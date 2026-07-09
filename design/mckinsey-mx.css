@@ -16,12 +16,13 @@
 
 :root{
   /* ground + ink — McKinsey-exact */
+  --bg:#faf9f6;            /* warm page ground — kills the white glare (cards stay pure white) */
   --paper:#ffffff;
-  --paper-2:#f7f7f4;       /* faint warm gray — table headers, strips */
-  --paper-3:#eeeeea;
+  --paper-2:#f5f4ef;       /* faint warm gray — table headers, strips */
+  --paper-3:#eceae4;
   --ink:#141414;           /* headings */
-  --ink-2:#333333;         /* body */
-  --mut:#6f6f6f;           /* captions, labels */
+  --ink-2:#2f2f2f;         /* body */
+  --mut:#4d4d4d;           /* captions, labels — darkened so the mono layer is readable, not decorative */
 
   /* Mexican flag accents — the only color on the page */
   --green:#0a7d4d;         /* primary accent: links, exhibit numbers, positive */
@@ -48,7 +49,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;background:var(--paper);color:var(--ink-2);
+  margin:0;background:var(--bg);color:var(--ink-2);
   font-family:var(--sans);font-size:17px;line-height:1.62;
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
 }
@@ -62,7 +63,7 @@ a:focus-visible,button:focus-visible{outline:2.5px solid var(--green);outline-of
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
 .col{max-width:var(--measure)}
 .mono{font-family:var(--mono)} .tnum{font-variant-numeric:tabular-nums}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
 
 /* section head — the signature hairline green rule is the tweak */
 .section-head{border-top:2px solid var(--green);padding-top:14px;margin-bottom:14px}

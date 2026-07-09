@@ -14,7 +14,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a7d4d'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Georgia,serif'%3EM%3C/text%3E%3C/svg%3E" />
 <link rel="stylesheet" href="./design/mckinsey-mx.css" />
 <style>
-  :root{--ink-3:#555;--amber2:#a6791a;--amber-bg2:#f6efdc}
+  :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
   body{font-size:16px}
 
   /* reading progress */
@@ -26,7 +26,7 @@
   .mast .inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(16px,4vw,44px)}
   .brand{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;text-decoration:none}
   .brand .u{border-bottom:2px solid var(--green);padding-bottom:1px}
-  .mnav{display:flex;align-items:center;gap:16px;font-family:var(--mono);font-size:11px}
+  .mnav{display:flex;align-items:center;gap:16px;font-family:var(--mono);font-size:12px}
   .mnav a{color:var(--mut);text-decoration:none;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
   .mnav a:hover{color:var(--green-d)}
   .mnav a.wire{color:var(--green-d);font-weight:600}
@@ -81,9 +81,9 @@
   .factstrip{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:10px;overflow:hidden;margin:16px 0 2px}
   @media(min-width:620px){.factstrip{grid-template-columns:repeat(4,1fr)}}
   .fact{background:var(--paper);padding:12px 14px}
-  .fact .fk{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+  .fact .fk{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut)}
   .fact .fv{font-family:var(--serif);font-size:20px;color:var(--ink);margin-top:3px;line-height:1.05;font-variant-numeric:tabular-nums}
-  .fact .fs{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);margin-top:3px}
+  .fact .fs{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:3px}
 
   /* section heads + bands */
   .band{border-top:2px solid var(--ink);padding-top:10px;margin:40px 0 4px}
@@ -99,17 +99,19 @@
   .board-lbl{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:12px 0 7px;border-top:2px solid var(--green);padding-top:11px}
   .board-lbl .no{font-family:var(--mono);font-size:12px;color:var(--green);font-weight:600}
   .board-lbl h2{font-family:var(--serif);font-size:clamp(20px,3.2vw,26px);color:var(--ink)}
-  .board-lbl .asof{font-family:var(--mono);font-size:10px;color:var(--mut);white-space:nowrap}
+  .board-lbl .asof{font-family:var(--mono);font-size:12px;color:var(--mut);white-space:nowrap}
   .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
   @media(min-width:560px){.tablero{grid-template-columns:repeat(4,1fr)}}
-  .tile{background:var(--paper);padding:13px 15px 12px;cursor:pointer}
+  .tile{background:var(--paper);padding:16px 17px 15px;cursor:pointer}
   .tile:hover{background:var(--paper-2)}
-  .tile .tl{font-family:var(--mono);font-size:10px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
-  .tile .tv{font-family:var(--serif);font-size:26px;color:var(--ink);margin-top:4px;font-variant-numeric:tabular-nums;line-height:1}
-  .tile .tv small{font-size:12px;color:var(--mut);font-weight:400}
-  .tile .tb{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:6px;line-height:1.35}
+  .tile .tl{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
+  .tile .tv{font-family:var(--serif);font-size:34px;color:var(--ink);margin-top:5px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.01em}
+  .tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
+  .tile svg.spark{margin-top:8px}
+  .tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
+  .tile .tb{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:7px;line-height:1.35}
   .tile .tb .arw{font-weight:700}
-  .tile .stamp{margin-top:5px;display:block}
+  .tile .stamp{margin-top:6px;display:block}
 
   /* stamp key */
   .stampkey{margin:8px 0 2px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
@@ -126,7 +128,7 @@
   .pmst-inline{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);border:1px dashed var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap}
 
   /* freshness stamp */
-  .stamp{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+  .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
   .stamp.live{color:var(--green-d);font-weight:600}
   .chip-ph{font-family:var(--mono);font-size:9px;letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
 
@@ -181,11 +183,11 @@
   .pcard .psrc a{color:var(--green)}
 
   /* latest line (replaces the cover band) */
-  .lateststrip{margin:18px 0 2px;padding:9px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--ink-2);line-height:1.7;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px}
+  .lateststrip{margin:18px 0 2px;padding:11px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12.5px;color:var(--ink-2);line-height:1.8;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 9px}
   .lateststrip:empty{display:none}
   .lateststrip .ll-k{color:var(--green-d);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
   .lateststrip .ll-k .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle;animation:lp 2.4s ease-in-out infinite}
-  .lateststrip a{color:var(--ink);text-decoration:none;max-width:34ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
+  .lateststrip a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:2px;max-width:44ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
   .lateststrip a:hover{color:var(--green-d);text-decoration:underline}
   .lateststrip .ll-sep{color:var(--line-2)}
   .lateststrip .ll-all{color:var(--green-d);white-space:nowrap}
@@ -201,14 +203,14 @@
   .mrow{border-bottom:1px solid var(--line);padding:15px 0}
   .mrow:last-child{border-bottom:none}
   .mrow .mr-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-  .mrow .mr-label{font-family:var(--mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut)}
+  .mrow .mr-label{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut)}
   .mrow .mr-main{display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap}
   .mrow .mr-val{font-family:var(--serif);font-size:27px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
   .mrow .mr-val small{font-size:13px;color:var(--mut);font-weight:400}
   .mrow .mr-spark{margin-left:auto}
   .mrow .mr-verdict{font-size:14px;color:var(--ink-2);margin-top:8px;line-height:1.45}
   .mrow .mr-verdict b{color:var(--ink)}
-  .mrow .mr-bench{font-family:var(--mono);font-size:10.5px;color:var(--green-d);margin-top:6px}
+  .mrow .mr-bench{font-family:var(--mono);font-size:12px;color:var(--green-d);margin-top:6px}
   .mrow details{margin-top:8px}
   .mrow summary{font-family:var(--mono);font-size:10px;color:var(--mut);cursor:pointer;list-style:none}
   .mrow summary::-webkit-details-marker{display:none}
@@ -667,6 +669,7 @@ function renderBoard(){
     if(!s){ el.innerHTML=`<div class="tl">${t.l}</div><div class="tv" style="font-size:15px;color:var(--amber2)">NOT YET WIRED</div><div class="tb">feed unavailable</div>`; host.appendChild(el); continue; }
     const h=tileVal(t.id,s),st=stampFor(s.meta),arw=dirArrow(s),bf=BENCH[t.id];
     el.innerHTML=`<div class="tl">${t.l}</div><div class="tv">${h.v} <small>${h.s}</small></div>`+
+      sparkSVG(s.data)+
       `<div class="tb">${bf?bf(s):(t.per?'<span class="arw">'+arw+'</span> '+t.per:'')}</div>`+
       `<span class="stamp ${st.cls}">${st.t}${t.ph?'<span class="chip-ph">'+t.ph+'</span>':''}</span>`;
     host.appendChild(el);
