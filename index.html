@@ -108,6 +108,20 @@
   .tile .tb .arw{font-weight:700}
   .tile .stamp{margin-top:5px;display:block}
 
+  /* stamp key */
+  .stampkey{margin:8px 0 2px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .stampkey>summary{font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);cursor:pointer;list-style:none;padding:9px 13px;background:var(--paper-2)}
+  .stampkey>summary::-webkit-details-marker{display:none}
+  .stampkey>summary::after{content:" ▸";color:var(--green)}
+  .stampkey[open]>summary::after{content:" ▾";color:var(--green)}
+  .sk-grid{padding:6px 13px 11px;display:grid;grid-template-columns:1fr;gap:2px}
+  @media(min-width:620px){.sk-grid{grid-template-columns:1fr 1fr;gap:2px 22px}}
+  .sk-i{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--line)}
+  .sk-i .sk-d{font-size:12px;color:var(--ink-2);line-height:1.4}
+  .sk-i .sk-d b{color:var(--ink)}
+  .sk-vs{font-family:var(--mono);font-size:10.5px;color:var(--green-d);white-space:nowrap;min-width:52px}
+  .pmst-inline{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);border:1px dashed var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap}
+
   /* freshness stamp */
   .stamp{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
   .stamp.live{color:var(--green-d);font-weight:600}
@@ -373,6 +387,19 @@
         <span class="asof" id="board-asof"></span>
       </div>
       <div class="tablero" id="tablero"></div>
+      <details class="stampkey" id="stampkey">
+        <summary>How to read this page — the stamps &amp; benchmarks</summary>
+        <div class="sk-grid">
+          <div class="sk-i"><span class="stamp live">● LIVE</span><span class="sk-d">updated daily or faster</span></div>
+          <div class="sk-i"><span class="stamp">MONTHLY · May data</span><span class="sk-d">official series, showing the <b>vintage</b> — the period of the latest data point, not today</span></div>
+          <div class="sk-i"><span class="stamp">QUARTERLY · Q1 2026</span><span class="sk-d">a quarter behind by nature</span></div>
+          <div class="sk-i"><span class="stamp">POLL · Jun · Mitofsky</span><span class="sk-d">a survey — named pollster + field date, never treated as live data</span></div>
+          <div class="sk-i"><span class="stamp">SNAPSHOT · 2020</span><span class="sk-d">structural (census, poverty) — changes slowly</span></div>
+          <div class="sk-i"><span class="pmst-inline">MODEL</span><span class="sk-d">an output of the teaching model — illustrative, never a measured figure</span></div>
+          <div class="sk-i"><span class="stamp" style="color:var(--amber2)">NOT YET WIRED</span><span class="sk-d">a source we haven't connected — we show nothing rather than invent a number</span></div>
+          <div class="sk-i"><span class="sk-vs">vs …</span><span class="sk-d">every headline number carries one comparison — its own history, a peer country, or a target. Green is the only "live" colour on the page.</span></div>
+        </div>
+      </details>
     </section>
 
     <section class="coverband" id="coverband">
@@ -417,7 +444,7 @@ const enNum=(n)=>Number(n).toLocaleString('en-US');
 async function J(p){const r=await fetch(p);if(!r.ok)throw new Error(p+' '+r.status);return r.json();}
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 const S={};
-let POV=null,CRI=null,REG={},NAT={},HEALTH=null,OUTLOOK=null,NEWS=null,EVENTS=null;
+let POV=null,CRI=null,REG={},NAT={},HEALTH=null,OUTLOOK=null,NEWS=null,EVENTS=null,SECTORS=null;
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MONL=['January','February','March','April','May','June','July','August','September','October','November','December'];
 function monLong(iso){const d=new Date(iso);return isNaN(d)?iso:MONL[d.getUTCMonth()]+' '+d.getUTCFullYear();}
@@ -507,7 +534,7 @@ function barChart(items,opts){
 }
 // Horizontal ranked bars. items=[{label,value,hi}] value in %
 function hbarChart(items){
-  const W=720,rowH=40,pl=132,pr=60,pt=8,H=pt*2+items.length*rowH;
+  const W=720,rowH=40,pl=150,pr=60,pt=8,H=pt*2+items.length*rowH;
   const mx=Math.max(...items.map(d=>d.value));
   let g='';
   items.forEach((d,i)=>{const y=pt+i*rowH+7,bw=(d.value/mx)*(W-pl-pr);
@@ -754,8 +781,15 @@ function renderSections(){
       hbarChart(dest),
       `Source: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI / Banxico</a>, balance of trade.`,
       dataTable(['Destination','Share'],dest.map(d=>[d.label,d.value+'%'])),true);
+    let ex3='';
+    if(SECTORS&&SECTORS.sectors){
+      const items=SECTORS.sectors.map(s=>({label:s.label,value:s.share,hi:s.hi}));
+      const tbl=dataTable(['Sector','Share','US$ bn'],SECTORS.sectors.map(s=>[s.label,s.share+'%',s.usd_bn?'$'+s.usd_bn+'bn':'—']));
+      ex3=exhibit('4.3','Mexico sells factories, not commodities — cars lead','Goods exports by sector, share of total, 2024',hbarChart(items),
+        `Source: <a href="${SECTORS.meta.sourceUrl}" target="_blank" rel="noopener">${SECTORS.meta.source}</a>. ${SECTORS.meta.note}`,tbl,true);
+    }
     H+=`<section class="dim" id="q4">${sectionHead('Q4','Is the economy growing — and on whom does it depend?','Growth is weak—about 0.4% a year—and almost all of it depends on demand from the United States.')}`+
-      ex1+ex2+ mrow({id:'banxico-pib-crecimiento',label:'Real GDP growth (annual)'})+mrow({id:'banxico-igae',label:'IGAE — monthly activity (annual)'})+
+      ex1+ex2+ex3+ mrow({id:'banxico-pib-crecimiento',label:'Real GDP growth (annual)'})+mrow({id:'banxico-igae',label:'IGAE — monthly activity (annual)'})+
       fwd(`2026 forecasts split: <b>Banxico survey +1.1%</b>, IMF +1.6%, OECD +0.8% — the near-term driver is US demand. <a href="#q10">Outlook →</a>`)+
       `<div class="ctxline">Gloss: <b>IGAE</b> = INEGI's monthly GDP proxy · <b>INEGI</b> = the national statistics office. Context: $${(S['wb-gdp-usd']?S['wb-gdp-usd'].data.at(-1).value/1e12:1.9).toFixed(2)}T economy · $${S['wb-gdp-per-capita']?enNum(Math.round(S['wb-gdp-per-capita'].data.at(-1).value)):'—'} per capita (World Bank, 2025).</div></section>`;
   }
@@ -892,7 +926,7 @@ function wireScroll(){
 /* ============ boot ============ */
 (async()=>{
   const SER=['banxico-usdmxn-fix','banxico-inflacion','banxico-tasa-objetivo','banxico-remesas','banxico-reservas','cre-gasolina-regular','wb-gdp-usd','wb-gdp-per-capita','wb-population','wb-unemployment','banxico-pib-crecimiento','banxico-igae','banxico-inflacion-subyacente','banxico-salario-minimo','se-ied'];
-  const [health,reg,pov,cri,outlook,news,events,...ser]=await Promise.all([
+  const [health,reg,pov,cri,outlook,news,events,sectors,...ser]=await Promise.all([
     J('./data/health.json').catch(()=>null),
     J('./data/meta/municipios.json').catch(()=>({})),
     J('./data/layers/coneval-pobreza.json').catch(()=>null),
@@ -900,9 +934,10 @@ function wireScroll(){
     J('./data/outlook.json').catch(()=>null),
     J('./data/news.json').catch(()=>null),
     J('./data/events.json').catch(()=>null),
+    J('./data/exports-sectors.json').catch(()=>null),
     ...SER.map(id=>J('./data/series/'+id+'.json').then(s=>({id,s})).catch(()=>({id,s:null})))
   ]);
-  HEALTH=health; REG=reg.m||reg; POV=pov; CRI=cri; OUTLOOK=outlook; NEWS=news; EVENTS=events;
+  HEALTH=health; REG=reg.m||reg; POV=pov; CRI=cri; OUTLOOK=outlook; NEWS=news; EVENTS=events; SECTORS=sectors;
   ser.forEach(x=>{if(x.s)S[x.id]=x.s;});
   computeNat();
   if(health){const ok=(health.summary&&health.summary.ok)||0;const nn=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime());const newest=nn.length?Math.max(...nn):0;$('#status').textContent=`● ${ok} live · ${newest?relTime(newest):''}`;}
