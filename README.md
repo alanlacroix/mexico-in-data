@@ -1,6 +1,7 @@
-# Mexico, in data
+# The Mexico Brief
 
-A sourced, always-current briefing on Mexico — for a smart outsider who starts near zero.
+A sourced, always-current briefing on Mexico — for a smart outsider who starts near zero. Live at **mexicobrief.com**.
+
 **Every figure is official, dated, and one tap from its source. Nothing is invented.**
 
 - **The Briefing** (`index.html`) — the state of Mexico's economy in one read: the Board of live
