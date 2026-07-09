@@ -105,11 +105,14 @@
   .tile{background:var(--paper);padding:16px 17px 15px;cursor:pointer}
   .tile:hover{background:var(--paper-2)}
   .tile .tl{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
-  .tile .tv{font-family:var(--serif);font-size:34px;color:var(--ink);margin-top:5px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.01em}
+  .tile .tv{font-family:var(--serif);font-size:38px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
   .tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
-  .tile svg.spark{margin-top:8px}
+  .tile .dl{font-family:var(--mono);font-size:12.5px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
+  .tile .dl.up::before{content:"▲ ";font-size:10px} .tile .dl.dn::before{content:"▼ ";font-size:10px}
+  .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
+  .tile svg.spark{margin-top:7px}
   .tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
-  .tile .tb{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:7px;line-height:1.35}
+  .tile .tb{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);margin-top:7px;line-height:1.4}
   .tile .tb .arw{font-weight:700}
   .tile .stamp{margin-top:6px;display:block}
 
@@ -293,10 +296,10 @@
   .fwdline b{color:var(--green-d)} .fwdline a{color:var(--green)}
 
   /* construccion / honesty */
-  .constr{border:1.5px dashed var(--line-2);border-radius:9px;padding:13px 15px;margin:10px 0;background:repeating-linear-gradient(135deg,transparent,transparent 9px,rgba(0,0,0,.012) 9px,rgba(0,0,0,.012) 18px)}
-  .constr .cc-l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-2)}
-  .constr .cc-s{font-family:var(--mono);font-size:9.5px;color:var(--amber2);margin-top:3px}
-  .constr .cc-d{font-size:12.5px;color:var(--mut);margin-top:5px}
+  .constr-lite{display:flex;flex-wrap:wrap;align-items:baseline;gap:9px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .constr-lite .cl-l{font-size:13.5px;color:var(--ink)}
+  .constr-lite .cl-s{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--amber2);border:1px solid var(--amber-bg2);background:var(--amber-bg2);border-radius:3px;padding:1px 6px}
+  .constr-lite .cl-d{font-family:var(--mono);font-size:11.5px;color:var(--mut)}
   .honesty{font-family:var(--mono);font-size:11px;color:var(--amber2);background:var(--amber-bg2);border-radius:8px;padding:9px 13px;margin:8px 0 4px;line-height:1.5}
   .ctxline{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.6;padding-top:10px;border-top:1px solid var(--line)}
 
@@ -402,7 +405,7 @@
     <a class="wire" id="nav-wire" href="#q12"><span class="dot"></span>The Wire</a>
     <a href="./model.html"><span class="nlbl">The </span>Model</a>
     <a href="./atlas.html"><span class="nlbl">The </span>Atlas</a>
-    <a href="./data.html">Data</a>
+    <a href="./data.html">Sources</a>
     <a class="status" id="status" href="./data.html">loading…</a>
   </nav>
 </div></header>
@@ -662,6 +665,18 @@ const TILES=[
   {id:'banxico-reservas',l:"Int'l reserves",per:'vs prior week'},
 ];
 function dirArrow(s){const d=s.data;if(d.length<2)return '';const a=d.at(-1).value,b=d.at(-2).value;return a>b?'▲':a<b?'▼':'—';}
+// The change over ~12 months, in ink (never good/bad colour) — answers "moved how?"
+const PP_METRICS=['banxico-tasa-objetivo','banxico-inflacion','banxico-inflacion-subyacente','banxico-pib-crecimiento','banxico-igae','wb-unemployment'];
+function tileDelta(id,s){
+  const d=s.data; if(d.length<3)return '';
+  const cur=d.at(-1).value, ago=valueAgo(d,365); const diff=cur-ago;
+  const pp=PP_METRICS.includes(id);
+  if(!pp && Math.abs(diff)<Math.abs(ago)*0.005) return '';
+  if(pp && Math.abs(diff)<0.05) return `<span class="dl fl">held <small>vs a year ago</small></span>`;
+  const cls=diff>0?'up':'dn';
+  const mag=pp?((diff>0?'+':'')+diff.toFixed(1)+'pp'):((diff>0?'+':'')+(diff/ago*100).toFixed(1)+'%');
+  return `<span class="dl ${cls}">${mag} <small>vs a year ago</small></span>`;
+}
 function tileVal(id,s){ if(id==='banxico-remesas')return fmtRem(s.data.at(-1).value); return fmt(id,s.data.at(-1).value,s.meta.units); }
 function renderBoard(){
   const host=$('#tablero');
@@ -669,7 +684,7 @@ function renderBoard(){
     if(!s){ el.innerHTML=`<div class="tl">${t.l}</div><div class="tv" style="font-size:15px;color:var(--amber2)">NOT YET WIRED</div><div class="tb">feed unavailable</div>`; host.appendChild(el); continue; }
     const h=tileVal(t.id,s),st=stampFor(s.meta),arw=dirArrow(s),bf=BENCH[t.id];
     el.innerHTML=`<div class="tl">${t.l}</div><div class="tv">${h.v} <small>${h.s}</small></div>`+
-      sparkSVG(s.data)+
+      tileDelta(t.id,s)+ sparkSVG(s.data)+
       `<div class="tb">${bf?bf(s):(t.per?'<span class="arw">'+arw+'</span> '+t.per:'')}</div>`+
       `<span class="stamp ${st.cls}">${st.t}${t.ph?'<span class="chip-ph">'+t.ph+'</span>':''}</span>`;
     host.appendChild(el);
@@ -756,7 +771,7 @@ function mrow(cfg){
     `<div class="mr-main"><span class="mr-val">${h.v} <small>${h.s}</small></span><span class="mr-spark">${sparkSVG(s.data)}</span></div>`+
     (vf?`<div class="mr-verdict">${vf(s)}</div>`:'')+(bf?`<div class="mr-bench">${bf(s)}</div>`:'')+srcDetails(s.meta)+`</div>`;
 }
-function construccion(o){ return `<div class="constr"><div class="cc-l">${o.l}</div><div class="cc-s">NOT YET WIRED · ${o.cad||''}</div><div class="cc-d">Source: ${o.src}. ${o.eta||'Connecting soon — no invented number in the meantime.'}</div></div>`; }
+function construccion(o){ return `<div class="constr-lite"><span class="cl-l">${o.l}</span><span class="cl-s">not yet wired</span><span class="cl-d">${o.src}${o.cad?' · '+o.cad:''}</span></div>`; }
 function staticRow(o){
   return `<div class="mrow"><div class="mr-top"><span class="mr-label">${o.label}</span><span class="stamp">${o.stamp}</span></div>`+
     `<div class="mr-main"><span class="mr-val">${o.value} <small>${o.unit||''}</small></span></div>`+
@@ -856,9 +871,8 @@ function renderSections(){
       barChart(s.data.slice(-16).map(p=>({label:p.date,value:p.value/1000})),{unit:'$',xfmt:(d)=>qtrOf(d),everyLabel:4}),
       `Source: <a href="https://www.economia.gob.mx/datamexico/" target="_blank" rel="noopener">Secretaría de Economía (Data México)</a>, cube fdi_9_quarter.`):'';
     H+=`<section class="dim" id="q5">${sectionHead('Q5','Is the nearshoring story real?','Through 2024, foreign investment ran high but flat — mostly reinvested earnings, not new factories. Official flows lag, so the current picture is not yet in.')}`+
-      `<div class="honesty">Data caveat: Mexico's official FDI series lags by several quarters — the latest wired figures are through <b>2024</b>. Treat the "flat" read as history, not this quarter.</div>`+
       ex+ iedRow()+
-      `<div class="honesty">Honesty note: "announcement" trackers count pledges, which often never land. This shows recorded FDI only. Most is reinvested earnings from firms already here — real, but not a wave of new factories.</div>`+
+      `<div class="honesty">"Announcement" trackers count pledges, which often never land. This shows recorded FDI only — mostly reinvested earnings from firms already here, real but not a wave of new factories.</div>`+
       construccion({l:'Exports & trade balance (monthly)',src:'Banxico / INEGI (balanza comercial)',cad:'monthly'})+
       oppsBlock()+
       fwd(`Banxico's survey sees FDI broadly steady; the swing factor is the <b>USMCA review</b> — <a href="#q8">Q8</a>.`)+`</section>`;
