@@ -1,0 +1,120 @@
+{
+  "meta": {
+    "updated": "2026-07-09",
+    "thesis": "Mexico is a US-welded assembly economy — it imports parts and exports cars — running on top of a second, informal economy that employs half the country.",
+    "note": "Structural data, mostly 2024 (labor figures Q4 2025). Every figure official and sourced; where a number isn't cleanly available it is marked NOT YET WIRED, never invented."
+  },
+  "hero": [
+    { "k": "Economy", "v": "$1.83T", "sub": "nominal GDP · World Bank 2024" },
+    { "k": "World rank", "v": "~13th", "sub": "by nominal GDP · IMF/WB" },
+    { "k": "Growth 2024", "v": "+1.4%", "sub": "real · World Bank" },
+    { "k": "Goods exports", "v": "$617bn", "sub": "2024 · INEGI" }
+  ],
+  "sectors": {
+    "unit": "% of GDP · gross value added, 2024",
+    "source": "World Bank WDI, from INEGI Sistema de Cuentas Nacionales",
+    "sourceUrl": "https://data.worldbank.org/indicator/NV.SRV.TOTL.ZS?locations=MX",
+    "segments": [
+      { "label": "Services", "value": 58.7, "hi": true },
+      { "label": "Industry", "value": 31.0, "sub": "incl. manufacturing 20.1" },
+      { "label": "Net taxes", "value": 6.4 },
+      { "label": "Agriculture", "value": 3.9 }
+    ]
+  },
+  "expenditure": {
+    "unit": "% of GDP · 2024. GDP = consumption + investment + government + net exports.",
+    "source": "World Bank WDI / INEGI",
+    "sourceUrl": "https://data.worldbank.org/country/mexico",
+    "items": [
+      { "label": "Private consumption", "value": 70.7 },
+      { "label": "Investment", "value": 23.8 },
+      { "label": "Government", "value": 11.6 },
+      { "label": "Exports", "value": 37.3 },
+      { "label": "Imports", "value": -38.1 }
+    ],
+    "note": "Consumption dominates; trade is enormous on both sides and nets to roughly zero (−0.9% of GDP)."
+  },
+  "growth": {
+    "unit": "real GDP, % change year-on-year",
+    "source": "World Bank WDI",
+    "sourceUrl": "https://data.worldbank.org/indicator/NY.GDP.MKTP.KD.ZG?locations=MX",
+    "points": [
+      { "year": "2020", "value": -8.4 },
+      { "year": "2021", "value": 6.0 },
+      { "year": "2022", "value": 3.7 },
+      { "year": "2023", "value": 3.1 },
+      { "year": "2024", "value": 1.4 }
+    ],
+    "note": "The post-COVID rebound is spent — 2024 decelerated sharply back toward Mexico's long-run ~2% trend."
+  },
+  "trade": {
+    "exports": 617.1, "imports": 625.3, "balance": -8.2, "unit": "US$ bn · 2024",
+    "source": "INEGI, Balanza Comercial de Mercancías",
+    "sourceUrl": "https://en.www.inegi.org.mx/programas/comext/",
+    "importsByUse": [
+      { "label": "Intermediate (parts, inputs)", "value": 75.6, "hi": true },
+      { "label": "Consumer goods", "value": 14.5 },
+      { "label": "Capital (machinery)", "value": 9.8 }
+    ],
+    "series": {
+      "exports": [{"year":"2015","value":380.6},{"year":"2016","value":374},{"year":"2017","value":409.4},{"year":"2018","value":450.7},{"year":"2019","value":460.6},{"year":"2020","value":417},{"year":"2021","value":494.6},{"year":"2022","value":577.7},{"year":"2023","value":593},{"year":"2024","value":617.1}],
+      "imports": [{"year":"2015","value":395.3},{"year":"2016","value":387.1},{"year":"2017","value":420.4},{"year":"2018","value":464.3},{"year":"2019","value":455.2},{"year":"2020","value":383},{"year":"2021","value":506.6},{"year":"2022","value":604.6},{"year":"2023","value":598.5},{"year":"2024","value":625.3}]
+    },
+    "note": "The deficit is structural, not weakness: Mexico imports parts and exports finished goods. Three of every four import dollars buy intermediate inputs for its factories."
+  },
+  "partners": {
+    "unit": "share of trade, 2024",
+    "source": "US Census Bureau; INEGI; OEC",
+    "sourceUrl": "https://oec.world/en/profile/country/mex",
+    "exports": [
+      { "label": "United States", "value": 80, "range": "80–83%", "hi": true },
+      { "label": "Rest of world", "value": 18 }
+    ],
+    "imports": [
+      { "label": "United States", "value": 43, "range": "~40s%", "hi": true },
+      { "label": "China", "value": 21, "usd": 129.8 },
+      { "label": "Rest of world", "value": 36 }
+    ],
+    "note": "A one-customer export story, a many-supplier import story — with a ~$120bn deficit with China whose parts feed US-bound factories."
+  },
+  "products": {
+    "unit": "US$ bn · 2024 (OEC / UN COMTRADE)",
+    "source": "OEC / UN COMTRADE; INEGI",
+    "sourceUrl": "https://oec.world/en/profile/country/mex",
+    "imports": [
+      { "label": "Office-machine parts", "value": 34.8 },
+      { "label": "Computers", "value": 33.3 },
+      { "label": "Vehicle parts", "value": 32.2 },
+      { "label": "Integrated circuits", "value": 28.9 },
+      { "label": "Refined petroleum", "value": 24.6 }
+    ],
+    "exportsHi": { "label": "Cars & auto parts", "value": 193.9 },
+    "exportsNote": "Manufactured goods are 89.8% of exports; the full top-10 export list is on the Briefing. A ranked HS-level export column is NOT YET WIRED (source: OEC / UN COMTRADE).",
+    "note": "The imports are factory feedstock; the flagship output is cars."
+  },
+  "informal": {
+    "unit": "2024–2025",
+    "source": "INEGI (ENOE; informal economy accounts)",
+    "sourceUrl": "https://www.inegi.org.mx/temas/pibmed/",
+    "dumbbells": [
+      { "label": "Informal", "jobs": 55, "gdp": 25.4 },
+      { "label": "Formal", "jobs": 45, "gdp": 74.6 }
+    ],
+    "states": [
+      { "label": "Oaxaca (south)", "value": 80.1 },
+      { "label": "Coahuila (north)", "value": 33.3 }
+    ],
+    "note": "Half the country works off the books and produces a quarter of the output. The north–south divide is the same fact drawn on a map: Oaxaca 80% informal, industrial Coahuila 33%."
+  },
+  "moneyflows": {
+    "unit": "US$ bn · 2024",
+    "source": "Banco de México; Secretaría de Economía",
+    "sourceUrl": "https://www.banxico.org.mx",
+    "items": [
+      { "label": "Remittances", "value": 64.75, "hi": true, "sub": "96.6% from the US" },
+      { "label": "FDI", "value": 36.9, "sub": "54% to manufacturing" },
+      { "label": "Tourism receipts", "value": 33.0 }
+    ],
+    "note": "Even the non-factory dollars come from the north — 96.6% of remittances originate in the US. Oil is now only ~11% of public revenue; these flows replaced it."
+  }
+}

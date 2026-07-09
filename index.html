@@ -403,6 +403,7 @@
   <a class="brand" href="./">THE MEXICO <span class="u">BRIEF</span></a>
   <nav class="mnav">
     <a class="wire" id="nav-wire" href="#q12"><span class="dot"></span>The Wire</a>
+    <a href="./economy.html"><span class="nlbl">The </span>Economy</a>
     <a href="./model.html"><span class="nlbl">The </span>Model</a>
     <a href="./atlas.html"><span class="nlbl">The </span>Atlas</a>
     <a href="./data.html">Sources</a>
@@ -862,6 +863,7 @@ function renderSections(){
       mrow({id:'banxico-pib-crecimiento',label:'Real GDP growth (annual)'})+mrow({id:'banxico-igae',label:'IGAE — monthly activity (annual)'})+
       fwd(`2026 forecasts split: <b>Banxico survey +1.1%</b>, IMF +1.6%, OECD +0.8% — the near-term driver is US demand. <a href="#q10">Outlook →</a>`)+
       `<details class="more"><summary>More on this question — growth over time & the full export mix</summary>`+ex1+ex3+`</details>`+
+      `<a class="teaser" href="./economy.html" style="margin-top:14px"><div class="tz-body"><div class="tz-k">The full anatomy</div><div class="tz-h">The Economy — what Mexico is made of →</div><div class="tz-d">GDP by sector and by spending, exports <b>and imports</b> broken out, the trade balance over a decade, and the informal economy that employs half the country. Nine charts.</div><span class="tz-go">Enter the room →</span></div></a>`+
       `<div class="ctxline">Gloss: <b>IGAE</b> = INEGI's monthly GDP proxy · <b>INEGI</b> = the national statistics office. Context: $${(S['wb-gdp-usd']?S['wb-gdp-usd'].data.at(-1).value/1e12:1.9).toFixed(2)}T economy · $${S['wb-gdp-per-capita']?enNum(Math.round(S['wb-gdp-per-capita'].data.at(-1).value)):'—'} per capita (World Bank, 2025).</div></section>`;
   }
   // Q5 nearshoring
