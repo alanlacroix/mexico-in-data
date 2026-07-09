@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-09T07:17:38.807Z",
-  "runId": "20260709071738",
+  "generatedAt": "2026-07-09T20:02:43.989Z",
+  "runId": "20260709200243",
   "geoEpoch": {
     "epoch": "mg-2020",
     "source": "INEGI Marco Geoestadístico",
@@ -8,13 +8,22 @@
     "count": 2478
   },
   "summary": {
-    "ok": 19,
+    "ok": 18,
     "flagged": 0,
-    "failed": 0,
+    "failed": 1,
     "skipped": 2,
     "darkSources": []
   },
-  "alerts": [],
+  "alerts": [
+    {
+      "id": "se-ied",
+      "source": "Secretaría de Economía (Data México)",
+      "metric": "fdi",
+      "severity": "error",
+      "message": "fetch failed after 4 tries: fetch failed",
+      "at": "2026-07-09T20:02:43.989Z"
+    }
+  ],
   "reconciliation": [],
   "sources": [
     {
@@ -26,12 +35,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 18,
       "file": "data/series/banxico-pib-crecimiento.json",
-      "finishedAt": "2026-07-09T07:17:39.507Z"
+      "finishedAt": "2026-07-09T20:02:44.397Z"
     },
     {
       "id": "banxico-igae",
@@ -42,12 +51,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2026-04-01",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 57,
       "file": "data/series/banxico-igae.json",
-      "finishedAt": "2026-07-09T07:17:39.668Z"
+      "finishedAt": "2026-07-09T20:02:44.504Z"
     },
     {
       "id": "banxico-inflacion-subyacente",
@@ -58,12 +67,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
-      "rowCount": 58,
+      "startedAt": "2026-07-09T20:02:43.989Z",
+      "vintage": "2026-06-01",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
+      "rowCount": 59,
       "file": "data/series/banxico-inflacion-subyacente.json",
-      "finishedAt": "2026-07-09T07:17:39.829Z"
+      "finishedAt": "2026-07-09T20:02:44.616Z"
     },
     {
       "id": "banxico-salario-minimo",
@@ -74,12 +83,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 70,
       "file": "data/series/banxico-salario-minimo.json",
-      "finishedAt": "2026-07-09T07:17:39.998Z"
+      "finishedAt": "2026-07-09T20:02:44.721Z"
     },
     {
       "id": "banxico-tasa-objetivo",
@@ -90,12 +99,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2026-07-09",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 366,
       "file": "data/series/banxico-tasa-objetivo.json",
-      "finishedAt": "2026-07-09T07:17:40.166Z"
+      "finishedAt": "2026-07-09T20:02:44.851Z"
     },
     {
       "id": "banxico-usdmxn-fix",
@@ -106,12 +115,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
-      "vintage": "2026-07-08",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
-      "rowCount": 251,
+      "startedAt": "2026-07-09T20:02:43.989Z",
+      "vintage": "2026-07-09",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
+      "rowCount": 252,
       "file": "data/series/banxico-usdmxn-fix.json",
-      "finishedAt": "2026-07-09T07:17:40.352Z"
+      "finishedAt": "2026-07-09T20:02:44.975Z"
     },
     {
       "id": "banxico-reservas",
@@ -122,12 +131,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2026-07-03",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 52,
       "file": "data/series/banxico-reservas.json",
-      "finishedAt": "2026-07-09T07:17:40.519Z"
+      "finishedAt": "2026-07-09T20:02:45.086Z"
     },
     {
       "id": "banxico-remesas",
@@ -138,12 +147,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 10,
       "file": "data/series/banxico-remesas.json",
-      "finishedAt": "2026-07-09T07:17:40.682Z"
+      "finishedAt": "2026-07-09T20:02:45.706Z"
     },
     {
       "id": "banxico-inflacion",
@@ -154,12 +163,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
-      "rowCount": 22,
+      "startedAt": "2026-07-09T20:02:43.989Z",
+      "vintage": "2026-06-01",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
+      "rowCount": 23,
       "file": "data/series/banxico-inflacion.json",
-      "finishedAt": "2026-07-09T07:17:40.841Z"
+      "finishedAt": "2026-07-09T20:02:45.819Z"
     },
     {
       "id": "coneval-pobreza",
@@ -170,16 +179,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2020",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 2466,
       "file": "data/layers/coneval-pobreza.json",
       "coverage": {
         "covered": 2466,
         "universe": 2478
       },
-      "finishedAt": "2026-07-09T07:17:42.917Z"
+      "finishedAt": "2026-07-09T20:02:46.447Z"
     },
     {
       "id": "cre-gasolina-regular",
@@ -190,12 +199,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2026-07-09",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 2,
       "file": "data/series/cre-gasolina-regular.json",
-      "finishedAt": "2026-07-09T07:17:43.484Z"
+      "finishedAt": "2026-07-09T20:02:46.839Z"
     },
     {
       "id": "cre-gasolina-premium",
@@ -206,12 +215,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2026-07-09",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 2,
       "file": "data/series/cre-gasolina-premium.json",
-      "finishedAt": "2026-07-09T07:17:43.725Z"
+      "finishedAt": "2026-07-09T20:02:47.015Z"
     },
     {
       "id": "cre-diesel",
@@ -222,12 +231,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2026-07-09",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 2,
       "file": "data/series/cre-diesel.json",
-      "finishedAt": "2026-07-09T07:17:44.451Z"
+      "finishedAt": "2026-07-09T20:02:47.195Z"
     },
     {
       "id": "se-ied",
@@ -236,14 +245,14 @@
       "track": "pulse",
       "kind": "series",
       "canonicalSource": true,
-      "status": "ok",
+      "status": "failed",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
-      "vintage": "2024-10",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
-      "rowCount": 104,
-      "file": "data/series/se-ied.json",
-      "finishedAt": "2026-07-09T07:17:45.172Z"
+      "startedAt": "2026-07-09T20:02:43.989Z",
+      "hard": false,
+      "message": "fetch failed after 4 tries: fetch failed",
+      "servingVintage": "2024-10",
+      "stale": false,
+      "finishedAt": "2026-07-09T20:02:57.410Z"
     },
     {
       "id": "imss-empleo",
@@ -268,12 +277,12 @@
       "canonicalSource": false,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 66,
       "file": "data/series/wb-gdp-usd.json",
-      "finishedAt": "2026-07-09T07:17:45.377Z"
+      "finishedAt": "2026-07-09T20:02:58.159Z"
     },
     {
       "id": "wb-gdp-per-capita",
@@ -284,12 +293,12 @@
       "canonicalSource": false,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 66,
       "file": "data/series/wb-gdp-per-capita.json",
-      "finishedAt": "2026-07-09T07:17:45.476Z"
+      "finishedAt": "2026-07-09T20:02:58.644Z"
     },
     {
       "id": "wb-inflation",
@@ -300,12 +309,12 @@
       "canonicalSource": false,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 66,
       "file": "data/series/wb-inflation.json",
-      "finishedAt": "2026-07-09T07:17:45.534Z"
+      "finishedAt": "2026-07-09T20:02:59.177Z"
     },
     {
       "id": "wb-population",
@@ -316,12 +325,12 @@
       "canonicalSource": false,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 66,
       "file": "data/series/wb-population.json",
-      "finishedAt": "2026-07-09T07:17:45.588Z"
+      "finishedAt": "2026-07-09T20:02:59.925Z"
     },
     {
       "id": "wb-unemployment",
@@ -332,12 +341,12 @@
       "canonicalSource": false,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-09T07:17:38.807Z",
+      "startedAt": "2026-07-09T20:02:43.989Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-09T07:17:38.807Z",
+      "fetchedAt": "2026-07-09T20:02:43.989Z",
       "rowCount": 35,
       "file": "data/series/wb-unemployment.json",
-      "finishedAt": "2026-07-09T07:17:45.643Z"
+      "finishedAt": "2026-07-09T20:03:00.662Z"
     }
   ]
 }
