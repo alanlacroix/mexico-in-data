@@ -52,7 +52,7 @@
   @media(min-width:960px){.briefing{grid-template-columns:224px minmax(0,1fr);gap:44px}}
   .rail{display:none}
   @media(min-width:960px){
-    .rail{display:block;position:sticky;top:96px;align-self:start;max-height:calc(100vh - 120px);overflow-y:auto;padding:24px 0 40px}
+    .rail{display:block;position:sticky;top:72px;align-self:start;max-height:calc(100vh - 96px);overflow-y:auto;padding:24px 0 40px}
   }
   .toc-grp{margin-bottom:16px}
   .toc-grp .ge{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);display:flex;justify-content:space-between;margin-bottom:5px}
@@ -75,6 +75,9 @@
   .country{font-size:16.5px;line-height:1.62;color:var(--ink-2);margin:20px 0 4px;max-width:66ch}
   .country b{color:var(--ink);font-weight:600}
   .country .ref{font-family:var(--mono);font-size:9.5px;color:var(--green);vertical-align:super;text-decoration:none;padding:0 1px}
+  .bottomline{font-size:15px;line-height:1.5;color:var(--ink-2);margin:16px 0 2px;max-width:70ch;padding:12px 15px;background:var(--paper-2);border-left:3px solid var(--green);border-radius:0 8px 8px 0}
+  .bottomline b{color:var(--ink)}
+  .bottomline .bl-k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);font-weight:600}
   .factstrip{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:10px;overflow:hidden;margin:16px 0 2px}
   @media(min-width:620px){.factstrip{grid-template-columns:repeat(4,1fr)}}
   .fact{background:var(--paper);padding:12px 14px}
@@ -177,6 +180,23 @@
   .pcard .psrc{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:6px}
   .pcard .psrc a{color:var(--green)}
 
+  /* latest line (replaces the cover band) */
+  .lateststrip{margin:18px 0 2px;padding:9px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--ink-2);line-height:1.7;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px}
+  .lateststrip:empty{display:none}
+  .lateststrip .ll-k{color:var(--green-d);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+  .lateststrip .ll-k .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle;animation:lp 2.4s ease-in-out infinite}
+  .lateststrip a{color:var(--ink);text-decoration:none;max-width:34ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
+  .lateststrip a:hover{color:var(--green-d);text-decoration:underline}
+  .lateststrip .ll-sep{color:var(--line-2)}
+  .lateststrip .ll-all{color:var(--green-d);white-space:nowrap}
+
+  /* "more on this question" expander */
+  details.more{margin:6px 0 4px;border-top:1px solid var(--line)}
+  details.more>summary{font-family:var(--mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);cursor:pointer;list-style:none;padding:10px 0 2px}
+  details.more>summary::-webkit-details-marker{display:none}
+  details.more>summary::after{content:" ▸"}
+  details.more[open]>summary::after{content:" ▾"}
+
   /* metric row */
   .mrow{border-bottom:1px solid var(--line);padding:15px 0}
   .mrow:last-child{border-bottom:none}
@@ -242,6 +262,29 @@
   table.dt thead th{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border-bottom:1.5px solid var(--line-2)}
   table.dt td.k,table.dt th.k{text-align:left;font-family:var(--sans);color:var(--ink)}
   table.dt td{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
+
+  /* ECI complexity block */
+  .eciline{border:1px solid var(--line-2);border-radius:10px;padding:14px 16px;margin:12px 0 6px;background:var(--paper)}
+  .eciline .eci-h{font-size:14.5px;color:var(--ink);line-height:1.5;max-width:64ch}
+  .eciline .eci-stat{display:flex;align-items:baseline;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .eciline .eci-v{font-family:var(--serif);font-size:34px;color:var(--green-d);font-variant-numeric:tabular-nums;line-height:1}
+  .eciline .eci-v small{font-size:15px}
+  .eciline .eci-l{font-size:13.5px;color:var(--ink-2);line-height:1.45;flex:1;min-width:220px}
+  .eciline .eci-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:9px}
+  .eciline .eci-src a{color:var(--green)}
+
+  /* opportunities card (Q5) */
+  .oppcard{border:1px solid var(--line-2);border-radius:10px;padding:14px 16px;margin:12px 0 6px;background:var(--paper-2)}
+  .oppcard .opp-h{font-family:var(--serif);font-size:16px;color:var(--ink);margin-bottom:3px}
+  .oppcard .opp-d{font-size:12.5px;color:var(--ink-2);line-height:1.45;max-width:62ch}
+  .oppcard .opp-list{margin:10px 0 4px;padding-left:20px;columns:2;column-gap:26px}
+  @media(max-width:560px){.oppcard .opp-list{columns:1}}
+  .oppcard .opp-list li{font-size:13.5px;color:var(--ink);margin-bottom:6px;line-height:1.35;break-inside:avoid}
+  .oppcard .opp-hs{font-family:var(--mono);font-size:9.5px;color:var(--mut)}
+  .oppcard .opp-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:6px}
+  .oppcard .opp-src a{color:var(--green)}
+  .oc-longrun{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:8px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:2px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
+  .oc-longrun b{color:var(--green-d)} .oc-longrun a{color:var(--green)}
 
   /* forward line */
   .fwdline{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:10px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:2px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
@@ -362,7 +405,6 @@
   </nav>
 </div></header>
 
-<div class="marketstrip"><div class="inner" id="marketstrip"></div></div>
 <nav class="pillnav" id="pillnav"></nav>
 
 <div class="briefing">
@@ -379,7 +421,10 @@
         It elects a president every six years—now <b>Claudia Sheinbaum (Morena)</b>, through 2030.<a class="ref" href="#q7" title="INE; Presidencia">3</a>
       </p>
       <div class="factstrip" id="factstrip"></div>
+      <p class="bottomline"><span class="bl-k">The bottom line</span> — <b>sound money</b> (inflation near Banxico's target, a firm peso), <b>weak growth</b>, and <b>near-total dependence on the United States</b>. The swing factor is the unresolved 2026 USMCA review.</p>
     </section>
+
+    <div class="lateststrip" id="lateststrip"></div>
 
     <section id="q2">
       <div class="board-lbl">
@@ -400,17 +445,6 @@
           <div class="sk-i"><span class="sk-vs">vs …</span><span class="sk-d">every headline number carries one comparison — its own history, a peer country, or a target. Green is the only "live" colour on the page.</span></div>
         </div>
       </details>
-    </section>
-
-    <section class="coverband" id="coverband">
-      <div>
-        <div class="cb-h"><span class="k">What to watch</span><a href="#q10">Full calendar →</a></div>
-        <div id="watch-cover"></div>
-      </div>
-      <div class="wire-latest">
-        <div class="cb-h"><span class="k">The Wire — latest</span><a href="#q12">All headlines →</a></div>
-        <div id="wire-latest"></div>
-      </div>
     </section>
 
     <section class="contents" id="contents">
@@ -444,7 +478,7 @@ const enNum=(n)=>Number(n).toLocaleString('en-US');
 async function J(p){const r=await fetch(p);if(!r.ok)throw new Error(p+' '+r.status);return r.json();}
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 const S={};
-let POV=null,CRI=null,REG={},NAT={},HEALTH=null,OUTLOOK=null,NEWS=null,EVENTS=null,SECTORS=null;
+let POV=null,CRI=null,REG={},NAT={},HEALTH=null,OUTLOOK=null,NEWS=null,EVENTS=null,SECTORS=null,COMPLEXITY=null;
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MONL=['January','February','March','April','May','June','July','August','September','October','November','December'];
 function monLong(iso){const d=new Date(iso);return isNaN(d)?iso:MONL[d.getUTCMonth()]+' '+d.getUTCFullYear();}
@@ -479,7 +513,9 @@ function stampFor(m){
 }
 function valueAgo(data,days){ const last=new Date(data[data.length-1].date), tgt=last-days*864e5; let best=data[0],bd=1e18; for(const p of data){const d=Math.abs(new Date(p.date)-tgt);if(d<bd){bd=d;best=p;}} return best.value; }
 function sparkSVG(data){ const pts=data.slice(-24); if(pts.length<8)return ''; const vals=pts.map(p=>p.value),mn=Math.min(...vals),mx=Math.max(...vals),rng=(mx-mn)||1; const W=92,H=26,px=(i)=>i/(pts.length-1)*(W-4)+2,py=(v)=>H-3-((v-mn)/rng)*(H-6); const d=pts.map((p,i)=>(i?'L':'M')+px(i).toFixed(1)+' '+py(p.value).toFixed(1)).join(' '); const lx=px(pts.length-1),ly=py(pts[pts.length-1].value); return `<svg class="spark" width="${W}" height="${H}"><path d="${d}"/><circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2.4"/></svg>`; }
-const srcDetails=(m)=>`<details><summary></summary><div class="src-body">Source: <a href="${m.sourceUrl}" target="_blank" rel="noopener">${m.source}</a><br>Vintage: ${m.vintage} · retrieved ${new Date(m.fetchedAt).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})}<br>License: ${m.license}</div></details>`;
+// Send source links to a human-readable page, not the raw API endpoint.
+function humanSrc(u){ if(!u)return u; if(/SieAPIRest/i.test(u))return 'https://www.banxico.org.mx/SieInternet/'; if(/apidatamexico|tesseract|economia\.gob\.mx\/api/i.test(u))return 'https://www.economia.gob.mx/datamexico/'; return u; }
+const srcDetails=(m)=>`<details><summary></summary><div class="src-body">Source: <a href="${humanSrc(m.sourceUrl)}" target="_blank" rel="noopener">${m.source}</a><br>Vintage: ${m.vintage} · retrieved ${new Date(m.fetchedAt).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})}<br>License: ${m.license}</div></details>`;
 
 /* ============ CHART ENGINE (bigger, value-labels, end-labels, hover) ============ */
 let CID=0; const CHARTS={};
@@ -533,14 +569,15 @@ function barChart(items,opts){
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">${g}</svg>`;
 }
 // Horizontal ranked bars. items=[{label,value,hi}] value in %
-function hbarChart(items){
-  const W=720,rowH=40,pl=150,pr=60,pt=8,H=pt*2+items.length*rowH;
+function hbarChart(items,opts){
+  opts=opts||{}; const vfmt=opts.vfmt||((v)=>v+'%');
+  const W=720,rowH=items.length>7?34:40,pl=156,pr=64,pt=8,H=pt*2+items.length*rowH;
   const mx=Math.max(...items.map(d=>d.value));
   let g='';
-  items.forEach((d,i)=>{const y=pt+i*rowH+7,bw=(d.value/mx)*(W-pl-pr);
+  items.forEach((d,i)=>{const y=pt+i*rowH+(rowH-24)/2,bw=(d.value/mx)*(W-pl-pr);
     g+=`<text class="cat" x="${pl-10}" y="${(y+16).toFixed(1)}" text-anchor="end">${d.label}</text>`;
     g+=`<rect class="${d.hi?'bar2':'bar'}" x="${pl}" y="${y}" width="${bw.toFixed(1)}" height="24" rx="2"/>`;
-    g+=`<text class="vlab" x="${(pl+bw+7).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="var(--ink)">${d.value}%</text>`;});
+    g+=`<text class="vlab" x="${(pl+bw+7).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="var(--ink)">${vfmt(d.value)}</text>`;});
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">${g}</svg>`;
 }
 // exhibit frame; optional table alt for chart<->table toggle
@@ -639,14 +676,15 @@ function renderBoard(){
   if(times.length)$('#board-asof').textContent='as of '+new Date(Math.max(...times)).toLocaleDateString('en-US',{month:'short',day:'numeric'});
 }
 
-/* ============ MARKETS STRIP ============ */
-function renderMarketStrip(){
-  const host=$('#marketstrip'); const items=[];
-  const peso=S['banxico-usdmxn-fix']; if(peso){const a=dirArrow(peso);items.push({l:'Peso',v:peso.data.at(-1).value.toFixed(2),u:'MXN/USD',d:a,dc:a==='▲'?'dn':a==='▼'?'up':'fl'});}
-  const rate=S['banxico-tasa-objetivo']; if(rate)items.push({l:'Policy rate',v:rate.data.at(-1).value.toFixed(2)+'%',u:'',d:'',dc:''});
-  const inf=S['banxico-inflacion']; if(inf){const v=inf.data.at(-1).value;items.push({l:'Inflation',v:v.toFixed(1)+'%',u:'vs 3% target',d:v>4?'▲':'',dc:v>4?'dn':'fl'});}
-  const nb=nextDecision(); if(nb)items.push({l:'Next Banxico',v:dayShort(nb.date),u:'rate decision',d:'',dc:''});
-  host.innerHTML=items.map(i=>`<div class="mkt"><span class="mk-l">${i.l}</span><span class="mk-v">${i.v}</span>${i.u?`<span class="mk-l">${i.u}</span>`:''}${i.d?`<span class="mk-d ${i.dc}">${i.d}</span>`:''}</div>`).join('');
+/* ============ LATEST LINE (compact, replaces cover band) ============ */
+function renderLatestLine(){
+  const host=$('#lateststrip'); if(!host)return;
+  const n=(NEWS&&NEWS.articles)||[];
+  const badge=$('#nav-wire'); if(badge&&n.length)badge.innerHTML=`<span class="dot"></span>The Wire ·${n.length}`;
+  if(!n.length){host.innerHTML='';return;}
+  host.innerHTML=`<span class="ll-k"><span class="dot"></span>Latest</span>`+
+    n.slice(0,3).map((a,i)=>`${i?'<span class="ll-sep">·</span>':''}<a href="${a.url}" target="_blank" rel="noopener" title="${a.domain||''}">${a.title}</a>`).join('')+
+    `<span class="ll-sep">·</span><a class="ll-all" href="#q12">The Wire →</a>`;
 }
 function nextEvent(kind){ if(!EVENTS||!EVENTS.events)return null; const now=Date.now(); return EVENTS.events.filter(e=>(!kind||e.kind===kind)&&new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date))[0]||null; }
 function nextDecision(){ if(!EVENTS||!EVENTS.events)return null; const now=Date.now(); return EVENTS.events.filter(e=>e.kind==='banxico'&&/monetary-policy decision/i.test(e.label)&&new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date))[0]||null; }
@@ -673,12 +711,6 @@ function renderContents(){
 
 /* ============ WHAT TO WATCH ============ */
 function evDate(e){ const d=new Date(e.date); return {mo:MON[d.getUTCMonth()],day:d.getUTCDate(),y:d.getUTCFullYear()}; }
-function renderWatchCover(){
-  const host=$('#watch-cover'); if(!host)return;
-  if(!EVENTS||!EVENTS.events||!EVENTS.events.length){ host.innerHTML=`<div class="cb-empty">Calendar loading…</div>`; return; }
-  const now=Date.now(); const up=EVENTS.events.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
-  host.innerHTML=up.map(e=>{const d=evDate(e);return `<div class="watchrow"><div class="wd">${d.mo} ${d.day}<small>${d.y}${e.approx?' ~':''}</small></div><div class="wk ${e.kind}"></div><div class="wb"><div class="wt">${e.label}</div><div class="wm">${e.mechanism||''}</div></div></div>`;}).join('');
-}
 function renderWatchFull(){
   if(!EVENTS||!EVENTS.events||!EVENTS.events.length) return `<div class="cb-empty">Calendar not yet loaded.</div>`;
   const now=Date.now(); const up=EVENTS.events.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date));
@@ -687,13 +719,6 @@ function renderWatchFull(){
 
 /* ============ WIRE ============ */
 function tagChip(t){return `<span class="wtag ${t||''}">${t||'econ'}</span>`;}
-function renderWireLatest(){
-  const host=$('#wire-latest'); if(!host)return;
-  const n=(NEWS&&NEWS.articles)||[];
-  const badge=$('#nav-wire'); if(badge&&n.length)badge.innerHTML=`<span class="dot"></span>The Wire ·${n.length}`;
-  if(!n.length){host.querySelector('#wire-latest')||(host.innerHTML=`<div class="cb-empty">No headlines yet — the next scheduled run will post them here.</div>`);return;}
-  host.innerHTML=n.slice(0,5).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';return `<div class="wl">${tagChip(a.tag)}<div><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('');
-}
 function renderWireFull(){
   const n=(NEWS&&NEWS.articles)||[];
   if(!n.length) return construccion({l:'The Wire — live headlines',src:'GDELT (English-language index)',cad:'continuous',eta:'No headlines yet — the next scheduled run will post them here.'});
@@ -746,6 +771,24 @@ function iedRow(){
 function sectionHead(no,title,dek){ return `<div class="section-head"><span class="no">${no}</span><h2>${title}</h2>${dek?`<p class="dek">${dek}</p>`:''}</div>`; }
 function fwd(html){ return `<div class="fwdline">Forward · ${html}</div>`; }
 function bandHead(t){ return `<div class="band"><span class="bl">${t}</span></div>`; }
+// Economic-complexity stat block (Harvard Growth Lab) — products-first, rank not raw score.
+function eciBlock(){
+  if(!COMPLEXITY||!COMPLEXITY.eci)return '';
+  const e=COMPLEXITY.eci,m=COMPLEXITY.meta||{};
+  const top=(COMPLEXITY.topExports||[]).slice(0,3).map(x=>x.product.toLowerCase()).join(', ')||'cars, computers, and medical instruments';
+  const noteShort=(e.note||'').split('. ')[0].replace(/\.$/,'');
+  return `<div class="eciline"><p class="eci-h">Mexico sells the world ${top} — not oil. That mix carries more knowhow than its income would predict — usually a sign of faster growth, though Mexico's own near-term growth stays weak (its export basket is getting <em>less</em> diversified even as it gets more complex).</p>`+
+    `<div class="eci-stat"><span class="eci-v">${e.rank}<small>th</small></span><span class="eci-l">of ${e.of} on <b>economic complexity</b> — how much knowhow a country's exports embody${noteShort?`. ${noteShort}`:''}. <span class="stamp">ANNUAL · ${m.year||'2024'}</span></span></div>`+
+    `<div class="eci-src">Source: <a href="${m.sourceUrl||'https://atlas.hks.harvard.edu'}" target="_blank" rel="noopener">${m.source||'Harvard Growth Lab · UN COMTRADE'}</a>${e.rankDecadeAgo?` · up from ${e.rankDecadeAgo}th a decade ago`:''}.</div></div>`;
+}
+// What Mexico could make next (Harvard diversification model) — the honest forward for Q5.
+function oppsBlock(){
+  if(!COMPLEXITY||!COMPLEXITY.opportunities||!COMPLEXITY.opportunities.length)return '';
+  return `<div class="oppcard"><div class="opp-h">What the complexity model says Mexico could make next</div>`+
+    `<div class="opp-d">High-complexity products close to what Mexico already knows how to make — Harvard's diversification model ranks these among the best-fit next steps.</div>`+
+    `<ol class="opp-list">`+COMPLEXITY.opportunities.map(o=>`<li>${o.product}${o.hs?` <span class="opp-hs">HS ${o.hs}</span>`:''}</li>`).join('')+`</ol>`+
+    `<div class="opp-src">Source: <a href="https://atlas.hks.harvard.edu/countries/484" target="_blank" rel="noopener">Harvard Growth Lab — Strategy Space</a> <span class="stamp">ANNUAL · 2024</span></div></div>`;
+}
 
 /* ============ SECTIONS ============ */
 function renderSections(){
@@ -760,7 +803,8 @@ function renderSections(){
       const rr=rate.data.filter(p=>new Date(p.date)>=new Date(Date.now()-2.2*365*864e5)).filter((_,i)=>i%6===0);
       const ii=inf.data.slice(-Math.min(inf.data.length,30));
       const svg=timeChart([{name:'Inflation',color:'var(--ink)',pts:ii},{name:'Policy rate',color:'green',pts:rr.length?rr:rate.data.slice(-30)}],{unit:'%',band:[2,4],bandLabel:'3% ± 1 target'});
-      const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p,i)=>[qtrOf(p.date),p.value.toFixed(1),(rate.data.at(-1).value).toFixed(2)]));
+      const rateAt=(d)=>{const t=+new Date(d);let best=rate.data[0],bd=1e18;for(const q of rate.data){const dd=Math.abs(+new Date(q.date)-t);if(dd<bd){bd=dd;best=q;}}return best.value;};
+      const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p)=>[qtrOf(p.date),p.value.toFixed(1),rateAt(p.date).toFixed(2)]));
       ex=exhibit('3.1','Banxico is holding rates high while inflation stays above target','Policy rate vs headline inflation, % · shaded band = 3% ± 1 target',svg,
         `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> · INPC + target rate.`,tbl,true);
     }
@@ -773,7 +817,8 @@ function renderSections(){
   // Q4 growth
   {
     const g=S['banxico-pib-crecimiento'];
-    let ex1=g?exhibit('4.1','Growth has slowed to 0.4% a year','Real GDP, % change year on year · zero line = no growth',
+    const gval=g?g.data.at(-1).value:0.4;
+    let ex1=g?exhibit('4.1',`Growth has slowed to about ${gval.toFixed(1)}% a year`,'Real GDP, % change year on year · zero line = no growth',
       timeChart([{name:'GDP',color:'var(--ink)',pts:g.data.slice(-20)}],{unit:'%',zero:true}),
       `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México / INEGI</a> · real GDP (base 2018), YoY.`):'';
     const dest=[{label:'United States',value:80,hi:true},{label:'Canada',value:3},{label:'China',value:2},{label:'Rest of world',value:15}];
@@ -782,27 +827,37 @@ function renderSections(){
       `Source: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI / Banxico</a>, balance of trade.`,
       dataTable(['Destination','Share'],dest.map(d=>[d.label,d.value+'%'])),true);
     let ex3='';
-    if(SECTORS&&SECTORS.sectors){
+    if(COMPLEXITY&&COMPLEXITY.topExports){
+      const items=COMPLEXITY.topExports.map((x,i)=>({label:x.product,value:x.usd_bn,hi:i===0}));
+      const tbl=dataTable(['Product','Exports','HS'],COMPLEXITY.topExports.map(x=>[x.product,'$'+x.usd_bn+'B',x.hs]));
+      ex3=exhibit('4.3','Cars, computers, auto parts — Mexico sells the world manufactured goods','Top goods exports, 2024, US$ billions',
+        hbarChart(items,{vfmt:(v)=>'$'+v+'B'}),
+        `Source: <a href="${COMPLEXITY.meta.sourceUrl}" target="_blank" rel="noopener">Observatory of Economic Complexity / UN COMTRADE (2024)</a>. Manufactured goods are ~90% of exports.`,tbl,true);
+    } else if(SECTORS&&SECTORS.sectors){
       const items=SECTORS.sectors.map(s=>({label:s.label,value:s.share,hi:s.hi}));
       const tbl=dataTable(['Sector','Share','US$ bn'],SECTORS.sectors.map(s=>[s.label,s.share+'%',s.usd_bn?'$'+s.usd_bn+'bn':'—']));
       ex3=exhibit('4.3','Mexico sells factories, not commodities — cars lead','Goods exports by sector, share of total, 2024',hbarChart(items),
         `Source: <a href="${SECTORS.meta.sourceUrl}" target="_blank" rel="noopener">${SECTORS.meta.source}</a>. ${SECTORS.meta.note}`,tbl,true);
     }
-    H+=`<section class="dim" id="q4">${sectionHead('Q4','Is the economy growing — and on whom does it depend?','Growth is weak—about 0.4% a year—and almost all of it depends on demand from the United States.')}`+
-      ex1+ex2+ex3+ mrow({id:'banxico-pib-crecimiento',label:'Real GDP growth (annual)'})+mrow({id:'banxico-igae',label:'IGAE — monthly activity (annual)'})+
+    H+=`<section class="dim" id="q4">${sectionHead('Q4','Is the economy growing — and on whom does it depend?',`Growth is weak—about ${gval.toFixed(1)}% a year—and almost all of it depends on demand from the United States.`)}`+
+      ex2+ eciBlock()+
+      mrow({id:'banxico-pib-crecimiento',label:'Real GDP growth (annual)'})+mrow({id:'banxico-igae',label:'IGAE — monthly activity (annual)'})+
       fwd(`2026 forecasts split: <b>Banxico survey +1.1%</b>, IMF +1.6%, OECD +0.8% — the near-term driver is US demand. <a href="#q10">Outlook →</a>`)+
+      `<details class="more"><summary>More on this question — growth over time & the full export mix</summary>`+ex1+ex3+`</details>`+
       `<div class="ctxline">Gloss: <b>IGAE</b> = INEGI's monthly GDP proxy · <b>INEGI</b> = the national statistics office. Context: $${(S['wb-gdp-usd']?S['wb-gdp-usd'].data.at(-1).value/1e12:1.9).toFixed(2)}T economy · $${S['wb-gdp-per-capita']?enNum(Math.round(S['wb-gdp-per-capita'].data.at(-1).value)):'—'} per capita (World Bank, 2025).</div></section>`;
   }
   // Q5 nearshoring
   {
     const s=S['se-ied'];
-    let ex=s?exhibit('5.1','FDI is high and steady—but flat, not the boom headlines claim','Foreign direct investment, quarterly flow, bn USD',
+    let ex=s?exhibit('5.1','Through 2024, FDI held high but flat — not the boom the headlines claimed','Foreign direct investment, quarterly flow, bn USD',
       barChart(s.data.slice(-16).map(p=>({label:p.date,value:p.value/1000})),{unit:'$',xfmt:(d)=>qtrOf(d),everyLabel:4}),
       `Source: <a href="https://www.economia.gob.mx/datamexico/" target="_blank" rel="noopener">Secretaría de Economía (Data México)</a>, cube fdi_9_quarter.`):'';
-    H+=`<section class="dim" id="q5">${sectionHead('Q5','Is the nearshoring story real?','Foreign investment is high but flat—most of it is reinvested earnings, not new factories.')}`+
+    H+=`<section class="dim" id="q5">${sectionHead('Q5','Is the nearshoring story real?','Through 2024, foreign investment ran high but flat — mostly reinvested earnings, not new factories. Official flows lag, so the current picture is not yet in.')}`+
+      `<div class="honesty">Data caveat: Mexico's official FDI series lags by several quarters — the latest wired figures are through <b>2024</b>. Treat the "flat" read as history, not this quarter.</div>`+
       ex+ iedRow()+
       `<div class="honesty">Honesty note: "announcement" trackers count pledges, which often never land. This shows recorded FDI only. Most is reinvested earnings from firms already here — real, but not a wave of new factories.</div>`+
       construccion({l:'Exports & trade balance (monthly)',src:'Banxico / INEGI (balanza comercial)',cad:'monthly'})+
+      oppsBlock()+
       fwd(`Banxico's survey sees FDI broadly steady; the swing factor is the <b>USMCA review</b> — <a href="#q8">Q8</a>.`)+`</section>`;
   }
   // Q6 households
@@ -812,7 +867,7 @@ function renderSections(){
       `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> / CONASAMI.`):'';
     H+=`<section class="dim" id="q6">${sectionHead('Q6','Are ordinary Mexicans getting better off?','Wages are rising by policy and remittances are near records—but weak growth caps how far that goes.')}`+
       ex1+ mrow({id:'banxico-salario-minimo',label:'General minimum wage'})+mrow({id:'banxico-remesas',label:'Remittances (family, monthly)'})+mrow({id:'cre-gasolina-regular',label:'Gasoline · regular (national avg)'})+
-      (NAT.pov!=null?staticRow({label:'Poverty (national)',value:NAT.pov.toFixed(1),unit:'% of population',stamp:'SNAPSHOT · 2020',verdict:'Population-weighted national rate from the municipal census layer. Poverty fell through 2018–2024; the Atlas shows how unevenly.',bench:'vs ~44% in 2012',srcName:'CONEVAL / INEGI',srcUrl:'https://www.coneval.org.mx'}):'')+
+      staticRow({label:'Poverty (national)',value:'29.6',unit:'% of population',stamp:'ANNUAL · 2024',verdict:'Multidimensional poverty fell to <b>29.6%</b> in 2024 — the lowest on record, down 12.3 points from 41.9% in 2018 (13.4M fewer people in poverty). INEGI\'s first measurement after CONEVAL.',bench:'vs 41.9% in 2018',srcName:'INEGI — Multidimensional Poverty 2024',srcUrl:'https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2025/pm/pm2025_08.pdf'})+
       construccion({l:'Formal jobs & average formal wage (IMSS)',src:'IMSS (Datos Abiertos)',cad:'monthly',eta:'National totals — connecting next.'})+
       fwd(`No official forecast exists for household welfare. Real wages keep rising by policy, but weak GDP growth (<a href="#q4">Q4</a>) caps the pace.`)+
       `<div class="ctxline">Gloss: <b>CONEVAL</b> = the federal poverty agency · <b>IMSS</b> = social security, i.e. the formal-jobs registry · <b>remittances</b> = money Mexicans abroad send home.</div></section>`;
@@ -840,16 +895,11 @@ function renderSections(){
     fwd(`Forward here is a schedule — the <b>USMCA review timeline</b> is the lever to watch. Pull it in the model — <a href="#q11">"USMCA review fails" ↓</a>.`)+`</section>`;
   // Q9 security
   {
-    let seg='';
-    if(NAT.cri!=null){
-      seg=`<div class="factcard"><div class="fc-row"><span class="fc-k">Reported crime (national)</span><span class="fc-v"><b>${enNum(Math.round(NAT.cri))}</b> crimes / 100k people · <span class="stamp">MONTHLY · 2025</span></span></div>`+
-        `<div class="fc-row"><span class="fc-k">Read it carefully</span><span class="fc-v">Reports filed, not crimes committed — a large share goes unreported.</span></div></div>`+
-        `<div class="mr-bench" style="margin-top:8px">Mexico's homicide rate (~24/100k) is well above the US (~6) and below the most violent Latin American peers. It has eased from the 2018–19 peak.</div>`;
-    }
-    H+=`<section class="dim" id="q9">${sectionHead('Q9','How dangerous is Mexico, really — and where?','Violence is real but concentrated—the national rate hides enormous variation by place.')}`+
-      seg+
-      `<a class="teaser" href="./atlas.html" style="margin-top:12px"><div class="tz-body"><div class="tz-k">The moat nobody else assembles</div><div class="tz-h">See any of 2,469 municipalities →</div><div class="tz-d">The national number hides everything. In the Atlas, search or tap a municipality for its crime and poverty versus the national benchmark.</div><span class="tz-go">Open the Atlas →</span></div></a>`+
-      fwd(`No credible short-term forecast exists for violence. Security is tracked here as a level and a place — never predicted as a number.`)+`</section>`;
+    H+=`<section class="dim" id="q9">${sectionHead('Q9','How dangerous is Mexico, really — and where?','The honest security number is the homicide rate — about 26 per 100,000 in 2024, easing from the 2018–19 peak.')}`+
+      staticRow({label:'Homicide rate (national)',value:'~26',unit:'per 100,000 · 2024',stamp:'ANNUAL · 2024',verdict:'The one danger metric that compares across places. Well above the US (~6) and below the most violent Latin American peers; down from the 2018–19 peak, and falling sharply through 2025 (Sept 2025 was the lowest in nine years).',bench:'vs US ~6 · peak ~29 in 2018',srcName:'SESNSP / INEGI',srcUrl:'https://www.gob.mx/sesnsp'})+
+      `<div class="honesty">Why there's no per-municipality crime map: <b>total reported crime measures how often people file police reports, not how dangerous a place is.</b> With ~90% of crime unreported, that inverts — quiet tourist towns with diligent reporting look "worse" than places where almost no one files. So the Atlas maps <b>poverty</b>, which is measured directly; municipal homicide data is the honest next layer.</div>`+
+      `<a class="teaser" href="./atlas.html" style="margin-top:12px"><div class="tz-body"><div class="tz-k">The moat nobody else assembles</div><div class="tz-h">Poverty in any of 2,469 municipalities →</div><div class="tz-d">The national number hides everything. In the Atlas, search or tap a municipality for its poverty versus the national benchmark.</div><span class="tz-go">Open the Atlas →</span></div></a>`+
+      fwd(`No credible short-term forecast exists for violence. Security is tracked here as a level — never predicted as a number.`)+`</section>`;
   }
   H+=bandHead('Forward');
   // Q10 outlook + what to watch
@@ -886,7 +936,10 @@ function renderOutlookHtml(){
     return `<tr><td class="k">${r.metric}<small>${r.unit}</small></td>`+cols.map(c=>`<td class="num">${r[c.key]||'—'}</td>`).join('')+`<td class="spread">${spread}</td></tr>`;
   }).join('');
   const notes=OUTLOOK.rows.filter(r=>r.note).map(r=>`<b>${r.metric}:</b> ${r.note}`).join('<br>');
-  return `<div class="octbl"><table class="oc"><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table><div class="oc-note">${notes}</div></div>`+
+  const ord=(n)=>{const s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);};
+  const p=COMPLEXITY&&COMPLEXITY.projection2034;
+  const lr=p?`<div class="oc-longrun"><b>Longer horizon</b> — Harvard's Growth Lab projects <b>${p.value}%/yr</b> through 2034 (${ord(p.rank)} of ${p.of} — the top half of countries). <a href="https://atlas.hks.harvard.edu/growth-projections" target="_blank" rel="noopener">Growth Lab →</a></div>`:'';
+  return `<div class="octbl"><table class="oc"><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table><div class="oc-note">${notes}</div></div>`+lr+
     `<div class="oc-src">${OUTLOOK.meta.note}<br>`+cols.map(c=>`<a href="${c.url}" target="_blank" rel="noopener">${c.srcName}</a>`).join(' · ')+`</div>`;
 }
 
@@ -926,7 +979,7 @@ function wireScroll(){
 /* ============ boot ============ */
 (async()=>{
   const SER=['banxico-usdmxn-fix','banxico-inflacion','banxico-tasa-objetivo','banxico-remesas','banxico-reservas','cre-gasolina-regular','wb-gdp-usd','wb-gdp-per-capita','wb-population','wb-unemployment','banxico-pib-crecimiento','banxico-igae','banxico-inflacion-subyacente','banxico-salario-minimo','se-ied'];
-  const [health,reg,pov,cri,outlook,news,events,sectors,...ser]=await Promise.all([
+  const [health,reg,pov,cri,outlook,news,events,sectors,complexity,...ser]=await Promise.all([
     J('./data/health.json').catch(()=>null),
     J('./data/meta/municipios.json').catch(()=>({})),
     J('./data/layers/coneval-pobreza.json').catch(()=>null),
@@ -935,13 +988,14 @@ function wireScroll(){
     J('./data/news.json').catch(()=>null),
     J('./data/events.json').catch(()=>null),
     J('./data/exports-sectors.json').catch(()=>null),
+    J('./data/complexity.json').catch(()=>null),
     ...SER.map(id=>J('./data/series/'+id+'.json').then(s=>({id,s})).catch(()=>({id,s:null})))
   ]);
-  HEALTH=health; REG=reg.m||reg; POV=pov; CRI=cri; OUTLOOK=outlook; NEWS=news; EVENTS=events; SECTORS=sectors;
+  HEALTH=health; REG=reg.m||reg; POV=pov; CRI=cri; OUTLOOK=outlook; NEWS=news; EVENTS=events; SECTORS=sectors; COMPLEXITY=complexity;
   ser.forEach(x=>{if(x.s)S[x.id]=x.s;});
   computeNat();
-  if(health){const ok=(health.summary&&health.summary.ok)||0;const nn=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime());const newest=nn.length?Math.max(...nn):0;$('#status').textContent=`● ${ok} live · ${newest?relTime(newest):''}`;}
-  renderRail(); renderContents(); renderFacts(); renderBoard(); renderMarketStrip(); renderWatchCover(); renderWireLatest(); renderPrimer(); renderSections(); wireScroll();
+  if(health){const ok=(health.summary&&health.summary.ok)||0;const nn=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime());const newest=nn.length?Math.max(...nn):0;$('#status').textContent=`● ${ok} sources · ${newest?'updated '+relTime(newest):''}`;}
+  renderRail(); renderContents(); renderFacts(); renderBoard(); renderLatestLine(); renderPrimer(); renderSections(); wireScroll();
 })().catch(e=>{ const h=$('#sections'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading data: '+e.message+'</p>'; });
 </script>
 </body>

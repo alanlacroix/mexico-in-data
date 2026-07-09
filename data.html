@@ -121,8 +121,8 @@ const SRC_META = {
   'cre-gasolina-premium':         { name: 'Gasoline · premium',      feeds: 'Q6 · households',            owner: 'CNE / Sener (ex-CRE)',       ownerType: 'energy',         cadence: 'Every 4h',  db: 'https://www.gob.mx/cre' },
   'cre-diesel':                   { name: 'Diesel',                  feeds: 'Q6 · households',            owner: 'CNE / Sener (ex-CRE)',       ownerType: 'energy',         cadence: 'Every 4h',  db: 'https://www.gob.mx/cre' },
   'se-ied':                       { name: 'Foreign direct investment',feeds: 'Q5 · nearshoring',          owner: 'Secretaría de Economía',     ownerType: 'national-stats', cadence: 'Quarterly', db: 'https://www.economia.gob.mx/datamexico/' },
-  'coneval-pobreza':              { name: 'Poverty by municipality', feeds: 'Atlas · Q6',                 owner: 'CONEVAL (via INEGI)',        ownerType: 'national-stats', cadence: '5-yr',      db: 'https://www.coneval.org.mx/' },
-  'sesnsp-delitos':               { name: 'Reported crime by muni.', feeds: 'Atlas · Q9',                 owner: 'SESNSP',                     ownerType: 'security',       cadence: 'Monthly',   db: 'https://www.gob.mx/sesnsp' },
+  'coneval-pobreza':              { name: 'Poverty by municipality', feeds: 'Atlas map',                  owner: 'CONEVAL (via INEGI)',        ownerType: 'national-stats', cadence: '5-yr',      db: 'https://www.coneval.org.mx/' },
+  'sesnsp-delitos':               { name: 'Reported crime by muni.', feeds: 'not mapped (see Q9)',        owner: 'SESNSP',                     ownerType: 'security',       cadence: 'Monthly',   db: 'https://www.gob.mx/sesnsp' },
   'imss-empleo':                  { name: 'Formal jobs (registered)',feeds: 'Q6 · households',            owner: 'IMSS (Datos Abiertos)',      ownerType: 'social-security',cadence: 'Monthly',   db: 'https://www.imss.gob.mx/' },
   'wb-gdp-usd':                   { name: 'GDP (current US$)',       feeds: 'Orientation · fact strip',   owner: 'World Bank',                 ownerType: 'multilateral',   cadence: 'Annual',    db: 'https://data.worldbank.org/country/mexico' },
   'wb-gdp-per-capita':            { name: 'GDP per capita (US$)',    feeds: 'Q4 · context',               owner: 'World Bank',                 ownerType: 'multilateral',   cadence: 'Annual',    db: 'https://data.worldbank.org/country/mexico' },
@@ -216,7 +216,7 @@ function host(u){try{return new URL(u).host.replace(/^www\./,'');}catch(e){retur
   const s=h.summary||{};
   $('#genl').textContent='Last pipeline run: '+when(h.generatedAt)+(h.runId?'  ·  run '+h.runId:'')+(h.geoEpoch?'  ·  geo epoch '+h.geoEpoch.epoch+' ('+h.geoEpoch.count+' municipalities)':'');
   $('#summ').innerHTML=[
-    {k:'Sources live',v:s.ok||0,c:'ok'},
+    {k:'Feeds healthy',v:s.ok||0,c:'ok'},
     {k:'Flagged',v:s.flagged||0,c:(s.flagged?'warn':'')},
     {k:'Failed',v:s.failed||0,c:(s.failed?'bad':'')},
     {k:'Behind a flag',v:s.skipped||0,c:''}

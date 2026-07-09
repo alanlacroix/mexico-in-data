@@ -29,8 +29,12 @@ const URL =
   '&mode=artlist&format=json&maxrecords=60&sort=datedesc&timespan=7d';
 
 // A second guard against off-topic bleed-through: the headline must mention
-// Mexico or a Mexico-specific entity. (GDELT relevance alone lets junk in.)
-const RELEVANT = /mexic|peso|banxico|sheinbaum|nearshor|usmca|pemex|remittanc|morena|amlo/i;
+// Mexico (the country) or a Mexico-specific entity — and must NOT be a known
+// false positive. Bare "peso" is dropped (Colombian/Argentine/Chilean/Philippine
+// pesos leaked in); "New Mexico" (the US state) is excluded explicitly.
+const RELEVANT = /\bmexic|banxico|sheinbaum|\bpemex\b|\bmorena\b|\bamlo\b|nearshor|usmca|claudia sheinbaum/i;
+const EXCLUDE  = /new mexico/i;
+const isRelevant = (t) => RELEVANT.test(t) && !EXCLUDE.test(t);
 
 // "20260709T113000Z" -> ISO
 function seenToIso(s) {
@@ -69,7 +73,7 @@ async function main() {
   const items = [];
   for (const a of arts) {
     if (!a.url || !a.title) continue;
-    if (!RELEVANT.test(a.title)) continue;   // drop off-topic bleed-through
+    if (!isRelevant(a.title)) continue;   // drop off-topic bleed-through
     const key = (a.title || '').toLowerCase().slice(0, 60);
     if (seen.has(key)) continue;         // crude title dedupe
     seen.add(key);
