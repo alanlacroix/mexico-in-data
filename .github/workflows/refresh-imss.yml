@@ -1,0 +1,33 @@
+name: refresh-imss
+# IMSS is the crown-jewel wedge but heavy (~400MB/month) and monthly, so it runs
+# on its own cadence with ENABLE_IMSS=1. Streams the file, aggregates to municipio
+# via the frozen crosswalk (exact-or-fail), commits only the slim layer JSON.
+
+on:
+  schedule:
+    - cron: '30 13 8 * *'    # ~8th of each month (after IMSS publishes the prior month)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  imss:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run IMSS connector
+        working-directory: pipeline
+        env:
+          ENABLE_IMSS: '1'
+        run: node run.js --only imss
+      - name: Commit IMSS layer
+        run: |
+          git config user.name  "mexico-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || { git commit -m "data: IMSS monthly refresh $(date -u +%Y-%m)"; git push; }

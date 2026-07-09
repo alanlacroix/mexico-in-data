@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "updated": "2026-07-09",
+    "note": "Named, dated forecasts from three independent houses. We show each one and the spread — we never average across houses, and we never publish our own number as data.",
+    "columns": [
+      { "key": "banxico", "label": "Banxico survey", "sub": "median of ~40 private banks", "date": "Jul 1, 2026", "url": "https://www.banxico.org.mx/publicaciones-y-prensa/encuestas-sobre-las-expectativas-de-los-especialis/", "srcName": "Banco de México — Survey of Private-Sector Expectations, June 2026 (released Jul 1, 2026)" },
+      { "key": "imf", "label": "IMF", "sub": "World Economic Outlook", "date": "Apr 2026", "url": "https://www.imf.org/external/datamapper/NGDP_RPCH@WEO/MEX", "srcName": "IMF World Economic Outlook, April 2026 (July update noted where it differs)" },
+      { "key": "oecd", "label": "OECD", "sub": "Economic Outlook 2026/1", "date": "Jun 2026", "url": "https://www.oecd.org/en/publications/oecd-economic-outlook-volume-2026-issue-1_2d1956f0-en/full-report/mexico_5d1c868d.html", "srcName": "OECD Economic Outlook, Volume 2026 Issue 1 (June 2026)" }
+    ]
+  },
+  "rows": [
+    { "metric": "GDP growth, 2026", "unit": "% real", "banxico": "1.1", "imf": "1.6", "oecd": "0.8", "note": "IMF's July 2026 update trimmed 2026 to 1.2%. The Apr WEO figure (1.6%) is the last full publication; OECD is the low mark." },
+    { "metric": "GDP growth, 2027", "unit": "% real", "banxico": "1.8", "imf": "2.2", "oecd": "1.8", "note": "All three see a modest 2027 recovery on firmer US demand." },
+    { "metric": "Inflation, end-2026", "unit": "% headline", "banxico": "4.2", "imf": "—", "oecd": "—", "note": "Above Banxico's 3% ± 1 target band. OECD sees inflation easing to 3.2% only by 2027; IMF does not publish a clean year-end print." },
+    { "metric": "Policy rate, end-2026", "unit": "%", "banxico": "6.50", "imf": "—", "oecd": "—", "note": "Survey sees Banxico on hold at 6.50% through year-end and into 2027." },
+    { "metric": "Peso, end-2026", "unit": "MXN / USD", "banxico": "17.95", "imf": "—", "oecd": "—", "note": "Survey sees the peso softening modestly to 17.95 by year-end, ~18.50 in 2027." }
+  ]
+}

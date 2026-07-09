@@ -1,0 +1,21 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Secrets — free API tokens live here locally, never in the repo (CI uses secrets)
+pipeline/.env
+
+# Pipeline run artifacts (regenerated each run)
+pipeline/alerts.json
+pipeline/.lastgood/
+
+# Geo-epoch RAW reference scratch (large, regenerable). The FROZEN, human-reviewed
+# artifacts that the runtime depends on ARE committed:
+#   pipeline/crosswalks/*.frozen.json   (the exact-or-fail lookups)
+#   pipeline/crosswalks/overrides/*     (human-reviewed ambiguity fixes)
+#   data/geo/municipios.topojson        (the map geometry for this geo-epoch)
+pipeline/reference/
+
+# OS
+.DS_Store
+private/

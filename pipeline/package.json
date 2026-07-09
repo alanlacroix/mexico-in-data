@@ -1,0 +1,14 @@
+{
+  "name": "mexico-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Accuracy-first data-connector spine for the Mexico site. Deterministic code only — no LLM in the number path.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "refresh": "node run.js",
+    "refresh:one": "node run.js --only",
+    "build:crosswalks": "node build-crosswalks.js",
+    "health": "node -e \"import('node:fs').then(f=>console.log(f.readFileSync('../data/health.json','utf8')))\""
+  }
+}

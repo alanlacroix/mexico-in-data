@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Atlas — Mexico, in data</title>
+<meta name="description" content="Search or tap any of Mexico's 2,469 municipalities for its poverty and reported crime versus the national benchmark. Official data, dated and sourced." />
+<meta name="theme-color" content="#ffffff" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a7d4d'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Georgia,serif'%3EM%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="./design/mckinsey-mx.css" />
+<style>
+  :root{--ink-3:#555}
+  body{font-size:16px}
+  .wrap{max-width:820px;margin:0 auto;padding:0 clamp(16px,5vw,32px)}
+  header.mast{border-bottom:1.5px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);z-index:40}
+  header.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(16px,5vw,32px)}
+  header .brand{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink);letter-spacing:-.01em;text-decoration:none}
+  header .brand .u{border-bottom:2px solid var(--green);padding-bottom:1px}
+  header .mnav{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px}
+  header .mnav a{color:var(--mut);text-decoration:none;text-transform:uppercase;letter-spacing:.04em}
+  header .mnav a.here{color:var(--green-d)}
+  header .mnav a:hover{color:var(--green-d)}
+  .stamp{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+  .hero{padding:22px 0 4px}
+  .hero h1{font-family:var(--serif);font-size:clamp(26px,6vw,38px);line-height:1.04;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
+  .hero .dek{font-size:15px;color:var(--ink-2);margin-top:10px;max-width:64ch}
+  .searchhelp{font-family:var(--mono);font-size:11px;color:var(--mut);margin:18px 0 8px;letter-spacing:.02em}
+  .searchbox{margin-top:0;position:relative;max-width:520px}
+  .searchbox .mag{position:absolute;left:17px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--mut);pointer-events:none}
+  .searchbox input{width:100%;padding:16px 18px 16px 46px;border:1.5px solid var(--line-2);border-radius:12px;font-family:var(--sans);font-size:16px;background:var(--paper);color:var(--ink)}
+  .searchbox input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-bg)}
+  .sugg{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--paper);border:1px solid var(--line-2);border-radius:11px;box-shadow:0 10px 30px rgba(0,0,0,.13);z-index:30;overflow:hidden}
+  .sugg div{padding:11px 15px;cursor:pointer;font-size:15px;border-bottom:1px solid var(--line);color:var(--ink)}
+  .sugg div:last-child{border-bottom:none}.sugg div.hi{background:var(--green-bg)}
+  .sugg .s-ent{color:var(--mut);font-size:12.5px}
+  .subactions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:11px}
+  .geobtn{font-size:13px;padding:9px 13px;border:1.5px solid var(--line-2);background:var(--paper);border-radius:10px;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .geobtn:hover{border-color:var(--green);color:var(--green-d)}.geobtn svg{width:13px;height:13px}
+  .chip{font-size:13px;padding:7px 12px;border:1px solid var(--line-2);border-radius:999px;background:var(--paper);color:var(--ink-2);cursor:pointer}
+  .chip:hover{border-color:var(--green);color:var(--green-d)}
+  .ficha{margin:16px 0 6px;border:1px solid var(--line-2);border-radius:13px;overflow:hidden;opacity:0;transform:translateY(8px)}
+  .ficha.in{opacity:1;transform:none;transition:.4s}
+  @media(prefers-reduced-motion:reduce){.ficha,.ficha.in{opacity:1;transform:none;transition:none}}
+  .ficha .fhead{padding:16px 18px 13px;border-bottom:1px solid var(--line);background:var(--paper-2)}
+  .ficha .fh-name{font-family:var(--serif);font-size:23px;color:var(--ink);line-height:1.08}
+  .ficha .fh-ent{font-size:13.5px;color:var(--ink-2);margin-top:2px}
+  .ficha .fh-pob{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:7px}
+  .ficha .fh-x{float:right;font-size:12px;color:var(--green-d);cursor:pointer}
+  .fmetric{padding:15px 18px;border-bottom:1px solid var(--line)}
+  .fmetric:last-of-type{border-bottom:none}
+  .fmetric .fm-l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut)}
+  .fmetric .fm-v{font-family:var(--serif);font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1;margin-top:5px}
+  .fmetric .fm-v small{font-size:13px;color:var(--mut)}
+  .fmetric .fm-verdict{font-size:14px;color:var(--ink);margin-top:8px}
+  .fstrip{position:relative;height:28px;margin:11px 0 3px}
+  .fstrip .tk{position:absolute;left:0;right:0;top:12px;height:4px;background:var(--paper-3);border-radius:3px}
+  .fstrip .nat{position:absolute;top:5px;height:18px;width:1.5px;background:var(--ink-3)}
+  .fstrip .natl{position:absolute;top:-3px;font-family:var(--mono);font-size:9px;color:var(--ink-3);transform:translateX(-50%)}
+  .fstrip .dot{position:absolute;top:8px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid #fff;box-shadow:0 0 0 1px var(--green);transform:translateX(-50%);left:0;transition:left .8s cubic-bezier(.2,.7,.2,1)}
+  @media(prefers-reduced-motion:reduce){.fstrip .dot{transition:none}}
+  .fmetric .fm-rank{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin-top:7px}.fmetric .fm-rank b{color:var(--green-d)}
+  .fmetric details{margin-top:9px}.fmetric summary{font-family:var(--mono);font-size:10px;color:var(--mut);cursor:pointer;list-style:none}
+  .fmetric summary::-webkit-details-marker{display:none}.fmetric summary::before{content:"▸ source"}.fmetric details[open] summary::before{content:"▾ source"}
+  .fmetric .fs-b{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:5px;line-height:1.6}.fmetric .fs-b a{color:var(--green)}
+  .ficha .fclose{padding:12px 18px;font-size:12px;color:var(--mut);background:var(--paper-2);line-height:1.5}
+  .layer-toggle{display:flex;gap:7px;margin:16px 0 4px;flex-wrap:wrap}
+  .layer-toggle button{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;padding:6px 14px;border:1px solid var(--line-2);background:var(--paper);border-radius:999px;color:var(--ink-2);cursor:pointer}
+  .layer-toggle button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .mapstage{position:relative;touch-action:pan-y;margin-top:6px}
+  #map{width:100%;height:auto;background:var(--paper);border:1px solid var(--line);border-radius:8px;display:block}
+  #map path{stroke:#fff;stroke-width:.15;cursor:pointer;transition:fill .3s ease}
+  #map path:hover{stroke:var(--ink);stroke-width:.5}#map path.sel{stroke:var(--green);stroke-width:1.2;paint-order:stroke}
+  @media(prefers-reduced-motion:reduce){#map path{transition:none}}
+  .zoomctl{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;align-items:flex-end;gap:5px;z-index:4}
+  .zoomctl button{width:34px;height:34px;border:1px solid var(--line-2);background:rgba(255,255,255,.94);border-radius:8px;font-size:18px;cursor:pointer;color:var(--ink);display:flex;align-items:center;justify-content:center}
+  .zoomctl .zreset{width:auto;height:auto;padding:8px 12px;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;color:var(--ink)}
+  .maplegend{margin-top:12px;font-family:var(--mono);font-size:10px;color:var(--mut)}
+  .maplegend .lg-title{font-size:10.5px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+  .maplegend .lg-bar{position:relative;width:140px}
+  .maplegend .lg-swatches{display:flex}
+  .maplegend .sw{width:28px;height:12px;display:block}
+  .maplegend .lg-ticks{position:relative;height:12px;margin-top:4px}
+  .maplegend .lg-ticks span{position:absolute;transform:translateX(-50%);font-size:9px;color:var(--mut);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .maplegend .lg-foot{margin-top:9px;display:flex;align-items:center;gap:7px;font-size:9.5px;color:var(--mut)}
+  .maplegend .lg-nd{display:inline-flex;align-items:center;gap:5px}
+  .maplegend .lg-nd .nd{width:14px;height:12px;display:inline-block;background:#f7f7f4;border:1px solid var(--line)}
+  .maptip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;line-height:1.45;padding:7px 10px;border-radius:5px;opacity:0;transition:opacity .1s;z-index:50;max-width:220px}
+  .maptip b{font-family:var(--serif);font-size:13px}.maptip .ent{opacity:.6;font-size:11px}.maptip .n{color:#9fd9bd}
+  .foot{border-top:1px solid var(--line);margin:34px 0 60px;padding-top:16px;font-family:var(--mono);font-size:10.5px;color:var(--mut);line-height:1.7}
+  .foot a{color:var(--green)}.foot .fnav a{margin-right:14px;text-transform:uppercase;letter-spacing:.03em}
+  .miniback{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:11px clamp(16px,5vw,32px);display:none;align-items:center;justify-content:space-between;z-index:45}
+  .miniback.show{display:flex}.miniback .mb-n{font-family:var(--serif);font-size:15px}.miniback .mb-a{font-family:var(--mono);font-size:11px;color:#9fd9bd;cursor:pointer}
+  @media(max-width:640px){.zoomctl{display:none}}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="./">MEXICO, <span class="u">IN DATA</span></a>
+  <nav class="mnav">
+    <a href="./">Briefing</a>
+    <a href="./model.html">Model</a>
+    <a class="here" href="./atlas.html">Atlas</a>
+    <a href="./data.html">Data</a>
+  </nav>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <span class="eyebrow">The moat · 2,469 municipalities</span>
+    <h1>What's it like in one specific place?</h1>
+    <p class="dek">The national number hides everything. Search or tap a municipality for its <b>poverty</b> and <b>reported crime</b> versus the national benchmark — the "it depends where" made concrete. Every figure official, dated, and sourced.</p>
+    <p class="searchhelp">Search 2,469 municipalities — or tap the map.</p>
+    <div class="searchbox"><svg class="mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="q" type="text" inputmode="search" placeholder="Search a municipality…" autocomplete="off" aria-label="Search municipality"><div class="sugg" id="sugg" hidden></div></div>
+    <div class="subactions"><button class="geobtn" id="geo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/></svg>Use my location</button><span class="chips" id="chips"></span></div>
+    <section id="ficha-wrap" hidden></section>
+    <div class="layer-toggle" id="layer-toggle"></div>
+    <div class="mapstage"><svg id="map" viewBox="0 0 800 560" role="img" aria-label="Municipality map"></svg><div class="zoomctl"><button data-z="in" title="Zoom in">+</button><button data-z="out" title="Zoom out">−</button><button class="zreset" data-z="reset" title="See all Mexico">See all Mexico</button></div></div>
+    <div class="maplegend" id="maplegend"></div><div style="margin-top:10px" id="ex1-src"></div>
+  </section>
+  <div class="foot">
+    <div class="fnav"><a href="./">Briefing</a><a href="./model.html">The Model</a><a href="./atlas.html">The Atlas</a><a href="./data.html">Data health</a></div>
+    Municipal layers: poverty (CONEVAL/INEGI, 2020 structural) and reported crime (SESNSP, monthly). Crime figures are reports filed, not crimes committed. Formal jobs (IMSS) and remittances by municipality will appear here once verified. Nothing invented.
+  </div>
+</div>
+
+<div class="maptip" id="maptip"></div>
+<div class="miniback" id="miniback"><span class="mb-n" id="mb-name"></span><span class="mb-a" id="mb-act">See profile ↑</span></div>
+
+<script>
+const $=(s)=>document.querySelector(s);
+const enNum=(n)=>Number(n).toLocaleString('en-US');
+const norm=(s)=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+async function J(p){const r=await fetch(p);if(!r.ok)throw new Error(p+' '+r.status);return r.json();}
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const isMobile=()=>matchMedia('(max-width:640px)').matches;
+let REG={},CENT={},POV=null,CRI=null,NAT={},RANK={},SELECTED=null;
+
+function computeNat(){
+  let pw=0,pob=0; for(const c in POV.values){const p=REG[c]&&REG[c].pob;if(p){pw+=p*POV.values[c];pob+=p;}} NAT.pov=pw/pob;
+  let cd=0,cp=0; CRI._rate={}; for(const c in CRI.values){const p=REG[c]&&REG[c].pob;if(p&&p>0){cd+=CRI.values[c];cp+=p;CRI._rate[c]=CRI.values[c]/p*1e5;}} NAT.cri=cd/cp*1e5;
+  RANK.pov=Object.values(POV.values).slice().sort((a,b)=>a-b);
+  RANK.cri=Object.values(CRI._rate).slice().sort((a,b)=>a-b);
+}
+function pctBelow(sorted,v){let lo=0,hi=sorted.length;while(lo<hi){const m=(lo+hi)>>1;if(sorted[m]<v)lo=m+1;else hi=m;}return lo/sorted.length;}
+
+// ============ FICHA ============
+function fstrip(val,nat,dmax){const c=(x)=>Math.max(0,Math.min(1,x/dmax));const dp=c(val)*100,np=c(nat)*100;return `<div class="fstrip"><div class="tk"></div><div class="nat" style="left:${np}%"></div><div class="natl" style="left:${np}%">national</div><div class="dot" data-to="${dp}"></div></div>`;}
+function frow(o){return `<div class="fmetric"><div class="fm-l">${o.label} <span class="stamp">${o.stamp}</span></div><div class="fm-v">${o.valHTML}</div>${o.strip||''}${o.verdict?`<div class="fm-verdict">${o.verdict}</div>`:''}${o.rank?`<div class="fm-rank">${o.rank}</div>`:''}<details><summary></summary><div class="fs-b">${o.src}</div></details></div>`;}
+function renderFicha(cve){
+  const info=REG[cve]; if(!info)return; SELECTED=cve; location.hash='m/'+cve; try{localStorage.setItem('mx_mun',cve);}catch(e){}
+  const wrap=$('#ficha-wrap'); wrap.hidden=false; wrap.className='ficha'; let rows='';
+  const rate=CRI._rate&&CRI._rate[cve];
+  if(rate!=null){const ratio=rate/NAT.cri,below=Math.round(pctBelow(RANK.cri,rate)*100),dmax=Math.max(NAT.cri*2.2,RANK.cri[Math.floor(RANK.cri.length*0.9)]);
+    rows+=frow({label:'Reported crime',stamp:'MONTHLY · 2025',valHTML:`${enNum(Math.round(rate))} <small>crimes / 100k people</small>`,strip:fstrip(rate,NAT.cri,dmax),
+      verdict: ratio>=1.15?`Runs at <b>${ratio.toFixed(1)}× the national rate</b>.`:ratio<=0.85?`<b>${Math.round((1-ratio)*100)}% below</b> the national average.`:'Close to the national average.',
+      rank:`More crime per capita than <b>${below}%</b> of municipalities.`,
+      src:`Source: <a href="${CRI.meta.sourceUrl}" target="_blank" rel="noopener">${CRI.meta.source}</a> · ${CRI.meta.vintage}. Reports filed, not crimes committed.`});}
+  const pv=POV.values[cve];
+  if(pv!=null){const ratio=pv/NAT.pov,below=Math.round(pctBelow(RANK.pov,pv)*100);
+    rows+=frow({label:'Poverty',stamp:'SNAPSHOT · 2020',valHTML:`${pv.toFixed(1)} <small>% of population</small>`,strip:fstrip(pv,NAT.pov,100),
+      verdict: ratio>=1.12?`<b>${ratio.toFixed(1)}× the national average</b> poverty rate.`:ratio<=0.88?`<b>${Math.round((1-ratio)*100)}% less poverty</b> than the national average.`:`Around the national average (${NAT.pov.toFixed(0)}%).`,
+      rank:`More poverty than <b>${below}%</b> of municipalities.`,
+      src:`Source: <a href="${POV.meta.sourceUrl}" target="_blank" rel="noopener">${POV.meta.source}</a> · ${POV.meta.vintage} (structural).`});}
+  wrap.innerHTML=`<div class="fhead"><span class="fh-x" id="fx">Change ✕</span><div class="fh-name">${info.nom}</div><div class="fh-ent">${info.ent}</div><div class="fh-pob">${info.pob?enNum(info.pob)+' people':''} · INEGI 2020</div></div>`+rows+`<div class="fclose">Formal employment (IMSS) and remittances by municipality will appear here once verified.</div>`;
+  requestAnimationFrame(()=>{wrap.classList.add('in');wrap.querySelectorAll('.fstrip .dot').forEach(d=>{const to=d.getAttribute('data-to');if(RM)d.style.left=to+'%';else requestAnimationFrame(()=>d.style.left=to+'%');});});
+  $('#fx').addEventListener('click',()=>{wrap.hidden=true;SELECTED=null;try{localStorage.removeItem('mx_mun');}catch(e){}history.replaceState(null,'','./atlas.html');$('#q').value='';if(window.__mapClear)__mapClear();});
+  if(window.__mapSelect)__mapSelect(cve);
+}
+function goFicha(cve,scroll){renderFicha(cve);$('#sugg').hidden=true;$('#q').value=REG[cve]?REG[cve].nom:'';if(scroll!==false)$('#ficha-wrap').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});}
+
+// ============ search / geo / chips ============
+function wireSearch(){
+  const inp=$('#q'),sugg=$('#sugg'); const IDX=Object.entries(REG).map(([cve,r])=>({cve,nom:r.nom,ent:r.ent,key:norm(r.nom)}));
+  let hi=-1,cur=[]; const paint=()=>{sugg.innerHTML=cur.map((h,i)=>`<div data-cve="${h.cve}" class="${i===hi?'hi':''}">${h.nom}<span class="s-ent"> · ${h.ent}</span></div>`).join('');sugg.hidden=!cur.length;};
+  inp.addEventListener('input',()=>{const q=norm(inp.value.trim());if(q.length<2){sugg.hidden=true;cur=[];return;}cur=IDX.filter(x=>x.key.includes(q)).sort((a,b)=>a.key.indexOf(q)-b.key.indexOf(q)).slice(0,8);hi=-1;paint();});
+  inp.addEventListener('keydown',(e)=>{if(sugg.hidden)return;if(e.key==='ArrowDown'){hi=Math.min(cur.length-1,hi+1);paint();e.preventDefault();}else if(e.key==='ArrowUp'){hi=Math.max(0,hi-1);paint();e.preventDefault();}else if(e.key==='Enter'&&cur.length){goFicha((cur[hi]||cur[0]).cve);}else if(e.key==='Escape')sugg.hidden=true;});
+  sugg.addEventListener('click',(e)=>{const d=e.target.closest('div[data-cve]');if(d)goFicha(d.dataset.cve);});
+  document.addEventListener('click',(e)=>{if(!e.target.closest('.searchbox'))sugg.hidden=true;});
+  const CH=[['09007','Iztapalapa'],['19039','Monterrey'],['14039','Guadalajara'],['15033','Ecatepec']].filter(c=>REG[c[0]]); const ch=$('#chips');
+  CH.forEach(c=>{const b=document.createElement('button');b.className='chip';b.textContent=REG[c[0]].nom;b.addEventListener('click',()=>goFicha(c[0]));ch.appendChild(b);});
+  $('#geo').addEventListener('click',()=>{const btn=$('#geo');if(!navigator.geolocation){btn.textContent='Unavailable';return;}btn.textContent='Locating…';
+    navigator.geolocation.getCurrentPosition((p)=>{const la=p.coords.latitude,lo=p.coords.longitude;let best=null,bd=1e9;for(const cve in CENT){const[clo,cla]=CENT[cve];const d=(clo-lo)*(clo-lo)*0.85+(cla-la)*(cla-la);if(d<bd){bd=d;best=cve;}}btn.textContent='Use my location';if(best)goFicha(best);},()=>{btn.textContent='Could not get location';setTimeout(()=>btn.textContent='Use my location',2500);},{timeout:8000});});
+}
+
+// ============ MAP ============
+const RAMP=['#fdf0e6','#f9d0a8','#f0a860','#d9741f','#a84800'];
+let FEATS=null,PROJ=null,MLAYERS=[],mapReady=false,FBOUNDS={};
+function decodeTopo(t,o){const{scale:[sx,sy],translate:[tx,ty]}=t.transform;const arcs=t.arcs.map(a=>{let x=0,y=0;return a.map(([dx,dy])=>{x+=dx;y+=dy;return[x*sx+tx,y*sy+ty];});});const ab=i=>i>=0?arcs[i]:arcs[~i].slice().reverse();const rc=r=>{const ix=Array.isArray(r)?r:[r];let o2=[];ix.forEach((i,k)=>{if(typeof i!=='number')return;const a=ab(i);o2=o2.concat(k?a.slice(1):a);});return o2;};return t.objects[o].geometries.map(g=>{let p;if(g.type==='Polygon')p=[g.arcs];else if(g.type==='MultiPolygon')p=g.arcs;else return{id:(g.properties&&g.properties.id)||g.id,rings:[]};return{id:(g.properties&&g.properties.id)||g.id,rings:p.map(q=>(Array.isArray(q)?q:[q]).map(rc))};});}
+function mkProj(F,W,H,pad){let a=1e9,b=1e9,c=-1e9,d=-1e9;const k=Math.cos(23*Math.PI/180);for(const f of F)for(const p of f.rings)for(const r of p)for(const[lo,la]of r){const x=lo*k;if(x<a)a=x;if(x>c)c=x;if(la<b)b=la;if(la>d)d=la;}const s=Math.min((W-2*pad)/(c-a),(H-2*pad)/(d-b)),ox=(W-(c-a)*s)/2,oy=(H-(d-b)*s)/2;return([lo,la])=>[(lo*k-a)*s+ox,H-((la-b)*s+oy)];}
+function pathFor(f){let d='';for(const p of f.rings)for(const r of p){d+=r.map((c,i)=>{const[x,y]=PROJ(c);return(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);}).join(' ')+'Z';}return d;}
+function quant(v,n){const s=v.filter(x=>x!=null).sort((a,b)=>a-b),q=[];for(let i=1;i<n;i++)q.push(s[Math.floor(i/n*s.length)]);return q;}
+async function ensureMap(){ if(mapReady)return; mapReady=true;
+  const topo=await J('./data/geo/municipios.topojson'); FEATS=decodeTopo(topo,Object.keys(topo.objects)[0]); PROJ=mkProj(FEATS,800,560,14);
+  const svg=$('#map'); svg.innerHTML=FEATS.map(f=>`<path d="${pathFor(f)}" data-id="${f.id}"></path>`).join('');
+  for(const f of FEATS){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const p of f.rings)for(const r of p)for(const c of r){const[x,y]=PROJ(c);if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}FBOUNDS[f.id]={x0,y0,x1,y1};}
+  MLAYERS=[{id:'coneval-pobreza',label:'Poverty',data:POV,per:false,units:'% in poverty',fmt:(v)=>Math.round(v)+'%'},{id:'sesnsp-delitos',label:'Crime',data:CRI,per:true,units:'crimes per 100k',fmt:(v)=>enNum(Math.round(v))}];
+  const tg=$('#layer-toggle'); tg.innerHTML=MLAYERS.map(l=>`<button data-id="${l.id}">${l.label}</button>`).join(''); tg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>mpaint(b.dataset.id)));
+  mpaint(MLAYERS[0].id); mapInteract(); if(SELECTED)__mapSelect(SELECTED);
+}
+function mpaint(id){const l=MLAYERS.find(x=>x.id===id);if(!l)return;const disp={};for(const c in l.data.values){const raw=l.data.values[c];if(l.per){const p=REG[c]&&REG[c].pob;disp[c]=(p&&p>0)?raw/p*1e5:null;}else disp[c]=raw;}const vals=Object.values(disp).filter(v=>v!=null),qs=quant(vals,RAMP.length);const col=(v)=>{if(v==null)return'#f7f7f4';let i=0;while(i<qs.length&&v>qs[i])i++;return RAMP[i];};const svg=$('#map'),tip=$('#maptip');svg.querySelectorAll('path').forEach(p=>{const c=p.getAttribute('data-id');p.setAttribute('fill',col(disp[c]));p.setAttribute('data-v',disp[c]==null?'':disp[c]);});$('#layer-toggle').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));svg.onmousemove=(e)=>{const t=e.target;if(t.tagName!=='path'){tip.style.opacity=0;return;}const c=t.getAttribute('data-id'),v=t.getAttribute('data-v'),info=REG[c];let l3;if(v===''||v==null){l3='<span class="n">no data</span>';}else{const num=Number(v),nat=l.per?NAT.cri:NAT.pov,r=nat?num/nat:1,bench=r>=1.05?'above':(r<=0.95?'below':'≈ national');l3=`<span class="n">${l.fmt(num)}${l.per?' /100k':''} · ${bench}</span>`;}tip.innerHTML=`<b>${info?info.nom:c}</b><br><span class="ent">${info?info.ent:''}</span><br>${l3}`;tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY+14)+'px';tip.style.opacity=1;};svg.addEventListener('mouseleave',()=>tip.style.opacity=0);let sws='';for(let i=0;i<RAMP.length;i++)sws+=`<span class="sw" style="background:${RAMP[i]}"></span>`;let tk='';for(let i=0;i<qs.length;i++)tk+=`<span style="left:${(i+1)*28}px">${l.fmt(qs[i])}</span>`;$('#maplegend').innerHTML=`<div class="lg-title">${l.label} · ${l.units}</div><div class="lg-bar"><div class="lg-swatches">${sws}</div><div class="lg-ticks">${tk}</div></div><div class="lg-foot"><span class="lg-nd"><span class="nd"></span>No data</span><span>·</span><span>quantile</span></div>`;$('#ex1-src').innerHTML=`<span style="font-family:var(--mono);font-size:10.5px;color:var(--mut)">Layer: ${l.units} · Source: <a href="${l.data.meta.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${l.data.meta.source}</a>, ${l.data.meta.vintage}.</span>`;}
+function mapInteract(){const svg=$('#map');const VB={x:0,y:0,w:800,h:560};let vb={...VB};const ap=()=>svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`);const cl=()=>{vb.w=Math.min(VB.w,vb.w);vb.h=Math.min(VB.h,vb.h);vb.x=Math.max(0,Math.min(VB.w-vb.w,vb.x));vb.y=Math.max(0,Math.min(VB.h-vb.h,vb.y));};const zm=(sx,sy,f)=>{const nw=Math.max(VB.w/30,Math.min(VB.w,vb.w*f)),nh=nw*(VB.h/VB.w);vb.x=sx-(sx-vb.x)*(nw/vb.w);vb.y=sy-(sy-vb.y)*(nh/vb.h);vb.w=nw;vb.h=nh;cl();ap();};
+  // Select = pan-only, SAME zoom. Holds still at full extent; only re-centers a chosen polygon that is off-screen while zoomed in. Never zooms.
+  window.__mapCenter=(cve)=>{if(isMobile())return;const b=FBOUNDS[cve];if(!b)return;if(vb.w>=VB.w-1&&vb.h>=VB.h-1)return;const cx=(b.x0+b.x1)/2,cy=(b.y0+b.y1)/2;if(cx>=vb.x&&cx<=vb.x+vb.w&&cy>=vb.y&&cy<=vb.y+vb.h)return;const tx=Math.max(0,Math.min(VB.w-vb.w,cx-vb.w/2)),ty=Math.max(0,Math.min(VB.h-vb.h,cy-vb.h/2));if(RM){vb.x=tx;vb.y=ty;ap();return;}const sx=vb.x,sy=vb.y,t0=performance.now(),D=250;const step=(t)=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);vb.x=sx+(tx-sx)*e;vb.y=sy+(ty-sy)*e;ap();if(k<1)requestAnimationFrame(step);};requestAnimationFrame(step);};
+  let dn=null,mv=false;svg.addEventListener('pointerdown',e=>{if(isMobile()){dn={tap:true};mv=false;return;}dn={x:e.clientX,y:e.clientY,vx:vb.x,vy:vb.y};mv=false;try{svg.setPointerCapture(e.pointerId);}catch(z){}});svg.addEventListener('pointermove',e=>{if(!dn||dn.tap)return;const r=svg.getBoundingClientRect();if(Math.abs(e.clientX-dn.x)+Math.abs(e.clientY-dn.y)>4)mv=true;vb.x=dn.vx-(e.clientX-dn.x)/r.width*vb.w;vb.y=dn.vy-(e.clientY-dn.y)/r.height*vb.h;cl();ap();});svg.addEventListener('pointerup',e=>{if(dn&&!mv&&e.target.tagName==='path'){goFicha(e.target.getAttribute('data-id'),false);}dn=null;});svg.addEventListener('pointercancel',()=>{dn=null;});const zc=$('.zoomctl');if(zc)zc.addEventListener('click',e=>{if(isMobile())return;const z=e.target.dataset.z;if(!z)return;if(z==='reset'){vb={...VB};ap();}else zm(vb.x+vb.w/2,vb.y+vb.h/2,z==='in'?0.667:1.5);});}
+window.__mapSelect=(cve)=>{if(!mapReady)return;const svg=$('#map');svg.querySelectorAll('path.sel').forEach(p=>p.classList.remove('sel'));const p=svg.querySelector('path[data-id="'+cve+'"]');if(p){p.classList.add('sel');p.parentNode.appendChild(p);}if(window.__mapCenter)__mapCenter(cve);};
+window.__mapClear=()=>{if(!mapReady)return;$('#map').querySelectorAll('path.sel').forEach(p=>p.classList.remove('sel'));};
+
+function wireMini(){const mini=$('#miniback');const io=new IntersectionObserver((es)=>{es.forEach(e=>{const show=SELECTED&&!e.isIntersecting&&$('#ficha-wrap').hidden===false;mini.classList.toggle('show',show);if(show)$('#mb-name').textContent=REG[SELECTED]?REG[SELECTED].nom:'';});},{threshold:0});io.observe($('#ficha-wrap'));$('#mb-act').addEventListener('click',()=>$('#ficha-wrap').scrollIntoView({behavior:RM?'auto':'smooth'}));}
+
+// ============ boot ============
+(async()=>{
+  const [reg,cent,pov,cri]=await Promise.all([
+    J('./data/meta/municipios.json'),J('./data/meta/centroids.json').catch(()=>({})),
+    J('./data/layers/coneval-pobreza.json'),J('./data/layers/sesnsp-delitos.json')
+  ]);
+  REG=reg.m||reg; CENT=cent; POV=pov; CRI=cri;
+  computeNat(); wireSearch(); wireMini();
+  const hash=(location.hash.match(/m\/(\d{5})/)||[])[1];
+  const saved=(()=>{try{return localStorage.getItem('mx_mun');}catch(e){return null;}})();
+  const start=(hash&&REG[hash])?hash:(saved&&REG[saved]?saved:null);
+  ensureMap().then(()=>{ if(start){ renderFicha(start); } }).catch(()=>{});
+})().catch(e=>{ const h=$('#map'); if(h)h.insertAdjacentHTML('afterend','<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading map data: '+e.message+'</p>'); });
+</script>
+</body>
+</html>
