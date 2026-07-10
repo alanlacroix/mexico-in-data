@@ -45,6 +45,14 @@ jobs:
         continue-on-error: true   # any dead feed is skipped; never fails the run
         run: node collect-news.js
 
+      - name: Capture article bodies into the store (before links rot)
+        working-directory: pipeline
+        continue-on-error: true   # best-effort; a miss never fails the data run. No-op without the SUPABASE secrets.
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node archive-bodies.js
+
       - name: Build the Tariff & USMCA Watch
         working-directory: pipeline
         continue-on-error: true   # external feed; a miss keeps last-good, never fails the run

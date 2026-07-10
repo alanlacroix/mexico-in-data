@@ -18,11 +18,12 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
 import { renderEmail, renderPreview, domainOf } from './lib/email-template.js';
+import { fetchArticle } from './lib/fetch-article.js';
+import { hasStore, upsertItems, upsertIssue } from './lib/store.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const D = (...p) => path.join(ROOT, 'data', ...p);
-const UA = 'Mozilla/5.0 (compatible; mexico-brief email builder; +https://mexicobrief.com)';
 const NAME = 'Alan';                     // primary-reader greeting (swap to a merge tag once there's a list)
 const TOP_THRESHOLD = 7.5;               // score to earn a "top of the week" lead slot
 const ROOM_THRESHOLD = 4.0;              // score to appear in a room at all
@@ -39,30 +40,7 @@ const fmtFull = (d) => `${WD[d.getUTCDay()]}, ${MOF[d.getUTCMonth()]} ${d.getUTC
 const shorten = (s, n) => (s && s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s || '');
 const numWord = (n) => ['zero','One','Two','Three','Four','Five'][n] || String(n);
 
-// ---- article fetch + text extraction (for lead summaries only) ----
-async function fetchText(url) {
-  try {
-    const r = await fetch(url, { headers: { 'User-Agent': UA }, redirect: 'follow', signal: AbortSignal.timeout(20000) });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return { ok: true, html: await r.text() };
-  } catch {
-    try {
-      const { execFileSync } = await import('node:child_process');
-      return { ok: true, html: execFileSync('curl', ['-sL', '--compressed', '--max-time', '22', '-A', UA, url], { encoding: 'utf8', maxBuffer: 24 * 1024 * 1024 }) };
-    } catch { return { ok: false, html: '' }; }
-  }
-}
-function extractText(html) {
-  if (!html) return '';
-  let s = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ');
-  const art = s.match(/<article\b[\s\S]*?<\/article>/i);
-  if (art) s = art[0];
-  return s.replace(/<[^>]+>/g, ' ')
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
-    .replace(/&#0?39;|&apos;|&#8217;/g, "'").replace(/&nbsp;|&#160;/g, ' ')
-    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n))
-    .replace(/\s+/g, ' ').trim();
-}
+// (article fetch + text extraction moved to lib/fetch-article.js, shared with archive-bodies.js)
 
 // ---- data board (deterministic; every row from a wired source) ----
 function loadSeries(id) {
@@ -197,9 +175,8 @@ Score each candidate 0 to 10 for how much it belongs in this week's brief. 10 = 
 async function summarizeLead(item) {
   const dek = (item.dek || '').trim();
   if (!hasLLM()) return { summary: dek, why: '', real: /federalregister\.gov/.test(item.url) };
-  const { ok, html } = await fetchText(item.url);
-  const text = ok ? extractText(html) : '';
-  if (text.length < 400) return { summary: dek || 'See the linked report.', why: '', real: /federalregister\.gov/.test(item.url) };
+  const { ok, text } = await fetchArticle(item.url);
+  if (!ok) return { summary: dek || 'See the linked report.', why: '', real: /federalregister\.gov/.test(item.url) };
   const schema = { type: 'object', additionalProperties: false, required: ['summary', 'why'], properties: { summary: { type: 'string' }, why: { type: 'string' } } };
   const system = `Summarize this news article for a weekly Mexico brief. Use ONLY facts stated in the provided article text. Do not add figures, names, or claims that are not in the text; if a detail is not present, leave it out. Voice: lead with the fact and the number, plain declarative sentences, 2 to 3 sentences total, actor first. No em-dashes. No hype or filler words (robust, significant, landscape, key, dynamic, poised). No persuasion adjectives. Then, in "why", write ONE sentence on why it matters to someone running a payments and fintech company in Mexico, but only if the article clearly supports that read-through; otherwise return "" for why. Return JSON {summary, why}.`;
   const user = `TITLE: ${item.title}\nSOURCE: ${item.sourceName || domainOf(item.url)}\nURL: ${item.url}\n\nARTICLE TEXT:\n${text.slice(0, 6000)}`;
@@ -255,12 +232,12 @@ async function main() {
     { key: 'politics', eyebrow: 'Politics & policy' },
     { key: 'us-mexico', eyebrow: 'US–Mexico' },
   ];
-  const rooms = ROOMS.map((r) => ({
-    eyebrow: r.eyebrow, floor: r.floor,
-    items: scored.filter((x) => !leadIds.has(x.id) && x.room === r.key && x.score >= ROOM_THRESHOLD)
-      .slice(0, MAX_PER_ROOM)
-      .map((x) => ({ t: x.title, d: shorten(x.dek || '', 165), chip: chipFor(x), source: x.sourceName, date: fmtDay(x.published_at), url: x.url })),
-  })).filter((r) => r.items.length);
+  const roomIds = new Set();
+  const rooms = ROOMS.map((r) => {
+    const picks = scored.filter((x) => !leadIds.has(x.id) && x.room === r.key && x.score >= ROOM_THRESHOLD).slice(0, MAX_PER_ROOM);
+    picks.forEach((x) => roomIds.add(x.id));
+    return { eyebrow: r.eyebrow, floor: r.floor, items: picks.map((x) => ({ t: x.title, d: shorten(x.dek || '', 165), chip: chipFor(x), source: x.sourceName, date: fmtDay(x.published_at), url: x.url })) };
+  }).filter((r) => r.items.length);
 
   // intro + read-time + subject + issue
   const roomCount = rooms.reduce((s, r) => s + r.items.length, 0);
@@ -294,6 +271,21 @@ async function main() {
     week: isoWk, issue, subject, status: 'draft', htmlPath: `data/email/${isoWk}.html`,
     builtAt: now.toISOString(), cost: usage().costUSD,
   }, null, 2));
+
+  // capture: persist the issue + this week's item judgments to the store (fail-soft)
+  if (hasStore()) {
+    try {
+      const published = new Set([...leadIds, ...roomIds]);
+      await upsertItems(scored.map((x) => ({
+        id: x.id, url: x.url, source: x.source, source_name: x.sourceName, tier: String(x.tier ?? ''),
+        beat: x.beat, lang: x.lang, title: x.title, dek: x.dek,
+        published_at: x.published_at || null, first_seen: x.first_seen || null,
+        score: x.score, room: x.room, published_in: published.has(x.id) ? isoWk : null,
+      })));
+      await upsertIssue({ week: isoWk, issue_no: issue, subject, status: 'draft', draft, built_at: now.toISOString() });
+      console.log(`  store: issue + ${scored.length} item judgments upserted`);
+    } catch (e) { console.warn('  store: upsert failed —', e.message); }
+  }
 
   const u = usage();
   console.log(`\n  issue ${issue} · ${topOfWeek.length} leads · ${rooms.length} rooms (${roomCount} items) · ${readMin}-min`);

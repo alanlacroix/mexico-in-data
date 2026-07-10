@@ -14,6 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { hasStore, upsertIssue } from './lib/store.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -70,8 +71,10 @@ async function main() {
 
   // record that this issue went out
   if (!asDraft) {
-    fs.writeFileSync(D('email', 'latest.json'), JSON.stringify({ ...latest, week, status: 'sent', sentAt: new Date().toISOString(), buttondownId: out.id || null }, null, 2));
+    const sentAt = new Date().toISOString();
+    fs.writeFileSync(D('email', 'latest.json'), JSON.stringify({ ...latest, week, status: 'sent', sentAt, buttondownId: out.id || null }, null, 2));
     const dj = readJson(D('email', week + '.json'), null); if (dj) { dj.status = 'sent'; fs.writeFileSync(D('email', week + '.json'), JSON.stringify(dj, null, 2)); }
+    if (hasStore()) { try { await upsertIssue({ week, issue_no: draft.issue, subject, status: 'sent', draft, built_at: draft.builtAt || null, sent_at: sentAt }); } catch (e) { console.warn('  store: sent-update failed —', e.message); } }
   }
   console.log('');
 }

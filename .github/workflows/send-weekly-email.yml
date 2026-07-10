@@ -41,6 +41,8 @@ jobs:
         # crafted `week` value could run commands with the send key in scope.
         env:
           BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           WEEK_INPUT: ${{ inputs.week }}
           MODE_INPUT: ${{ inputs.mode }}
         run: |
