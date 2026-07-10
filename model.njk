@@ -32,7 +32,9 @@ description: "A teaching model of Mexico's economy: pull the levers (US tariffs,
   .lever .lv-l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-2)}
   .lever .lv-v{font-family:var(--serif);font-size:17px;color:var(--green-d);font-variant-numeric:tabular-nums}
   .lever input[type=range]{width:100%;margin-top:8px;accent-color:var(--green)}
-  .lever .lv-hint{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:3px}
+  .lever .lv-hint{font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.45}
+  .lever .lv-hint b{color:var(--ink);font-weight:600}
+  .lever .lv-now{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);background:var(--green-bg);border-radius:3px;padding:1px 6px;margin-left:6px}
 
   .out{padding:12px 0;border-bottom:1px solid var(--line)}
   .out:last-child{border-bottom:none}
@@ -90,7 +92,7 @@ description: "A teaching model of Mexico's economy: pull the levers (US tariffs,
 
   <div class="elast">
     <div class="section-head"><h2>The elasticities (footnoted)</h2></div>
-    <p style="font-size:13.5px;color:var(--ink-2);margin-bottom:10px">Directional coefficients, chosen to teach mechanism and rough scale — not calibrated to the last basis point. Sources are the standard literature and Banxico/INEGI structure; a serious forecast would estimate these on data.</p>
+    <p style="font-size:13.5px;color:var(--ink-2);margin-bottom:10px">Directional coefficients, chosen to teach mechanism and rough scale — not calibrated to the last basis point. Sources are the standard literature and Banxico/INEGI structure; a serious forecast would estimate these on data. Two honest limits: Banxico's rate here feeds only growth, so a hike neither disinflates nor defends the peso in this toy; and it is a <b>marginal</b> tool — the far ends of the sliders understate a real crisis rather than exaggerate it.</p>
     <div class="tblwrap"><table class="mck" id="elast"></table></div>
   </div>
 </div>
@@ -102,10 +104,14 @@ const BASE={ tariff:4, fed:0, oil:65, usg:2.3 };            // lever baselines
 const OUT0={ peso:17.60, infl:3.9, rate:6.50, gdp:1.1 };    // output baselines — anchored to the Briefing's current readings
 
 const LEVERS=[
-  {k:'tariff',l:'US tariff on Mexican goods',min:0,max:25,step:1,unit:'%',hint:'Today ~4% (post-SCOTUS). USMCA-review failure could push this up.'},
-  {k:'fed',l:'US (Fed) policy-rate change',min:-3,max:3,step:0.25,unit:' pp',hint:'Change vs today. Negative = the Fed cuts.'},
-  {k:'oil',l:'Global crude price',min:30,max:110,step:5,unit:' $/bbl',hint:'Today ~$65. Mexico is a net fuel importer — this is mostly a fiscal lever.'},
-  {k:'usg',l:'US GDP growth',min:-1,max:4,step:0.1,unit:'%',hint:'Mexico\'s exports ride US demand.'}
+  {k:'tariff',l:'US tariff on Mexican goods',min:0,max:25,step:1,unit:'%',
+   hint:'<b>Today about 4% effective.</b> Most goods still enter the US free under USMCA; 4% is the trade-weighted average after 2025 actions. Move it up if the 2026 USMCA review breaks down or a new Section 232/301 case lands — the 2018–19 metals tariffs ran 10–25% on covered lines. 0% is full free trade.'},
+  {k:'fed',l:'US Fed rate, change from today',min:-3,max:3,step:0.25,unit:' pp',
+   hint:'<b>Change from the current US policy rate (about 4.25–4.50%).</b> Markets price cuts into 2026, so −1 to −2pp is a clean easing cycle; +1pp means US inflation reignites and hikes come back. It reaches Mexico mainly through the rate gap that holds the peso up.'},
+  {k:'oil',l:'Global crude price',min:30,max:110,step:5,unit:' $/bbl',
+   hint:'<b>Today about $65 (Brent).</b> Mexico imports fuel but exports crude, so this is mostly a fiscal and Pemex lever now, not a growth one — the peso oil link has faded. $40 is a demand slump or price war; $90+ a supply shock.'},
+  {k:'usg',l:'US GDP growth',min:-1,max:4,step:0.1,unit:'%',
+   hint:'<b>US real growth, about 2.3% now.</b> Around 80% of Mexico exports go north, so this is the single biggest external pull on Mexican growth. Below 0 is a US recession pulling Mexico down; 3–4% a US boom lifting it.'}
 ];
 const PRESETS=[
   {name:'The USMCA review fails',set:{tariff:20,fed:0,oil:65,usg:1.5}},
@@ -118,14 +124,16 @@ let ST={...BASE};
 
 // ---- the model: transparent, directional ----
 function model(s){
-  // peso (MXN/USD): tariffs & higher US rates weaken it; strong US growth firms it; low oil weakens it a touch
-  const peso = OUT0.peso + (s.tariff-BASE.tariff)*0.05 + s.fed*0.45 + (BASE.oil-s.oil)*0.010 - (s.usg-BASE.usg)*0.30;
-  // inflation: peso pass-through + direct tariff cost
-  const infl = OUT0.infl + (peso-OUT0.peso)*0.15 + (s.tariff-BASE.tariff)*0.03;
-  // Banxico reacts to inflation gap (Taylor-ish), floored at 0
-  const rate = Math.max(0, OUT0.rate + (infl-OUT0.infl)*0.85 + Math.max(0,s.fed)*0.3);
-  // GDP growth: export hit from tariffs, US-demand pull, drag from tighter policy
-  const gdp  = OUT0.gdp - (s.tariff-BASE.tariff)*0.04 + (s.usg-BASE.usg)*0.55 - (rate-OUT0.rate)*0.12;
+  // peso (MXN/USD): tariffs & higher US rates weaken it; strong US growth firms it.
+  // oil kept tiny — the petro-currency sign is contested now that Mexico is a net fuel importer.
+  const peso = OUT0.peso + (s.tariff-BASE.tariff)*0.06 + s.fed*0.45 + (BASE.oil-s.oil)*0.005 - (s.usg-BASE.usg)*0.30;
+  // inflation: a US tariff on Mexican goods is paid by US importers (it hits US CPI), so it reaches
+  // MEXICAN inflation through the weaker peso, not directly. No direct-tariff term.
+  const infl = OUT0.infl + (peso-OUT0.peso)*0.15;
+  // Banxico reacts to the inflation gap (Taylor principle: response >1) and follows the Fed both ways, floored at 0
+  const rate = Math.max(0, OUT0.rate + (infl-OUT0.infl)*1.2 + s.fed*0.3);
+  // GDP growth: export hit from tariffs (sized to actually bite — ~30% of GDP, 80% US-bound), US-demand pull, policy drag
+  const gdp  = OUT0.gdp - (s.tariff-BASE.tariff)*0.13 + (s.usg-BASE.usg)*0.55 - (rate-OUT0.rate)*0.12;
   return {peso,infl,rate,gdp};
 }
 const OUTDEF=[
@@ -172,8 +180,8 @@ const NODES=[
 ];
 const EDGES=[
   {a:'tariff',b:'exports',neg:true},{a:'usg',b:'exports'},{a:'exports',b:'peso'},
-  {a:'fed',b:'peso'},{a:'oil',b:'peso'},{a:'peso',b:'infl'},{a:'tariff',b:'infl'},
-  {a:'infl',b:'rate'},{a:'rate',b:'gdp',neg:true},{a:'exports',b:'gdp'}
+  {a:'fed',b:'peso'},{a:'oil',b:'peso'},{a:'peso',b:'infl'},
+  {a:'fed',b:'rate'},{a:'infl',b:'rate'},{a:'rate',b:'gdp',neg:true},{a:'exports',b:'gdp'}
 ];
 function hotNodes(){ // which levers are off-baseline -> highlight their paths
   const h=new Set();
@@ -201,16 +209,16 @@ function renderDiagram(){
 }
 
 const ELAST=[
-  ['US tariff → peso','+0.05 MXN/USD per +1pp','Trade-cost shock weakens FX; scale illustrative.'],
-  ['US rate → peso','+0.45 MXN/USD per +1pp','Rate differential drives carry — the dominant near-term FX driver.'],
-  ['Oil → peso','+0.01 MXN/USD per −$1/bbl','Fiscal/Pemex channel; small for a net importer.'],
-  ['US growth → peso','−0.30 MXN/USD per +1pp','Stronger US demand firms the peso.'],
-  ['Peso → inflation','+0.15pp CPI per +1 MXN/USD','Exchange-rate pass-through, mid of literature range.'],
-  ['Tariff → inflation','+0.03pp per +1pp','Direct imported-input cost.'],
-  ['Inflation → Banxico','+0.85pp rate per +1pp gap','Taylor-type reaction, floored at 0.'],
-  ['Tariff → GDP','−0.04pp per +1pp','Exports ≈ 30% of GDP; demand hit.'],
-  ['US growth → GDP','+0.55pp per +1pp','The US-tether elasticity.'],
-  ['Rate → GDP','−0.12pp per +1pp','Tighter policy drags activity with a lag.']
+  ['US tariff → peso','+0.06 MXN/USD per +1pp','Trade-cost / current-account shock weakens FX. Linear here; a real 25% tariff would bite harder and non-linearly.'],
+  ['US rate → peso','+0.45 MXN/USD per +1pp','Rate differential drives carry (~2.6% per 100bp) — the dominant near-term FX driver.'],
+  ['Oil → peso','+0.005 MXN/USD per −$1/bbl','Faint Pemex/fiscal echo, kept small on purpose: the sign is contested now that Mexico is a net fuel importer.'],
+  ['US growth → peso','−0.30 MXN/USD per +1pp','Stronger US demand firms the peso (~1.7% per +1pp).'],
+  ['Peso → inflation','+0.15pp CPI per +1 MXN/USD','Exchange-rate pass-through ~0.026 on impact, larger over time. This is how a tariff reaches Mexican CPI — through the peso, not directly.'],
+  ['Inflation → Banxico','+1.2pp rate per +1pp gap','Taylor-type, response above 1 (the Taylor principle), floored at 0.'],
+  ['US rate → Banxico','+0.3pp per +1pp','Follows the Fed both ways: hikes to defend the peso, room to ease when the Fed eases.'],
+  ['Tariff → GDP','−0.13pp per +1pp','Exports ≈30% of GDP, ~80% US-bound — sized to actually bite; realistically convex past USMCA-breaking levels.'],
+  ['US growth → GDP','+0.55pp per +1pp','The US-tether elasticity (could be 0.7–1.0 vs US industrial output).'],
+  ['Rate → GDP','−0.12pp per +1pp','Tighter policy drags activity, with a lag.']
 ];
 function renderElast(){ $('#elast').innerHTML=`<thead><tr><th>Link</th><th>Coefficient</th><th>Rationale</th></tr></thead><tbody>`+ELAST.map(r=>`<tr><td class="k">${r[0]}</td><td class="mono">${r[1]}</td><td><small>${r[2]}</small></td></tr>`).join('')+`</tbody>`; }
 
