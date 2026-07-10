@@ -2,8 +2,9 @@
    McKinsey-MX — the house style for the Mexico project
    White paper, black ink, McKinsey exhibit discipline,
    Mexican flag green + red as the only accents.
-   The ~5% tweak vs. McKinsey: a warmer editorial serif
-   (Fraunces) and a hairline green section rule.
+   Clean sans everywhere (Inter), including bold headlines,
+   exactly like McKinsey — built for maximum readability.
+   The one tweak vs. McKinsey: a hairline green section rule.
 
    For the hosted site this loads real webfonts; inside a
    Claude Artifact (which blocks font CDNs) the system-font
@@ -11,8 +12,8 @@
    ============================================================ */
 
 /* Webfonts — hosted site only (Artifacts fall back to system stacks).
-   Display = Fraunces (an editorial serif — Bower-adjacent, distinctly ours). */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+   One clean sans (Inter) for body and headlines, McKinsey-style. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
 :root{
   /* ground + ink — McKinsey-exact */
@@ -37,12 +38,13 @@
   --line:#e6e6e2;
   --line-2:#ccccc6;
 
-  /* type */
-  --serif:"Fraunces","Iowan Old Style","Charter","Palatino Linotype",Georgia,serif;
+  /* type — one clean sans, McKinsey-style. --serif is kept as the "display"
+     token so every heading flips in one place; it now resolves to Inter. */
+  --serif:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
   --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
   --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,Consolas,monospace;
 
-  --measure:68ch;
+  --measure:66ch;
   --maxw:1120px;
 }
 
@@ -50,10 +52,10 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;background:var(--bg);color:var(--ink-2);
-  font-family:var(--sans);font-size:18px;line-height:1.6;
+  font-family:var(--sans);font-size:18px;line-height:1.62;
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
 }
-h1,h2,h3,h4{font-family:var(--serif);color:var(--ink);font-weight:600;line-height:1.14;margin:0;text-wrap:balance;letter-spacing:-.005em}
+h1,h2,h3,h4{font-family:var(--serif);color:var(--ink);font-weight:700;line-height:1.16;margin:0;text-wrap:balance;letter-spacing:-.014em}
 p{margin:0}
 a{color:var(--green);text-decoration:none}
 a:hover{text-decoration:underline;text-underline-offset:2px}
@@ -76,7 +78,7 @@ a:focus-visible,button:focus-visible{outline:2.5px solid var(--green);outline-of
 .exhibit{border:1px solid var(--line-2);background:var(--paper);border-radius:4px;overflow:hidden}
 .exhibit .ex-head{padding:16px 22px 2px}
 .exhibit .ex-no{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:600}
-.exhibit .ex-title{font-family:var(--serif);font-size:19px;line-height:1.22;margin-top:5px;color:var(--ink);max-width:80ch}
+.exhibit .ex-title{font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.25;margin-top:5px;color:var(--ink);max-width:80ch}
 .exhibit .ex-units{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin-top:6px}
 .exhibit .ex-body{padding:10px 22px 6px}
 .exhibit .ex-foot{border-top:1px solid var(--line);margin-top:8px;padding:11px 22px 15px}
