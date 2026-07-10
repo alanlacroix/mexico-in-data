@@ -55,16 +55,23 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
   .stamp.live{color:var(--green-d);font-weight:600}
   .chip-ph{font-family:var(--mono);font-size:9px;letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
 
-  /* 3 · WHAT MOVED */
-  .moved{border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
-  .movedrow{display:flex;align-items:baseline;gap:11px;padding:12px 15px;border-bottom:1px solid var(--line);text-decoration:none;background:var(--paper)}
-  .movedrow:last-child{border-bottom:none}
-  .movedrow:hover{background:var(--paper-2)}
-  .movedrow .mv-arw{font-size:11px;color:var(--ink-3);min-width:12px}
-  .movedrow .mv-mag{font-family:var(--serif);font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums;min-width:82px;letter-spacing:-.01em}
-  .movedrow .mv-lbl{font-size:14.5px;color:var(--ink);flex:1}
-  .movedrow .mv-when{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);white-space:nowrap}
-  .movedrow .mv-go{font-family:var(--mono);font-size:13px;color:var(--green-d)}
+  /* 2b · WHAT CHANGED — the lead queue (event log + series-delta fallback, one treatment) */
+  .chg{border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
+  .chgrow{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--line);background:var(--paper)}
+  .chgrow:last-child{border-bottom:none}
+  .chgrow:hover{background:var(--paper-2)}
+  .chgrow.cross{background:var(--green-bg)}
+  .chgrow.cross:hover{background:#dcefe3}
+  .cg-body{flex:1;min-width:0;display:block;text-decoration:none}
+  .cg-line{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .cg-flag{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border-radius:3px;padding:1px 6px;white-space:nowrap}
+  .cg-lbl{font-size:15px;color:var(--ink);font-weight:600}
+  .cg-move{font-family:var(--serif);font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .cg-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
+  .cg-src{font-family:var(--mono);font-size:11px;color:var(--green-d);white-space:nowrap;text-decoration:none;flex:none}
+  .cg-src:hover{text-decoration:underline}
+  .cg-go{font-family:var(--mono);font-size:13px;color:var(--green-d);flex:none}
+  .chg-quiet{border:1px solid var(--line-2);border-radius:11px;background:var(--paper);padding:15px 16px;font-size:15px;color:var(--ink-2);margin:2px 0 4px}
 
   /* 4 · NEWSLETTER (from weekly.njk .sub) */
   .sub{margin:8px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
@@ -120,6 +127,29 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
   .wire .wm{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:3px}
   .wire-note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:10px;line-height:1.6}
   .wire-note a{color:var(--green)}
+
+  /* 7 · PRIMER — evergreen orientation, moved out of the top and collapsed */
+  .primer{margin-top:30px}
+  .primerbox{border:1px solid var(--line);border-radius:11px;background:var(--paper)}
+  .primerbox summary{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600;cursor:pointer;padding:14px 16px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+  .primerbox summary::-webkit-details-marker{display:none}
+  .primerbox summary::after{content:"+";color:var(--mut)}
+  .primerbox[open] summary::after{content:"–"}
+  .primerbox .country{margin:0;padding:0 16px 16px}
+
+  /* board "show all indicators" toggle — appears on mobile only */
+  .board-more{display:none}
+
+  /* MOBILE — real usability fix at ≤480px (390px target) */
+  @media(max-width:480px){
+    .tablero{grid-template-columns:1fr}                       /* was 2-up: clipped labels/sources */
+    .tile{padding:14px 15px 13px}
+    .tile .tl{min-height:0}
+    .tile .tb,.tile .tsrc,.tile svg.spark{display:none}       /* benchmark + source + sparkline behind the tile tap */
+    .tilelink.extra{display:none}                             /* only the four core tiles by default */
+    .tablero.show-all .tilelink.extra{display:contents}
+    .board-more{display:block;width:100%;font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;color:var(--green-d);background:var(--paper);border:1px solid var(--line-2);border-radius:9px;padding:11px;margin:8px 0 4px;cursor:pointer}
+  }
 </style>
 
 <div class="home">
@@ -128,28 +158,25 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
   <section class="hero">
     <a class="dateline" href="/data.html"><span class="dot"></span><span id="status">Official data · updated live</span></a>
     <h1>Mexico, right now.</h1>
-    <p class="country">
-      Mexico is a country of <b>131 million people</b> with a <b>~$1.9 trillion economy</b>, the world's ~14th-largest and the <b>largest US trading partner</b>.<a class="ref" href="/economy.html" title="World Bank; US Census Bureau">1</a>
-      It manufactures and exports: about <b>80% of its exports go to the United States</b>.<a class="ref" href="/us-mexico.html" title="INEGI / Banxico balance of trade">2</a>
-      It elects a president every six years, now <b>Claudia Sheinbaum (Morena)</b>, through 2030.<a class="ref" href="/politics.html" title="INE; Presidencia">3</a>
-    </p>
-    <p class="bottomline"><span class="bl-k">The bottom line</span> — <b>sound money</b> (inflation near Banxico's target, a firm peso), <b>weak growth</b>, and <b>near-total dependence on the United States</b>. The swing factor is the unresolved 2026 USMCA review.</p>
   </section>
 
-  <!-- 2 · THE BOARD -->
+  <!-- 2 · WHAT CHANGED — the lead: the event log since your last visit -->
+  <section>
+    <div class="bh"><div><span class="k">What changed</span></div><span class="asof" id="chg-since">Recently</span></div>
+    <div id="changed"></div>
+  </section>
+
+  <p class="bottomline"><span class="bl-k">The bottom line</span> — <b>sound money</b> (inflation near Banxico's target, a firm peso), <b>weak growth</b>, and <b>near-total dependence on the United States</b>. The swing factor is the unresolved 2026 USMCA review.</p>
+
+  <!-- 3 · THE BOARD -->
   <section>
     <div class="board-lbl">
       <div><span class="k">The board</span> &nbsp; <h2 style="display:inline">Mexico by the numbers</h2></div>
       <span class="asof" id="board-asof"></span>
     </div>
     <div class="tablero" id="tablero"></div>
+    <button class="board-more" id="board-more" type="button" aria-expanded="false">Show all indicators</button>
     <p class="wire-note">Every tile links to the section that owns it, where the same figure is shown with its full history and source.</p>
-  </section>
-
-  <!-- 3 · WHAT MOVED -->
-  <section>
-    <div class="bh"><div><span class="k">What moved</span></div><span class="a">latest vs a week / month ago</span></div>
-    <div class="moved" id="moved"></div>
   </section>
 
   <!-- 4 · NEWSLETTER -->
@@ -189,10 +216,22 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
     </div>
   </section>
 
+  <!-- 7 · PRIMER — new to Mexico? the evergreen basics, moved out of the top -->
+  <section class="primer">
+    <details class="primerbox">
+      <summary>New to Mexico? — the basics</summary>
+      <p class="country">
+        Mexico is a country of <b>131 million people</b> with a <b>~$1.9 trillion economy</b>, the world's ~14th-largest and the <b>largest US trading partner</b>.<a class="ref" href="/economy.html" title="World Bank; US Census Bureau">1</a>
+        It manufactures and exports: about <b>80% of its exports go to the United States</b>.<a class="ref" href="/us-mexico.html" title="INEGI / Banxico balance of trade">2</a>
+        It elects a president every six years, now <b>Claudia Sheinbaum (Morena)</b>, through 2030.<a class="ref" href="/politics.html" title="INE; Presidencia">3</a>
+      </p>
+    </details>
+  </section>
+
 </div>
 
 <script type="module">
-import { loadSeries, S, NEWS, EVENTS, tile, relTime, evDate } from '/assets/mb.js';
+import { loadSeries, S, NEWS, EVENTS, tile, relTime, evDate, enNum } from '/assets/mb.js';
 
 /* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
    Every topic now owns a page, so a bookmarked #q link should land on it. */
@@ -210,7 +249,8 @@ const SOC_RX=/pobreza|salario|salarial|empleo|desempleo|desigualdad|migraci|migr
 const ECON_RX=/econom|\bgdp\b|\bpib\b|growth|crecimiento|manufactur|industri|inversi|invest|nearshor|export|import|sector|f[aá]brica|factory/i;
 const MONEY_RX=/peso|inflaci|inflation|banxico|\brate\b|\btasa\b|remittance|remesas|market|mercado|tariff|arancel|usmca|nearshor|invest|inversi|bolsa|divisa/i;
 
-/* ============ THE BOARD (block 2) — same tile() render + same JSON as the sections ============ */
+/* ============ THE BOARD (block 3) — same tile() render + same JSON as the sections ============ */
+const CORE=new Set(['banxico-usdmxn-fix','banxico-inflacion','banxico-tasa-objetivo','banxico-pib-crecimiento']); // shown by default on mobile
 const TILES=[
   {id:'banxico-usdmxn-fix',   l:'Peso · MXN/USD',      href:'/money.html'},
   {id:'banxico-inflacion',    l:'Inflation · annual',  href:'/money.html'},
@@ -220,22 +260,88 @@ const TILES=[
   {id:'banxico-reservas',     l:"Int'l reserves",      href:'/money.html'},
 ];
 function renderBoard(){
-  let h=TILES.map(t=>`<a class="tilelink" href="${t.href}">${tile(t)}</a>`).join('');
+  // the four core tiles always show; the rest carry .extra and collapse behind "Show all" on mobile
+  let h=TILES.map(t=>`<a class="tilelink${CORE.has(t.id)?'':' extra'}" href="${t.href}">${tile(t)}</a>`).join('');
   // two dated static tiles (no live series exists yet) — links to their owning sections
-  h+=`<a class="tilelink" href="/security.html"><div class="tile"><div class="tl">Homicide rate · national</div>`+
+  h+=`<a class="tilelink extra" href="/security.html"><div class="tile"><div class="tl">Homicide rate · national</div>`+
      `<div class="tv">~26 <small>per 100k</small></div><div class="tb">vs US ~6 per 100k</div>`+
      `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span></div></a>`;
-  h+=`<a class="tilelink" href="/politics.html"><div class="tile"><div class="tl">Presidential approval</div>`+
+  h+=`<a class="tilelink extra" href="/politics.html"><div class="tile"><div class="tl">Presidential approval</div>`+
      `<div class="tv">49–68 <small>%</small></div><div class="tb">Mitofsky ~68 · AtlasIntel ~49</div>`+
      `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span></div></a>`;
   return h;
 }
 
-/* ============ WHAT MOVED (block 3) — deltas computed from series history ============
-   For each mover, find the data point nearest to N days ago and compare it with the
-   latest. Skip a mover when its series has no point far enough back (never invent a
-   delta) or when the change is below a materiality floor. Sort by relative magnitude,
-   take the top five. */
+/* ============ WHAT CHANGED (block 2, the lead) — the event-log queue ============
+   Leads with detected official releases/revisions since your last visit; when the log
+   is still sparse it falls back to the SAME series-delta computation the old "what moved"
+   strip used, so the block is never empty. A private, public-safe lens ranks
+   threshold-crossers first. Never invents a figure; every path degrades to a quiet line. */
+
+/* series → owning section + short label (event rows + fallback rows share this) */
+const SERIES_META={
+  'banxico-usdmxn-fix':{label:'Peso',href:'/money.html'},
+  'banxico-inflacion':{label:'Inflation',href:'/money.html'},
+  'banxico-inflacion-subyacente':{label:'Core inflation',href:'/money.html'},
+  'banxico-tasa-objetivo':{label:'Policy rate',href:'/money.html'},
+  'banxico-reservas':{label:'Reserves',href:'/money.html'},
+  'banxico-remesas':{label:'Remittances',href:'/money.html'},
+  'banxico-pib-crecimiento':{label:'Growth',href:'/economy.html'},
+  'banxico-igae':{label:'Monthly activity',href:'/economy.html'},
+};
+const metaFor=(id)=>SERIES_META[id]||{label:id,href:'/data.html'};
+
+/* the lens — generic, public-safe defaults; Al can override it in his own browser via
+   localStorage 'mb_lens'. It only personalizes RANKING (crossers sort first + get a flag). */
+const DEFAULT_LENS={
+  watch:['banxico-usdmxn-fix','banxico-inflacion','banxico-tasa-objetivo','banxico-pib-crecimiento','banxico-remesas'],
+  thresholds:{'banxico-usdmxn-fix':{band:[17.0,18.0]},'banxico-inflacion':{move:0.3},'banxico-tasa-objetivo':{anyChange:true}}
+};
+function getLens(){ try{ const o=JSON.parse(localStorage.getItem('mb_lens')||'null'); if(o&&Array.isArray(o.watch)) return o; }catch(e){} return DEFAULT_LENS; }
+
+/* the "since" point: the last visit (localStorage 'mb_lastvisit'), else the last ~3 days */
+function readSince(){
+  let raw=null; try{ raw=localStorage.getItem('mb_lastvisit'); }catch(e){}
+  const t=raw?Date.parse(raw):NaN;
+  if(raw&&!isNaN(t)) return {since:t,first:false,label:'Since '+new Date(t).toLocaleDateString('en-US',{month:'short',day:'numeric'})};
+  return {since:Date.now()-3*864e5,first:true,label:'Recently'};
+}
+function writeVisit(){ try{ localStorage.setItem('mb_lastvisit',new Date().toISOString()); }catch(e){} }
+
+/* prev_value → value with units, e.g. "4.0% → 3.4%" (decimals matched across the pair) */
+function decs(n){ const s=String(n),i=s.indexOf('.'); return i<0?0:Math.min(2,s.length-i-1); }
+function evNum(x,d){ x=Number(x); return Math.abs(x)>=1000?enNum(Math.round(x)):x.toFixed(d); }
+function evPair(e){
+  const u=(e.units||'').trim(), short=u.length>0&&u.length<=3, suf=short?u:(u?' '+u:'');
+  const hasP=e.prev_value!=null&&e.prev_value!==''&&!isNaN(Number(e.prev_value));
+  const hasV=e.value!=null&&e.value!==''&&!isNaN(Number(e.value));
+  if(!hasV&&!hasP) return '';
+  const d=Math.max(hasP?decs(Number(e.prev_value)):0,hasV?decs(Number(e.value)):0);
+  if(!hasV) return evNum(e.prev_value,d)+suf;
+  if(!hasP) return evNum(e.value,d)+suf;
+  return short?evNum(e.prev_value,d)+u+' → '+evNum(e.value,d)+u:evNum(e.prev_value,d)+' → '+evNum(e.value,d)+suf;
+}
+function evChange(e){ const v=Number(e.value),p=Number(e.prev_value); if(e.change!=null&&!isNaN(Number(e.change))) return Number(e.change); return (isFinite(v)&&isFinite(p))?v-p:NaN; }
+function evRel(e){ const chg=evChange(e),base=Math.abs(Number(e.prev_value))||Math.abs(Number(e.value))||1; return isFinite(chg)?Math.abs(chg)/base:0; }
+function crosses(e,lens){
+  if(!lens||!Array.isArray(lens.watch)||lens.watch.indexOf(e.series)<0) return false;
+  const th=(lens.thresholds||{})[e.series]; if(!th) return false;
+  const v=Number(e.value),chg=evChange(e);
+  if(th.band&&isFinite(v)&&(v<th.band[0]||v>th.band[1])) return true;       // value left the band
+  if(th.move!=null&&isFinite(chg)&&Math.abs(chg)>=th.move) return true;     // moved at least `move`
+  if(th.anyChange&&(!isFinite(chg)||chg!==0)) return true;                  // any change at all
+  return false;
+}
+function eventRow(e,lens){
+  const m=metaFor(e.series), whenT=Date.parse(e.published_at||e.detected_at||'');
+  const bits=[e.period||'',isNaN(whenT)?'':relTime(whenT),e.kind==='revision'?'revised':''].filter(Boolean);
+  return {series:e.series,href:m.href,label:e.metric||m.label,move:evPair(e),meta:bits.join(' · '),
+          crosser:crosses(e,lens),rel:evRel(e),sourceUrl:e.sourceUrl||'',source:e.source||'source'};
+}
+
+/* fallback = the series-delta computation the old "what moved" strip used, reused here.
+   For each mover, find the point nearest N days back and compare with the latest; skip
+   when there's no point far enough back (never invent a delta) or the change is tiny. */
 const MOVERS=[
   {id:'banxico-usdmxn-fix',    label:'Peso',              href:'/money.html', days:7,  unit:'pct', when:'past week'},
   {id:'banxico-inflacion',     label:'Inflation',         href:'/money.html', days:32, unit:'pp',  when:'past month'},
@@ -252,23 +358,37 @@ function moveOver(s,days){
   if(lastT-(+new Date(best.date)) < days*0.4*864e5) return null; // comparison point too close to now
   return {cur:last.value, prev:best.value};
 }
-function renderMoved(){
-  const rows=[];
+function fallbackRows(exclude){
+  const out=[];
   for(const m of MOVERS){
+    if(exclude.has(m.id)) continue;
     const mv=moveOver(S[m.id],m.days); if(!mv) continue;
     const diff=mv.cur-mv.prev; if(diff===0) continue;
-    const rel=Math.abs(diff)/(Math.abs(mv.prev)||1);
-    let mag;
-    if(m.unit==='pp'){ if(Math.abs(diff)<0.05) continue; mag=(diff>0?'+':'−')+Math.abs(diff).toFixed(2)+' pp'; }
-    else { const pct=diff/mv.prev*100; if(Math.abs(pct)<0.25) continue; mag=(pct>0?'+':'−')+Math.abs(pct).toFixed(1)+'%'; }
-    rows.push({...m,diff,rel,mag});
+    let move;
+    if(m.unit==='pp'){ if(Math.abs(diff)<0.05) continue; move=(diff>0?'+':'−')+Math.abs(diff).toFixed(2)+' pp'; }
+    else { const pct=diff/mv.prev*100; if(Math.abs(pct)<0.25) continue; move=(pct>0?'+':'−')+Math.abs(pct).toFixed(1)+'%'; }
+    out.push({series:m.id,href:m.href,label:m.label,move,meta:m.when,crosser:false,rel:Math.abs(diff)/(Math.abs(mv.prev)||1)});
   }
-  rows.sort((a,b)=>b.rel-a.rel);
-  const top=rows.slice(0,5);
-  if(!top.length) return `<div class="cb-empty" style="padding:14px 15px">Not enough recent history to report a move.</div>`;
-  return top.map(r=>{const up=r.diff>0,arw=up?'▲':'▼';
-    return `<a class="movedrow" href="${r.href}"><span class="mv-arw">${arw}</span><span class="mv-mag">${r.mag}</span>`+
-      `<span class="mv-lbl">${r.label}</span><span class="mv-when">${r.when}</span><span class="mv-go">→</span></a>`;}).join('');
+  return out;
+}
+function chgRow(r){
+  const flag=r.crosser?`<span class="cg-flag">Act</span>`:'';
+  const move=r.move?`<span class="cg-move">${r.move}</span>`:'';
+  const right=r.sourceUrl?`<a class="cg-src" href="${r.sourceUrl}" target="_blank" rel="noopener">${r.source} ↗</a>`:`<span class="cg-go">→</span>`;
+  return `<div class="chgrow${r.crosser?' cross':''}"><a class="cg-body" href="${r.href}">`+
+    `<div class="cg-line">${flag}<span class="cg-lbl">${r.label}</span>${move}</div>`+
+    (r.meta?`<div class="cg-meta">${r.meta}</div>`:'')+`</a>${right}</div>`;
+}
+function renderChanged(releases,since,lens){
+  const evs=((releases&&releases.events)||[]).map(e=>({e,t:Date.parse(e&&e.detected_at)})).filter(x=>!isNaN(x.t));
+  // return visit: events detected since your last visit · first visit: the most recent ~5
+  const picked=(since.first?evs.sort((a,b)=>b.t-a.t):evs.filter(x=>x.t>since.since).sort((a,b)=>b.t-a.t)).slice(0,5).map(x=>x.e);
+  let rows=picked.map(e=>eventRow(e,lens));
+  if(rows.length<2){ const have=new Set(rows.map(r=>r.series)); rows=rows.concat(fallbackRows(have)); } // supplement, never empty
+  rows.sort((a,b)=>(b.crosser-a.crosser)||(b.rel-a.rel));    // lens: threshold-crossers first, then magnitude
+  rows=rows.slice(0,5);
+  if(!rows.length) return `<div class="chg-quiet">${since.first?'Nothing material to report in the last few days.':'Nothing material changed since your last visit.'}</div>`;
+  return `<div class="chg">`+rows.map(chgRow).join('')+`</div>`;
 }
 
 /* ============ SECTION CARDS (block 5) ============ */
@@ -322,10 +442,13 @@ function renderWire(){
 
 /* ============ boot ============ */
 (async()=>{
+  const since=readSince();          // read the last-visit point BEFORE we overwrite it
+  const lens=getLens();
   await loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-reservas','banxico-remesas','banxico-pib-crecimiento','banxico-igae','wb-gdp-usd','wb-population','wb-gdp-per-capita']);
-  const [health,trade]=await Promise.all([
+  const [health,trade,releases]=await Promise.all([
     fetch('./data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/trade-us.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/releases.json').then(r=>r.ok?r.json():null).catch(()=>null),
   ]);
   TRADE=trade;
 
@@ -337,10 +460,19 @@ function renderWire(){
   const ba=document.getElementById('board-asof'); if(ba&&newest) ba.textContent='as of '+new Date(newest).toLocaleDateString('en-US',{month:'short',day:'numeric'});
 
   document.getElementById('tablero').innerHTML=renderBoard();
-  document.getElementById('moved').innerHTML=renderMoved();
+
+  // the lead: what changed since your last visit (event log → series-delta fallback)
+  document.getElementById('changed').innerHTML=renderChanged(releases,since,lens);
+  const cs=document.getElementById('chg-since'); if(cs) cs.textContent=since.label;
+  writeVisit();                     // stamp this visit so the next one has a "since" point
+
   document.getElementById('seccards').innerHTML=renderCards();
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
+
+  // "Show all indicators" — reveals the .extra tiles on mobile
+  const bm=document.getElementById('board-more'), tbl=document.getElementById('tablero');
+  if(bm&&tbl) bm.addEventListener('click',()=>{ const on=tbl.classList.toggle('show-all'); bm.setAttribute('aria-expanded',on?'true':'false'); bm.textContent=on?'Show fewer':'Show all indicators'; });
 
   // #q12 / #wire from an old link → scroll to the Wire block on this page
   if(location.hash==='#q12'||location.hash==='#wire'){const w=document.getElementById('wire'); if(w)w.scrollIntoView();}
