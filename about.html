@@ -2,53 +2,43 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>About — The Mexico Brief</title>
 <meta name="description" content="The Mexico Brief is a free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source." />
-<link rel="stylesheet" href="./design/mckinsey-mx.css" />
-<style>
-  :root{--ink-3:#4d4d4d}
-  body{font-size:17px}
-  .wrap{max-width:760px;margin:0 auto;padding:0 clamp(16px,5vw,32px)}
-  header.mast{border-bottom:1.5px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);z-index:40}
-  header.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(16px,5vw,32px);max-width:900px}
-  header .brand{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink);text-decoration:none}
-  header .brand .u{border-bottom:2px solid var(--green);padding-bottom:1px}
-  header .mnav{display:flex;align-items:center;gap:15px;font-family:var(--mono);font-size:12px}
-  header .mnav a{color:var(--mut);text-decoration:none;text-transform:uppercase;letter-spacing:.04em}
-  header .mnav a.here{color:var(--green-d)}header .mnav a:hover{color:var(--green-d)}
-  @media(max-width:640px){header .mnav a.opt{display:none}}
-
-  .hero{padding:30px 0 8px}
-  .hero h1{font-family:var(--serif);font-size:clamp(30px,6vw,44px);line-height:1.03;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
-  .hero .thesis{font-size:19px;color:var(--ink-2);margin-top:16px;line-height:1.55}
-  .hero .thesis b{color:var(--ink)}
-
-  section.blk{margin:30px 0 0;border-top:1px solid var(--line);padding-top:22px}
-  section.blk h2{font-family:var(--serif);font-size:23px;line-height:1.15;color:var(--ink);letter-spacing:-.01em;margin:0 0 10px}
-  section.blk p{color:var(--ink-2);line-height:1.6;margin:0 0 12px}
-  section.blk p b{color:var(--ink)}
-  ul.rules{list-style:none;margin:6px 0 0;padding:0}
-  ul.rules li{position:relative;padding:0 0 0 20px;margin:0 0 10px;color:var(--ink-2);line-height:1.55}
-  ul.rules li::before{content:"";position:absolute;left:0;top:10px;width:7px;height:7px;background:var(--green);border-radius:2px}
-  a.inline{color:var(--green);font-weight:500}
-
-  .foot{border-top:1px solid var(--line);margin:44px 0 60px;padding-top:16px;font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.7}
-  .foot a{color:var(--green)}.foot .fnav a{margin-right:14px;text-transform:uppercase;letter-spacing:.03em}
+<meta name="theme-color" content="#ffffff" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="About — The Mexico Brief" />
+<meta property="og:description" content="The Mexico Brief is a free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source." />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a7d4d'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Georgia,serif'%3EM%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css" />
+<style>.hero{padding:30px 0 8px}
+.hero h1{font-family:var(--serif);font-size:clamp(30px,6vw,44px);line-height:1.03;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
+.hero .thesis{font-size:19px;color:var(--ink-2);margin-top:16px;line-height:1.55}
+.hero .thesis b{color:var(--ink)}
+section.blk{margin:30px 0 0;border-top:1px solid var(--line);padding-top:22px}
+section.blk h2{font-family:var(--serif);font-size:23px;line-height:1.15;color:var(--ink);letter-spacing:-.01em;margin:0 0 10px}
+section.blk p{color:var(--ink-2);line-height:1.6;margin:0 0 12px}
+section.blk p b{color:var(--ink)}
+ul.rules{list-style:none;margin:6px 0 0;padding:0}
+ul.rules li{position:relative;padding:0 0 0 20px;margin:0 0 10px;color:var(--ink-2);line-height:1.55}
+ul.rules li::before{content:"";position:absolute;left:0;top:10px;width:7px;height:7px;background:var(--green);border-radius:2px}
+a.inline{color:var(--green);font-weight:500}
 </style>
+
 </head>
-<body>
+<body class="reading">
 <header class="mast"><div class="wrap">
-  <a class="brand" href="./">THE MEXICO <span class="u">BRIEF</span></a>
+  <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
   <nav class="mnav">
-    <a href="./">Briefing</a>
-    <a class="opt" href="./economy.html">Economy</a>
-    <a class="opt" href="./model.html">Model</a>
-    <a class="opt" href="./atlas.html">Atlas</a>
-    <a href="./data.html">Sources</a>
-    <a href="./weekly.html">Weekly</a>
-    <a class="here" href="./about.html">About</a>
-  </nav>
+    <a href="/">Briefing</a>
+    <a href="/economy.html" class="opt">Economy</a>
+    <a href="/model.html" class="opt">Model</a>
+    <a href="/atlas.html" class="opt">Atlas</a>
+    <a href="/data.html">Sources</a>
+    <a href="/weekly.html">Weekly</a>
+    <a href="/about.html" class="here">About</a></nav>
 </div></header>
 
 <div class="wrap">
@@ -91,13 +81,15 @@
 
   <section class="blk">
     <h2>Check us</h2>
-    <p>Every figure links to its source. If you find an error, tell us and we will correct it with a note. Start with the <a class="inline" href="./data.html">Sources</a> page, which lists every feed and when it last updated.</p>
+    <p>Every figure links to its source. If you find an error, tell us and we will correct it with a note. Start with the <a class="inline" href="/data.html">Sources</a> page, which lists every feed and when it last updated.</p>
   </section>
-
-  <div class="foot">
-    <div class="fnav"><a href="./">Briefing</a><a href="./economy.html">Economy</a><a href="./model.html">Model</a><a href="./atlas.html">Atlas</a><a href="./data.html">Sources</a><a href="./weekly.html">Weekly</a><a href="./about.html">About</a></div>
-    A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.
-  </div>
 </div>
+
+<footer class="foot"><div class="wrap">
+  <nav class="fnav"><a href="/">Briefing</a><a href="/economy.html">Economy</a><a href="/model.html">Model</a><a href="/atlas.html">Atlas</a><a href="/data.html">Sources</a><a href="/weekly.html">Weekly</a><a href="/about.html">About</a></nav>
+  <p class="fblurb">A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.</p>
+</div></footer>
+
+
 </body>
 </html>

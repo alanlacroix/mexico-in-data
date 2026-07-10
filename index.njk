@@ -1,35 +1,20 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>The Mexico Brief — a sourced, live briefing on the whole country.</title>
-<meta name="description" content="Mexico&#39;s economy in official numbers: growth, the peso, inflation, jobs, investment, politics and security—every figure sourced and dated." />
-<meta name="theme-color" content="#ffffff" />
-<meta property="og:type" content="website" />
-<meta property="og:title" content="The Mexico Brief" />
-<meta property="og:description" content="Mexico&#39;s economy in official numbers—sourced, dated, and updated as the data lands." />
-<meta property="og:locale" content="en_US" />
-<meta name="twitter:card" content="summary" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a7d4d'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Georgia,serif'%3EM%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css" />
-
-
-</head>
-<body>
-<header class="mast"><div class="wrap">
-  <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
-  <nav class="mnav"><a class="wire" id="nav-wire" href="#q12"><span class="dot"></span>The Wire</a>
-    <a href="/" class="here">Briefing</a>
-    <a href="/economy.html" class="opt">Economy</a>
-    <a href="/model.html" class="opt">Model</a>
-    <a href="/atlas.html" class="opt">Atlas</a>
-    <a href="/data.html">Sources</a>
-    <a href="/weekly.html">Weekly</a>
-    <a href="/about.html">About</a><a class="status" id="status" href="/data.html">loading…</a></nav>
-</div></header>
-
-
+---
+layout: base.njk
+permalink: /
+title: "The Mexico Brief — a sourced, live briefing on the whole country."
+description: "Mexico's economy in official numbers: growth, the peso, inflation, jobs, investment, politics and security—every figure sourced and dated."
+ogTitle: "The Mexico Brief"
+ogDescription: "Mexico's economy in official numbers—sourced, dated, and updated as the data lands."
+wire:
+  href: "#q12"
+  label: "The Wire"
+  id: "nav-wire"
+status:
+  text: "loading…"
+  href: "/data.html"
+  id: "status"
+---
+{% raw %}
 <style>
 :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
   body{font-size:17px}
@@ -1013,13 +998,4 @@ function wireScroll(){
   renderRail(); renderContents(); renderFacts(); renderBoard(); renderLatestLine(); renderPrimer(); renderSections(); wireScroll();
 })().catch(e=>{ const h=$('#sections'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading data: '+e.message+'</p>'; });
 </script>
-
-
-<footer class="foot"><div class="wrap">
-  <nav class="fnav"><a href="/">Briefing</a><a href="/economy.html">Economy</a><a href="/model.html">Model</a><a href="/atlas.html">Atlas</a><a href="/data.html">Sources</a><a href="/weekly.html">Weekly</a><a href="/about.html">About</a></nav>
-  <p class="fblurb">A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.</p>
-</div></footer>
-
-
-</body>
-</html>
+{% endraw %}

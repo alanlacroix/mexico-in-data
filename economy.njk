@@ -1,35 +1,10 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>The Economy — The Mexico Brief</title>
-<meta name="description" content="What Mexico&#39;s economy is actually made of: GDP by sector and spending, growth, exports and imports broken out, the trade balance, the informal economy, and the money flowing in. Official, dated, sourced." />
-<meta name="theme-color" content="#ffffff" />
-<meta property="og:type" content="website" />
-<meta property="og:title" content="The Economy — The Mexico Brief" />
-<meta property="og:description" content="What Mexico&#39;s economy is actually made of: GDP by sector and spending, growth, exports and imports broken out, the trade balance, the informal economy, and the money flowing in. Official, dated, sourced." />
-<meta property="og:locale" content="en_US" />
-<meta name="twitter:card" content="summary" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a7d4d'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='Georgia,serif'%3EM%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css" />
-
-
-</head>
-<body>
-<header class="mast"><div class="wrap">
-  <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
-  <nav class="mnav">
-    <a href="/">Briefing</a>
-    <a href="/economy.html" class="here">Economy</a>
-    <a href="/model.html" class="opt">Model</a>
-    <a href="/atlas.html" class="opt">Atlas</a>
-    <a href="/data.html">Sources</a>
-    <a href="/weekly.html">Weekly</a>
-    <a href="/about.html">About</a></nav>
-</div></header>
-
-
+---
+layout: base.njk
+permalink: /economy.html
+title: "The Economy — The Mexico Brief"
+description: "What Mexico's economy is actually made of: GDP by sector and spending, growth, exports and imports broken out, the trade balance, the informal economy, and the money flowing in. Official, dated, sourced."
+---
+{% raw %}
 <style>
   :root{--ink-3:#4d4d4d}
   body{font-size:17px}
@@ -224,13 +199,4 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   $('#exhibits').innerHTML=H;
 })().catch(e=>{$('#exhibits').innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading economy data: '+e.message+'</p>';});
 </script>
-
-
-<footer class="foot"><div class="wrap">
-  <nav class="fnav"><a href="/">Briefing</a><a href="/economy.html">Economy</a><a href="/model.html">Model</a><a href="/atlas.html">Atlas</a><a href="/data.html">Sources</a><a href="/weekly.html">Weekly</a><a href="/about.html">About</a></nav>
-  <p class="fblurb">A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.</p>
-</div></footer>
-
-
-</body>
-</html>
+{% endraw %}

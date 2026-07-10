@@ -1,0 +1,7 @@
+{#- The footer. Same one nav as the header, so the two can never diverge again
+   (the old hand-copied footers dropped Economy + About on some pages). Each page
+   may override the blurb via `footerBlurb`. -#}
+<footer class="foot"><div class="wrap">
+  <nav class="fnav">{% for item in nav %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}</nav>
+  <p class="fblurb">{{ footerBlurb or "A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source." }}</p>
+</div></footer>

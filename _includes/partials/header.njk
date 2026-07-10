@@ -1,0 +1,13 @@
+{#- The masthead. Renders the one nav (see _data/nav.js); "here" is derived from
+   page.url. The homepage passes `wire` (the live Wire link) and `status`; every
+   other page omits them and gets the plain nav. -#}
+<header class="mast"><div class="wrap">
+  <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
+  <nav class="mnav">
+    {%- if wire %}<a class="wire"{% if wire.id %} id="{{ wire.id }}"{% endif %} href="{{ wire.href }}"><span class="dot"></span>{{ wire.label }}</a>{% endif -%}
+    {%- for item in nav %}
+    <a href="{{ item.href }}"{% if page.url == item.href %} class="here"{% elif item.opt %} class="opt"{% endif %}>{{ item.label }}</a>
+    {%- endfor %}
+    {%- if status %}<a class="status"{% if status.id %} id="{{ status.id }}"{% endif %} href="{{ status.href or '/data.html' }}">{{ status.text }}</a>{% endif -%}
+  </nav>
+</div></header>
