@@ -115,7 +115,7 @@ function boardRow(r) {
 function leadItem(it, first) {
   const c = CAT[it.room] || CAT.economy;
   const style = catCls[c.cls] || catCls[''];
-  const why = it.why ? `<div class="why"><b>Why it matters for you:</b> ${esc(it.why)}</div>` : '';
+  const why = it.why ? `<div class="why"><b>Why it matters:</b> ${esc(it.why)}</div>` : '';
   const dom = domainOf(it.url);
   const realTag = it.real ? ` <span style="color:${C.greenD}">· from the wire</span>` : '';
   const src = it.url

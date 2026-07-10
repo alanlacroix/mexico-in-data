@@ -35,5 +35,7 @@ export function lintSummary({ summary = '', why = '' }) {
 
   if (CONTINUITY.test(both) && !HASDATE.test(both)) flags.push('continuity claim without a cited date');
 
+  if (/\byou(r|rs|'re|’re)?\b/i.test(both)) flags.push("addresses the reader ('you')");
+
   return { ok: flags.length === 0, hard, flags };
 }
