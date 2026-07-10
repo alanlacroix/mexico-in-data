@@ -65,6 +65,11 @@ jobs:
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
         run: node build-trade.js
 
+      - name: Bank today's snapshot (delta history — cannot be backfilled)
+        working-directory: pipeline
+        continue-on-error: true   # never fails the run
+        run: node snapshot.js
+
       - name: Commit refreshed data
         run: |
           git config user.name  "mexico-data-bot"
