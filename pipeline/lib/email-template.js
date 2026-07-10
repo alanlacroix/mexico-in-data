@@ -80,6 +80,7 @@ const STYLE = `
   .item .d{font-size:15.5px;line-height:1.5;color:${C.body};margin-top:3px}.item .d b{color:${C.ink}}
   .item .m{font-family:${MONO};font-size:11px;color:${C.mut};margin-top:4px}.item .m a{color:${C.greenD}}
   .chip{font-family:${MONO};font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:${C.greenD};background:${C.upBg};border-radius:4px;padding:2px 6px;margin-right:6px}
+  .item .t .mv{font-family:${MONO};font-weight:600;font-size:14px;color:${C.greenD};white-space:nowrap;margin-left:2px}
   ul.watch{list-style:none;margin:12px 0 0;padding:0}
   ul.watch li{margin-bottom:11px;font-size:15.5px;line-height:1.45;color:${C.body}}
   ul.watch li .dt{display:inline-block;font-family:${MONO};font-size:12px;font-weight:600;color:${C.greenD};min-width:62px}
@@ -94,6 +95,7 @@ const STYLE = `
     .pad{border-color:#2c2d33}
     .lead,.isum,.item .d,ul.watch li{color:#c7c6bd}
     .lead b,.hl,.hl a,.nm,.val,.isum b,.item .t,.item .t a,.item .d b,ul.watch li b,.why b{color:#f2f1ea}
+    .item .t .mv{color:#8fd3ae}
     .why{color:#c7c6bd}
     .board td,.item{border-color:#2c2d33}
     .foot{background:#191a1e;border-color:#2c2d33;color:#98978e}
@@ -140,6 +142,19 @@ function roomItem(it) {
   return `<div class="item"><div class="t">${title}</div>${dek}${meta}</div>`;
 }
 
+// one "what changed this week" row: the label + prev→new move, then period · source.
+// Reuses the room .item/.t/.m/.chip patterns; revisions get a small "revised" chip.
+function changedItem(it) {
+  const move = it.move ? ` <span class="mv">${esc(it.move)}</span>` : '';
+  const revised = it.revised ? `<span class="chip">revised</span>` : '';
+  const src = it.sourceUrl
+    ? `<a href="${esc(it.sourceUrl)}">${esc(it.source || domainOf(it.sourceUrl))} ↗</a>`
+    : esc(it.source || '');
+  const bits = [it.period ? esc(it.period) : '', src].filter(Boolean).join(' · ');
+  const meta = (revised || bits) ? `<div class="m">${revised}${bits}</div>` : '';
+  return `<div class="item"><div class="t">${esc(it.label)}${move}</div>${meta}</div>`;
+}
+
 // ---- the full document ----
 export function renderEmail(d) {
   const topOfWeek = (d.topOfWeek || []).map((it, i) => leadItem(it, i === 0)).join('');
@@ -153,6 +168,12 @@ export function renderEmail(d) {
     <div class="pad">
       <div class="eyebrow">What to watch</div>
       <ul class="watch">${d.watch.map((w) => `<li><span class="dt">${esc(w.dt)}</span> ${esc(w.w)}</li>`).join('')}</ul>
+    </div>` : '';
+  // "What changed this week" — omitted entirely when no releases landed in the window
+  const changed = (d.changed || []).length ? `
+    <div class="pad">
+      <div class="eyebrow">What changed this week</div>
+      ${d.changed.map(changedItem).join('')}
     </div>` : '';
 
   return `<!DOCTYPE html>
@@ -180,6 +201,8 @@ export function renderEmail(d) {
       <table class="board" role="presentation">${board}</table>
       <div class="subsrc">Computed by code from wired sources. Pills show the direction each number moved.</div>
     </div>` : ''}
+
+    ${changed}
 
     ${rooms}
     ${watch}

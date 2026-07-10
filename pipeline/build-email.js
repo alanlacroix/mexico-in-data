@@ -114,6 +114,62 @@ function buildWatch(now) {
     .map((e) => { let w = e.label.split(' (')[0].split(' — ')[0]; return { dt: fmtDay(e.date), w: shorten(w, 96) }; });
 }
 
+// ---- what changed this week (deterministic; rendered from the release event log) ----
+// The SAME append-only log (data/releases.json) the homepage's "What changed" block reads —
+// this is just another rendering of it. No LLM: it's the log, formatted. Empty log → no section.
+const CHANGED_LABEL = {   // friendly English labels, mirroring the site's SERIES_META
+  'banxico-usdmxn-fix': 'Peso per USD', 'banxico-inflacion': 'Inflation',
+  'banxico-inflacion-subyacente': 'Core inflation', 'banxico-tasa-objetivo': 'Banxico rate',
+  'banxico-reservas': 'Reserves', 'banxico-remesas': 'Remittances',
+  'banxico-pib-crecimiento': 'GDP growth', 'banxico-igae': 'Monthly activity',
+};
+const humanize = (s) => { s = String(s == null ? '' : s).replace(/_/g, ' ').trim(); return s ? s[0].toUpperCase() + s.slice(1) : ''; };
+const changedLabel = (e) => CHANGED_LABEL[e.series] || humanize(e.metric) || e.title || e.series || '';
+const changedSource = (s) => shorten(String(s == null ? '' : s).replace(/\s*\(SIE[^)]*\)/g, '').trim(), 46);
+const enNum = (x) => Math.round(x).toLocaleString('en-US');
+const decs = (n) => { const s = String(n), i = s.indexOf('.'); return i < 0 ? 0 : Math.min(2, s.length - i - 1); };
+const evNum = (x, d) => { x = Number(x); return Math.abs(x) >= 1000 ? enNum(x) : x.toFixed(d); };
+// prev_value → value with units, matching the homepage's evPair exactly (e.g. "4.0% → 3.4%")
+function evPair(e) {
+  const u = (e.units || '').trim(), short = u.length > 0 && u.length <= 3, suf = short ? u : (u ? ' ' + u : '');
+  const hasP = e.prev_value != null && e.prev_value !== '' && !isNaN(Number(e.prev_value));
+  const hasV = e.value != null && e.value !== '' && !isNaN(Number(e.value));
+  if (!hasV && !hasP) return '';
+  const d = Math.max(hasP ? decs(Number(e.prev_value)) : 0, hasV ? decs(Number(e.value)) : 0);
+  if (!hasV) return evNum(e.prev_value, d) + suf;
+  if (!hasP) return evNum(e.value, d) + suf;
+  return short ? evNum(e.prev_value, d) + u + ' → ' + evNum(e.value, d) + u
+               : evNum(e.prev_value, d) + ' → ' + evNum(e.value, d) + suf;
+}
+// reference period → a clean label: "June" (monthly), "Jul 8" (daily), "2025" (annual)
+function fmtPeriod(period, cadence, now) {
+  const s = String(period == null ? '' : period).trim();
+  if (!s) return '';
+  if (/^\d{4}$/.test(s)) return s;
+  const m = s.match(/^(\d{4})-(\d{2})(?:-(\d{2}))?$/);
+  if (!m) return s;
+  const y = +m[1], moi = +m[2] - 1, day = m[3] ? +m[3] : null;
+  if (moi < 0 || moi > 11) return s;
+  if (/daily|weekly|hourly/i.test(cadence || '') && day) return `${MO[moi]} ${day}`;
+  const yr = (now || new Date()).getUTCFullYear();
+  return y === yr ? MOF[moi] : `${MOF[moi]} ${y}`;
+}
+function buildChanged(now) {
+  const j = readJson(D('releases.json'), { events: [] });
+  const cutoff = now.getTime() - 7 * 864e5;
+  // window + sort by detected_at (when the cron saw the change); fall back to published_at
+  const when = (e) => { const t = Date.parse(e && e.detected_at); return Number.isFinite(t) ? t : Date.parse(e && e.published_at); };
+  return arr(j && j.events)
+    .map((e) => ({ e, t: when(e) }))
+    .filter((x) => Number.isFinite(x.t) && x.t >= cutoff)   // this week only; empty log → []
+    .sort((a, b) => b.t - a.t)                              // most-recent first
+    .slice(0, 6)                                            // cap ~6
+    .map(({ e }) => ({
+      label: changedLabel(e), move: evPair(e), period: fmtPeriod(e.period, e.cadence, now),
+      source: changedSource(e.source), sourceUrl: e.sourceUrl || '', revised: e.kind === 'revision',
+    }));
+}
+
 // ---- candidate news (dedup, window, drop aggregator) ----
 const normTitle = (t) => t.toLowerCase().replace(/[^a-z0-9áéíóúñü ]/g, ' ').replace(/\s+/g, ' ').trim();
 function jaccard(a, b) {
@@ -216,9 +272,10 @@ async function main() {
   console.log(`\nbuild-email ${isoWk} · model ${hasLLM() ? model : 'none (deterministic fallback)'}`);
 
   const board = buildBoard();
+  const changed = buildChanged(now);
   const watch = buildWatch(now);
   const cands = candidates(now);
-  console.log(`  board ${board.length} rows · watch ${watch.length} · candidates ${cands.length}`);
+  console.log(`  board ${board.length} rows · changed ${changed.length} · watch ${watch.length} · candidates ${cands.length}`);
 
   const scored = (await scoreAll(cands)).sort((a, b) => b.score - a.score);
 
@@ -260,7 +317,7 @@ async function main() {
 
   // intro + read-time + subject + issue
   const roomCount = rooms.reduce((s, r) => s + r.items.length, 0);
-  const readMin = Math.max(2, Math.round((topOfWeek.length * 45 + roomCount * 8 + 30 + (watch.length ? 15 : 0)) / 60));
+  const readMin = Math.max(2, Math.round((topOfWeek.length * 45 + roomCount * 8 + 30 + (changed.length ? 15 : 0) + (watch.length ? 15 : 0)) / 60));
   const n = topOfWeek.length;
   const leadClause = n === 0 ? 'A quiet week for headlines. The board is below.'
     : n === 1 ? 'One story led the week.'
@@ -274,7 +331,7 @@ async function main() {
   const draft = {
     week: isoWk, issue, subject, status: 'draft',
     dateLabel: fmtFull(monday), readMin, builtAt: now.toISOString(),
-    intro, topOfWeek, board, rooms, watch, lintFlags,
+    intro, topOfWeek, board, changed, rooms, watch, lintFlags,
     footerExtra: '<br>You are getting this because you subscribed at mexicobrief.com. One tap unsubscribes.',
     _cost: usage().costUSD, _llm: hasLLM(),
   };
