@@ -1,0 +1,51 @@
+name: build-weekly-email
+# Saturday: refresh the news, then build the weekly issue as a DRAFT. It never
+# sends — it writes data/email/<week>.json + .html and email-preview.html, commits
+# them, and stops. Review the preview over the weekend; send with the separate
+# send-weekly-email action when you're happy. Needs ANTHROPIC_API_KEY (Haiku 4.5,
+# cents per issue) for the scoring + lead summaries; without it, it still builds a
+# real issue from the deterministic fallback.
+
+on:
+  schedule:
+    - cron: '0 15 * * 6'   # Saturday 15:00 UTC (~9am Mexico City) — draft ready for the weekend
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-weekly-email
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Refresh the news ledger + wire
+        working-directory: pipeline
+        continue-on-error: true   # a dead feed never blocks the build
+        run: node collect-news.js
+
+      - name: Build the weekly draft
+        working-directory: pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node build-email.js
+
+      - name: Commit the draft + preview
+        run: |
+          git config user.name  "mexico-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/email/ email-preview.html
+          if git diff --cached --quiet; then
+            echo "no email changes"
+          else
+            git commit -m "email: weekly draft $(date -u +%Y-%m-%d)"
+            git push
+          fi

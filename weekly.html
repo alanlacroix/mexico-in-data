@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Weekly — The Mexico Brief</title>
+<meta name="description" content="A free weekly email on Mexico: the week's biggest moves in the economy, politics, and companies, summarized from the source articles, with a data board computed from official sources." />
+<link rel="stylesheet" href="./design/mckinsey-mx.css" />
+<style>
+  :root{--ink-3:#4d4d4d}
+  body{font-size:17px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 clamp(16px,5vw,32px)}
+  header.mast{border-bottom:1.5px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);z-index:40}
+  header.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(16px,5vw,32px);max-width:900px}
+  header .brand{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink);text-decoration:none}
+  header .brand .u{border-bottom:2px solid var(--green);padding-bottom:1px}
+  header .mnav{display:flex;align-items:center;gap:15px;font-family:var(--mono);font-size:12px}
+  header .mnav a{color:var(--mut);text-decoration:none;text-transform:uppercase;letter-spacing:.04em}
+  header .mnav a.here{color:var(--green-d)}header .mnav a:hover{color:var(--green-d)}
+  @media(max-width:640px){header .mnav a.opt{display:none}}
+
+  .hero{padding:30px 0 8px}
+  .hero h1{font-family:var(--serif);font-size:clamp(30px,6vw,44px);line-height:1.03;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
+  .hero .thesis{font-size:19px;color:var(--ink-2);margin-top:16px;line-height:1.55}
+  .hero .thesis b{color:var(--ink)}
+
+  .sub{margin:26px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:22px 22px 18px;background:#fbfaf6}
+  .sub .lab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
+  .sub form{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+  .sub input[type=email]:focus{outline:none;border-color:var(--green)}
+  .sub button{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:9px;padding:12px 24px;cursor:pointer}
+  .sub button:hover{background:var(--green-d)}
+  .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:11px;line-height:1.6}
+  .samplelink{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);text-decoration:none;border-bottom:2px solid #daf0e2;padding-bottom:1px}
+
+  section.blk{margin:30px 0 0;border-top:1px solid var(--line);padding-top:22px}
+  section.blk h2{font-family:var(--serif);font-size:23px;line-height:1.15;color:var(--ink);letter-spacing:-.01em;margin:0 0 10px}
+  section.blk p{color:var(--ink-2);line-height:1.6;margin:0 0 12px}
+  section.blk p b{color:var(--ink)}
+  ul.parts{list-style:none;margin:6px 0 0;padding:0}
+  ul.parts li{position:relative;padding:0 0 0 20px;margin:0 0 12px;color:var(--ink-2);line-height:1.55}
+  ul.parts li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;background:var(--green);border-radius:2px}
+  ul.parts li b{color:var(--ink)}
+  a.inline{color:var(--green);font-weight:500}
+
+  .foot{border-top:1px solid var(--line);margin:44px 0 60px;padding-top:16px;font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.7}
+  .foot a{color:var(--green)}.foot .fnav a{margin-right:14px;text-transform:uppercase;letter-spacing:.03em}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="./">THE MEXICO <span class="u">BRIEF</span></a>
+  <nav class="mnav">
+    <a href="./">Briefing</a>
+    <a class="opt" href="./economy.html">Economy</a>
+    <a class="opt" href="./model.html">Model</a>
+    <a class="opt" href="./atlas.html">Atlas</a>
+    <a href="./data.html">Sources</a>
+    <a class="here" href="./weekly.html">Weekly</a>
+    <a class="opt" href="./about.html">About</a>
+  </nav>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <span class="eyebrow">The weekly</span>
+    <h1>Mexico, once a week, in one email</h1>
+    <p class="thesis">Every Monday, the week's biggest moves in Mexico's economy, politics, and companies, in one email you can read in about five minutes. The lead stories are summarized from the source articles and linked. Under them, a board of the numbers that moved: the peso, inflation, the Banxico rate, remittances, and US–Mexico trade, each computed from official data. Built for one founder who runs a payments company here and needs to stay sharp on Mexico. <b>Free, and open to anyone who does too.</b></p>
+  </section>
+
+  <!-- Buttondown embed. Replace `mexicobrief` below with your Buttondown username once the account exists. Keyless: this posts straight to Buttondown, works on a static host. -->
+  <div class="sub">
+    <div class="lab">Get the Monday email</div>
+    <form action="https://buttondown.email/api/emails/embed-subscribe/mexicobrief" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/mexicobrief','popupwindow')">
+      <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
+      <input type="hidden" value="1" name="embed" />
+      <button type="submit">Subscribe</button>
+    </form>
+    <div class="fine">One email a week. No tracking beyond open rates. One tap unsubscribes.</div>
+    <a class="samplelink" href="./weekly-sample.html">See the latest issue →</a>
+  </div>
+
+  <section class="blk">
+    <h2>What's inside</h2>
+    <ul class="parts">
+      <li><b>Top of the week.</b> The two or three stories that actually mattered, ranked and capped. A big week runs long; a quiet week runs short. It is never padded to fill space.</li>
+      <li><b>The board.</b> The peso, headline and core inflation, the Banxico rate, remittances, and two-way US–Mexico trade. Each shows the latest value, the direction it moved, and the date it is from.</li>
+      <li><b>The rooms.</b> Payments and fintech first, then companies and deals, economy, politics, and US–Mexico. A room appears only when something happened in it.</li>
+      <li><b>What to watch.</b> The dated calendar ahead: rate decisions, CPI releases, USMCA milestones.</li>
+    </ul>
+  </section>
+
+  <section class="blk">
+    <h2>How it's made</h2>
+    <p>The board is computed by code from wired official sources: Banxico, INEGI, and the US Census Bureau. The lead summaries are written only from the fetched article text of a trusted-source allowlist, never from memory, and every headline links to its origin. Tariff and trade items come straight from the US Federal Register in the government's own words.</p>
+    <p>One email a week. Every issue is reviewed by a person before it sends. Nothing goes out on autopilot.</p>
+  </section>
+
+  <section class="blk">
+    <h2>The rest of the site</h2>
+    <p>The weekly is the moving picture. The <a class="inline" href="./">Briefing</a> is the standing one: 40 sourced answers about Mexico's economy, security, and politics, refreshed every six hours. See the <a class="inline" href="./economy.html">Economy</a> room, the state-by-state <a class="inline" href="./atlas.html">Atlas</a>, or the <a class="inline" href="./data.html">Sources</a> page that lists every feed and when it last updated.</p>
+  </section>
+
+  <div class="foot">
+    <div class="fnav"><a href="./">Briefing</a><a href="./economy.html">Economy</a><a href="./model.html">Model</a><a href="./atlas.html">Atlas</a><a href="./data.html">Sources</a><a href="./weekly.html">Weekly</a><a href="./about.html">About</a></div>
+    A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.
+  </div>
+</div>
+</body>
+</html>

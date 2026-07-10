@@ -1,0 +1,69 @@
+name: send-weekly-email
+# The approve-and-send tap. Manual only — this is the one action that puts an issue
+# in front of readers. Click "Run workflow", pick the week (blank = latest built),
+# choose send or draft, and go. Needs BUTTONDOWN_API_KEY; without it the run is a
+# safe dry-run that prints what it would send. Default-hold lives here: nothing goes
+# out on a schedule, only when you press this.
+
+on:
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'Issue week (e.g. 2026-W28). Leave blank for the latest built draft.'
+        required: false
+        default: ''
+      mode:
+        description: 'send = deliver to the list · draft = stage in Buttondown only'
+        required: true
+        default: 'send'
+        type: choice
+        options: [send, draft]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: send-weekly-email
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Send (or stage) the issue
+        working-directory: pipeline
+        # Inputs go through env, never interpolated into the shell — otherwise a
+        # crafted `week` value could run commands with the send key in scope.
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
+          WEEK_INPUT: ${{ inputs.week }}
+          MODE_INPUT: ${{ inputs.mode }}
+        run: |
+          WEEK_ARG=""
+          if [ -n "$WEEK_INPUT" ]; then
+            case "$WEEK_INPUT" in
+              [0-9][0-9][0-9][0-9]-W[0-9][0-9]) WEEK_ARG="--week $WEEK_INPUT" ;;
+              *) echo "invalid week '$WEEK_INPUT' (expected YYYY-Www)"; exit 1 ;;
+            esac
+          fi
+          DRAFT_ARG=""
+          [ "$MODE_INPUT" = "draft" ] && DRAFT_ARG="--draft"
+          node send-email.js $WEEK_ARG --confirm $DRAFT_ARG
+
+      - name: Record the send
+        if: inputs.mode == 'send'
+        run: |
+          git config user.name  "mexico-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/email/
+          if git diff --cached --quiet; then
+            echo "no status change"
+          else
+            git commit -m "email: sent issue $(date -u +%Y-%m-%d)"
+            git push
+          fi
