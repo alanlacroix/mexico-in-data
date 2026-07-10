@@ -35,985 +35,345 @@
 
 
 <style>
-:root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
+  :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
   body{font-size:17px}
+  .home{max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,44px)}
 
-  /* reading progress */
-  .progress{position:fixed;top:0;left:0;height:2px;background:var(--green);width:0;z-index:60;transition:width .1s linear}
-  @media(prefers-reduced-motion:reduce){.progress{transition:none}}
-
-  /* masthead */
-
-  
-
-  
-
-  
-  @keyframes lp{0%,100%{opacity:1}50%{opacity:.3}}
-  @media(prefers-reduced-motion:reduce){.dot{animation:none!important}}
-  
-  @media(max-width:820px){.mnav .nlbl,}
-
-  /* markets strip */
-  .marketstrip{border-bottom:1px solid var(--line);background:var(--paper-2);position:sticky;top:52px;z-index:49}
-  .marketstrip .inner{max-width:1180px;margin:0 auto;display:flex;gap:0;padding:0 clamp(16px,4vw,44px);overflow-x:auto}
-  .mkt{display:flex;align-items:baseline;gap:7px;padding:8px 18px 8px 0;white-space:nowrap;border-right:1px solid var(--line);margin-right:18px}
-  .mkt:last-child{border-right:none}
-  .mkt .mk-l{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
-  .mkt .mk-v{font-family:var(--serif);font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums}
-  .mkt .mk-d{font-family:var(--mono);font-size:10px}
-  .mkt .up{color:var(--green-d)} .mkt .dn{color:var(--red)} .mkt .fl{color:var(--mut)}
-  @media(max-width:640px){.marketstrip{position:static}}
-
-  /* the two-altitude frame */
-  .briefing{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,44px);display:grid;grid-template-columns:1fr;gap:0}
-  @media(min-width:960px){.briefing{grid-template-columns:224px minmax(0,1fr);gap:44px}}
-  .rail{display:none}
-  @media(min-width:960px){
-    .rail{display:block;position:sticky;top:72px;align-self:start;max-height:calc(100vh - 96px);overflow-y:auto;padding:24px 0 40px}
-  }
-  .toc-grp{margin-bottom:16px}
-  .toc-grp .ge{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);display:flex;justify-content:space-between;margin-bottom:5px}
-  .toc a{display:flex;gap:8px;align-items:baseline;text-decoration:none;padding:4px 0 4px 10px;border-left:2px solid transparent;margin-left:-2px}
-  .toc a .q{font-family:var(--mono);font-size:10.5px;color:var(--green);font-weight:600;min-width:26px;font-variant-numeric:tabular-nums}
-  .toc a .t{font-size:12.5px;color:var(--ink-2);line-height:1.3}
-  .toc a:hover .t{color:var(--ink)}
-  .toc a.active{border-left-color:var(--green)}
-  .toc a.active .t{color:var(--ink);font-weight:600}
-  .toc a.wirelink{margin-bottom:14px}
-  .toc a.wirelink .q .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);animation:lp 2.4s ease-in-out infinite}
-  .content{min-width:0;max-width:900px}
-  .content .col{max-width:70ch}
-
-  /* hero */
+  /* 1 · HERO */
   .hero{padding:26px 0 4px}
-  .hero .eyebrow{display:block}
   .hero h1{font-family:var(--serif);font-size:clamp(32px,6vw,50px);line-height:1.0;letter-spacing:-.025em;margin:9px 0 0;color:var(--ink)}
-  .hero .dek{font-size:16px;color:var(--ink-2);margin-top:12px;max-width:60ch;line-height:1.5}
-  .country{font-size:16.5px;line-height:1.62;color:var(--ink-2);margin:20px 0 4px;max-width:66ch}
+  .country{font-size:16.5px;line-height:1.62;color:var(--ink-2);margin:18px 0 4px;max-width:66ch}
   .country b{color:var(--ink);font-weight:600}
   .country .ref{font-family:var(--mono);font-size:9.5px;color:var(--green);vertical-align:super;text-decoration:none;padding:0 1px}
   .bottomline{font-size:15px;line-height:1.5;color:var(--ink-2);margin:16px 0 2px;max-width:70ch;padding:12px 15px;background:var(--paper-2);border-left:3px solid var(--green);border-radius:0 8px 8px 0}
   .bottomline b{color:var(--ink)}
   .bottomline .bl-k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);font-weight:600}
-  .factstrip{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:10px;overflow:hidden;margin:16px 0 2px}
-  @media(min-width:620px){.factstrip{grid-template-columns:repeat(4,1fr)}}
-  .fact{background:var(--paper);padding:12px 14px}
-  .fact .fk{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut)}
-  .fact .fv{font-family:var(--serif);font-size:20px;color:var(--ink);margin-top:3px;line-height:1.05;font-variant-numeric:tabular-nums}
-  .fact .fs{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:3px}
 
-  /* section heads + bands */
-  .band{border-top:2px solid var(--ink);padding-top:10px;margin:40px 0 4px}
-  .band .bl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:600}
-  section.dim{padding:22px 0 4px;scroll-margin-top:120px}
-  section[id]{scroll-margin-top:120px}
-  .section-head{border-top:2px solid var(--green);padding-top:12px;margin-bottom:8px}
-  .section-head .no{font-family:var(--mono);font-size:12px;color:var(--green);font-weight:600}
-  .section-head h2{font-family:var(--serif);font-size:clamp(21px,3.2vw,28px);margin-top:5px;color:var(--ink);letter-spacing:-.01em;line-height:1.08}
-  .section-head .dek{font-size:14.5px;color:var(--ink-2);margin-top:7px;max-width:60ch;line-height:1.45}
+  /* block headers */
+  .bh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-top:2px solid var(--green);padding-top:11px;margin:38px 0 10px}
+  .bh .k{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .bh h2{font-family:var(--serif);font-size:clamp(19px,2.6vw,24px);color:var(--ink);display:inline;letter-spacing:-.01em}
+  .bh .a{font-family:var(--mono);font-size:11px;color:var(--green-d);white-space:nowrap}
+  .bh .asof{font-family:var(--mono);font-size:12px;color:var(--mut);white-space:nowrap}
 
-  /* board */
-  .board-lbl{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:12px 0 7px;border-top:2px solid var(--green);padding-top:11px}
-  .board-lbl .no{font-family:var(--mono);font-size:12px;color:var(--green);font-weight:600}
-  .board-lbl h2{font-family:var(--serif);font-size:clamp(20px,3.2vw,26px);color:var(--ink)}
+  /* 2 · THE BOARD */
+  .board-lbl{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:26px 0 8px;border-top:2px solid var(--green);padding-top:11px}
+  .board-lbl .k{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .board-lbl h2{font-family:var(--serif);font-size:clamp(19px,2.6vw,24px);color:var(--ink);display:inline;letter-spacing:-.01em}
   .board-lbl .asof{font-family:var(--mono);font-size:12px;color:var(--mut);white-space:nowrap}
   .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
   @media(min-width:560px){.tablero{grid-template-columns:repeat(4,1fr)}}
-  .tile{background:var(--paper);padding:16px 17px 15px;cursor:pointer}
-  .tile:hover{background:var(--paper-2)}
+  .tilelink{display:contents}
+  .tile{background:var(--paper);padding:16px 17px 15px;cursor:pointer;height:100%}
+  .tilelink:hover .tile{background:var(--paper-2)}
   .tile .tl{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
-  .tile .tv{font-family:var(--serif);font-size:38px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .tile .tv{font-family:var(--serif);font-size:34px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
   .tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
   .tile .dl{font-family:var(--mono);font-size:12.5px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
   .tile .dl.up::before{content:"▲ ";font-size:10px} .tile .dl.dn::before{content:"▼ ";font-size:10px}
   .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
   .tile svg.spark{margin-top:7px}
   .tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
-  .tile .tb{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);margin-top:7px;line-height:1.4}
+  .tile .tb{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:7px;line-height:1.4}
   .tile .tb .arw{font-weight:700}
   .tile .stamp{margin-top:6px;display:block}
-
-  /* stamp key */
-  .stampkey{margin:8px 0 2px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
-  .stampkey>summary{font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);cursor:pointer;list-style:none;padding:9px 13px;background:var(--paper-2)}
-  .stampkey>summary::-webkit-details-marker{display:none}
-  .stampkey>summary::after{content:" ▸";color:var(--green)}
-  .stampkey[open]>summary::after{content:" ▾";color:var(--green)}
-  .sk-grid{padding:6px 13px 11px;display:grid;grid-template-columns:1fr;gap:2px}
-  @media(min-width:620px){.sk-grid{grid-template-columns:1fr 1fr;gap:2px 22px}}
-  .sk-i{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--line)}
-  .sk-i .sk-d{font-size:12px;color:var(--ink-2);line-height:1.4}
-  .sk-i .sk-d b{color:var(--ink)}
-  .sk-vs{font-family:var(--mono);font-size:10.5px;color:var(--green-d);white-space:nowrap;min-width:52px}
-  .pmst-inline{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);border:1px dashed var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap}
-
-  /* freshness stamp */
+  .tile .tsrc{font-family:var(--mono);font-size:9.5px;letter-spacing:.02em;color:var(--mut);margin-top:4px;display:block;line-height:1.35}
   .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
   .stamp.live{color:var(--green-d);font-weight:600}
   .chip-ph{font-family:var(--mono);font-size:9px;letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
 
-  /* cover band: what-to-watch | latest */
-  .coverband{display:grid;grid-template-columns:1fr;gap:20px;margin:22px 0 4px}
-  @media(min-width:680px){.coverband{grid-template-columns:1fr 1fr;gap:28px}}
-  .cb-h{display:flex;align-items:baseline;justify-content:space-between;border-top:2px solid var(--green);padding-top:9px;margin-bottom:4px}
+  /* 3 · WHAT MOVED */
+  .moved{border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
+  .movedrow{display:flex;align-items:baseline;gap:11px;padding:12px 15px;border-bottom:1px solid var(--line);text-decoration:none;background:var(--paper)}
+  .movedrow:last-child{border-bottom:none}
+  .movedrow:hover{background:var(--paper-2)}
+  .movedrow .mv-arw{font-size:11px;color:var(--ink-3);min-width:12px}
+  .movedrow .mv-mag{font-family:var(--serif);font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums;min-width:82px;letter-spacing:-.01em}
+  .movedrow .mv-lbl{font-size:14.5px;color:var(--ink);flex:1}
+  .movedrow .mv-when{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);white-space:nowrap}
+  .movedrow .mv-go{font-family:var(--mono);font-size:13px;color:var(--green-d)}
+
+  /* 4 · NEWSLETTER (from weekly.njk .sub) */
+  .sub{margin:8px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
+  .sub .lab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
+  .sub .line{font-size:16px;color:var(--ink-2);margin-top:8px;line-height:1.5}
+  .sub .line b{color:var(--ink)}
+  .sub form{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+  .sub input[type=email]:focus{outline:none;border-color:var(--green)}
+  .sub button{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:9px;padding:12px 24px;cursor:pointer}
+  .sub button:hover{background:var(--green-d)}
+  .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:11px;line-height:1.6}
+  .sub .samplelink{display:inline-block;margin-top:13px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);text-decoration:none;border-bottom:2px solid #daf0e2;padding-bottom:1px}
+
+  /* 5 · SECTION CARDS */
+  .seccards{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
+  @media(min-width:560px){.seccards{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:900px){.seccards{grid-template-columns:repeat(3,1fr)}}
+  .seccard{background:var(--paper);padding:17px 18px 15px;text-decoration:none;display:flex;flex-direction:column;gap:0}
+  .seccard:hover{background:var(--paper-2)}
+  .seccard .sc-k{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .seccard .sc-stat{font-family:var(--serif);font-size:28px;color:var(--ink);margin-top:8px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .seccard .sc-stat small{font-size:12px;color:var(--mut);font-weight:400}
+  .seccard .sc-wire{font-size:13px;color:var(--ink-2);line-height:1.4;margin-top:11px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .seccard .sc-wire .sc-none{color:var(--mut);font-family:var(--mono);font-size:11px}
+  .seccard .sc-go{font-family:var(--mono);font-size:11.5px;color:var(--green-d);margin-top:12px}
+
+  /* 6 · WHAT TO WATCH + THE WIRE */
+  .coverband{display:grid;grid-template-columns:1fr;gap:22px;margin:2px 0 4px}
+  @media(min-width:760px){.coverband{grid-template-columns:minmax(240px,320px) 1fr;gap:34px}}
+  .cb-h{display:flex;align-items:baseline;justify-content:space-between;border-top:2px solid var(--green);padding-top:9px;margin-bottom:6px}
   .cb-h .k{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .cb-h a{font-family:var(--mono);font-size:10px;color:var(--green-d)}
-  .watchrow{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
-  .watchrow:last-child{border-bottom:none}
-  .watchrow .wd{font-family:var(--mono);font-size:10px;color:var(--ink);min-width:52px;text-align:right;font-variant-numeric:tabular-nums;line-height:1.3}
-  .watchrow .wd small{color:var(--mut);display:block;font-size:8.5px}
-  .watchrow .wk{width:3px;align-self:stretch;border-radius:2px;background:var(--line-2)}
-  .watchrow .wk.banxico,.watchrow .wk.fomc{background:var(--green)}
-  .watchrow .wk.election,.watchrow .wk.political{background:var(--red)}
-  .watchrow .wk.trade{background:var(--amber2)}
-  .watchrow .wb{flex:1}
-  .watchrow .wt{font-size:13.5px;color:var(--ink);line-height:1.3}
-  .watchrow .wm{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:2px}
-  .wire-latest .wl{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
-  .wire-latest .wl:last-child{border-bottom:none}
-  .wire-latest .wtag{font-family:var(--mono);font-size:8px;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 4px;white-space:nowrap;margin-top:2px}
-  .wire-latest a{font-size:13px;color:var(--ink);text-decoration:none;line-height:1.3}
-  .wire-latest a:hover{color:var(--green-d);text-decoration:underline}
-  .wire-latest .wm{font-family:var(--mono);font-size:9px;color:var(--mut);margin-top:2px}
-  .cb-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0}
-
-  /* contents grid */
-  .contents{margin:26px 0 4px}
-  .contents .ch{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);font-weight:600;border-top:2px solid var(--ink);padding-top:9px;margin-bottom:8px}
-  .cgrid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden}
-  @media(min-width:560px){.cgrid{grid-template-columns:1fr 1fr}}
-  .cgrid a{display:flex;gap:9px;align-items:baseline;background:var(--paper);padding:9px 13px;text-decoration:none}
-  .cgrid a:hover{background:var(--paper-2)}
-  .cgrid a .q{font-family:var(--mono);font-size:10.5px;color:var(--green);font-weight:600;min-width:26px}
-  .cgrid a .t{font-size:13.5px;color:var(--ink)}
-
-  /* primer */
-  .primer{border:1px solid var(--line-2);border-radius:11px;margin:16px 0 4px;overflow:hidden}
-  .primer>summary{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);cursor:pointer;list-style:none;padding:13px 16px;background:var(--paper-2);display:flex;justify-content:space-between}
-  .primer>summary::-webkit-details-marker{display:none}
-  .primer>summary::after{content:"▸ expand";color:var(--green);font-size:10px}
-  .primer[open]>summary::after{content:"▾ collapse"}
-  .primer .pgrid{display:grid;gap:1px;background:var(--line);padding:1px;grid-template-columns:1fr}
-  @media(min-width:620px){.primer .pgrid{grid-template-columns:repeat(2,1fr)}}
-  .pcard{background:var(--paper);padding:14px 16px}
-  .pcard .pn{font-family:var(--mono);font-size:10px;color:var(--green);font-weight:600}
-  .pcard h4{font-family:var(--serif);font-size:16px;color:var(--ink);margin:3px 0 5px}
-  .pcard p{font-size:13.5px;color:var(--ink-2);line-height:1.5}
-  .pcard .psrc{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:6px}
-  .pcard .psrc a{color:var(--green)}
-
-  /* latest line (replaces the cover band) */
-  .lateststrip{margin:18px 0 2px;padding:11px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12.5px;color:var(--ink-2);line-height:1.8;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 9px}
-  .lateststrip:empty{display:none}
-  .lateststrip .ll-k{color:var(--green-d);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
-  .lateststrip .ll-k .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle;animation:lp 2.4s ease-in-out infinite}
-  .lateststrip a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:2px;max-width:44ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
-  .lateststrip a:hover{color:var(--green-d);text-decoration:underline}
-  .lateststrip .ll-sep{color:var(--line-2)}
-  .lateststrip .ll-all{color:var(--green-d);white-space:nowrap}
-
-  /* "more on this question" expander */
-  details.more{margin:6px 0 4px;border-top:1px solid var(--line)}
-  details.more>summary{font-family:var(--mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);cursor:pointer;list-style:none;padding:10px 0 2px}
-  details.more>summary::-webkit-details-marker{display:none}
-  details.more>summary::after{content:" ▸"}
-  details.more[open]>summary::after{content:" ▾"}
-
-  /* metric row */
-  .mrow{border-bottom:1px solid var(--line);padding:15px 0}
-  .mrow:last-child{border-bottom:none}
-  .mrow .mr-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-  .mrow .mr-label{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut)}
-  .mrow .mr-main{display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap}
-  .mrow .mr-val{font-family:var(--serif);font-size:27px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
-  .mrow .mr-val small{font-size:13px;color:var(--mut);font-weight:400}
-  .mrow .mr-spark{margin-left:auto}
-  .mrow .mr-verdict{font-size:14px;color:var(--ink-2);margin-top:8px;line-height:1.45}
-  .mrow .mr-verdict b{color:var(--ink)}
-  .mrow .mr-bench{font-family:var(--mono);font-size:12px;color:var(--green-d);margin-top:6px}
-  .mrow details{margin-top:8px}
-  .mrow summary{font-family:var(--mono);font-size:10px;color:var(--mut);cursor:pointer;list-style:none}
-  .mrow summary::-webkit-details-marker{display:none}
-  .mrow summary::before{content:"▸ source & date"}
-  .mrow details[open] summary::before{content:"▾ source & date"}
-  .mrow .src-body{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:5px;line-height:1.6}
-  .mrow .src-body a{color:var(--green)}
-  svg.spark{display:block}
-  svg.spark path{fill:none;stroke:var(--ink-3);stroke-width:1.3}
-  svg.spark circle{fill:var(--green)}
-
-  /* EXHIBIT (chart) frame */
-  .exwrap{margin:16px 0 8px}
-  .exwrap.wide{background:var(--paper-2);border-radius:5px;padding:18px 20px;margin:16px 0}
-  .ex-tag{width:26px;height:5px;background:var(--green);border-radius:1px;margin-bottom:7px}
-  .ex-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-  .ex-no{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .ex-title{font-family:var(--serif);font-size:19px;line-height:1.22;margin:3px 0 2px;color:var(--ink);letter-spacing:-.005em}
-  .ex-sub{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-bottom:8px}
-  .ex-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:7px;line-height:1.5}
-  .ex-src a{color:var(--green)}
-  .ex-toggle{display:flex;gap:5px}
-  .ex-toggle button{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;padding:3px 9px;border:1px solid var(--line-2);background:var(--paper);border-radius:6px;color:var(--mut);cursor:pointer}
-  .ex-toggle button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  svg.chart{display:block;width:100%;height:auto}
-  .chart .gl{stroke:var(--line);stroke-width:1}
-  .chart .axl{font-family:var(--mono);font-size:10px;fill:var(--mut)}
-  .chart .band{fill:var(--green-bg);opacity:.55}
-  .chart .bandl{font-family:var(--mono);font-size:9px;fill:var(--green-d)}
-  .chart .ln{fill:none;stroke:var(--ink);stroke-width:2}
-  .chart .ln2{fill:none;stroke:var(--green);stroke-width:2}
-  .chart .zero{stroke:var(--ink-3);stroke-width:1}
-  .chart .bar{fill:#b8b8b0} .chart .bar2{fill:var(--green)}
-  .chart .dot{fill:var(--green);stroke:#fff;stroke-width:1.5}
-  .chart .vlab{font-family:var(--mono);font-size:10px;font-variant-numeric:tabular-nums}
-  .chart .endlab{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
-  .chart .cat{font-family:var(--sans);font-size:11px;fill:var(--ink)}
-  .chart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2;opacity:0}
-  .chart .hdot{opacity:0}
-  .charttip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 10px;border-radius:6px;opacity:0;transition:opacity .08s;z-index:70;min-width:120px}
-  .charttip b{font-family:var(--serif);font-size:12px;color:#fff}
-  .charttip .tr{display:flex;justify-content:space-between;gap:12px;margin-top:3px}
-  .charttip .tr i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px;vertical-align:middle}
-  .charttip .tr .nm{color:#cfcfc9}
-  .charttip .tr .vv{font-variant-numeric:tabular-nums}
-
-  /* data table (chart alt) */
-  .dtbl{overflow-x:auto}
-  table.dt{border-collapse:collapse;width:100%;font-size:13px}
-  table.dt th,table.dt td{padding:7px 12px;border-bottom:1px solid var(--line);text-align:right}
-  table.dt thead th{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border-bottom:1.5px solid var(--line-2)}
-  table.dt td.k,table.dt th.k{text-align:left;font-family:var(--sans);color:var(--ink)}
-  table.dt td{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
-
-  /* ECI complexity block */
-  .eciline{border:1px solid var(--line-2);border-radius:10px;padding:14px 16px;margin:12px 0 6px;background:var(--paper)}
-  .eciline .eci-h{font-size:14.5px;color:var(--ink);line-height:1.5;max-width:64ch}
-  .eciline .eci-stat{display:flex;align-items:baseline;gap:12px;margin-top:10px;flex-wrap:wrap}
-  .eciline .eci-v{font-family:var(--serif);font-size:34px;color:var(--green-d);font-variant-numeric:tabular-nums;line-height:1}
-  .eciline .eci-v small{font-size:15px}
-  .eciline .eci-l{font-size:13.5px;color:var(--ink-2);line-height:1.45;flex:1;min-width:220px}
-  .eciline .eci-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:9px}
-  .eciline .eci-src a{color:var(--green)}
-
-  /* opportunities card (Q5) */
-  .oppcard{border:1px solid var(--line-2);border-radius:10px;padding:14px 16px;margin:12px 0 6px;background:var(--paper-2)}
-  .oppcard .opp-h{font-family:var(--serif);font-size:16px;color:var(--ink);margin-bottom:3px}
-  .oppcard .opp-d{font-size:12.5px;color:var(--ink-2);line-height:1.45;max-width:62ch}
-  .oppcard .opp-list{margin:10px 0 4px;padding-left:20px;columns:2;column-gap:26px}
-  @media(max-width:560px){.oppcard .opp-list{columns:1}}
-  .oppcard .opp-list li{font-size:13.5px;color:var(--ink);margin-bottom:6px;line-height:1.35;break-inside:avoid}
-  .oppcard .opp-hs{font-family:var(--mono);font-size:9.5px;color:var(--mut)}
-  .oppcard .opp-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:6px}
-  .oppcard .opp-src a{color:var(--green)}
-  .oc-longrun{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:8px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:2px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
-  .oc-longrun b{color:var(--green-d)} .oc-longrun a{color:var(--green)}
-
-  /* forward line */
-  .fwdline{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:10px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:2px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
-  .fwdline b{color:var(--green-d)} .fwdline a{color:var(--green)}
-
-  /* construccion / honesty */
-  .constr-lite{display:flex;flex-wrap:wrap;align-items:baseline;gap:9px;padding:11px 0;border-bottom:1px solid var(--line)}
-  .constr-lite .cl-l{font-size:13.5px;color:var(--ink)}
-  .constr-lite .cl-s{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--amber2);border:1px solid var(--amber-bg2);background:var(--amber-bg2);border-radius:3px;padding:1px 6px}
-  .constr-lite .cl-d{font-family:var(--mono);font-size:11.5px;color:var(--mut)}
-  .honesty{font-family:var(--mono);font-size:11px;color:var(--amber2);background:var(--amber-bg2);border-radius:8px;padding:9px 13px;margin:8px 0 4px;line-height:1.5}
-  .ctxline{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.6;padding-top:10px;border-top:1px solid var(--line)}
-
-  /* fact card */
-  .factcard{border:1px solid var(--line-2);border-radius:10px;padding:15px 17px;margin:10px 0 4px}
-  .factcard .fc-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
-  .factcard .fc-row:last-child{border-bottom:none}
-  .factcard .fc-k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);flex:1}
-  .factcard .fc-v{color:var(--ink);text-align:right;flex:1.3;line-height:1.4}
-  .factcard .fc-v b{color:var(--ink)}
-  .factcard .fc-v a{color:var(--green)}
-
-  /* outlook table */
-  .octbl{overflow-x:auto;margin:10px 0 4px;border:1px solid var(--line-2);border-radius:10px}
-  table.oc{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
-  table.oc th,table.oc td{padding:10px 13px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
-  table.oc thead th{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);background:var(--paper-2);text-align:right;font-weight:600}
-  table.oc thead th .sub{display:block;color:var(--ink-3);font-size:9px;font-weight:400;margin-top:2px}
-  table.oc thead th .dt{display:block;color:var(--green-d);font-size:9px;margin-top:2px}
-  table.oc th.k,table.oc td.k{text-align:left}
-  table.oc td.k{font-family:var(--serif);font-size:14.5px;color:var(--ink);white-space:nowrap}
-  table.oc td.k small{font-family:var(--mono);font-size:9.5px;color:var(--mut);display:block;font-weight:400}
-  table.oc td.num{font-family:var(--serif);font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums}
-  table.oc td.spread{font-family:var(--mono);font-size:10.5px;color:var(--green-d);text-align:left;white-space:nowrap}
-  .oc-note{font-family:var(--mono);font-size:10px;color:var(--mut);padding:9px 13px;border-top:1px solid var(--line);line-height:1.5}
-  .oc-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:8px;line-height:1.6}
-  .oc-src a{color:var(--green)}
-
-  /* watch full table (Q10) */
-  .watchtbl{margin:10px 0 4px}
-  .watchtbl .wtr{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .cb-h .a{font-family:var(--mono);font-size:10px;color:var(--green-d)}
+  .watchtbl .wtr{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);align-items:baseline}
   .watchtbl .wtr:last-child{border-bottom:none}
-  .watchtbl .wtr .wd{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:88px;font-variant-numeric:tabular-nums}
+  .watchtbl .wtr .wd{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:50px;font-variant-numeric:tabular-nums;line-height:1.3}
+  .watchtbl .wtr .wd small{color:var(--mut);display:block;font-size:9px}
   .watchtbl .wtr .wk{width:3px;align-self:stretch;border-radius:2px;background:var(--line-2)}
-  .watchtbl .wtr .wk.banxico,.watchtbl .wtr .wk.fomc{background:var(--green)}
-  .watchtbl .wtr .wk.election,.watchtbl .wtr .wk.political{background:var(--red)}
-  .watchtbl .wtr .wk.trade{background:var(--amber2)}
-  .watchtbl .wtr .wt{font-size:14px;color:var(--ink);flex:1}
-  .watchtbl .wtr .wm{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:2px}
+  .watchtbl .wtr .wk.banxico,.watchtbl .wtr .wk.fomc,.watchtbl .wtr .wk.inegi{background:var(--green)}
+  .watchtbl .wtr .wk.political,.watchtbl .wtr .wk.election{background:var(--red)}
+  .watchtbl .wtr .wk.trade,.watchtbl .wtr .wk.fiscal{background:var(--amber2)}
+  .watchtbl .wtr .wt{font-size:13.5px;color:var(--ink);flex:1;line-height:1.35}
+  .watchtbl .wtr .wm{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:2px}
   .watchtbl .wtr .wsrc{font-family:var(--mono);font-size:9.5px}
-
-  /* machine presets */
-  .presets{display:grid;gap:10px;margin:10px 0 4px;grid-template-columns:1fr}
-  @media(min-width:640px){.presets{grid-template-columns:repeat(3,1fr)}}
-  .preset{border:1.5px dashed var(--line-2);border-radius:10px;padding:14px 15px;background:var(--paper)}
-  .preset .pmst{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;display:inline-block}
-  .preset h4{font-family:var(--serif);font-size:16px;color:var(--ink);margin:8px 0 2px}
-  .preset .plever{font-family:var(--mono);font-size:10.5px;color:var(--green-d);margin-bottom:8px}
-  .preset .chain{display:flex;flex-wrap:wrap;gap:3px 4px;align-items:center;margin:8px 0}
-  .preset .chain span{font-family:var(--mono);font-size:10px;color:var(--ink-2);background:var(--paper-2);border:1px solid var(--line);border-radius:4px;padding:2px 6px}
-  .preset .chain .ar{background:none;border:none;color:var(--ink-3);padding:0 1px}
-  .preset .chain .dn{color:var(--red);border-color:var(--red-bg)}
-  .preset .chain .up{color:var(--green-d);border-color:var(--green-bg)}
-  .preset .pread{font-size:13px;color:var(--ink-2);line-height:1.5;margin-top:6px}
-  .preset .pfn{font-family:var(--mono);font-size:9px;color:var(--mut);margin-top:8px;line-height:1.5}
-  .modelcta{font-family:var(--mono);font-size:12px;margin-top:12px}
-  .modelcta a{color:var(--green);border-bottom:1px solid var(--green);padding-bottom:1px}
-
-  /* wire (full, Q12) */
+  .cb-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0}
   .wire .wi{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:11px;align-items:baseline}
   .wire .wi:last-child{border-bottom:none}
-  .wire .wtag{font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px}
-  .wire .wtag.markets{color:var(--green-d);border-color:var(--green-bg)}
-  .wire .wtag.trade{color:var(--amber2);border-color:var(--amber-bg2)}
+  .wire .wtag{font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px;text-decoration:none}
+  .wire .wtag:hover{color:var(--green-d);border-color:var(--green-bg)}
   .wire .wbody{flex:1}
   .wire .wt{font-size:14px;color:var(--ink);line-height:1.35;text-decoration:none}
   .wire .wt:hover{color:var(--green-d);text-decoration:underline}
   .wire .wm{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:3px}
-
-  /* atlas teaser */
-  .teaser{border:1px solid var(--line-2);border-radius:12px;overflow:hidden;margin:10px 0 4px;display:block;text-decoration:none;background:var(--paper)}
-  .teaser:hover{border-color:var(--green)}
-  .teaser .tz-body{padding:16px 18px}
-  .teaser .tz-k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--green)}
-  .teaser .tz-h{font-family:var(--serif);font-size:19px;color:var(--ink);margin:4px 0 5px}
-  .teaser .tz-d{font-size:13.5px;color:var(--ink-2);line-height:1.45}
-  .teaser .tz-go{font-family:var(--mono);font-size:11px;color:var(--green-d);margin-top:9px;display:inline-block}
-
-  
-  .foot .fnav{margin-bottom:8px}
-
-  /* back to top */
-  .totop{position:fixed;right:20px;bottom:20px;width:40px;height:40px;border-radius:50%;background:var(--paper);border:1px solid var(--line-2);color:var(--ink-2);font-size:17px;cursor:pointer;z-index:45;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.08)}
-  .totop.show{display:flex}
-
-  /* mobile pill nav */
-  .pillnav{display:none}
-  @media(max-width:960px){
-    .pillnav{display:block;position:sticky;top:52px;z-index:44;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap;padding:8px clamp(16px,5vw,20px)}
-    .pillnav a{display:inline-block;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;color:var(--mut);text-decoration:none;padding:5px 11px;border:1px solid var(--line-2);border-radius:999px;margin-right:6px}
-    .pillnav a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-  }
-  /* align shared masthead/footer to the briefing width */
-  .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,44px)}
+  .wire-note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:10px;line-height:1.6}
+  .wire-note a{color:var(--green)}
 </style>
 
-<div class="progress" id="progress"></div>
+<div class="home">
 
-<nav class="pillnav" id="pillnav"></nav>
+  <!-- 1 · HERO -->
+  <section class="hero">
+    <a class="dateline" href="/data.html"><span class="dot"></span><span id="status">Official data · updated live</span></a>
+    <h1>Mexico, right now.</h1>
+    <p class="country">
+      Mexico is a country of <b>131 million people</b> with a <b>~$1.9 trillion economy</b>, the world's ~14th-largest and the <b>largest US trading partner</b>.<a class="ref" href="/economy.html" title="World Bank; US Census Bureau">1</a>
+      It manufactures and exports: about <b>80% of its exports go to the United States</b>.<a class="ref" href="/us-mexico.html" title="INEGI / Banxico balance of trade">2</a>
+      It elects a president every six years, now <b>Claudia Sheinbaum (Morena)</b>, through 2030.<a class="ref" href="/politics.html" title="INE; Presidencia">3</a>
+    </p>
+    <p class="bottomline"><span class="bl-k">The bottom line</span> — <b>sound money</b> (inflation near Banxico's target, a firm peso), <b>weak growth</b>, and <b>near-total dependence on the United States</b>. The swing factor is the unresolved 2026 USMCA review.</p>
+  </section>
 
-<div class="briefing">
-  <aside class="rail"><nav class="toc" id="toc"></nav></aside>
-  <main class="content">
+  <!-- 2 · THE BOARD -->
+  <section>
+    <div class="board-lbl">
+      <div><span class="k">The board</span> &nbsp; <h2 style="display:inline">Mexico by the numbers</h2></div>
+      <span class="asof" id="board-asof"></span>
+    </div>
+    <div class="tablero" id="tablero"></div>
+    <p class="wire-note">Every tile links to the section that owns it, where the same figure is shown with its full history and source.</p>
+  </section>
 
-    <section class="hero" id="q1">
-      <a class="dateline" href="/data.html"><span class="dot"></span><span id="status">Official data · updated live</span></a>
-      <h1>Mexico, right now.</h1>
-      <p class="dek">The state of Mexico's economy in official numbers. Every figure links to the source series it came from, with the date it was published.</p>
-      <p class="country">
-        Mexico is a country of <b>131 million people</b> with a <b>~$1.9 trillion economy</b>, the world's ~14th-largest and the <b>largest US trading partner</b>.<a class="ref" href="#contents" title="World Bank; US Census Bureau">1</a>
-        It manufactures and exports: about <b>80% of its exports go to the United States</b>.<a class="ref" href="#q4" title="INEGI / Banxico balance of trade">2</a>
-        It elects a president every six years, now <b>Claudia Sheinbaum (Morena)</b>, through 2030.<a class="ref" href="#q7" title="INE; Presidencia">3</a>
-      </p>
-      <div class="factstrip" id="factstrip"></div>
-      <p class="bottomline"><span class="bl-k">The bottom line</span> — <b>sound money</b> (inflation near Banxico's target, a firm peso), <b>weak growth</b>, and <b>near-total dependence on the United States</b>. The swing factor is the unresolved 2026 USMCA review.</p>
-    </section>
+  <!-- 3 · WHAT MOVED -->
+  <section>
+    <div class="bh"><div><span class="k">What moved</span></div><span class="a">latest vs a week / month ago</span></div>
+    <div class="moved" id="moved"></div>
+  </section>
 
-    <div class="lateststrip" id="lateststrip"></div>
+  <!-- 4 · NEWSLETTER -->
+  <section>
+    <div class="sub">
+      <div class="lab">The brief — free</div>
+      <p class="line"><b>The brief, in your inbox</b> — two or three mornings a week.</p>
+      <!-- Buttondown embed. Replace `mexicobrief` with the Buttondown username once the account exists. Keyless: posts straight to Buttondown, works on a static host. -->
+      <form action="https://buttondown.email/api/emails/embed-subscribe/mexicobrief" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/mexicobrief','popupwindow')">
+        <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
+        <input type="hidden" value="1" name="embed" />
+        <button type="submit">Get the brief</button>
+      </form>
+      <div class="fine">The address is used only for the brief and never shared, and one tap unsubscribes.</div>
+      <a class="samplelink" href="/weekly.html">What's in it →</a>
+    </div>
+  </section>
 
-    <section id="q2">
-      <div class="board-lbl">
-        <div><span class="no">Q2</span> &nbsp; <h2 style="display:inline">How is Mexico doing right now?</h2></div>
-        <span class="asof" id="board-asof"></span>
+  <!-- 5 · SECTION CARDS -->
+  <section>
+    <div class="bh"><div><span class="k">The sections</span> &nbsp; <h2 style="display:inline">Mexico in one glance</h2></div></div>
+    <div class="seccards" id="seccards"></div>
+  </section>
+
+  <!-- 6 · WHAT TO WATCH + THE WIRE -->
+  <section id="wire">
+    <div class="coverband">
+      <div>
+        <div class="cb-h"><span class="k">What to watch</span></div>
+        <div id="watch-list"></div>
       </div>
-      <div class="tablero" id="tablero"></div>
-      <details class="stampkey" id="stampkey">
-        <summary>How to read this page — the stamps &amp; benchmarks</summary>
-        <div class="sk-grid">
-          <div class="sk-i"><span class="stamp live">● LIVE</span><span class="sk-d">updated daily or faster</span></div>
-          <div class="sk-i"><span class="stamp">MONTHLY · May data</span><span class="sk-d">official series, showing the <b>vintage</b> — the period of the latest data point, not today</span></div>
-          <div class="sk-i"><span class="stamp">QUARTERLY · Q1 2026</span><span class="sk-d">a quarter behind by nature</span></div>
-          <div class="sk-i"><span class="stamp">POLL · Jun · Mitofsky</span><span class="sk-d">a survey, shown with the pollster's name and field date</span></div>
-          <div class="sk-i"><span class="stamp">SNAPSHOT · 2020</span><span class="sk-d">structural (census, poverty) — changes slowly</span></div>
-          <div class="sk-i"><span class="pmst-inline">MODEL</span><span class="sk-d">a figure the teaching model computed, not a measured value</span></div>
-          <div class="sk-i"><span class="stamp" style="color:var(--amber2)">NOT YET WIRED</span><span class="sk-d">a source we haven't connected yet; the tile stays blank until we do</span></div>
-          <div class="sk-i"><span class="sk-vs">vs …</span><span class="sk-d">every headline number carries one comparison — its own history, a peer country, or a target. Green is the only "live" colour on the page.</span></div>
-        </div>
-      </details>
-    </section>
+      <div>
+        <div class="cb-h"><span class="k">The Wire</span><a class="a" href="/weekly.html">The Weekly →</a></div>
+        <div id="wire-list"></div>
+        <p class="wire-note">Headlines from a trusted-source allowlist, each dated and linked to its origin, unsummarized. The tag links to the section it belongs to.</p>
+      </div>
+    </div>
+  </section>
 
-    <section class="contents" id="contents">
-      <div class="ch">The full briefing</div>
-      <div class="cgrid" id="cgrid"></div>
-    </section>
-
-    <details class="primer" id="primer">
-      <summary>Five things to know before the dials mean anything</summary>
-      <div class="pgrid" id="pgrid"></div>
-    </details>
-
-    <div id="sections"></div>
-
-    </main>
 </div>
 
-<button class="totop" id="totop" aria-label="Back to top">↑</button>
-<div class="charttip" id="charttip"></div>
+<script type="module">
+import { loadSeries, S, NEWS, EVENTS, tile, relTime, evDate } from '/assets/mb.js';
 
-<script>
-const $=(s)=>document.querySelector(s);
-const enNum=(n)=>Number(n).toLocaleString('en-US');
-async function J(p){const r=await fetch(p);if(!r.ok)throw new Error(p+' '+r.status);return r.json();}
-const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
-const S={};
-let POV=null,CRI=null,REG={},NAT={},HEALTH=null,OUTLOOK=null,NEWS=null,EVENTS=null,SECTORS=null,COMPLEXITY=null;
-const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const MONL=['January','February','March','April','May','June','July','August','September','October','November','December'];
-function monLong(iso){const d=new Date(iso);return isNaN(d)?iso:MONL[d.getUTCMonth()]+' '+d.getUTCFullYear();}
-function dayShort(iso){const d=new Date(iso);return isNaN(d)?iso:MON[d.getUTCMonth()]+' '+d.getUTCDate();}
-function qtrOf(iso){const d=new Date(iso);if(isNaN(d))return iso;return 'Q'+(Math.floor(d.getUTCMonth()/3)+1)+' '+d.getUTCFullYear();}
-function relTime(ms){const s=Math.max(0,(Date.now()-ms)/1000);if(s<5400)return Math.max(1,Math.round(s/60))+' min ago';if(s<86400)return Math.round(s/3600)+'h ago';return Math.round(s/86400)+'d ago';}
+/* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
+   Every topic now owns a page, so a bookmarked #q link should land on it. */
+const RD={'#q3':'/money.html','#q4':'/economy.html','#q5':'/economy.html','#q6':'/society.html','#q7':'/politics.html','#q8':'/us-mexico.html','#q9':'/security.html','#q10':'/economy.html','#q11':'/model.html'};
+if(RD[location.hash]){ location.replace(RD[location.hash]); }
 
-/* ---- formatters ---- */
-function fmt(id,v,units){
-  units=units||'';
-  if(id==='banxico-reservas') return {v:'$'+enNum(Math.round(v/1000)), s:'bn USD'};
-  if(id==='banxico-remesas') return {v:'$'+enNum(Math.round(v)), s:'mn USD'};
-  if(id==='wb-gdp-usd') return {v:'$'+(v/1e12).toFixed(2), s:'tn USD'};
-  if(id==='wb-population') return {v:(v/1e6).toFixed(1), s:'mn'};
-  if(id==='wb-gdp-per-capita') return {v:'$'+enNum(Math.round(v)), s:'USD'};
-  if(id==='banxico-pib-crecimiento'||id==='banxico-igae') return {v:(v>=0?'+':'')+v.toFixed(1), s:'%'};
-  if(id==='banxico-salario-minimo') return {v:'$'+v.toFixed(2), s:'MXN/day'};
-  if(units.includes('per USD')) return {v:v.toFixed(2), s:'MXN/USD'};
-  if(units.includes('per liter')) return {v:'$'+v.toFixed(2), s:'MXN/L'};
-  if(units.includes('%')) return {v:v.toFixed(1), s:'%'};
-  return {v:enNum(Math.round(v)), s:''};
-}
-function fmtRem(v){return {v:'$'+enNum(Math.round(v)), s:'mn USD'};}
-function stampFor(m){
-  const cad=(m.cadence||'')+'', v=m.vintage;
-  if(/4-hour|business-daily|daily/.test(cad)) return {cls:'live',t:'● LIVE'};
-  if(/weekly/.test(cad)) return {cls:'',t:'WEEKLY · '+dayShort(v)};
-  if(/monthly/.test(cad)) return {cls:'',t:'MONTHLY · '+monLong(v)+' data'};
-  if(/quarter/.test(cad)) return {cls:'',t:'QUARTERLY · '+qtrOf(v)};
-  if(/annual|yearly/.test(cad)) return {cls:'',t:'ANNUAL · '+String(v).slice(0,4)};
-  return {cls:'',t:String(v)};
-}
-function valueAgo(data,days){ const last=new Date(data[data.length-1].date), tgt=last-days*864e5; let best=data[0],bd=1e18; for(const p of data){const d=Math.abs(new Date(p.date)-tgt);if(d<bd){bd=d;best=p;}} return best.value; }
-function sparkSVG(data){ const pts=data.slice(-24); if(pts.length<8)return ''; const vals=pts.map(p=>p.value),mn=Math.min(...vals),mx=Math.max(...vals),rng=(mx-mn)||1; const W=92,H=26,px=(i)=>i/(pts.length-1)*(W-4)+2,py=(v)=>H-3-((v-mn)/rng)*(H-6); const d=pts.map((p,i)=>(i?'L':'M')+px(i).toFixed(1)+' '+py(p.value).toFixed(1)).join(' '); const lx=px(pts.length-1),ly=py(pts[pts.length-1].value); return `<svg class="spark" width="${W}" height="${H}"><path d="${d}"/><circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2.4"/></svg>`; }
-// Send source links to a human-readable page, not the raw API endpoint.
-function humanSrc(u){ if(!u)return u; if(/SieAPIRest/i.test(u))return 'https://www.banxico.org.mx/SieInternet/'; if(/apidatamexico|tesseract|economia\.gob\.mx\/api/i.test(u))return 'https://www.economia.gob.mx/datamexico/'; return u; }
-const srcDetails=(m)=>`<details><summary></summary><div class="src-body">Source: <a href="${humanSrc(m.sourceUrl)}" target="_blank" rel="noopener">${m.source}</a><br>Vintage: ${m.vintage} · retrieved ${new Date(m.fetchedAt).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})}<br>License: ${m.license}</div></details>`;
+let TRADE=null;
 
-/* ============ CHART ENGINE (bigger, value-labels, end-labels, hover) ============ */
-let CID=0; const CHARTS={};
-function niceStr(v,unit){ unit=unit||''; if(unit==='%')return v.toFixed(v>=10?0:1)+'%'; if(unit==='$')return '$'+(Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0)); return v.toFixed(Math.abs(v)>=10?0:1); }
-// Multi-series time-series. series=[{name,color,pts:[{date,value}]}]. opts:{unit,band,zero,green}
-function timeChart(series,opts){
-  opts=opts||{}; const W=720,H=400,pl=44,pr=104,pt=10,pb=30,iw=W-pl-pr,ih=H-pt-pb;
-  const all=series.flatMap(s=>s.pts.map(p=>p.value));
-  let mn=opts.min!=null?opts.min:Math.min(...all), mx=opts.max!=null?opts.max:Math.max(...all);
-  if(opts.zero){ if(mn>0)mn=0; if(mx<0)mx=0; }
-  const pad=(mx-mn)*0.10||1; mn-=pad; mx+=pad;
-  const times=series.flatMap(s=>s.pts.map(p=>+new Date(p.date)));
-  const dmn=Math.min(...times),dmx=Math.max(...times);
-  const X=(t)=>pl+((t-dmn)/((dmx-dmn)||1))*iw, Y=(v)=>pt+ih-((v-mn)/((mx-mn)||1))*ih;
-  let g='';
-  for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${(pl-6).toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="end">${niceStr(v,opts.unit)}</text>`;}
-  if(opts.band){const y1=Y(opts.band[1]),y0=Y(opts.band[0]);g+=`<rect class="band" x="${pl}" y="${y1.toFixed(1)}" width="${iw.toFixed(1)}" height="${(y0-y1).toFixed(1)}"/><text class="bandl" x="${(pl+5)}" y="${(y1+11).toFixed(1)}">${opts.bandLabel||''}</text>`;}
-  if(opts.zero&&mn<0&&mx>0){const yz=Y(0);g+=`<line class="zero" x1="${pl}" y1="${yz.toFixed(1)}" x2="${W-pr}" y2="${yz.toFixed(1)}"/>`;}
-  series.forEach((s)=>{ const d=s.pts.map((p,i)=>(i?'L':'M')+X(+new Date(p.date)).toFixed(1)+' '+Y(p.value).toFixed(1)).join(' ');
-    const cls=s.color==='green'?'ln2':'ln'; const stroke=s.color==='green'?'var(--green)':(s.color||'var(--ink)');
-    g+=`<path class="${cls}" style="stroke:${stroke}" d="${d}"/>`;
-    const last=s.pts[s.pts.length-1],lx=X(+new Date(last.date)),ly=Y(last.value);
-    g+=`<circle class="dot" style="fill:${stroke}" cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="3.2"/>`;
-    g+=`<text class="endlab" style="fill:${stroke}" x="${(lx+7).toFixed(1)}" y="${(ly+4).toFixed(1)}">${s.name} ${niceStr(last.value,opts.unit)}</text>`;
-  });
-  // x labels: first, last
-  const f=series[0].pts, l=f[f.length-1];
-  g+=`<text class="axl" x="${pl}" y="${H-8}" text-anchor="start">${opts.xfmt?opts.xfmt(f[0].date):qtrOf(f[0].date)}</text>`;
-  g+=`<text class="axl" x="${(W-pr).toFixed(1)}" y="${H-8}" text-anchor="end">${opts.xfmt?opts.xfmt(l.date):qtrOf(l.date)}</text>`;
-  const id='ch'+(CID++);
-  CHARTS[id]={series,X,Y,pl,pr,pt,pb,W,H,dmn,dmx,unit:opts.unit};
-  g+=`<line class="cross" id="${id}-cr" y1="${pt}" y2="${pt+ih}"/>`;
-  series.forEach((s,si)=>{const st=s.color==='green'?'var(--green)':(s.color||'var(--ink)');g+=`<circle class="hdot" id="${id}-hd${si}" r="3.5" style="fill:${st}"/>`;});
-  return `<svg class="chart" id="${id}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">${g}</svg>`;
-}
-// Vertical bars. items=[{label,value,hi}]. opts:{unit,everyLabel,xfmt}
-function barChart(items,opts){
-  opts=opts||{}; const W=720,H=380,pl=44,pr=14,pt=14,pb=34,iw=W-pl-pr,ih=H-pt-pb;
-  const vals=items.map(d=>d.value); let mx=Math.max(...vals,0),mn=Math.min(...vals,0);
-  const pad=(mx-mn)*0.12||1; mx+=pad; if(mn<0)mn-=pad;
-  const n=items.length,gap=iw/n,bw=gap*0.66;
-  const Y=(v)=>pt+ih-((v-mn)/((mx-mn)||1))*ih; const y0=Y(0);
-  let g='';
-  for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${(pl-6)}" y="${(y+3).toFixed(1)}" text-anchor="end">${niceStr(v,opts.unit)}</text>`;}
-  items.forEach((d,i)=>{const x=pl+i*gap+(gap-bw)/2,y=Y(Math.max(0,d.value)),h=Math.abs(Y(d.value)-y0);
-    g+=`<rect class="${d.hi?'bar2':'bar'}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1,h).toFixed(1)}" rx="1"/>`;
-    if(opts.everyLabel&&(i%opts.everyLabel===0||i===n-1)){
-      g+=`<text class="vlab" fill="var(--ink-2)" x="${(x+bw/2).toFixed(1)}" y="${(y-5).toFixed(1)}" text-anchor="middle">${niceStr(d.value,opts.unit)}</text>`;
-      g+=`<text class="axl" x="${(x+bw/2).toFixed(1)}" y="${H-9}" text-anchor="middle">${opts.xfmt?opts.xfmt(d.label):d.label}</text>`;
-    }});
-  return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">${g}</svg>`;
-}
-// Horizontal ranked bars. items=[{label,value,hi}] value in %
-function hbarChart(items,opts){
-  opts=opts||{}; const vfmt=opts.vfmt||((v)=>v+'%');
-  const W=720,rowH=items.length>7?34:40,pl=156,pr=64,pt=8,H=pt*2+items.length*rowH;
-  const mx=Math.max(...items.map(d=>d.value));
-  let g='';
-  items.forEach((d,i)=>{const y=pt+i*rowH+(rowH-24)/2,bw=(d.value/mx)*(W-pl-pr);
-    g+=`<text class="cat" x="${pl-10}" y="${(y+16).toFixed(1)}" text-anchor="end">${d.label}</text>`;
-    g+=`<rect class="${d.hi?'bar2':'bar'}" x="${pl}" y="${y}" width="${bw.toFixed(1)}" height="24" rx="2"/>`;
-    g+=`<text class="vlab" x="${(pl+bw+7).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="var(--ink)">${vfmt(d.value)}</text>`;});
-  return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">${g}</svg>`;
-}
-// exhibit frame; optional table alt for chart<->table toggle
-function exhibit(no,finding,sub,svg,src,tableHtml,wide){
-  const tid='ex'+(CID++);
-  const toggle=tableHtml?`<div class="ex-toggle"><button class="on" data-t="chart" data-for="${tid}">Chart</button><button data-t="table" data-for="${tid}">Table</button></div>`:'';
-  const tbl=tableHtml?`<div id="${tid}-table" style="display:none">${tableHtml}</div>`:'';
-  return `<div class="exwrap${wide?' wide':''}"><div class="ex-tag"></div>`+
-    `<div class="ex-head"><div><div class="ex-no">Exhibit ${no}</div><div class="ex-title">${finding}</div><div class="ex-sub">${sub}</div></div>${toggle}</div>`+
-    `<div id="${tid}-chart">${svg}</div>${tbl}<div class="ex-src">${src}</div></div>`;
-}
-function dataTable(cols,rows){
-  return `<div class="dtbl"><table class="dt"><thead><tr>${cols.map((c,i)=>`<th class="${i===0?'k':''}">${c}</th>`).join('')}</tr></thead>`+
-    `<tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${i===0?'k':''}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
-}
-// wire hover + toggles after innerHTML
-function wireCharts(){
-  const tip=$('#charttip');
-  for(const id in CHARTS){ const el=document.getElementById(id); if(!el||el.__w)continue; el.__w=1; const C=CHARTS[id];
-    el.addEventListener('pointermove',(e)=>{
-      const r=el.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width*C.W;
-      const t=C.dmn+((sx-C.pl)/(C.W-C.pl-C.pr))*(C.dmx-C.dmn);
-      const cr=document.getElementById(id+'-cr');
-      let rows='',hdr='';
-      C.series.forEach((s,si)=>{ let best=s.pts[0],bd=1e18; for(const p of s.pts){const d=Math.abs(+new Date(p.date)-t);if(d<bd){bd=d;best=p;}}
-        const px=C.X(+new Date(best.date)),py=C.Y(best.value),st=s.color==='green'?'#0a7d4d':(s.color||'#141414');
-        const hd=document.getElementById(id+'-hd'+si); if(hd){hd.setAttribute('cx',px);hd.setAttribute('cy',py);hd.style.opacity=1;}
-        if(cr){cr.setAttribute('x1',px);cr.setAttribute('x2',px);cr.style.opacity=1;}
-        hdr=qtrOf(best.date);
-        rows+=`<div class="tr"><span class="nm"><i style="background:${st}"></i>${s.name}</span><span class="vv">${niceStr(best.value,C.unit)}</span></div>`;
-      });
-      tip.innerHTML=`<b>${hdr}</b>${rows}`; tip.style.opacity=1;
-      tip.style.left=Math.min(e.clientX+14,innerWidth-160)+'px'; tip.style.top=(e.clientY+14)+'px';
-    });
-    el.addEventListener('pointerleave',()=>{ tip.style.opacity=0; const cr=document.getElementById(id+'-cr'); if(cr)cr.style.opacity=0; C.series.forEach((s,si)=>{const hd=document.getElementById(id+'-hd'+si);if(hd)hd.style.opacity=0;}); });
-  }
-  document.querySelectorAll('.ex-toggle button').forEach(b=>{ if(b.__w)return; b.__w=1; b.addEventListener('click',()=>{
-    const t=b.dataset.t,f=b.dataset.for; b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
-    const c=document.getElementById(f+'-chart'),tb=document.getElementById(f+'-table'); if(c)c.style.display=t==='chart'?'':'none'; if(tb)tb.style.display=t==='table'?'':'none';
-  }); });
-}
+/* section keyword filters — reused verbatim from the section pages so a homepage
+   headline matches what the section page itself would surface first. */
+const POL_RX=/sheinbaum|morena|gobierno|pol[ií]tic|\belecc|\belect|comicios|congreso|senado|diputad|judicial|oposici|\bpan\b|\bpri\b|gobernador|gubernatur|informe|constituc|government|\bcongress|senate|\belection|midterm|opposition|\bpresident|\bminister|cabinet/i;
+const SEC_RX=/seguridad|homicid|violenc|cartel|crimen|delito|desaparec|narco|secuestr|extorsi|drone attack/i;
+const USMX_RX=/usmca|t-?mec|arancel|tariff|ee\.?uu|estados unidos|frontera|\bborder\b|comercio|exportaci|trump|remesa|remittance|\bice\b|migra|deportaci|\bustr\b|washington/i;
+const SOC_RX=/pobreza|salario|salarial|empleo|desempleo|desigualdad|migraci|migrante|remesas|remittance|poblaci|imss|trabajador|informal|welfare|bienestar|coneval|conasami|pension|jornada|desarrollo humano|social|wage|poverty|inequality|\bjobs\b|\blabor\b/i;
+const ECON_RX=/econom|\bgdp\b|\bpib\b|growth|crecimiento|manufactur|industri|inversi|invest|nearshor|export|import|sector|f[aá]brica|factory/i;
+const MONEY_RX=/peso|inflaci|inflation|banxico|\brate\b|\btasa\b|remittance|remesas|market|mercado|tariff|arancel|usmca|nearshor|invest|inversi|bolsa|divisa/i;
 
-/* ---- verdicts + benchmarks (McKinsey voice: quantified, declarative) ---- */
-const VERDICT={
-  'banxico-usdmxn-fix':(s)=>{const ago=valueAgo(s.data,365),c=(s.data.at(-1).value-ago)/ago*100;return `The peso is <b>${Math.abs(c).toFixed(1)}% ${c<0?'stronger':'weaker'}</b> than a year ago.`;},
-  'banxico-inflacion':(s)=>{const v=s.data.at(-1).value;return `${v<4&&v>2?'Inside':'Above'} Banxico's 3% ± 1 target band.`;},
-  'banxico-tasa-objetivo':(s)=>{const v=s.data.at(-1).value,ago=valueAgo(s.data,365),pp=(v-ago).toFixed(2).replace('-','−');return `${v===ago?'Held':(v<ago?'Cut':'Raised')} ${pp} pp over the year — one of the G20's highest real rates.`;},
-  'banxico-reservas':(s)=>{const v=s.data.at(-1).value,ago=valueAgo(s.data,365),c=(v-ago)/ago*100;return `${c>=0?'+':''}${c.toFixed(1)}% over the year, near a record high.`;},
-  'banxico-remesas':(s)=>{const v=s.data.at(-1).value,ago=valueAgo(s.data,365),c=(v-ago)/ago*100;return `${c>=0?'+':''}${c.toFixed(1)}% year on year — larger than oil exports or FDI.`;},
-  'wb-unemployment':(s)=>`${s.data.at(-1).value.toFixed(1)}% — among the world's lowest. Informality (~55% of workers) is the counterpart, tracked separately.`,
-  'banxico-pib-crecimiento':(s)=>{const v=s.data.at(-1).value;return `Real GDP is growing <b>${v>=0?'+':''}${v.toFixed(1)}% a year</b> — barely above zero.`;},
-  'banxico-igae':(s)=>{const v=s.data.at(-1).value;return `Activity is <b>${v>=0?'+':''}${v.toFixed(1)}%</b> versus a year ago.`;},
-  'banxico-inflacion-subyacente':(s)=>{const v=s.data.at(-1).value;return `Core inflation (${v.toFixed(1)}%) is above target — the measure Banxico watches most.`;},
-  'banxico-salario-minimo':()=>`Up 2.4× in real terms since 2018, set by government decree.`,
-  'cre-gasolina-regular':()=>`National average pump price, refreshed every 4 hours.`
-};
-const BENCH={
-  'banxico-usdmxn-fix':(s)=>{const w=Math.min(...s.data.slice(-252).map(p=>p.value)),k=Math.max(...s.data.slice(-252).map(p=>p.value));return `vs 12-mo range ${w.toFixed(2)}–${k.toFixed(2)}`;},
-  'banxico-inflacion':()=>`vs 3% target (±1)`,
-  'banxico-inflacion-subyacente':()=>`vs 3% target (±1)`,
-  'banxico-tasa-objetivo':()=>`vs 2024 peak 11.25%`,
-  'banxico-pib-crecimiento':()=>`vs US +2.3% · ~2% Mexico trend`,
-  'banxico-igae':()=>`vs 0% = no growth`,
-  'wb-unemployment':()=>`vs US ~4% · Brazil ~7%`,
-  'banxico-remesas':()=>`vs ~4% of GDP`,
-  'banxico-reservas':()=>`vs record high`,
-  'banxico-salario-minimo':()=>`vs 2018 = 2.4× real`,
-  'cre-gasolina-regular':()=>`vs US ~$0.85/L equiv.`
-};
-
-/* ============ THE BOARD ============ */
+/* ============ THE BOARD (block 2) — same tile() render + same JSON as the sections ============ */
 const TILES=[
-  {id:'banxico-pib-crecimiento',l:'Growth · real GDP',per:'annual'},
-  {id:'banxico-inflacion',l:'Inflation · annual',per:'vs prior month'},
-  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',per:'vs 2024'},
-  {id:'banxico-usdmxn-fix',l:'Peso · MXN/USD',per:'vs yesterday'},
-  {id:'banxico-remesas',l:'Remittances · month',per:'vs prior month'},
-  {id:'wb-unemployment',l:'Unemployment',per:'',ph:'monthly: ENOE'},
-  {id:'cre-gasolina-regular',l:'Gasoline · regular',per:''},
-  {id:'banxico-reservas',l:"Int'l reserves",per:'vs prior week'},
+  {id:'banxico-usdmxn-fix',   l:'Peso · MXN/USD',      href:'/money.html'},
+  {id:'banxico-inflacion',    l:'Inflation · annual',  href:'/money.html'},
+  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',href:'/money.html'},
+  {id:'banxico-pib-crecimiento',l:'Growth · real GDP', href:'/economy.html'},
+  {id:'banxico-remesas',      l:'Remittances · month', href:'/money.html'},
+  {id:'banxico-reservas',     l:"Int'l reserves",      href:'/money.html'},
 ];
-function dirArrow(s){const d=s.data;if(d.length<2)return '';const a=d.at(-1).value,b=d.at(-2).value;return a>b?'▲':a<b?'▼':'—';}
-// The change over ~12 months, in ink (never good/bad colour) — answers "moved how?"
-const PP_METRICS=['banxico-tasa-objetivo','banxico-inflacion','banxico-inflacion-subyacente','banxico-pib-crecimiento','banxico-igae','wb-unemployment'];
-function tileDelta(id,s){
-  const d=s.data; if(d.length<3)return '';
-  const cur=d.at(-1).value, ago=valueAgo(d,365); const diff=cur-ago;
-  const pp=PP_METRICS.includes(id);
-  if(!pp && Math.abs(diff)<Math.abs(ago)*0.005) return '';
-  if(pp && Math.abs(diff)<0.05) return `<span class="dl fl">held <small>vs a year ago</small></span>`;
-  const cls=diff>0?'up':'dn';
-  const mag=pp?((diff>0?'+':'')+diff.toFixed(1)+'pp'):((diff>0?'+':'')+(diff/ago*100).toFixed(1)+'%');
-  return `<span class="dl ${cls}">${mag} <small>vs a year ago</small></span>`;
-}
-function tileVal(id,s){ if(id==='banxico-remesas')return fmtRem(s.data.at(-1).value); return fmt(id,s.data.at(-1).value,s.meta.units); }
 function renderBoard(){
-  const host=$('#tablero');
-  for(const t of TILES){ const s=S[t.id]; const el=document.createElement('div'); el.className='tile'; el.setAttribute('data-go',t.id);
-    if(!s){ el.innerHTML=`<div class="tl">${t.l}</div><div class="tv" style="font-size:15px;color:var(--amber2)">NOT YET WIRED</div><div class="tb">feed unavailable</div>`; host.appendChild(el); continue; }
-    const h=tileVal(t.id,s),st=stampFor(s.meta),arw=dirArrow(s),bf=BENCH[t.id];
-    el.innerHTML=`<div class="tl">${t.l}</div><div class="tv">${h.v} <small>${h.s}</small></div>`+
-      tileDelta(t.id,s)+ sparkSVG(s.data)+
-      `<div class="tb">${bf?bf(s):(t.per?'<span class="arw">'+arw+'</span> '+t.per:'')}</div>`+
-      `<span class="stamp ${st.cls}">${st.t}${t.ph?'<span class="chip-ph">'+t.ph+'</span>':''}</span>`;
-    host.appendChild(el);
-  }
-  host.addEventListener('click',(e)=>{const t=e.target.closest('[data-go]');if(!t)return;const sec=document.querySelector('[data-metric="'+t.getAttribute('data-go')+'"]');if(sec)sec.closest('section').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'});});
-  const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime());
-  if(times.length)$('#board-asof').textContent='as of '+new Date(Math.max(...times)).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  let h=TILES.map(t=>`<a class="tilelink" href="${t.href}">${tile(t)}</a>`).join('');
+  // two dated static tiles (no live series exists yet) — links to their owning sections
+  h+=`<a class="tilelink" href="/security.html"><div class="tile"><div class="tl">Homicide rate · national</div>`+
+     `<div class="tv">~26 <small>per 100k</small></div><div class="tb">vs US ~6 per 100k</div>`+
+     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span></div></a>`;
+  h+=`<a class="tilelink" href="/politics.html"><div class="tile"><div class="tl">Presidential approval</div>`+
+     `<div class="tv">49–68 <small>%</small></div><div class="tb">Mitofsky ~68 · AtlasIntel ~49</div>`+
+     `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span></div></a>`;
+  return h;
 }
 
-/* ============ LATEST LINE (compact, replaces cover band) ============ */
-function renderLatestLine(){
-  const host=$('#lateststrip'); if(!host)return;
-  const n=(NEWS&&NEWS.articles)||[];
-  const badge=$('#rail-wire .t'); if(badge&&n.length)badge.textContent=`The Wire · ${n.length} latest`;
-  if(!n.length){host.innerHTML='';return;}
-  host.innerHTML=`<span class="ll-k"><span class="dot"></span>Latest</span>`+
-    n.slice(0,3).map((a,i)=>`${i?'<span class="ll-sep">·</span>':''}<a href="${a.url}" target="_blank" rel="noopener" title="${a.domain||''}">${a.title}</a>`).join('')+
-    `<span class="ll-sep">·</span><a class="ll-all" href="#q12">The Wire →</a>`;
-}
-function nextEvent(kind){ if(!EVENTS||!EVENTS.events)return null; const now=Date.now(); return EVENTS.events.filter(e=>(!kind||e.kind===kind)&&new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date))[0]||null; }
-function nextDecision(){ if(!EVENTS||!EVENTS.events)return null; const now=Date.now(); return EVENTS.events.filter(e=>e.kind==='banxico'&&/monetary-policy decision/i.test(e.label)&&new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date))[0]||null; }
-
-/* ============ NAV / RAIL / CONTENTS ============ */
-const NAV=[
-  {g:'THE ECONOMY',items:[{q:'Q3',t:'Is the money sound?',id:'q3'},{q:'Q4',t:'Growth & the US',id:'q4'},{q:'Q5',t:'Nearshoring real?',id:'q5'},{q:'Q6',t:'Better off?',id:'q6'}]},
-  {g:'POLITICS & RISK',items:[{q:'Q7',t:'Who governs?',id:'q7'},{q:'Q8',t:'The US relationship',id:'q8'},{q:'Q9',t:'How dangerous?',id:'q9'}]},
-  {g:'FORWARD',items:[{q:'Q10',t:"Where it's heading",id:'q10'},{q:'Q11',t:'What if…?',id:'q11'}]},
-  {g:'THIS WEEK',items:[{q:'Q12',t:'The Wire',id:'q12'}]},
+/* ============ WHAT MOVED (block 3) — deltas computed from series history ============
+   For each mover, find the data point nearest to N days ago and compare it with the
+   latest. Skip a mover when its series has no point far enough back (never invent a
+   delta) or when the change is below a materiality floor. Sort by relative magnitude,
+   take the top five. */
+const MOVERS=[
+  {id:'banxico-usdmxn-fix',    label:'Peso',              href:'/money.html', days:7,  unit:'pct', when:'past week'},
+  {id:'banxico-inflacion',     label:'Inflation',         href:'/money.html', days:32, unit:'pp',  when:'past month'},
+  {id:'banxico-tasa-objetivo', label:'Banxico policy rate',href:'/money.html',days:50, unit:'pp',  when:'past 6 weeks'},
+  {id:'banxico-reservas',      label:'International reserves',href:'/money.html',days:8,unit:'pct', when:'past week'},
+  {id:'banxico-remesas',       label:'Remittances',       href:'/money.html', days:32, unit:'pct', when:'past month'},
+  {id:'banxico-igae',          label:'Monthly activity (IGAE)',href:'/economy.html',days:32,unit:'pp',when:'past month'},
 ];
-const ALLQ=[{q:'Q1',t:'Mexico in one look',id:'q1'},{q:'Q2',t:'How is it doing now?',id:'q2'}].concat(NAV.flatMap(g=>g.items));
-function renderRail(){
-  let h=`<a class="wirelink" href="#q12" id="rail-wire"><span class="q"><span class="dot"></span></span><span class="t" style="color:var(--green-d);font-weight:600">The Wire — latest news</span></a>`;
-  h+=`<div class="toc-grp"><div class="ge"><span>OVERVIEW</span></div><a href="#q2"><span class="q">Q2</span><span class="t">The board</span></a><a href="#q10"><span class="q">▶</span><span class="t">What to watch</span></a></div>`;
-  for(const grp of NAV){ h+=`<div class="toc-grp"><div class="ge"><span>${grp.g}</span><span>· ${grp.items.length}</span></div>`+grp.items.map(it=>`<a href="#${it.id}"><span class="q">${it.q}</span><span class="t">${it.t}</span></a>`).join('')+`</div>`; }
-  $('#toc').innerHTML=h;
-  // pill nav (mobile)
-  $('#pillnav').innerHTML=ALLQ.map(it=>`<a href="#${it.id}">${it.q}</a>`).join('');
+function moveOver(s,days){
+  const d=s&&s.data; if(!d||d.length<2) return null;
+  const last=d[d.length-1], lastT=+new Date(last.date), tgt=lastT-days*864e5;
+  let best=d[0],bd=1e18; for(const p of d){const dd=Math.abs(+new Date(p.date)-tgt); if(dd<bd){bd=dd;best=p;}}
+  if(best.date===last.date) return null;                       // no earlier point → no delta
+  if(lastT-(+new Date(best.date)) < days*0.4*864e5) return null; // comparison point too close to now
+  return {cur:last.value, prev:best.value};
 }
-function renderContents(){
-  $('#cgrid').innerHTML=ALLQ.map(it=>`<a href="#${it.id}"><span class="q">${it.q}</span><span class="t">${it.t}</span></a>`).join('');
-}
-
-/* ============ WHAT TO WATCH ============ */
-function evDate(e){ const d=new Date(e.date); return {mo:MON[d.getUTCMonth()],day:d.getUTCDate(),y:d.getUTCFullYear()}; }
-function renderWatchFull(){
-  if(!EVENTS||!EVENTS.events||!EVENTS.events.length) return `<div class="cb-empty">Calendar not yet loaded.</div>`;
-  const now=Date.now(); const up=EVENTS.events.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date));
-  return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
-}
-
-/* ============ WIRE ============ */
-function tagChip(t){return `<span class="wtag ${t||''}">${t||'econ'}</span>`;}
-function renderWireFull(){
-  const n=(NEWS&&NEWS.articles)||[];
-  if(!n.length) return construccion({l:'The Wire — live headlines',src:'GDELT (English-language index)',cad:'continuous',eta:'No headlines yet — the next scheduled run will post them here.'});
-  return `<div class="wire">`+n.slice(0,16).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';return `<div class="wi">${tagChip(a.tag)}<div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`+
-    `<div class="oc-src" style="margin-top:10px">Headlines indexed by <a href="https://www.gdeltproject.org/" target="_blank" rel="noopener">GDELT</a> from English-language outlets; each links to its source, unsummarized. Last built ${NEWS&&NEWS.meta&&NEWS.meta.fetchedAt?new Date(NEWS.meta.fetchedAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—'}.</div>`;
-}
-
-/* ============ PRIMER ============ */
-const PRIMER=[
-  {n:'1',h:'The scale',p:'~131M people, ~$1.9T GDP — the world\'s ~14th-largest economy, bigger than Spain or Australia. Per-capita income (~$14k) is upper-middle-income, well below the US.',s:'World Bank, 2025',u:'https://data.worldbank.org/country/mexico'},
-  {n:'2',h:'The US tether',p:'About 80% of exports go to the US, and Mexico is the US\'s largest trading partner. US demand, the Fed, and US trade policy move Mexico first.',s:'US Census Bureau; INEGI',u:'https://www.census.gov/foreign-trade/balance/c2010.html'},
-  {n:'3',h:'How it\'s governed',p:'A federal presidential republic; one 6-year term, no re-election. Morena has governed since 2018 with a congressional supermajority. A 2024–25 reform now elects judges by popular vote — contested, and watched abroad.',s:'INE; Congreso',u:'https://www.ine.mx'},
-  {n:'4',h:'The two Mexicos',p:'A prosperous industrial north, a poorer, more informal south. About 55% of workers are informal. National averages hide large local variation — which is what the Atlas is for.',s:'INEGI (ENOE); CONEVAL',u:'https://www.inegi.org.mx'},
-  {n:'5',h:'Security, by place',p:'Violence is real, concentrated by place, and tied to organized crime — not random. The national homicide rate has eased from its 2018–19 peak. "How dangerous is Mexico?" depends entirely on where.',s:'SESNSP; INEGI',u:'https://www.gob.mx/sesnsp'}
-];
-function renderPrimer(){ $('#pgrid').innerHTML=PRIMER.map(c=>`<div class="pcard"><div class="pn">${c.n}</div><h4>${c.h}</h4><p>${c.p}</p><div class="psrc">Source: <a href="${c.u}" target="_blank" rel="noopener">${c.s}</a></div></div>`).join(''); }
-
-/* ============ FACT STRIP ============ */
-function renderFacts(){
-  const pop=S['wb-population']?(S['wb-population'].data.at(-1).value/1e6).toFixed(1)+'M':'131M';
-  const gdp=S['wb-gdp-usd']?'$'+(S['wb-gdp-usd'].data.at(-1).value/1e12).toFixed(2)+'T':'$1.9T';
-  const facts=[{k:'Population',v:pop,s:'World Bank · 2025'},{k:'Economy',v:gdp,s:'~14th · World Bank'},{k:'Exports to US',v:'~80%',s:'INEGI · 2025'},{k:'Government',v:'Sheinbaum',s:'Morena · next vote Jun 2027'}];
-  $('#factstrip').innerHTML=facts.map(f=>`<div class="fact"><div class="fk">${f.k}</div><div class="fv">${f.v}</div><div class="fs">${f.s}</div></div>`).join('');
-}
-
-/* ============ metric rows ============ */
-function mrow(cfg){
-  const s=S[cfg.id];
-  if(!s) return construccion({l:cfg.label,src:cfg.src||'feed in progress',cad:cfg.cad||'',eta:cfg.eta||''});
-  const h=cfg.id==='banxico-remesas'?fmtRem(s.data.at(-1).value):fmt(cfg.id,s.data.at(-1).value,s.meta.units),st=stampFor(s.meta),vf=VERDICT[cfg.id],bf=BENCH[cfg.id];
-  return `<div class="mrow" data-metric="${cfg.id}"><div class="mr-top"><span class="mr-label">${cfg.label}</span><span class="stamp ${st.cls}">${st.t}${cfg.ph?'<span class="chip-ph">'+cfg.ph+'</span>':''}</span></div>`+
-    `<div class="mr-main"><span class="mr-val">${h.v} <small>${h.s}</small></span><span class="mr-spark">${sparkSVG(s.data)}</span></div>`+
-    (vf?`<div class="mr-verdict">${vf(s)}</div>`:'')+(bf?`<div class="mr-bench">${bf(s)}</div>`:'')+srcDetails(s.meta)+`</div>`;
-}
-function construccion(o){ return `<div class="constr-lite"><span class="cl-l">${o.l}</span><span class="cl-s">not yet wired</span><span class="cl-d">${o.src}${o.cad?' · '+o.cad:''}</span></div>`; }
-function staticRow(o){
-  return `<div class="mrow"><div class="mr-top"><span class="mr-label">${o.label}</span><span class="stamp">${o.stamp}</span></div>`+
-    `<div class="mr-main"><span class="mr-val">${o.value} <small>${o.unit||''}</small></span></div>`+
-    (o.verdict?`<div class="mr-verdict">${o.verdict}</div>`:'')+(o.bench?`<div class="mr-bench">${o.bench}</div>`:'')+
-    `<details><summary></summary><div class="src-body">Source: <a href="${o.srcUrl}" target="_blank" rel="noopener">${o.srcName}</a></div></details></div>`;
-}
-function iedRow(){
-  const s=S['se-ied']; if(!s) return construccion({l:'FDI — foreign direct investment',src:'Secretaría de Economía (Data México)',cad:'quarterly'});
-  const d=s.data,last4=d.slice(-4),annual=last4.reduce((a,p)=>a+p.value,0),st=stampFor(s.meta);
-  return `<div class="mrow" data-metric="se-ied"><div class="mr-top"><span class="mr-label">FDI — foreign direct investment</span><span class="stamp ${st.cls}">${st.t}</span></div>`+
-    `<div class="mr-main"><span class="mr-val">$${(annual/1000).toFixed(1)} <small>bn USD · last 4 quarters</small></span></div>`+
-    `<div class="mr-verdict">This is FDI Banxico recorded in the balance of payments, not the announced pledges behind most FDI headlines. Trailing four quarters, because FDI is very seasonal.</div>`+
-    `<div class="mr-bench">vs ~2% of GDP · ~60% reinvested earnings</div>`+srcDetails(s.meta)+`</div>`;
-}
-function sectionHead(no,title,dek){ return `<div class="section-head"><span class="no">${no}</span><h2>${title}</h2>${dek?`<p class="dek">${dek}</p>`:''}</div>`; }
-function fwd(html){ return `<div class="fwdline">Forward · ${html}</div>`; }
-function bandHead(t){ return `<div class="band"><span class="bl">${t}</span></div>`; }
-// Economic-complexity stat block (Harvard Growth Lab) — products-first, rank not raw score.
-function eciBlock(){
-  if(!COMPLEXITY||!COMPLEXITY.eci)return '';
-  const e=COMPLEXITY.eci,m=COMPLEXITY.meta||{};
-  const top=(COMPLEXITY.topExports||[]).slice(0,3).map(x=>x.product.toLowerCase()).join(', ')||'cars, computers, and medical instruments';
-  const noteShort=(e.note||'').split('. ')[0].replace(/\.$/,'');
-  return `<div class="eciline"><p class="eci-h">Mexico sells the world ${top}, not oil. That export mix carries more knowhow than its income would predict, usually a sign of faster growth ahead, though Mexico's own near-term growth stays weak: its export basket is getting <em>less</em> diversified even as it gets more complex.</p>`+
-    `<div class="eci-stat"><span class="eci-v">${e.rank}<small>th</small></span><span class="eci-l">of ${e.of} on <b>economic complexity</b> — how much knowhow a country's exports embody${noteShort?`. ${noteShort}`:''}. <span class="stamp">ANNUAL · ${m.year||'2024'}</span></span></div>`+
-    `<div class="eci-src">Source: <a href="${m.sourceUrl||'https://atlas.hks.harvard.edu'}" target="_blank" rel="noopener">${m.source||'Harvard Growth Lab · UN COMTRADE'}</a>${e.rankDecadeAgo?` · up from ${e.rankDecadeAgo}th a decade ago`:''}.</div></div>`;
-}
-// What Mexico could make next (Harvard diversification model) — the honest forward for Q5.
-function oppsBlock(){
-  if(!COMPLEXITY||!COMPLEXITY.opportunities||!COMPLEXITY.opportunities.length)return '';
-  return `<div class="oppcard"><div class="opp-h">What the complexity model says Mexico could make next</div>`+
-    `<div class="opp-d">High-complexity products close to what Mexico already knows how to make — Harvard's diversification model ranks these among the best-fit next steps.</div>`+
-    `<ol class="opp-list">`+COMPLEXITY.opportunities.map(o=>`<li>${o.product}${o.hs?` <span class="opp-hs">HS ${o.hs}</span>`:''}</li>`).join('')+`</ol>`+
-    `<div class="opp-src">Source: <a href="https://atlas.hks.harvard.edu/countries/484" target="_blank" rel="noopener">Harvard Growth Lab — Strategy Space</a> <span class="stamp">ANNUAL · 2024</span></div></div>`;
-}
-
-/* ============ SECTIONS ============ */
-function renderSections(){
-  const host=$('#sections'); let H='';
-  H+=bandHead('The economy');
-
-  // Q3 money
-  {
-    const rate=S['banxico-tasa-objetivo'],inf=S['banxico-inflacion'];
-    let ex='';
-    if(rate&&inf){
-      const rr=rate.data.filter(p=>new Date(p.date)>=new Date(Date.now()-2.2*365*864e5)).filter((_,i)=>i%6===0);
-      const ii=inf.data.slice(-Math.min(inf.data.length,30));
-      const svg=timeChart([{name:'Inflation',color:'var(--ink)',pts:ii},{name:'Policy rate',color:'green',pts:rr.length?rr:rate.data.slice(-30)}],{unit:'%',band:[2,4],bandLabel:'3% ± 1 target'});
-      const rateAt=(d)=>{const t=+new Date(d);let best=rate.data[0],bd=1e18;for(const q of rate.data){const dd=Math.abs(+new Date(q.date)-t);if(dd<bd){bd=dd;best=q;}}return best.value;};
-      const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p)=>[qtrOf(p.date),p.value.toFixed(1),rateAt(p.date).toFixed(2)]));
-      ex=exhibit('3.1','Banxico is holding rates high while inflation stays above target','Policy rate vs headline inflation, % · shaded band = 3% ± 1 target',svg,
-        `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> · INPC + target rate.`,tbl,true);
-    }
-    H+=`<section class="dim" id="q3">${sectionHead('Q3','Is Mexico\'s money sound?','Inflation sits above Banxico\'s target, so the bank is holding rates high—and the peso is holding with them.')}`+
-      ex+ mrow({id:'banxico-inflacion',label:'Inflation, annual (CPI)'})+mrow({id:'banxico-inflacion-subyacente',label:'Core inflation, annual'})+
-      mrow({id:'banxico-tasa-objetivo',label:'Banxico policy rate'})+mrow({id:'banxico-usdmxn-fix',label:'Peso · exchange rate (FIX)'})+mrow({id:'banxico-reservas',label:'International reserves'})+
-      fwd(`Banxico's survey (Jul 2026) sees inflation at <b>4.2%</b> end-2026, the rate on hold at <b>6.50%</b>, the peso near <b>17.95</b>. <a href="#q10">Outlook →</a>`)+
-      `<div class="ctxline">Gloss: <b>Banxico</b> = the central bank · <b>INPC</b> = the consumer price index · <b>FIX</b> = Banxico's official daily reference rate.</div></section>`;
+function renderMoved(){
+  const rows=[];
+  for(const m of MOVERS){
+    const mv=moveOver(S[m.id],m.days); if(!mv) continue;
+    const diff=mv.cur-mv.prev; if(diff===0) continue;
+    const rel=Math.abs(diff)/(Math.abs(mv.prev)||1);
+    let mag;
+    if(m.unit==='pp'){ if(Math.abs(diff)<0.05) continue; mag=(diff>0?'+':'−')+Math.abs(diff).toFixed(2)+' pp'; }
+    else { const pct=diff/mv.prev*100; if(Math.abs(pct)<0.25) continue; mag=(pct>0?'+':'−')+Math.abs(pct).toFixed(1)+'%'; }
+    rows.push({...m,diff,rel,mag});
   }
-  // Q4 growth
-  {
-    const g=S['banxico-pib-crecimiento'];
-    const gval=g?g.data.at(-1).value:0.4;
-    let ex1=g?exhibit('4.1',`Growth has slowed to about ${gval.toFixed(1)}% a year`,'Real GDP, % change year on year · zero line = no growth',
-      timeChart([{name:'GDP',color:'var(--ink)',pts:g.data.slice(-20)}],{unit:'%',zero:true}),
-      `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México / INEGI</a> · real GDP (base 2018), YoY.`):'';
-    const dest=[{label:'United States',value:80,hi:true},{label:'Canada',value:3},{label:'China',value:2},{label:'Rest of world',value:15}];
-    let ex2=exhibit('4.2','Four out of five export dollars go to one country','Mexican goods exports by destination, share of total, 2025',
-      hbarChart(dest),
-      `Source: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI / Banxico</a>, balance of trade.`,
-      dataTable(['Destination','Share'],dest.map(d=>[d.label,d.value+'%'])),true);
-    let ex3='';
-    if(COMPLEXITY&&COMPLEXITY.topExports){
-      const items=COMPLEXITY.topExports.map((x,i)=>({label:x.product,value:x.usd_bn,hi:i===0}));
-      const tbl=dataTable(['Product','Exports','HS'],COMPLEXITY.topExports.map(x=>[x.product,'$'+x.usd_bn+'B',x.hs]));
-      ex3=exhibit('4.3','Cars, computers, auto parts — Mexico sells the world manufactured goods','Top goods exports, 2024, US$ billions',
-        hbarChart(items,{vfmt:(v)=>'$'+v+'B'}),
-        `Source: <a href="${COMPLEXITY.meta.sourceUrl}" target="_blank" rel="noopener">Observatory of Economic Complexity / UN COMTRADE (2024)</a>. Manufactured goods are ~90% of exports.`,tbl,true);
-    } else if(SECTORS&&SECTORS.sectors){
-      const items=SECTORS.sectors.map(s=>({label:s.label,value:s.share,hi:s.hi}));
-      const tbl=dataTable(['Sector','Share','US$ bn'],SECTORS.sectors.map(s=>[s.label,s.share+'%',s.usd_bn?'$'+s.usd_bn+'bn':'—']));
-      ex3=exhibit('4.3','Mexico\'s exports are manufactured goods, led by cars','Goods exports by sector, share of total, 2024',hbarChart(items),
-        `Source: <a href="${SECTORS.meta.sourceUrl}" target="_blank" rel="noopener">${SECTORS.meta.source}</a>. ${SECTORS.meta.note}`,tbl,true);
-    }
-    H+=`<section class="dim" id="q4">${sectionHead('Q4','Is the economy growing — and on whom does it depend?',`Growth is weak, about ${gval.toFixed(1)}% a year, and almost all of it depends on demand from the United States.`)}`+
-      ex2+ eciBlock()+
-      mrow({id:'banxico-pib-crecimiento',label:'Real GDP growth (annual)'})+mrow({id:'banxico-igae',label:'IGAE — monthly activity (annual)'})+
-      fwd(`2026 forecasts split: <b>Banxico survey +1.1%</b>, IMF +1.6%, OECD +0.8% — the near-term driver is US demand. <a href="#q10">Outlook →</a>`)+
-      `<details class="more"><summary>More on this question — growth over time & the full export mix</summary>`+ex1+ex3+`</details>`+
-      `<a class="teaser" href="./economy.html" style="margin-top:14px"><div class="tz-body"><div class="tz-k">The full economy</div><div class="tz-h">The Economy — what Mexico is made of →</div><div class="tz-d">GDP by sector and by spending, exports <b>and imports</b> broken out, the trade balance over a decade, and the informal economy that employs half the country. Nine charts.</div><span class="tz-go">Open the Economy page →</span></div></a>`+
-      `<div class="ctxline">Gloss: <b>IGAE</b> = INEGI's monthly GDP proxy · <b>INEGI</b> = the national statistics office. Context: $${(S['wb-gdp-usd']?S['wb-gdp-usd'].data.at(-1).value/1e12:1.9).toFixed(2)}T economy · $${S['wb-gdp-per-capita']?enNum(Math.round(S['wb-gdp-per-capita'].data.at(-1).value)):'—'} per capita (World Bank, 2025).</div></section>`;
-  }
-  // Q5 nearshoring
-  {
-    const s=S['se-ied'];
-    let ex=s?exhibit('5.1','FDI held high but flat through 2024, short of the boom in the headlines','Foreign direct investment, quarterly flow, bn USD',
-      barChart(s.data.slice(-16).map(p=>({label:p.date,value:p.value/1000})),{unit:'$',xfmt:(d)=>qtrOf(d),everyLabel:4}),
-      `Source: <a href="https://www.economia.gob.mx/datamexico/" target="_blank" rel="noopener">Secretaría de Economía (Data México)</a>, cube fdi_9_quarter.`):'';
-    H+=`<section class="dim" id="q5">${sectionHead('Q5','Is the nearshoring story real?','Through 2024, foreign investment ran high but flat, mostly reinvested earnings rather than new factories. Official flows lag, so the current quarter is not yet in.')}`+
-      ex+ iedRow()+
-      `<div class="honesty">Announcement trackers count pledges, which often never land. This shows only the FDI Banxico recorded, mostly earnings reinvested by firms already here rather than new factories.</div>`+
-      construccion({l:'Exports & trade balance (monthly)',src:'Banxico / INEGI (balanza comercial)',cad:'monthly'})+
-      oppsBlock()+
-      fwd(`Banxico's survey sees FDI broadly steady; the swing factor is the <b>USMCA review</b> — <a href="#q8">Q8</a>.`)+`</section>`;
-  }
-  // Q6 households
-  {
-    let ex1=S['banxico-salario-minimo']?exhibit('6.1','The minimum wage has doubled since 2018, by policy','General minimum wage, MXN per day (nominal)',
-      timeChart([{name:'Min wage',color:'green',pts:S['banxico-salario-minimo'].data.slice(-14)}],{unit:'$',xfmt:(d)=>String(new Date(d).getUTCFullYear())}),
-      `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> / CONASAMI.`):'';
-    H+=`<section class="dim" id="q6">${sectionHead('Q6','Are ordinary Mexicans getting better off?','Wages are rising by policy and remittances are near records—but weak growth caps how far that goes.')}`+
-      ex1+ mrow({id:'banxico-salario-minimo',label:'General minimum wage'})+mrow({id:'banxico-remesas',label:'Remittances (family, monthly)'})+mrow({id:'cre-gasolina-regular',label:'Gasoline · regular (national avg)'})+
-      staticRow({label:'Poverty (national)',value:'29.6',unit:'% of population',stamp:'ANNUAL · 2024',verdict:'Multidimensional poverty fell to <b>29.6%</b> in 2024 — the lowest on record, down 12.3 points from 41.9% in 2018 (13.4M fewer people in poverty). INEGI\'s first measurement after CONEVAL.',bench:'vs 41.9% in 2018',srcName:'INEGI — Multidimensional Poverty 2024',srcUrl:'https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2025/pm/pm2025_08.pdf'})+
-      construccion({l:'Formal jobs & average formal wage (IMSS)',src:'IMSS (Datos Abiertos)',cad:'monthly',eta:'National totals — connecting next.'})+
-      fwd(`No official forecast exists for household welfare. Real wages keep rising by policy, but weak GDP growth (<a href="#q4">Q4</a>) caps the pace.`)+
-      `<div class="ctxline">Gloss: <b>CONEVAL</b> = the federal poverty agency · <b>IMSS</b> = social security, i.e. the formal-jobs registry · <b>remittances</b> = money Mexicans abroad send home.</div></section>`;
-  }
-  H+=bandHead('Politics & risk');
-  // Q7 politics
-  H+=`<section class="dim" id="q7">${sectionHead('Q7','Who governs, and is it stable?','One party governs with a supermajority; the president is popular but slipping.')}`+
-    `<div class="factcard">`+
-      `<div class="fc-row"><span class="fc-k">Head of government</span><span class="fc-v"><b>Claudia Sheinbaum</b> (Morena) · sworn in Oct 2024, term to 2030</span></div>`+
-      `<div class="fc-row"><span class="fc-k">Legislature</span><span class="fc-v">Morena + allies hold a <b>qualified supermajority</b> — able to amend the constitution</span></div>`+
-      `<div class="fc-row"><span class="fc-k">Signature change</span><span class="fc-v">2024–25 judicial reform: judges now <b>elected by popular vote</b></span></div>`+
-      `<div class="fc-row"><span class="fc-k">Next federal vote</span><span class="fc-v"><b>Jun 6, 2027</b> — midterms: all 500 deputies + 17 governorships</span></div>`+
-    `</div>`+
-    `<div class="honesty">No official real-time series exists for political sentiment. The figure below is a poll, shown with its polling house and field date.</div>`+
-    staticRow({label:'Presidential approval (Sheinbaum)',value:'49–68',unit:'% (by pollster)',stamp:'POLL · Jun 2026',verdict:'Wide range by method: Mitofsky ~68%, AtlasIntel ~49% (first read below 50%). Trend is gently down from very high levels.',bench:'vs ~60% first-year average',srcName:'AS/COA Approval Tracker (Mitofsky · AtlasIntel)',srcUrl:'https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum'})+
-    fwd(`The <b>2027 midterms</b> are the next test of the supermajority. <a href="#q10">See what to watch →</a>`)+`</section>`;
-  // Q8 US relationship
-  H+=`<section class="dim" id="q8">${sectionHead('Q8','Where does the US relationship stand?','Trade terms with the US are the biggest external risk—and the 2026 USMCA review is unresolved.')}`+
-    `<div class="factcard">`+
-      `<div class="fc-row"><span class="fc-k">Trade pact</span><span class="fc-v"><b>USMCA</b> in force to 2036, but the <b>2026 joint review is unresolved</b> — the US declined to renew on schedule (Jul 1, 2026)</span></div>`+
-      `<div class="fc-row"><span class="fc-k">Tariffs</span><span class="fc-v">Blanket IEEPA tariffs struck down by the US Supreme Court (Feb 2026); effective US tariff now <b>~4%</b>, but sector threats recur</span></div>`+
-      `<div class="fc-row"><span class="fc-k">Why it matters</span><span class="fc-v">With ~80% of exports going north (<a href="#q4">Q4</a>), trade terms are the economy's single biggest risk</span></div>`+
-    `</div>`+
-    `<div class="oc-src">Sources: <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a>; <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a>; verified Jul 2026. These facts move fast, so each one carries its date.</div>`+
-    fwd(`The <b>USMCA review timeline</b> is the lever to watch. Pull it in the model: <a href="#q11">"USMCA review fails" ↓</a>.`)+`</section>`;
-  // Q9 security
-  {
-    H+=`<section class="dim" id="q9">${sectionHead('Q9','How dangerous is Mexico, really — and where?','The security number that compares across places is the homicide rate: about 26 per 100,000 in 2024, easing from the 2018–19 peak.')}`+
-      staticRow({label:'Homicide rate (national)',value:'~26',unit:'per 100,000 · 2024',stamp:'ANNUAL · 2024',verdict:'This is the only crime statistic measured the same way everywhere, so it compares across places. It runs well above the US (~6) and below the most violent Latin American peers; it is down from the 2018–19 peak, and fell sharply through 2025 (Sept 2025 was the lowest in nine years).',bench:'vs US ~6 · peak ~29 in 2018',srcName:'SESNSP / INEGI',srcUrl:'https://www.gob.mx/sesnsp'})+
-      `<div class="honesty">Why there's no per-municipality crime map: total reported crime counts how often people file police reports, not how dangerous a place is. With about 90% of crime unreported, that inverts: quiet tourist towns with diligent reporting look worse than places where almost no one files. So the Atlas maps poverty, which is measured directly; municipal homicide data is the next layer.</div>`+
-      `<a class="teaser" href="./atlas.html" style="margin-top:12px"><div class="tz-body"><div class="tz-k">Every municipality</div><div class="tz-h">Poverty in any of 2,469 municipalities →</div><div class="tz-d">National averages hide large local variation. In the Atlas, search or tap any municipality to see its poverty rate against the national benchmark.</div><span class="tz-go">Open the Atlas →</span></div></a>`+
-      fwd(`No credible short-term forecast exists for violence, so the page shows the current level only.`)+`</section>`;
-  }
-  H+=bandHead('Forward');
-  // Q10 outlook + what to watch
-  H+=`<section class="dim" id="q10">${sectionHead('Q10','Where is Mexico heading — and what will move it?','A dated calendar of what will move Mexico, and forecasts from three named houses, each dated, shown as a spread rather than a single average.')}`+
-    `<div class="ch" style="font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);font-weight:600;border-top:2px solid var(--ink);padding-top:9px;margin:6px 0 4px">What to watch — the catalyst calendar</div>`+
-    `<div id="watch-full"></div>`+
-    `<div class="ch" style="font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);font-weight:600;border-top:2px solid var(--ink);padding-top:9px;margin:20px 0 4px">The Outlook — named forecasts</div>`+
-    `<div id="outlook"></div></section>`;
-  // Q11 machine
-  H+=`<section class="dim" id="q11">${sectionHead('Q11','What happens if…?','Pull a lever such as tariffs, the Fed, or oil, and follow the causal chain it sets off. Each step shows the modeled direction and rough size of the move.')}`+
-    `<div class="presets" id="presets"></div>`+
-    `<div class="modelcta"><a href="./model.html">Open the full model — every lever unlocked →</a></div></section>`;
-  H+=bandHead('This week');
-  // Q12 wire
-  H+=`<section class="dim" id="q12">${sectionHead('Q12','What happened this week?','Every English-language headline on Mexico\'s economy and politics, dated and linked to its source.')}`+
-    `<div id="wire-full"></div></section>`;
-
-  host.innerHTML=H;
-  $('#watch-full').innerHTML=renderWatchFull();
-  $('#outlook').innerHTML=renderOutlookHtml();
-  renderPresets();
-  $('#wire-full').innerHTML=renderWireFull();
-  wireCharts();
+  rows.sort((a,b)=>b.rel-a.rel);
+  const top=rows.slice(0,5);
+  if(!top.length) return `<div class="cb-empty" style="padding:14px 15px">Not enough recent history to report a move.</div>`;
+  return top.map(r=>{const up=r.diff>0,arw=up?'▲':'▼';
+    return `<a class="movedrow" href="${r.href}"><span class="mv-arw">${arw}</span><span class="mv-mag">${r.mag}</span>`+
+      `<span class="mv-lbl">${r.label}</span><span class="mv-when">${r.when}</span><span class="mv-go">→</span></a>`;}).join('');
 }
 
-/* ============ OUTLOOK ============ */
-function renderOutlookHtml(){
-  if(!OUTLOOK) return construccion({l:'Forecast table',src:'Banxico survey · IMF · OECD',cad:'monthly',eta:'Loading.'});
-  const cols=OUTLOOK.meta.columns;
-  let th=`<th class="k">Indicator</th>`+cols.map(c=>`<th>${c.label}<span class="sub">${c.sub}</span><span class="dt">${c.date}</span></th>`).join('')+`<th class="k" style="text-align:left">Spread</th>`;
-  let rows=OUTLOOK.rows.map(r=>{
-    const nums=cols.map(c=>r[c.key]).filter(v=>v&&v!=='—').map(Number);
-    const spread=nums.length>1?`${Math.min(...nums)}–${Math.max(...nums)}`:'—';
-    return `<tr><td class="k">${r.metric}<small>${r.unit}</small></td>`+cols.map(c=>`<td class="num">${r[c.key]||'—'}</td>`).join('')+`<td class="spread">${spread}</td></tr>`;
-  }).join('');
-  const notes=OUTLOOK.rows.filter(r=>r.note).map(r=>`<b>${r.metric}:</b> ${r.note}`).join('<br>');
-  const ord=(n)=>{const s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);};
-  const p=COMPLEXITY&&COMPLEXITY.projection2034;
-  const lr=p?`<div class="oc-longrun"><b>Longer horizon</b> — Harvard's Growth Lab projects <b>${p.value}%/yr</b> through 2034 (${ord(p.rank)} of ${p.of} — the top half of countries). <a href="https://atlas.hks.harvard.edu/growth-projections" target="_blank" rel="noopener">Growth Lab →</a></div>`:'';
-  return `<div class="octbl"><table class="oc"><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table><div class="oc-note">${notes}</div></div>`+lr+
-    `<div class="oc-src">${OUTLOOK.meta.note}<br>`+cols.map(c=>`<a href="${c.url}" target="_blank" rel="noopener">${c.srcName}</a>`).join(' · ')+`</div>`;
+/* ============ SECTION CARDS (block 5) ============ */
+function renderCards(){
+  const A=(NEWS&&NEWS.articles)||[];
+  const first=(fn)=>{const m=A.find(fn);return m?m.title:'';};
+  const g=S['banxico-pib-crecimiento'], gv=g?g.data.at(-1).value:null;
+  const gStat=gv!=null?((gv>=0?'+':'')+gv.toFixed(1)+'%'):'≈1.4%';
+  const peso=S['banxico-usdmxn-fix'], pStat=peso?peso.data.at(-1).value.toFixed(2):'—';
+  const tw=(TRADE&&TRADE.latest)?('$'+Math.round(TRADE.latest.twoway_bn)):'$87';
+  const cards=[
+    {name:'Economy',     href:'/economy.html',  stat:gStat,   unit:'real GDP · YoY',   hl:first(a=>a.tag==='economy'||ECON_RX.test(a.title||''))},
+    {name:'Money',       href:'/money.html',    stat:pStat,   unit:'MXN/USD · peso',   hl:first(a=>a.tag==='markets'||MONEY_RX.test(a.title||''))},
+    {name:'Politics',    href:'/politics.html', stat:'49–68', unit:'% approval',       hl:first(a=>POL_RX.test(a.title||''))},
+    {name:'Security',    href:'/security.html', stat:'~26',   unit:'per 100k · homicide',hl:first(a=>SEC_RX.test(a.title||''))},
+    {name:'Society',     href:'/society.html',  stat:'29.6',  unit:'% in poverty',     hl:first(a=>SOC_RX.test(a.title||''))},
+    {name:'U.S.–Mexico', href:'/us-mexico.html',stat:tw,      unit:'bn/mo two-way',    hl:first(a=>a.tag==='trade'||USMX_RX.test(a.title||''))},
+  ];
+  return cards.map(c=>`<a class="seccard" href="${c.href}"><div class="sc-k">${c.name}</div>`+
+    `<div class="sc-stat">${c.stat} <small>${c.unit}</small></div>`+
+    `<div class="sc-wire">${c.hl?c.hl:'<span class="sc-none">Open the section →</span>'}</div>`+
+    `<span class="sc-go">${c.name} →</span></a>`).join('');
 }
 
-/* ============ MACHINE PRESETS ============ */
-const PRESETS=[
-  {mst:'MODEL',h:'The USMCA review fails',lever:'US reinstates broad tariffs',chain:[['Tariffs','up'],['→'],['Exports','dn'],['→'],['Peso','dn'],['→'],['Inflation','up'],['→'],['Banxico','up'],['→'],['Growth','dn']],read:'Higher US tariffs cut export demand, weaken the peso, and push imported inflation up — forcing Banxico to stay tight and slowing growth. The economy\'s biggest downside risk.',fn:'Elasticities sourced in the full model.'},
-  {mst:'MODEL',h:'The Fed cuts fast',lever:'US policy rate falls faster than expected',chain:[['US rate','dn'],['→'],['Peso','up'],['→'],['Inflation','dn'],['→'],['Banxico','dn'],['→'],['Growth','up']],read:'Faster Fed easing narrows the US–Mexico rate gap in the peso\'s favor, cools imported inflation, and gives Banxico room to cut — a modest tailwind.',fn:'Rate-differential → carry → FX is the dominant near-term peso driver.'},
-  {mst:'MODEL',h:'Oil at $40',lever:'Global crude price falls sharply',chain:[['Oil','dn'],['→'],['Pemex/fiscal','dn'],['→'],['Peso','dn'],['→'],['Budget','dn']],read:'Lower oil hits Pemex and public finances more than the broad economy (Mexico is a net fuel importer). The pressure shows up in the fiscal balance and the peso, not consumer prices.',fn:'Oil is a fiscal story, not a growth story, for today\'s Mexico.'}
-];
-function renderPresets(){
-  const host=$('#presets'); if(!host)return;
-  host.innerHTML=PRESETS.map(p=>{const chain=p.chain.map(c=>c[0]==='→'?`<span class="ar">→</span>`:`<span class="${c[1]||''}">${c[0]}${c[1]==='up'?' ▲':c[1]==='dn'?' ▼':''}</span>`).join('');
-    return `<div class="preset"><span class="pmst">${p.mst}</span><h4>${p.h}</h4><div class="plever">Lever: ${p.lever}</div><div class="chain">${chain}</div><div class="pread">${p.read}</div><div class="pfn">${p.fn}</div></div>`;}).join('');
+/* ============ WHAT TO WATCH (block 6, left) — next 3 dated catalysts ============ */
+function renderWatch(){
+  const ev=(EVENTS&&EVENTS.events)||[]; const now=Date.now();
+  const up=ev.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3);
+  if(!up.length) return `<div class="cb-empty">No dated catalysts on the calendar yet.</div>`;
+  return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
+    return `<div class="wtr"><div class="wd">${d.mo} ${d.day}<small>${d.y}${e.approx?' ~':''}</small></div><div class="wk ${e.kind||''}"></div>`+
+      `<div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
-/* ============ national aggregates ============ */
-function computeNat(){
-  if(POV&&POV.values){let pw=0,pob=0;for(const c in POV.values){const p=REG[c]&&REG[c].pob;if(p){pw+=p*POV.values[c];pob+=p;}}if(pob)NAT.pov=pw/pob;}
-  if(CRI&&CRI.values){let cd=0,cp=0;for(const c in CRI.values){const p=REG[c]&&REG[c].pob;if(p&&p>0){cd+=CRI.values[c];cp+=p;}}if(cp)NAT.cri=cd/cp*1e5;}
+/* ============ THE WIRE (block 6, right) — latest ~10, each tagged to its section ============ */
+function secOf(a){
+  const t=(a.tag||'').toLowerCase(), s=(a.title||'')+' '+(a.beat||'');
+  if(SEC_RX.test(a.title||'')) return {l:'Security',h:'/security.html'};
+  if(['politics','government','policy'].includes(t)||POL_RX.test(s)) return {l:'Politics',h:'/politics.html'};
+  if(t==='trade'||USMX_RX.test(a.title||'')) return {l:'U.S.–Mexico',h:'/us-mexico.html'};
+  if(SOC_RX.test(a.title||'')) return {l:'Society',h:'/society.html'};
+  if(t==='markets'||MONEY_RX.test(a.title||'')) return {l:'Money',h:'/money.html'};
+  return {l:'Economy',h:'/economy.html'};
 }
-
-/* ============ scroll wiring ============ */
-function wireScroll(){
-  const prog=$('#progress'),totop=$('#totop');
-  const tick=()=>{const st=scrollY,h=document.documentElement.scrollHeight-innerHeight;prog.style.width=(h>0?st/h*100:0)+'%';totop.classList.toggle('show',st>innerHeight);};
-  addEventListener('scroll',()=>requestAnimationFrame(tick),{passive:true}); tick();
-  totop.addEventListener('click',()=>scrollTo({top:0,behavior:RM?'auto':'smooth'}));
-  // scrollspy
-  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
-    document.querySelectorAll('.toc a, .pillnav a').forEach(a=>a.classList.remove('active'));
-    document.querySelectorAll('.toc a[href="#'+e.target.id+'"], .pillnav a[href="#'+e.target.id+'"]').forEach(a=>a.classList.add('active'));
-    history.replaceState(null,'','#'+e.target.id);
-  }});},{rootMargin:'-45% 0px -50% 0px',threshold:0});
-  document.querySelectorAll('section[id]').forEach(s=>io.observe(s));
+function renderWire(){
+  const A=(NEWS&&NEWS.articles)||[];
+  if(!A.length) return `<div class="cb-empty">No headlines in the latest run — the next scheduled fetch will post them here.</div>`;
+  return `<div class="wire">`+A.slice(0,10).map(a=>{const sec=secOf(a);const dd=a.date?new Date(a.date):null;const w=dd&&!isNaN(dd)?relTime(dd.getTime()):'';
+    return `<div class="wi"><a class="wtag" href="${sec.h}">${sec.l}</a><div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
 /* ============ boot ============ */
 (async()=>{
-  const SER=['banxico-usdmxn-fix','banxico-inflacion','banxico-tasa-objetivo','banxico-remesas','banxico-reservas','cre-gasolina-regular','wb-gdp-usd','wb-gdp-per-capita','wb-population','wb-unemployment','banxico-pib-crecimiento','banxico-igae','banxico-inflacion-subyacente','banxico-salario-minimo','se-ied'];
-  const [health,reg,pov,cri,outlook,news,events,sectors,complexity,...ser]=await Promise.all([
-    J('./data/health.json').catch(()=>null),
-    J('./data/meta/municipios.json').catch(()=>({})),
-    J('./data/layers/coneval-pobreza.json').catch(()=>null),
-    J('./data/layers/sesnsp-delitos.json').catch(()=>null),
-    J('./data/outlook.json').catch(()=>null),
-    J('./data/news/wire.json').catch(()=>J('./data/news.json').catch(()=>null)),
-    J('./data/events.json').catch(()=>null),
-    J('./data/exports-sectors.json').catch(()=>null),
-    J('./data/complexity.json').catch(()=>null),
-    ...SER.map(id=>J('./data/series/'+id+'.json').then(s=>({id,s})).catch(()=>({id,s:null})))
+  await loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-reservas','banxico-remesas','banxico-pib-crecimiento','banxico-igae','wb-gdp-usd','wb-population','wb-gdp-per-capita']);
+  const [health,trade]=await Promise.all([
+    fetch('./data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/trade-us.json').then(r=>r.ok?r.json():null).catch(()=>null),
   ]);
-  HEALTH=health; REG=reg.m||reg; POV=pov; CRI=cri; OUTLOOK=outlook; NEWS=news; EVENTS=events; SECTORS=sectors; COMPLEXITY=complexity;
-  ser.forEach(x=>{if(x.s)S[x.id]=x.s;});
-  computeNat();
-  if(health){const ok=(health.summary&&health.summary.ok)||0;const nn=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime());const newest=nn.length?Math.max(...nn):0;$('#status').textContent=`${ok} sources · ${newest?'updated '+relTime(newest):''}`;}
-  renderRail(); renderContents(); renderFacts(); renderBoard(); renderLatestLine(); renderPrimer(); renderSections(); wireScroll();
-})().catch(e=>{ const h=$('#sections'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading data: '+e.message+'</p>'; });
+  TRADE=trade;
+
+  // dateline: N sources · updated Xh ago (from data health + freshest series fetch)
+  const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
+  const newest=times.length?Math.max(...times):0;
+  const ok=(health&&health.summary&&health.summary.ok)||0;
+  const st=document.getElementById('status'); if(st) st.textContent=(ok?`● ${ok} sources · `:'● ')+(newest?'updated '+relTime(newest):'updated live');
+  const ba=document.getElementById('board-asof'); if(ba&&newest) ba.textContent='as of '+new Date(newest).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
+  document.getElementById('tablero').innerHTML=renderBoard();
+  document.getElementById('moved').innerHTML=renderMoved();
+  document.getElementById('seccards').innerHTML=renderCards();
+  document.getElementById('watch-list').innerHTML=renderWatch();
+  document.getElementById('wire-list').innerHTML=renderWire();
+
+  // #q12 / #wire from an old link → scroll to the Wire block on this page
+  if(location.hash==='#q12'||location.hash==='#wire'){const w=document.getElementById('wire'); if(w)w.scrollIntoView();}
+})().catch(e=>{
+  const h=document.getElementById('seccards'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading data: '+e.message+'</p>';
+});
 </script>
 
 
