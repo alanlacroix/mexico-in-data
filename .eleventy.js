@@ -12,6 +12,7 @@ const crypto = require('node:crypto');
 
 module.exports = function (ec) {
   ec.addPassthroughCopy('design');
+  ec.addPassthroughCopy('assets');   // shared JS toolkit (mb.js) the section pages import
   ec.addPassthroughCopy('data');
   ec.addPassthroughCopy('email-preview.html');
   ec.addPassthroughCopy('weekly-sample.html');

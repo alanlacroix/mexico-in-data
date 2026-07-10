@@ -4,6 +4,7 @@
 // so there is no "Briefing" link. Weekly is the single call-to-action (cta).
 module.exports = [
   { label: 'Economy', href: '/economy.html' },
+  { label: 'Money',   href: '/money.html' },
   { label: 'Model',   href: '/model.html' },
   { label: 'Atlas',   href: '/atlas.html' },
   { label: 'Sources', href: '/sources.html' },
