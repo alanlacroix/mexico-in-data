@@ -84,8 +84,9 @@
 
   /* 2b · WHAT CHANGED — the lead queue (event log + series-delta fallback, one treatment) */
   .chg{border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
-  .chgrow{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--line);background:var(--paper)}
-  .chgrow:last-child{border-bottom:none}
+  .chg-item{border-bottom:1px solid var(--line);background:var(--paper)}
+  .chg-item:last-child{border-bottom:none}
+  .chgrow{display:flex;align-items:center;gap:12px;padding:12px 15px}
   .chgrow:hover{background:var(--paper-2)}
   .chgrow.cross{background:var(--green-bg)}
   .chgrow.cross:hover{background:#dcefe3}
@@ -99,6 +100,26 @@
   .cg-src:hover{text-decoration:underline}
   .cg-go{font-family:var(--mono);font-size:13px;color:var(--green-d);flex:none}
   .chg-quiet{border:1px solid var(--line-2);border-radius:11px;background:var(--paper);padding:15px 16px;font-size:15px;color:var(--ink-2);margin:2px 0 4px}
+
+  /* 2c · IMPACT SCORE — expand a row (caret) to see its components + weights */
+  .cg-caret{flex:none;font-family:var(--mono);font-size:12px;line-height:1;color:var(--mut);background:none;border:none;cursor:pointer;padding:4px 3px;transition:transform .15s ease}
+  .cg-caret:hover{color:var(--green-d)}
+  .cg-caret.open{transform:rotate(90deg)}
+  .cg-breakdown{background:var(--paper-2);border-top:1px solid var(--line);padding:11px 15px 12px;font-family:var(--mono)}
+  .bd-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px}
+  .bd-k{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700}
+  .bd-score{font-family:var(--serif);font-size:21px;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .bd-grid{display:flex;flex-direction:column;gap:6px}
+  .bd-hd,.bd-f{display:grid;grid-template-columns:1fr 46px 32px 52px;gap:2px 8px;align-items:baseline}
+  .bd-hd{font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);padding-bottom:4px;border-bottom:1px solid var(--line)}
+  .bd-hd span:nth-child(n+2){text-align:right}
+  .bd-fn{font-size:11px;color:var(--ink)}
+  .bd-fv,.bd-fw,.bd-fc{font-size:11px;text-align:right;font-variant-numeric:tabular-nums}
+  .bd-fv{color:var(--ink-2)} .bd-fw{color:var(--mut)} .bd-fc{color:var(--ink);font-weight:600}
+  .bd-note{grid-column:1 / -1;font-size:9px;color:var(--mut);letter-spacing:.02em;line-height:1.35}
+  .bd-f.ph .bd-fv,.bd-f.ph .bd-fc,.bd-f.ph .bd-note{color:var(--amber2)}
+  .bd-eq{font-size:9px;color:var(--mut);margin-top:10px;line-height:1.55}
+  .bd-eq code{font-family:var(--mono);color:var(--ink-2)}
 
   /* 4 · NEWSLETTER (from weekly.njk .sub) */
   .sub{margin:8px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
@@ -326,6 +347,69 @@ const DEFAULT_LENS={
 };
 function getLens(){ try{ const o=JSON.parse(localStorage.getItem('mb_lens')||'null'); if(o&&Array.isArray(o.watch)) return o; }catch(e){} return DEFAULT_LENS; }
 
+/* ---- IMPACT SCORE — the transparent, tunable ranker -----------------------
+   Every row (event OR series-delta fallback) is scored the SAME way:
+
+     impact = magnitude^wM · exposure^wE · freshness^wF · surprise^wS · confidence^wC
+
+   A product of five ~1.0-centred factors, each raised to a per-factor weight.
+   Weights are EXPONENTS on purpose, not multipliers: a plain multiplier on a
+   product is the same scalar on every row, so it can never change the RANKING —
+   only an exponent lets a weight actually re-order the queue (0 = ignore the
+   factor · 1 = as-is · >1 = amplify). Defaults are all 1.0, so by default the
+   score is exactly the plain product above.
+   surprise & confidence are honest, named placeholders fixed at 1.0 (we have no
+   forecast/expectation data yet, so we NEVER invent a surprise): they are real
+   weighted slots, wired to data later — nothing here gets rebuilt when they are. */
+const DEFAULT_SCORE_WEIGHTS={magnitude:1,exposure:1,freshness:1,surprise:1,confidence:1};
+function getWeights(){
+  try{ const o=JSON.parse(localStorage.getItem('mb_score_weights')||'null');
+    if(o&&typeof o==='object'){ const w={...DEFAULT_SCORE_WEIGHTS};
+      for(const k of Object.keys(DEFAULT_SCORE_WEIGHTS)) if(isFinite(Number(o[k]))) w[k]=Number(o[k]);
+      return w; } }catch(e){}
+  return {...DEFAULT_SCORE_WEIGHTS};
+}
+const hasSeries=(id)=>{ const s=S[id]; return !!(s&&s.data&&s.data.length>=3); };
+/* magnitude scale = how much THIS series usually moves — stdev of its recent
+   period-over-period changes; degrades to mean-abs-change, then to |prev|. */
+function scaleFor(id,prevAbs){
+  const s=S[id], d=s&&s.data;
+  if(d&&d.length>=3){
+    const vals=d.slice(-13).map(p=>Number(p.value)).filter(isFinite);
+    if(vals.length>=3){
+      const diffs=[]; for(let i=1;i<vals.length;i++) diffs.push(vals[i]-vals[i-1]);
+      const mean=diffs.reduce((a,b)=>a+b,0)/diffs.length;
+      const sd=Math.sqrt(diffs.reduce((a,b)=>a+(b-mean)*(b-mean),0)/diffs.length);
+      if(sd>0) return sd;
+      const mad=diffs.reduce((a,b)=>a+Math.abs(b),0)/diffs.length;
+      if(mad>0) return mad;
+    }
+  }
+  return (isFinite(prevAbs)&&prevAbs>0)?prevAbs:1;
+}
+function magnitudeOf(chg,id,prevAbs){
+  const c=Number(chg);
+  if(!isFinite(c)) return 1;   // move unknown → neutral (never zero a real crosser)
+  if(c===0) return 0;          // genuinely flat → no magnitude
+  const m=Math.abs(c)/scaleFor(id,prevAbs);
+  return (isFinite(m)&&m>0)?Math.min(m,8):1;   // cap so one factor can't run away
+}
+const exposureOf=(watched,crosser)=>crosser?3:(watched?1.5:1);   // act-now > on-watch > off-watch
+const FRESH_HALFLIFE_DAYS=7;
+function freshnessOf(ts){ if(!isFinite(ts)) return 1; const age=Math.max(0,(Date.now()-ts)/864e5); return Math.pow(2,-age/FRESH_HALFLIFE_DAYS); }
+function scoreRow(r,w){
+  const factors=[
+    {key:'magnitude', label:'Magnitude', v:r.mag,        weight:w.magnitude,  ph:false, note:r.magNote||''},
+    {key:'exposure',  label:'Exposure',  v:r.exposure,   weight:w.exposure,   ph:false, note:r.crosser?'crosses a threshold':(r.watched?'on the watch list':'not on watch')},
+    {key:'freshness', label:'Freshness', v:r.freshness,  weight:w.freshness,  ph:false, note:r.freshNote?('detected '+r.freshNote):''},
+    {key:'surprise',  label:'Surprise',  v:(isFinite(r.surprise)?r.surprise:1),   weight:w.surprise,   ph:true, note:'not yet wired (=1)'},
+    {key:'confidence',label:'Confidence',v:(isFinite(r.confidence)?r.confidence:1),weight:w.confidence, ph:true, note:'not yet wired (=1)'},
+  ];
+  let score=1;
+  for(const f of factors){ const c=Math.pow(Math.max(Number(f.v)||0,0),f.weight); f.contribution=isFinite(c)?c:0; score*=f.contribution; }
+  return {score:isFinite(score)?score:0, factors};
+}
+
 /* the "since" point: the last visit (localStorage 'mb_lastvisit'), else the last ~3 days */
 function readSince(){
   let raw=null; try{ raw=localStorage.getItem('mb_lastvisit'); }catch(e){}
@@ -361,9 +445,17 @@ function crosses(e,lens){
 }
 function eventRow(e,lens){
   const m=metaFor(e.series), whenT=Date.parse(e.published_at||e.detected_at||'');
+  const freshT=Date.parse(e.detected_at||e.published_at||'');   // freshness decays from detected_at
   const bits=[e.period||'',isNaN(whenT)?'':relTime(whenT),e.kind==='revision'?'revised':''].filter(Boolean);
+  const chg=evChange(e);
+  const prevN=Math.abs(Number(e.prev_value)), prevAbs=(isFinite(prevN)&&prevN>0)?prevN:Math.abs(Number(e.value));
+  const watched=Array.isArray(lens&&lens.watch)&&lens.watch.indexOf(e.series)>=0, crosser=crosses(e,lens);
   return {series:e.series,href:m.href,label:e.metric||m.label,move:evPair(e),meta:bits.join(' · '),
-          crosser:crosses(e,lens),rel:evRel(e),sourceUrl:e.sourceUrl||'',source:e.source||'source'};
+          crosser,watched,rel:evRel(e),sourceUrl:e.sourceUrl||'',source:e.source||'source',
+          mag:magnitudeOf(chg,e.series,prevAbs),exposure:exposureOf(watched,crosser),
+          freshness:freshnessOf(freshT),surprise:1,confidence:1,
+          magNote:hasSeries(e.series)?'move ÷ recent volatility':'move ÷ previous level',
+          freshNote:isFinite(freshT)?relTime(freshT):''};
 }
 
 /* fallback = the series-delta computation the old "what moved" strip used, reused here.
@@ -383,9 +475,9 @@ function moveOver(s,days){
   let best=d[0],bd=1e18; for(const p of d){const dd=Math.abs(+new Date(p.date)-tgt); if(dd<bd){bd=dd;best=p;}}
   if(best.date===last.date) return null;                       // no earlier point → no delta
   if(lastT-(+new Date(best.date)) < days*0.4*864e5) return null; // comparison point too close to now
-  return {cur:last.value, prev:best.value};
+  return {cur:last.value, prev:best.value, date:last.date};
 }
-function fallbackRows(exclude){
+function fallbackRows(exclude,lens){
   const out=[];
   for(const m of MOVERS){
     if(exclude.has(m.id)) continue;
@@ -394,28 +486,59 @@ function fallbackRows(exclude){
     let move;
     if(m.unit==='pp'){ if(Math.abs(diff)<0.05) continue; move=(diff>0?'+':'−')+Math.abs(diff).toFixed(2)+' pp'; }
     else { const pct=diff/mv.prev*100; if(Math.abs(pct)<0.25) continue; move=(pct>0?'+':'−')+Math.abs(pct).toFixed(1)+'%'; }
-    out.push({series:m.id,href:m.href,label:m.label,move,meta:m.when,crosser:false,rel:Math.abs(diff)/(Math.abs(mv.prev)||1)});
+    // scored the SAME way as an event: run it through crosses() with a pseudo-event
+    const pseudo={series:m.id,value:mv.cur,prev_value:mv.prev,change:diff};
+    const watched=Array.isArray(lens&&lens.watch)&&lens.watch.indexOf(m.id)>=0, crosser=crosses(pseudo,lens);
+    const ts=Date.parse(mv.date), prevAbs=Math.abs(mv.prev);
+    out.push({series:m.id,href:m.href,label:m.label,move,meta:m.when,crosser,watched,
+      rel:Math.abs(diff)/(Math.abs(mv.prev)||1),
+      mag:magnitudeOf(diff,m.id,prevAbs),exposure:exposureOf(watched,crosser),
+      freshness:freshnessOf(ts),surprise:1,confidence:1,
+      magNote:hasSeries(m.id)?'move ÷ recent volatility':'move ÷ previous level',
+      freshNote:isFinite(ts)?relTime(ts):''});
   }
   return out;
 }
-function chgRow(r){
+/* compact number + weight labels for the breakdown */
+const fmtN=(n)=>{ n=Number(n); if(!isFinite(n)) return '—'; const a=Math.abs(n); return a>=100?n.toFixed(0):a>=10?n.toFixed(1):n.toFixed(2); };
+const wLbl=(w)=>'w'+(Number.isInteger(w)?w:(+w).toFixed(2));
+/* the expand panel: the final score + every factor's value, weight and contribution.
+   surprise/confidence are shown in amber and labelled "not yet wired (=1)" so it's
+   always clear they're placeholders, not real signal. */
+function chgBreakdown(sc){
+  const fr=sc.factors.map(f=>
+    `<div class="bd-f${f.ph?' ph':''}"><span class="bd-fn">${f.label}</span>`+
+    `<span class="bd-fv">${fmtN(f.v)}</span><span class="bd-fw">${wLbl(f.weight)}</span>`+
+    `<span class="bd-fc">${fmtN(f.contribution)}</span>`+
+    (f.note?`<span class="bd-note">${f.note}</span>`:'')+`</div>`).join('');
+  return `<div class="bd-head"><span class="bd-k">Impact score</span><span class="bd-score">${fmtN(sc.score)}</span></div>`+
+    `<div class="bd-grid"><div class="bd-hd"><span>factor</span><span>value</span><span>wt</span><span>=contrib</span></div>${fr}</div>`+
+    `<div class="bd-eq">score = magnitude × exposure × freshness × surprise × confidence, each raised to its weight. Tune the weights per-browser via <code>mb_score_weights</code>.</div>`;
+}
+function chgRow(r,i){
+  const sc=r.sc||{score:0,factors:[]};
   const flag=r.crosser?`<span class="cg-flag">Act</span>`:'';
   const move=r.move?`<span class="cg-move">${r.move}</span>`:'';
   const right=r.sourceUrl?`<a class="cg-src" href="${r.sourceUrl}" target="_blank" rel="noopener">${r.source} ↗</a>`:`<span class="cg-go">→</span>`;
-  return `<div class="chgrow${r.crosser?' cross':''}"><a class="cg-body" href="${r.href}">`+
-    `<div class="cg-line">${flag}<span class="cg-lbl">${r.label}</span>${move}</div>`+
-    (r.meta?`<div class="cg-meta">${r.meta}</div>`:'')+`</a>${right}</div>`;
+  const bid='cgbd-'+i;
+  return `<div class="chg-item"><div class="chgrow${r.crosser?' cross':''}">`+
+    `<a class="cg-body" href="${r.href}"><div class="cg-line">${flag}<span class="cg-lbl">${r.label}</span>${move}</div>`+
+    (r.meta?`<div class="cg-meta">${r.meta}</div>`:'')+`</a>${right}`+
+    `<button class="cg-caret" type="button" aria-expanded="false" aria-controls="${bid}" title="Impact score & how it's built">▸</button>`+
+    `</div><div class="cg-breakdown" id="${bid}" hidden>${chgBreakdown(sc)}</div></div>`;
 }
 function renderChanged(releases,since,lens){
+  const weights=getWeights();
   const evs=((releases&&releases.events)||[]).map(e=>({e,t:Date.parse(e&&e.detected_at)})).filter(x=>!isNaN(x.t));
   // return visit: events detected since your last visit · first visit: the most recent ~5
   const picked=(since.first?evs.sort((a,b)=>b.t-a.t):evs.filter(x=>x.t>since.since).sort((a,b)=>b.t-a.t)).slice(0,5).map(x=>x.e);
   let rows=picked.map(e=>eventRow(e,lens));
-  if(rows.length<2){ const have=new Set(rows.map(r=>r.series)); rows=rows.concat(fallbackRows(have)); } // supplement, never empty
-  rows.sort((a,b)=>(b.crosser-a.crosser)||(b.rel-a.rel));    // lens: threshold-crossers first, then magnitude
+  if(rows.length<2){ const have=new Set(rows.map(r=>r.series)); rows=rows.concat(fallbackRows(have,lens)); } // supplement, never empty
+  rows.forEach(r=>{ r.sc=scoreRow(r,weights); });                                   // transparent impact score
+  rows.sort((a,b)=>(b.sc.score-a.sc.score)||(b.crosser-a.crosser)||(b.rel-a.rel));  // score is the ranker (crossers rise via exposure)
   rows=rows.slice(0,5);
   if(!rows.length) return `<div class="chg-quiet">${since.first?'Nothing material to report in the last few days.':'Nothing material changed since your last visit.'}</div>`;
-  return `<div class="chg">`+rows.map(chgRow).join('')+`</div>`;
+  return `<div class="chg">`+rows.map((r,i)=>chgRow(r,i)).join('')+`</div>`;
 }
 
 /* ============ SECTION CARDS (block 5) ============ */
@@ -489,7 +612,16 @@ function renderWire(){
   document.getElementById('tablero').innerHTML=renderBoard();
 
   // the lead: what changed since your last visit (event log → series-delta fallback)
-  document.getElementById('changed').innerHTML=renderChanged(releases,since,lens);
+  const changedEl=document.getElementById('changed');
+  changedEl.innerHTML=renderChanged(releases,since,lens);
+  // expand a row (caret) to reveal its impact-score breakdown — delegated, one listener
+  changedEl.addEventListener('click',(ev)=>{
+    const btn=ev.target.closest('.cg-caret'); if(!btn||!changedEl.contains(btn)) return;
+    const item=btn.closest('.chg-item'), panel=item&&item.querySelector('.cg-breakdown'); if(!panel) return;
+    const opening=panel.hasAttribute('hidden');
+    if(opening) panel.removeAttribute('hidden'); else panel.setAttribute('hidden','');
+    btn.classList.toggle('open',opening); btn.setAttribute('aria-expanded',opening?'true':'false');
+  });
   const cs=document.getElementById('chg-since'); if(cs) cs.textContent=since.label;
   writeVisit();                     // stamp this visit so the next one has a "since" point
 
@@ -510,7 +642,7 @@ function renderWire(){
 
 
 <footer class="foot"><div class="wrap">
-  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a></nav>
+  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a><a href="/journal.html">Journal</a></nav>
   <p class="fblurb">A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.</p>
 </div></footer>
 

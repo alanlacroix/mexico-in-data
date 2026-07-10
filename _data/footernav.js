@@ -4,4 +4,5 @@ module.exports = [
   { label: 'Sources', href: '/sources.html' },
   { label: 'About',   href: '/about.html' },
   { label: 'Weekly',  href: '/weekly.html' },
+  { label: 'Journal', href: '/journal.html' },
 ];

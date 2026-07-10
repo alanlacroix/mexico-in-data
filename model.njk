@@ -60,6 +60,40 @@ description: "A model of Mexico's economy you can run: set US tariffs, the Fed, 
   table.mck td small{color:var(--mut);font-family:var(--mono);font-size:10px}
   .section-head{border-top:2px solid var(--green);padding-top:12px;margin:24px 0 8px}
   .section-head h2{font-family:var(--serif);font-size:clamp(19px,3vw,24px);color:var(--ink)}
+
+  /* saved scenarios (Feature 1) — durable, private, localStorage */
+  .scenarios{margin:22px 0 4px}
+  .scen-intro{font-size:13.5px;color:var(--ink-2);margin:2px 0 12px;max-width:66ch;line-height:1.5}
+  .scen-intro b{color:var(--ink)}
+  .scen-save{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .scen-save input{flex:1 1 260px;min-width:0;font-family:var(--sans);font-size:14px;padding:10px 13px;border:1.5px solid var(--line-2);border-radius:9px;background:var(--paper);color:var(--ink)}
+  .scen-save input::placeholder{color:var(--mut)}
+  .scen-save input:focus{outline:none;border-color:var(--green)}
+  .scen-save button{font-family:var(--mono);font-size:12px;padding:10px 16px;border:1.5px solid var(--green-d);background:var(--green-d);color:#fff;border-radius:9px;cursor:pointer;white-space:nowrap}
+  .scen-save button:hover{background:var(--green);border-color:var(--green)}
+  .scen-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:9px 0;line-height:1.5}
+  .scen-list{display:grid;gap:8px}
+  .scen-item{display:flex;align-items:stretch;border:1px solid var(--line-2);border-radius:10px;overflow:hidden}
+  .scen-restore{flex:1;min-width:0;text-align:left;background:none;border:0;cursor:pointer;padding:11px 14px;font-family:inherit}
+  .scen-restore:hover{background:var(--paper-2)}
+  .scen-name{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);line-height:1.2}
+  .scen-meta{font-family:var(--mono);font-size:10.5px;color:var(--ink-2);margin-top:5px;line-height:1.65;word-break:break-word}
+  .scen-meta .sv{color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+  .scen-when{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:6px;letter-spacing:.03em}
+  .scen-side{display:flex;align-items:center;justify-content:center;padding:8px 10px;border-left:1px solid var(--line)}
+  .scen-del{font-family:var(--mono);font-size:16px;line-height:1;color:var(--mut);background:none;border:1px solid var(--line-2);border-radius:7px;width:28px;height:28px;cursor:pointer;padding:0}
+  .scen-del:hover{color:var(--red);border-color:var(--red);background:var(--red-bg)}
+
+  /* live event overlay on the transmission diagram (Feature 2) — amber = a real logged release */
+  .node.changed rect{stroke:var(--amber);stroke-width:2}
+  .node.pressure rect{stroke:var(--amber);stroke-width:1.4;stroke-dasharray:3 2.5}
+  .ev-dot.changed{fill:var(--amber);stroke:var(--paper);stroke-width:1}
+  .ev-dot.pressure{fill:none;stroke:var(--amber);stroke-width:1.5}
+  .ev-legend{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:9px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;line-height:1.5}
+  .ev-legend .dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .ev-legend .dot.c{background:var(--amber)}
+  .ev-legend .dot.p{background:transparent;border:1.5px solid var(--amber)}
+  .ev-legend .sep{color:var(--line-2)}
 </style>
 
 <div class="wrap">
@@ -83,6 +117,16 @@ description: "A model of Mexico's economy you can run: set US tariffs, the Fed, 
       <div class="csub">Baseline → modeled (vs. today's readings)</div>
       <div id="outputs"></div>
     </div>
+  </div>
+
+  <div class="scenarios">
+    <div class="section-head"><h2>Saved scenarios</h2></div>
+    <p class="scen-intro">Save the current levers as a named scenario you can reload later. Scenarios are stored <b>only in this browser</b> — they're private to you and never leave this device. When the inputs behind a scenario move in the real data, this will flag it; that watch is coming next, and nothing is monitored yet.</p>
+    <div class="scen-save">
+      <input id="scen-name" type="text" maxlength="80" placeholder="Name this scenario (e.g. USMCA review fails)" aria-label="Scenario name">
+      <button id="scen-save-btn" type="button">Save this scenario</button>
+    </div>
+    <div id="scen-list"></div>
   </div>
 
   <div class="diagram">
@@ -183,6 +227,60 @@ const EDGES=[
   {a:'fed',b:'peso'},{a:'oil',b:'peso'},{a:'peso',b:'infl'},
   {a:'fed',b:'rate'},{a:'infl',b:'rate'},{a:'rate',b:'gdp',neg:true},{a:'exports',b:'gdp'}
 ];
+
+// ---- live overlay: map real logged releases onto the diagram (Feature 2) ----
+// Forward adjacency built from the SAME EDGES the diagram draws, so "downstream"
+// always follows the causal chain exactly as pictured.
+const ADJ={}; EDGES.forEach(e=>{ (ADJ[e.a]||(ADJ[e.a]=[])).push(e.b); });
+function downstreamOf(changed){ // every node reachable forward from a changed node (changed wins over pressure)
+  const down=new Set(), seen=new Set(changed), stack=[...changed];
+  while(stack.length){ const n=stack.pop();
+    (ADJ[n]||[]).forEach(m=>{ if(!changed.has(m))down.add(m); if(!seen.has(m)){seen.add(m);stack.push(m);} }); }
+  return down;
+}
+// Which official series maps to which diagram node. Series id is the key the event log
+// uses (see data/releases.json); metric is a fallback. Anything not listed is ignored —
+// we never invent a mapping. There is no tariff series in the log, so the Tariffs node is
+// only ever lit by moving its lever, never by a release.
+const SERIES2NODE={
+  'banxico-usdmxn-fix':'peso',
+  'banxico-inflacion':'infl','banxico-inflacion-subyacente':'infl','wb-inflation':'infl',
+  'banxico-tasa-objetivo':'rate',
+  'banxico-pib-crecimiento':'gdp','banxico-igae':'gdp','wb-gdp-usd':'gdp','wb-gdp-per-capita':'gdp',
+  'fred-fedfunds':'fed','fred-ust10':'fed','fred-ust2':'fed',
+  'fred-us-indpro':'usg','fred-us-autosales':'usg',
+  'us_mx_trade_twoway':'exports',
+  'cre-gasolina-regular':'oil','cre-gasolina-premium':'oil','cre-diesel':'oil'
+};
+const METRIC2NODE={ // fallback if a series id isn't in the table above but the metric is known
+  usdmxn:'peso', inflation:'infl', core_inflation:'infl', inflation_annual_wb:'infl',
+  policy_rate:'rate', gdp_growth:'gdp', igae:'gdp', gdp_usd:'gdp', gdp_per_capita_usd:'gdp',
+  us_fed_funds:'fed', us_10y:'fed', us_2y:'fed',
+  us_industrial_production:'usg', us_vehicle_sales:'usg',
+  trade_twoway:'exports', fuel_regular:'oil', fuel_premium:'oil', fuel_diesel:'oil'
+};
+function nodeForSeries(e){ if(!e)return null; return (e.series&&SERIES2NODE[e.series])||(e.metric&&METRIC2NODE[e.metric])||null; }
+let EV={changed:new Set(),pressure:new Set(),asOf:null};
+const EV_WINDOW_DAYS=14;
+function computeEventOverlay(rel){
+  const out={changed:new Set(),pressure:new Set(),asOf:null};
+  const evs=(rel&&Array.isArray(rel.events))?rel.events:[];
+  if(!evs.length) return out;                         // empty log → no overlay
+  const now=Date.now(), win=EV_WINDOW_DAYS*864e5; let newest=0;
+  evs.forEach(e=>{
+    const node=nodeForSeries(e); if(!node) return;    // unmapped series → ignore, never invent
+    const t=Date.parse((e&&(e.detected_at||e.published_at))||''); if(isNaN(t)) return;
+    if(now-t>win) return;                             // older than the window → ignore
+    out.changed.add(node); if(t>newest) newest=t;
+  });
+  if(!out.changed.size) return out;                   // nothing mapped & recent → no overlay at all
+  out.pressure=downstreamOf(out.changed);
+  out.asOf=newest;
+  return out;
+}
+function loadReleases(){ // fetch the real event log; on any failure, leave the diagram exactly as today
+  fetch('./data/releases.json').then(r=>r.ok?r.json():null).then(rel=>{ EV=computeEventOverlay(rel); renderDiagram(); }).catch(()=>{});
+}
 function hotNodes(){ // which levers are off-baseline -> highlight their paths
   const h=new Set();
   if(ST.tariff!==BASE.tariff)h.add('tariff');
@@ -197,14 +295,22 @@ function hotNodes(){ // which levers are off-baseline -> highlight their paths
 function renderDiagram(){
   const hot=hotNodes();
   const N=Object.fromEntries(NODES.map(n=>[n.id,n]));
-  const cx=(n)=>n.x+n.w/2, cy=(n)=>n.y+16;
+  const cy=(n)=>n.y+16;
   let edges=EDGES.map(e=>{const a=N[e.a],b=N[e.b];const isHot=hot.has(e.a)&&hot.has(e.b);
     const x1=a.x+a.w,y1=cy(a),x2=b.x,y2=cy(b);const mx=(x1+x2)/2;
     return `<path class="edge ${isHot?'hot':''} ${e.neg?'neg':''}" d="M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}"/>`;}).join('');
-  let nodes=NODES.map(n=>`<g class="node ${hot.has(n.id)?'hot':''}"><rect x="${n.x}" y="${n.y}" width="${n.w}" height="32" rx="6"/><text x="${n.x+n.w/2}" y="${n.y+20}" text-anchor="middle">${n.l}</text></g>`).join('');
+  let nodes=NODES.map(n=>{
+    const cls=['node']; if(hot.has(n.id))cls.push('hot');
+    let badge='';                                        // real-release overlay: amber corner dot, filled = changed, hollow = downstream
+    if(EV.changed.has(n.id)){ cls.push('changed'); badge=`<circle class="ev-dot changed" cx="${n.x+n.w-8}" cy="${n.y+8}" r="3.6"/>`; }
+    else if(EV.pressure.has(n.id)){ cls.push('pressure'); badge=`<circle class="ev-dot pressure" cx="${n.x+n.w-8}" cy="${n.y+8}" r="3.6"/>`; }
+    return `<g class="${cls.join(' ')}"><rect x="${n.x}" y="${n.y}" width="${n.w}" height="32" rx="6"/><text x="${n.x+n.w/2}" y="${n.y+20}" text-anchor="middle">${n.l}</text>${badge}</g>`;
+  }).join('');
+  const legend = EV.changed.size ? `<div class="ev-legend"><span class="dot c"></span> changed recently <span class="sep">·</span> <span class="dot p"></span> downstream under pressure <span class="sep">·</span> as of ${fmtDate(EV.asOf)}</div>` : '';
   $('#diagram').innerHTML=`<svg viewBox="0 0 740 210" role="img" aria-label="Causal transmission diagram">
     <defs><marker id="arw" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--line-2)"/></marker></defs>
     ${edges}${nodes}</svg>
+    ${legend}
     <div style="font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:8px">Green path = a lever you've moved. Red edge = an inverse relationship (tariffs cut exports; a higher Banxico rate slows growth).</div>`;
 }
 
@@ -222,7 +328,56 @@ const ELAST=[
 ];
 function renderElast(){ $('#elast').innerHTML=`<thead><tr><th>Link</th><th>Coefficient</th><th>Rationale</th></tr></thead><tbody>`+ELAST.map(r=>`<tr><td class="k">${r[0]}</td><td class="mono">${r[1]}</td><td><small>${r[2]}</small></td></tr>`).join('')+`</tbody>`; }
 
+// ---- saved scenarios (Feature 1): real localStorage, structured for future alerting ----
+const LS_KEY='mb_scenarios';
+const LBL={tariff:'Tariff',fed:'Fed',oil:'Oil',usg:'US'};
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fmtDate(t){ if(!t||isNaN(t))return ''; return new Date(t).toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function leverStr(k,v){ const L=LEVERS.find(x=>x.k===k); const sign=(v>0&&k==='fed')?'+':''; return sign+v+(L?L.unit:''); }
+function loadScenarios(){ try{ const a=JSON.parse(localStorage.getItem(LS_KEY)||'[]'); return Array.isArray(a)?a.filter(x=>x&&x.levers&&x.outputs):[]; }catch(e){ return []; } }
+function saveScenarios(arr){ try{ localStorage.setItem(LS_KEY,JSON.stringify(arr)); return true; }
+  catch(e){ const h=$('#scen-list'); if(h) h.insertAdjacentHTML('afterbegin','<div class="scen-empty" style="color:var(--red)">This browser is blocking local storage, so scenarios can\'t be saved here.</div>'); return false; } }
+function addScenario(){
+  const nameEl=$('#scen-name'); if(!nameEl) return;
+  const arr=loadScenarios(); let name=(nameEl.value||'').trim(); if(!name) name='Scenario '+(arr.length+1);
+  const o=model(ST);
+  arr.unshift({ id:'s_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), name:name,
+    levers:{...ST}, outputs:{peso:+o.peso.toFixed(2),infl:+o.infl.toFixed(1),rate:+o.rate.toFixed(2),gdp:+o.gdp.toFixed(1)},
+    savedAt:new Date().toISOString() });
+  if(saveScenarios(arr)){ nameEl.value=''; renderScenarios(); }
+}
+function restoreScenario(id){
+  const s=loadScenarios().find(x=>x.id===id); if(!s)return;
+  ST={...BASE,...s.levers}; LEVERS.forEach(L=>{ const el=$('#lv-'+L.k); if(el&&ST[L.k]!=null) el.value=ST[L.k]; }); update();
+}
+function deleteScenario(id){ saveScenarios(loadScenarios().filter(x=>x.id!==id)); renderScenarios(); }
+function renderScenarios(){
+  const host=$('#scen-list'); if(!host) return;
+  const arr=loadScenarios();
+  if(!arr.length){ host.innerHTML='<div class="scen-empty">No saved scenarios yet. Set the levers above, name it, and save.</div>'; return; }
+  host.innerHTML=arr.map(s=>{
+    const lv=['tariff','fed','oil','usg'].map(k=>LBL[k]+' '+leverStr(k,s.levers[k])).join('  ·  ');
+    const ou=OUTDEF.map(D=>D.l+' '+Number(s.outputs[D.k]).toFixed(D.dp)).join('  ·  ');
+    const when=fmtDate(Date.parse(s.savedAt));
+    return '<div class="scen-item"><button class="scen-restore" data-id="'+esc(s.id)+'" title="Load these levers">'
+      +'<div class="scen-name">'+esc(s.name)+'</div>'
+      +'<div class="scen-meta"><span class="sv">levers</span> '+esc(lv)+' &nbsp;<span class="sv">&rarr;</span>&nbsp; '+esc(ou)+'</div>'
+      +'<div class="scen-when">saved '+esc(when)+' · click to load</div></button>'
+      +'<div class="scen-side"><button class="scen-del" data-id="'+esc(s.id)+'" aria-label="Delete scenario" title="Delete this scenario">&times;</button></div></div>';
+  }).join('');
+}
+function wireScenarios(){
+  const btn=$('#scen-save-btn'), nameEl=$('#scen-name'), list=$('#scen-list');
+  if(btn) btn.addEventListener('click',addScenario);
+  if(nameEl) nameEl.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); addScenario(); } });
+  if(list) list.addEventListener('click',e=>{
+    const d=e.target.closest('.scen-del'); if(d){ deleteScenario(d.dataset.id); return; }
+    const r=e.target.closest('.scen-restore'); if(r){ restoreScenario(r.dataset.id); }
+  });
+}
+
 function update(){ LEVERS.forEach(L=>{$('#lvv-'+L.k).textContent=fmtLever(L);}); renderOutputs(); renderDiagram(); }
 renderPresets(); renderLevers(); renderElast(); update();
+renderScenarios(); wireScenarios(); loadReleases();
 </script>
 {% endraw %}

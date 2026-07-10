@@ -1,0 +1,440 @@
+---
+layout: base.njk
+permalink: /journal.html
+title: "Decision Journal — The Mexico Brief"
+description: "A private log for recording what you concluded when something in Mexico changed, and scoring the call later. Everything stays in your browser; nothing is sent to a server."
+ogTitle: "Decision Journal — The Mexico Brief"
+ogDescription: "Record the call when something changes, then score whether it was right. Private and local to this browser."
+---
+{% raw %}
+<style>
+  /* section-local tokens the shared CSS doesn't carry (mirrors money.njk) */
+  :root{--ink-3:#4d4d4d}
+  body{font-size:17px}
+  .wrap{max-width:860px;margin:0 auto;padding:0 clamp(16px,5vw,32px)}
+
+  /* 1 · header */
+  .hero{padding:30px 0 6px}
+  .hero h1{font-family:var(--serif);font-size:clamp(24px,4vw,34px);line-height:1.14;letter-spacing:-.02em;margin:10px 0 0;color:var(--ink);max-width:26ch}
+  .hero .lede{font-size:17px;color:var(--ink-2);margin-top:16px;line-height:1.55;max-width:62ch}
+  .hero .priv{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin-top:12px;letter-spacing:.02em}
+
+  /* section rhythm */
+  section.blk{margin:32px 0 0}
+
+  /* 2 · add-entry form */
+  .panel{border:1px solid var(--line-2);border-radius:6px;background:var(--paper);padding:18px 20px 20px;margin-top:12px}
+  .form-help{font-family:var(--mono);font-size:11px;color:var(--mut);margin:0 0 15px;line-height:1.6}
+  .field{margin:0 0 13px}
+  .field.narrow{max-width:220px}
+  .field label{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
+  .field label .req{color:var(--green-d)}
+  .field textarea,.field input[type=date]{width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:5px;padding:9px 11px;line-height:1.5;resize:vertical}
+  .field input[type=date]{font-family:var(--mono);font-size:13px}
+  .field textarea:focus,.field input:focus{outline:none;border-color:var(--green)}
+  .form-foot{display:flex;align-items:center;gap:14px;margin-top:4px;flex-wrap:wrap}
+  .form-err{font-family:var(--mono);font-size:11.5px;color:var(--red)}
+
+  /* buttons */
+  .btn{font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;border:1px solid var(--green-d);border-radius:3px;padding:8px 16px;cursor:pointer;background:var(--green-d);color:#fff}
+  .btn:hover{background:var(--green);border-color:var(--green)}
+  .btn.sm{padding:6px 12px;font-size:11px}
+  .btn.ghost{background:transparent;color:var(--green-d);border-color:var(--line-2)}
+  .btn.ghost:hover{background:var(--paper-2);color:var(--green-d);border-color:var(--line-2)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn:disabled:hover{background:transparent;color:var(--green-d);border-color:var(--line-2)}
+  .lnk{background:none;border:0;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);cursor:pointer;padding:0}
+  .lnk:hover{color:var(--red);text-decoration:underline}
+
+  /* 3 · ledger tools + calibration */
+  .toolbar{display:flex;gap:9px;align-items:center;margin:12px 0 0}
+  .calib{border-top:2px solid var(--green);padding:13px 0 4px;margin:16px 0 10px}
+  .calib-line{font-family:var(--serif);font-size:clamp(17px,2.6vw,21px);color:var(--ink);letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1.3}
+  .calib-break{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
+  .calib-note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:10px;line-height:1.6}
+
+  /* entry cards */
+  #entries{margin-top:4px}
+  .entry{border:1px solid var(--line);border-radius:6px;padding:15px 17px;margin:0 0 12px;background:var(--paper)}
+  .entry-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:11px}
+  .entry-date{font-family:var(--mono);font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .chip.open{background:var(--paper-3);color:var(--mut)}
+  .kvlist{margin:0}
+  .kv{display:grid;grid-template-columns:158px 1fr;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+  .kv:first-child{border-top:none;padding-top:0}
+  .kv dt{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);line-height:1.55}
+  .kv dd{margin:0;font-size:14.5px;color:var(--ink-2);line-height:1.5;white-space:pre-wrap}
+  .kv.res dt{color:var(--green-d)}
+  .kv.res dd{color:var(--ink)}
+  @media(max-width:560px){.kv{grid-template-columns:1fr;gap:3px}}
+  .entry-actions{margin-top:13px}
+  .entry-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:13px;padding-top:10px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
+
+  /* resolve panel */
+  .resolve{margin-top:13px;padding:14px 15px 15px;border:1px dashed var(--line-2);border-radius:5px;background:var(--paper-2)}
+  .resolve .rlab{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+  .resolve textarea{width:100%;font-family:var(--sans);font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:5px;padding:8px 10px;line-height:1.5;resize:vertical}
+  .resolve textarea:focus{outline:none;border-color:var(--green)}
+  .seg{display:inline-flex;margin:12px 0;border:1px solid var(--line-2);border-radius:5px;overflow:hidden}
+  .seg-b{font-family:var(--mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;padding:7px 15px;border:0;border-right:1px solid var(--line-2);background:var(--paper);color:var(--mut);cursor:pointer}
+  .seg-b:last-child{border-right:0}
+  .seg-b:hover{background:var(--paper-3)}
+  .seg-b.on{background:var(--ink);color:#fff}
+  .rrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .r-err{font-family:var(--mono);font-size:11px;color:var(--red)}
+
+  /* empty state */
+  .empty{border:1px dashed var(--line-2);border-radius:6px;padding:26px 24px;background:var(--paper-2);color:var(--ink-2)}
+  .empty .empty-h{font-family:var(--serif);font-size:19px;color:var(--ink);margin:0 0 12px}
+  .empty p{margin:0 0 11px;line-height:1.62;font-size:15px;max-width:64ch}
+  .empty p:last-child{margin-bottom:0}
+
+  .mut{color:var(--mut)}
+</style>
+
+<div class="wrap">
+
+  <!-- 1 · HEADER -->
+  <section class="hero">
+    <span class="eyebrow">Decision Journal</span>
+    <h1>The value is not faster information. It is knowing whether your reads were right.</h1>
+    <p class="lede">A private log, stored only in this browser, for recording what you concluded when something in Mexico changed and scoring the outcome later.</p>
+    <p class="priv">Private. Saved to local storage on this device. Nothing is sent to a server.</p>
+  </section>
+
+  <!-- 2 · ADD ENTRY -->
+  <section class="blk">
+    <div class="section-head"><span class="no">Record</span><h2>Add a decision</h2><p class="dek">Write it down when something changes: the trigger, what the data says, what you concluded, and what you did.</p></div>
+    <form class="panel" id="journal-form" novalidate>
+      <p class="form-help">What changed and what you believe are required. The rest is optional.</p>
+      <div class="field narrow">
+        <label for="f-date">Date</label>
+        <input type="date" id="f-date" name="date" />
+      </div>
+      <div class="field">
+        <label for="f-trigger">What changed / the trigger <span class="req">· required</span></label>
+        <textarea id="f-trigger" rows="2" placeholder="e.g. Banxico held the rate against an expected cut"></textarea>
+      </div>
+      <div class="field">
+        <label for="f-data">What the data says</label>
+        <textarea id="f-data" rows="2" placeholder="the numbers behind it"></textarea>
+      </div>
+      <div class="field">
+        <label for="f-belief">What you believe <span class="req">· required</span></label>
+        <textarea id="f-belief" rows="2" placeholder="your read on what it means"></textarea>
+      </div>
+      <div class="field">
+        <label for="f-action">The action you took</label>
+        <textarea id="f-action" rows="2" placeholder="what you did, or decided not to do"></textarea>
+      </div>
+      <div class="field">
+        <label for="f-expected">Expected outcome</label>
+        <textarea id="f-expected" rows="2" placeholder="what you expect to happen, and by when"></textarea>
+      </div>
+      <div class="form-foot">
+        <button type="submit" class="btn">Log decision</button>
+        <span class="form-err" id="form-err"></span>
+      </div>
+    </form>
+  </section>
+
+  <!-- 3 · THE LEDGER -->
+  <section class="blk">
+    <div class="section-head"><span class="no">Ledger</span><h2>Decisions</h2><p class="dek">Most recent first. Resolve an open decision to record what happened and score the call.</p></div>
+    <div class="toolbar">
+      <button type="button" class="btn ghost sm" id="btn-export">Export JSON</button>
+      <button type="button" class="btn ghost sm" id="btn-clear">Clear</button>
+    </div>
+    <div id="calib"></div>
+    <div id="entries"></div>
+  </section>
+
+</div>
+
+<script type="module">
+/* The Decision Journal is entirely client-side. The log lives in localStorage
+   under 'mb_journal' as a JSON array of entry objects. Nothing is sent anywhere
+   and no external request is made — a public visitor sees the explainer and the
+   empty state; only this browser holds the entries. */
+
+const KEY = 'mb_journal';
+const SCHEMA_V = 1;
+const RESOLVED_MIN = 3;   // below this many resolved decisions, we do not claim a rate
+
+const $ = (sel, root) => (root || document).querySelector(sel);
+
+/* ---------- ids, time, storage ---------- */
+function newId(){
+  return 'je_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+function nowISO(){ return new Date().toISOString(); }
+function todayStr(){ return new Date().toISOString().slice(0, 10); }
+
+function load(){
+  try {
+    const arr = JSON.parse(localStorage.getItem(KEY) || '[]');
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+function save(list){
+  try { localStorage.setItem(KEY, JSON.stringify(list)); return true; }
+  catch (e) { return false; }
+}
+
+/* ---------- helpers ---------- */
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function fmtDate(s){
+  const d = new Date(String(s) + 'T00:00:00');
+  if (isNaN(d.getTime())) return esc(s);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+function fmtStamp(iso){
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+const VERDICT = {
+  right:  { chip: 'g', label: 'Right' },
+  partly: { chip: 'a', label: 'Partly' },
+  wrong:  { chip: 'r', label: 'Wrong' }
+};
+
+/* ---------- create ---------- */
+function addEntry(){
+  const trigger  = $('#f-trigger').value.trim();
+  const data     = $('#f-data').value.trim();
+  const belief   = $('#f-belief').value.trim();
+  const action   = $('#f-action').value.trim();
+  const expected = $('#f-expected').value.trim();
+  const date     = $('#f-date').value || todayStr();
+  const err = $('#form-err');
+
+  if (!trigger || !belief) {
+    err.textContent = 'Two fields are needed: what changed, and what you believe.';
+    (!trigger ? $('#f-trigger') : $('#f-belief')).focus();
+    return;
+  }
+  err.textContent = '';
+
+  const entry = {
+    v: SCHEMA_V,
+    id: newId(),
+    date: date,
+    trigger: trigger,
+    data: data,
+    belief: belief,
+    action: action,
+    expected: expected,
+    status: 'open',
+    actual: null,
+    verdict: null,
+    createdAt: nowISO(),
+    updatedAt: nowISO(),
+    resolvedAt: null
+  };
+
+  const list = load();
+  list.push(entry);
+  if (!save(list)) {
+    err.textContent = 'This browser blocked local storage, so the entry was not saved.';
+    return;
+  }
+  ['f-trigger', 'f-data', 'f-belief', 'f-action', 'f-expected'].forEach((id) => { $('#' + id).value = ''; });
+  $('#f-trigger').focus();
+  render();
+}
+
+/* ---------- resolve / remove ---------- */
+function resolveEntry(id, actual, verdict){
+  const list = load();
+  const e = list.find((x) => x.id === id);
+  if (!e) return;
+  e.status = 'resolved';
+  e.actual = actual;
+  e.verdict = verdict;
+  e.resolvedAt = nowISO();
+  e.updatedAt = nowISO();
+  save(list);
+  render();
+}
+function removeEntry(id){
+  save(load().filter((x) => x.id !== id));
+  render();
+}
+
+/* ---------- calibration ----------
+   Among resolved decisions only. A "right" counts full credit, a "partly" counts
+   half, a "wrong" counts zero. Below RESOLVED_MIN resolved decisions we refuse to
+   print a percentage — too few to mean anything. */
+function calibrate(list){
+  const resolved = list.filter((e) => e.status === 'resolved' && e.verdict);
+  const right  = resolved.filter((e) => e.verdict === 'right').length;
+  const partly = resolved.filter((e) => e.verdict === 'partly').length;
+  const wrong  = resolved.filter((e) => e.verdict === 'wrong').length;
+  const N = list.length;
+  const M = resolved.length;
+  const enough = M >= RESOLVED_MIN;
+  const pct = M ? Math.round(100 * (right + 0.5 * partly) / M) : 0;
+  return { N, M, right, partly, wrong, enough, pct };
+}
+
+/* ---------- render ---------- */
+function entryHTML(e){
+  const v = (e.status === 'resolved' && VERDICT[e.verdict]) ? VERDICT[e.verdict] : null;
+  const chip = v
+    ? '<span class="chip ' + v.chip + '">' + v.label + '</span>'
+    : '<span class="chip open">Open</span>';
+
+  const rows = [
+    ['What changed', e.trigger],
+    ['What the data says', e.data],
+    ['What you believe', e.belief],
+    ['The action you took', e.action],
+    ['Expected outcome', e.expected]
+  ]
+    .filter((r) => r[1] && String(r[1]).trim())
+    .map((r) => '<div class="kv"><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>')
+    .join('');
+
+  const resolvedRow = (e.status === 'resolved')
+    ? '<div class="kv res"><dt>What happened</dt><dd>' + (esc(e.actual) || '<span class="mut">no note</span>') + '</dd></div>'
+    : '';
+
+  const foot = 'logged ' + fmtStamp(e.createdAt) +
+    (e.resolvedAt ? ' · resolved ' + fmtStamp(e.resolvedAt) : '');
+
+  const resolveUI = (e.status !== 'resolved')
+    ? '<div class="resolve" hidden>' +
+        '<label class="rlab">What actually happened</label>' +
+        '<textarea class="r-actual" rows="2" placeholder="the outcome, once it is in"></textarea>' +
+        '<div class="seg" role="group" aria-label="Was the call right?">' +
+          '<button type="button" class="seg-b" data-verdict="right">Right</button>' +
+          '<button type="button" class="seg-b" data-verdict="partly">Partly</button>' +
+          '<button type="button" class="seg-b" data-verdict="wrong">Wrong</button>' +
+        '</div>' +
+        '<div class="rrow">' +
+          '<button type="button" class="btn sm" data-act="save-resolve">Save outcome</button>' +
+          '<span class="r-err"></span>' +
+        '</div>' +
+      '</div>'
+    : '';
+
+  const actions = (e.status !== 'resolved')
+    ? '<button type="button" class="btn ghost sm" data-act="toggle-resolve">Resolve</button>'
+    : '';
+
+  return '<article class="entry" data-id="' + esc(e.id) + '">' +
+    '<header class="entry-top"><span class="entry-date">' + fmtDate(e.date) + '</span>' + chip + '</header>' +
+    '<dl class="kvlist">' + rows + resolvedRow + '</dl>' +
+    '<div class="entry-actions">' + actions + '</div>' +
+    resolveUI +
+    '<footer class="entry-foot"><span>' + foot + '</span>' +
+      '<button type="button" class="lnk" data-act="remove">Remove</button></footer>' +
+  '</article>';
+}
+
+function calibHTML(c){
+  if (!c.N) return '';
+  const line = c.enough
+    ? c.N + ' logged · ' + c.M + ' resolved · directionally right ' + c.pct + '%'
+    : c.N + ' logged · ' + c.M + ' resolved · not enough resolved decisions to calibrate yet';
+  const breaks = c.M
+    ? '<div class="calib-break">' +
+        '<span class="chip g">' + c.right + ' right</span>' +
+        '<span class="chip a">' + c.partly + ' partly</span>' +
+        '<span class="chip r">' + c.wrong + ' wrong</span>' +
+      '</div>'
+    : '';
+  const note = c.enough
+    ? '<p class="calib-note">Right counts full, partly counts half, wrong counts zero.</p>'
+    : '<p class="calib-note">The rate appears once ' + RESOLVED_MIN + ' decisions are resolved.</p>';
+  return '<div class="calib"><div class="calib-line">' + line + '</div>' + breaks + note + '</div>';
+}
+
+const EMPTY_HTML =
+  '<div class="empty">' +
+    '<p class="empty-h">No decisions logged yet.</p>' +
+    '<p>This journal is private. Every entry stays in this browser, saved to local storage on this device. Nothing is sent to a server, and no one else can see it.</p>' +
+    '<p>Log a decision when something in Mexico changes: the trigger, what the data says, what you concluded, and what you did. Come back later to record what actually happened and score the call.</p>' +
+  '</div>';
+
+function render(){
+  const list = load().slice().sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+  const c = calibrate(list);
+  $('#calib').innerHTML = calibHTML(c);
+  $('#entries').innerHTML = list.length ? list.map(entryHTML).join('') : EMPTY_HTML;
+  const empty = list.length === 0;
+  $('#btn-export').disabled = empty;
+  $('#btn-clear').disabled = empty;
+}
+
+/* ---------- export / clear ---------- */
+function exportJson(){
+  const text = JSON.stringify(load(), null, 2);
+  const blob = new Blob([text], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mb-journal-' + todayStr() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function clearAll(){
+  if (!load().length) return;
+  if (confirm('Delete every journal entry on this device? This cannot be undone.')) {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    render();
+  }
+}
+
+/* ---------- events ---------- */
+$('#journal-form').addEventListener('submit', (ev) => { ev.preventDefault(); addEntry(); });
+$('#btn-export').addEventListener('click', exportJson);
+$('#btn-clear').addEventListener('click', clearAll);
+
+$('#entries').addEventListener('click', (ev) => {
+  const btn = ev.target.closest('button');
+  if (!btn) return;
+  const card = ev.target.closest('.entry');
+  if (!card) return;
+  const id = card.getAttribute('data-id');
+  const act = btn.getAttribute('data-act');
+
+  if (act === 'toggle-resolve') {
+    const panel = card.querySelector('.resolve');
+    if (panel) panel.hidden = !panel.hidden;
+    return;
+  }
+  if (btn.classList.contains('seg-b')) {
+    btn.parentElement.querySelectorAll('.seg-b').forEach((b) => b.classList.remove('on'));
+    btn.classList.add('on');
+    return;
+  }
+  if (act === 'save-resolve') {
+    const panel = card.querySelector('.resolve');
+    const sel = panel.querySelector('.seg-b.on');
+    const rerr = panel.querySelector('.r-err');
+    if (!sel) { rerr.textContent = 'Pick a verdict.'; return; }
+    resolveEntry(id, panel.querySelector('.r-actual').value.trim(), sel.getAttribute('data-verdict'));
+    return;
+  }
+  if (act === 'remove') {
+    if (confirm('Remove this entry?')) removeEntry(id);
+    return;
+  }
+});
+
+/* ---------- boot ---------- */
+$('#f-date').value = todayStr();
+render();
+</script>
+{% endraw %}
+</content>
+</invoke>
