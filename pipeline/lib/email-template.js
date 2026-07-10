@@ -199,8 +199,15 @@ export function renderEmail(d) {
 export function renderPreview(d) {
   const html = renderEmail(d);
   const usd = d._cost != null ? `~$${d._cost.toFixed(3)} to generate` : '';
+  const flags = d.lintFlags || [];
+  const voice = !d._llm
+    ? `<span style="color:#f0b76b">fallback mode: source blurbs, no model summaries (set ANTHROPIC_API_KEY)</span>`
+    : flags.length
+      ? `<span style="color:#f0b76b">⚠ voice check (${flags.length}): ${esc(flags.join(' · '))}</span>`
+      : `<span style="color:#8fd3ae">✓ voice: clean</span>`;
   const banner = `<div style="font-family:${MONO};background:${C.ink};color:#f2f1ea;padding:12px 18px;font-size:12.5px;line-height:1.6;text-align:center">
     DRAFT PREVIEW · issue ${esc(d.issue || '?')} · ${esc(d.week || '')} · ${(d.topOfWeek || []).length} lead${(d.topOfWeek || []).length === 1 ? '' : 's'} · ${esc(d.readMin || 3)}-min read · ${esc(usd)}<br>
+    ${voice}<br>
     <span style="color:#8fd3ae">To send: run the “send-email” GitHub Action for this week. Default-hold. Nothing sends on its own.</span>
   </div>`;
   return html.replace('<body>', `<body>\n${banner}`);

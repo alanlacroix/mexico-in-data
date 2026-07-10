@@ -5,10 +5,15 @@
 //
 // Fail-soft by design: with no ANTHROPIC_API_KEY set, askJSON() returns null and
 // the caller falls back to a deterministic heuristic. The email still builds; the
-// model only sharpens it. Model is one constant below — swap to claude-sonnet-5
-// for higher-quality summaries at ~3x the (already trivial) cost.
+// model only sharpens it.
+//
+// Model: Sonnet 5 for ALL jobs (rank + write), per Fable's Fork 1 ruling. Tiering
+// to Haiku saved nothing here (one Saturday batch over ~70 headline-length items,
+// cents either way) and put the most damaging judgment — significance ranking, i.e.
+// what leads the email — on the weakest model. One model, one voice. Still a few
+// dollars a month at most.
 
-const MODEL = 'claude-haiku-4-5';        // $1/M in · $5/M out — a weekly issue costs cents
+const MODEL = 'claude-sonnet-5';         // $3/M in · $15/M out — one weekly batch, still cents/issue
 const KEY = process.env.ANTHROPIC_API_KEY || '';
 const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 
@@ -17,9 +22,9 @@ let _in = 0, _out = 0, _calls = 0;
 export const hasLLM = () => !!KEY;
 export const model = MODEL;
 
-// Cumulative token usage + Haiku-4.5-priced cost estimate for the run.
+// Cumulative token usage + Sonnet-5-priced cost estimate for the run.
 export function usage() {
-  const costUSD = (_in / 1e6) * 1 + (_out / 1e6) * 5;
+  const costUSD = (_in / 1e6) * 3 + (_out / 1e6) * 15;
   return { calls: _calls, input: _in, output: _out, costUSD };
 }
 

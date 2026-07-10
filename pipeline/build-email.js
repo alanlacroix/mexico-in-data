@@ -19,11 +19,13 @@ import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
 import { renderEmail, renderPreview, domainOf } from './lib/email-template.js';
 import { fetchArticle } from './lib/fetch-article.js';
-import { hasStore, upsertItems, upsertIssue } from './lib/store.js';
+import { hasStore, upsertItems, upsertIssue, recentIssues } from './lib/store.js';
+import { lintSummary } from './lib/lint.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const D = (...p) => path.join(ROOT, 'data', ...p);
+const STYLE = fs.readFileSync(path.join(__dirname, 'email-style.md'), 'utf8');   // the editorial contract, compiled into the summary prompt
 const NAME = 'Alan';                     // primary-reader greeting (swap to a merge tag once there's a list)
 const TOP_THRESHOLD = 7.5;               // score to earn a "top of the week" lead slot
 const ROOM_THRESHOLD = 4.0;              // score to appear in a room at all
@@ -172,17 +174,26 @@ Score each candidate 0 to 10 for how much it belongs in this week's brief. 10 = 
 }
 
 // ---- summarize a lead story from its own article text only ----
-async function summarizeLead(item) {
+// Voice is the compiled email-style.md contract; every model draft is lint-gated and
+// rewritten once on a hard violation. Fallback (no key / no text) uses the source dek
+// verbatim, unlinted (it's the outlet's own words, not ours to enforce).
+async function summarizeLead(item, continuityCtx) {
   const dek = (item.dek || '').trim();
-  if (!hasLLM()) return { summary: dek, why: '', real: /federalregister\.gov/.test(item.url) };
+  const real = /federalregister\.gov/.test(item.url);
+  if (!hasLLM()) return { summary: dek, why: '', real, source: 'dek', flags: [] };
   const { ok, text } = await fetchArticle(item.url);
-  if (!ok) return { summary: dek || 'See the linked report.', why: '', real: /federalregister\.gov/.test(item.url) };
+  if (!ok) return { summary: dek || 'See the linked report.', why: '', real, source: 'dek', flags: [] };
   const schema = { type: 'object', additionalProperties: false, required: ['summary', 'why'], properties: { summary: { type: 'string' }, why: { type: 'string' } } };
-  const system = `Summarize this news article for a weekly Mexico brief. Use ONLY facts stated in the provided article text. Do not add figures, names, or claims that are not in the text; if a detail is not present, leave it out. Voice: lead with the fact and the number, plain declarative sentences, 2 to 3 sentences total, actor first. No em-dashes. No hype or filler words (robust, significant, landscape, key, dynamic, poised). No persuasion adjectives. Then, in "why", write ONE sentence on why it matters to someone running a payments and fintech company in Mexico, but only if the article clearly supports that read-through; otherwise return "" for why. Return JSON {summary, why}.`;
-  const user = `TITLE: ${item.title}\nSOURCE: ${item.sourceName || domainOf(item.url)}\nURL: ${item.url}\n\nARTICLE TEXT:\n${text.slice(0, 6000)}`;
-  const out = await askJSON({ system, user, schema, maxTokens: 500 });
-  if (!out?.summary) return { summary: dek || 'See the linked report.', why: '', real: /federalregister\.gov/.test(item.url) };
-  return { summary: out.summary.trim(), why: (out.why || '').trim(), real: /federalregister\.gov/.test(item.url) };
+  const system = STYLE + (continuityCtx ? `\n\n## Prior issues (continuity only — you may reference these, but only if you cite the issue's date)\n${continuityCtx}` : '');
+  const baseUser = `TITLE: ${item.title}\nSOURCE: ${item.sourceName || domainOf(item.url)}\nURL: ${item.url}\n\nARTICLE TEXT:\n${text.slice(0, 6000)}`;
+  let out = await askJSON({ system, user: baseUser, schema, maxTokens: 500 });
+  if (!out?.summary) return { summary: dek || 'See the linked report.', why: '', real, source: 'dek', flags: [] };
+  let lint = lintSummary(out);
+  if (lint.hard) {   // one enforced rewrite on a hard voice violation (em-dash / hype)
+    const retry = await askJSON({ system, user: `${baseUser}\n\nYour previous draft broke the style rules (${lint.flags.join('; ')}). Rewrite it obeying every rule, same facts, from the article text only.`, schema, maxTokens: 500 });
+    if (retry?.summary) { const rl = lintSummary(retry); if (rl.flags.length <= lint.flags.length) { out = retry; lint = rl; } }
+  }
+  return { summary: (out.summary || '').trim(), why: (out.why || '').trim(), real, source: 'llm', flags: lint.flags };
 }
 
 // ---- room chips (deterministic label from the story) ----
@@ -217,11 +228,20 @@ async function main() {
   if (!leadPicks.length && scored.length) leadPicks = scored.slice(0, 1);
   const leadIds = new Set(leadPicks.map((x) => x.id));
 
+  // continuity context: what recent issues led with (from the store; empty without it)
+  const priorIssues = await recentIssues(8).catch(() => []);
+  const continuityCtx = priorIssues.map((r) => {
+    const leads = (r.draft?.topOfWeek || []).map((t) => t.headline).slice(0, 3).join(' · ');
+    return `- ${r.week}${r.issue_no ? ' (issue ' + r.issue_no + ')' : ''}: ${leads || '(no leads)'}`;
+  }).join('\n');
+
   const topOfWeek = [];
+  const lintFlags = [];
   for (const p of leadPicks) {
-    const s = await summarizeLead(p);
-    topOfWeek.push({ room: p.room, headline: p.title, summary: s.summary, why: s.why, url: p.url, sourceName: p.sourceName, date: fmtDay(p.published_at), real: s.real });
-    console.log(`  lead [${p.score}] ${p.room} · ${shorten(p.title, 64)}`);
+    const s = await summarizeLead(p, continuityCtx);
+    topOfWeek.push({ room: p.room, headline: p.title, summary: s.summary, why: s.why, url: p.url, sourceName: p.sourceName, date: fmtDay(p.published_at), real: s.real, flags: s.flags });
+    if (s.flags?.length) lintFlags.push(`${shorten(p.title, 40)} — ${s.flags.join(', ')}`);
+    console.log(`  lead [${p.score}] ${p.room} · ${shorten(p.title, 58)}${s.flags?.length ? '  ⚠ ' + s.flags.join(', ') : ''}`);
   }
 
   // rooms: remaining above the room bar, grouped, top N each
@@ -255,9 +275,9 @@ async function main() {
   const draft = {
     week: isoWk, issue, subject, status: 'draft',
     dateLabel: fmtFull(monday), readMin, builtAt: now.toISOString(),
-    intro, topOfWeek, board, rooms, watch,
+    intro, topOfWeek, board, rooms, watch, lintFlags,
     footerExtra: '<br>You are getting this because you subscribed at mexicobrief.com. One tap unsubscribes.',
-    _cost: usage().costUSD,
+    _cost: usage().costUSD, _llm: hasLLM(),
   };
 
   // write outputs: draft JSON (approvable), exact send HTML, and the preview page
