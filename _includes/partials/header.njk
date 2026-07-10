@@ -7,7 +7,7 @@
   <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
   <nav class="mnav" id="sitenav">
     {%- for item in nav %}
-    <a href="{{ item.href }}"{% if page.url == item.href %} class="here"{% endif %}>{{ item.label }}</a>
+    <a href="{{ item.href }}"{% if item.cta and page.url == item.href %} class="cta here"{% elif item.cta %} class="cta"{% elif page.url == item.href %} class="here"{% endif %}>{{ item.label }}</a>
     {%- endfor %}
   </nav>
 </div></header>
