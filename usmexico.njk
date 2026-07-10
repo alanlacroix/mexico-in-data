@@ -1,10 +1,10 @@
 ---
 layout: base.njk
-permalink: /money.html
-title: "Money — The Mexico Brief"
-description: "Mexico's money, in official numbers: the peso, headline and core inflation, Banxico's policy rate, international reserves and remittances. Every figure is dated and one tap from its source."
-ogTitle: "Money — The Mexico Brief"
-ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked to its source."
+permalink: /us-mexico.html
+title: "U.S.–Mexico — The Mexico Brief"
+description: "Mexico's trade with the United States, in official numbers: the ~80% of exports that go north, two-way trade and the balance, the post-SCOTUS tariff level, remittances, and the peso. Every figure is dated and links to its source."
+ogTitle: "U.S.–Mexico — The Mexico Brief"
+ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Court, and the ~80% of exports that go to the United States. Every figure is dated and links to its source."
 ---
 {% raw %}
 <style>
@@ -123,6 +123,23 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
   .ctxline{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.6;padding-top:10px;border-top:1px solid var(--line)}
   .ctxline b{color:var(--ink)}
 
+  /* fact card + source note + honesty (migrated from index.njk's inline style) */
+  .honesty{font-family:var(--mono);font-size:11px;color:var(--amber2);background:var(--amber-bg2);border-radius:8px;padding:9px 13px;margin:8px 0 4px;line-height:1.5}
+  .factcard{border:1px solid var(--line-2);border-radius:10px;padding:15px 17px;margin:14px 0 4px}
+  .factcard .fc-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .factcard .fc-row:last-child{border-bottom:none}
+  .factcard .fc-k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);flex:1}
+  .factcard .fc-v{color:var(--ink);text-align:right;flex:1.3;line-height:1.4}
+  .factcard .fc-v b{color:var(--ink)}
+  .factcard .fc-v a{color:var(--green)}
+  .oc-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:8px;line-height:1.6}
+  .oc-src a{color:var(--green)}
+  details.more{margin:6px 0 4px;border-top:1px solid var(--line)}
+  details.more>summary{font-family:var(--mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);cursor:pointer;list-style:none;padding:10px 0 2px}
+  details.more>summary::-webkit-details-marker{display:none}
+  details.more>summary::after{content:" ▸"}
+  details.more[open]>summary::after{content:" ▾"}
+
   /* 4 · what to watch */
   .watchtbl{margin:10px 0 4px}
   .watchtbl .wtr{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:baseline}
@@ -164,8 +181,8 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
 
   <!-- 1 · HEADER -->
   <section class="hero" id="top">
-    <span class="eyebrow">Money</span>
-    <h1 class="state">Inflation is easing toward Banxico's target while the bank holds rates high and the peso holds with them.</h1>
+    <span class="eyebrow">U.S.–Mexico</span>
+    <h1 class="state">Trade terms with the United States are Mexico's biggest external risk. The 2026 USMCA review is unresolved.</h1>
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
@@ -178,30 +195,30 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
     <div class="tablero" id="tablero"></div>
   </section>
 
-  <!-- 3 · BACKGROUND (migrated from the homepage's Q3) -->
+  <!-- 3 · BACKGROUND (migrated from the homepage's Q8, with the ~80% dependence as the hero exhibit) -->
   <section class="blk" id="background"></section>
 
   <!-- 4 · WHAT TO WATCH -->
   <section class="blk" id="watch">
-    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">The next central-bank decisions and inflation releases, each with its scheduled date and source.</p></div>
+    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">The USMCA review rounds and other scheduled U.S.–Mexico trade decisions, each with its date.</p></div>
     <div id="watch-list"></div>
   </section>
 
   <!-- 5 · LATEST -->
   <section class="blk" id="latest">
-    <div class="section-head"><span class="no">The Wire</span><h2>Latest</h2><p class="dek">Markets and money headlines, each dated and linked to its source.</p></div>
+    <div class="section-head"><span class="no">The Wire</span><h2>Latest</h2><p class="dek">Trade, tariff, and border headlines on the U.S. relationship, each dated and linked to its source.</p></div>
     <div id="wire-list"></div>
-    <p class="wire-note">Each headline links to its original source. Fuller summaries are coming.</p>
+    <p class="wire-note">Fuller summaries are coming. For now each headline links straight to its source.</p>
   </section>
 
   <!-- 6 · TOOLS & SOURCES -->
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Pull a lever (the Fed, tariffs, oil) and see how the peso, inflation, and Banxico's rate respond. It shows the modeled direction and rough size of the move.</div></a>
+      <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Pull the USMCA-review lever, or tariffs, the Fed, or oil, and watch the peso, inflation, and growth respond. It shows the modeled direction and rough size of each move.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE</a> (peso FIX, policy rate, reserves, remittances) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (INPC, the consumer-price index). Every figure above is dated and one tap from its source.</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">U.S. Census Bureau</a> (two-way trade, balance) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (export destinations, peso, remittances) · <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a> and <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a> (USMCA, tariffs). Every figure above is dated and one tap from its source.</p>
   </section>
 
 </div>
@@ -209,86 +226,150 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts } from '/assets/mb.js';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, sparkSVG, valueAgo, monLong } from '/assets/mb.js';
 
-/* the live tile board (block 2) — same JSON as the metric rows below */
-const TILES=[
-  {id:'banxico-usdmxn-fix',l:'Peso · MXN/USD',per:'vs yesterday'},
-  {id:'banxico-inflacion',l:'Inflation · annual',per:'vs prior month'},
-  {id:'banxico-inflacion-subyacente',l:'Core inflation · annual',per:'vs prior month'},
-  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',per:'vs 2024'},
-  {id:'banxico-reservas',l:"Int'l reserves",per:'vs prior week'},
-  {id:'banxico-remesas',l:'Remittances · month',per:'vs prior month'},
-];
+/* US–Mexico keyword filters — the task's keyword set (USMCA/TMEC/arancel/tariff/EEUU/
+   Estados Unidos/frontera/border/comercio/exportaciones/Trump) plus the border/migration
+   and remittance terms the section explicitly covers. */
+const RE_EV = /usmca|t-?mec|arancel|tariff|ee\.?uu|estados unidos|frontera|\bborder\b|comercio|exportaci|trump|united states/i;
+const RE_NEWS = /usmca|t-?mec|arancel|tariff|ee\.?uu|estados unidos|frontera|\bborder\b|comercio|exportaci|trump|remesa|remittance|\bice\b|migra|deportaci|\bustr\b|washington/i;
 
-/* block 3 — the migrated Q3 "money" exhibit + metric rows + forward line, built exactly
-   as index.njk builds it (inflation vs policy rate, band = 3% ± 1, chart<->table toggle) */
-function renderBackground(){
-  const rate=S['banxico-tasa-objetivo'],inf=S['banxico-inflacion'];
-  let ex='';
-  if(rate&&inf){
-    const rr=rate.data.filter(p=>new Date(p.date)>=new Date(Date.now()-2.2*365*864e5)).filter((_,i)=>i%6===0);
-    const ii=inf.data.slice(-Math.min(inf.data.length,30));
-    const svg=timeChart([{name:'Inflation',color:'var(--ink)',pts:ii},{name:'Policy rate',color:'green',pts:rr.length?rr:rate.data.slice(-30)}],{unit:'%',band:[2,4],bandLabel:'3% ± 1 target'});
-    const rateAt=(d)=>{const t=+new Date(d);let best=rate.data[0],bd=1e18;for(const q of rate.data){const dd=Math.abs(+new Date(q.date)-t);if(dd<bd){bd=dd;best=q;}}return best.value;};
-    const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p)=>[qtrOf(p.date),p.value.toFixed(1),rateAt(p.date).toFixed(2)]));
-    ex=exhibit('3.1','Banxico is holding rates high while inflation stays above target','Policy rate vs headline inflation, % · shaded band = 3% ± 1 target',svg,
-      `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> · INPC + target rate.`,tbl,true);
-  }
-  return sectionHead('Background',"Where Mexico's money stands","Inflation sits above Banxico's target, so the bank is holding rates high, and the peso is holding with them.")+
-    ex+
-    mrow({id:'banxico-inflacion',label:'Inflation, annual (CPI)'})+
-    mrow({id:'banxico-inflacion-subyacente',label:'Core inflation, annual'})+
-    mrow({id:'banxico-tasa-objetivo',label:'Banxico policy rate'})+
-    mrow({id:'banxico-usdmxn-fix',label:'Peso · exchange rate (FIX)'})+
-    mrow({id:'banxico-reservas',label:'International reserves'})+
-    fwd(`Banxico's survey (Jul 2026) sees inflation at <b>4.2%</b> end-2026, the rate on hold at <b>6.50%</b>, the peso near <b>17.95</b>. <a href="/#q10">Outlook →</a>`)+
-    `<div class="ctxline">Gloss: <b>Banxico</b> = the central bank · <b>INPC</b> = the consumer price index · <b>FIX</b> = Banxico's official daily reference rate.</div>`;
+/* the export-destination split — migrated VERBATIM from the homepage's Q4 exhibit 4.2
+   (Q8 references this same ~80% figure). A hardcoded government stat, not a live feed. */
+const DEST = [{label:'United States',value:80,hi:true},{label:'Canada',value:3},{label:'China',value:2},{label:'Rest of world',value:15}];
+
+/* ---- a static / from-trade-json tile with the same .tile markup tile() emits ---- */
+function ctile(o){
+  return `<div class="tile"${o.go?` data-go="${o.go}"`:''}><div class="tl">${o.l}</div>`+
+    `<div class="tv">${o.v} <small>${o.s||''}</small></div>`+
+    (o.dl||'')+(o.spark||'')+
+    `<div class="tb">${o.tb||''}</div>`+
+    `<span class="stamp ${o.stampCls||''}">${o.stamp||''}</span>`+
+    (o.src?`<span class="tsrc">${o.src}</span>`:'')+`</div>`;
+}
+function pctDelta(series){
+  if(!series||series.length<13) return '';
+  const cur=series.at(-1).value, ago=valueAgo(series,365);
+  if(!ago) return '';
+  const pct=(cur-ago)/ago*100;
+  if(Math.abs(pct)<0.05) return `<span class="dl fl">held <small>vs a year ago</small></span>`;
+  return `<span class="dl ${pct>0?'up':'dn'}">${pct>0?'+':''}${pct.toFixed(1)}% <small>vs a year ago</small></span>`;
 }
 
-/* block 4 — money-relevant catalyst calendar (central bank / inflation) */
+/* block 2 — the live tile board. Hero (~80%) + two-way trade + surplus + tariff come from the
+   same JSON their exhibits use; remittances + peso reuse tile() straight off the loaded series. */
+function renderTiles(TRADE){
+  let out='';
+  out+=ctile({l:'Exports to the U.S.', v:'~80', s:'% of total', tb:'Four of five export dollars go north', stamp:'ANNUAL · 2025', src:'INEGI / Banxico'});
+  if(TRADE&&TRADE.latest&&TRADE.series){
+    const L=TRADE.latest, mo=monLong(L.month);
+    const expByMonth=Object.fromEntries((TRADE.series.exports||[]).map(m=>[m.month,m.value]));
+    const twoway=(TRADE.series.imports||[]).filter(m=>expByMonth[m.month]!=null).map(m=>({date:m.month,value:m.value+expByMonth[m.month]}));
+    const surplus=(TRADE.series.imports||[]).filter(m=>expByMonth[m.month]!=null).map(m=>({date:m.month,value:m.value-expByMonth[m.month]}));
+    out+=ctile({l:'Two-way trade · monthly', v:'$'+Math.round(L.twoway_bn), s:'bn / month', dl:pctDelta(twoway), spark:sparkSVG(twoway), tb:'U.S.–Mexico goods, both directions', stamp:'MONTHLY · '+mo, src:'U.S. Census Bureau'});
+    out+=ctile({l:"Mexico's surplus · monthly", v:'$'+Math.round(-L.balance_bn), s:'bn / month', dl:pctDelta(surplus), spark:sparkSVG(surplus), tb:'Mexico sells the U.S. more than it buys', stamp:'MONTHLY · '+mo, src:'U.S. Census Bureau'});
+  } else {
+    out+=ctile({l:'Two-way trade · monthly', v:'<span style="font-size:15px;color:var(--amber2)">NOT YET WIRED</span>', s:'', tb:'feed unavailable', stamp:''});
+    out+=ctile({l:"Mexico's surplus · monthly", v:'<span style="font-size:15px;color:var(--amber2)">NOT YET WIRED</span>', s:'', tb:'feed unavailable', stamp:''});
+  }
+  out+=ctile({l:'Effective US tariff', v:'~4', s:'%', tb:'Blanket IEEPA tariffs struck down (SCOTUS)', stamp:'AS OF FEB 2026', src:'USTR · U.S. Supreme Court'});
+  out+=tile({id:'banxico-remesas',l:'Remittances · month'},{src:true});
+  out+=tile({id:'banxico-usdmxn-fix',l:'Peso · MXN/USD'},{src:true});
+  return out;
+}
+
+/* block 3 — Background. Hero exhibit = the ~80% dependence (migrated from Q4/Q8); then the
+   live USMCA/tariff fact card migrated VERBATIM from Q8; then trade flows over time; the peso
+   and remittances rows; a deeper "what the US buys" exhibit; the Q8 forward line + a gloss. */
+function renderBackground(TRADE){
+  // hero exhibit 8.1 — export dependence (same DEST constant the hero tile uses)
+  const ex1=exhibit('8.1','Four out of five export dollars go to the United States','Mexican goods exports by destination, share of total, 2025',
+    hbarChart(DEST),
+    `Source: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI / Banxico</a>, balance of trade.`,
+    dataTable(['Destination','Share'],DEST.map(d=>[d.label,d.value+'%'])),true);
+
+  // the live story — fact card migrated VERBATIM from the homepage's Q8 (internal ref rewritten to the homepage anchor)
+  const fc=`<div class="factcard">`+
+      `<div class="fc-row"><span class="fc-k">Trade pact</span><span class="fc-v"><b>USMCA</b> in force to 2036, but the <b>2026 joint review is unresolved</b> — the US declined to renew on schedule (Jul 1, 2026)</span></div>`+
+      `<div class="fc-row"><span class="fc-k">Tariffs</span><span class="fc-v">Blanket IEEPA tariffs struck down by the US Supreme Court (Feb 2026); effective US tariff now <b>~4%</b>, but sector threats recur</span></div>`+
+      `<div class="fc-row"><span class="fc-k">Why it matters</span><span class="fc-v">With ~80% of exports going north (<a href="/#q4">Q4</a>), trade terms are the economy's single biggest risk</span></div>`+
+    `</div>`+
+    `<div class="oc-src">Sources: <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a>; <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a>; verified Jul 2026. Each row carries its own date.</div>`;
+
+  // exhibit 8.2 — two-way goods trade over time (US Census ledger)
+  let ex2='';
+  if(TRADE&&TRADE.series){
+    const imp=(TRADE.series.imports||[]).slice(-60).map(m=>({date:m.month,value:m.value}));
+    const exp=(TRADE.series.exports||[]).slice(-60).map(m=>({date:m.month,value:m.value}));
+    if(imp.length&&exp.length){
+      const expByMonth=Object.fromEntries((TRADE.series.exports||[]).map(m=>[m.month,m.value]));
+      const rows=(TRADE.series.imports||[]).filter(m=>expByMonth[m.month]!=null).slice(-8).map(m=>[monLong(m.month),m.value.toFixed(1),expByMonth[m.month].toFixed(1),(m.value-expByMonth[m.month]).toFixed(1)]);
+      ex2=exhibit('8.2','The US buys more from Mexico than it sells, month after month','U.S.–Mexico goods trade, monthly, US$ bn · U.S. Census ledger',
+        timeChart([{name:'US buys',color:'green',pts:imp},{name:'US sells',color:'var(--ink)',pts:exp}],{unit:'$'}),
+        `Source: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">U.S. Census Bureau</a>, International Trade · US imports from / exports to Mexico.`,
+        dataTable(['Month','US buys','US sells','MX surplus'],rows),true);
+    }
+  }
+
+  // exhibit 8.3 — what the US actually buys from Mexico (tucked under a "more" disclosure)
+  let ex3='';
+  if(TRADE&&TRADE.topImports&&TRADE.topImports.length){
+    const buys=TRADE.topImports.map((x,i)=>({label:x.name,value:x.value_bn,hi:i===0}));
+    ex3=exhibit('8.3','Cars, computers, and electronics top what the US buys from Mexico','Top U.S. goods imports from Mexico, trailing 12 months, US$ bn',
+      hbarChart(buys,{vfmt:(v)=>'$'+v+'B'}),
+      `Source: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">U.S. Census Bureau</a>, HS2 chapters, trailing 12 months.`,
+      dataTable(['Product','Imports','HS'],TRADE.topImports.map(x=>[x.name,'$'+x.value_bn+'B',x.hs])),true);
+  }
+
+  return sectionHead('Background',"Where the U.S. relationship stands","Trade terms with the United States are Mexico's biggest external risk. The 2026 USMCA review is unresolved.")+
+    ex1+ fc+ ex2+
+    mrow({id:'banxico-usdmxn-fix',label:'Peso · exchange rate (FIX)'})+
+    mrow({id:'banxico-remesas',label:'Remittances (family, monthly)'})+
+    (ex3?`<details class="more"><summary>More — what the US actually buys from Mexico</summary>${ex3}</details>`:'')+
+    fwd(`The <b>USMCA review timeline</b> is the lever to watch. Test it in the model: <a href="/model.html">"USMCA review fails" →</a>.`)+
+    `<div class="ctxline">Gloss: <b>USMCA / T-MEC</b> = the North American trade pact · <b>IEEPA</b> = the US emergency-powers law behind the blanket tariffs the Supreme Court struck down · <b>USTR</b> = the US Trade Representative.</div>`;
+}
+
+/* block 4 — the US–Mexico catalyst calendar (USMCA review rounds + any trade-tagged events) */
 function renderWatch(){
   const ev=(EVENTS&&EVENTS.events)||[];
-  const money=ev.filter(e=>{const k=(e.kind||'');
-    if(k==='banxico'||k==='fomc')return true;
-    return /inflaci|cpi|inpc|inflation|tasa|policy rate|peso|banxico|remesas|remittance/i.test((e.label||'')+' '+(e.mechanism||''));});
+  const rel=ev.filter(e=>e.kind==='trade'||RE_EV.test((e.label||'')+' '+(e.mechanism||'')));
   const now=Date.now();
-  const up=money.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
-  if(!up.length) return `<div class="cb-empty">No money events on the calendar yet.</div>`;
+  const up=rel.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  if(!up.length) return `<div class="cb-empty">Nothing on the calendar yet. The next scheduled run will post US–Mexico events here.</div>`;
   return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind||''}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
-/* block 5 — latest markets/money headlines */
+/* block 5 — latest US-relationship headlines */
 function renderWire(){
   const arts=(NEWS&&NEWS.articles)||[];
-  const money=arts.filter(a=>{const t=(a.tag||'');
-    if(['markets','money','economy','trade'].includes(t))return true;
-    return /peso|inflation|banxico|rate|remittance|remesas|market|econom|tariff|trade|usmca|nearshor|invest/i.test(a.title||'');});
-  if(!money.length) return `<div class="cb-empty">No headlines yet — the next scheduled run will post them here.</div>`;
-  return `<div class="wire">`+money.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
+  const rel=arts.filter(a=>a.tag==='trade'||RE_NEWS.test(a.title||''));
+  if(!rel.length) return `<div class="cb-empty">No headlines yet. The next scheduled run will post them here.</div>`;
+  return `<div class="wire">`+rel.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
     return `<div class="wi">${tagChip(a.tag)}<div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
 /* boot */
 (async()=>{
   await loadSeries();
-  // as-of = freshest fetch across the loaded money series
-  const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t);
+  const TRADE = await fetch('./data/trade-us.json').then(r=>r.ok?r.json():null).catch(()=>null);
+  // as-of = freshest fetch across the loaded series + the trade ledger
+  const times=[...Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()), TRADE&&TRADE.meta?new Date(TRADE.meta.fetchedAt).getTime():0].filter(t=>t&&!isNaN(t));
   if(times.length){
     const newest=new Date(Math.max(...times));
     document.getElementById('asof').textContent=newest.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
-  document.getElementById('tablero').innerHTML=TILES.map(t=>tile(t,{src:true})).join('');
-  document.getElementById('background').innerHTML=renderBackground();
+  document.getElementById('tablero').innerHTML=renderTiles(TRADE);
+  document.getElementById('background').innerHTML=renderBackground(TRADE);
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   wireCharts();
-  // tile → scroll to its metric row in Background
+  // tile → scroll to its metric row in Background (peso / remittances tiles carry data-go)
   document.getElementById('tablero').addEventListener('click',(e)=>{const t=e.target.closest('[data-go]');if(!t)return;const row=document.querySelector('[data-metric="'+t.getAttribute('data-go')+'"]');if(row)row.scrollIntoView({behavior:'smooth',block:'center'});});
 })().catch(e=>{
-  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading money data: '+e.message+'</p>';
+  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading U.S.–Mexico data: '+e.message+'</p>';
 });
 </script>
 {% endraw %}

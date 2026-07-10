@@ -1,12 +1,39 @@
----
-layout: base.njk
-permalink: /money.html
-title: "Money — The Mexico Brief"
-description: "Mexico's money, in official numbers: the peso, headline and core inflation, Banxico's policy rate, international reserves and remittances. Every figure is dated and one tap from its source."
-ogTitle: "Money — The Mexico Brief"
-ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked to its source."
----
-{% raw %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Society — The Mexico Brief</title>
+<meta name="description" content="Mexico&#39;s society in official numbers: poverty at a record low, the minimum wage rising by policy, remittances, jobs and population. Every figure is dated and links to its source." />
+<meta name="theme-color" content="#ffffff" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Society — The Mexico Brief" />
+<meta property="og:description" content="Poverty, wages, jobs and migration in official numbers, updated every six hours." />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=ffaa610b" />
+
+
+</head>
+<body>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
+  <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav class="mnav" id="sitenav">
+    <a href="/economy.html">Economy</a>
+    <a href="/money.html">Money</a>
+    <a href="/politics.html">Politics</a>
+    <a href="/security.html">Security</a>
+    <a href="/society.html" class="here">Society</a>
+    <a href="/us-mexico.html">U.S.–Mexico</a>
+    <a href="/atlas.html">Atlas</a>
+    <a href="/model.html">Model</a>
+    <a href="/weekly.html" class="cta">Weekly</a>
+  </nav>
+</div></header>
+
+
 <style>
   /* section-specific tokens the shared CSS doesn't carry (mirrors index.njk's inline :root) */
   :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
@@ -73,6 +100,12 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
   svg.spark{display:block}
   svg.spark path{fill:none;stroke:var(--ink-3);stroke-width:1.3}
   svg.spark circle{fill:var(--green)}
+
+  /* not-yet-wired row (construccion — migrated from index.njk's inline style) */
+  .constr-lite{display:flex;flex-wrap:wrap;align-items:baseline;gap:9px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .constr-lite .cl-l{font-size:13.5px;color:var(--ink)}
+  .constr-lite .cl-s{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--amber2);border:1px solid var(--amber-bg2);background:var(--amber-bg2);border-radius:3px;padding:1px 6px}
+  .constr-lite .cl-d{font-family:var(--mono);font-size:11.5px;color:var(--mut)}
 
   /* EXHIBIT (chart) frame */
   .exwrap{margin:16px 0 8px}
@@ -164,8 +197,8 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
 
   <!-- 1 · HEADER -->
   <section class="hero" id="top">
-    <span class="eyebrow">Money</span>
-    <h1 class="state">Inflation is easing toward Banxico's target while the bank holds rates high and the peso holds with them.</h1>
+    <span class="eyebrow">Society</span>
+    <h1 class="state">Poverty is at its lowest on record and wages keep rising by policy, but weak growth caps how far living standards can climb.</h1>
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
@@ -178,30 +211,30 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
     <div class="tablero" id="tablero"></div>
   </section>
 
-  <!-- 3 · BACKGROUND (migrated from the homepage's Q3) -->
+  <!-- 3 · BACKGROUND (migrated verbatim from the homepage's Q6) -->
   <section class="blk" id="background"></section>
 
   <!-- 4 · WHAT TO WATCH -->
   <section class="blk" id="watch">
-    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">The next central-bank decisions and inflation releases, each with its scheduled date and source.</p></div>
+    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">The scheduled dates for upcoming poverty, wage, jobs and remittance releases, each with its publishing agency.</p></div>
     <div id="watch-list"></div>
   </section>
 
   <!-- 5 · LATEST -->
   <section class="blk" id="latest">
-    <div class="section-head"><span class="no">The Wire</span><h2>Latest</h2><p class="dek">Markets and money headlines, each dated and linked to its source.</p></div>
+    <div class="section-head"><span class="no">The Wire</span><h2>Latest</h2><p class="dek">Wages, jobs, poverty and migration headlines, each dated and linked to its source.</p></div>
     <div id="wire-list"></div>
-    <p class="wire-note">Each headline links to its original source. Fuller summaries are coming.</p>
+    <p class="wire-note">Fuller summaries are coming. For now each headline links straight to its original source.</p>
   </section>
 
   <!-- 6 · TOOLS & SOURCES -->
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Pull a lever (the Fed, tariffs, oil) and see how the peso, inflation, and Banxico's rate respond. It shows the modeled direction and rough size of the move.</div></a>
+      <a href="/atlas.html"><div class="tk">By municipality</div><div class="th">The Atlas →</div><div class="td">Poverty for each of 2,469 municipalities. The national average hides wide differences between them; search or tap one to see its rate against the national benchmark.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE</a> (peso FIX, policy rate, reserves, remittances) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (INPC, the consumer-price index). Every figure above is dated and one tap from its source.</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / CONEVAL (multidimensional poverty) · <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE</a> / CONASAMI (minimum wage, remittances) · <a href="https://data.worldbank.org/country/mexico" target="_blank" rel="noopener">World Bank</a> (unemployment, population, GDP per capita) · CNE / Sener (fuel prices). Each figure above shows its publication date and links to the series it came from.</p>
   </section>
 
 </div>
@@ -209,78 +242,96 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts } from '/assets/mb.js';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts } from '/assets/mb.js';
 
-/* the live tile board (block 2) — same JSON as the metric rows below */
-const TILES=[
-  {id:'banxico-usdmxn-fix',l:'Peso · MXN/USD',per:'vs yesterday'},
-  {id:'banxico-inflacion',l:'Inflation · annual',per:'vs prior month'},
-  {id:'banxico-inflacion-subyacente',l:'Core inflation · annual',per:'vs prior month'},
-  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',per:'vs 2024'},
-  {id:'banxico-reservas',l:"Int'l reserves",per:'vs prior week'},
-  {id:'banxico-remesas',l:'Remittances · month',per:'vs prior month'},
-];
+/* series this section reads — the Q6 numbers plus the same-file living-standards /
+   demography series (World Bank). loadSeries also pulls the news wire + events. */
+const SOCIETY_SERIES=['banxico-salario-minimo','banxico-remesas','cre-gasolina-regular','wb-unemployment','wb-gdp-per-capita','wb-population'];
 
-/* block 3 — the migrated Q3 "money" exhibit + metric rows + forward line, built exactly
-   as index.njk builds it (inflation vs policy rate, band = 3% ± 1, chart<->table toggle) */
-function renderBackground(){
-  const rate=S['banxico-tasa-objetivo'],inf=S['banxico-inflacion'];
-  let ex='';
-  if(rate&&inf){
-    const rr=rate.data.filter(p=>new Date(p.date)>=new Date(Date.now()-2.2*365*864e5)).filter((_,i)=>i%6===0);
-    const ii=inf.data.slice(-Math.min(inf.data.length,30));
-    const svg=timeChart([{name:'Inflation',color:'var(--ink)',pts:ii},{name:'Policy rate',color:'green',pts:rr.length?rr:rate.data.slice(-30)}],{unit:'%',band:[2,4],bandLabel:'3% ± 1 target'});
-    const rateAt=(d)=>{const t=+new Date(d);let best=rate.data[0],bd=1e18;for(const q of rate.data){const dd=Math.abs(+new Date(q.date)-t);if(dd<bd){bd=dd;best=q;}}return best.value;};
-    const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p)=>[qtrOf(p.date),p.value.toFixed(1),rateAt(p.date).toFixed(2)]));
-    ex=exhibit('3.1','Banxico is holding rates high while inflation stays above target','Policy rate vs headline inflation, % · shaded band = 3% ± 1 target',svg,
-      `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> · INPC + target rate.`,tbl,true);
-  }
-  return sectionHead('Background',"Where Mexico's money stands","Inflation sits above Banxico's target, so the bank is holding rates high, and the peso is holding with them.")+
-    ex+
-    mrow({id:'banxico-inflacion',label:'Inflation, annual (CPI)'})+
-    mrow({id:'banxico-inflacion-subyacente',label:'Core inflation, annual'})+
-    mrow({id:'banxico-tasa-objetivo',label:'Banxico policy rate'})+
-    mrow({id:'banxico-usdmxn-fix',label:'Peso · exchange rate (FIX)'})+
-    mrow({id:'banxico-reservas',label:'International reserves'})+
-    fwd(`Banxico's survey (Jul 2026) sees inflation at <b>4.2%</b> end-2026, the rate on hold at <b>6.50%</b>, the peso near <b>17.95</b>. <a href="/#q10">Outlook →</a>`)+
-    `<div class="ctxline">Gloss: <b>Banxico</b> = the central bank · <b>INPC</b> = the consumer price index · <b>FIX</b> = Banxico's official daily reference rate.</div>`;
+/* Poverty is a static, human-entered figure (no live series). Authored ONCE here and
+   rendered into BOTH the board tile and the Background staticRow, so the two can never
+   disagree — the same "same-source" law the live tiles follow. Migrated verbatim from Q6. */
+const POVERTY={
+  rate:'29.6', unit:'% of population', tileUnit:'% of pop.', year:'2024',
+  prior:'41.9', priorYear:'2018', dropPp:'12.3', fewer:'13.4M',
+  stamp:'ANNUAL · 2024',
+  srcName:'INEGI — Multidimensional Poverty 2024',
+  srcUrl:'https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2025/pm/pm2025_08.pdf'
+};
+function povertyTile(P){
+  return `<div class="tile"><div class="tl">Poverty · national</div>`+
+    `<div class="tv">${P.rate} <small>${P.tileUnit}</small></div>`+
+    `<span class="dl dn">−${P.dropPp}pp <small>vs ${P.priorYear}</small></span>`+
+    `<div class="tb">lowest on record</div>`+
+    `<span class="stamp">${P.stamp}</span><span class="tsrc">INEGI / CONEVAL</span></div>`;
 }
 
-/* block 4 — money-relevant catalyst calendar (central bank / inflation) */
+/* the live tile board (block 2) — poverty headline + the same JSON as the metric rows below */
+const TILES=[
+  {id:'banxico-salario-minimo',l:'Minimum wage · daily',per:'vs a year ago'},
+  {id:'banxico-remesas',l:'Remittances · month',per:'vs prior month'},
+  {id:'wb-unemployment',l:'Unemployment',per:'vs prior year'},
+  {id:'wb-gdp-per-capita',l:'Income per person',per:'vs prior year'},
+  {id:'wb-population',l:'Population',per:'vs prior year'},
+];
+
+/* block 3 — the migrated Q6 "are people better off?" exhibit + metric rows + poverty +
+   the IMSS not-yet-wired row + forward line + gloss, built exactly as index.njk builds it. */
+function renderBackground(){
+  const sal=S['banxico-salario-minimo'];
+  let ex='';
+  if(sal){
+    const svg=timeChart([{name:'Min wage',color:'green',pts:sal.data.slice(-14)}],{unit:'$',xfmt:(d)=>String(new Date(d).getUTCFullYear())});
+    ex=exhibit('6.1','The minimum wage has doubled since 2018, by policy','General minimum wage, MXN per day (nominal)',svg,
+      `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> / CONASAMI.`);
+  }
+  const P=POVERTY;
+  return sectionHead('Background','Living standards are rising, but weak growth caps the pace.','The minimum wage has doubled since 2018, remittances are near record highs, and poverty fell to a record low in 2024.')+
+    ex+
+    mrow({id:'banxico-salario-minimo',label:'General minimum wage'})+
+    mrow({id:'banxico-remesas',label:'Remittances (family, monthly)'})+
+    mrow({id:'cre-gasolina-regular',label:'Gasoline · regular (national avg)'})+
+    staticRow({label:'Poverty (national)',value:P.rate,unit:P.unit,stamp:P.stamp,
+      verdict:`Multidimensional poverty fell to <b>${P.rate}%</b> in ${P.year}, the lowest on record, down ${P.dropPp} points from ${P.prior}% in ${P.priorYear} (${P.fewer} fewer people in poverty). It is INEGI's first poverty measurement since it took over from CONEVAL.`,
+      bench:`vs ${P.prior}% in ${P.priorYear}`,srcName:P.srcName,srcUrl:P.srcUrl})+
+    construccion({l:'Formal jobs & average formal wage (IMSS)',src:'IMSS (Datos Abiertos)',cad:'monthly',eta:'National totals — connecting next.'})+
+    fwd(`No official forecast exists for household welfare. Real wages keep rising by policy, but weak GDP growth (<a href="/#q4">Q4</a>) caps the pace.`)+
+    `<div class="ctxline">Gloss: <b>CONEVAL</b> = the federal poverty agency · <b>IMSS</b> = social security, i.e. the formal-jobs registry · <b>remittances</b> = money Mexicans abroad send home.</div>`;
+}
+
+/* block 4 — society-relevant catalyst calendar (poverty / wages / jobs / migration) */
 function renderWatch(){
   const ev=(EVENTS&&EVENTS.events)||[];
-  const money=ev.filter(e=>{const k=(e.kind||'');
-    if(k==='banxico'||k==='fomc')return true;
-    return /inflaci|cpi|inpc|inflation|tasa|policy rate|peso|banxico|remesas|remittance/i.test((e.label||'')+' '+(e.mechanism||''));});
+  const rx=/pobreza|salario|salarial|empleo|desempleo|desigualdad|migraci|migrante|remesas|remittance|poblaci|imss|trabajador|informal|welfare|bienestar|coneval|conasami|censo|census|wage|poverty|inequality/i;
+  const soc=ev.filter(e=>rx.test((e.label||'')+' '+(e.mechanism||'')+' '+(e.kind||'')));
   const now=Date.now();
-  const up=money.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
-  if(!up.length) return `<div class="cb-empty">No money events on the calendar yet.</div>`;
+  const up=soc.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  if(!up.length) return `<div class="cb-empty">Nothing is on the society calendar yet. Poverty, wage and jobs releases appear here once they're scheduled.</div>`;
   return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind||''}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
-/* block 5 — latest markets/money headlines */
+/* block 5 — latest society headlines (wages, jobs, poverty, migration) */
 function renderWire(){
   const arts=(NEWS&&NEWS.articles)||[];
-  const money=arts.filter(a=>{const t=(a.tag||'');
-    if(['markets','money','economy','trade'].includes(t))return true;
-    return /peso|inflation|banxico|rate|remittance|remesas|market|econom|tariff|trade|usmca|nearshor|invest/i.test(a.title||'');});
-  if(!money.length) return `<div class="cb-empty">No headlines yet — the next scheduled run will post them here.</div>`;
-  return `<div class="wire">`+money.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
+  const rx=/pobreza|salario|salarial|empleo|desempleo|desigualdad|migraci|migrante|remesas|remittance|poblaci|imss|trabajador|informal|welfare|bienestar|coneval|conasami|pension|jornada|desarrollo humano|social|wage|poverty|inequality|\bjobs\b|\blabor\b/i;
+  const soc=arts.filter(a=>rx.test(a.title||''));
+  if(!soc.length) return `<div class="cb-empty">No society headlines yet. The next scheduled run will post them here.</div>`;
+  return `<div class="wire">`+soc.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
     return `<div class="wi">${tagChip(a.tag)}<div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
 /* boot */
 (async()=>{
-  await loadSeries();
-  // as-of = freshest fetch across the loaded money series
+  await loadSeries(SOCIETY_SERIES);
+  // as-of = freshest fetch across the loaded society series
   const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t);
   if(times.length){
     const newest=new Date(Math.max(...times));
     document.getElementById('asof').textContent=newest.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
-  document.getElementById('tablero').innerHTML=TILES.map(t=>tile(t,{src:true})).join('');
+  document.getElementById('tablero').innerHTML=povertyTile(POVERTY)+TILES.map(t=>tile(t,{src:true})).join('');
   document.getElementById('background').innerHTML=renderBackground();
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
@@ -288,7 +339,19 @@ function renderWire(){
   // tile → scroll to its metric row in Background
   document.getElementById('tablero').addEventListener('click',(e)=>{const t=e.target.closest('[data-go]');if(!t)return;const row=document.querySelector('[data-metric="'+t.getAttribute('data-go')+'"]');if(row)row.scrollIntoView({behavior:'smooth',block:'center'});});
 })().catch(e=>{
-  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading money data: '+e.message+'</p>';
+  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading society data: '+e.message+'</p>';
 });
 </script>
-{% endraw %}
+
+</content>
+</invoke>
+
+<footer class="foot"><div class="wrap">
+  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a></nav>
+  <p class="fblurb">A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.</p>
+</div></footer>
+
+<script>document.addEventListener('click',function(e){var b=e.target.closest('.navtoggle');if(!b)return;b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');});</script>
+
+</body>
+</html>

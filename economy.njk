@@ -2,7 +2,7 @@
 layout: base.njk
 permalink: /economy.html
 title: "The Economy — The Mexico Brief"
-description: "What Mexico's economy is actually made of: GDP by sector and spending, growth, exports and imports broken out, the trade balance, the informal economy, and the money flowing in. Official, dated, sourced."
+description: "What Mexico's economy is made of: GDP by sector and spending, growth, exports and imports broken out, the trade balance, the informal economy, and the money flowing in. Every figure links to the official series it came from."
 ---
 {% raw %}
 <style>
@@ -157,39 +157,39 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   // 2 · what Mexico makes
   H+=ex('1','It\'s a services economy with an unusually big factory floor','Gross value added by sector, '+E.sectors.unit,
     stack100(E.sectors.segments),
-    'Services are nearly <b>60% of output</b>; industry a third (manufacturing alone is a fifth). Agriculture, the image many outsiders hold, is under 4%.',
+    'Services are nearly <b>60% of output</b>; industry a third (manufacturing alone is a fifth). Agriculture is under 4%.',
     srcLine(E.sectors));
   // 3 · who spends it
-  H+=ex('2','Consumption dominates; trade is huge on both sides and nets to zero','GDP by expenditure, '+E.expenditure.unit,
+  H+=ex('2','Consumption dominates; trade is large on both sides and nets to roughly zero','GDP by expenditure, '+E.expenditure.unit,
     divBar(E.expenditure.items),
     E.expenditure.note,srcLine(E.expenditure));
   // 4 · growth
   H+=ex('3','The post-COVID rebound is spent','Real GDP growth, % change year-on-year',
     line(E.growth.points),E.growth.note,srcLine(E.growth));
   // 5 · the machine (exports vs imports + imports by use)
-  H+=ex('4','The machine: it imports parts and exports finished goods','Goods exports vs imports, US$ bn, 2015–2024',
+  H+=ex('4','It imports parts and exports finished goods','Goods exports vs imports, US$ bn, 2015–2024',
     dualLine(E.trade.series.imports,E.trade.series.exports),
-    `2024: <b>$${E.trade.exports}bn exports, $${E.trade.imports}bn imports</b> — a $${Math.abs(E.trade.balance)}bn deficit. But look at what the imports are:`+
+    `2024: <b>$${E.trade.exports}bn exports, $${E.trade.imports}bn imports</b>, a $${Math.abs(E.trade.balance)}bn deficit. Most of those imports are factory inputs:`+
     stack100(E.trade.importsByUse)+ E.trade.note, srcLine(E.trade));
   // 6 · partners
-  H+=ex('5','One customer, many suppliers','Trade partners, share, 2024',
+  H+=ex('5','Most exports go to the United States; imports come from many countries','Trade partners, share, 2024',
     `<div style="font-family:var(--mono);font-size:12px;color:var(--mut);margin:2px 0 4px">Exports go to →</div>`+ranked(E.partners.exports,{pl:150})+
     `<div style="font-family:var(--mono);font-size:12px;color:var(--mut);margin:14px 0 4px">Imports come from ←</div>`+ranked(E.partners.imports,{pl:150}),
     E.partners.note,srcLine(E.partners));
   // 6 · the US relationship, live monthly (US Census)
-  if(TR&&TR.topImports){H+=ex('6','What the United States actually buys from Mexico','US imports from Mexico by product, trailing 12 months, US$ bn',
+  if(TR&&TR.topImports){H+=ex('6','What the United States buys from Mexico','US imports from Mexico by product, trailing 12 months, US$ bn',
     ranked(TR.topImports.map((t,i)=>({label:t.name,value:t.value_bn,hi:i===0})),{vfmt:(v)=>'$'+v+'bn',pl:210}),
-    `In ${TR.latest.month} the US bought <b>$${TR.latest.imports_bn}bn</b> from Mexico and sold it $${TR.latest.exports_bn}bn, <b>$${TR.latest.twoway_bn}bn</b> of two-way trade in a single month. Machinery, vehicles, and electronics are most of it. Mexico assembles, the US buys.`,
+    `In ${TR.latest.month} the US bought <b>$${TR.latest.imports_bn}bn</b> from Mexico and sold it $${TR.latest.exports_bn}bn, for <b>$${TR.latest.twoway_bn}bn</b> of two-way trade in the month. Machinery, vehicles, and electronics are most of what Mexico sends north.`,
     srcLine({source:TR.meta.source,sourceUrl:TR.meta.sourceUrl,unit:'US$ bn · monthly · latest '+TR.meta.latestMonth}));}
   // 7 · what comes in / goes out
-  H+=ex('7','What comes in is factory feedstock; what goes out is cars','Top import products, US$ bn, 2024',
+  H+=ex('7','Imports are factory inputs; the top export is vehicles','Top import products, US$ bn, 2024',
     ranked(E.products.imports,{vfmt:(v)=>'$'+v+'bn',pl:160})+
     `<div style="margin-top:14px;font-size:14px;color:var(--ink-2)">Out: <b>${E.products.exportsHi.label} — $${E.products.exportsHi.value}bn</b>, and manufactured goods are 89.8% of exports. <span class="nyw">export ranking not yet wired</span></div>`,
     E.products.note,srcLine(E.products));
   // 8 · two economies
-  H+=ex('8','Half the country works off the books — and makes a quarter of the output','Informal vs formal: share of jobs vs share of GDP',
+  H+=ex('8','Half the country works off the books and makes a quarter of the output','Informal vs formal: share of jobs vs share of GDP',
     dumbbell(E.informal.dumbbells)+
-    `<div style="margin-top:16px"><div style="font-family:var(--mono);font-size:12px;color:var(--mut);margin-bottom:4px">Informality by state — the same fact, drawn north vs south</div>`+
+    `<div style="margin-top:16px"><div style="font-family:var(--mono);font-size:12px;color:var(--mut);margin-bottom:4px">Informality by state: highest in the south, lowest in the north</div>`+
     ranked(E.informal.states,{vfmt:(v)=>v+'%',pl:150})+`</div>`,
     E.informal.note,srcLine(E.informal));
   // 9 · money flows

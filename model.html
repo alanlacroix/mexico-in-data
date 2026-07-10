@@ -4,15 +4,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>The Model — The Mexico Brief</title>
-<meta name="description" content="A teaching model of Mexico&#39;s economy: pull the levers (US tariffs, the Fed, oil, US demand) and watch the causal chain move the peso, inflation, Banxico&#39;s rate and growth. Directions and rough magnitudes — not a forecast." />
+<meta name="description" content="A model of Mexico&#39;s economy you can run: set US tariffs, the Fed, oil, and US demand and watch the causal chain move the peso, inflation, Banxico&#39;s rate, and growth. It shows the direction and rough size of each move, not a forecast." />
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="The Model — The Mexico Brief" />
-<meta property="og:description" content="A teaching model of Mexico&#39;s economy: pull the levers (US tariffs, the Fed, oil, US demand) and watch the causal chain move the peso, inflation, Banxico&#39;s rate and growth. Directions and rough magnitudes — not a forecast." />
+<meta property="og:description" content="A model of Mexico&#39;s economy you can run: set US tariffs, the Fed, oil, and US demand and watch the causal chain move the peso, inflation, Banxico&#39;s rate, and growth. It shows the direction and rough size of each move, not a forecast." />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=cc83d16f" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=ffaa610b" />
 
 
 </head>
@@ -23,10 +23,12 @@
   <nav class="mnav" id="sitenav">
     <a href="/economy.html">Economy</a>
     <a href="/money.html">Money</a>
-    <a href="/model.html" class="here">Model</a>
+    <a href="/politics.html">Politics</a>
+    <a href="/security.html">Security</a>
+    <a href="/society.html">Society</a>
+    <a href="/us-mexico.html">U.S.–Mexico</a>
     <a href="/atlas.html">Atlas</a>
-    <a href="/sources.html">Sources</a>
-    <a href="/about.html">About</a>
+    <a href="/model.html" class="here">Model</a>
     <a href="/weekly.html" class="cta">Weekly</a>
   </nav>
 </div></header>
@@ -91,10 +93,10 @@
 
 <div class="wrap">
   <section class="hero">
-    <span class="eyebrow">The what-if engine</span>
+    <span class="eyebrow">Interactive model</span>
     <h1>The Model <span class="mst" style="vertical-align:middle">MODEL</span></h1>
     <p class="dek">Move a lever and see how it changes the peso, inflation, Banxico's rate, and growth. Start with one of the preset scenarios, then adjust the sliders yourself.</p>
-    <div class="modelnote"><b>This is a teaching model of directions and rough magnitudes, built from sourced elasticities (footnoted below). It is not a forecast.</b> Every output carries the <span class="mst">MODEL</span> stamp; nothing here is live data. For the real current readings, see the <a href="./">Briefing</a>.</div>
+    <div class="modelnote">This model shows the direction and rough size of each move, computed from the sourced elasticities footnoted below. It is not a forecast. Every output carries the <span class="mst">MODEL</span> stamp, and none of it is live data. For the current readings, see the <a href="./">Briefing</a>.</div>
   </section>
 
   <div class="presetbar" id="presetbar"></div>
@@ -102,7 +104,7 @@
   <div class="panel">
     <div class="card">
       <h3>The levers</h3>
-      <div class="csub">Four external forces that move Mexico first</div>
+      <div class="csub">Four external forces you set as inputs</div>
       <div id="levers"></div>
     </div>
     <div class="card">
@@ -119,7 +121,7 @@
 
   <div class="elast">
     <div class="section-head"><h2>The elasticities (footnoted)</h2></div>
-    <p style="font-size:13.5px;color:var(--ink-2);margin-bottom:10px">Directional coefficients, chosen to teach mechanism and rough scale — not calibrated to the last basis point. Sources are the standard literature and Banxico/INEGI structure; a serious forecast would estimate these on data. Two honest limits: Banxico's rate here feeds only growth, so a hike neither disinflates nor defends the peso in this toy; and it is a <b>marginal</b> tool — the far ends of the sliders understate a real crisis rather than exaggerate it.</p>
+    <p style="font-size:13.5px;color:var(--ink-2);margin-bottom:10px">These coefficients are directional. They capture the mechanism and rough scale rather than values estimated to the last basis point, and they come from the standard literature and the structure of Banxico and INEGI data; a real forecast would estimate them on data. Two limits to read them by. First, Banxico's rate here feeds only growth, so a hike neither disinflates nor defends the peso in this model. Second, the coefficients are marginal, so the far ends of the sliders understate a real crisis rather than exaggerate it.</p>
     <div class="tblwrap"><table class="mck" id="elast"></table></div>
   </div>
 </div>
@@ -132,11 +134,11 @@ const OUT0={ peso:17.60, infl:3.9, rate:6.50, gdp:1.1 };    // output baselines 
 
 const LEVERS=[
   {k:'tariff',l:'US tariff on Mexican goods',min:0,max:25,step:1,unit:'%',
-   hint:'<b>Today about 4% effective.</b> Most goods still enter the US free under USMCA; 4% is the trade-weighted average after 2025 actions. Move it up if the 2026 USMCA review breaks down or a new Section 232/301 case lands — the 2018–19 metals tariffs ran 10–25% on covered lines. 0% is full free trade.'},
+   hint:'<b>Today about 4% effective.</b> Most goods still enter the US free under USMCA; 4% is the trade-weighted average after 2025 actions. Move it up if the 2026 USMCA review breaks down or a new Section 232/301 case lands. The 2018–19 metals tariffs ran 10–25% on covered lines. 0% is full free trade.'},
   {k:'fed',l:'US Fed rate, change from today',min:-3,max:3,step:0.25,unit:' pp',
    hint:'<b>Change from the current US policy rate (about 4.25–4.50%).</b> Markets price cuts into 2026, so −1 to −2pp is a clean easing cycle; +1pp means US inflation reignites and hikes come back. It reaches Mexico mainly through the rate gap that holds the peso up.'},
   {k:'oil',l:'Global crude price',min:30,max:110,step:5,unit:' $/bbl',
-   hint:'<b>Today about $65 (Brent).</b> Mexico imports fuel but exports crude, so this is mostly a fiscal and Pemex lever now, not a growth one — the peso oil link has faded. $40 is a demand slump or price war; $90+ a supply shock.'},
+   hint:'<b>Today about $65 (Brent).</b> Mexico imports fuel but exports crude, so this is mostly a fiscal and Pemex lever now, not a growth one. The peso-oil link has faded. $40 is a demand slump or price war; $90+ a supply shock.'},
   {k:'usg',l:'US GDP growth',min:-1,max:4,step:0.1,unit:'%',
    hint:'<b>US real growth, about 2.3% now.</b> Around 80% of Mexico exports go north, so this is the single biggest external pull on Mexican growth. Below 0 is a US recession pulling Mexico down; 3–4% a US boom lifting it.'}
 ];
@@ -164,9 +166,9 @@ function model(s){
   return {peso,infl,rate,gdp};
 }
 const OUTDEF=[
-  {k:'peso',l:'Peso',unit:'MXN/USD',dp:2,goodUp:false,note:(o)=>o.peso>OUT0.peso?'Weaker peso — imported inflation pressure.':'Firmer peso.'},
-  {k:'infl',l:'Inflation',unit:'% headline',dp:1,goodUp:false,note:(o)=>o.infl>4?'Above Banxico\'s 3% ± 1 band.':'Toward target.'},
-  {k:'rate',l:'Banxico policy rate',unit:'%',dp:2,goodUp:false,note:(o)=>o.rate>OUT0.rate?'Forced to stay tight.':'Room to ease.'},
+  {k:'peso',l:'Peso',unit:'MXN/USD',dp:2,goodUp:false,note:(o)=>o.peso>OUT0.peso?'A weaker peso adds imported inflation.':'The peso firms.'},
+  {k:'infl',l:'Inflation',unit:'% headline',dp:1,goodUp:false,note:(o)=>o.infl>4?'Above Banxico\'s 3% ±1 band.':'Inside the 3% ±1 band.'},
+  {k:'rate',l:'Banxico policy rate',unit:'%',dp:2,goodUp:false,note:(o)=>o.rate>OUT0.rate?'Held higher to fight inflation.':'Room to ease.'},
   {k:'gdp',l:'GDP growth',unit:'% real',dp:1,goodUp:true,note:(o)=>o.gdp<1?'Near or below stall speed.':'Modest expansion.'}
 ];
 
@@ -237,13 +239,13 @@ function renderDiagram(){
 
 const ELAST=[
   ['US tariff → peso','+0.06 MXN/USD per +1pp','Trade-cost / current-account shock weakens FX. Linear here; a real 25% tariff would bite harder and non-linearly.'],
-  ['US rate → peso','+0.45 MXN/USD per +1pp','Rate differential drives carry (~2.6% per 100bp) — the dominant near-term FX driver.'],
+  ['US rate → peso','+0.45 MXN/USD per +1pp','Rate differential drives carry (~2.6% per 100bp), the dominant near-term FX driver.'],
   ['Oil → peso','+0.005 MXN/USD per −$1/bbl','Faint Pemex/fiscal echo, kept small on purpose: the sign is contested now that Mexico is a net fuel importer.'],
   ['US growth → peso','−0.30 MXN/USD per +1pp','Stronger US demand firms the peso (~1.7% per +1pp).'],
-  ['Peso → inflation','+0.15pp CPI per +1 MXN/USD','Exchange-rate pass-through ~0.026 on impact, larger over time. This is how a tariff reaches Mexican CPI — through the peso, not directly.'],
+  ['Peso → inflation','+0.15pp CPI per +1 MXN/USD','Exchange-rate pass-through ~0.026 on impact, larger over time. A tariff reaches Mexican CPI through the weaker peso, not as a direct price effect.'],
   ['Inflation → Banxico','+1.2pp rate per +1pp gap','Taylor-type, response above 1 (the Taylor principle), floored at 0.'],
   ['US rate → Banxico','+0.3pp per +1pp','Follows the Fed both ways: hikes to defend the peso, room to ease when the Fed eases.'],
-  ['Tariff → GDP','−0.13pp per +1pp','Exports ≈30% of GDP, ~80% US-bound — sized to actually bite; realistically convex past USMCA-breaking levels.'],
+  ['Tariff → GDP','−0.13pp per +1pp','Exports ≈30% of GDP, ~80% US-bound, so this is sized to actually bite; realistically convex past USMCA-breaking levels.'],
   ['US growth → GDP','+0.55pp per +1pp','The US-tether elasticity (could be 0.7–1.0 vs US industrial output).'],
   ['Rate → GDP','−0.12pp per +1pp','Tighter policy drags activity, with a lag.']
 ];
@@ -255,7 +257,7 @@ renderPresets(); renderLevers(); renderElast(); update();
 
 
 <footer class="foot"><div class="wrap">
-  <nav class="fnav"><a href="/economy.html">Economy</a><a href="/money.html">Money</a><a href="/model.html">Model</a><a href="/atlas.html">Atlas</a><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a></nav>
+  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a></nav>
   <p class="fblurb">A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.</p>
 </div></footer>
 

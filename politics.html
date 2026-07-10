@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Money — The Mexico Brief</title>
-<meta name="description" content="Mexico&#39;s money, in official numbers: the peso, headline and core inflation, Banxico&#39;s policy rate, international reserves and remittances. Every figure is dated and one tap from its source." />
+<title>Politics — The Mexico Brief</title>
+<meta name="description" content="Who governs Mexico, in dated facts: President Sheinbaum, Morena&#39;s congressional supermajority, the elected judiciary, presidential approval, and the June 2027 midterm calendar. Every figure links to its source with the date it was published." />
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Money — The Mexico Brief" />
-<meta property="og:description" content="The peso, inflation, and Banxico&#39;s rate, each dated and linked to its source." />
+<meta property="og:title" content="Politics — The Mexico Brief" />
+<meta property="og:description" content="Sheinbaum, Morena&#39;s supermajority, and the June 2027 midterms. Every figure links to its source with its date; the one poll is stamped as a poll." />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
@@ -22,8 +22,8 @@
   <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
   <nav class="mnav" id="sitenav">
     <a href="/economy.html">Economy</a>
-    <a href="/money.html" class="here">Money</a>
-    <a href="/politics.html">Politics</a>
+    <a href="/money.html">Money</a>
+    <a href="/politics.html" class="here">Politics</a>
     <a href="/security.html">Security</a>
     <a href="/society.html">Society</a>
     <a href="/us-mexico.html">U.S.–Mexico</a>
@@ -101,54 +101,23 @@
   svg.spark path{fill:none;stroke:var(--ink-3);stroke-width:1.3}
   svg.spark circle{fill:var(--green)}
 
-  /* EXHIBIT (chart) frame */
-  .exwrap{margin:16px 0 8px}
-  .exwrap.wide{background:var(--paper-2);border-radius:5px;padding:18px 20px;margin:16px 0}
-  .ex-tag{width:26px;height:5px;background:var(--green);border-radius:1px;margin-bottom:7px}
-  .ex-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-  .ex-no{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .ex-title{font-family:var(--serif);font-size:19px;line-height:1.22;margin:3px 0 2px;color:var(--ink);letter-spacing:-.005em}
-  .ex-sub{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-bottom:8px}
-  .ex-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:7px;line-height:1.5}
-  .ex-src a{color:var(--green)}
-  .ex-toggle{display:flex;gap:5px}
-  .ex-toggle button{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;padding:3px 9px;border:1px solid var(--line-2);background:var(--paper);border-radius:6px;color:var(--mut);cursor:pointer}
-  .ex-toggle button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  svg.chart{display:block;width:100%;height:auto}
-  .chart .gl{stroke:var(--line);stroke-width:1}
-  .chart .axl{font-family:var(--mono);font-size:10px;fill:var(--mut)}
-  .chart .band{fill:var(--green-bg);opacity:.55}
-  .chart .bandl{font-family:var(--mono);font-size:9px;fill:var(--green-d)}
-  .chart .ln{fill:none;stroke:var(--ink);stroke-width:2}
-  .chart .ln2{fill:none;stroke:var(--green);stroke-width:2}
-  .chart .zero{stroke:var(--ink-3);stroke-width:1}
-  .chart .bar{fill:#b8b8b0} .chart .bar2{fill:var(--green)}
-  .chart .dot{fill:var(--green);stroke:#fff;stroke-width:1.5}
-  .chart .vlab{font-family:var(--mono);font-size:10px;font-variant-numeric:tabular-nums}
-  .chart .endlab{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
-  .chart .cat{font-family:var(--sans);font-size:11px;fill:var(--ink)}
-  .chart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2;opacity:0}
-  .chart .hdot{opacity:0}
-  .charttip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 10px;border-radius:6px;opacity:0;transition:opacity .08s;z-index:70;min-width:120px}
-  .charttip b{font-family:var(--serif);font-size:12px;color:#fff}
-  .charttip .tr{display:flex;justify-content:space-between;gap:12px;margin-top:3px}
-  .charttip .tr i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px;vertical-align:middle}
-  .charttip .tr .nm{color:#cfcfc9}
-  .charttip .tr .vv{font-variant-numeric:tabular-nums}
+  /* fact card (migrated from index.njk's inline style — q7 uses it) */
+  .factcard{border:1px solid var(--line-2);border-radius:10px;padding:15px 17px;margin:10px 0 4px}
+  .factcard .fc-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .factcard .fc-row:last-child{border-bottom:none}
+  .factcard .fc-k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);flex:1}
+  .factcard .fc-v{color:var(--ink);text-align:right;flex:1.3;line-height:1.4}
+  .factcard .fc-v b{color:var(--ink)}
+  .factcard .fc-v a{color:var(--green)}
 
-  /* data table (chart alt) */
-  .dtbl{overflow-x:auto}
-  table.dt{border-collapse:collapse;width:100%;font-size:13px}
-  table.dt th,table.dt td{padding:7px 12px;border-bottom:1px solid var(--line);text-align:right}
-  table.dt thead th{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border-bottom:1.5px solid var(--line-2)}
-  table.dt td.k,table.dt th.k{text-align:left;font-family:var(--sans);color:var(--ink)}
-  table.dt td{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
-
-  /* forward line + gloss + honesty */
-  .fwdline{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:10px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:2px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
-  .fwdline b{color:var(--green-d)} .fwdline a{color:var(--green)}
+  /* honesty note + gloss (migrated from index.njk's inline style) */
+  .honesty{font-family:var(--mono);font-size:11px;color:var(--amber2);background:var(--amber-bg2);border-radius:8px;padding:9px 13px;margin:8px 0 4px;line-height:1.5}
   .ctxline{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.6;padding-top:10px;border-top:1px solid var(--line)}
   .ctxline b{color:var(--ink)}
+
+  /* forward line */
+  .fwdline{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:10px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:2px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
+  .fwdline b{color:var(--green-d)} .fwdline a{color:var(--green)}
 
   /* 4 · what to watch */
   .watchtbl{margin:10px 0 4px}
@@ -156,8 +125,9 @@
   .watchtbl .wtr:last-child{border-bottom:none}
   .watchtbl .wtr .wd{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:88px;font-variant-numeric:tabular-nums}
   .watchtbl .wtr .wk{width:3px;align-self:stretch;border-radius:2px;background:var(--line-2)}
+  .watchtbl .wtr .wk.political,.watchtbl .wtr .wk.election{background:var(--green)}
   .watchtbl .wtr .wk.banxico,.watchtbl .wtr .wk.fomc{background:var(--green)}
-  .watchtbl .wtr .wk.trade{background:var(--amber2)}
+  .watchtbl .wtr .wk.trade,.watchtbl .wtr .wk.fiscal{background:var(--amber2)}
   .watchtbl .wtr .wt{font-size:14px;color:var(--ink);flex:1}
   .watchtbl .wtr .wm{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:2px}
   .watchtbl .wtr .wsrc{font-family:var(--mono);font-size:9.5px}
@@ -167,7 +137,7 @@
   .wire .wi{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:11px;align-items:baseline}
   .wire .wi:last-child{border-bottom:none}
   .wire .wtag{font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px}
-  .wire .wtag.markets{color:var(--green-d);border-color:var(--green-bg)}
+  .wire .wtag.politics{color:var(--green-d);border-color:var(--green-bg)}
   .wire .wtag.trade{color:var(--amber2);border-color:var(--amber-bg2)}
   .wire .wbody{flex:1}
   .wire .wt{font-size:14px;color:var(--ink);line-height:1.35;text-decoration:none}
@@ -191,44 +161,45 @@
 
   <!-- 1 · HEADER -->
   <section class="hero" id="top">
-    <span class="eyebrow">Money</span>
-    <h1 class="state">Inflation is easing toward Banxico's target while the bank holds rates high and the peso holds with them.</h1>
+    <span class="eyebrow">Politics</span>
+    <h1 class="state">One party governs with a supermajority; the president is popular but slipping.</h1>
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
-      <div><span class="no">01</span> &nbsp; <h2 style="display:inline">The numbers now</h2></div>
+      <div><span class="no">01</span> &nbsp; <h2 style="display:inline">The state of play now</h2></div>
       <span class="asof" id="board-asof"></span>
     </div>
     <div class="tablero" id="tablero"></div>
+    <p class="blk-note">Politics has no official real-time series, so these are dated facts rather than a live feed. The one poll figure is stamped with its polling house and field date.</p>
   </section>
 
-  <!-- 3 · BACKGROUND (migrated from the homepage's Q3) -->
+  <!-- 3 · BACKGROUND (migrated from the homepage's Q7) -->
   <section class="blk" id="background"></section>
 
   <!-- 4 · WHAT TO WATCH -->
   <section class="blk" id="watch">
-    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">The next central-bank decisions and inflation releases, each with its scheduled date and source.</p></div>
+    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">Scheduled political events: the annual Informe, the June 2027 midterms, and the events that test the supermajority.</p></div>
     <div id="watch-list"></div>
   </section>
 
   <!-- 5 · LATEST -->
   <section class="blk" id="latest">
-    <div class="section-head"><span class="no">The Wire</span><h2>Latest</h2><p class="dek">Markets and money headlines, each dated and linked to its source.</p></div>
+    <div class="section-head"><span class="no">The Wire</span><h2>Latest</h2><p class="dek">Government and politics headlines, each dated and linked to its source.</p></div>
     <div id="wire-list"></div>
-    <p class="wire-note">Each headline links to its original source. Fuller summaries are coming.</p>
+    <p class="wire-note">Fuller summaries are coming. For now each headline links to its original source.</p>
   </section>
 
   <!-- 6 · TOOLS & SOURCES -->
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Pull a lever (the Fed, tariffs, oil) and see how the peso, inflation, and Banxico's rate respond. It shows the modeled direction and rough size of the move.</div></a>
+      <a href="/#q7"><div class="tk">Context</div><div class="th">The full briefing →</div><div class="td">The full governance question on the homepage, alongside the US relationship, security, and the outlook.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE</a> (peso FIX, policy rate, reserves, remittances) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (INPC, the consumer-price index). Every figure above is dated and one tap from its source.</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.ine.mx/voto-y-elecciones/calendario-electoral/" target="_blank" rel="noopener">INE</a> (electoral calendar &amp; results) · <a href="https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum" target="_blank" rel="noopener">AS/COA Approval Tracker</a> (Mitofsky · AtlasIntel) · <a href="https://www.diputados.gob.mx" target="_blank" rel="noopener">Cámara de Diputados</a> &amp; <a href="https://www.gob.mx/presidencia" target="_blank" rel="noopener">Presidencia</a> (composition, the Informe). Each fact above carries its date and links to the source listed here.</p>
   </section>
 
 </div>
@@ -236,86 +207,89 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts } from '/assets/mb.js';
+import { loadSeries, EVENTS, NEWS, sectionHead, staticRow, fwd, evDate, relTime, tagChip } from '/assets/mb.js';
 
-/* the live tile board (block 2) — same JSON as the metric rows below */
+/* the politics keyword filter — shared by the calendar (block 4) and the wire (block 5).
+   Spanish + English institution words; \b guards stop "selecciones" matching "elecci" etc. */
+const POL_RX=/sheinbaum|morena|gobierno|pol[ií]tic|\belecc|\belect|comicios|congreso|senado|diputad|judicial|oposici|\bpan\b|\bpri\b|gobernador|gubernatur|informe|constituc|government|\bcongress|senate|\belection|midterm|opposition|\bpresident|\bminister|cabinet/i;
+
+/* block 2 — the state-of-play board. Politics has no live series, so these are dated
+   static facts drawn from the SAME q7 source content as the fact card below (never a
+   re-authored live number). The one poll figure carries a "not live" chip. */
 const TILES=[
-  {id:'banxico-usdmxn-fix',l:'Peso · MXN/USD',per:'vs yesterday'},
-  {id:'banxico-inflacion',l:'Inflation · annual',per:'vs prior month'},
-  {id:'banxico-inflacion-subyacente',l:'Core inflation · annual',per:'vs prior month'},
-  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',per:'vs 2024'},
-  {id:'banxico-reservas',l:"Int'l reserves",per:'vs prior week'},
-  {id:'banxico-remesas',l:'Remittances · month',per:'vs prior month'},
+  {tl:'Head of government', tv:'Sheinbaum', sz:23, tb:'Claudia Sheinbaum · Morena', stamp:'SWORN IN OCT 2024', tsrc:'Presidencia / INE'},
+  {tl:'Presidential term', tv:'2024–2030', sz:29, tb:'The six-year sexenio · no re-election', stamp:'TO 2030', tsrc:'CPEUM'},
+  {tl:'Congress', tv:'Supermajority', sz:19, tb:'Morena + allies — a qualified bloc able to amend the constitution', stamp:'SINCE 2024', tsrc:'Cámara de Diputados'},
+  {tl:'Judiciary', tv:'Elected', sz:26, tb:'Judges now chosen by popular vote — the 2024–25 reform', stamp:'REFORM 2024–25', tsrc:'DOF / reform'},
+  {tl:'Presidential approval', tv:'49–68 <small>%</small>', tb:'By pollster · Mitofsky ~68, AtlasIntel ~49', stamp:'POLL · JUN 2026', chip:'not live', tsrc:'AS/COA tracker'},
+  {tl:'Next federal vote', tv:'Jun 2027', sz:27, tb:'Midterms — all 500 deputies + 17 governorships', stamp:'SCHEDULED', tsrc:'INE'},
 ];
-
-/* block 3 — the migrated Q3 "money" exhibit + metric rows + forward line, built exactly
-   as index.njk builds it (inflation vs policy rate, band = 3% ± 1, chart<->table toggle) */
-function renderBackground(){
-  const rate=S['banxico-tasa-objetivo'],inf=S['banxico-inflacion'];
-  let ex='';
-  if(rate&&inf){
-    const rr=rate.data.filter(p=>new Date(p.date)>=new Date(Date.now()-2.2*365*864e5)).filter((_,i)=>i%6===0);
-    const ii=inf.data.slice(-Math.min(inf.data.length,30));
-    const svg=timeChart([{name:'Inflation',color:'var(--ink)',pts:ii},{name:'Policy rate',color:'green',pts:rr.length?rr:rate.data.slice(-30)}],{unit:'%',band:[2,4],bandLabel:'3% ± 1 target'});
-    const rateAt=(d)=>{const t=+new Date(d);let best=rate.data[0],bd=1e18;for(const q of rate.data){const dd=Math.abs(+new Date(q.date)-t);if(dd<bd){bd=dd;best=q;}}return best.value;};
-    const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p)=>[qtrOf(p.date),p.value.toFixed(1),rateAt(p.date).toFixed(2)]));
-    ex=exhibit('3.1','Banxico is holding rates high while inflation stays above target','Policy rate vs headline inflation, % · shaded band = 3% ± 1 target',svg,
-      `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> · INPC + target rate.`,tbl,true);
-  }
-  return sectionHead('Background',"Where Mexico's money stands","Inflation sits above Banxico's target, so the bank is holding rates high, and the peso is holding with them.")+
-    ex+
-    mrow({id:'banxico-inflacion',label:'Inflation, annual (CPI)'})+
-    mrow({id:'banxico-inflacion-subyacente',label:'Core inflation, annual'})+
-    mrow({id:'banxico-tasa-objetivo',label:'Banxico policy rate'})+
-    mrow({id:'banxico-usdmxn-fix',label:'Peso · exchange rate (FIX)'})+
-    mrow({id:'banxico-reservas',label:'International reserves'})+
-    fwd(`Banxico's survey (Jul 2026) sees inflation at <b>4.2%</b> end-2026, the rate on hold at <b>6.50%</b>, the peso near <b>17.95</b>. <a href="/#q10">Outlook →</a>`)+
-    `<div class="ctxline">Gloss: <b>Banxico</b> = the central bank · <b>INPC</b> = the consumer price index · <b>FIX</b> = Banxico's official daily reference rate.</div>`;
+function renderTiles(){
+  return TILES.map(t=>`<div class="tile" data-go="background"><div class="tl">${t.tl}</div>`+
+    `<div class="tv"${t.sz?` style="font-size:${t.sz}px"`:''}>${t.tv}</div>`+
+    `<div class="tb">${t.tb}</div>`+
+    `<span class="stamp ${t.stamp&&/POLL/.test(t.stamp)?'':''}">${t.stamp}${t.chip?'<span class="chip-ph">'+t.chip+'</span>':''}</span>`+
+    (t.tsrc?`<span class="tsrc">${t.tsrc}</span>`:'')+`</div>`).join('');
 }
 
-/* block 4 — money-relevant catalyst calendar (central bank / inflation) */
+/* block 3 — the migrated Q7 "who governs" fact card + honesty note + approval poll row +
+   forward line, built exactly as index.njk builds it. No chart: q7 carries no political
+   time series (none exists), so this stays a fact card, not a fabricated exhibit. */
+function renderBackground(){
+  return sectionHead('Background',"Who governs, and is it stable?","One party governs with a supermajority; the president is popular but slipping.")+
+    `<div class="factcard">`+
+      `<div class="fc-row"><span class="fc-k">Head of government</span><span class="fc-v"><b>Claudia Sheinbaum</b> (Morena) · sworn in Oct 2024, term to 2030</span></div>`+
+      `<div class="fc-row"><span class="fc-k">Legislature</span><span class="fc-v">Morena + allies hold a <b>qualified supermajority</b> — able to amend the constitution</span></div>`+
+      `<div class="fc-row"><span class="fc-k">Signature change</span><span class="fc-v">2024–25 judicial reform: judges now <b>elected by popular vote</b></span></div>`+
+      `<div class="fc-row"><span class="fc-k">Next federal vote</span><span class="fc-v"><b>Jun 6, 2027</b> — midterms: all 500 deputies + 17 governorships</span></div>`+
+    `</div>`+
+    `<div class="honesty">No official real-time series exists for political sentiment. The figure below is a named poll, stamped with its polling house and field date.</div>`+
+    staticRow({label:'Presidential approval (Sheinbaum)',value:'49–68',unit:'% (by pollster)',stamp:'POLL · Jun 2026',verdict:'Wide range by method: Mitofsky ~68%, AtlasIntel ~49% (first read below 50%). Trend is gently down from very high levels.',bench:'vs ~60% first-year average',srcName:'AS/COA Approval Tracker (Mitofsky · AtlasIntel)',srcUrl:'https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum'})+
+    fwd(`The <b>2027 midterms</b> are the next scheduled test of the supermajority. <a href="#watch">See what to watch ↓</a>`)+
+    `<div class="ctxline">Gloss: <b>Morena</b> = the governing party (founded 2014) · <b>qualified supermajority</b> = a two-thirds bloc able to amend the constitution · <b>midterms</b> = the mid-sexenio federal vote that renews the entire Chamber of Deputies.</div>`;
+}
+
+/* block 4 — politics-relevant catalyst calendar (kind political/election + keyword match) */
 function renderWatch(){
   const ev=(EVENTS&&EVENTS.events)||[];
-  const money=ev.filter(e=>{const k=(e.kind||'');
-    if(k==='banxico'||k==='fomc')return true;
-    return /inflaci|cpi|inpc|inflation|tasa|policy rate|peso|banxico|remesas|remittance/i.test((e.label||'')+' '+(e.mechanism||''));});
+  const pol=ev.filter(e=>{const k=(e.kind||'');
+    if(k==='political'||k==='election')return true;
+    return POL_RX.test((e.label||'')+' '+(e.mechanism||''));});
   const now=Date.now();
-  const up=money.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
-  if(!up.length) return `<div class="cb-empty">No money events on the calendar yet.</div>`;
+  const up=pol.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  if(!up.length) return `<div class="cb-empty">Nothing dated on the political calendar yet — scheduled events will appear here as they are set.</div>`;
   return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind||''}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
-/* block 5 — latest markets/money headlines */
+/* block 5 — latest government/politics headlines */
 function renderWire(){
   const arts=(NEWS&&NEWS.articles)||[];
-  const money=arts.filter(a=>{const t=(a.tag||'');
-    if(['markets','money','economy','trade'].includes(t))return true;
-    return /peso|inflation|banxico|rate|remittance|remesas|market|econom|tariff|trade|usmca|nearshor|invest/i.test(a.title||'');});
-  if(!money.length) return `<div class="cb-empty">No headlines yet — the next scheduled run will post them here.</div>`;
-  return `<div class="wire">`+money.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
+  const pol=arts.filter(a=>{const t=(a.tag||'').toLowerCase();
+    if(['politics','government','policy'].includes(t))return true;
+    return POL_RX.test((a.title||'')+' '+(a.beat||''));});
+  if(!pol.length) return `<div class="cb-empty">No political headlines in the latest run — the next scheduled fetch will post them here.</div>`;
+  return `<div class="wire">`+pol.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
     return `<div class="wi">${tagChip(a.tag)}<div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
 /* boot */
 (async()=>{
-  await loadSeries();
-  // as-of = freshest fetch across the loaded money series
-  const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t);
-  if(times.length){
-    const newest=new Date(Math.max(...times));
-    document.getElementById('asof').textContent=newest.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  }
-  document.getElementById('tablero').innerHTML=TILES.map(t=>tile(t,{src:true})).join('');
+  await loadSeries([]); // no money series for politics — just populates NEWS + EVENTS
+  // as-of = the dated stamp on the facts wired to this page (events feed's updated date)
+  let asof='Jul 2026';
+  const upd=EVENTS&&EVENTS.meta&&EVENTS.meta.updated;
+  if(upd){const d=new Date(upd+'T12:00:00'); if(!isNaN(d)) asof=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+  document.getElementById('asof').textContent=asof;
+  document.getElementById('board-asof').textContent='as of '+asof;
+  document.getElementById('tablero').innerHTML=renderTiles();
   document.getElementById('background').innerHTML=renderBackground();
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
-  wireCharts();
-  // tile → scroll to its metric row in Background
-  document.getElementById('tablero').addEventListener('click',(e)=>{const t=e.target.closest('[data-go]');if(!t)return;const row=document.querySelector('[data-metric="'+t.getAttribute('data-go')+'"]');if(row)row.scrollIntoView({behavior:'smooth',block:'center'});});
+  // tile → scroll to the Background detail (fact card + approval poll)
+  document.getElementById('tablero').addEventListener('click',(e)=>{if(!e.target.closest('.tile'))return;const b=document.getElementById('background');if(b)b.scrollIntoView({behavior:'smooth',block:'start'});});
 })().catch(e=>{
-  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading money data: '+e.message+'</p>';
+  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading politics data: '+e.message+'</p>';
 });
 </script>
 

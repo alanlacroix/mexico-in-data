@@ -111,7 +111,7 @@ table.mck td.k{font-weight:600;color:var(--ink);white-space:nowrap}
    ============================================================ */
 /* masthead — identical on every page; solid white, fixed height, nothing animated */
 header.mast{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line)}
-header.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:52px;padding-top:0;padding-bottom:0}
+header.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:52px;padding-top:0;padding-bottom:0;max-width:1180px}
 .brand{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;text-decoration:none}
 .brand:hover{text-decoration:none}
 .brand .u{border-bottom:2px solid var(--green);padding-bottom:1px}
@@ -125,7 +125,7 @@ header.mast .wrap{display:flex;align-items:center;justify-content:space-between;
 /* menu button — shown only on narrow screens, where the links collapse into a drop panel */
 .navtoggle{display:none;flex-direction:column;justify-content:center;gap:4px;width:34px;height:30px;padding:0;background:none;border:0;cursor:pointer}
 .navtoggle span{display:block;width:20px;height:2px;background:var(--ink);border-radius:2px}
-@media(max-width:800px){
+@media(max-width:1000px){
   .navtoggle{display:flex}
   .mnav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:#fff;border-bottom:1px solid var(--line);padding:2px clamp(18px,4vw,44px) 10px;box-shadow:0 12px 30px rgba(20,20,20,.09)}
   .navtoggle[aria-expanded="true"] ~ .mnav{display:flex}

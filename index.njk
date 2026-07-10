@@ -1,10 +1,10 @@
 ---
 layout: base.njk
 permalink: /
-title: "The Mexico Brief — a sourced, live briefing on the whole country."
-description: "Mexico's economy in official numbers: growth, the peso, inflation, jobs, investment, politics and security—every figure sourced and dated."
+title: "The Mexico Brief — a live briefing on Mexico's economy in official numbers."
+description: "Mexico's economy in official numbers: growth, the peso, inflation, jobs, investment, politics and security. Every figure links to its official source, with the date it was published."
 ogTitle: "The Mexico Brief"
-ogDescription: "Mexico's economy in official numbers—sourced, dated, and updated as the data lands."
+ogDescription: "Mexico's economy in official numbers, each linked to its official source and dated."
 ---
 {% raw %}
 <style>
@@ -398,11 +398,11 @@ ogDescription: "Mexico's economy in official numbers—sourced, dated, and updat
     <section class="hero" id="q1">
       <a class="dateline" href="/data.html"><span class="dot"></span><span id="status">Official data · updated live</span></a>
       <h1>Mexico, right now.</h1>
-      <p class="dek">The state of Mexico's economy, in official numbers—sourced, dated, and updated as the data lands.</p>
+      <p class="dek">The state of Mexico's economy in official numbers. Every figure links to the source series it came from, with the date it was published.</p>
       <p class="country">
-        Mexico is a country of <b>131 million people</b> with a <b>~$1.9 trillion economy</b>—the world's ~14th-largest and the <b>largest US trading partner</b>.<a class="ref" href="#contents" title="World Bank; US Census Bureau">1</a>
+        Mexico is a country of <b>131 million people</b> with a <b>~$1.9 trillion economy</b>, the world's ~14th-largest and the <b>largest US trading partner</b>.<a class="ref" href="#contents" title="World Bank; US Census Bureau">1</a>
         It manufactures and exports: about <b>80% of its exports go to the United States</b>.<a class="ref" href="#q4" title="INEGI / Banxico balance of trade">2</a>
-        It elects a president every six years—now <b>Claudia Sheinbaum (Morena)</b>, through 2030.<a class="ref" href="#q7" title="INE; Presidencia">3</a>
+        It elects a president every six years, now <b>Claudia Sheinbaum (Morena)</b>, through 2030.<a class="ref" href="#q7" title="INE; Presidencia">3</a>
       </p>
       <div class="factstrip" id="factstrip"></div>
       <p class="bottomline"><span class="bl-k">The bottom line</span> — <b>sound money</b> (inflation near Banxico's target, a firm peso), <b>weak growth</b>, and <b>near-total dependence on the United States</b>. The swing factor is the unresolved 2026 USMCA review.</p>
@@ -422,10 +422,10 @@ ogDescription: "Mexico's economy in official numbers—sourced, dated, and updat
           <div class="sk-i"><span class="stamp live">● LIVE</span><span class="sk-d">updated daily or faster</span></div>
           <div class="sk-i"><span class="stamp">MONTHLY · May data</span><span class="sk-d">official series, showing the <b>vintage</b> — the period of the latest data point, not today</span></div>
           <div class="sk-i"><span class="stamp">QUARTERLY · Q1 2026</span><span class="sk-d">a quarter behind by nature</span></div>
-          <div class="sk-i"><span class="stamp">POLL · Jun · Mitofsky</span><span class="sk-d">a survey — named pollster + field date, never treated as live data</span></div>
+          <div class="sk-i"><span class="stamp">POLL · Jun · Mitofsky</span><span class="sk-d">a survey, shown with the pollster's name and field date</span></div>
           <div class="sk-i"><span class="stamp">SNAPSHOT · 2020</span><span class="sk-d">structural (census, poverty) — changes slowly</span></div>
-          <div class="sk-i"><span class="pmst-inline">MODEL</span><span class="sk-d">an output of the teaching model — illustrative, never a measured figure</span></div>
-          <div class="sk-i"><span class="stamp" style="color:var(--amber2)">NOT YET WIRED</span><span class="sk-d">a source we haven't connected — we show nothing rather than invent a number</span></div>
+          <div class="sk-i"><span class="pmst-inline">MODEL</span><span class="sk-d">a figure the teaching model computed, not a measured value</span></div>
+          <div class="sk-i"><span class="stamp" style="color:var(--amber2)">NOT YET WIRED</span><span class="sk-d">a source we haven't connected yet; the tile stays blank until we do</span></div>
           <div class="sk-i"><span class="sk-vs">vs …</span><span class="sk-d">every headline number carries one comparison — its own history, a peer country, or a target. Green is the only "live" colour on the page.</span></div>
         </div>
       </details>
@@ -437,7 +437,7 @@ ogDescription: "Mexico's economy in official numbers—sourced, dated, and updat
     </section>
 
     <details class="primer" id="primer">
-      <summary>New to Mexico? — five things to know before the dials mean anything</summary>
+      <summary>Five things to know before the dials mean anything</summary>
       <div class="pgrid" id="pgrid"></div>
     </details>
 
@@ -608,7 +608,7 @@ const VERDICT={
   'banxico-pib-crecimiento':(s)=>{const v=s.data.at(-1).value;return `Real GDP is growing <b>${v>=0?'+':''}${v.toFixed(1)}% a year</b> — barely above zero.`;},
   'banxico-igae':(s)=>{const v=s.data.at(-1).value;return `Activity is <b>${v>=0?'+':''}${v.toFixed(1)}%</b> versus a year ago.`;},
   'banxico-inflacion-subyacente':(s)=>{const v=s.data.at(-1).value;return `Core inflation (${v.toFixed(1)}%) is above target — the measure Banxico watches most.`;},
-  'banxico-salario-minimo':()=>`Up 2.4× in real terms since 2018 — a policy choice, not market drift.`,
+  'banxico-salario-minimo':()=>`Up 2.4× in real terms since 2018, set by government decree.`,
   'cre-gasolina-regular':()=>`National average pump price, refreshed every 4 hours.`
 };
 const BENCH={
@@ -722,7 +722,7 @@ const PRIMER=[
   {n:'2',h:'The US tether',p:'About 80% of exports go to the US, and Mexico is the US\'s largest trading partner. US demand, the Fed, and US trade policy move Mexico first.',s:'US Census Bureau; INEGI',u:'https://www.census.gov/foreign-trade/balance/c2010.html'},
   {n:'3',h:'How it\'s governed',p:'A federal presidential republic; one 6-year term, no re-election. Morena has governed since 2018 with a congressional supermajority. A 2024–25 reform now elects judges by popular vote — contested, and watched abroad.',s:'INE; Congreso',u:'https://www.ine.mx'},
   {n:'4',h:'The two Mexicos',p:'A prosperous industrial north, a poorer, more informal south. About 55% of workers are informal. National averages hide large local variation — which is what the Atlas is for.',s:'INEGI (ENOE); CONEVAL',u:'https://www.inegi.org.mx'},
-  {n:'5',h:'Security, honestly',p:'Violence is real, concentrated by place, and tied to organized crime — not random. The national homicide rate has eased from its 2018–19 peak. "How dangerous is Mexico?" depends entirely on where.',s:'SESNSP; INEGI',u:'https://www.gob.mx/sesnsp'}
+  {n:'5',h:'Security, by place',p:'Violence is real, concentrated by place, and tied to organized crime — not random. The national homicide rate has eased from its 2018–19 peak. "How dangerous is Mexico?" depends entirely on where.',s:'SESNSP; INEGI',u:'https://www.gob.mx/sesnsp'}
 ];
 function renderPrimer(){ $('#pgrid').innerHTML=PRIMER.map(c=>`<div class="pcard"><div class="pn">${c.n}</div><h4>${c.h}</h4><p>${c.p}</p><div class="psrc">Source: <a href="${c.u}" target="_blank" rel="noopener">${c.s}</a></div></div>`).join(''); }
 
@@ -755,7 +755,7 @@ function iedRow(){
   const d=s.data,last4=d.slice(-4),annual=last4.reduce((a,p)=>a+p.value,0),st=stampFor(s.meta);
   return `<div class="mrow" data-metric="se-ied"><div class="mr-top"><span class="mr-label">FDI — foreign direct investment</span><span class="stamp ${st.cls}">${st.t}</span></div>`+
     `<div class="mr-main"><span class="mr-val">$${(annual/1000).toFixed(1)} <small>bn USD · last 4 quarters</small></span></div>`+
-    `<div class="mr-verdict">This counts money Banxico actually recorded — not the press-release pledges that drive most FDI headlines. Trailing four quarters, since FDI is very seasonal.</div>`+
+    `<div class="mr-verdict">This is FDI Banxico recorded in the balance of payments, not the announced pledges behind most FDI headlines. Trailing four quarters, because FDI is very seasonal.</div>`+
     `<div class="mr-bench">vs ~2% of GDP · ~60% reinvested earnings</div>`+srcDetails(s.meta)+`</div>`;
 }
 function sectionHead(no,title,dek){ return `<div class="section-head"><span class="no">${no}</span><h2>${title}</h2>${dek?`<p class="dek">${dek}</p>`:''}</div>`; }
@@ -767,7 +767,7 @@ function eciBlock(){
   const e=COMPLEXITY.eci,m=COMPLEXITY.meta||{};
   const top=(COMPLEXITY.topExports||[]).slice(0,3).map(x=>x.product.toLowerCase()).join(', ')||'cars, computers, and medical instruments';
   const noteShort=(e.note||'').split('. ')[0].replace(/\.$/,'');
-  return `<div class="eciline"><p class="eci-h">Mexico sells the world ${top} — not oil. That mix carries more knowhow than its income would predict — usually a sign of faster growth, though Mexico's own near-term growth stays weak (its export basket is getting <em>less</em> diversified even as it gets more complex).</p>`+
+  return `<div class="eciline"><p class="eci-h">Mexico sells the world ${top}, not oil. That export mix carries more knowhow than its income would predict, usually a sign of faster growth ahead, though Mexico's own near-term growth stays weak: its export basket is getting <em>less</em> diversified even as it gets more complex.</p>`+
     `<div class="eci-stat"><span class="eci-v">${e.rank}<small>th</small></span><span class="eci-l">of ${e.of} on <b>economic complexity</b> — how much knowhow a country's exports embody${noteShort?`. ${noteShort}`:''}. <span class="stamp">ANNUAL · ${m.year||'2024'}</span></span></div>`+
     `<div class="eci-src">Source: <a href="${m.sourceUrl||'https://atlas.hks.harvard.edu'}" target="_blank" rel="noopener">${m.source||'Harvard Growth Lab · UN COMTRADE'}</a>${e.rankDecadeAgo?` · up from ${e.rankDecadeAgo}th a decade ago`:''}.</div></div>`;
 }
@@ -826,26 +826,26 @@ function renderSections(){
     } else if(SECTORS&&SECTORS.sectors){
       const items=SECTORS.sectors.map(s=>({label:s.label,value:s.share,hi:s.hi}));
       const tbl=dataTable(['Sector','Share','US$ bn'],SECTORS.sectors.map(s=>[s.label,s.share+'%',s.usd_bn?'$'+s.usd_bn+'bn':'—']));
-      ex3=exhibit('4.3','Mexico sells factories, not commodities — cars lead','Goods exports by sector, share of total, 2024',hbarChart(items),
+      ex3=exhibit('4.3','Mexico\'s exports are manufactured goods, led by cars','Goods exports by sector, share of total, 2024',hbarChart(items),
         `Source: <a href="${SECTORS.meta.sourceUrl}" target="_blank" rel="noopener">${SECTORS.meta.source}</a>. ${SECTORS.meta.note}`,tbl,true);
     }
-    H+=`<section class="dim" id="q4">${sectionHead('Q4','Is the economy growing — and on whom does it depend?',`Growth is weak—about ${gval.toFixed(1)}% a year—and almost all of it depends on demand from the United States.`)}`+
+    H+=`<section class="dim" id="q4">${sectionHead('Q4','Is the economy growing — and on whom does it depend?',`Growth is weak, about ${gval.toFixed(1)}% a year, and almost all of it depends on demand from the United States.`)}`+
       ex2+ eciBlock()+
       mrow({id:'banxico-pib-crecimiento',label:'Real GDP growth (annual)'})+mrow({id:'banxico-igae',label:'IGAE — monthly activity (annual)'})+
       fwd(`2026 forecasts split: <b>Banxico survey +1.1%</b>, IMF +1.6%, OECD +0.8% — the near-term driver is US demand. <a href="#q10">Outlook →</a>`)+
       `<details class="more"><summary>More on this question — growth over time & the full export mix</summary>`+ex1+ex3+`</details>`+
-      `<a class="teaser" href="./economy.html" style="margin-top:14px"><div class="tz-body"><div class="tz-k">The full anatomy</div><div class="tz-h">The Economy — what Mexico is made of →</div><div class="tz-d">GDP by sector and by spending, exports <b>and imports</b> broken out, the trade balance over a decade, and the informal economy that employs half the country. Nine charts.</div><span class="tz-go">Enter the room →</span></div></a>`+
+      `<a class="teaser" href="./economy.html" style="margin-top:14px"><div class="tz-body"><div class="tz-k">The full economy</div><div class="tz-h">The Economy — what Mexico is made of →</div><div class="tz-d">GDP by sector and by spending, exports <b>and imports</b> broken out, the trade balance over a decade, and the informal economy that employs half the country. Nine charts.</div><span class="tz-go">Open the Economy page →</span></div></a>`+
       `<div class="ctxline">Gloss: <b>IGAE</b> = INEGI's monthly GDP proxy · <b>INEGI</b> = the national statistics office. Context: $${(S['wb-gdp-usd']?S['wb-gdp-usd'].data.at(-1).value/1e12:1.9).toFixed(2)}T economy · $${S['wb-gdp-per-capita']?enNum(Math.round(S['wb-gdp-per-capita'].data.at(-1).value)):'—'} per capita (World Bank, 2025).</div></section>`;
   }
   // Q5 nearshoring
   {
     const s=S['se-ied'];
-    let ex=s?exhibit('5.1','Through 2024, FDI held high but flat — not the boom the headlines claimed','Foreign direct investment, quarterly flow, bn USD',
+    let ex=s?exhibit('5.1','FDI held high but flat through 2024, short of the boom in the headlines','Foreign direct investment, quarterly flow, bn USD',
       barChart(s.data.slice(-16).map(p=>({label:p.date,value:p.value/1000})),{unit:'$',xfmt:(d)=>qtrOf(d),everyLabel:4}),
       `Source: <a href="https://www.economia.gob.mx/datamexico/" target="_blank" rel="noopener">Secretaría de Economía (Data México)</a>, cube fdi_9_quarter.`):'';
-    H+=`<section class="dim" id="q5">${sectionHead('Q5','Is the nearshoring story real?','Through 2024, foreign investment ran high but flat — mostly reinvested earnings, not new factories. Official flows lag, so the current picture is not yet in.')}`+
+    H+=`<section class="dim" id="q5">${sectionHead('Q5','Is the nearshoring story real?','Through 2024, foreign investment ran high but flat, mostly reinvested earnings rather than new factories. Official flows lag, so the current quarter is not yet in.')}`+
       ex+ iedRow()+
-      `<div class="honesty">"Announcement" trackers count pledges, which often never land. This shows recorded FDI only — mostly reinvested earnings from firms already here, real but not a wave of new factories.</div>`+
+      `<div class="honesty">Announcement trackers count pledges, which often never land. This shows only the FDI Banxico recorded, mostly earnings reinvested by firms already here rather than new factories.</div>`+
       construccion({l:'Exports & trade balance (monthly)',src:'Banxico / INEGI (balanza comercial)',cad:'monthly'})+
       oppsBlock()+
       fwd(`Banxico's survey sees FDI broadly steady; the swing factor is the <b>USMCA review</b> — <a href="#q8">Q8</a>.`)+`</section>`;
@@ -871,9 +871,9 @@ function renderSections(){
       `<div class="fc-row"><span class="fc-k">Signature change</span><span class="fc-v">2024–25 judicial reform: judges now <b>elected by popular vote</b></span></div>`+
       `<div class="fc-row"><span class="fc-k">Next federal vote</span><span class="fc-v"><b>Jun 6, 2027</b> — midterms: all 500 deputies + 17 governorships</span></div>`+
     `</div>`+
-    `<div class="honesty">No official real-time series exists for political sentiment. The figure below is a named poll with its house and field date — never presented as live data.</div>`+
+    `<div class="honesty">No official real-time series exists for political sentiment. The figure below is a poll, shown with its polling house and field date.</div>`+
     staticRow({label:'Presidential approval (Sheinbaum)',value:'49–68',unit:'% (by pollster)',stamp:'POLL · Jun 2026',verdict:'Wide range by method: Mitofsky ~68%, AtlasIntel ~49% (first read below 50%). Trend is gently down from very high levels.',bench:'vs ~60% first-year average',srcName:'AS/COA Approval Tracker (Mitofsky · AtlasIntel)',srcUrl:'https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum'})+
-    fwd(`Political forward is a calendar, not a forecast: the <b>2027 midterms</b> are the next test of the supermajority. <a href="#q10">See what to watch →</a>`)+`</section>`;
+    fwd(`The <b>2027 midterms</b> are the next test of the supermajority. <a href="#q10">See what to watch →</a>`)+`</section>`;
   // Q8 US relationship
   H+=`<section class="dim" id="q8">${sectionHead('Q8','Where does the US relationship stand?','Trade terms with the US are the biggest external risk—and the 2026 USMCA review is unresolved.')}`+
     `<div class="factcard">`+
@@ -881,25 +881,25 @@ function renderSections(){
       `<div class="fc-row"><span class="fc-k">Tariffs</span><span class="fc-v">Blanket IEEPA tariffs struck down by the US Supreme Court (Feb 2026); effective US tariff now <b>~4%</b>, but sector threats recur</span></div>`+
       `<div class="fc-row"><span class="fc-k">Why it matters</span><span class="fc-v">With ~80% of exports going north (<a href="#q4">Q4</a>), trade terms are the economy's single biggest risk</span></div>`+
     `</div>`+
-    `<div class="oc-src">Sources: <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a>; <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a>; verified Jul 2026. Fast-moving facts — each carries its date.</div>`+
-    fwd(`Forward here is a schedule — the <b>USMCA review timeline</b> is the lever to watch. Pull it in the model — <a href="#q11">"USMCA review fails" ↓</a>.`)+`</section>`;
+    `<div class="oc-src">Sources: <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a>; <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a>; verified Jul 2026. These facts move fast, so each one carries its date.</div>`+
+    fwd(`The <b>USMCA review timeline</b> is the lever to watch. Pull it in the model: <a href="#q11">"USMCA review fails" ↓</a>.`)+`</section>`;
   // Q9 security
   {
-    H+=`<section class="dim" id="q9">${sectionHead('Q9','How dangerous is Mexico, really — and where?','The honest security number is the homicide rate — about 26 per 100,000 in 2024, easing from the 2018–19 peak.')}`+
-      staticRow({label:'Homicide rate (national)',value:'~26',unit:'per 100,000 · 2024',stamp:'ANNUAL · 2024',verdict:'The one danger metric that compares across places. Well above the US (~6) and below the most violent Latin American peers; down from the 2018–19 peak, and falling sharply through 2025 (Sept 2025 was the lowest in nine years).',bench:'vs US ~6 · peak ~29 in 2018',srcName:'SESNSP / INEGI',srcUrl:'https://www.gob.mx/sesnsp'})+
-      `<div class="honesty">Why there's no per-municipality crime map: <b>total reported crime measures how often people file police reports, not how dangerous a place is.</b> With ~90% of crime unreported, that inverts — quiet tourist towns with diligent reporting look "worse" than places where almost no one files. So the Atlas maps <b>poverty</b>, which is measured directly; municipal homicide data is the honest next layer.</div>`+
-      `<a class="teaser" href="./atlas.html" style="margin-top:12px"><div class="tz-body"><div class="tz-k">The moat nobody else assembles</div><div class="tz-h">Poverty in any of 2,469 municipalities →</div><div class="tz-d">The national number hides everything. In the Atlas, search or tap a municipality for its poverty versus the national benchmark.</div><span class="tz-go">Open the Atlas →</span></div></a>`+
-      fwd(`No credible short-term forecast exists for violence. Security is tracked here as a level — never predicted as a number.`)+`</section>`;
+    H+=`<section class="dim" id="q9">${sectionHead('Q9','How dangerous is Mexico, really — and where?','The security number that compares across places is the homicide rate: about 26 per 100,000 in 2024, easing from the 2018–19 peak.')}`+
+      staticRow({label:'Homicide rate (national)',value:'~26',unit:'per 100,000 · 2024',stamp:'ANNUAL · 2024',verdict:'This is the only crime statistic measured the same way everywhere, so it compares across places. It runs well above the US (~6) and below the most violent Latin American peers; it is down from the 2018–19 peak, and fell sharply through 2025 (Sept 2025 was the lowest in nine years).',bench:'vs US ~6 · peak ~29 in 2018',srcName:'SESNSP / INEGI',srcUrl:'https://www.gob.mx/sesnsp'})+
+      `<div class="honesty">Why there's no per-municipality crime map: total reported crime counts how often people file police reports, not how dangerous a place is. With about 90% of crime unreported, that inverts: quiet tourist towns with diligent reporting look worse than places where almost no one files. So the Atlas maps poverty, which is measured directly; municipal homicide data is the next layer.</div>`+
+      `<a class="teaser" href="./atlas.html" style="margin-top:12px"><div class="tz-body"><div class="tz-k">Every municipality</div><div class="tz-h">Poverty in any of 2,469 municipalities →</div><div class="tz-d">National averages hide large local variation. In the Atlas, search or tap any municipality to see its poverty rate against the national benchmark.</div><span class="tz-go">Open the Atlas →</span></div></a>`+
+      fwd(`No credible short-term forecast exists for violence, so the page shows the current level only.`)+`</section>`;
   }
   H+=bandHead('Forward');
   // Q10 outlook + what to watch
-  H+=`<section class="dim" id="q10">${sectionHead('Q10','Where is Mexico heading — and what will move it?','Dated forecasts and a dated calendar. Three named houses, each dated, with the spread shown—never averaged into a false consensus.')}`+
+  H+=`<section class="dim" id="q10">${sectionHead('Q10','Where is Mexico heading — and what will move it?','A dated calendar of what will move Mexico, and forecasts from three named houses, each dated, shown as a spread rather than a single average.')}`+
     `<div class="ch" style="font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);font-weight:600;border-top:2px solid var(--ink);padding-top:9px;margin:6px 0 4px">What to watch — the catalyst calendar</div>`+
     `<div id="watch-full"></div>`+
     `<div class="ch" style="font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);font-weight:600;border-top:2px solid var(--ink);padding-top:9px;margin:20px 0 4px">The Outlook — named forecasts</div>`+
     `<div id="outlook"></div></section>`;
   // Q11 machine
-  H+=`<section class="dim" id="q11">${sectionHead('Q11','What happens if…?','Pull a lever—tariffs, the Fed, oil—and watch the causal chain. A teaching model, not a forecast.')}`+
+  H+=`<section class="dim" id="q11">${sectionHead('Q11','What happens if…?','Pull a lever such as tariffs, the Fed, or oil, and follow the causal chain it sets off. Each step shows the modeled direction and rough size of the move.')}`+
     `<div class="presets" id="presets"></div>`+
     `<div class="modelcta"><a href="./model.html">Open the full model — every lever unlocked →</a></div></section>`;
   H+=bandHead('This week');

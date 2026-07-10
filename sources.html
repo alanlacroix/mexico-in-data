@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=cc83d16f" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=ffaa610b" />
 
 
 </head>
@@ -23,10 +23,12 @@
   <nav class="mnav" id="sitenav">
     <a href="/economy.html">Economy</a>
     <a href="/money.html">Money</a>
-    <a href="/model.html">Model</a>
+    <a href="/politics.html">Politics</a>
+    <a href="/security.html">Security</a>
+    <a href="/society.html">Society</a>
+    <a href="/us-mexico.html">U.S.–Mexico</a>
     <a href="/atlas.html">Atlas</a>
-    <a href="/sources.html" class="here">Sources</a>
-    <a href="/about.html">About</a>
+    <a href="/model.html">Model</a>
     <a href="/weekly.html" class="cta">Weekly</a>
   </nav>
 </div></header>
@@ -116,52 +118,29 @@
   <section class="hero">
     <span class="eyebrow">What we draw on</span>
     <h1>Sources</h1>
-    <p class="dek">Every figure on the brief is <b>official or first-party, dated, and one tap from its source</b>. This page is the full catalog behind that promise — honestly labeled by how each source is accessed, and including the ones we haven't wired yet. Where an access method is a real public API we say so; where a source is proprietary, discontinued, or behind an unconfirmed endpoint, we flag it plainly rather than pretend it's live.</p>
+    <p class="dek">Every figure on the brief links to the <b>official or first-party source</b> it came from, with its date. This page is the full catalog of those sources. Each row shows how the data comes out — a public API, a bulk file, a scrape — and marks the sources not yet wired. Proprietary, discontinued, and unconfirmed-endpoint sources carry a label saying which.</p>
     <p class="live"><a href="/data.html">See which are live right now &rarr;</a></p>
     <div class="metastrip">
       <span><b>97</b> catalog entries</span>
       <span><b>7</b> groups</span>
-      <span><b>A</b> &middot; Mexican official is the spine</span>
-      <span>Access shown per source, not assumed</span>
+      <span><b>A</b> &middot; Mexican official is the core</span>
+      <span>Access method shown for every source</span>
     </div>
   </section>
 
   <!-- LEGEND -->
   <div class="legend">
-    <div class="lh">Access method — how the data actually comes out</div>
+    <div class="lh">Access method — how the data comes out</div>
     <div class="row">
-      <div class="item"><span class="chip g">API</span><span class="lt">A documented, public, machine-readable API. The gold standard for wiring.</span></div>
+      <div class="item"><span class="chip g">API</span><span class="lt">A documented, public, machine-readable API. We pull it directly on a schedule.</span></div>
       <div class="item"><span class="chip n">BULK</span><span class="lt">Downloadable files (XLS/ZIP/portal). Machine-usable, no live endpoint.</span></div>
       <div class="item"><span class="chip n">CSV</span><span class="lt">Direct CSV / XML downloads, structured but manually fetched.</span></div>
       <div class="item"><span class="chip n">SDMX</span><span class="lt">Statistical standard (IMF/OECD/BIS). API-like, treated as structured feed.</span></div>
       <div class="item"><span class="chip n">RSS</span><span class="lt">A syndication feed we can poll for releases and headlines.</span></div>
       <div class="item"><span class="chip a">SCRAPE</span><span class="lt">No feed offered; extracted from the page. Fragile, needs maintenance.</span></div>
       <div class="item"><span class="chip a">REG</span><span class="lt">Free but behind registration / a key request wall.</span></div>
-      <div class="item"><span class="chip r">NO FREE API</span><span class="lt">Proprietary or commercial. No first-party free feed — labeled, never faked.</span></div>
+      <div class="item"><span class="chip r">NO FREE API</span><span class="lt">Proprietary or commercial. No free first-party feed, so these are linked rather than wired.</span></div>
     </div>
-  </div>
-
-  <!-- TOP GAPS -->
-  <div class="gaps">
-    <div class="gt">Top gaps to wire next</div>
-    <p class="gd">The highest-value machine-readable sources not yet live, in rough priority. These are where more wiring buys the most signal — most are clean public APIs.</p>
-    <ol>
-      <li><b>Banxico SIE API</b> — peso FIX, Cetes/Mbonos curve, TIIE, reserves, remittances by state, mezcla.</li>
-      <li><b>INEGI Banco de Indicadores API</b> — INPC, IGAE, IOAE nowcast, unemployment.</li>
-      <li><b>US Census Trade API + USITC DataWeb</b> — port-level bilateral trade.</li>
-      <li><b>BTS TransBorder Freight</b> — freight by mode &amp; gateway, the nearshoring indicator.</li>
-      <li><b>CBP Border Wait Times API</b> — live, hourly, no key.</li>
-      <li><b>CBP/DHS encounters + OHSS</b> — migration.</li>
-      <li><b>SESNSP incidencia delictiva</b> — homicides / crime by municipality.</li>
-      <li><b>CENACE grid demand</b> — real-time activity nowcast.</li>
-      <li><b>Banxico SPEI</b> — daily interbank transaction pulse.</li>
-      <li><b>EIA API v2</b> — energy trade both directions.</li>
-      <li><b>CFTC Commitments of Traders</b> — weekly peso positioning.</li>
-      <li><b>DOF + US Federal Register API</b> — two-sided tariff/regulatory change-log.</li>
-      <li><b>GACC China customs</b> — China&rarr;Mexico flows (scrape).</li>
-      <li><b>IMSS asegurados</b> — timeliest formal employment.</li>
-      <li><b>UN Comtrade API</b> — mirror-trade cross-check.</li>
-    </ol>
   </div>
 
   <!-- ============ GROUP A ============ -->
@@ -169,7 +148,7 @@
     <div class="section-head">
       <div class="no">Group A</div>
       <h2>Mexican official — the core</h2>
-      <p class="dek">The primary record, straight from the institutions that produce it: Banxico, INEGI, Hacienda, and the regulators. This is the spine of the brief.</p>
+      <p class="dek">The primary record, straight from the institutions that produce it: Banxico, INEGI, Hacienda, and the regulators.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
       <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
@@ -179,7 +158,7 @@
           <td class="gives">FX (FIX/USD), Cetes/Mbonos yield curve, TIIE, policy rate, reserves, inflation, remittances</td>
           <td class="cad">Daily–monthly</td>
           <td class="acc"><span class="chip g">API</span><span class="note">free token</span></td>
-          <td class="why">The rates / FX / remittances spine — the single most important programmatic feed.</td>
+          <td class="why">The rates, FX, and remittances spine, and the most-used programmatic feed here.</td>
         </tr>
         <tr>
           <td class="nm"><span class="n"><a href="https://www.inegi.org.mx/servicios/api_indicadores.html" target="_blank" rel="noopener">INEGI Banco de Indicadores API</a></span><span class="bo">INEGI</span></td>
@@ -351,7 +330,7 @@
     <div class="section-head">
       <div class="no">Group B</div>
       <h2>US sources that reveal Mexico</h2>
-      <p class="dek">Mexico is the United States' #1 goods partner, so US agencies hold some of the sharpest, most machine-readable views of it — often more current and better-documented than Mexico's own.</p>
+      <p class="dek">Mexico is the United States' #1 goods partner, so US agencies publish detailed, machine-readable data on it, often more current and better-documented than Mexico's own.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
       <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
@@ -361,7 +340,7 @@
           <td class="gives">US↔Mexico trade by HS commodity, country, district/port, and mode</td>
           <td class="cad">Monthly</td>
           <td class="acc"><span class="chip g">API</span><span class="note">free key</span></td>
-          <td class="why">The trade truth at port level — Mexico is the #1 US goods partner.</td>
+          <td class="why">Trade at the port level; Mexico is the #1 US goods partner.</td>
         </tr>
         <tr>
           <td class="nm"><span class="n"><a href="https://dataweb.usitc.gov" target="_blank" rel="noopener">USITC DataWeb + HTS</a></span><span class="bo">US ITC</span></td>
@@ -533,7 +512,7 @@
     <div class="section-head">
       <div class="no">Group C</div>
       <h2>China &amp; foreign lenses on Mexico</h2>
-      <p class="dek">Trade is two-sided. Partner customs and statistics offices let us triangulate Mexican figures and watch flows Mexico doesn't publish cleanly — above all the surge from China.</p>
+      <p class="dek">Partner customs and statistics offices report their own trade with Mexico, which cross-checks the Mexican figures and captures flows Mexico doesn't publish cleanly, above all the surge from China.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
       <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
@@ -652,7 +631,7 @@
     <div class="section-head">
       <div class="no">Group E</div>
       <h2>Markets &amp; financial real-time</h2>
-      <p class="dek">Prices that move intraday. The domestic rates, FX, and mezcla are open through Banxico; the country-risk gauges are proprietary and labeled as such — never presented as wired.</p>
+      <p class="dek">These prices move intraday. Domestic rates, FX, and the mezcla come through Banxico's API; the country-risk gauges are proprietary, each tagged NO FREE API or PROPRIETARY above.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
       <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
@@ -690,7 +669,7 @@
           <td class="gives">Sovereign spread over US Treasuries</td>
           <td class="cad">Daily</td>
           <td class="acc"><span class="chip r">PROPRIETARY</span><span class="note v">no first-party free feed</span></td>
-          <td class="why">The country-risk gauge; echoed by secondary press, not wired.</td>
+          <td class="why">The country-risk gauge; the brief cites it from secondary press, dated.</td>
         </tr>
         <tr>
           <td class="nm"><span class="n"><span class="plain">Sovereign CDS (5Y)</span></span><span class="bo">ICE / S&amp;P Global (proprietary)</span></td>
@@ -715,7 +694,7 @@
     <div class="section-head">
       <div class="no">Group F</div>
       <h2>News — feeds usable programmatically</h2>
-      <p class="dek">Where the numbers get context and the politics get said out loud. We use these as machine-readable feeds for signal and quotes, never as a substitute for a sourced figure.</p>
+      <p class="dek">News feeds add context and quotes to the numbers. We poll them for signal and quotes; the figures themselves come from the official sources above.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
       <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
@@ -806,7 +785,7 @@
     <div class="section-head">
       <div class="no">Group G</div>
       <h2>Non-obvious &amp; creative signals</h2>
-      <p class="dek">The feeds most briefings never wire: grid load, night lights, border-wait times, flights, fires, disappearances. Harder to extract, high in nowcasting value.</p>
+      <p class="dek">The feeds most briefings never wire: grid load, night lights, border-wait times, flights, fires, disappearances. They are harder to extract but carry high nowcasting value.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
       <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
@@ -943,14 +922,14 @@
 
   <!-- HONESTY NOTE -->
   <div class="honesty">
-    <div class="ht">An honest word on what's not wired</div>
+    <div class="ht">Sources we don't wire, and why</div>
     <ul>
-      <li><b>Proprietary, no free feed.</b> <b>EMBI+ Mexico</b>, <b>sovereign CDS</b>, and <b>BMV real-time</b> quotes have no first-party free API. They're labeled here and never shown on the brief as if live; where we cite the direction of country risk, it comes from secondary press, dated.</li>
-      <li><b>Discontinued.</b> <b>Google and Apple mobility</b> ended (Google in 2022, Apple after). We keep the history but treat it as a closed series, not a current signal.</li>
-      <li><b>Endpoint unconfirmed.</b> <b>DataMéxico</b> (Tesseract OLAP), <b>CEPALSTAT</b>, <b>SENER</b>, <b>CNH</b>, <b>IFT</b>, and several <b>gob.mx / news RSS</b> paths have platforms that exist but an exact API endpoint we haven't confirmed — flagged <span class="chip a">verify endpoint</span> above rather than assumed working.</li>
+      <li><b>Proprietary, no free feed.</b> <b>EMBI+ Mexico</b>, <b>sovereign CDS</b>, and <b>BMV real-time</b> quotes have no first-party free API. Each carries a NO FREE API or PROPRIETARY tag above; where the brief cites the direction of country risk, it comes from secondary press, with the date.</li>
+      <li><b>Discontinued.</b> <b>Google and Apple mobility</b> ended (Google in 2022, Apple after). We keep the history and mark it as a closed series that stopped updating.</li>
+      <li><b>Endpoint unconfirmed.</b> <b>DataMéxico</b> (Tesseract OLAP), <b>CEPALSTAT</b>, <b>SENER</b>, <b>CNH</b>, <b>IFT</b>, and several <b>gob.mx / news RSS</b> paths have live platforms but an API endpoint we haven't confirmed. Each is flagged <span class="chip a">verify endpoint</span> above.</li>
       <li><b>Deprecated feed.</b> <b>Reuters</b> retired its public RSS; we read it via the site, not a feed.</li>
-      <li><b>Unofficial.</b> <b>Google Trends</b> is not a first-party statistic. When it appears it's labeled a search-interest hint, never a fact.</li>
-      <li>The rule underneath all of it: every published figure is official, dated, and one tap from its source. <a href="/data.html">See which feeds are live right now &rarr;</a></li>
+      <li><b>Unofficial.</b> <b>Google Trends</b> comes from Google, not a statistics agency. When it appears, it carries a search-interest label.</li>
+      <li>Every figure the brief publishes links to the official source it came from, with its date. <a href="/data.html">See which feeds are live right now &rarr;</a></li>
     </ul>
   </div>
 
@@ -958,7 +937,7 @@
 
 
 <footer class="foot"><div class="wrap">
-  <nav class="fnav"><a href="/economy.html">Economy</a><a href="/money.html">Money</a><a href="/model.html">Model</a><a href="/atlas.html">Atlas</a><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a></nav>
+  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a></nav>
   <p class="fblurb">A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.</p>
 </div></footer>
 

@@ -1,12 +1,39 @@
----
-layout: base.njk
-permalink: /money.html
-title: "Money — The Mexico Brief"
-description: "Mexico's money, in official numbers: the peso, headline and core inflation, Banxico's policy rate, international reserves and remittances. Every figure is dated and one tap from its source."
-ogTitle: "Money — The Mexico Brief"
-ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked to its source."
----
-{% raw %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Security — The Mexico Brief</title>
+<meta name="description" content="Mexico&#39;s security in official numbers: the national homicide rate, its easing from the 2018–19 peak, and why place-level crime statistics mislead. Every figure links to its source, with the date it was published." />
+<meta name="theme-color" content="#ffffff" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Security — The Mexico Brief" />
+<meta property="og:description" content="The homicide rate is the one danger number that compares across places, shown with its source and date. This page also explains why place-level crime maps mislead." />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=ffaa610b" />
+
+
+</head>
+<body>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
+  <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav class="mnav" id="sitenav">
+    <a href="/economy.html">Economy</a>
+    <a href="/money.html">Money</a>
+    <a href="/politics.html">Politics</a>
+    <a href="/security.html" class="here">Security</a>
+    <a href="/society.html">Society</a>
+    <a href="/us-mexico.html">U.S.–Mexico</a>
+    <a href="/atlas.html">Atlas</a>
+    <a href="/model.html">Model</a>
+    <a href="/weekly.html" class="cta">Weekly</a>
+  </nav>
+</div></header>
+
+
 <style>
   /* section-specific tokens the shared CSS doesn't carry (mirrors index.njk's inline :root) */
   :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
@@ -73,6 +100,18 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
   svg.spark{display:block}
   svg.spark path{fill:none;stroke:var(--ink-3);stroke-width:1.3}
   svg.spark circle{fill:var(--green)}
+
+  /* honesty / caveat note (migrated from index.njk) */
+  .honesty{font-family:var(--mono);font-size:11px;color:var(--amber2);background:var(--amber-bg2);border-radius:8px;padding:9px 13px;margin:8px 0 4px;line-height:1.5}
+
+  /* teaser card (migrated from index.njk — the Atlas cross-link) */
+  .teaser{border:1px solid var(--line-2);border-radius:12px;overflow:hidden;margin:10px 0 4px;display:block;text-decoration:none;background:var(--paper)}
+  .teaser:hover{border-color:var(--green)}
+  .teaser .tz-body{padding:16px 18px}
+  .teaser .tz-k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--green)}
+  .teaser .tz-h{font-family:var(--serif);font-size:19px;color:var(--ink);margin:4px 0 5px}
+  .teaser .tz-d{font-size:13.5px;color:var(--ink-2);line-height:1.45}
+  .teaser .tz-go{font-family:var(--mono);font-size:11px;color:var(--green-d);margin-top:9px;display:inline-block}
 
   /* EXHIBIT (chart) frame */
   .exwrap{margin:16px 0 8px}
@@ -164,8 +203,8 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
 
   <!-- 1 · HEADER -->
   <section class="hero" id="top">
-    <span class="eyebrow">Money</span>
-    <h1 class="state">Inflation is easing toward Banxico's target while the bank holds rates high and the peso holds with them.</h1>
+    <span class="eyebrow">Security</span>
+    <h1 class="state">The homicide rate is the one danger number that compares across places, and it has eased from its 2018–19 peak.</h1>
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
@@ -176,32 +215,33 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
       <span class="asof" id="board-asof"></span>
     </div>
     <div class="tablero" id="tablero"></div>
+    <p class="blk-note">This section compares places on one metric, the homicide rate, because it is the only crime statistic measured the same way everywhere. Reported-crime counts are not: they track who files a police report, not where danger is. The full caveat is in Background.</p>
   </section>
 
-  <!-- 3 · BACKGROUND (migrated from the homepage's Q3) -->
+  <!-- 3 · BACKGROUND (migrated from the homepage's Q9) -->
   <section class="blk" id="background"></section>
 
   <!-- 4 · WHAT TO WATCH -->
   <section class="blk" id="watch">
-    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">The next central-bank decisions and inflation releases, each with its scheduled date and source.</p></div>
+    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">Official crime releases, hearings, and reviews that are already scheduled, each with its date.</p></div>
     <div id="watch-list"></div>
   </section>
 
   <!-- 5 · LATEST -->
   <section class="blk" id="latest">
-    <div class="section-head"><span class="no">The Wire</span><h2>Latest</h2><p class="dek">Markets and money headlines, each dated and linked to its source.</p></div>
+    <div class="section-head"><span class="no">The Wire</span><h2>Latest</h2><p class="dek">Security and violence headlines, each dated and linked to its source.</p></div>
     <div id="wire-list"></div>
-    <p class="wire-note">Each headline links to its original source. Fuller summaries are coming.</p>
+    <p class="wire-note">Fuller summaries are coming. For now each headline links straight to its original source.</p>
   </section>
 
   <!-- 6 · TOOLS & SOURCES -->
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Pull a lever (the Fed, tariffs, oil) and see how the peso, inflation, and Banxico's rate respond. It shows the modeled direction and rough size of the move.</div></a>
+      <a href="./atlas.html"><div class="tk">Municipal detail</div><div class="th">The Atlas →</div><div class="td">A national number hides local variation. Search or tap any of 2,469 municipalities for its poverty rate against the national benchmark.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE</a> (peso FIX, policy rate, reserves, remittances) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (INPC, the consumer-price index). Every figure above is dated and one tap from its source.</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.gob.mx/sesnsp" target="_blank" rel="noopener">SESNSP</a> (Sistema Nacional de Seguridad Pública — reported homicides) and <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (the statistical audit of the count). Each figure above links to its source, with the date it was published.</p>
   </section>
 
 </div>
@@ -209,86 +249,98 @@ ogDescription: "The peso, inflation, and Banxico's rate, each dated and linked t
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts } from '/assets/mb.js';
+import { loadSeries, S, EVENTS, NEWS, staticRow, sectionHead, fwd, evDate, relTime, tagChip, wireCharts } from '/assets/mb.js';
 
-/* the live tile board (block 2) — same JSON as the metric rows below */
-const TILES=[
-  {id:'banxico-usdmxn-fix',l:'Peso · MXN/USD',per:'vs yesterday'},
-  {id:'banxico-inflacion',l:'Inflation · annual',per:'vs prior month'},
-  {id:'banxico-inflacion-subyacente',l:'Core inflation · annual',per:'vs prior month'},
-  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',per:'vs 2024'},
-  {id:'banxico-reservas',l:"Int'l reserves",per:'vs prior week'},
-  {id:'banxico-remesas',l:'Remittances · month',per:'vs prior month'},
-];
+/* The one hard security number, authored ONCE — the tile board (block 2) and the
+   Background metric row (block 3) both render from this object, so a tile and its
+   exhibit can never disagree (the law). Migrated verbatim from the homepage's Q9
+   security staticRow. No live homicide series exists yet, so this is a dated static
+   fact, not a fetched feed. */
+const HOMICIDE={
+  label:'Homicide rate (national)',
+  value:'~26', unit:'per 100,000 · 2024',
+  stamp:'ANNUAL · 2024',
+  verdict:'It runs well above the US rate (~6 per 100,000) and below the most violent Latin American peers. It has fallen from the 2018–19 peak and kept falling through 2025; September 2025 was the lowest month in nine years.',
+  bench:'vs US ~6 · peak ~29 in 2018',
+  srcName:'SESNSP / INEGI',
+  srcUrl:'https://www.gob.mx/sesnsp'
+};
 
-/* block 3 — the migrated Q3 "money" exhibit + metric rows + forward line, built exactly
-   as index.njk builds it (inflation vs policy rate, band = 3% ± 1, chart<->table toggle) */
-function renderBackground(){
-  const rate=S['banxico-tasa-objetivo'],inf=S['banxico-inflacion'];
-  let ex='';
-  if(rate&&inf){
-    const rr=rate.data.filter(p=>new Date(p.date)>=new Date(Date.now()-2.2*365*864e5)).filter((_,i)=>i%6===0);
-    const ii=inf.data.slice(-Math.min(inf.data.length,30));
-    const svg=timeChart([{name:'Inflation',color:'var(--ink)',pts:ii},{name:'Policy rate',color:'green',pts:rr.length?rr:rate.data.slice(-30)}],{unit:'%',band:[2,4],bandLabel:'3% ± 1 target'});
-    const rateAt=(d)=>{const t=+new Date(d);let best=rate.data[0],bd=1e18;for(const q of rate.data){const dd=Math.abs(+new Date(q.date)-t);if(dd<bd){bd=dd;best=q;}}return best.value;};
-    const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p)=>[qtrOf(p.date),p.value.toFixed(1),rateAt(p.date).toFixed(2)]));
-    ex=exhibit('3.1','Banxico is holding rates high while inflation stays above target','Policy rate vs headline inflation, % · shaded band = 3% ± 1 target',svg,
-      `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> · INPC + target rate.`,tbl,true);
-  }
-  return sectionHead('Background',"Where Mexico's money stands","Inflation sits above Banxico's target, so the bank is holding rates high, and the peso is holding with them.")+
-    ex+
-    mrow({id:'banxico-inflacion',label:'Inflation, annual (CPI)'})+
-    mrow({id:'banxico-inflacion-subyacente',label:'Core inflation, annual'})+
-    mrow({id:'banxico-tasa-objetivo',label:'Banxico policy rate'})+
-    mrow({id:'banxico-usdmxn-fix',label:'Peso · exchange rate (FIX)'})+
-    mrow({id:'banxico-reservas',label:'International reserves'})+
-    fwd(`Banxico's survey (Jul 2026) sees inflation at <b>4.2%</b> end-2026, the rate on hold at <b>6.50%</b>, the peso near <b>17.95</b>. <a href="/#q10">Outlook →</a>`)+
-    `<div class="ctxline">Gloss: <b>Banxico</b> = the central bank · <b>INPC</b> = the consumer price index · <b>FIX</b> = Banxico's official daily reference rate.</div>`;
+/* the place-level honesty caveat — migrated VERBATIM from Q9 */
+const HONESTY=`Why there's no per-municipality crime map: total reported crime measures how often people file police reports, not how dangerous a place is. With <b>~90% of crime unreported</b>, that inverts: quiet tourist towns with diligent reporting look "worse" than places where almost no one files. So the Atlas maps poverty, which is measured directly. Municipal homicide data is the next layer down.`;
+
+/* block 2 — the numbers now. Two dated tiles, both drawn from the Q9 homicide figure:
+   the current rate and the peak it is easing from (no invented numbers). */
+function renderBoard(){
+  const now=`<div class="tile" data-go="background"><div class="tl">Homicide rate · national</div>`+
+    `<div class="tv">~26 <small>per 100k · 2024</small></div>`+
+    `<div class="tb">vs US ~6 per 100k</div>`+
+    `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span></div>`;
+  const peak=`<div class="tile" data-go="background"><div class="tl">2018 peak</div>`+
+    `<div class="tv">~29 <small>per 100k</small></div>`+
+    `<div class="tb">the high it's easing from</div>`+
+    `<span class="stamp">ANNUAL · 2018</span><span class="tsrc">SESNSP / INEGI</span></div>`;
+  return now+peak;
 }
 
-/* block 4 — money-relevant catalyst calendar (central bank / inflation) */
+/* block 3 — Background, migrated from the homepage's Q9 (staticRow + honesty note +
+   Atlas teaser + forward line), built exactly as index.njk builds it. */
+function renderBackground(){
+  return sectionHead('Background','How dangerous Mexico is, and why crime maps by place mislead','The homicide rate is the security number that compares across places; it has been easing from the 2018–19 peak.')+
+    staticRow({label:HOMICIDE.label,value:HOMICIDE.value,unit:HOMICIDE.unit,stamp:HOMICIDE.stamp,verdict:HOMICIDE.verdict,bench:HOMICIDE.bench,srcName:HOMICIDE.srcName,srcUrl:HOMICIDE.srcUrl})+
+    `<div class="honesty">${HONESTY}</div>`+
+    `<a class="teaser" href="./atlas.html" style="margin-top:12px"><div class="tz-body"><div class="tz-k">The next layer down</div><div class="tz-h">Poverty in any of 2,469 municipalities →</div><div class="tz-d">A national number hides local variation. In the Atlas, search or tap a municipality for its poverty rate against the national benchmark.</div><span class="tz-go">Open the Atlas →</span></div></a>`+
+    fwd(`No credible short-term forecast exists for violence, so this section shows the current level and its trend rather than a predicted number.`);
+}
+
+/* security keyword filter — shared by the calendar and the wire */
+const SEC_RE=/seguridad|homicid|violenc|cartel|crimen|delito|desaparec|narco|secuestr|extorsi|drone attack/i;
+
+/* block 4 — security-relevant catalyst calendar */
 function renderWatch(){
   const ev=(EVENTS&&EVENTS.events)||[];
-  const money=ev.filter(e=>{const k=(e.kind||'');
-    if(k==='banxico'||k==='fomc')return true;
-    return /inflaci|cpi|inpc|inflation|tasa|policy rate|peso|banxico|remesas|remittance/i.test((e.label||'')+' '+(e.mechanism||''));});
+  const sec=ev.filter(e=>SEC_RE.test((e.label||'')+' '+(e.mechanism||'')+' '+(e.kind||'')));
   const now=Date.now();
-  const up=money.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
-  if(!up.length) return `<div class="cb-empty">No money events on the calendar yet.</div>`;
+  const up=sec.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  if(!up.length) return `<div class="cb-empty">Nothing dated on the calendar yet. Official crime releases and security hearings will appear here as they're scheduled.</div>`;
   return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind||''}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
-/* block 5 — latest markets/money headlines */
+/* block 5 — latest security / violence headlines */
 function renderWire(){
   const arts=(NEWS&&NEWS.articles)||[];
-  const money=arts.filter(a=>{const t=(a.tag||'');
-    if(['markets','money','economy','trade'].includes(t))return true;
-    return /peso|inflation|banxico|rate|remittance|remesas|market|econom|tariff|trade|usmca|nearshor|invest/i.test(a.title||'');});
-  if(!money.length) return `<div class="cb-empty">No headlines yet — the next scheduled run will post them here.</div>`;
-  return `<div class="wire">`+money.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
+  const sec=arts.filter(a=>SEC_RE.test(a.title||''));
+  if(!sec.length) return `<div class="cb-empty">No security headlines yet. The next scheduled run will post them here.</div>`;
+  return `<div class="wire">`+sec.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
     return `<div class="wi">${tagChip(a.tag)}<div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
 /* boot */
 (async()=>{
-  await loadSeries();
-  // as-of = freshest fetch across the loaded money series
-  const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t);
-  if(times.length){
-    const newest=new Date(Math.max(...times));
-    document.getElementById('asof').textContent=newest.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  }
-  document.getElementById('tablero').innerHTML=TILES.map(t=>tile(t,{src:true})).join('');
+  await loadSeries([]);   // security has no live series yet — loads only news + events
+  // as-of = the vintage of the hard security number (the annual homicide count)
+  document.getElementById('asof').textContent='2024';
+  document.getElementById('board-asof').textContent='as of 2024 (latest annual)';
+  document.getElementById('tablero').innerHTML=renderBoard();
   document.getElementById('background').innerHTML=renderBackground();
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   wireCharts();
-  // tile → scroll to its metric row in Background
-  document.getElementById('tablero').addEventListener('click',(e)=>{const t=e.target.closest('[data-go]');if(!t)return;const row=document.querySelector('[data-metric="'+t.getAttribute('data-go')+'"]');if(row)row.scrollIntoView({behavior:'smooth',block:'center'});});
+  // tile → scroll to the Background detail
+  document.getElementById('tablero').addEventListener('click',(e)=>{const t=e.target.closest('[data-go]');if(!t)return;const el=document.getElementById(t.getAttribute('data-go'));if(el)el.scrollIntoView({behavior:'smooth',block:'start'});});
 })().catch(e=>{
-  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading money data: '+e.message+'</p>';
+  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading security data: '+e.message+'</p>';
 });
 </script>
-{% endraw %}
+
+
+<footer class="foot"><div class="wrap">
+  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a></nav>
+  <p class="fblurb">A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.</p>
+</div></footer>
+
+<script>document.addEventListener('click',function(e){var b=e.target.closest('.navtoggle');if(!b)return;b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');});</script>
+
+</body>
+</html>
