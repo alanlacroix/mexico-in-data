@@ -1005,7 +1005,7 @@ function wireScroll(){
     J('./data/layers/coneval-pobreza.json').catch(()=>null),
     J('./data/layers/sesnsp-delitos.json').catch(()=>null),
     J('./data/outlook.json').catch(()=>null),
-    J('./data/news.json').catch(()=>null),
+    J('./data/news/wire.json').catch(()=>J('./data/news.json').catch(()=>null)),
     J('./data/events.json').catch(()=>null),
     J('./data/exports-sectors.json').catch(()=>null),
     J('./data/complexity.json').catch(()=>null),

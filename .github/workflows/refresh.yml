@@ -40,6 +40,11 @@ jobs:
         continue-on-error: true   # GDELT is flaky; a miss must not fail the run — the site fail-closes
         run: node build-news.js
 
+      - name: Collect multi-source news (RSS ledger + wire)
+        working-directory: pipeline
+        continue-on-error: true   # any dead feed is skipped; never fails the run
+        run: node collect-news.js
+
       - name: Build the Tariff & USMCA Watch
         working-directory: pipeline
         continue-on-error: true   # external feed; a miss keeps last-good, never fails the run

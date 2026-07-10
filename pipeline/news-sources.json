@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "note": "Phase-1 news source registry for The Mexico Brief. All RSS/API, no scrapes. Adding a source = one line here. Pan-LatAm/global feeds set mx:true and get a Mexico keyword filter; Mexico-native feeds set mx:false and pass through. GDELT (build-news.js) stays as the wire backstop for Reuters/AP/Bloomberg. Verified 2026-07-10.",
+    "beatToTag": { "politics": "politics", "economy": "economy", "companies": "markets", "fintech": "markets", "deals": "trade", "us-mexico": "trade" }
+  },
+  "sources": [
+    { "id": "elfin-empresas", "name": "El Financiero — Empresas", "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/empresas/?outputType=xml", "beat": "companies", "tier": 2, "lang": "es", "mx": false },
+    { "id": "elfin-economia", "name": "El Financiero — Economía", "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/economia/?outputType=xml", "beat": "economy", "tier": 2, "lang": "es", "mx": false },
+    { "id": "elfin-mercados", "name": "El Financiero — Mercados", "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/mercados/?outputType=xml", "beat": "companies", "tier": 2, "lang": "es", "mx": false },
+    { "id": "expansion-empresas", "name": "Expansión — Empresas", "url": "https://expansion.mx/rss/empresas", "beat": "companies", "tier": 2, "lang": "es", "mx": false },
+    { "id": "iupana", "name": "iupana", "url": "https://iupana.com/feed/", "beat": "fintech", "tier": "specialist", "lang": "es", "mx": true },
+    { "id": "elceo", "name": "El CEO", "url": "https://elceo.com/feed/", "beat": "fintech", "tier": 2, "lang": "es", "mx": false },
+    { "id": "contxto", "name": "Contxto", "url": "https://contxto.com/en/feed/", "beat": "deals", "tier": "specialist", "lang": "en", "mx": true },
+    { "id": "latamlist", "name": "LatamList", "url": "https://latamlist.com/feed/", "beat": "deals", "tier": "specialist", "lang": "en", "mx": true },
+    { "id": "crunchbase", "name": "Crunchbase News", "url": "https://news.crunchbase.com/feed/", "beat": "deals", "tier": 2, "lang": "en", "mx": true },
+    { "id": "guardian-mx", "name": "The Guardian — Mexico", "url": "https://www.theguardian.com/world/mexico/rss", "beat": "politics", "tier": 1, "lang": "en", "mx": false },
+    { "id": "bloomberglinea", "name": "Bloomberg Línea", "url": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml", "beat": "economy", "tier": 2, "lang": "es", "mx": true },
+    { "id": "techcrunch-mx", "name": "TechCrunch — Mexico", "url": "https://techcrunch.com/tag/mexico/feed/", "beat": "deals", "tier": 2, "lang": "en", "mx": false },
+    { "id": "gnews-usmca", "name": "Google News — trade & tariffs", "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(aranceles%20OR%20USMCA%20OR%20TMEC%20OR%20Trump%20comercio)&hl=es-419&gl=MX&ceid=MX:es", "beat": "us-mexico", "tier": "aggregator", "lang": "es", "mx": false },
+    { "id": "gnews-politics", "name": "Google News — politics", "url": "https://news.google.com/rss/search?q=(Sheinbaum%20OR%20Morena%20OR%20%22reforma%20judicial%22)%20M%C3%A9xico&hl=es-419&gl=MX&ceid=MX:es", "beat": "politics", "tier": "aggregator", "lang": "es", "mx": false }
+  ]
+}
