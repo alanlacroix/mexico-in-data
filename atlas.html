@@ -119,14 +119,14 @@
 <body>
 <header class="mast"><div class="wrap">
   <a class="brand" href="./">THE MEXICO <span class="u">BRIEF</span></a>
-  <nav class="mnav"><a href="./">Briefing</a><a href="./economy.html">Economy</a><a href="./model.html">Model</a><a class="here" href="./atlas.html">Atlas</a><a href="./data.html">Sources</a></nav>
+  <nav class="mnav"><a href="./">Briefing</a><a href="./economy.html">Economy</a><a href="./model.html">Model</a><a class="here" href="./atlas.html">Atlas</a><a href="./data.html">Sources</a><a href="./about.html">About</a></nav>
 </div></header>
 
 <div class="wrap">
   <section class="hero">
-    <span class="eyebrow">The moat · 32 states · 2,469 municipalities</span>
-    <h1>What's it like in one specific place?</h1>
-    <p class="dek">National averages hide everything. Start with the 32 states, then drill into any of 2,469 municipalities for its <b>poverty</b> versus the national benchmark — or search a place by name. <span style="color:var(--mut)">(Poverty is measured directly; we don't map "reported crime" because it tracks who files police reports, not danger — see Q9.)</span></p>
+    <span class="eyebrow">32 states · 2,469 municipalities</span>
+    <h1>Mexico, state by state</h1>
+    <p class="dek">The national average hides a country split in two. Colour the 32 states by <b>GDP per person</b>, total GDP, poverty, or informality, then tap any state for its full profile. GDP per person runs from about $4,800 in Chiapas to $36,000 in Campeche. <span style="color:var(--mut)">We map the economy and poverty, not reported crime: crime reports track who files a report, not danger (see the Briefing, Q9).</span></p>
 
     <div class="controls">
       <div class="searchcol">
@@ -138,7 +138,10 @@
         </div>
       </div>
       <div class="metricsel" id="metricsel">
-        <button data-m="pov" class="on">Poverty · % of population</button>
+        <button data-m="gdppc" class="on">GDP / person</button>
+        <button data-m="gdp">Total GDP</button>
+        <button data-m="pov">Poverty</button>
+        <button data-m="inf">Informality</button>
       </div>
     </div>
     <div class="subactions"><button class="geobtn" id="geo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/></svg>Use my location</button><span class="chips" id="chips"></span></div>
@@ -156,8 +159,8 @@
   <section id="ficha-wrap" hidden></section>
 
   <div class="foot">
-    <div class="fnav"><a href="./">Briefing</a><a href="./model.html">The Model</a><a href="./atlas.html">The Atlas</a><a href="./data.html">Data health</a></div>
-    Layer: poverty (CONEVAL/INEGI, 2020 structural — the municipal map's vintage; the national poverty headline uses INEGI's newer 2024 print). State values are population-weighted aggregates of their municipalities. We deliberately do not map reported crime by place — it measures reporting, not danger; the honest security number is the national homicide rate (see the Briefing, Q9). Nothing invented.
+    <div class="fnav"><a href="./">Briefing</a><a href="./economy.html">Economy</a><a href="./model.html">Model</a><a href="./atlas.html">Atlas</a><a href="./data.html">Sources</a><a href="./about.html">About</a></div>
+    State metrics: GDP and GDP per person from INEGI's PIB por Entidad Federativa 2023 (nominal); population from CONAPO 2023; poverty from CONEVAL 2022; informality from INEGI's ENOE (Q1 2026). GDP per person is state GDP divided by population, converted at 17.5 MXN per USD. The municipal map shows poverty (CONEVAL/INEGI 2020). We do not map reported crime by place: it measures reporting, not danger, and the honest security number is the national homicide rate (see the Briefing, Q9). Nothing invented.
   </div>
 </div>
 
@@ -172,13 +175,16 @@ async function J(p){const r=await fetch(p);if(!r.ok)throw new Error(p+' '+r.stat
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
 const isMobile=()=>innerWidth<=640;
 
-let REG={},CENT={},POV=null,CRI=null,STATES=null;
-let PROJ=null, MUNI=[], MBY={}, SFEAT=[], SEL=null, LEVEL='states', CURSTATE=null, METRIC='pov';
-const NAT={}, MUNIVAL={pov:{},cri:{}}, STVAL={pov:{},cri:{}};
-const RAMP=['#f4f0e6','#e7c893','#d99a4f','#c26a26','#8f4110'];
+let REG={},CENT={},POV=null,STATES=null,ST={};
+let PROJ=null, MUNI=[], MBY={}, SFEAT=[], SEL=null, LEVEL='states', CURSTATE=null, METRIC='gdppc';
+const NAT={}, MUNIVAL={pov:{}}, STVAL={gdppc:{},gdp:{},pov:{},inf:{}};
+const RAMP_G=['#e7f2ec','#b7dcc5','#79bd96','#3a9866','#0a7d4d']; // economy (green)
+const RAMP_A=['#f4f0e6','#e7c893','#d99a4f','#c26a26','#8f4110']; // deprivation (amber)
 const METRICS={
-  pov:{label:'Poverty',unit:'% in poverty',fmt:(v)=>Math.round(v)+'%',dir:'more poverty'},
-  cri:{label:'Reported crime',unit:'per 100k',fmt:(v)=>enNum(Math.round(v)),dir:'more crime'}
+  gdppc:{label:'GDP per person',unit:'US$ per person',fmt:(v)=>'$'+enNum(Math.round(v)),dir:'richer',ramp:RAMP_G,stateOnly:true},
+  gdp:{label:'Total GDP',unit:'US$ billions',fmt:(v)=>'$'+enNum(Math.round(v))+'bn',dir:'a bigger economy',ramp:RAMP_G,stateOnly:true},
+  pov:{label:'Poverty',unit:'% of people',fmt:(v)=>Math.round(v)+'%',dir:'more poverty',ramp:RAMP_A,stateOnly:false},
+  inf:{label:'Informality',unit:'% of workers',fmt:(v)=>Math.round(v)+'%',dir:'more informal',ramp:RAMP_A,stateOnly:true}
 };
 
 /* ---- projection over lon/lat ---- */
@@ -194,27 +200,23 @@ function decodeTopo(t,o){const{scale:[sx,sy],translate:[tx,ty]}=t.transform;cons
 
 /* ---- aggregates ---- */
 function computeVals(){
-  // municipio poverty %, per-capita crime
-  for(const c in (POV.values||{}))MUNIVAL.pov[c]=POV.values[c];
-  for(const c in (CRI.values||{})){const p=REG[c]&&REG[c].pob;MUNIVAL.cri[c]=(p&&p>0)?CRI.values[c]/p*1e5:null;}
-  // national
+  for(const c in (POV.values||{}))MUNIVAL.pov[c]=POV.values[c];               // municipio poverty (2020 layer)
   let pw=0,pob=0;for(const c in MUNIVAL.pov){const p=REG[c]&&REG[c].pob;if(p){pw+=p*MUNIVAL.pov[c];pob+=p;}}NAT.pov=pw/pob;
-  let cd=0,cp=0;for(const c in (CRI.values||{})){const p=REG[c]&&REG[c].pob;if(p&&p>0){cd+=CRI.values[c];cp+=p;}}NAT.cri=cd/cp*1e5;
-  // state aggregates
-  const acc={};
-  for(const c in REG){const ent=c.slice(0,2),p=REG[c].pob||0;const a=acc[ent]||(acc[ent]={pw:0,pob:0,cd:0});const pv=MUNIVAL.pov[c];if(pv!=null&&p){a.pw+=p*pv;a.pob+=p;}const cc=CRI.values&&CRI.values[c];if(cc!=null)a.cd+=cc;}
-  for(const ent in acc){const a=acc[ent];STVAL.pov[ent]=a.pob?a.pw/a.pob:null;STVAL.cri[ent]=a.pob?a.cd/a.pob*1e5:null;}
+  // state metrics come straight from the official state dataset (data/atlas-states.json)
+  let gsum=0,psum=0;
+  for(const cve in ST){const s=ST[cve];STVAL.gdppc[cve]=s.gdppc_usd;STVAL.gdp[cve]=s.gdp_bn/17.5;STVAL.pov[cve]=s.pov;STVAL.inf[cve]=s.inf;gsum+=s.gdp_bn||0;psum+=s.pop||0;}
+  NAT.gdppc=psum?Math.round(gsum*1e9/psum/17.5):13881;
 }
 function quantiles(vals,n){const s=vals.filter(v=>v!=null).sort((a,b)=>a-b),q=[];for(let i=1;i<n;i++)q.push(s[Math.floor(i/n*s.length)]);return q;}
-function colorOf(v,qs){if(v==null)return'#ededea';let i=0;while(i<qs.length&&v>qs[i])i++;return RAMP[i];}
+function colorOf(v,qs,ramp){if(v==null)return'#ededea';let i=0;while(i<qs.length&&v>qs[i])i++;return ramp[i];}
 function pctBelow(sorted,v){let lo=0,hi=sorted.length;while(lo<hi){const m=(lo+hi)>>1;if(sorted[m]<v)lo=m+1;else hi=m;}return lo/sorted.length;}
 
 /* ---- render legend ---- */
-function renderLegend(qs){
-  const m=METRICS[METRIC];
-  let sw=RAMP.map(c=>`<span class="sw" style="background:${c}"></span>`).join('');
+function renderLegend(qs,mk){
+  const m=METRICS[mk||METRIC];
+  let sw=m.ramp.map(c=>`<span class="sw" style="background:${c}"></span>`).join('');
   let brk=`<div class="brk">`+qs.map(q=>`<span>${m.fmt(q)}</span>`).join('')+`</div>`;
-  $('#legend').innerHTML=`<div class="lt">${m.label} · ${m.unit} · darker = ${m.dir} (quantiles${LEVEL==='states'?', across 32 states':', national'})</div>`+
+  $('#legend').innerHTML=`<div class="lt">${m.label} · ${m.unit} · darker = ${m.dir} (quantiles${LEVEL==='states'?', across 32 states':', municipal poverty'})</div>`+
     `<div class="sw-row">${sw}</div>${brk}<span class="nd"><i></i>No data</span>`;
 }
 
@@ -226,7 +228,7 @@ function paintStates(){
   const m=METRICS[METRIC];
   let paths='',labels='';
   for(const f of SFEAT){const v=STVAL[METRIC][f.cve];
-    paths+=`<path d="${f.d}" data-cve="${f.cve}" fill="${colorOf(v,qs)}"></path>`;
+    paths+=`<path d="${f.d}" data-cve="${f.cve}" fill="${colorOf(v,qs,m.ramp)}"></path>`;
     if(f.bounds.x1-f.bounds.x0>26){const cx=(f.bounds.x0+f.bounds.x1)/2,cy=(f.bounds.y0+f.bounds.y1)/2;labels+=`<text class="stlabel ${f.bounds.x1-f.bounds.x0>60?'big':''}" x="${cx.toFixed(0)}" y="${cy.toFixed(0)}" text-anchor="middle">${f.name}</text>`;}
   }
   $('#map').innerHTML=`<g class="stlayer">${paths}</g><g class="munilayer" style="display:none"></g><g class="labels">${labels}</g>`;
@@ -245,32 +247,27 @@ function paintStates(){
 function drill(cve,keepSel){
   CURSTATE=cve; LEVEL='muni'; const f=SFEAT.find(x=>x.cve===cve); if(!f)return;
   const munis=MBY[cve]||[];
-  const vals=munis.map(mu=>MUNIVAL[METRIC][mu.id]);
-  const qs=quantiles(Object.values(MUNIVAL[METRIC]),5); // national scale for comparability
+  // GDP is state-level only, so the zoomed municipio map always shows poverty (the one municipal metric we have)
+  const qs=quantiles(Object.values(MUNIVAL.pov),5);
   const svg=$('#map'); const ml=svg.querySelector('.munilayer'), sl=svg.querySelector('.stlayer'), lb=svg.querySelector('.labels');
-  ml.innerHTML=munis.map(mu=>`<path d="${mu.d}" data-id="${mu.id}" fill="${colorOf(MUNIVAL[METRIC][mu.id],qs)}"></path>`).join('');
+  ml.innerHTML=munis.map(mu=>`<path d="${mu.d}" data-id="${mu.id}" fill="${colorOf(MUNIVAL.pov[mu.id],qs,RAMP_A)}"></path>`).join('');
   ml.style.display=''; sl.querySelectorAll('path').forEach(p=>p.classList.toggle('dim',p.getAttribute('data-cve')!==cve)); if(lb)lb.style.display='none';
-  // zoom viewBox to state bounds (padded)
   const b=f.bounds,pad=Math.max((b.x1-b.x0)*0.08,10);
   setViewBox(b.x0-pad,b.y0-pad,(b.x1-b.x0)+2*pad,(b.y1-b.y0)+2*pad);
-  renderLegend(qs);
-  // crumb + summary
-  const m=METRICS[METRIC],sv=STVAL[METRIC][cve],sorted=SFEAT.map(x=>STVAL[METRIC][x.cve]).filter(v=>v!=null).sort((a,b)=>a-b);
-  const rank=sv!=null?Math.round((1-pctBelow(sorted,sv))*32):null;
+  renderLegend(qs,'pov');
   $('#crumb').innerHTML=`<span class="bc" id="bc-all">← All 32 states</span><span class="bc plain"><span class="arw">/</span> ${f.name}</span>`;
   $('#bc-all').addEventListener('click',allStates);
-  $('#statesum').innerHTML=`<b>${f.name}</b> — ${m.label.toLowerCase()} <b>${m.fmt(sv)}</b> ${METRIC==='pov'?'(pop-weighted)':'(per 100k)'}${rank?`, ${m.dir} than <b>${32-rank}</b> of 32 states`:''}. Tap a municipality for its profile.`;
-  // interactions
-  ml.onpointermove=(e)=>{const t=e.target,tip=$('#maptip');if(t.tagName!=='path'){tip.style.opacity=0;return;}const id=t.getAttribute('data-id'),info=REG[id],v=MUNIVAL[METRIC][id];const bench=v!=null&&NAT[METRIC]?(v>=NAT[METRIC]*1.1?'above':v<=NAT[METRIC]*0.9?'below':'≈'):'';tip.innerHTML=`<b>${info?info.nom:id}</b><br><span class="n">${v!=null?m.fmt(v):'no data'}</span>${bench?`<br><span class="r">${bench} national</span>`:''}`;tip.style.left=Math.min(e.clientX+14,innerWidth-180)+'px';tip.style.top=(e.clientY+14)+'px';tip.style.opacity=1;};
+  $('#statesum').innerHTML=`Municipalities coloured by <b>poverty</b> (2020). Tap any one for its profile.`;
+  ml.onpointermove=(e)=>{const t=e.target,tip=$('#maptip');if(t.tagName!=='path'){tip.style.opacity=0;return;}const id=t.getAttribute('data-id'),info=REG[id],v=MUNIVAL.pov[id];const bench=v!=null&&NAT.pov?(v>=NAT.pov*1.1?'above':v<=NAT.pov*0.9?'below':'≈'):'';tip.innerHTML=`<b>${info?info.nom:id}</b><br><span class="n">${v!=null?Math.round(v)+'% in poverty':'no data'}</span>${bench?`<br><span class="r">${bench} national</span>`:''}`;tip.style.left=Math.min(e.clientX+14,innerWidth-180)+'px';tip.style.top=(e.clientY+14)+'px';tip.style.opacity=1;};
   ml.onpointerleave=()=>{$('#maptip').style.opacity=0;};
   ml.onclick=(e)=>{const t=e.target;if(t.tagName==='path')goFicha(t.getAttribute('data-id'));};
   renderZoomCtl();
-  if(!keepSel){const wrap=$('#ficha-wrap');wrap.hidden=true;SEL=null;}
+  if(!keepSel)renderStateFicha(cve);
   else if(SEL)markMuni(SEL);
 }
 function allStates(){LEVEL='states';CURSTATE=null;SEL=null;setViewBox(0,0,800,560);
   const svg=$('#map');svg.querySelector('.munilayer').style.display='none';svg.querySelectorAll('.stlayer path').forEach(p=>p.classList.remove('dim'));const lb=svg.querySelector('.labels');if(lb)lb.style.display='';
-  $('#crumb').innerHTML=`<span class="bc plain">All 32 states — tap one to zoom in, or search a municipality</span>`;$('#statesum').innerHTML='';
+  $('#crumb').innerHTML=`<span class="bc plain">All 32 states. Tap one to zoom in, or search a municipality</span>`;$('#statesum').innerHTML='';
   $('#ficha-wrap').hidden=true;renderZoomCtl();$('#maptip').style.opacity=0;paintStates();}
 function markMuni(id){const p=$('#map').querySelector('.munilayer path[data-id="'+id+'"]');if(p){$('#map').querySelectorAll('.munilayer path.sel').forEach(x=>x.classList.remove('sel'));p.classList.add('sel');p.parentNode.appendChild(p);}}
 
@@ -284,6 +281,31 @@ function renderZoomCtl(){$('#zoomctl').innerHTML= LEVEL==='muni'?`<button class=
 /* ================= FICHA ================= */
 function fstrip(val,nat,dmax){const c=(x)=>Math.max(0,Math.min(1,x/dmax));const dp=c(val)*100,np=c(nat)*100;return `<div class="fstrip"><div class="tk"></div><div class="nat" style="left:${np}%"></div><div class="natl" style="left:${np}%">national</div><div class="dot" data-to="${dp}"></div></div>`;}
 function frow(o){return `<div class="fmetric"><div class="fm-l">${o.label} <span class="stamp">${o.stamp}</span></div><div class="fm-v">${o.valHTML}</div>${o.strip||''}${o.verdict?`<div class="fm-verdict">${o.verdict}</div>`:''}${o.rank?`<div class="fm-rank">${o.rank}</div>`:''}<details><summary></summary><div class="fs-b">${o.src}</div></details></div>`;}
+function rankAmong(mk,v){const vals=Object.values(STVAL[mk]).filter(x=>x!=null);const higher=vals.filter(x=>x>v).length;return{top:higher+1,of:vals.length};}
+function ordinal(n){const t=['th','st','nd','rd'],x=n%100;return n+(t[(x-20)%10]||t[x]||t[0]);}
+function renderStateFicha(cve){
+  const s=ST[cve];if(!s)return;SEL=null;
+  const wrap=$('#ficha-wrap');wrap.hidden=false;wrap.className='ficha';let rows='';
+  {const v=s.gdppc_usd,r=rankAmong('gdppc',v);
+   rows+=frow({label:'GDP per person',stamp:'INEGI · 2023',valHTML:`$${enNum(v)} <small>US$ per person</small>`,
+     verdict:`Richer than <b>${r.of-r.top}</b> of the 32 states. The national average is $${enNum(NAT.gdppc)}.`,
+     src:'Source: INEGI, PIB por Entidad Federativa 2023 (nominal), divided by CONAPO 2023 population, at 17.5 MXN per USD.'});}
+  {const v=s.gdp_bn/17.5,r=rankAmong('gdp',v),share=(s.gdp_bn/318.55566).toFixed(1);
+   rows+=frow({label:'Total GDP',stamp:'INEGI · 2023',valHTML:`$${enNum(Math.round(v))} <small>US$ billions</small>`,
+     verdict:`<b>${share}%</b> of Mexico's economy, a bigger economy than ${r.of-r.top} of the 32 states.`,
+     src:'Source: INEGI, PIB por Entidad Federativa 2023 (nominal), at 17.5 MXN per USD.'});}
+  {const v=s.pov,r=rankAmong('pov',v);
+   rows+=frow({label:'Poverty',stamp:'CONEVAL · 2022',valHTML:`${v.toFixed(1)} <small>% of people</small>`,
+     verdict:`More poverty than <b>${r.of-r.top}</b> of the 32 states.`,
+     src:'Source: CONEVAL, multidimensional poverty by state, 2022.'});}
+  {const v=s.inf,r=rankAmong('inf',v);
+   rows+=frow({label:'Informal work',stamp:'INEGI ENOE · Q1 2026',valHTML:`${v.toFixed(1)} <small>% of workers</small>`,
+     verdict:`${v.toFixed(0)}% of workers are off the books, more than ${r.of-r.top} of the 32 states.`,
+     src:'Source: INEGI, ENOE labour-informality rate, first quarter 2026.'});}
+  wrap.innerHTML=`<div class="fhead"><span class="fh-x" id="fx">Clear ✕</span><div class="fh-name">${s.name}</div><div class="fh-ent">State profile</div><div class="fh-pob">${enNum(s.pop)} people · CONAPO 2023</div></div>`+rows+`<div class="fclose">Municipalities below are coloured by poverty. GDP is measured at the state level; Mexico has no official municipal GDP.</div>`;
+  requestAnimationFrame(()=>wrap.classList.add('in'));
+  $('#fx').addEventListener('click',()=>{wrap.hidden=true;});
+}
 function renderFicha(cve){
   const info=REG[cve];if(!info)return;SEL=cve;location.hash='m/'+cve;try{localStorage.setItem('mx_mun',cve);}catch(e){}
   const wrap=$('#ficha-wrap');wrap.hidden=false;wrap.className='ficha';let rows='';
@@ -293,6 +315,10 @@ function renderFicha(cve){
       verdict:ratio>=1.12?`<b>${ratio.toFixed(1)}× the national average</b> poverty rate.`:ratio<=0.88?`<b>${Math.round((1-ratio)*100)}% less poverty</b> than the national average.`:`Around the national average (${NAT.pov.toFixed(0)}%).`,
       rank:`More poverty than <b>${below}%</b> of municipalities.`,
       src:`Source: <a href="${POV.meta.sourceUrl}" target="_blank" rel="noopener">${POV.meta.source}</a> · ${POV.meta.vintage} (structural).`});}
+  const st=ST[cve.slice(0,2)];
+  if(st){rows+=frow({label:'State economy',stamp:'INEGI · 2023',valHTML:`$${enNum(st.gdppc_usd)} <small>GDP per person, ${st.name}</small>`,
+    verdict:`This municipality is in <b>${st.name}</b>, where GDP per person is $${enNum(st.gdppc_usd)}. The national average is $${enNum(NAT.gdppc)}.`,
+    src:'GDP is measured at the state level; Mexico has no official municipal GDP. Source: INEGI, PIB por Entidad Federativa 2023.'});}
   wrap.innerHTML=`<div class="fhead"><span class="fh-x" id="fx">Clear ✕</span><div class="fh-name">${info.nom}</div><div class="fh-ent">${info.ent}</div><div class="fh-pob">${info.pob?enNum(info.pob)+' people':''} · INEGI 2020</div></div>`+rows+`<div class="fclose">Formal employment (IMSS) and remittances by municipality will appear here once verified.</div>`;
   requestAnimationFrame(()=>{wrap.classList.add('in');wrap.querySelectorAll('.fstrip .dot').forEach(d=>{const to=d.getAttribute('data-to');if(RM)d.style.left=to+'%';else requestAnimationFrame(()=>d.style.left=to+'%');});});
   $('#fx').addEventListener('click',()=>{wrap.hidden=true;SEL=null;try{localStorage.removeItem('mx_mun');}catch(e){}history.replaceState(null,'','./atlas.html');$('#q').value='';$('#map').querySelectorAll('.munilayer path.sel').forEach(p=>p.classList.remove('sel'));});
@@ -315,17 +341,18 @@ function wireSearch(){
   CH.forEach(c=>{const b=document.createElement('button');b.className='chip';b.textContent=REG[c[0]].nom;b.addEventListener('click',()=>selectMuni(c[0]));ch.appendChild(b);});
   $('#geo').addEventListener('click',()=>{const btn=$('#geo');if(!navigator.geolocation){btn.textContent='Unavailable';return;}btn.textContent='Locating…';navigator.geolocation.getCurrentPosition((p)=>{const la=p.coords.latitude,lo=p.coords.longitude;let best=null,bd=1e9;for(const cve in CENT){const[clo,cla]=CENT[cve];const d=(clo-lo)*(clo-lo)*0.85+(cla-la)*(cla-la);if(d<bd){bd=d;best=cve;}}btn.textContent='Use my location';if(best)selectMuni(best);},()=>{btn.textContent='Could not locate';setTimeout(()=>btn.textContent='Use my location',2500);},{timeout:8000});});
 }
-function wireMetric(){$('#metricsel').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{METRIC=b.dataset.m;$('#metricsel').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));if(LEVEL==='states')paintStates();else drill(CURSTATE,true);}));}
+function wireMetric(){$('#metricsel').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{METRIC=b.dataset.m;$('#metricsel').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));if(LEVEL==='muni')allStates();else paintStates();}));}
 function wireMini(){const mini=$('#miniback');const io=new IntersectionObserver((es)=>{es.forEach(e=>{const show=SEL&&!e.isIntersecting&&$('#ficha-wrap').hidden===false;mini.classList.toggle('show',show);if(show)$('#mb-name').textContent=REG[SEL]?REG[SEL].nom:'';});},{threshold:0});io.observe($('#ficha-wrap'));$('#mb-act').addEventListener('click',()=>$('#ficha-wrap').scrollIntoView({behavior:RM?'auto':'smooth'}));}
 
 /* ================= BOOT ================= */
 (async()=>{
-  const [reg,cent,pov,cri,states,topo]=await Promise.all([
+  const [reg,cent,pov,states,topo,stj]=await Promise.all([
     J('./data/meta/municipios.json'),J('./data/meta/centroids.json').catch(()=>({})),
-    J('./data/layers/coneval-pobreza.json'),J('./data/layers/sesnsp-delitos.json').catch(()=>null),
-    J('./data/geo/estados.geojson'),J('./data/geo/municipios.topojson')
+    J('./data/layers/coneval-pobreza.json'),
+    J('./data/geo/estados.geojson'),J('./data/geo/municipios.topojson'),
+    J('./data/atlas-states.json')
   ]);
-  REG=reg.m||reg;CENT=cent;POV=pov;CRI=cri||{values:{},meta:{}};STATES=states;
+  REG=reg.m||reg;CENT=cent;POV=pov;STATES=states;ST=stj.states||{};
   computeVals();
   // projection from all state coords
   const allpts=[];for(const f of STATES.features){const polys=f.geometry.type==='MultiPolygon'?f.geometry.coordinates:[f.geometry.coordinates];for(const poly of polys)for(const r of poly)for(const c of r)allpts.push(c);}
@@ -337,7 +364,7 @@ function wireMini(){const mini=$('#miniback');const io=new IntersectionObserver(
   for(const g of MUNI){if(!g.polys.length)continue;g.d=ringsPath(g.polys);g.bounds=boundsOf(g.polys);const ent=String(g.id).slice(0,2);(MBY[ent]=MBY[ent]||[]).push(g);}
   wireSearch();wireMetric();wireMini();
   paintStates();
-  $('#crumb').innerHTML=`<span class="bc plain">All 32 states — tap one to zoom in, or search a municipality</span>`;
+  $('#crumb').innerHTML=`<span class="bc plain">All 32 states. Tap one to zoom in, or search a municipality</span>`;
   // deep-link / returning
   const hash=(location.hash.match(/m\/(\d{5})/)||[])[1];
   const saved=(()=>{try{return localStorage.getItem('mx_mun');}catch(e){return null;}})();

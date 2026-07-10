@@ -32,12 +32,25 @@ jobs:
         env:
           INEGI_TOKEN: ${{ secrets.INEGI_TOKEN }}
           BANXICO_TOKEN: ${{ secrets.BANXICO_TOKEN }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: node run.js
 
       - name: Build the news wire (Q12)
         working-directory: pipeline
         continue-on-error: true   # GDELT is flaky; a miss must not fail the run — the site fail-closes
         run: node build-news.js
+
+      - name: Build the Tariff & USMCA Watch
+        working-directory: pipeline
+        continue-on-error: true   # external feed; a miss keeps last-good, never fails the run
+        run: node build-tariffs.js
+
+      - name: Build US–Mexico trade (Census)
+        working-directory: pipeline
+        continue-on-error: true   # external API; a miss keeps last-good, never fails the run
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+        run: node build-trade.js
 
       - name: Commit refreshed data
         run: |

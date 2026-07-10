@@ -16,7 +16,7 @@
 
 :root{
   /* ground + ink — McKinsey-exact */
-  --bg:#faf9f6;            /* warm page ground — kills the white glare (cards stay pure white) */
+  --bg:#ffffff;            /* white page (Alan's call) */
   --paper:#ffffff;
   --paper-2:#f5f4ef;       /* faint warm gray — table headers, strips */
   --paper-3:#eceae4;
@@ -50,7 +50,7 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;background:var(--bg);color:var(--ink-2);
-  font-family:var(--sans);font-size:17px;line-height:1.62;
+  font-family:var(--sans);font-size:18px;line-height:1.6;
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
 }
 h1,h2,h3,h4{font-family:var(--serif);color:var(--ink);font-weight:600;line-height:1.14;margin:0;text-wrap:balance;letter-spacing:-.005em}

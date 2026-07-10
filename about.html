@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About — The Mexico Brief</title>
+<meta name="description" content="The Mexico Brief is a free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source." />
+<link rel="stylesheet" href="./design/mckinsey-mx.css" />
+<style>
+  :root{--ink-3:#4d4d4d}
+  body{font-size:17px}
+  .wrap{max-width:760px;margin:0 auto;padding:0 clamp(16px,5vw,32px)}
+  header.mast{border-bottom:1.5px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);z-index:40}
+  header.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px clamp(16px,5vw,32px);max-width:900px}
+  header .brand{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink);text-decoration:none}
+  header .brand .u{border-bottom:2px solid var(--green);padding-bottom:1px}
+  header .mnav{display:flex;align-items:center;gap:15px;font-family:var(--mono);font-size:12px}
+  header .mnav a{color:var(--mut);text-decoration:none;text-transform:uppercase;letter-spacing:.04em}
+  header .mnav a.here{color:var(--green-d)}header .mnav a:hover{color:var(--green-d)}
+  @media(max-width:640px){header .mnav a.opt{display:none}}
+
+  .hero{padding:30px 0 8px}
+  .hero h1{font-family:var(--serif);font-size:clamp(30px,6vw,44px);line-height:1.03;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
+  .hero .thesis{font-size:19px;color:var(--ink-2);margin-top:16px;line-height:1.55}
+  .hero .thesis b{color:var(--ink)}
+
+  section.blk{margin:30px 0 0;border-top:1px solid var(--line);padding-top:22px}
+  section.blk h2{font-family:var(--serif);font-size:23px;line-height:1.15;color:var(--ink);letter-spacing:-.01em;margin:0 0 10px}
+  section.blk p{color:var(--ink-2);line-height:1.6;margin:0 0 12px}
+  section.blk p b{color:var(--ink)}
+  ul.rules{list-style:none;margin:6px 0 0;padding:0}
+  ul.rules li{position:relative;padding:0 0 0 20px;margin:0 0 10px;color:var(--ink-2);line-height:1.55}
+  ul.rules li::before{content:"";position:absolute;left:0;top:10px;width:7px;height:7px;background:var(--green);border-radius:2px}
+  a.inline{color:var(--green);font-weight:500}
+
+  .foot{border-top:1px solid var(--line);margin:44px 0 60px;padding-top:16px;font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.7}
+  .foot a{color:var(--green)}.foot .fnav a{margin-right:14px;text-transform:uppercase;letter-spacing:.03em}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="./">THE MEXICO <span class="u">BRIEF</span></a>
+  <nav class="mnav">
+    <a href="./">Briefing</a>
+    <a class="opt" href="./economy.html">Economy</a>
+    <a class="opt" href="./model.html">Model</a>
+    <a class="opt" href="./atlas.html">Atlas</a>
+    <a href="./data.html">Sources</a>
+    <a class="here" href="./about.html">About</a>
+  </nav>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <span class="eyebrow">What this is</span>
+    <h1>About The Mexico Brief</h1>
+    <p class="thesis">The Mexico Brief is a free, public briefing on Mexico's economy and conditions, built from official data. It exists for people looking at Mexico from the outside: investors, journalists, people moving here, and anyone who wants the actual numbers in one place instead of scattered across a dozen institutional websites.</p>
+  </section>
+
+  <section class="blk">
+    <h2>Why it exists</h2>
+    <p>Most people outside Mexico form their view of the country from headlines. The official record is public, but it lives in separate portals, in Spanish, behind unfamiliar interfaces. We believe people make better decisions with real information, so we put the record in one place and keep it current.</p>
+  </section>
+
+  <section class="blk">
+    <h2>Where the numbers come from</h2>
+    <p>Mexico's own institutions: INEGI, Banxico, SHCP, CONEVAL, and others, plus international bodies where they are the primary source. The Mexico Brief renders official data. It does not originate it.</p>
+  </section>
+
+  <section class="blk">
+    <h2>How we handle the data</h2>
+    <p>These are the rules the site runs on, and they are checkable on every page:</p>
+    <ul class="rules">
+      <li>Nothing is invented. If a number cannot be verified, it is not published.</li>
+      <li>Every figure is official, dated, and one tap from its source.</li>
+      <li>When a feed fails, we show the last valid value and mark it as stale. We never fill the gap ourselves.</li>
+      <li>Forecasts are named and dated. The causal model is labeled MODEL, because that is what it is.</li>
+    </ul>
+  </section>
+
+  <section class="blk">
+    <h2>How it stays current</h2>
+    <p>The data refreshes every six hours. We are always adding new first-party sources. When one goes dark, you see the last good number and the date it stopped, not silence.</p>
+  </section>
+
+  <section class="blk">
+    <h2>What this is not</h2>
+    <p>Not opinion, not investment advice, not affiliated with any government or party, and not written by an AI at read time. The page you are reading was built from the sources it cites.</p>
+  </section>
+
+  <section class="blk">
+    <h2>Check us</h2>
+    <p>Every figure links to its source. If you find an error, tell us and we will correct it with a note. Start with the <a class="inline" href="./data.html">Sources</a> page, which lists every feed and when it last updated.</p>
+  </section>
+
+  <div class="foot">
+    <div class="fnav"><a href="./">Briefing</a><a href="./economy.html">Economy</a><a href="./model.html">Model</a><a href="./atlas.html">Atlas</a><a href="./data.html">Sources</a><a href="./about.html">About</a></div>
+    A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.
+  </div>
+</div>
+</body>
+</html>
