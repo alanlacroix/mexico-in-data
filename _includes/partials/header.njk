@@ -1,13 +1,13 @@
-{#- The masthead. Renders the one nav (see _data/nav.js); "here" is derived from
-   page.url. The homepage passes `wire` (the live Wire link) and `status`; every
-   other page omits them and gets the plain nav. -#}
+{#- The masthead: brand + the one nav (see _data/nav.js), current page derived
+   from page.url. On narrow screens the links collapse behind the menu button
+   (toggled by the small script in base.njk). Live indicators (the Wire, freshness)
+   are NOT in the nav — the homepage renders them in its own .livebar strip. -#}
 <header class="mast"><div class="wrap">
   <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
-  <nav class="mnav">
-    {%- if wire %}<a class="wire"{% if wire.id %} id="{{ wire.id }}"{% endif %} href="{{ wire.href }}"><span class="dot"></span>{{ wire.label }}</a>{% endif -%}
+  <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav class="mnav" id="sitenav">
     {%- for item in nav %}
-    <a href="{{ item.href }}"{% if page.url == item.href %} class="here"{% elif item.opt %} class="opt"{% endif %}>{{ item.label }}</a>
+    <a href="{{ item.href }}"{% if page.url == item.href %} class="here"{% endif %}>{{ item.label }}</a>
     {%- endfor %}
-    {%- if status %}<a class="status"{% if status.id %} id="{{ status.id }}"{% endif %} href="{{ status.href or '/data.html' }}">{{ status.text }}</a>{% endif -%}
   </nav>
 </div></header>

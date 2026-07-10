@@ -2,7 +2,7 @@
 layout: base.njk
 permalink: /weekly.html
 title: "The Weekly — The Mexico Brief"
-description: "A free weekly email on Mexico: the week's biggest moves in the economy, politics, and companies, summarized from the source articles, with a data board computed from official sources."
+description: "A free weekly email on Mexico: what moved in politics, business, and money each week, summarized from the source reporting, with a data board computed from official sources. One email, every Monday morning."
 ---
 {% raw %}
 <style>
@@ -25,55 +25,68 @@ description: "A free weekly email on Mexico: the week's biggest moves in the eco
   .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:11px;line-height:1.6}
   .samplelink{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);text-decoration:none;border-bottom:2px solid #daf0e2;padding-bottom:1px}
 
-  section.blk{margin:30px 0 0;border-top:1px solid var(--line);padding-top:22px}
-  section.blk h2{font-family:var(--serif);font-size:23px;line-height:1.15;color:var(--ink);letter-spacing:-.01em;margin:0 0 10px}
-  section.blk p{color:var(--ink-2);line-height:1.6;margin:0 0 12px}
-  section.blk p b{color:var(--ink)}
   ul.parts{list-style:none;margin:6px 0 0;padding:0}
   ul.parts li{position:relative;padding:0 0 0 20px;margin:0 0 12px;color:var(--ink-2);line-height:1.55}
   ul.parts li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;background:var(--green);border-radius:2px}
   ul.parts li b{color:var(--ink)}
+  ul.vprops{margin:24px 0 4px}
+
+  section.blk{margin:30px 0 0;border-top:1px solid var(--line);padding-top:22px}
+  section.blk h2{font-family:var(--serif);font-size:23px;line-height:1.15;color:var(--ink);letter-spacing:-.01em;margin:0 0 10px}
+  section.blk p{color:var(--ink-2);line-height:1.6;margin:0 0 12px}
+  section.blk p b{color:var(--ink)}
   a.inline{color:var(--green);font-weight:500}
 </style>
 
 <div class="wrap">
   <section class="hero">
-    <span class="eyebrow">The weekly</span>
-    <h1>Mexico, once a week, in one email</h1>
-    <p class="thesis">Every Monday, the week's biggest moves in Mexico's economy, politics, and companies, in one email you can read in about five minutes. The lead stories are summarized from the source articles and linked. Under them, a board of the numbers that moved: the peso, inflation, the Banxico rate, remittances, and US–Mexico trade, each computed from official data. Built for one founder who runs a payments company here and needs to stay sharp on Mexico. <b>Free, and open to anyone who does too.</b></p>
+    <span class="eyebrow">The weekly email</span>
+    <h1>Mexico's week, from the official numbers.</h1>
+    <p class="thesis">One email every Monday morning: what moved in Mexican politics, business, and money, with every figure dated and linked to the institution that published it. Free.</p>
   </section>
 
-  <!-- Buttondown embed. Replace `mexicobrief` below with your Buttondown username once the account exists. Keyless: this posts straight to Buttondown, works on a static host. -->
+  <!-- Buttondown embed. Replace `mexicobrief` below with your Buttondown username once the account exists. Keyless: posts straight to Buttondown, works on a static host. -->
   <div class="sub">
-    <div class="lab">Get the Monday email</div>
+    <div class="lab">The Monday brief — free</div>
     <form action="https://buttondown.email/api/emails/embed-subscribe/mexicobrief" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/mexicobrief','popupwindow')">
       <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
       <input type="hidden" value="1" name="embed" />
-      <button type="submit">Subscribe</button>
+      <button type="submit">Get the Monday brief</button>
     </form>
-    <div class="fine">One email a week. No tracking beyond open rates. One tap unsubscribes.</div>
-    <a class="samplelink" href="./weekly-sample.html">See the latest issue →</a>
+    <div class="fine">One email, every Monday morning. That is the whole relationship. Nothing else is ever sent to this address, nothing is shared, and one tap unsubscribes.</div>
+    <a class="samplelink" href="./weekly-sample.html">Read the latest issue →</a>
   </div>
+
+  <ul class="parts vprops">
+    <li><b>The numbers before anyone's narrative.</b> The peso, inflation, the Banxico rate, remittances, US–Mexico trade, and tariff actions, pulled from the institutions that produce them, each with its as-of date.</li>
+    <li><b>The week in one read.</b> Politics, companies, fintech, and deals, summarized from the original reporting, with a link to every source.</li>
+    <li><b>Nothing to take on faith.</b> Every claim is one tap from where it came from. If it can't be sourced, it isn't in the email.</li>
+  </ul>
+
+  <section class="blk">
+    <h2>Why it's different</h2>
+    <p>Most coverage of Mexico starts with a take and borrows the numbers. This starts with the numbers: from Banxico, INEGI, and the official record, dated so you know exactly how current each one is, and linked so you can check them yourself. You shouldn't have to trust a newsletter. You should be able to verify it.</p>
+  </section>
 
   <section class="blk">
     <h2>What's inside</h2>
     <ul class="parts">
       <li><b>Top of the week.</b> The two or three stories that actually mattered, ranked and capped. A big week runs long; a quiet week runs short. It is never padded to fill space.</li>
       <li><b>The board.</b> The peso, headline and core inflation, the Banxico rate, remittances, and two-way US–Mexico trade. Each shows the latest value, the direction it moved, and the date it is from.</li>
-      <li><b>The rooms.</b> Payments and fintech first, then companies and deals, economy, politics, and US–Mexico. A room appears only when something happened in it.</li>
-      <li><b>What to watch.</b> The dated calendar ahead: rate decisions, CPI releases, USMCA milestones.</li>
+      <li><b>The rooms.</b> Politics, companies and deals, economy, payments and fintech, US–Mexico. A room appears only when something happened in it.</li>
+      <li><b>What to watch.</b> The dated calendar ahead: rate decisions, inflation releases, USMCA milestones.</li>
     </ul>
   </section>
 
   <section class="blk">
     <h2>How it's made</h2>
-    <p>The board is computed by code from wired official sources: Banxico, INEGI, and the US Census Bureau. The lead summaries are written only from the fetched article text of a trusted-source allowlist, never from memory, and every headline links to its origin. Tariff and trade items come straight from the US Federal Register in the government's own words.</p>
-    <p>One email a week. Every issue is reviewed by a person before it sends. Nothing goes out on autopilot.</p>
+    <p>The board is computed by code from official sources: Banxico, INEGI, and the US Census Bureau. The lead summaries are written only from the fetched text of the source articles, never from memory, and every headline links to its origin. The figures come from official data; the stories are linked to the original reporting. Tariff and trade items come straight from the US Federal Register, in the government's own words.</p>
+    <p>Every issue is reviewed by a person before it sends. Nothing goes out on autopilot.</p>
   </section>
 
   <section class="blk">
     <h2>The rest of the site</h2>
-    <p>The weekly is the moving picture. The <a class="inline" href="./">Briefing</a> is the standing one: 40 sourced answers about Mexico's economy, security, and politics, refreshed every six hours. See the <a class="inline" href="./economy.html">Economy</a> room, the state-by-state <a class="inline" href="./atlas.html">Atlas</a>, or the <a class="inline" href="./data.html">Sources</a> page that lists every feed and when it last updated.</p>
+    <p>The weekly is the moving picture. The <a class="inline" href="./">Briefing</a> is the standing one: sourced answers about Mexico's economy, security, and politics, refreshed every six hours. See the <a class="inline" href="./economy.html">Economy</a> room, the state-by-state <a class="inline" href="./atlas.html">Atlas</a>, or the <a class="inline" href="./sources.html">Sources</a> catalog behind it all.</p>
   </section>
 </div>
 {% endraw %}

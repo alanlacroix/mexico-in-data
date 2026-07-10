@@ -1,0 +1,931 @@
+---
+layout: base.njk
+permalink: /sources.html
+title: "Sources — The Mexico Brief"
+description: "Every source behind The Mexico Brief: official Mexican data, US and foreign trade data, markets, news, and the non-obvious feeds — with cadence, access method, and why each matters."
+---
+{% raw %}
+<style>
+  :root{--ink-3:#4d4d4d}
+  body{font-size:16px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(16px,5vw,36px)}
+
+  /* hero */
+  .hero{padding:26px 0 6px}
+  .hero h1{font-family:var(--serif);font-size:clamp(30px,6vw,46px);line-height:1.0;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
+  .hero .dek{font-size:16.5px;color:var(--ink-2);margin-top:14px;max-width:72ch;line-height:1.55}
+  .hero .dek b{color:var(--ink)}
+  .hero .live{margin-top:14px;font-family:var(--mono);font-size:13px}
+  .hero .live a{color:var(--green);font-weight:500}
+  .metastrip{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:18px;font-family:var(--mono);font-size:11.5px;color:var(--mut);border-top:1px solid var(--line);padding-top:14px}
+  .metastrip b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+  /* legend */
+  .legend{margin:26px 0 6px;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+  .legend .lh{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:12px}
+  .legend .row{display:flex;flex-wrap:wrap;gap:12px 20px}
+  .legend .item{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--ink-2);line-height:1.4;max-width:31ch}
+  .legend .item .lt{color:var(--mut)}
+
+  /* chips: reuse .chip .g/.r/.a; add a neutral fill */
+  .chip.n{background:var(--paper-3);color:var(--ink-2)}
+  .chip{margin:0 2px 2px 0}
+
+  /* gaps callout */
+  .gaps{margin:30px 0 8px;background:var(--paper-2);border:1px solid var(--line);border-left:4px solid var(--green);border-radius:0 8px 8px 0;padding:20px 22px 18px}
+  .gaps .gt{font-family:var(--serif);font-size:20px;color:var(--ink);letter-spacing:-.01em}
+  .gaps .gd{font-size:14.5px;color:var(--ink-2);margin-top:6px;max-width:74ch;line-height:1.5}
+  .gaps ol{margin:14px 0 0;padding:0;list-style:none;counter-reset:gap;
+    display:grid;grid-template-columns:1fr;gap:9px 26px}
+  @media(min-width:720px){.gaps ol{grid-template-columns:1fr 1fr}}
+  .gaps li{position:relative;counter-increment:gap;padding-left:34px;font-size:13.5px;color:var(--ink-2);line-height:1.4}
+  .gaps li::before{content:counter(gap);position:absolute;left:0;top:0;width:22px;height:22px;
+    font-family:var(--mono);font-size:11px;font-weight:600;color:var(--green-d);background:var(--green-bg);
+    border-radius:5px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+  .gaps li b{color:var(--ink);font-weight:600}
+
+  /* section heads: reuse .section-head; letter badge in .no */
+  .grp{margin:40px 0 0}
+  .section-head .no{text-transform:uppercase}
+
+  /* the source tables */
+  table.mck.src{table-layout:fixed;font-size:13.5px}
+  table.mck.src th,table.mck.src td{padding:11px 14px;vertical-align:top}
+  .src th:nth-child(1),.src td:nth-child(1){width:19%}
+  .src th:nth-child(2),.src td:nth-child(2){width:25%}
+  .src th:nth-child(3),.src td:nth-child(3){width:10%}
+  .src th:nth-child(4),.src td:nth-child(4){width:13%}
+  .src th:nth-child(5),.src td:nth-child(5){width:33%}
+  td.nm{white-space:normal}
+  td.nm .n{font-weight:600;color:var(--ink);font-size:13.5px;line-height:1.28}
+  td.nm .n a{color:var(--green)}
+  td.nm .plain{color:var(--ink);font-weight:600}
+  td.nm .bo{display:block;font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:4px;text-transform:uppercase;letter-spacing:.03em;line-height:1.35}
+  td.gives{color:var(--ink-2);line-height:1.42}
+  td.cad{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);white-space:nowrap}
+  td.acc{white-space:nowrap}
+  td.acc .note{display:block;font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:5px;letter-spacing:.01em;white-space:normal;line-height:1.35}
+  td.acc .note.v{color:var(--amber);font-weight:600}
+  td.why{color:var(--ink-2);line-height:1.42}
+  td.why b{color:var(--ink)}
+
+  @media(max-width:820px){
+    .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    table.mck.src{min-width:840px}
+  }
+
+  /* honesty note */
+  .honesty{margin:44px 0 8px;background:var(--amber-bg);border:1px solid #e4d29a;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:20px 22px}
+  .honesty .ht{font-family:var(--serif);font-size:19px;color:var(--ink);letter-spacing:-.01em}
+  .honesty ul{margin:12px 0 0;padding:0;list-style:none}
+  .honesty li{position:relative;padding-left:18px;margin-bottom:9px;font-size:14px;color:var(--ink-2);line-height:1.5}
+  .honesty li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--amber);border-radius:2px}
+  .honesty li b{color:var(--ink)}
+  .honesty a{color:var(--green-d);font-weight:500}
+</style>
+
+<div class="wrap">
+
+  <section class="hero">
+    <span class="eyebrow">What we draw on</span>
+    <h1>Sources</h1>
+    <p class="dek">Every figure on the brief is <b>official or first-party, dated, and one tap from its source</b>. This page is the full catalog behind that promise — honestly labeled by how each source is accessed, and including the ones we haven't wired yet. Where an access method is a real public API we say so; where a source is proprietary, discontinued, or behind an unconfirmed endpoint, we flag it plainly rather than pretend it's live.</p>
+    <p class="live"><a href="/data.html">See which are live right now &rarr;</a></p>
+    <div class="metastrip">
+      <span><b>97</b> catalog entries</span>
+      <span><b>7</b> groups</span>
+      <span><b>A</b> &middot; Mexican official is the spine</span>
+      <span>Access shown per source, not assumed</span>
+    </div>
+  </section>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="lh">Access method — how the data actually comes out</div>
+    <div class="row">
+      <div class="item"><span class="chip g">API</span><span class="lt">A documented, public, machine-readable API. The gold standard for wiring.</span></div>
+      <div class="item"><span class="chip n">BULK</span><span class="lt">Downloadable files (XLS/ZIP/portal). Machine-usable, no live endpoint.</span></div>
+      <div class="item"><span class="chip n">CSV</span><span class="lt">Direct CSV / XML downloads, structured but manually fetched.</span></div>
+      <div class="item"><span class="chip n">SDMX</span><span class="lt">Statistical standard (IMF/OECD/BIS). API-like, treated as structured feed.</span></div>
+      <div class="item"><span class="chip n">RSS</span><span class="lt">A syndication feed we can poll for releases and headlines.</span></div>
+      <div class="item"><span class="chip a">SCRAPE</span><span class="lt">No feed offered; extracted from the page. Fragile, needs maintenance.</span></div>
+      <div class="item"><span class="chip a">REG</span><span class="lt">Free but behind registration / a key request wall.</span></div>
+      <div class="item"><span class="chip r">NO FREE API</span><span class="lt">Proprietary or commercial. No first-party free feed — labeled, never faked.</span></div>
+    </div>
+  </div>
+
+  <!-- TOP GAPS -->
+  <div class="gaps">
+    <div class="gt">Top gaps to wire next</div>
+    <p class="gd">The highest-value machine-readable sources not yet live, in rough priority. These are where more wiring buys the most signal — most are clean public APIs.</p>
+    <ol>
+      <li><b>Banxico SIE API</b> — peso FIX, Cetes/Mbonos curve, TIIE, reserves, remittances by state, mezcla.</li>
+      <li><b>INEGI Banco de Indicadores API</b> — INPC, IGAE, IOAE nowcast, unemployment.</li>
+      <li><b>US Census Trade API + USITC DataWeb</b> — port-level bilateral trade.</li>
+      <li><b>BTS TransBorder Freight</b> — freight by mode &amp; gateway, the nearshoring indicator.</li>
+      <li><b>CBP Border Wait Times API</b> — live, hourly, no key.</li>
+      <li><b>CBP/DHS encounters + OHSS</b> — migration.</li>
+      <li><b>SESNSP incidencia delictiva</b> — homicides / crime by municipality.</li>
+      <li><b>CENACE grid demand</b> — real-time activity nowcast.</li>
+      <li><b>Banxico SPEI</b> — daily interbank transaction pulse.</li>
+      <li><b>EIA API v2</b> — energy trade both directions.</li>
+      <li><b>CFTC Commitments of Traders</b> — weekly peso positioning.</li>
+      <li><b>DOF + US Federal Register API</b> — two-sided tariff/regulatory change-log.</li>
+      <li><b>GACC China customs</b> — China&rarr;Mexico flows (scrape).</li>
+      <li><b>IMSS asegurados</b> — timeliest formal employment.</li>
+      <li><b>UN Comtrade API</b> — mirror-trade cross-check.</li>
+    </ol>
+  </div>
+
+  <!-- ============ GROUP A ============ -->
+  <div class="grp">
+    <div class="section-head">
+      <div class="no">Group A</div>
+      <h2>Mexican official — the core</h2>
+      <p class="dek">The primary record, straight from the institutions that produce it: Banxico, INEGI, Hacienda, and the regulators. This is the spine of the brief.</p>
+    </div>
+    <div class="tblwrap"><table class="mck src">
+      <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx/SieAPIRest" target="_blank" rel="noopener">Banxico SIE API</a></span><span class="bo">Banco de México</span></td>
+          <td class="gives">FX (FIX/USD), Cetes/Mbonos yield curve, TIIE, policy rate, reserves, inflation, remittances</td>
+          <td class="cad">Daily–monthly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free token</span></td>
+          <td class="why">The rates / FX / remittances spine — the single most important programmatic feed.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.inegi.org.mx/servicios/api_indicadores.html" target="_blank" rel="noopener">INEGI Banco de Indicadores API</a></span><span class="bo">INEGI</span></td>
+          <td class="gives">INPC inflation, IGAE monthly-GDP proxy, IOAE nowcast, unemployment, industrial production</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free token</span></td>
+          <td class="why">The real-economy backbone.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.inegi.org.mx/servicios/api_denue.html" target="_blank" rel="noopener">INEGI DENUE API</a></span><span class="bo">INEGI</span></td>
+          <td class="gives">Geolocated business census by NAICS, size, and location</td>
+          <td class="cad">~Annual</td>
+          <td class="acc"><span class="chip g">API</span></td>
+          <td class="why">Economic geography and the nearshoring footprint.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.inegi.org.mx/programas" target="_blank" rel="noopener">INEGI microdata</a></span><span class="bo">INEGI · ENOE / ENIGH / ENVIPE / ENSU</span></td>
+          <td class="gives">Labor, income, and victimization microdata</td>
+          <td class="cad">Quarterly / annual</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">Deep labor and security cuts.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.finanzaspublicas.hacienda.gob.mx" target="_blank" rel="noopener">Estadísticas Oportunas de Finanzas Públicas</a></span><span class="bo">SHCP / Hacienda</span></td>
+          <td class="gives">Revenue, spending, balance, public debt, oil revenue</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">BULK</span><span class="note">no API</span></td>
+          <td class="why">Fiscal health: deficit and debt.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.ppef.hacienda.gob.mx" target="_blank" rel="noopener">Criterios Generales / Paquete Económico</a></span><span class="bo">SHCP</span></td>
+          <td class="gives">Budget assumptions: oil price, GDP, FX, deficit targets</td>
+          <td class="cad">Annual</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">The government's own baseline to score reality against.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://portafolioinfo.cnbv.gob.mx" target="_blank" rel="noopener">CNBV Portafolio de Información</a></span><span class="bo">CNBV</span></td>
+          <td class="gives">Bank-by-bank balance sheets, credit, NPLs, capital</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note">XLSX · no API</span></td>
+          <td class="why">Banking-system stress and credit.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.coneval.org.mx" target="_blank" rel="noopener">CONEVAL poverty</a></span><span class="bo">CONEVAL</span></td>
+          <td class="gives">Multidimensional poverty by state and municipality</td>
+          <td class="cad">Biennial</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">The social and political scorecard.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.sat.gob.mx/minisitio/DatosAbiertos" target="_blank" rel="noopener">SAT Datos Abiertos</a></span><span class="bo">SAT</span></td>
+          <td class="gives">Taxpayer registry stats, CFDI e-invoicing volumes</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">The tax base and formalization.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.economia.gob.mx/datamexico" target="_blank" rel="noopener">DataMéxico</a></span><span class="bo">Secretaría de Economía</span></td>
+          <td class="gives">Trade, FDI, employment, complexity, 13k+ profiles</td>
+          <td class="cad">Varies</td>
+          <td class="acc"><span class="chip g">API</span><span class="note v">Tesseract OLAP · verify endpoint</span></td>
+          <td class="why">One-stop compiled economic profiles.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.gob.mx/se" target="_blank" rel="noopener">RNIE Foreign Direct Investment</a></span><span class="bo">Secretaría de Economía</span></td>
+          <td class="gives">FDI inflows by country, sector, and state</td>
+          <td class="cad">Quarterly</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">Where nearshoring capital lands.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://datos.gob.mx/organization/cre" target="_blank" rel="noopener">CRE open data</a></span><span class="bo">Comisión Reguladora de Energía</span></td>
+          <td class="gives">Fuel and LP-gas retail prices, permits, tariffs</td>
+          <td class="cad">Weekly / monthly</td>
+          <td class="acc"><span class="chip n">CSV</span></td>
+          <td class="why">Retail energy-price pulse and sector permits.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.cenace.gob.mx" target="_blank" rel="noopener">CENACE SIM</a></span><span class="bo">CENACE</span></td>
+          <td class="gives">Real-time grid demand and nodal market prices</td>
+          <td class="cad">5-min / hourly</td>
+          <td class="acc"><span class="chip n">CSV/XML</span><span class="note">no clean API</span></td>
+          <td class="why">A high-frequency activity nowcast.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://ebdi.pemex.com" target="_blank" rel="noopener">Pemex BDI + daily mezcla price</a></span><span class="bo">Pemex</span></td>
+          <td class="gives">Crude/condensate output, exports by grade, refining; daily Mexican-mix export price</td>
+          <td class="cad">Daily / monthly</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">Oil output and exports plus the fiscal oil reference.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.cnh.gob.mx" target="_blank" rel="noopener">CNH hydrocarbons</a></span><span class="bo">Comisión Nacional de Hidrocarburos</span></td>
+          <td class="gives">Field-level oil &amp; gas production, reserves</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note v">no documented API · verify</span></td>
+          <td class="why">Granular upstream detail.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://sie.energia.gob.mx" target="_blank" rel="noopener">SENER SIE energy balances</a></span><span class="bo">Secretaría de Energía</span></td>
+          <td class="gives">Petroleum, gas, electricity, and fuels supply-demand</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note v">verify endpoint</span></td>
+          <td class="why">The national energy balance in one feed.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://datos.gob.mx/organization/cfe" target="_blank" rel="noopener">CFE datos abiertos</a></span><span class="bo">CFE</span></td>
+          <td class="gives">Generation, financials, tariffs</td>
+          <td class="cad">Irregular</td>
+          <td class="acc"><span class="chip n">CSV</span></td>
+          <td class="why">The state utility's generation and tariffs.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://sidof.segob.gob.mx/datos_abiertos" target="_blank" rel="noopener">DOF / SIDOF Datos Abiertos</a></span><span class="bo">Segob</span></td>
+          <td class="gives">Every federal law, decree, regulation, tariff, and NOM</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">BULK</span><span class="note">unofficial IMCO dof-api</span></td>
+          <td class="why">The legal and regulatory change-log.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.ine.mx" target="_blank" rel="noopener">INE Datos Abiertos</a></span><span class="bo">Instituto Nacional Electoral</span></td>
+          <td class="gives">Padrón stats, candidacies, results, party financing</td>
+          <td class="cad">Electoral cycle</td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note">bulk</span></td>
+          <td class="why">The electoral machinery: rolls, results, party money.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.gob.mx/sesnsp" target="_blank" rel="noopener">SESNSP incidencia delictiva</a></span><span class="bo">Secretariado Ejecutivo SNSP</span></td>
+          <td class="gives">Crimes and victims by type, state, and municipality (incl. homicides)</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note">no API</span></td>
+          <td class="why">The core security dataset.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://datos.imss.gob.mx" target="_blank" rel="noopener">IMSS asegurados</a></span><span class="bo">IMSS</span></td>
+          <td class="gives">Formal registered jobs, insured workers, wages by sector and state</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">The timeliest formal-employment pulse.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.cofece.mx" target="_blank" rel="noopener">COFECE resolutions</a></span><span class="bo">Comisión Federal de Competencia</span></td>
+          <td class="gives">Merger reviews and competition rulings</td>
+          <td class="cad">Irregular</td>
+          <td class="acc"><span class="chip a">SCRAPE</span><span class="note">no API</span></td>
+          <td class="why">Competition enforcement and market structure.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://bit.ift.org.mx" target="_blank" rel="noopener">IFT BIT</a></span><span class="bo">Instituto Federal de Telecom</span></td>
+          <td class="gives">Telecom/broadband subscribers, coverage, prices</td>
+          <td class="cad">Quarterly</td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note v">verify endpoint</span></td>
+          <td class="why">Connectivity and telecom competition.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banxico Encuesta de Expectativas + SPEI</a></span><span class="bo">Banco de México</span></td>
+          <td class="gives">Analyst forecasts (GDP/inflation/FX/rate); daily SPEI interbank payment volumes</td>
+          <td class="cad">Monthly / daily</td>
+          <td class="acc"><span class="chip n">BULK</span><span class="note">SPEI in SIE API</span></td>
+          <td class="why">Consensus expectations plus a high-frequency payments proxy.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ============ GROUP B ============ -->
+  <div class="grp">
+    <div class="section-head">
+      <div class="no">Group B</div>
+      <h2>US sources that reveal Mexico</h2>
+      <p class="dek">Mexico is the United States' #1 goods partner, so US agencies hold some of the sharpest, most machine-readable views of it — often more current and better-documented than Mexico's own.</p>
+    </div>
+    <div class="tblwrap"><table class="mck src">
+      <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.census.gov/data/developers/data-sets/international-trade.html" target="_blank" rel="noopener">US Census International Trade API</a></span><span class="bo">US Census Bureau</span></td>
+          <td class="gives">US↔Mexico trade by HS commodity, country, district/port, and mode</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free key</span></td>
+          <td class="why">The trade truth at port level — Mexico is the #1 US goods partner.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://dataweb.usitc.gov" target="_blank" rel="noopener">USITC DataWeb + HTS</a></span><span class="bo">US ITC</span></td>
+          <td class="gives">Detailed US import/export &amp; tariff (HTS) data incl. Mexico; live tariff schedule</td>
+          <td class="cad">Monthly / live</td>
+          <td class="acc"><span class="chip g">API</span></td>
+          <td class="why">Tariff-line detail plus current duty rates.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://data.bts.gov" target="_blank" rel="noopener">BTS TransBorder Freight</a></span><span class="bo">BTS / DOT</span></td>
+          <td class="gives">US↔Mexico freight value by mode (truck/rail/pipeline) and port of entry</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">Socrata + bulk</span></td>
+          <td class="why">The nearshoring flow, by gateway.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.bts.gov" target="_blank" rel="noopener">BTS Border Crossing / Entry</a></span><span class="bo">BTS / DOT</span></td>
+          <td class="gives">Incoming trucks, rail containers, pedestrians by border port</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">Socrata + bulk</span></td>
+          <td class="why">Physical throughput at the border.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://bwt.cbp.gov/api/waittimes" target="_blank" rel="noopener">CBP Border Wait Times API</a></span><span class="bo">CBP / DHS</span></td>
+          <td class="gives">Live commercial &amp; passenger lane wait times, 80+ land ports</td>
+          <td class="cad">Hourly / near-real-time</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">no key</span></td>
+          <td class="why">A rare real-time congestion signal almost nobody wires.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.cbp.gov/newsroom/stats/nationwide-encounters" target="_blank" rel="noopener">CBP/DHS encounters</a></span><span class="bo">CBP / DHS</span></td>
+          <td class="gives">Migrant encounters by sector, nationality, and month</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">CSV</span></td>
+          <td class="why">Migration — central to US–Mexico politics.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://ohss.dhs.gov" target="_blank" rel="noopener">DHS OHSS immigration statistics</a></span><span class="bo">Office of Homeland Security Statistics</span></td>
+          <td class="gives">Enforcement, removals, encounters</td>
+          <td class="cad">Monthly / annual</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">The official enforcement and removals record.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.eia.gov/opendata" target="_blank" rel="noopener">EIA API v2</a></span><span class="bo">US EIA</span></td>
+          <td class="gives">US crude imports from Mexico; US product exports to Mexico</td>
+          <td class="cad">Weekly / monthly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free key</span></td>
+          <td class="why">Energy trade in both directions.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.usgs.gov/centers/national-minerals-information-center" target="_blank" rel="noopener">USGS Mineral Commodity Summaries</a></span><span class="bo">USGS</span></td>
+          <td class="gives">Mexico silver/copper/zinc output; US import reliance</td>
+          <td class="cad">Annual</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">Mexico is ~half of US silver imports.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://fas.usda.gov/data" target="_blank" rel="noopener">USDA FAS (PSD, Export Sales, GAIN)</a></span><span class="bo">USDA Foreign Ag Service</span></td>
+          <td class="gives">Ag production/trade; weekly US export sales to Mexico; attaché GAIN reports</td>
+          <td class="cad">Weekly / monthly</td>
+          <td class="acc"><span class="chip g">API</span></td>
+          <td class="why">Corn, pork, and dairy to Mexico plus on-the-ground intel.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://apps.bea.gov/api" target="_blank" rel="noopener">BEA API</a></span><span class="bo">Bureau of Economic Analysis</span></td>
+          <td class="gives">US FDI position in/out of Mexico; services trade</td>
+          <td class="cad">Quarterly / annual</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free UserID</span></td>
+          <td class="why">The FDI counterpart to RNIE.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://ticdata.treasury.gov" target="_blank" rel="noopener">Treasury TIC</a></span><span class="bo">US Treasury</span></td>
+          <td class="gives">Mexican holdings of US securities; portfolio flows</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">Mexico's footprint in US securities and portfolio flows.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://fred.stlouisfed.org/docs/api/fred" target="_blank" rel="noopener">FRED API</a></span><span class="bo">St. Louis Fed</span></td>
+          <td class="gives">Peso FX (DEXMXUS), rates, mirrored Mexico series</td>
+          <td class="cad">Daily–annual</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free key</span></td>
+          <td class="why">The easiest single API for clean FX and macro.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.federalreserve.gov/releases/h10" target="_blank" rel="noopener">Federal Reserve H.10</a></span><span class="bo">Federal Reserve Board</span></td>
+          <td class="gives">Official daily peso/USD noon rate</td>
+          <td class="cad">Daily / weekly</td>
+          <td class="acc"><span class="chip n">BULK</span><span class="note">also FRED API</span></td>
+          <td class="why">The official daily reference peso rate.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.dallasfed.org/research/economics" target="_blank" rel="noopener">Dallas Fed Mexico research</a></span><span class="bo">FRB Dallas</span></td>
+          <td class="gives">Mexico update, maquiladora / Texas-Mexico trade, business-cycle indexes</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note">no API</span></td>
+          <td class="why">A US central-bank lens trained on Mexico.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.bls.gov/developers" target="_blank" rel="noopener">BLS API</a></span><span class="bo">Bureau of Labor Statistics</span></td>
+          <td class="gives">US import/export price indexes incl. by origin</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free key</span></td>
+          <td class="why">Trade-price inflation on Mexican imports.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.federalregister.gov/developers/documentation/api/v1" target="_blank" rel="noopener">Federal Register API</a></span><span class="bo">Office of the Federal Register</span></td>
+          <td class="gives">Tariff actions, trade proclamations, sanctions touching Mexico</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">no key</span></td>
+          <td class="why">A real-time US regulatory / tariff change-log.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://api.govinfo.gov" target="_blank" rel="noopener">govinfo + eCFR API</a></span><span class="bo">GPO / NARA</span></td>
+          <td class="gives">US statutes, executive orders, CFR text</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip g">API</span></td>
+          <td class="why">Full-text US legal actions.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a></span><span class="bo">US Trade Representative</span></td>
+          <td class="gives">USMCA disputes, §301 / §232 actions</td>
+          <td class="cad">Irregular</td>
+          <td class="acc"><span class="chip a">SCRAPE</span><span class="note">no data API</span></td>
+          <td class="why">Trade-policy intent.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://ofac.treasury.gov/sanctions-list-service" target="_blank" rel="noopener">OFAC Sanctions List Service</a></span><span class="bo">US Treasury OFAC</span></td>
+          <td class="gives">SDN / Consolidated lists — cartels, Mexican nationals and entities</td>
+          <td class="cad">Irregular</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">+ bulk</span></td>
+          <td class="why">Cartel and finance sanctions.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.state.gov" target="_blank" rel="noopener">State Dept INCSR &amp; travel advisories</a></span><span class="bo">US Dept of State</span></td>
+          <td class="gives">Narcotics control report; Mexico advisory levels</td>
+          <td class="cad">Annual / irregular</td>
+          <td class="acc"><span class="chip a">SCRAPE</span><span class="note">PDF</span></td>
+          <td class="why">Official US read on narcotics and safety.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://efts.sec.gov/LATEST/search-index" target="_blank" rel="noopener">SEC EDGAR Full-Text Search API</a></span><span class="bo">US SEC</span></td>
+          <td class="gives">US-listed firms' filings mentioning Mexico exposure</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">no key · UA required</span></td>
+          <td class="why">Corporate Mexico exposure from 10-Ks and 8-Ks.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://publicreporting.cftc.gov" target="_blank" rel="noopener">CFTC Commitments of Traders</a></span><span class="bo">US CFTC</span></td>
+          <td class="gives">Speculative peso futures positioning (net longs/shorts)</td>
+          <td class="cad">Weekly (Fri)</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">Socrata + bulk</span></td>
+          <td class="why">The cleanest weekly peso-sentiment read.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://safer.fmcsa.dot.gov" target="_blank" rel="noopener">FMCSA SAFER</a></span><span class="bo">Fed Motor Carrier Safety Admin</span></td>
+          <td class="gives">Mexican cross-border carriers registered in the US, safety records</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">Socrata</span></td>
+          <td class="why">Who hauls the freight.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ============ GROUP C ============ -->
+  <div class="grp">
+    <div class="section-head">
+      <div class="no">Group C</div>
+      <h2>China &amp; foreign lenses on Mexico</h2>
+      <p class="dek">Trade is two-sided. Partner customs and statistics offices let us triangulate Mexican figures and watch flows Mexico doesn't publish cleanly — above all the surge from China.</p>
+    </div>
+    <div class="tblwrap"><table class="mck src">
+      <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://english.customs.gov.cn/statics/report/monthly.html" target="_blank" rel="noopener">GACC China Customs (English)</a></span><span class="bo">Gen. Admin. of Customs China</span></td>
+          <td class="gives">China↔Mexico exports/imports, monthly</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip a">SCRAPE</span><span class="note">no API</span></td>
+          <td class="why">The China-side view of surging China&rarr;Mexico flows and transshipment.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://stats.customs.gov.cn" target="_blank" rel="noopener">GACC detailed statistics</a></span><span class="bo">GACC</span></td>
+          <td class="gives">Commodity × partner detail</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip a">REG</span><span class="note">portal</span></td>
+          <td class="why">HS-level China–Mexico detail behind a registration wall.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.mofcom.gov.cn" target="_blank" rel="noopener">MOFCOM / SAFE outward FDI</a></span><span class="bo">China MOFCOM / SAFE</span></td>
+          <td class="gives">Chinese ODI into Mexico</td>
+          <td class="cad">Annual</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">China's own tally of capital going into Mexico.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://ec.europa.eu/eurostat" target="_blank" rel="noopener">Eurostat Comext</a></span><span class="bo">Eurostat</span></td>
+          <td class="gives">EU↔Mexico trade in goods, detailed HS</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">EU-side triangulation of Mexican trade.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://comtradeplus.un.org" target="_blank" rel="noopener">UN Comtrade</a></span><span class="bo">UN Statistics Division</span></td>
+          <td class="gives">Mirror trade: Mexico's trade as reported by every partner</td>
+          <td class="cad">Monthly / annual</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free tier · key</span></td>
+          <td class="why">Cross-check on the Mexican figures.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://apiportal.wto.org" target="_blank" rel="noopener">WTO Timeseries + Tariff Data</a></span><span class="bo">WTO</span></td>
+          <td class="gives">Applied/bound/preferential tariffs, trade indicators</td>
+          <td class="cad">Annual / quarterly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">key</span></td>
+          <td class="why">The official tariff structure.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ============ GROUP D ============ -->
+  <div class="grp">
+    <div class="section-head">
+      <div class="no">Group D</div>
+      <h2>Multilateral &amp; cross-country</h2>
+      <p class="dek">The IMF, World Bank, OECD, and BIS put Mexico on a comparable footing and add independent diagnosis and forecasts.</p>
+    </div>
+    <div class="tblwrap"><table class="mck src">
+      <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://data.imf.org" target="_blank" rel="noopener">IMF Data (SDMX 3.0) + DataMapper API</a></span><span class="bo">IMF</span></td>
+          <td class="gives">BoP, international accounts, WEO projections, fiscal</td>
+          <td class="cad">Monthly–annual</td>
+          <td class="acc"><span class="chip n">SDMX</span><span class="note">REST · no key</span></td>
+          <td class="why">WEO forecasts plus standard series.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.imf.org/en/Countries/MEX" target="_blank" rel="noopener">IMF Article IV Mexico</a></span><span class="bo">IMF</span></td>
+          <td class="gives">Staff assessment of the economy and risks</td>
+          <td class="cad">~Annual</td>
+          <td class="acc"><span class="chip n">BULK</span><span class="note">PDF</span></td>
+          <td class="why">The definitive external diagnosis.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://api.worldbank.org/v2" target="_blank" rel="noopener">World Bank Open Data API</a></span><span class="bo">World Bank</span></td>
+          <td class="gives">~16k indicators for Mexico incl. WGI governance</td>
+          <td class="cad">Annual</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">no key</span></td>
+          <td class="why">Long-run benchmarking.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://data-explorer.oecd.org" target="_blank" rel="noopener">OECD Data Explorer API</a></span><span class="bo">OECD</span></td>
+          <td class="gives">Mexico Economic Surveys, CLI, tax, TiVA</td>
+          <td class="cad">Monthly–annual</td>
+          <td class="acc"><span class="chip n">SDMX</span><span class="note">REST · no key</span></td>
+          <td class="why">Mexico is a member; deep comparable stats.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://stats.bis.org" target="_blank" rel="noopener">BIS statistics</a></span><span class="bo">Bank for Intl Settlements</span></td>
+          <td class="gives">Peso effective exchange rate, credit to non-financial sector, property prices</td>
+          <td class="cad">Monthly / quarterly</td>
+          <td class="acc"><span class="chip n">SDMX</span><span class="note">+ bulk</span></td>
+          <td class="why">REER and the credit cycle.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://statistics.cepal.org" target="_blank" rel="noopener">ECLAC / CEPALSTAT</a></span><span class="bo">UN ECLAC</span></td>
+          <td class="gives">LatAm-comparable macro and social series</td>
+          <td class="cad">Annual</td>
+          <td class="acc"><span class="chip g">API</span><span class="note v">verify endpoint</span></td>
+          <td class="why">Regional context.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.fao.org/faostat" target="_blank" rel="noopener">FAO FAOSTAT</a></span><span class="bo">UN FAO</span></td>
+          <td class="gives">Mexico ag production, food balances, prices</td>
+          <td class="cad">Annual</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">+ bulk</span></td>
+          <td class="why">Comparable food and agriculture series.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ============ GROUP E ============ -->
+  <div class="grp">
+    <div class="section-head">
+      <div class="no">Group E</div>
+      <h2>Markets &amp; financial real-time</h2>
+      <p class="dek">Prices that move intraday. The domestic rates, FX, and mezcla are open through Banxico; the country-risk gauges are proprietary and labeled as such — never presented as wired.</p>
+    </div>
+    <div class="tblwrap"><table class="mck src">
+      <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx/SieAPIRest" target="_blank" rel="noopener">Cetes / Mbonos yield curve</a></span><span class="bo">Banxico SIE</span></td>
+          <td class="gives">Sovereign yield curve, auctions, TIIE, UDIS</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip g">API</span></td>
+          <td class="why">The domestic rates curve.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx/SieAPIRest" target="_blank" rel="noopener">Banxico FIX</a></span><span class="bo">Banco de México</span></td>
+          <td class="gives">Official daily USD/MXN determination (published in DOF)</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip g">API</span></td>
+          <td class="why">The legal reference exchange rate.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx/apps/gc/precios-spot-del-petroleo" target="_blank" rel="noopener">Mexican-mix (mezcla) crude price</a></span><span class="bo">Pemex / Banxico SIE / SHCP</span></td>
+          <td class="gives">Daily export-blend reference price</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">via SIE</span></td>
+          <td class="why">The fiscal oil reference.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.bmv.com.mx" target="_blank" rel="noopener">BMV / S&amp;P-BMV IPC</a></span><span class="bo">Bolsa Mexicana de Valores</span></td>
+          <td class="gives">Equity index and listed-issuer data</td>
+          <td class="cad">Intraday (20-min delay)</td>
+          <td class="acc"><span class="chip r">NO FREE API</span><span class="note">real-time is commercial</span></td>
+          <td class="why">The equity barometer.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><span class="plain">EMBI+ Mexico / country-risk spread</span></span><span class="bo">J.P. Morgan (proprietary)</span></td>
+          <td class="gives">Sovereign spread over US Treasuries</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip r">PROPRIETARY</span><span class="note v">no first-party free feed</span></td>
+          <td class="why">The country-risk gauge; echoed by secondary press, not wired.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><span class="plain">Sovereign CDS (5Y)</span></span><span class="bo">ICE / S&amp;P Global (proprietary)</span></td>
+          <td class="gives">Default-risk pricing</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip r">NO FREE API</span><span class="note v">paid / proprietary</span></td>
+          <td class="why">The market default read — commercial only.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.moodys.com" target="_blank" rel="noopener">Rating actions</a></span><span class="bo">Moody's · S&amp;P · Fitch · HR Ratings</span></td>
+          <td class="gives">Sovereign &amp; Pemex / CFE rating changes</td>
+          <td class="cad">Irregular</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">email · free reg</span></td>
+          <td class="why">Rating shifts move the peso.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ============ GROUP F ============ -->
+  <div class="grp">
+    <div class="section-head">
+      <div class="no">Group F</div>
+      <h2>News — feeds usable programmatically</h2>
+      <p class="dek">Where the numbers get context and the politics get said out loud. We use these as machine-readable feeds for signal and quotes, never as a substitute for a sourced figure.</p>
+    </div>
+    <div class="tblwrap"><table class="mck src">
+      <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.gob.mx/presidencia" target="_blank" rel="noopener">Presidencia — versiones estenográficas</a></span><span class="bo">Presidencia · la mañanera</span></td>
+          <td class="gives">Full daily presidential press-conference transcripts</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note v">web · verify</span></td>
+          <td class="why">Primary-source policy signaling, verbatim.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.inegi.org.mx/app/saladeprensa" target="_blank" rel="noopener">INEGI sala de prensa</a></span><span class="bo">INEGI</span></td>
+          <td class="gives">Release calendar and headline communiqués</td>
+          <td class="cad">On schedule</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Know the number the moment it drops.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banxico boletines</a></span><span class="bo">Banco de México</span></td>
+          <td class="gives">Policy decisions, minutes, reports</td>
+          <td class="cad">Scheduled</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">calendar</span></td>
+          <td class="why">Monetary-policy signals at source.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.eleconomista.com.mx" target="_blank" rel="noopener">El Economista</a></span><span class="bo">El Economista</span></td>
+          <td class="gives">Business, finance, and economy, daily</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note v">verify paths</span></td>
+          <td class="why">Daily business coverage.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.elfinanciero.com.mx" target="_blank" rel="noopener">El Financiero</a></span><span class="bo">El Financiero</span></td>
+          <td class="gives">Finance / economy / politics, markets, mezcla</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Markets and macro daily.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://expansion.mx/canales-rss" target="_blank" rel="noopener">Expansión</a></span><span class="bo">Grupo Expansión</span></td>
+          <td class="gives">Business and economy</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">official channels</span></td>
+          <td class="why">Business coverage with published feeds.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.bloomberglinea.com" target="_blank" rel="noopener">Bloomberg Línea</a></span><span class="bo">Bloomberg Línea</span></td>
+          <td class="gives">LatAm / Mexico markets and business (Spanish)</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Markets desk view, in Spanish.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.eluniversal.com.mx" target="_blank" rel="noopener">National dailies</a></span><span class="bo">El Universal · Milenio · Excélsior · La Jornada</span></td>
+          <td class="gives">General and political news</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note v">most · verify</span></td>
+          <td class="why">The general-news baseline.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.animalpolitico.com" target="_blank" rel="noopener">Investigative outlets</a></span><span class="bo">Animal Político · Proceso · Aristegui</span></td>
+          <td class="gives">Corruption, security, politics</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">partial coverage</span></td>
+          <td class="why">Where accountability stories break.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.reuters.com/world/americas" target="_blank" rel="noopener">Reuters / AP Mexico</a></span><span class="bo">Reuters · Associated Press</span></td>
+          <td class="gives">English breaking news</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip a">SCRAPE</span><span class="note v">Reuters RSS deprecated</span></td>
+          <td class="why">English-language breaking coverage.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://mexiconewsdaily.com/feed" target="_blank" rel="noopener">Mexico News Daily</a></span><span class="bo">Mexico News Daily</span></td>
+          <td class="gives">English-language Mexico news</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Daily Mexico coverage in English.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ============ GROUP G ============ -->
+  <div class="grp">
+    <div class="section-head">
+      <div class="no">Group G</div>
+      <h2>Non-obvious &amp; creative signals</h2>
+      <p class="dek">The feeds most briefings never wire: grid load, night lights, border-wait times, flights, fires, disappearances. Harder to extract, high in nowcasting value.</p>
+    </div>
+    <div class="tblwrap"><table class="mck src">
+      <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://sidof.segob.gob.mx/datos_abiertos" target="_blank" rel="noopener">DOF Datos Abiertos</a></span><span class="bo">Segob</span></td>
+          <td class="gives">Machine-readable log of every federal legal / regulatory / tariff act</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">BULK</span></td>
+          <td class="why">A regulatory change detector.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.cenace.gob.mx" target="_blank" rel="noopener">CENACE grid demand &amp; prices</a></span><span class="bo">CENACE</span></td>
+          <td class="gives">Real-time national / regional electricity demand and nodal prices</td>
+          <td class="cad">5-min / hourly</td>
+          <td class="acc"><span class="chip n">CSV/XML</span></td>
+          <td class="why">The best public high-frequency activity nowcast.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx/SieAPIRest" target="_blank" rel="noopener">Banxico remittance microdata</a></span><span class="bo">Banxico SIE</span></td>
+          <td class="gives">Remittances by state (CA79) and municipality (CE166), avg amount</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip g">API</span></td>
+          <td class="why">A household-income lifeline mapped locally.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://datos.gob.mx" target="_blank" rel="noopener">Port container throughput</a></span><span class="bo">SICT / Marina · ASIPONA</span></td>
+          <td class="gives">Monthly TEUs &amp; tonnage: Manzanillo, Lázaro Cárdenas, Veracruz, Altamira</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip n">CSV</span></td>
+          <td class="why">Trade throughput at the chokepoints.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://bwt.cbp.gov/api/waittimes" target="_blank" rel="noopener">CBP Border Wait Times API</a></span><span class="bo">CBP</span></td>
+          <td class="gives">Live crossing congestion</td>
+          <td class="cad">Near-real-time</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">no key</span></td>
+          <td class="why">A daily-habit signal rarely wired.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://firms.modaps.eosdis.nasa.gov/api" target="_blank" rel="noopener">NASA FIRMS active-fire API</a></span><span class="bo">NASA LANCE / EOSDIS</span></td>
+          <td class="gives">Near-real-time fire / hotspot detections over Mexico</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free MAP_KEY</span></td>
+          <td class="why">An ag-burning and flaring proxy.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.earthdata.nasa.gov" target="_blank" rel="noopener">VIIRS Black Marble nighttime lights</a></span><span class="bo">NASA / NOAA</span></td>
+          <td class="gives">Nighttime radiance = activity / electrification proxy</td>
+          <td class="cad">Daily / monthly</td>
+          <td class="acc"><span class="chip n">BULK</span><span class="note">Earthdata login</span></td>
+          <td class="why">Sub-national activity where official stats lag.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://opensky-network.org/apidoc" target="_blank" rel="noopener">OpenSky + airport-operator traffic</a></span><span class="bo">OpenSky · GAP · ASUR · OMA · AICM · AIFA</span></td>
+          <td class="gives">Live/historical flights; monthly passenger &amp; cargo by airport</td>
+          <td class="cad">Live / monthly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">reg · + bulk</span></td>
+          <td class="why">Tourism, business travel, and air-cargo pulse.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://acleddata.com/data-export-tool" target="_blank" rel="noopener">ACLED</a></span><span class="bo">ACLED</span></td>
+          <td class="gives">Geolocated cartel / political-violence events</td>
+          <td class="cad">Weekly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">free reg</span></td>
+          <td class="why">A structured security-event tracker.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://versionpublicarnpdno.segob.gob.mx" target="_blank" rel="noopener">RNPDNO disappeared persons</a></span><span class="bo">Segob (CNB)</span></td>
+          <td class="gives">National registry of missing / disappeared persons</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip a">SCRAPE</span></td>
+          <td class="why">The security dimension SESNSP misses.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://datacivica.org" target="_blank" rel="noopener">Data Cívica / civil-society trackers</a></span><span class="bo">Data Cívica et al.</span></td>
+          <td class="gives">Femicides, clandestine graves, police-abuse datasets</td>
+          <td class="cad">Irregular</td>
+          <td class="acc"><span class="chip n">BULK</span><span class="note">CSV / GitHub</span></td>
+          <td class="why">Where official data is thin.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.inegi.org.mx/programas/ensu" target="_blank" rel="noopener">INEGI ENSU / ENVIPE</a></span><span class="bo">INEGI</span></td>
+          <td class="gives">Quarterly urban security perception; annual victimization</td>
+          <td class="cad">Quarterly / annual</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">+ bulk</span></td>
+          <td class="why">Public-safety sentiment — a leading political signal.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.amia.com.mx" target="_blank" rel="noopener">Auto industry (RAIAVL / AMIA)</a></span><span class="bo">INEGI / AMIA</span></td>
+          <td class="gives">Monthly vehicle production, exports, domestic sales</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">+ bulk</span></td>
+          <td class="why">Autos are ~a third of manufacturing exports.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.antad.net" target="_blank" rel="noopener">ANTAD same-store sales</a></span><span class="bo">ANTAD</span></td>
+          <td class="gives">Monthly retail same-store and total sales growth</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip r">NO FREE API</span><span class="note">web / PR</span></td>
+          <td class="why">A consumer-demand pulse.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><span class="plain">Google / Apple mobility</span></span><span class="bo">Google · Apple</span></td>
+          <td class="gives">Movement trends</td>
+          <td class="cad">Historical only</td>
+          <td class="acc"><span class="chip r">DISCONTINUED</span><span class="note v">no longer updated</span></td>
+          <td class="why">Useful history, but Google (2022) and Apple ended these feeds.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://trends.google.com" target="_blank" rel="noopener">Google Trends</a></span><span class="bo">Google (unofficial)</span></td>
+          <td class="gives">Search-interest nowcasting</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip a">UNOFFICIAL</span><span class="note v">not first-party · label</span></td>
+          <td class="why">A nowcasting hint — used only when clearly labeled.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banxico SPEI payment volumes</a></span><span class="bo">Banco de México</span></td>
+          <td class="gives">Daily interbank payment count and value</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip g">API</span><span class="note">via SIE / bulk</span></td>
+          <td class="why">The highest-frequency transaction proxy.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI IOAE nowcast &amp; IGAE</a></span><span class="bo">INEGI</span></td>
+          <td class="gives">Timely estimate of monthly economic activity</td>
+          <td class="cad">Monthly</td>
+          <td class="acc"><span class="chip g">API</span></td>
+          <td class="why">The fastest official GDP-direction read.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- HONESTY NOTE -->
+  <div class="honesty">
+    <div class="ht">An honest word on what's not wired</div>
+    <ul>
+      <li><b>Proprietary, no free feed.</b> <b>EMBI+ Mexico</b>, <b>sovereign CDS</b>, and <b>BMV real-time</b> quotes have no first-party free API. They're labeled here and never shown on the brief as if live; where we cite the direction of country risk, it comes from secondary press, dated.</li>
+      <li><b>Discontinued.</b> <b>Google and Apple mobility</b> ended (Google in 2022, Apple after). We keep the history but treat it as a closed series, not a current signal.</li>
+      <li><b>Endpoint unconfirmed.</b> <b>DataMéxico</b> (Tesseract OLAP), <b>CEPALSTAT</b>, <b>SENER</b>, <b>CNH</b>, <b>IFT</b>, and several <b>gob.mx / news RSS</b> paths have platforms that exist but an exact API endpoint we haven't confirmed — flagged <span class="chip a">verify endpoint</span> above rather than assumed working.</li>
+      <li><b>Deprecated feed.</b> <b>Reuters</b> retired its public RSS; we read it via the site, not a feed.</li>
+      <li><b>Unofficial.</b> <b>Google Trends</b> is not a first-party statistic. When it appears it's labeled a search-interest hint, never a fact.</li>
+      <li>The rule underneath all of it: every published figure is official, dated, and one tap from its source. <a href="/data.html">See which feeds are live right now &rarr;</a></li>
+    </ul>
+  </div>
+
+</div>
+{% endraw %}

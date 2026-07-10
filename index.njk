@@ -5,14 +5,6 @@ title: "The Mexico Brief — a sourced, live briefing on the whole country."
 description: "Mexico's economy in official numbers: growth, the peso, inflation, jobs, investment, politics and security—every figure sourced and dated."
 ogTitle: "The Mexico Brief"
 ogDescription: "Mexico's economy in official numbers—sourced, dated, and updated as the data lands."
-wire:
-  href: "#q12"
-  label: "The Wire"
-  id: "nav-wire"
-status:
-  text: "loading…"
-  href: "/data.html"
-  id: "status"
 ---
 {% raw %}
 <style>
@@ -397,7 +389,10 @@ status:
 
 <div class="progress" id="progress"></div>
 
-
+<div class="livebar"><div class="wrap">
+  <a class="wire" id="nav-wire" href="#q12"><span class="dot"></span>The Wire</a>
+  <a class="status" id="status" href="/data.html">loading…</a>
+</div></div>
 
 <nav class="pillnav" id="pillnav"></nav>
 
