@@ -26,6 +26,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const D = (...p) => path.join(ROOT, 'data', ...p);
 const STYLE = fs.readFileSync(path.join(__dirname, 'email-style.md'), 'utf8');   // the editorial contract, compiled into the summary prompt
+const GREETING_NAME = 'Alan';            // you're reader #1; once there's a list, swap for a Buttondown merge tag: {{ subscriber.first_name }}
 const TOP_THRESHOLD = 7.5;               // score to earn a "top of the week" lead slot
 const ROOM_THRESHOLD = 4.0;              // score to appear in a room at all
 const MAX_LEADS = 3, MAX_PER_ROOM = 3, MAX_CANDIDATES = 70;
@@ -265,7 +266,7 @@ async function main() {
   const leadClause = n === 0 ? 'A quiet week for headlines. The board is below.'
     : n === 1 ? 'One story led the week.'
       : `${numWord(n)} stories led the week.`;
-  const intro = `<b>Good ${WD[monday.getUTCDay()]}.</b> ${leadClause} About a ${readMin}-minute read.`;
+  const intro = `<b>Good morning, ${GREETING_NAME}.</b> ${leadClause} About a ${readMin}-minute read.`;
   const prev = readJson(D('email', 'latest.json'), null);
   const issue = prev && prev.week === isoWk ? prev.issue : (prev?.issue || 0) + 1;
   const lead0 = topOfWeek[0];
