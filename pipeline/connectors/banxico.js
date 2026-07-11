@@ -84,7 +84,41 @@ export const connectors = [
   makeConnector({ id: 'banxico-tpv-debito-monto', title: 'TPV — importe con tarjeta de débito',     metric: 'debit_pos_value', serie: 'SF62279', units: 'million MXN', cadence: 'quarterly', maxPct: 45, years: 6 }),
   makeConnector({ id: 'banxico-cajeros-ops',      title: 'Cajeros — retiros de efectivo (operaciones)', metric: 'atm_ops',    serie: 'SF62269', units: 'operaciones',  cadence: 'quarterly', maxPct: 40, years: 6 }),
   makeConnector({ id: 'banxico-cajeros-monto',    title: 'Cajeros — retiros de efectivo (importe)',     metric: 'atm_value',  serie: 'SF62275', units: 'million MXN', cadence: 'quarterly', maxPct: 40, years: 6 }),
+  // Credit-card at POS (CF268 credit rows), e-commerce (CF621), and cards in circulation (CF256).
+  // All quarterly SYSTEM aggregates — no named private company. Cards total = credit + debit (CF256 has
+  // no single combined row), summed on the page.
+  makeConnector({ id: 'banxico-tpv-credito-ops',   title: 'TPV — operaciones con tarjeta de crédito', metric: 'credit_pos_ops',   serie: 'SF62274',  units: 'operaciones',  cadence: 'quarterly', maxPct: 45, years: 6 }),
+  makeConnector({ id: 'banxico-tpv-credito-monto', title: 'TPV — importe con tarjeta de crédito',     metric: 'credit_pos_value', serie: 'SF62280',  units: 'million MXN', cadence: 'quarterly', maxPct: 45, years: 6 }),
+  makeConnector({ id: 'banxico-ecommerce-ops',     title: 'Comercio electrónico — operaciones con tarjeta', metric: 'ecom_ops',   serie: 'SF273475', units: 'operaciones',  cadence: 'quarterly', maxPct: 55, years: 6 }),
+  makeConnector({ id: 'banxico-ecommerce-monto',   title: 'Comercio electrónico — importe con tarjeta',     metric: 'ecom_value', serie: 'SF273476', units: 'million MXN', cadence: 'quarterly', maxPct: 55, years: 6 }),
+  makeConnector({ id: 'banxico-tarjetas-credito',  title: 'Tarjetas de crédito vigentes (todas las marcas)', metric: 'cards_credit', serie: 'SF61870', units: 'tarjetas', cadence: 'quarterly', maxPct: 25, years: 6 }),
+  makeConnector({ id: 'banxico-tarjetas-debito',   title: 'Tarjetas de débito vigentes (todas las marcas)',  metric: 'cards_debit',  serie: 'SF61871', units: 'tarjetas', cadence: 'quarterly', maxPct: 25, years: 6 }),
+  makeConnector({ id: 'banxico-consumo-privado',   title: 'Consumo privado — índice mensual (desest.)', metric: 'private_consumption', serie: 'SR16563', units: 'index 2013=100', cadence: 'monthly', maxPct: 20, years: 6 }),
   makeConnector({ id: 'banxico-remesas-electronicas', title: 'Remesas — transferencias electrónicas', metric: 'remittances_electronic', serie: 'SE27806', units: 'million US$', cadence: 'monthly', maxPct: 25 }),
+  // Currency in circulation (SF1, monthly). Native unit is MILES de pesos → convert to millones (÷1000)
+  // so it matches every other importe series on the page. The cash half of the paradox.
+  {
+    manifest: {
+      id: 'banxico-circulante', title: 'Billetes y monedas en circulación', metric: 'currency_circulation', canonicalSource: true,
+      source: 'Banco de México (SIE)', sourceUrl: 'https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF1/datos',
+      license: 'Banxico Términos de Uso (attribution; not open — Clause 8)', cadence: 'monthly', units: 'million MXN',
+      track: 'pulse', kind: 'series', granularity: 'national', thresholds: { maxPctChange: 20, minRows: 3 },
+    },
+    async fetchRaw(ctx) {
+      const token = TOKEN(); if (!token) throw new Error('missing BANXICO_TOKEN (fail-closed)');
+      const d = new Date(ctx.now); d.setFullYear(d.getFullYear() - 6);
+      const start = d.toISOString().slice(0, 10), end = ctx.now.slice(0, 10);
+      return getJson(`https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF1/datos/${start}/${end}?token=${token}`);
+    },
+    normalize(raw) {
+      const s = raw?.bmx?.series?.[0]; if (!s || !Array.isArray(s.datos)) throw new Error('SF1: no datos');
+      const data = s.datos.filter((d) => d.dato && d.dato !== 'N/E')
+        .map((d) => ({ date: isoFrom(d.fecha), value: Number(String(d.dato).replace(/,/g, '')) / 1000 })) // miles → millones
+        .filter((p) => Number.isFinite(p.value)).sort((a, b) => a.date.localeCompare(b.date));
+      if (!data.length) throw new Error('SF1: no usable observations');
+      return { vintage: data[data.length - 1].date, data, notes: 'Billetes y monedas en circulación (SF1), de miles a millones de pesos' };
+    },
+  },
   // CoDi is published DAILY (SF335701). Aggregate to monthly totals; drop the trailing partial month so a
   // half-summed current month never reads as a crash.
   {

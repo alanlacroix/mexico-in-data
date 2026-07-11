@@ -77,7 +77,11 @@ export function validate(m, out, prior) {
 }
 
 // How old the latest observation may be, per cadence, before we call it stale.
-const GRACE_DAYS = { '4-hour': 2, 'business-daily': 5, daily: 5, weekly: 12, monthly: 58, quarter: 135, annual: 430, yearly: 430 };
+// Calibrated to "a full period has been missed, plus normal publication lag" — NOT the raw period
+// length. Banxico dates each observation at the period START (Q1 = Jan 1) and publishes with a lag,
+// so a perfectly current quarterly feed can read ~190 days old; flagging that would cry wolf. These
+// windows flag a feed that has genuinely skipped a release, not one that's merely lagged-but-current.
+const GRACE_DAYS = { '4-hour': 2, 'business-daily': 6, daily: 8, weekly: 21, monthly: 90, quarter: 220, annual: 460, yearly: 460 };
 function stalenessFlag(m, vintage) {
   const cad = String(m.cadence || '');
   const key = Object.keys(GRACE_DAYS).find((k) => cad.includes(k));
