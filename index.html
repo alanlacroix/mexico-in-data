@@ -59,6 +59,25 @@
   .brief .s:hover{border-bottom:1px solid var(--green)}
   @media(max-width:560px){ .brief p{font-size:16.5px} }
 
+  /* THE AREAS — the topic browse. Each area: a header (→ its section page), a 1–2 sentence read,
+     then up to 3 standardized headline line-items (claim + muted source · date). 2-col on desktop.
+     One visual grammar, hard caps, fixed order — the anti-'articles all over the place' rules. */
+  .areas{display:grid;grid-template-columns:1fr;gap:8px;margin:2px 0 4px}
+  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:11px;overflow:hidden}}
+  .area{background:var(--paper);padding:16px 18px 15px}
+  @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:11px}}
+  .area-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none;margin-bottom:8px}
+  .area-k{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .area-go{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
+  .area-h:hover .area-go{color:var(--green-d)}
+  .area-syn{font-size:14px;line-height:1.52;color:var(--ink-2);margin:0 0 11px}
+  .area-hl .hl{display:block;padding:9px 0;border-top:1px solid var(--line);text-decoration:none}
+  .area-hl .hl:first-child{border-top:none;padding-top:1px}
+  .hl-t{display:block;font-size:14px;color:var(--ink);font-weight:500;line-height:1.36}
+  .area-hl .hl:hover .hl-t{color:var(--green-d)}
+  .hl-m{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
+  .area-empty{font-size:13.5px;color:var(--mut);padding:2px 0 4px}
+
   /* block headers */
   .bh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-top:2px solid var(--green);padding-top:11px;margin:38px 0 10px}
   .bh .k{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
@@ -81,6 +100,7 @@
   .tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
   .tile .dl{font-family:var(--mono);font-size:12.5px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
   .tile .dl.up::before{content:"▲ ";font-size:10px} .tile .dl.dn::before{content:"▼ ";font-size:10px}
+  .tile .dl.up{color:var(--green-d)} .tile .dl.dn{color:var(--red)}
   .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
   .tile svg.spark{margin-top:7px}
   .tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
@@ -242,12 +262,6 @@
     <div id="brief" class="brief"></div>
   </section>
 
-  <!-- 2b · WHAT CHANGED — the dated developments behind the brief, newest first, tagged by topic -->
-  <section>
-    <div class="bh"><div><span class="k">What changed</span></div><span class="asof" id="chg-since">Recently</span></div>
-    <div id="changed"></div>
-  </section>
-
   <!-- 3 · THE BOARD -->
   <section>
     <div class="board-lbl">
@@ -257,6 +271,12 @@
     <div class="tablero" id="tablero"></div>
     <button class="board-more" id="board-more" type="button" aria-expanded="false">Show all indicators</button>
     <p class="wire-note">Every tile links to the section that owns it, where the same figure is shown with its full history and source. Every number on the brief is first-party and dated — <a href="/sources.html">see all sources &rarr;</a></p>
+  </section>
+
+  <!-- 3b · THE AREAS — the topic browse: each area = a 1–2 sentence read + its top headlines -->
+  <section>
+    <div class="board-lbl"><div><span class="k">The areas</span> &nbsp; <h2 style="display:inline">Mexico by topic</h2></div><span class="asof" id="areas-asof"></span></div>
+    <div class="areas" id="areas"></div>
   </section>
 
   <!-- 4 · NEWSLETTER -->
@@ -275,11 +295,6 @@
     </div>
   </section>
 
-  <!-- 5 · SECTION CARDS -->
-  <section>
-    <div class="bh"><div><span class="k">The sections</span> &nbsp; <h2 style="display:inline">Mexico in one glance</h2></div></div>
-    <div class="seccards" id="seccards"></div>
-  </section>
 
   <!-- 6 · WHAT TO WATCH + THE WIRE -->
   <section id="wire">
@@ -592,6 +607,24 @@ function renderBrief(brief){
   }).join(' ')+`</p>`).join('');
 }
 
+/* ============ THE AREAS — the topic browse, projected from the tagged event store ============
+   Rendered from data/areas.json. Each area = a synthesis + up to 3 headline line-items, one grammar,
+   capped. Empty areas say so. Links go to the source (headlines) and the section page (header). */
+function renderAreas(data){
+  const areas=(data&&data.areas)||[];
+  if(!areas.length) return '';
+  return areas.map(a=>{
+    const hls=(a.headlines||[]).slice(0,3);
+    const hl=hls.map(h=>{
+      const ext=/^https?:/.test(h.url||'');
+      const meta=[h.source,h.date?hapDate(h.date):''].filter(Boolean).join(' · ');
+      return `<a class="hl" href="${esc(h.url||'#')}"${ext?' target="_blank" rel="noopener"':''}><span class="hl-t">${esc(h.title)}</span><span class="hl-m">${esc(meta)}</span></a>`;
+    }).join('');
+    const body=hls.length ? `${a.synthesis?`<p class="area-syn">${esc(a.synthesis)}</p>`:''}<div class="area-hl">${hl}</div>` : `<div class="area-empty">Nothing major this week.</div>`;
+    return `<div class="area"><a class="area-h" href="${esc(a.href||'#')}"><span class="area-k">${esc(a.label)}</span><span class="area-go">${hls.length?'more &rarr;':'&rarr;'}</span></a>${body}</div>`;
+  }).join('');
+}
+
 /* ============ WHAT'S HAPPENING (the lead) — curated cross-domain event log ============
    The daily reason to open: the developments moving Mexico across every domain — economy,
    money, politics, security, U.S.–Mexico — each dated and linked to a first-party or record
@@ -685,11 +718,12 @@ function renderWire(){
   const since=readSince();          // read the last-visit point BEFORE we overwrite it
   const lens=getLens();
   await loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-reservas','banxico-remesas','banxico-pib-crecimiento','banxico-igae','wb-gdp-usd','wb-population','wb-gdp-per-capita']);
-  const [health,trade,releases,brief]=await Promise.all([
+  const [health,trade,releases,brief,areasData]=await Promise.all([
     fetch('./data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/trade-us.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/releases.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/brief.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/areas.json').then(r=>r.ok?r.json():null).catch(()=>null),
   ]);
   TRADE=trade;
 
@@ -711,21 +745,15 @@ function renderWire(){
 
   document.getElementById('tablero').innerHTML=renderBoard();
 
-  // the lead: what changed since your last visit (event log → series-delta fallback)
-  const changedEl=document.getElementById('changed');
-  changedEl.innerHTML=renderHappening(HAPPENING,since);
-  // expand a row (caret) to reveal its impact-score breakdown — delegated, one listener
-  changedEl.addEventListener('click',(ev)=>{
-    const btn=ev.target.closest('.cg-caret'); if(!btn||!changedEl.contains(btn)) return;
-    const item=btn.closest('.chg-item'), panel=item&&item.querySelector('.cg-breakdown'); if(!panel) return;
-    const opening=panel.hasAttribute('hidden');
-    if(opening) panel.removeAttribute('hidden'); else panel.setAttribute('hidden','');
-    btn.classList.toggle('open',opening); btn.setAttribute('aria-expanded',opening?'true':'false');
-  });
-  const cs=document.getElementById('chg-since'); if(cs) cs.textContent=(HAPPENING&&HAPPENING.meta&&HAPPENING.meta.updated)?('Updated '+hapDate(HAPPENING.meta.updated)):since.label;
+  // the topic browse: the areas (a synthesis + top headlines per topic), projected from the event store
+  const areasEl=document.getElementById('areas');
+  if(areasEl){
+    const html=renderAreas(areasData);
+    if(html){ areasEl.innerHTML=html; const aao=document.getElementById('areas-asof'); if(aao&&areasData&&areasData.meta) aao.textContent='updated '+hapDate(areasData.meta.updated); }
+    else { const sec=areasEl.closest('section'); if(sec) sec.remove(); }
+  }
   writeVisit();                     // stamp this visit so the next one has a "since" point
 
-  document.getElementById('seccards').innerHTML=renderCards();
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
 
@@ -736,7 +764,7 @@ function renderWire(){
   // #q12 / #wire from an old link → scroll to the Wire block on this page
   if(location.hash==='#q12'||location.hash==='#wire'){const w=document.getElementById('wire'); if(w)w.scrollIntoView();}
 })().catch(e=>{
-  const h=document.getElementById('seccards'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading data: '+e.message+'</p>';
+  const h=document.getElementById('areas'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading data: '+e.message+'</p>';
 });
 </script>
 
