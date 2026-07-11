@@ -8,12 +8,13 @@ module.exports = [
   { label: 'Brief', href: '/' },
   {
     label: 'Topics',
-    match: ['/economy.html', '/money.html', '/payments.html', '/politics.html', '/security.html', '/society.html', '/us-mexico.html', '/model.html'],
+    match: ['/economy.html', '/money.html', '/payments.html', '/trade.html', '/politics.html', '/security.html', '/society.html', '/us-mexico.html', '/model.html'],
     menu: [
       { group: 'Sections', links: [
         { label: 'Economy', href: '/economy.html' },
         { label: 'Money', href: '/money.html' },
         { label: 'Payments', href: '/payments.html' },
+        { label: 'Trade', href: '/trade.html' },
         { label: 'Politics', href: '/politics.html' },
         { label: 'Security', href: '/security.html' },
         { label: 'Society', href: '/society.html' },

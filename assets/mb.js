@@ -35,6 +35,9 @@ export function fmt(id,v,units){
   if(id==='banxico-tarjetas-credito'||id==='banxico-tarjetas-debito') return {v:enNum(Math.round(v/1e6)), s:'mn cards'};
   if(id==='banxico-consumo-privado') return {v:v.toFixed(1), s:'index'};
   if(id==='banxico-circulante') return {v:'$'+(v/1e6).toFixed(2), s:'tn MXN'};                // billetes y monedas, millones de pesos → trillions
+  // Trade (Banxico CE125, thousands US$ → billions). Balance can be negative.
+  if(id==='banxico-trade-balance') return {v:(v>=0?'+$':'−$')+Math.abs(v/1e6).toFixed(1), s:'B/mo'};
+  if(/^banxico-(exports|imports)-/.test(id)) return {v:'$'+(v/1e6).toFixed(1), s:'B/mo'};
   if(id==='wb-gdp-usd') return {v:'$'+(v/1e12).toFixed(2), s:'tn USD'};
   if(id==='wb-population') return {v:(v/1e6).toFixed(1), s:'mn'};
   if(id==='wb-gdp-per-capita') return {v:'$'+enNum(Math.round(v)), s:'USD'};

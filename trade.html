@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Trade — The Mexico Brief</title>
+<meta name="description" content="What Mexico sells, to whom, and what it buys — the export basket, trade partners, the balance over two decades, and how Mexico compares regionally. Banxico + INEGI, with every foreign figure reconciled to the official total." />
+<meta name="theme-color" content="#ffffff" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Trade — The Mexico Brief" />
+<meta property="og:description" content="Mexico&#39;s export basket, partners, and balance — official Banxico/INEGI data, every foreign number reconciled to the official total." />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=2668fd5b" />
+
+
+</head>
+<body>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
+  <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav class="mnav" id="sitenav">
+    <a href="/">Brief</a>
+    <div class="navdrop here-sec">
+      <button class="navdrop-t" type="button" aria-haspopup="true" aria-expanded="false">Topics<span class="caret">▾</span></button>
+      <div class="navdrop-menu">
+        <div class="navdrop-grp"><span class="navdrop-gl">Sections</span><a href="/economy.html">Economy</a><a href="/money.html">Money</a><a href="/payments.html">Payments</a><a href="/trade.html" class="here">Trade</a><a href="/politics.html">Politics</a><a href="/security.html">Security</a><a href="/society.html">Society</a><a href="/us-mexico.html">U.S.–Mexico</a>
+        </div>
+        <div class="navdrop-grp"><span class="navdrop-gl">Lab</span><a href="/model.html">The Model</a>
+        </div>
+      </div>
+    </div>
+    <a href="/atlas.html">Atlas</a>
+    <a href="/sources.html">Sources</a>
+    <a href="/about.html">About</a>
+    <a href="/weekly.html" class="cta">Subscribe</a>
+  </nav>
+</div></header>
+
+
+<style>
+  :root{--ink-3:#4d4d4d;--amber2:#8f6a15}
+  body{font-size:17px}
+  .hero{padding:28px 0 6px}
+  .hero h1.state{font-family:var(--serif);font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.02em;margin:10px 0 0;color:var(--ink);max-width:22ch}
+  .hero .statedate{font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);margin-top:14px}
+  .hero .statedate b{color:var(--green-d)}
+  .pbrief{font-size:18px;line-height:1.62;color:var(--ink);margin:14px 0 2px;max-width:64ch}
+  .pbrief b{color:var(--ink);font-weight:600}
+  section.sec{margin:42px 0 0}
+  .sec-head{border-top:2px solid var(--green);padding-top:11px;margin:0 0 4px}
+  .sec-head.ctx{border-top-color:var(--mut)}
+  .sec-eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .sec-head.ctx .sec-eyebrow{color:var(--mut)}
+  .sec-head h2{font-family:var(--serif);font-size:clamp(21px,3.4vw,28px);color:var(--ink);letter-spacing:-.01em;line-height:1.1;margin:4px 0 0}
+  .sec-dek{font-size:16.5px;line-height:1.55;color:var(--ink-2);max-width:62ch;margin:8px 0 0}
+  .sec-dek b{color:var(--ink)}
+  .badge-tier{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:3px;vertical-align:middle;margin-left:8px}
+  .badge-tier.core{color:var(--green-d);background:#e7f3ec} .badge-tier.ctx{color:var(--ink-2);background:var(--paper-2)}
+  /* tiles */
+  .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:16px 0 4px}
+  @media(min-width:640px){.tablero.c4{grid-template-columns:repeat(4,1fr)}.tablero.c3{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:420px){.tablero{grid-template-columns:1fr}}
+  .tilelink{display:contents;text-decoration:none}
+  .tile{background:var(--paper);padding:15px 16px 14px;height:100%}
+  .tile .tl{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.5em}
+  .tile .tv{font-family:var(--serif);font-size:30px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .tile .tv small{font-size:11.5px;color:var(--mut);font-weight:400}
+  .tile .dl{font-family:var(--mono);font-size:12px;margin-top:6px;font-variant-numeric:tabular-nums;display:block}
+  .tile .dl.up{color:var(--green-d)} .tile .dl.dn{color:var(--red)} .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
+  .tile .dl.up::before{content:"▲ ";font-size:9px} .tile .dl.dn::before{content:"▼ ";font-size:9px}
+  .tile .tb{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin-top:6px;min-height:1em}
+  .tile .stamp{margin-top:7px;display:block}
+  .tile .tsrc,.tile .tbadge{display:none}
+  .stamp{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+  /* exhibits */
+  .exwrap{margin:18px 0 0}
+  .ex-tag{width:24px;height:4px;background:var(--green);border-radius:1px;margin-bottom:7px}
+  .ex-tag.ctx{background:var(--mut)}
+  .ex-no{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .ex-no.ctx{color:var(--mut)}
+  .ex-title{font-family:var(--serif);font-size:18px;line-height:1.22;margin:3px 0 2px;color:var(--ink)}
+  .ex-sub{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-bottom:8px}
+  .ex-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:7px;line-height:1.5}
+  .ex-src a{color:var(--green)}
+  /* reconciliation footer — the trust move */
+  .recon{font-family:var(--mono);font-size:10.5px;color:var(--ink-2);margin-top:8px;padding:7px 10px;background:var(--paper-2);border-radius:4px;border-left:2px solid var(--green);line-height:1.5}
+  .recon b{color:var(--green-d)} .recon .fail{color:var(--red)}
+  svg.chart{display:block;width:100%;height:auto}
+  .chart .gl{stroke:var(--line);stroke-width:1}
+  .chart .axl{font-family:var(--mono);font-size:10px;fill:var(--mut)}
+  .chart .ln{fill:none;stroke:var(--ink);stroke-width:2}
+  .chart .ln2{fill:none;stroke:var(--green);stroke-width:2}
+  .chart .dot{fill:var(--green);stroke:#fff;stroke-width:1.5}
+  .chart .endlab{font-family:var(--mono);font-size:10.5px;font-variant-numeric:tabular-nums}
+  .chart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2;opacity:0}
+  .chart .hdot{opacity:0}
+  .chart .bar{fill:var(--ink);opacity:.16} .chart .bar2{fill:var(--green)}
+  .chart .vlab{font-family:var(--mono);font-size:10.5px;font-variant-numeric:tabular-nums}
+  .chart .cat{font-family:var(--mono);font-size:11px;fill:var(--ink-2)}
+  /* treemap */
+  svg.tmap{display:block;width:100%;height:auto}
+  .tmap rect{stroke:var(--paper);stroke-width:2}
+  .tmap .tml{font-family:var(--sans,system-ui);font-size:12px;fill:#fff;font-weight:600}
+  .tmap .tms{font-family:var(--mono);font-size:10.5px;fill:#fff;opacity:.9}
+  .tmap .tml-d{fill:var(--ink)} .tmap .tms-d{fill:var(--ink-2)}
+  /* THE STORY block — Fable's site-wide pattern */
+  .story{margin:18px 0 0;background:var(--paper-2);border:1px solid var(--line);border-radius:4px;padding:16px 18px}
+  .story .st-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-d);font-weight:600;display:flex;justify-content:space-between}
+  .story .st-lbl .asof{color:var(--mut);font-weight:400}
+  .story p{font-size:15.5px;line-height:1.58;color:var(--ink-2);margin:9px 0 0}
+  .story p b{color:var(--ink)}
+  .story .st-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:9px}
+  .story .st-src a{color:var(--green)}
+  .charttip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 10px;border-radius:6px;opacity:0;transition:opacity .08s;z-index:70;min-width:120px}
+  .charttip b{font-family:var(--serif);font-size:12px;color:#fff}
+  .charttip .tr{display:flex;justify-content:space-between;gap:12px;margin-top:3px}
+  .charttip .tr .nm{display:flex;align-items:center;gap:5px} .charttip .tr .nm i{width:8px;height:8px;border-radius:2px;display:inline-block}
+  .srcnote{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.7}
+  .srcnote a{color:var(--green)}
+  .atlas-cta{display:block;margin:14px 0 0;padding:15px 18px;background:var(--paper-2);border-radius:8px;border:1px solid var(--line);text-decoration:none}
+  .atlas-cta b{font-family:var(--serif);font-size:16px;color:var(--ink)} .atlas-cta span{display:block;font-size:14px;color:var(--ink-2);margin-top:4px;line-height:1.5} .atlas-cta .go{color:var(--green);font-weight:500}
+</style>
+<div class="wrap">
+  <section class="hero" id="top">
+    <span class="eyebrow">Trade</span>
+    <h1 class="state">What Mexico sells, and to whom</h1>
+    <p class="pbrief" id="brief">Loading trade data…</p>
+    <p class="statedate">latest data as of <b id="asof">—</b></p>
+  </section>
+
+  <section class="sec" id="sec-arc"></section>
+  <section class="sec" id="sec-sell"></section>
+  <section class="sec" id="sec-whom"></section>
+  <section class="sec" id="sec-buy"></section>
+  <section class="sec" id="sec-compare"></section>
+
+  <section class="sec" id="sec-close">
+    <div class="sec-head"><span class="sec-eyebrow">The story</span><h2>Up the ladder</h2></div>
+    <p class="sec-dek" id="close-dek"></p>
+    <a class="atlas-cta" href="https://atlas.hks.harvard.edu/countries/484" target="_blank" rel="noopener">
+      <b>Explore the full product space →</b>
+      <span>For the interactive map of every product Mexico makes and could make next, the Harvard Growth Lab's Atlas of Economic Complexity is the best tool in the world. We link it rather than rebuild it worse. <span class="go">Open the Atlas ↗</span></span>
+    </a>
+  </section>
+
+  <section class="sec" id="sources">
+    <div class="sec-head ctx"><span class="sec-eyebrow">Sources</span><h2>Where this comes from</h2></div>
+    <p class="srcnote" id="srcnote"></p>
+  </section>
+</div>
+
+<div class="charttip" id="charttip"></div>
+
+<script type="module">
+import { loadSeries, S, tile, timeChart, hbarChart, wireCharts, enNum } from '/assets/mb.js?v=9';
+
+const CE125 = ['banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-exports-nonoil','banxico-exports-oil','banxico-exports-manufactures','banxico-imports-consumer','banxico-imports-intermediate','banxico-imports-capital'];
+let PROD=null, PART=null, REG=null;
+const J=(p)=>fetch(p).then(r=>r.ok?r.json():null).catch(()=>null);
+
+const has=(id)=>!!(S[id]&&S[id].data&&S[id].data.length);
+const lastv=(id)=>has(id)?S[id].data.at(-1).value:null;
+const bn=(thousands)=>thousands/1e6; // thousand US$ → billion US$
+const fmtB=(v)=>'$'+v.toFixed(0)+'B';
+const moFmt=(iso)=>{const d=new Date(iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{month:'short',year:'2-digit',timeZone:'UTC'})};
+const yrFmt=(iso)=>String(iso).slice(0,4);
+
+// aggregate a monthly CE125 series → complete calendar years, in billions US$
+function annual(id){
+  if(!has(id)) return [];
+  const sum={},cnt={};
+  for(const p of S[id].data){ const y=p.date.slice(0,4); sum[y]=(sum[y]||0)+p.value; cnt[y]=(cnt[y]||0)+1; }
+  return Object.keys(sum).filter(y=>cnt[y]>=12).sort().map(y=>({date:y+'-01-01', value:+bn(sum[y]).toFixed(1)}));
+}
+// trailing-12-month sum (billions) ending at the latest month — the current annual pace
+function ttm(id){ if(!has(id))return null; const d=S[id].data.slice(-12); if(d.length<12)return null; return bn(d.reduce((s,p)=>s+p.value,0)); }
+
+/* ---- components ---- */
+function reconFooter(rc){
+  if(!rc) return '';
+  const pass=rc.pass!==false;
+  return `<div class="recon">COMTRADE total <b>$${(rc.reconTotal/1e9).toFixed(1)}B</b> — reconciles to Banxico/INEGI official <b>$${(rc.official/1e9).toFixed(1)}B</b>, <span class="${pass?'':'fail'}">Δ ${rc.deltaPct}%</span> ${pass?'✓ within 2% tolerance':'✗ EXCEEDS tolerance'}.</div>`;
+}
+function storyBlock(o){
+  return `<div class="story"><div class="st-lbl"><span>The story</span><span class="asof">${o.asof||''}</span></div>`+
+    `<p><b>Latest.</b> ${o.latest}</p><p><b>Background.</b> ${o.background}</p><p><b>Why it matters.</b> ${o.why}</p>`+
+    (o.src?`<div class="st-src">${o.src}</div>`:'')+`</div>`;
+}
+function exhibit(no,tier,title,sub,svg,src,recon){
+  const c=tier==='ctx'?' ctx':'';
+  return `<div class="exwrap"><div class="ex-tag${c}"></div>`+
+    `<div class="ex-no${c}">Exhibit ${no}</div><div class="ex-title">${title}</div><div class="ex-sub">${sub}</div>`+
+    `${svg}${recon||''}<div class="ex-src">${src}</div></div>`;
+}
+function sectionHead(el,tier,eyebrow,title,dek){
+  const c=tier==='ctx'?' ctx':'';
+  document.getElementById(el).insertAdjacentHTML('beforeend',
+    `<div class="sec-head${c}"><span class="sec-eyebrow">${eyebrow}</span>`+
+    `<span class="badge-tier ${tier==='ctx'?'ctx':'core'}">${tier==='ctx'?'⚪ Multilateral':'🟢 MX Official'}</span>`+
+    `<h2>${title}</h2></div>`+(dek?`<p class="sec-dek">${dek}</p>`:''));
+}
+
+/* ---- squarified treemap (green-scale, closed palette) ---- */
+function squarify(data,x,y,w,h){
+  const out=[]; const total=data.reduce((s,d)=>s+d.value,0); const area=w*h;
+  let items=data.map(d=>({d,a:d.value/total*area})).filter(d=>d.a>0);
+  const worst=(row,len)=>{const s=row.reduce((a,b)=>a+b.a,0),mx=Math.max(...row.map(r=>r.a)),mn=Math.min(...row.map(r=>r.a));return Math.max(len*len*mx/(s*s),s*s/(len*len*mn));};
+  let rx=x,ry=y,rw=w,rh=h,i=0;
+  while(i<items.length){
+    const len=Math.min(rw,rh); let row=[];
+    while(i<items.length){ const t=[...row,items[i]]; if(row.length&&worst(t,len)>worst(row,len))break; row.push(items[i]); i++; }
+    const rs=row.reduce((a,b)=>a+b.a,0);
+    if(rw>=rh){ const sw=rs/rh; let cy=ry; for(const r of row){const ch=r.a/sw; out.push({d:r.d,x:rx,y:cy,w:sw,h:ch}); cy+=ch;} rx+=sw; rw-=sw; }
+    else { const sh=rs/rw; let cx=rx; for(const r of row){const cw=r.a/sh; out.push({d:r.d,x:cx,y:ry,w:cw,h:sh}); cx+=cw;} ry+=sh; rh-=sh; }
+  }
+  return out;
+}
+function treemapSVG(items){
+  const W=720,H=430; const top=items[0]?items[0].share:1;
+  const cells=squarify(items,0,0,W,H);
+  let g='';
+  for(const c of cells){
+    const op=(0.4+0.55*(c.d.share/top)).toFixed(2);
+    const light=op>0.62; const tc=light?'':'-d';
+    g+=`<rect x="${c.x.toFixed(1)}" y="${c.y.toFixed(1)}" width="${c.w.toFixed(1)}" height="${c.h.toFixed(1)}" fill="var(--green)" fill-opacity="${op}"/>`;
+    if(c.w>78&&c.h>34){ g+=`<text class="tml${tc}" x="${(c.x+8).toFixed(1)}" y="${(c.y+19).toFixed(1)}">${c.d.name.length>18?c.d.name.slice(0,17)+'…':c.d.name}</text>`+
+      `<text class="tms${tc}" x="${(c.x+8).toFixed(1)}" y="${(c.y+34).toFixed(1)}">${c.d.share>=10?Math.round(c.d.share):c.d.share.toFixed(1)}%</text>`; }
+    else if(c.w>40&&c.h>18){ g+=`<text class="tms${tc}" x="${(c.x+5).toFixed(1)}" y="${(c.y+14).toFixed(1)}">${c.d.share>=10?Math.round(c.d.share):c.d.share.toFixed(1)}%</text>`; }
+  }
+  return `<svg class="tmap" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">${g}</svg>`;
+}
+// collapse a long tail into "Other" for a readable treemap / bar
+function topN(items,n,otherName){
+  if(items.length<=n) return items.slice();
+  const head=items.slice(0,n); const tail=items.slice(n);
+  const otherVal=tail.reduce((s,i)=>s+i.value,0), otherShare=+tail.reduce((s,i)=>s+(i.share||0),0).toFixed(1);
+  return [...head,{name:otherName||'Other',value:otherVal,share:otherShare}];
+}
+
+/* ---- brief ---- */
+function briefHTML(){
+  const xTtm=ttm('banxico-exports-total'), mTtm=ttm('banxico-imports-total');
+  if(xTtm==null) return 'Trade data is loading.';
+  const bal=xTtm-mTtm;
+  const usShare=PART&&PART.exports?PART.exports.items[0].share:null;
+  let s=`Mexico is a <b>trading economy</b>. Over the last twelve months it exported about <b>$${xTtm.toFixed(0)} billion</b> of goods and imported <b>$${mTtm.toFixed(0)} billion</b>, for a ${bal>=0?'surplus':'deficit'} of <b>$${Math.abs(bal).toFixed(0)} billion</b>.`;
+  if(usShare) s+=` Almost all of it moves in one direction: about <b>${Math.round(usShare)}%</b> of exports go to the United States.`;
+  s+=` What it sells is manufactured — vehicles, electronics, machinery — not commodities. This page follows what Mexico sells, to whom, what it buys, and how that has changed.`;
+  return s;
+}
+
+/* ---- boot ---- */
+(async()=>{
+  await loadSeries(CE125);
+  [PROD,PART,REG]=await Promise.all([J('./data/trade/exports-by-product.json'),J('./data/trade/exports-by-partner.json'),J('./data/trade/regional.json')]);
+
+  // as-of
+  const vints=CE125.filter(has).map(id=>{const v=S[id].meta.vintage;const d=new Date(String(v).length===7?v+'-01':v);return isNaN(d)?0:+d;}).filter(Boolean);
+  if(vints.length) document.getElementById('asof').textContent=new Date(Math.max(...vints)).toLocaleDateString('en-US',{month:'long',year:'numeric',timeZone:'UTC'});
+  document.getElementById('brief').innerHTML=briefHTML();
+
+  /* ===== 2. The arc (CE125, green) ===== */
+  (function(){
+    const el='sec-arc';
+    sectionHead(el,'core','The arc','Two decades of trade','Mexico’s trade has multiplied — through the 2009 crash, the pandemic, and the recent nearshoring surge.');
+    const xs=annual('banxico-exports-total'), ms=annual('banxico-imports-total');
+    let ex='';
+    if(xs.length>=3){
+      ex=exhibit('1','core','Exports and imports, 1999–today','Goods trade, US$ billion per year',
+        timeChart([{name:'Exports',color:'green',pts:xs},{name:'Imports',color:'var(--ink-2)',pts:ms}],{xfmt:yrFmt}),
+        'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México (SIE)</a> · CE125 (SE36593, SE36595). Validated: 2024 sum $617.7B = INEGI official.','');
+    }
+    const xT=ttm('banxico-exports-total'),mT=ttm('banxico-imports-total');
+    const tiles=`<div class="tablero c3">`+
+      [{id:'banxico-exports-total',l:'Exports · monthly'},{id:'banxico-imports-total',l:'Imports · monthly'},{id:'banxico-trade-balance',l:'Trade balance · monthly'}]
+      .filter(t=>has(t.id)).map(t=>tile(t,{})).join('')+`</div>`;
+    document.getElementById(el).insertAdjacentHTML('beforeend',tiles+ex+storyBlock({
+      asof:document.getElementById('asof').textContent,
+      latest:`Mexico is exporting at an annual pace of about <b>$${xT?xT.toFixed(0):'—'} billion</b>, near a record and running ahead of imports.`,
+      background:`Trade rose steadily after NAFTA, dropped sharply in 2009, recovered, and dipped again in 2020. Since 2022 exports have surged as companies relocated supply chains closer to the US market.`,
+      why:`In 2023 Mexico passed China as the United States’ top source of imports (US Census Bureau). Trade near 38% of GDP means a US slowdown or a tariff is felt across the whole economy.`,
+      src:'Banxico CE125 · nearshoring milestone: U.S. Census Bureau.'}));
+  })();
+
+  /* ===== 3. What we sell (COMTRADE treemap, context) ===== */
+  (function(){
+    const el='sec-sell';
+    sectionHead(el,'ctx','What we sell','The export basket','Three manufacturing chapters — vehicles, electronics, machinery — are the core of what Mexico ships.');
+    if(!PROD){ document.getElementById(el).insertAdjacentHTML('beforeend','<div class="recon">Export-basket data is being wired — fills in on the next refresh.</div>'); return; }
+    const items=PROD.items.map(i=>({name:i.name,value:i.value,share:i.share}));
+    const tm=topN(items,15,'Other products');
+    const top3=items.slice(0,3).reduce((s,i)=>s+i.share,0);
+    const rc={reconTotal:PROD.total,official:PROD.reconciliation.official,deltaPct:PROD.reconciliation.deltaPct,pass:PROD.reconciliation.pass};
+    document.getElementById(el).insertAdjacentHTML('beforeend',
+      exhibit('2','ctx','What Mexico exports, by product',`HS chapters, ${PROD.year} · share of goods exports`,treemapSVG(tm),
+        'Source: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a> · HS 2-digit, all transport modes.',reconFooter(rc))+
+      storyBlock({asof:PROD.year,
+        latest:`The three biggest chapters — <b>vehicles &amp; parts (${Math.round(items[0].share)}%)</b>, <b>electronics (${Math.round(items[1].share)}%)</b> and <b>machinery (${Math.round(items[2].share)}%)</b> — are about <b>${Math.round(top3)}%</b> of everything Mexico exports.`,
+        background:`This is a manufacturing export economy, not a commodity one. Crude oil, once dominant, is now under 5%. The basket is factory output — much of it assembled from imported parts.`,
+        why:`Concentration cuts both ways: it lifted Mexico up the value chain, but it ties the economy tightly to the US auto cycle and to any tariff on cars.`,
+        src:`UN COMTRADE, reconciled to Banxico/INEGI (Δ ${PROD.reconciliation.deltaPct}%).`}));
+  })();
+
+  /* ===== 4. To whom (COMTRADE partners, context) ===== */
+  (function(){
+    const el='sec-whom';
+    sectionHead(el,'ctx','To whom','One customer above all','Mexico sells to the whole world on paper. In practice, it sells to the United States.');
+    if(!PART||!PART.exports){ document.getElementById(el).insertAdjacentHTML('beforeend','<div class="recon">Partner data is being wired.</div>'); return; }
+    const xitems=topN(PART.exports.items.map(i=>({name:i.name,value:i.value,share:i.share})),8,'Other partners');
+    const bars=xitems.map(i=>({label:i.name.length>22?i.name.slice(0,21)+'…':i.name,value:i.share,hi:i===xitems[0]}));
+    const rc={reconTotal:PART.exports.total,official:PART.exports.reconciliation.official,deltaPct:PART.exports.reconciliation.deltaPct,pass:PART.exports.reconciliation.pass};
+    const us=PART.exports.items[0].share, usImp=PART.imports?PART.imports.items.find(i=>/United States|USA/.test(i.name)):null, chImp=PART.imports?PART.imports.items.find(i=>/China/.test(i.name)):null;
+    document.getElementById(el).insertAdjacentHTML('beforeend',
+      exhibit('3','ctx','Where Mexico’s exports go',`Top destinations, ${PART.year} · share of goods exports`,
+        hbarChart(bars,{vfmt:(v)=>v+'%'}),
+        'Source: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a> · bilateral totals. Aggregates (“nes”) are COMTRADE’s own unspecified-destination buckets, shown as reported.',reconFooter(rc))+
+      storyBlock({asof:PART.year,
+        latest:`About <b>${us}%</b> of Mexico’s goods exports go to the <b>United States</b>. No other partner reaches ${xitems[1]?Math.ceil(xitems[1].value):5}%.`,
+        background:`That concentration is a feature of the integrated North American factory: parts cross the border several times before a finished good is sold. ${usImp&&chImp?`On the import side it is more mixed — the US supplies about ${Math.round(usImp.share)}% and China about ${Math.round(chImp.share)}%.`:''}`,
+        why:`With four of every five export dollars riding on one customer, US trade policy — USMCA, tariffs, border rules — is, in effect, Mexico’s trade policy.`,
+        src:`UN COMTRADE, reconciled to Banxico/INEGI (Δ ${PART.exports.reconciliation.deltaPct}%).`}));
+  })();
+
+  /* ===== 5. What we buy (CE125, green) ===== */
+  (function(){
+    const el='sec-buy';
+    sectionHead(el,'core','What we buy','Imports are inputs','Most of what Mexico buys abroad is not for the shelf — it is parts and machines that get built into the next export.');
+    const use=[['banxico-imports-intermediate','Intermediate (inputs)'],['banxico-imports-capital','Capital (machines)'],['banxico-imports-consumer','Consumer goods']].filter(u=>has(u[0]));
+    let ex='';
+    if(use.length){
+      const totalImp=use.reduce((s,u)=>s+lastv(u[0]),0);
+      const bars=use.map((u,i)=>({label:u[1],value:+((lastv(u[0])/totalImp)*100).toFixed(1),hi:i===0}));
+      ex=exhibit('4','core','What Mexico imports, by use',`Latest month · share of goods imports`,
+        hbarChart(bars,{vfmt:(v)=>v+'%'}),
+        'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México (SIE)</a> · CE125 (SE36597–99).','');
+    }
+    const inter=has('banxico-imports-intermediate')?(lastv('banxico-imports-intermediate')/(lastv('banxico-imports-consumer')+lastv('banxico-imports-intermediate')+lastv('banxico-imports-capital'))*100):null;
+    const tiles=`<div class="tablero c3">`+[{id:'banxico-imports-intermediate',l:'Intermediate imports'},{id:'banxico-imports-capital',l:'Capital imports'},{id:'banxico-imports-consumer',l:'Consumer imports'}].filter(t=>has(t.id)).map(t=>tile(t,{})).join('')+`</div>`;
+    document.getElementById(el).insertAdjacentHTML('beforeend',tiles+ex+storyBlock({
+      asof:document.getElementById('asof').textContent,
+      latest:`Intermediate goods — components and materials — are about <b>${inter?Math.round(inter):'—'}%</b> of imports. These are inputs, not final products.`,
+      background:`It is the maquila logic at national scale: import a part, add work, export the assembly. That is why imports and exports rise and fall together, and why the trade balance stays small.`,
+      why:`It also means “made in Mexico” is really “assembled in Mexico.” Rising local content is the slow, hard work of turning assembly into deeper manufacturing.`,
+      src:'Banxico CE125 (imports by economic use).'}));
+  })();
+
+  /* ===== 6. How we compare (World Bank, context) ===== */
+  (function(){
+    const el='sec-compare';
+    sectionHead(el,'ctx','How we compare','Open, and climbing','Against its regional peers, Mexico trades more of its economy — and sells more advanced goods.');
+    if(!REG||!REG.metrics){ document.getElementById(el).insertAdjacentHTML('beforeend','<div class="recon">Regional data is being wired.</div>'); return; }
+    const mkBars=(m)=>m.values.map(v=>({label:v.iso,value:v.value,hi:v.iso==='MEX'}));
+    const g=REG.metrics.exportsPctGdp, t=REG.metrics.highTechPct;
+    let ex='';
+    if(g) ex+=exhibit('5','ctx',g.label,`${g.values[0]?.year||''} · Mexico vs regional peers`,hbarChart(mkBars(g),{vfmt:(v)=>v+'%'}),
+      'Source: <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank</a> · World Development Indicators. One methodology across countries.','');
+    if(t) ex+=exhibit('6','ctx',t.label,`${t.values[0]?.year||''} · Mexico vs regional peers`,hbarChart(mkBars(t),{vfmt:(v)=>v+'%'}),
+      'Source: <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank</a> · World Development Indicators.','');
+    const mexG=g?g.values.find(v=>v.iso==='MEX'):null, mexT=t?t.values.find(v=>v.iso==='MEX'):null;
+    document.getElementById(el).insertAdjacentHTML('beforeend',ex+storyBlock({asof:(g&&g.values[0]?.year)||'',
+      latest:`Exports are about <b>${mexG?mexG.value:'—'}% of Mexico’s GDP</b> — the highest among the region’s big economies. High-tech goods are about <b>${mexT?mexT.value:'—'}%</b> of manufactured exports, second only to the US.`,
+      background:`Brazil and Colombia are larger or more commodity-based and trade less of their output. Chile is open but sells copper and fruit; Mexico sells cars and electronics.`,
+      why:`Trading a big share of a manufacturing economy is Mexico’s advantage and its exposure: it captures global demand fast, and it imports global shocks just as fast.`,
+      src:'World Bank WDI (exports %GDP; high-tech share of manufactured exports).'}));
+  })();
+
+  /* closing + sources */
+  document.getElementById('close-dek').innerHTML=`Mexico’s exports have grown more sophisticated for two decades — fewer raw materials, more machines and instruments. Economists track this as “economic complexity,” and by that measure Mexico ranks among the more capable emerging economies. That climb is the real story under the numbers on this page.`;
+  document.getElementById('srcnote').innerHTML=
+    `Trade over time and imports by use: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México (SIE), cuadro CE125</a> — Mexican-official, validated against INEGI’s Balanza Comercial. `+
+    `Export basket and partners: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a>, every total reconciled to the official Banxico figure (shown under each chart). `+
+    `Regional comparison: <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank</a> WDI. Product space: <a href="https://atlas.hks.harvard.edu" target="_blank" rel="noopener">Harvard Growth Lab, Atlas of Economic Complexity</a>.`;
+
+  wireCharts();
+})().catch(e=>{ const b=document.getElementById('brief'); if(b) b.textContent='Error loading trade data: '+e.message; });
+</script>
+
+
+<footer class="foot"><div class="wrap">
+  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a><a href="/journal.html">Journal</a></nav>
+  <p class="fblurb">A free public briefing on Mexico: the official numbers, and the news that moves them. Built by Alan Lacroix.</p>
+</div></footer>
+
+<script>document.addEventListener('click',function(e){
+  var b=e.target.closest('.navtoggle');
+  if(b){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');return;}
+  // Topics dropdown: click to open/close (a reliable backstop to hover). Clicking outside closes it.
+  var inDrop=e.target.closest('.navdrop');
+  document.querySelectorAll('.navdrop.open').forEach(function(o){if(o!==inDrop)o.classList.remove('open');});
+  var t=e.target.closest('.navdrop-t');
+  if(t){var d=t.closest('.navdrop');var on=d.classList.toggle('open');t.setAttribute('aria-expanded',on?'true':'false');}
+});</script>
+
+</body>
+</html>
