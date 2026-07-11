@@ -46,7 +46,6 @@ export function stampFor(m){
   return {cls:'',t:String(v)};
 }
 export function valueAgo(data,days){ const last=new Date(data[data.length-1].date), tgt=last-days*864e5; let best=data[0],bd=1e18; for(const p of data){const d=Math.abs(new Date(p.date)-tgt);if(d<bd){bd=d;best=p;}} return best.value; }
-export function sparkSVG(data){ const pts=data.slice(-24); if(pts.length<8)return ''; const vals=pts.map(p=>p.value),mn=Math.min(...vals),mx=Math.max(...vals),rng=(mx-mn)||1; const W=92,H=26,px=(i)=>i/(pts.length-1)*(W-4)+2,py=(v)=>H-3-((v-mn)/rng)*(H-6); const d=pts.map((p,i)=>(i?'L':'M')+px(i).toFixed(1)+' '+py(p.value).toFixed(1)).join(' '); const lx=px(pts.length-1),ly=py(pts[pts.length-1].value); return `<svg class="spark" width="${W}" height="${H}"><path d="${d}"/><circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2.4"/></svg>`; }
 // Send source links to a human-readable page, not the raw API endpoint.
 export function humanSrc(u){ if(!u)return u; if(/SieAPIRest/i.test(u))return 'https://www.banxico.org.mx/SieInternet/'; if(/apidatamexico|tesseract|economia\.gob\.mx\/api/i.test(u))return 'https://www.economia.gob.mx/datamexico/'; return u; }
 export const srcDetails = (m)=>`<details><summary></summary><div class="src-body">Source: <a href="${humanSrc(m.sourceUrl)}" target="_blank" rel="noopener">${m.source}</a><br>Vintage: ${m.vintage} · retrieved ${new Date(m.fetchedAt).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})}<br>License: ${m.license}</div></details>`;
@@ -248,4 +247,4 @@ export async function loadSeries(ids){
   return { S, NEWS, EVENTS, HAPPENING };
 }
 
-export { sparkSVG as sparkline, hbarChart as hbar, barChart as bar };
+export { hbarChart as hbar, barChart as bar };
