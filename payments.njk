@@ -1,0 +1,146 @@
+---
+layout: base.njk
+permalink: /payments.html
+title: "Payments — The Mexico Brief"
+description: "How money moves in Mexico, in official numbers: SPEI interbank transfers, CoDi mobile payments, and the electronic remittance rail, from Banco de México."
+ogTitle: "Payments — The Mexico Brief"
+ogDescription: "SPEI, CoDi, and the remittance rails — the plumbing of how Mexicans pay, from Banco de México."
+---
+{% raw %}
+<style>
+  :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
+  body{font-size:17px}
+  .hero{padding:28px 0 6px}
+  .hero .state{font-family:var(--serif);font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.02em;margin:10px 0 0;color:var(--ink);max-width:24ch}
+  .hero .statedate{font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);margin-top:14px}
+  .hero .statedate b{color:var(--green-d)}
+  .pbrief{font-size:18px;line-height:1.62;color:var(--ink);margin:14px 0 2px;max-width:66ch}
+  .pbrief b{color:var(--ink);font-weight:600}
+  section.blk{margin:34px 0 0}
+  .board-lbl{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 8px;border-top:2px solid var(--green);padding-top:11px}
+  .board-lbl h2{font-family:var(--serif);font-size:clamp(20px,3.2vw,26px);color:var(--ink)}
+  .board-lbl .asof{font-family:var(--mono);font-size:12px;color:var(--mut);white-space:nowrap}
+  .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
+  @media(min-width:560px){.tablero{grid-template-columns:repeat(4,1fr)}}
+  @media(max-width:480px){.tablero{grid-template-columns:1fr}}
+  .tilelink{display:contents}
+  .tile{background:var(--paper);padding:16px 17px 15px;cursor:pointer;height:100%}
+  .tilelink:hover .tile{background:var(--paper-2)}
+  .tile .tl{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
+  .tile .tv{font-family:var(--serif);font-size:32px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .tile .tv small{font-size:12px;color:var(--mut);font-weight:400}
+  .tile .dl{font-family:var(--mono);font-size:12.5px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
+  .tile .dl.up::before{content:"▲ ";font-size:10px} .tile .dl.dn::before{content:"▼ ";font-size:10px}
+  .tile .dl.up{color:var(--green-d)} .tile .dl.dn{color:var(--red)}
+  .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
+  .tile .tb{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:7px;line-height:1.4}
+  .tile .stamp{margin-top:6px;display:block}
+  .tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:4px;display:block;line-height:1.35}
+  .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+  .stamp.live{color:var(--green-d);font-weight:600}
+  .exwrap{margin:22px 0 8px}
+  .ex-tag{width:26px;height:5px;background:var(--green);border-radius:1px;margin-bottom:7px}
+  .ex-no{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .ex-title{font-family:var(--serif);font-size:19px;line-height:1.22;margin:3px 0 2px;color:var(--ink);letter-spacing:-.005em}
+  .ex-sub{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-bottom:8px}
+  .ex-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:7px;line-height:1.5}
+  .ex-src a{color:var(--green)}
+  svg.chart{display:block;width:100%;height:auto}
+  .chart .gl{stroke:var(--line);stroke-width:1}
+  .chart .axl{font-family:var(--mono);font-size:10px;fill:var(--mut)}
+  .chart .ln{fill:none;stroke:var(--ink);stroke-width:2}
+  .chart .ln2{fill:none;stroke:var(--green);stroke-width:2}
+  .chart .zero{stroke:var(--ink-3);stroke-width:1}
+  .chart .dot{fill:var(--green);stroke:#fff;stroke-width:1.5}
+  .chart .endlab{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
+  .chart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2;opacity:0}
+  .chart .hdot{opacity:0}
+  .charttip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 10px;border-radius:6px;opacity:0;transition:opacity .08s;z-index:70;min-width:120px}
+  .charttip b{font-family:var(--serif);font-size:12px;color:#fff}
+  .charttip .tr{display:flex;justify-content:space-between;gap:12px;margin-top:3px}
+  .srcnote{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.7}
+  .srcnote a{color:var(--green)}
+</style>
+<div class="wrap">
+  <section class="hero" id="top">
+    <span class="eyebrow">Payments</span>
+    <h1 class="state">How money moves in Mexico</h1>
+    <p class="pbrief" id="brief"></p>
+    <p class="statedate">as of <b id="asof">—</b></p>
+  </section>
+
+  <section class="blk" id="numbers">
+    <div class="board-lbl"><div><h2 style="display:inline">The rails</h2></div><span class="asof" id="board-asof"></span></div>
+    <div class="tablero" id="tablero"></div>
+  </section>
+
+  <section class="blk" id="charts"></section>
+
+  <section class="blk" id="tools">
+    <div class="section-head"><span class="no">Sources</span><h2>Where this comes from</h2></div>
+    <p class="srcnote">All from <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México (SIE)</a>: SPEI operations (SF273317) and value (SF273318), CoDi operations (SF335701, summed to monthly), and electronic remittance transfers (SE27806). These are system totals — no private company appears here.</p>
+  </section>
+</div>
+
+<div class="charttip" id="charttip"></div>
+
+<script type="module">
+import { loadSeries, S, tile, exhibit, timeChart, wireCharts } from '/assets/mb.js?v=7';
+
+const TILES=[
+  {id:'banxico-spei-operaciones',     l:'SPEI · transfers / month',  href:'#charts'},
+  {id:'banxico-spei-monto',           l:'SPEI · value / month',      href:'#charts'},
+  {id:'banxico-codi-operaciones',     l:'CoDi · operations / month', href:'#charts'},
+  {id:'banxico-remesas-electronicas', l:'Remittances · electronic',  href:'#charts'},
+];
+
+// The brief numbers are read from the live series at render time (never hand-asserted).
+function briefHTML(){
+  const spei=S['banxico-spei-operaciones'], val=S['banxico-spei-monto'], codi=S['banxico-codi-operaciones'], rem=S['banxico-remesas-electronicas'];
+  if(!spei) return 'Payments data is loading.';
+  const ops=Math.round(spei.data.at(-1).value/1e6);
+  const pesos=val?Math.round(val.data.at(-1).value/1e12):null;
+  const codiK=codi?Math.round(codi.data.at(-1).value/1e3):null;
+  const remB=rem?(rem.data.at(-1).value/1e3).toFixed(1):null;
+  let s=`Mexico runs on a handful of public rails. SPEI, Banxico's interbank system, cleared about <b>${ops.toLocaleString('en-US')} million</b> transfers`;
+  if(pesos!=null) s+=` worth roughly <b>${pesos} trillion pesos</b>`;
+  s+=` last month, the backbone of account-to-account money here.`;
+  if(codiK!=null) s+=` CoDi, the central bank's QR system, is far smaller, near <b>${codiK.toLocaleString('en-US')} thousand</b> operations a month.`;
+  if(remB!=null) s+=` Electronic transfers now carry almost all of the <b>$${remB} billion</b> that arrives in remittances each month.`;
+  s+=` Cash still rules at the counter; the account-to-account rails are where the volume is moving.`;
+  return s;
+}
+
+const moFmt=(iso)=>{const d=new Date(iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{month:'short',year:'2-digit'});};
+function chartsHTML(){
+  let h='';
+  const spei=S['banxico-spei-operaciones'];
+  if(spei){ const pts=spei.data.slice(-24).map(p=>({date:p.date,value:+(p.value/1e6).toFixed(1)}));
+    h+=exhibit('1','SPEI keeps climbing','Interbank transfers, millions per month',timeChart([{name:'SPEI',color:'green',pts}],{xfmt:moFmt}),
+      `Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México (SIE)</a> · SF273317.`,'',false); }
+  const codi=S['banxico-codi-operaciones'];
+  if(codi){ const pts=codi.data.slice(-24).map(p=>({date:p.date,value:+(p.value/1e3).toFixed(0)}));
+    h+=exhibit('2','CoDi is small, but growing','QR/mobile payments, thousands of operations per month',timeChart([{name:'CoDi',color:'green',pts}],{xfmt:moFmt}),
+      `Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México (SIE)</a> · SF335701, summed to monthly.`,'',false); }
+  const rem=S['banxico-remesas-electronicas'];
+  if(rem){ const pts=rem.data.slice(-24).map(p=>({date:p.date,value:+p.value.toFixed(0)}));
+    h+=exhibit('3','Remittances ride the electronic rail','Electronic-transfer remittances, million US$ per month',timeChart([{name:'Remittances',color:'green',pts}],{xfmt:moFmt}),
+      `Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México (SIE)</a> · SE27806.`,'',false); }
+  return h;
+}
+
+(async()=>{
+  await loadSeries(['banxico-spei-operaciones','banxico-spei-monto','banxico-codi-operaciones','banxico-remesas-electronicas']);
+  const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
+  const newest=times.length?Math.max(...times):0;
+  if(newest){
+    const el=document.getElementById('asof'); if(el) el.textContent=new Date(newest).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const ba=document.getElementById('board-asof'); if(ba) ba.textContent='as of '+new Date(newest).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  }
+  document.getElementById('brief').innerHTML=briefHTML();
+  document.getElementById('tablero').innerHTML=TILES.map(t=>`<a class="tilelink" href="${t.href}">${tile(t,{src:true})}</a>`).join('');
+  document.getElementById('charts').innerHTML=chartsHTML();
+  wireCharts();
+})().catch(e=>{ const b=document.getElementById('brief'); if(b) b.textContent='Error loading payments data: '+e.message; });
+</script>
+{% endraw %}

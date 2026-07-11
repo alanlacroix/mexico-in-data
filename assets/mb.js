@@ -25,6 +25,10 @@ export function fmt(id,v,units){
   units=units||'';
   if(id==='banxico-reservas') return {v:'$'+enNum(Math.round(v/1000)), s:'bn USD'};
   if(id==='banxico-remesas') return {v:'$'+enNum(Math.round(v)), s:'mn USD'};
+  if(id==='banxico-remesas-electronicas') return {v:'$'+enNum(Math.round(v)), s:'mn USD'};
+  if(id==='banxico-spei-operaciones') return {v:enNum(Math.round(v/1e6)), s:'mn/mo'};        // millions of transfers per month
+  if(id==='banxico-spei-monto') return {v:'$'+(v/1e12).toFixed(1), s:'tn MXN/mo'};           // trillions of pesos per month
+  if(id==='banxico-codi-operaciones') return {v:enNum(Math.round(v/1e3)), s:'k ops/mo'};     // thousands of operations per month
   if(id==='wb-gdp-usd') return {v:'$'+(v/1e12).toFixed(2), s:'tn USD'};
   if(id==='wb-population') return {v:(v/1e6).toFixed(1), s:'mn'};
   if(id==='wb-gdp-per-capita') return {v:'$'+enNum(Math.round(v)), s:'USD'};
