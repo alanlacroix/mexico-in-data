@@ -35,6 +35,11 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: node run.js
 
+      - name: Build the Trade section (COMTRADE + World Bank, reconciled to Banxico)
+        working-directory: pipeline
+        continue-on-error: true   # external APIs; reconcile-or-drop keeps last-good, never fails the run
+        run: node fetch-trade.js
+
       - name: Build the news wire (Q12)
         working-directory: pipeline
         continue-on-error: true   # GDELT is flaky; a miss must not fail the run — the site fail-closes
