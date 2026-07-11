@@ -213,3 +213,15 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .story p b{color:var(--ink)}
 .story .st-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:10px}
 .story .st-src a{color:var(--green)}
+
+/* Demographics stat strip — a row of headline stats, each tagged Projection (CONAPO model output)
+   or Measured (a real count/registration), so a projected figure can never be read as a measurement. */
+.dstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:22px 0 0}
+.dstat{background:var(--paper);padding:14px 16px 12px;position:relative}
+.dstat .dsl{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.dstat .dsv{font-family:var(--serif);font-size:26px;line-height:1.05;color:var(--ink);margin-top:4px;letter-spacing:-.01em}
+.dstat .dss{font-size:12px;color:var(--ink-2);margin-top:3px}
+.dbadge{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:3px;font-weight:600}
+.dbadge.proj{background:rgba(180,120,20,.12);color:#8a5a10}
+.dbadge.meas{background:var(--green-wash,rgba(30,120,80,.10));color:var(--green-d)}
+@media (prefers-color-scheme:dark){.dbadge.proj{background:rgba(220,160,60,.16);color:#e0b060}}

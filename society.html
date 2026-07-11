@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1e591c58" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1fd9a063" />
 
 
 </head>
@@ -218,6 +218,9 @@
     <div class="tablero" id="tablero"></div>
   </section>
 
+  <!-- 2.5 · DEMOGRAPHICS — the population + vital-signs block (CONAPO projection + INEGI vital stats) -->
+  <section class="blk" id="demographics"></section>
+
   <!-- 3 · BACKGROUND (migrated verbatim from the homepage's Q6) -->
   <section class="blk" id="background"></section>
 
@@ -248,7 +251,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=11';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=12';
 
 /* series this section reads — the Q6 numbers plus the same-file living-standards /
    demography series (World Bank). loadSeries also pulls the news wire + events. */
@@ -278,7 +281,8 @@ const TILES=[
   {id:'banxico-remesas',l:'Remittances · month',per:'vs prior month'},
   {id:'wb-unemployment',l:'Unemployment',per:'vs prior year'},
   {id:'wb-gdp-per-capita',l:'Income per person',per:'vs prior year'},
-  {id:'wb-population',l:'Population',per:'vs prior year'},
+  // population lives in the demographics block below (CONAPO, Mexican-official, with the census anchor) —
+  // we don't also show the World Bank estimate as a tile, so a reader never sees two population numbers.
 ];
 
 /* block 3 — the migrated Q6 "are people better off?" exhibit + metric rows + poverty +
@@ -317,12 +321,57 @@ function renderWatch(){
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind||''}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
+/* block 2.5 — demographics: the flagship births-vs-deaths "demographic turn" chart (INEGI
+   vital statistics, MEASURED) + a stat strip mixing the CONAPO population PROJECTION with the
+   measured vital-stat headlines. Every number carries a Projection/Measured badge so the reader
+   never mistakes a 2023-base model output for a count. No number is hand-typed — all read from
+   data/demographics.json + data/vitals.json. */
+function dstat(label,value,sub,tier){
+  const b=tier==='projection'?'<span class="dbadge proj">Projection</span>':'<span class="dbadge meas">Measured</span>';
+  return `<div class="dstat"><div class="dsl">${label}</div><div class="dsv">${value}</div><div class="dss">${sub}</div>${b}</div>`;
+}
+function renderDemographics(DEMO,VIT){
+  if(!DEMO&&!VIT) return '';
+  let out=sectionHead('Population','Mexico’s demographic turn',
+    'Births are falling and deaths rising, the population is aging, and CONAPO projects it peaks near 2053 before it starts to shrink.');
+  if(VIT&&VIT.births&&VIT.deaths){
+    const toPts=s=>s.series.map(p=>({date:p.year+'-07-01',value:p.value/1e6}));   // millions
+    const svg=timeChart([
+      {name:'Deaths',color:'var(--red)',pts:toPts(VIT.deaths)},
+      {name:'Births',color:'green',pts:toPts(VIT.births)},
+    ],{unit:'M',xfmt:(d)=>String(new Date(d).getUTCFullYear())});
+    out+=exhibit('Vital signs','Births have fallen toward rising deaths — the yearly gap has narrowed by two-thirds since 2010',
+      'Registered births and deaths per year. Births 2010–2024; deaths 1990–2024.',svg,
+      `Source: <a href="${VIT.deaths.sourceUrl}" target="_blank" rel="noopener">INEGI</a> — Estadísticas de Nacimientos y Defunciones Registradas. Read the two COVID marks honestly: the 2020–21 jump in deaths is real excess mortality; the 2020 dip in births is a registration effect — civil-registry offices closed, so births were recorded late and rebound in 2021 — not a fertility collapse.`);
+  }
+  // stat strip — population/median/dependency are CONAPO projection; births/deaths are measured
+  let strip='';
+  if(DEMO){
+    strip+=dstat('Population',(DEMO.population.latest/1e6).toFixed(1)+'M',`${DEMO.latestYear} · CONAPO`,'projection');
+    if(DEMO.medianAge) strip+=dstat('Median age',DEMO.medianAge,'years',projTierFor(DEMO.latestYear));
+    if(DEMO.dependencyRatio) strip+=dstat('Dependency ratio',DEMO.dependencyRatio,'per 100 of working age',projTierFor(DEMO.latestYear));
+  }
+  if(VIT&&VIT.births) strip+=dstat('Births',(VIT.births.latest.value/1e6).toFixed(2)+'M',`${VIT.births.latest.year} · INEGI`,'measured');
+  if(VIT&&VIT.deaths) strip+=dstat('Deaths',Math.round(VIT.deaths.latest.value/1e3)+'k',`${VIT.deaths.latest.year} · INEGI`,'measured');
+  if(strip) out+=`<div class="dstrip">${strip}</div>`;
+  // census anchor line — kept separate from the projection, never mixed
+  if(DEMO&&DEMO.censusAnchor) out+=`<p class="ctxline">The last hard count was the <b>${(DEMO.censusAnchor.population/1e6).toFixed(1)}M</b> of the ${DEMO.censusAnchor.year} Census (INEGI). Figures above the count are CONAPO's 2023-base projection, shown as a projection, not a measurement.</p>`;
+  return out;
+}
+// a year past CONAPO's 2023 base is a projected year; 2020–2023 are the reconciled/measured base
+function projTierFor(y){ return y>2023?'projection':'measured'; }
+
 /* block 5 — latest society headlines (wages, jobs, poverty, migration) */
 function renderWire(){ return renderDevelopments('society'); }   // curated events for this section, not the raw wire
 
 /* boot */
 (async()=>{
   await loadSeries(SOCIETY_SERIES);
+  // demographics is small static JSON (CONAPO projection + INEGI vital stats), not part of the series feed
+  const [DEMO,VIT]=await Promise.all([
+    fetch('/data/demographics.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('/data/vitals.json').then(r=>r.ok?r.json():null).catch(()=>null),
+  ]);
   // as-of = freshest fetch across the loaded society series
   const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t);
   if(times.length){
@@ -331,6 +380,7 @@ function renderWire(){ return renderDevelopments('society'); }   // curated even
     document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
   document.getElementById('tablero').innerHTML=povertyTile(POVERTY)+TILES.map(t=>tile(t,{src:true})).join('');
+  document.getElementById('demographics').innerHTML=renderDemographics(DEMO,VIT);
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Poverty 2024 · wages May 2026',
     p1:`Poverty fell to <b>29.6%</b> in 2024, the lowest on record and down <b>12.3 points</b> from 41.9% in 2018 — about <b>13.4M</b> fewer people. It's the first poverty read INEGI has published since taking over from CONEVAL, and it lands while the minimum wage keeps rising by policy, now <b>$315 a day</b> and roughly double its 2018 level, with remittances near record highs at <b>$5.6bn</b> in May.`,
     p2:`So the gains here run on policy, not on a booming economy: a wage floor lifted by decree rather than earned by growth, which caps how much further living standards can climb while output grows slowly.`,

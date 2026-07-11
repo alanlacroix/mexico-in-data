@@ -79,7 +79,7 @@ export const srcDetails = (m)=>{
 
 /* ============ CHART ENGINE (bigger, value-labels, end-labels, hover) ============ */
 let CID=0; const CHARTS={};
-export function niceStr(v,unit){ unit=unit||''; if(unit==='%')return v.toFixed(v>=10?0:1)+'%'; if(unit==='$')return '$'+(Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0)); return v.toFixed(Math.abs(v)>=10?0:1); }
+export function niceStr(v,unit){ unit=unit||''; if(unit==='%')return v.toFixed(v>=10?0:1)+'%'; if(unit==='$')return '$'+(Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0)); if(unit==='M')return v.toFixed(Math.abs(v)>=10?0:1)+'M'; return v.toFixed(Math.abs(v)>=10?0:1); }
 // Multi-series time-series. series=[{name,color,pts:[{date,value}]}]. opts:{unit,band,zero,green}
 export function timeChart(series,opts){
   opts=opts||{}; const W=720,H=400,pl=44,pr=104,pt=10,pb=30,iw=W-pl-pr,ih=H-pt-pb;
