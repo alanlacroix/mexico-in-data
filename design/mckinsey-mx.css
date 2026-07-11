@@ -203,3 +203,13 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 
 /* Section-page hero deck — the short-title + deck grammar (Fable: kill the sentence-length H1s). */
 .hero .dek{font-family:var(--serif);font-size:clamp(18px,2.4vw,22px);line-height:1.4;color:var(--ink-2);margin:10px 0 0;max-width:60ch;font-weight:400;letter-spacing:-.005em}
+
+/* "The story" — Fable's site-wide sourced-narrative block that closes each section. Two plain
+   paragraphs, no labels; every number in it is visible in a chart above. */
+.story{margin:26px 0 0;background:var(--paper-2);border:1px solid var(--line);border-radius:4px;padding:16px 18px;max-width:68ch}
+.story .st-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-d);font-weight:600;display:flex;justify-content:space-between;gap:12px}
+.story .st-lbl .asof{color:var(--mut);font-weight:400;white-space:nowrap}
+.story p{font-size:15.5px;line-height:1.58;color:var(--ink-2);margin:9px 0 0}
+.story p b{color:var(--ink)}
+.story .st-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:10px}
+.story .st-src a{color:var(--green)}

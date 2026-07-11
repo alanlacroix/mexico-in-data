@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=8d19bcb9" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1e591c58" />
 
 
 </head>
@@ -242,7 +242,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments } from '/assets/mb.js?v=6';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, storyBlock } from '/assets/mb.js?v=7';
 
 /* the live tile board (block 2) — same JSON as the metric rows below */
 const TILES=[
@@ -307,7 +307,10 @@ function renderWire(){ return renderDevelopments('money'); }   // curated events
     document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
   document.getElementById('tablero').innerHTML=TILES.map(t=>tile(t,{src:true})).join('');
-  document.getElementById('background').innerHTML=renderBackground();
+  document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'July 2026',
+    p1:`Headline inflation slid from <b>4.59%</b> in March back inside Banxico's <b>2–4%</b> target, printing <b>3.37%</b> in June, so prices are finally cooling. But the bank is holding its policy rate at <b>6.50%</b> after last year's cuts, because core inflation, the stickier gauge, is still <b>4.03%</b>, just above the band. The peso has held with it, near <b>17.48</b> per dollar.`,
+    p2:`Inflation back inside the band is real relief for stretched household budgets, but with core still above target the first cut stays off the table, so credit stays expensive for anyone borrowing to buy a home or a car.`,
+    src:'Banco de México (SIE), INEGI'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   wireCharts();

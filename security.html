@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=8d19bcb9" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1e591c58" />
 
 
 </head>
@@ -256,7 +256,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, staticRow, sectionHead, fwd, evDate, relTime, tagChip, wireCharts, renderDevelopments, srcBadge } from '/assets/mb.js?v=6';
+import { loadSeries, S, EVENTS, NEWS, staticRow, sectionHead, fwd, evDate, relTime, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=7';
 
 /* The one hard security number, authored ONCE — the tile board (block 2) and the
    Background metric row (block 3) both render from this object, so a tile and its
@@ -324,7 +324,10 @@ function renderWire(){ return renderDevelopments('security'); }   // curated eve
   document.getElementById('asof').textContent='2024';
   document.getElementById('board-asof').textContent='as of 2024 (latest annual)';
   document.getElementById('tablero').innerHTML=renderBoard();
-  document.getElementById('background').innerHTML=renderBackground();
+  document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'2024 rate · trend to Sep 2025',
+    p1:`Mexico's homicide rate sits around <b>26 per 100,000</b> in 2024, still high but off its <b>~29</b> peak in 2018, and it kept easing through 2025 — <b>September 2025</b> was the lowest month in nine years. That's the number worth watching, because it's the one measure of lethal violence that compares cleanly across states. Reported-crime counts don't, since roughly <b>90%</b> of crime never gets filed, so a place that reports diligently can look worse than one where almost nobody does.`,
+    p2:`So the level is genuinely improving, but at more than four times the US rate of <b>~6 per 100,000</b>, Mexico is still far from safe, and one national figure hides how uneven the danger is from one state to the next.`,
+    src:'SESNSP, INEGI'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   wireCharts();

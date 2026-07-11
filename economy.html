@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=8d19bcb9" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1e591c58" />
 
 
 </head>
@@ -252,7 +252,11 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   H+=ex('9','Even the non-factory dollars come from the north','External money into Mexico, US$ bn, 2024',
     ranked(E.moneyflows.items,{vfmt:(v)=>'$'+v+'bn',pl:150}),
     E.moneyflows.note,srcLine(E.moneyflows));
-  $('#exhibits').innerHTML=H;
+  const STORY=`<div class="story"><div class="st-lbl"><span>The story</span><span class="asof">updated 2024 data</span></div>`+
+    `<p>Growth cooled to <b>+1.4%</b> in 2024 because the post-COVID rebound is spent: after the <b>−8.4%</b> pandemic crash and a <b>+6.0%</b> snapback in 2021, the economy has drifted back toward its long-run ~2% trend. Underneath, the structure holds — services are nearly <b>60%</b> of output, private consumption alone is <b>70.7%</b> of GDP, and trade is huge on both sides, with about <b>four-fifths</b> of the <b>$617bn</b> in exports going to the United States.</p>`+
+    `<p>So the headline economy leans hard on a single customer, while beneath it half the country works off the books — <b>55%</b> of jobs producing just <b>25.4%</b> of output — and even the outside money comes from the north: <b>$64.75bn</b> in remittances, <b>96.6%</b> of it from the US.</p>`+
+    `<div class="st-src">Source: World Bank, INEGI, Banco de México.</div></div>`;
+  $('#exhibits').innerHTML=H+STORY;
 })().catch(e=>{$('#exhibits').innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading economy data: '+e.message+'</p>';});
 </script>
 

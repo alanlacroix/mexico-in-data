@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=8d19bcb9" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1e591c58" />
 
 
 </head>
@@ -251,7 +251,7 @@
       <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Pull the USMCA-review lever, or tariffs, the Fed, or oil, and watch the peso, inflation, and growth respond. It shows the modeled direction and rough size of each move.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">U.S. Census Bureau</a> (two-way trade, balance) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (export destinations, peso, remittances) · <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a> and <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a> (USMCA, tariffs).</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">U.S. Census Bureau</a> (two-way trade, balance) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (export destinations, peso, remittances) · <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a> and <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a> (USMCA, tariffs). <b style="color:var(--ink-2);font-weight:500">A note on the numbers:</b> U.S. Census and Banxico measure the same trade differently — valuation, timing, and re-exports — so their totals never match exactly. We use Banxico for Mexico's trade accounts, and the U.S. Census ledger only for the U.S.-side view.</p>
   </section>
 
 </div>
@@ -259,7 +259,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, valueAgo, monLong, renderDevelopments, srcBadge } from '/assets/mb.js?v=6';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, valueAgo, monLong, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=7';
 
 /* US–Mexico keyword filters — the task's keyword set (USMCA/TMEC/arancel/tariff/EEUU/
    Estados Unidos/frontera/border/comercio/exportaciones/Trump) plus the border/migration
@@ -291,9 +291,10 @@ function pctDelta(series){
 
 /* block 2 — the live tile board. Hero (~80%) + two-way trade + surplus + tariff come from the
    same JSON their exhibits use; remittances + peso reuse tile() straight off the loaded series. */
-function renderTiles(TRADE){
+function renderTiles(TRADE, PART){
   let out='';
-  out+=ctile({l:'Exports to the U.S.', v:'~80', s:'% of total', tb:'Four of five export dollars go north', stamp:'ANNUAL · 2025', src:'INEGI / Banxico'});
+  const usSh=PART&&PART.exports?Math.round(PART.exports.items[0].share):80;   // bound to the same file /trade renders — can't drift
+  out+=ctile({l:'Exports to the U.S.', v:'~'+usSh, s:'% of total', tb:'Four of five export dollars go north', stamp:'ANNUAL · '+(PART?PART.year:'2024'), src:'UN COMTRADE / Banxico'});
   if(TRADE&&TRADE.latest&&TRADE.series){
     const L=TRADE.latest, mo=monLong(L.month);
     const expByMonth=Object.fromEntries((TRADE.series.exports||[]).map(m=>[m.month,m.value]));
@@ -314,12 +315,13 @@ function renderTiles(TRADE){
 /* block 3 — Background. Hero exhibit = the ~80% dependence (migrated from Q4/Q8); then the
    live USMCA/tariff fact card migrated VERBATIM from Q8; then trade flows over time; the peso
    and remittances rows; a deeper "what the US buys" exhibit; the Q8 forward line + a gloss. */
-function renderBackground(TRADE){
-  // hero exhibit 8.1 — export dependence (same DEST constant the hero tile uses)
-  const ex1=exhibit('8.1','Four out of five export dollars go to the United States','Mexican goods exports by destination, share of total, 2025',
-    hbarChart(DEST),
-    `Source: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI / Banxico</a>, balance of trade.`,
-    dataTable(['Destination','Share'],DEST.map(d=>[d.label,d.value+'%'])),true);
+function renderBackground(TRADE, PART){
+  // 8.1 retired: the export-destination split now lives on /trade (Fable: one series, one room). Pointer only.
+  const usSh=PART&&PART.exports?Math.round(PART.exports.items[0].share):80;
+  const ex1=exhibit('8.1','Almost everything Mexico sells goes to one customer','Export destinations — the full picture lives on Trade',
+    `<p style="font-size:15px;line-height:1.55;color:var(--ink-2);margin:0 0 8px">About <b>${usSh}%</b> of Mexico's goods exports go to the United States — the single fact that shapes this whole page. The export basket, every trading partner, and the balance over two decades are charted in one place.</p><a href="/trade.html" style="color:var(--green);font-weight:500">See the full trade picture → Trade</a>`,
+    `Source: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a>, reconciled to <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banxico</a>. Detailed charts on Trade.`,
+    '', true);
 
   // the live story — fact card migrated VERBATIM from the homepage's Q8 (internal ref rewritten to the homepage anchor)
   const fc=`<div class="factcard">`+
@@ -381,6 +383,7 @@ function renderWire(){ return renderDevelopments('us-mexico'); }   // curated ev
 (async()=>{
   await loadSeries();
   const TRADE = await fetch('./data/trade-us.json').then(r=>r.ok?r.json():null).catch(()=>null);
+  const PART = await fetch('./data/trade/exports-by-partner.json').then(r=>r.ok?r.json():null).catch(()=>null);  // same partner file /trade renders (single source)
   // as-of = freshest fetch across the loaded series + the trade ledger
   const times=[...Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()), TRADE&&TRADE.meta?new Date(TRADE.meta.fetchedAt).getTime():0].filter(t=>t&&!isNaN(t));
   if(times.length){
@@ -388,8 +391,11 @@ function renderWire(){ return renderDevelopments('us-mexico'); }   // curated ev
     document.getElementById('asof').textContent=newest.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
-  document.getElementById('tablero').innerHTML=renderTiles(TRADE);
-  document.getElementById('background').innerHTML=renderBackground(TRADE);
+  document.getElementById('tablero').innerHTML=renderTiles(TRADE, PART);
+  document.getElementById('background').innerHTML=renderBackground(TRADE, PART)+storyBlock({asof:'Jul 2026',
+    p1:`About <b>four-fifths</b> of Mexico's exports go to the United States, so the terms of that one relationship set the weather for the whole economy. Right now those terms are unsettled: the US Supreme Court struck down the blanket IEEPA tariffs in February, pulling the effective rate back to about <b>4%</b>, but the <b>2026 USMCA review</b> is unresolved — Washington declined to renew on schedule on July 1. Month to month, Mexico still sells the US more than it buys.`,
+    p2:`That's why trade terms, not oil or the peso, are Mexico's single biggest external risk: with four of five export dollars riding on one buyer, a stalled review or a new sector tariff lands straight on the country's factories, jobs, and growth.`,
+    src:'U.S. Census Bureau, USTR, Banco de México'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   wireCharts();

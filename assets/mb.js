@@ -268,6 +268,12 @@ export function staticRow(o){
     `<details class="srcd"><summary>Source &amp; date</summary><div class="src-body">Source: <a href="${o.srcUrl}" target="_blank" rel="noopener">${o.srcName}</a></div></details></div>`;
 }
 export function sectionHead(no,title,dek){ return `<div class="section-head"><span class="no">${no}</span><h2>${title}</h2>${dek?`<p class="dek">${dek}</p>`:''}</div>`; }
+// "The story" — Fable's sourced-narrative block: two plain paragraphs (no labels), a person talking.
+export function storyBlock(o){
+  return `<div class="story"><div class="st-lbl"><span>The story</span><span class="asof">updated ${o.asof||''}</span></div>`+
+    `<p>${o.p1}</p>`+(o.p2?`<p>${o.p2}</p>`:'')+
+    (o.src?`<div class="st-src">Source: ${o.src}.</div>`:'')+`</div>`;
+}
 export function fwd(html){ return `<div class="fwdline">Forward · ${html}</div>`; }
 export function bandHead(t){ return `<div class="band"><span class="bl">${t}</span></div>`; }
 export function tagChip(t){ return `<span class="wtag ${t||''}">${t||'econ'}</span>`; }

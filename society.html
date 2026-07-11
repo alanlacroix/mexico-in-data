@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=8d19bcb9" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1e591c58" />
 
 
 </head>
@@ -248,7 +248,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, srcBadge } from '/assets/mb.js?v=6';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=7';
 
 /* series this section reads — the Q6 numbers plus the same-file living-standards /
    demography series (World Bank). loadSeries also pulls the news wire + events. */
@@ -331,7 +331,10 @@ function renderWire(){ return renderDevelopments('society'); }   // curated even
     document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
   document.getElementById('tablero').innerHTML=povertyTile(POVERTY)+TILES.map(t=>tile(t,{src:true})).join('');
-  document.getElementById('background').innerHTML=renderBackground();
+  document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Poverty 2024 · wages May 2026',
+    p1:`Poverty fell to <b>29.6%</b> in 2024, the lowest on record and down <b>12.3 points</b> from 41.9% in 2018 — about <b>13.4M</b> fewer people. It's the first poverty read INEGI has published since taking over from CONEVAL, and it lands while the minimum wage keeps rising by policy, now <b>$315 a day</b> and roughly double its 2018 level, with remittances near record highs at <b>$5.6bn</b> in May.`,
+    p2:`So the gains here run on policy, not on a booming economy: a wage floor lifted by decree rather than earned by growth, which caps how much further living standards can climb while output grows slowly.`,
+    src:'INEGI / CONEVAL, Banco de México (SIE), CONASAMI'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   wireCharts();

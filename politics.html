@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=8d19bcb9" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1e591c58" />
 
 
 </head>
@@ -213,7 +213,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, EVENTS, NEWS, sectionHead, staticRow, fwd, evDate, relTime, tagChip, renderDevelopments, srcBadge } from '/assets/mb.js?v=6';
+import { loadSeries, EVENTS, NEWS, sectionHead, staticRow, fwd, evDate, relTime, tagChip, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=7';
 
 /* the politics keyword filter — shared by the calendar (block 4) and the wire (block 5).
    Spanish + English institution words; \b guards stop "selecciones" matching "elecci" etc. */
@@ -281,7 +281,10 @@ function renderWire(){ return renderDevelopments('politics'); }   // curated eve
   document.getElementById('asof').textContent=asof;
   document.getElementById('board-asof').textContent='as of '+asof;
   document.getElementById('tablero').innerHTML=renderTiles();
-  document.getElementById('background').innerHTML=renderBackground();
+  document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Jun 2026 poll',
+    p1:`Morena and its allies hold a qualified supermajority in Congress, enough to amend the constitution on their own, and they've already used it: after the <b>2024–25</b> judicial reform, judges are now chosen by popular vote. President Sheinbaum, sworn in <b>October 2024</b> for a term running to <b>2030</b>, stays broadly popular, but how popular depends on who's asking — Mitofsky puts her near <b>68%</b>, AtlasIntel at <b>49%</b>, its first read below half, and the trend is gently down from high levels.`,
+    p2:`That spread matters because no official real-time gauge of political sentiment exists — only polls that disagree by almost 20 points — and the next test is the <b>June 6, 2027</b> midterms, when all <b>500 deputies</b> and <b>17 governorships</b> are on the ballot and the supermajority is at stake.`,
+    src:'INE, Cámara de Diputados, AS/COA Approval Tracker (Mitofsky, AtlasIntel)'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   // tile → scroll to the Background detail (fact card + approval poll)
