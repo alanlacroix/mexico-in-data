@@ -35,15 +35,21 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-happening.js
 
-      - name: Commit the event log
+      - name: Build the homepage brief (reads the fresh event log + board + standing)
+        working-directory: pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node build-brief.js
+
+      - name: Commit the event log + brief
         run: |
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/happening.json
+          git add data/happening.json data/brief.json
           if git diff --cached --quiet; then
-            echo "no change to the event log"
+            echo "no change to the event log or brief"
           else
-            git commit -m "happening: event log refresh $(date -u +%Y-%m-%dT%H:%MZ)"
+            git commit -m "happening: event log + brief refresh $(date -u +%Y-%m-%dT%H:%MZ)"
             git pull --rebase --autostash 2>/dev/null || true
             git push
           fi

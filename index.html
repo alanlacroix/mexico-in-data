@@ -50,6 +50,15 @@
   .bottomline b{color:var(--ink)}
   .bottomline .bl-k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);font-weight:600}
 
+  /* THE BRIEF — the 2-paragraph synthesis lead. Every sentence is a link to the source it
+     cites (dotted = sourced, solid green on hover) — the "no sentence without a link" law made visible. */
+  .brief{margin:6px 0 2px;max-width:74ch}
+  .brief p{font-size:18px;line-height:1.66;color:var(--ink);margin:0 0 13px;font-weight:400}
+  .brief p:last-child{margin-bottom:0}
+  .brief .s{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--line-2);cursor:pointer}
+  .brief .s:hover{border-bottom:1px solid var(--green)}
+  @media(max-width:560px){ .brief p{font-size:16.5px} }
+
   /* block headers */
   .bh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-top:2px solid var(--green);padding-top:11px;margin:38px 0 10px}
   .bh .k{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
@@ -227,18 +236,22 @@
     <h1>Mexico, right now.</h1>
   </section>
 
-  <!-- 2 · WHAT'S HAPPENING — the lead: the cross-domain event log, what's moving Mexico now -->
+  <!-- 2 · THE BRIEF — the lead: a 2-paragraph synthesis, every sentence linked to the source below it -->
   <section>
-    <div class="bh"><div><span class="k">What's happening</span> &nbsp; <h2 style="display:inline">This week in Mexico</h2></div><span class="asof" id="chg-since">Recently</span></div>
-    <div id="changed"></div>
+    <div class="bh"><div><span class="k">The Brief</span></div><span class="asof" id="brief-asof"></span></div>
+    <div id="brief" class="brief"></div>
   </section>
 
-  <p class="bottomline"><span class="bl-k">The bottom line</span> — <b>sound money</b> (inflation near Banxico's target, a firm peso), <b>weak growth</b>, and <b>near-total dependence on the United States</b>. The swing factor is the unresolved 2026 USMCA review.</p>
+  <!-- 2b · WHAT CHANGED — the dated developments behind the brief, newest first, tagged by topic -->
+  <section>
+    <div class="bh"><div><span class="k">What changed</span></div><span class="asof" id="chg-since">Recently</span></div>
+    <div id="changed"></div>
+  </section>
 
   <!-- 3 · THE BOARD -->
   <section>
     <div class="board-lbl">
-      <div><span class="k">The board</span> &nbsp; <h2 style="display:inline">Mexico by the numbers</h2></div>
+      <div><span class="k">Where things stand</span> &nbsp; <h2 style="display:inline">The numbers</h2></div>
       <span class="asof" id="board-asof"></span>
     </div>
     <div class="tablero" id="tablero"></div>
@@ -276,7 +289,7 @@
         <div id="watch-list"></div>
       </div>
       <div>
-        <div class="cb-h"><span class="k">The Wire</span><a class="a" href="/weekly.html">The Weekly →</a></div>
+        <div class="cb-h"><span class="k">Headlines</span><a class="a" href="/weekly.html">This week →</a></div>
         <div id="wire-list"></div>
         <p class="wire-note">Headlines from a trusted-source allowlist, each dated and linked to its origin, unsummarized. The tag links to the section it belongs to.</p>
       </div>
@@ -564,6 +577,21 @@ function renderChanged(releases,since,lens){
   return `<div class="chg">`+rows.map((r,i)=>chgRow(r,i)).join('')+`</div>`;
 }
 
+/* ============ THE BRIEF (the lead) — the 2-paragraph synthesis ============
+   Rendered from data/brief.json (built by the pipeline under the "no sentence without a link"
+   law). Each sentence is a link to the source item it cites; the page never invents — it only
+   renders what the generator (or its deterministic fallback) already validated. */
+const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function renderBrief(brief){
+  const paras=(brief&&brief.paragraphs)||[];
+  if(!paras.length||!paras.flat().length) return '';
+  return paras.map(p=>`<p>`+p.map(s=>{
+    const ext=/^https?:/.test(s.href||'');
+    if(!s.href) return `<span class="s">${esc(s.text)}</span>`;
+    return `<a class="s" href="${esc(s.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(s.source||'source')}">${esc(s.text)}</a>`;
+  }).join(' ')+`</p>`).join('');
+}
+
 /* ============ WHAT'S HAPPENING (the lead) — curated cross-domain event log ============
    The daily reason to open: the developments moving Mexico across every domain — economy,
    money, politics, security, U.S.–Mexico — each dated and linked to a first-party or record
@@ -657,12 +685,22 @@ function renderWire(){
   const since=readSince();          // read the last-visit point BEFORE we overwrite it
   const lens=getLens();
   await loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-reservas','banxico-remesas','banxico-pib-crecimiento','banxico-igae','wb-gdp-usd','wb-population','wb-gdp-per-capita']);
-  const [health,trade,releases]=await Promise.all([
+  const [health,trade,releases,brief]=await Promise.all([
     fetch('./data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/trade-us.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/releases.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/brief.json').then(r=>r.ok?r.json():null).catch(()=>null),
   ]);
   TRADE=trade;
+
+  // the lead: the 2-paragraph brief (built by the pipeline; each sentence links to its source).
+  // If it's missing, drop the section rather than show an empty block.
+  const briefEl=document.getElementById('brief');
+  if(briefEl){
+    const html=renderBrief(brief);
+    if(html){ briefEl.innerHTML=html; const bao=document.getElementById('brief-asof'); if(bao&&brief&&brief.meta) bao.textContent='as of '+(brief.meta.asOf||''); }
+    else { const sec=briefEl.closest('section'); if(sec) sec.remove(); }
+  }
 
   // dateline: N sources · updated Xh ago (from data health + freshest series fetch)
   const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
