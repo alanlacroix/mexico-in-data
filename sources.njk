@@ -107,6 +107,24 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
     .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
     table.mck.src{min-width:840px}
   }
+  /* narrow phones: the catalog stops being an 840px horizontal-scroll table and becomes stacked,
+     labeled cards (the review's largest mobile fix). Pure CSS off the existing td classes. */
+  @media(max-width:600px){
+    .tblwrap{overflow-x:visible}
+    table.mck.src{min-width:0;display:block}
+    .src thead{display:none}
+    .src tbody,.src tr,.src td{display:block;width:auto!important}
+    .src tr{border:1px solid var(--line-2);border-radius:4px;margin:0 0 10px;padding:6px 0;background:var(--paper)}
+    .src tr.band{border:0;background:none;margin:18px 0 2px;padding:0}
+    .src td{border:0!important;padding:5px 14px}
+    .src td::before{display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin-bottom:2px}
+    .src td.gives::before{content:"What it gives"}
+    .src td.cad::before{content:"Cadence"}
+    .src td.acc::before{content:"Access"}
+    .src td.why::before{content:"Used for"}
+    .src td.nm{padding-top:11px}
+    .src tr.band td::before{content:none}
+  }
 
   /* honesty note */
   .honesty{margin:44px 0 8px;background:var(--amber-bg);border:1px solid #e4d29a;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:20px 22px}
