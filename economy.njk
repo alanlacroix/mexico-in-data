@@ -104,7 +104,7 @@ function line(pts,opts){
   let g='';for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${pl-5}" y="${(y+3).toFixed(1)}" text-anchor="end">${v.toFixed(0)}%</text>`;}
   if(mn<0&&mx>0){const yz=Y(0);g+=`<line class="zero" x1="${pl}" y1="${yz.toFixed(1)}" x2="${W-pr}" y2="${yz.toFixed(1)}"/>`;}
   g+=`<path class="ln" d="${pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.value).toFixed(1)).join(' ')}"/>`;
-  pts.forEach((p,i)=>{g+=`<circle class="dot" cx="${X(i).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="3.4" fill="var(--ink)"/><text class="axl" x="${X(i).toFixed(1)}" y="${H-8}" text-anchor="middle">${p.year}</text><text class="vlab" x="${X(i).toFixed(1)}" y="${(Y(p.value)-9).toFixed(1)}" text-anchor="middle">${(p.value>0?'+':'')+p.value}</text>`;});
+  pts.forEach((p,i)=>{const anc=i===0?'start':(i===pts.length-1?'end':'middle');g+=`<circle class="dot" cx="${X(i).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="3.4" fill="var(--ink)"/><text class="axl" x="${X(i).toFixed(1)}" y="${H-8}" text-anchor="${anc}">${p.year}</text><text class="vlab" x="${X(i).toFixed(1)}" y="${(Y(p.value)-9).toFixed(1)}" text-anchor="${anc}">${(p.value>0?'+':'')+p.value}</text>`;});
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">${g}</svg>`;
 }
 /* ---- dual line (exports vs imports) ---- */
@@ -115,9 +115,12 @@ function dualLine(a,b,opts){
   let g='';for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${pl-5}" y="${(y+3).toFixed(1)}" text-anchor="end">$${v.toFixed(0)}</text>`;}
   const path=(arr,cls)=>`<path class="${cls}" d="${arr.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.value).toFixed(1)).join(' ')}"/>`;
   g+=path(a,'ln')+path(b,'ln2');
-  const la=a[a.length-1],lb=b[b.length-1];
-  g+=`<circle class="dot" cx="${X(n-1).toFixed(1)}" cy="${Y(la.value).toFixed(1)}" r="3.4" fill="var(--ink)"/><text class="endlab" style="fill:var(--ink)" x="${(X(n-1)+7).toFixed(1)}" y="${(Y(la.value)+4).toFixed(1)}">Imports $${la.value}</text>`;
-  g+=`<circle class="dot" cx="${X(n-1).toFixed(1)}" cy="${Y(lb.value).toFixed(1)}" r="3.4" fill="var(--green)"/><text class="endlab" style="fill:var(--green-d)" x="${(X(n-1)+7).toFixed(1)}" y="${(Y(lb.value)+4).toFixed(1)}">Exports $${lb.value}</text>`;
+  const la=a[a.length-1],lb=b[b.length-1],ex=X(n-1),ya=Y(la.value),yb=Y(lb.value);
+  // separate the two endpoint labels when the values are close (they were overlapping)
+  let yla=ya+4,ylb=yb+4;
+  if(Math.abs(ya-yb)<15){ if(ya<=yb){yla=ya-4;ylb=yb+14;}else{yla=ya+14;ylb=yb-4;} }
+  g+=`<circle class="dot" cx="${ex.toFixed(1)}" cy="${ya.toFixed(1)}" r="3.4" fill="var(--ink)"/><text class="endlab" style="fill:var(--ink)" x="${(ex+7).toFixed(1)}" y="${yla.toFixed(1)}">Imports $${la.value}</text>`;
+  g+=`<circle class="dot" cx="${ex.toFixed(1)}" cy="${yb.toFixed(1)}" r="3.4" fill="var(--green)"/><text class="endlab" style="fill:var(--green-d)" x="${(ex+7).toFixed(1)}" y="${ylb.toFixed(1)}">Exports $${lb.value}</text>`;
   g+=`<text class="axl" x="${pl}" y="${H-8}">${a[0].year}</text><text class="axl" x="${(W-pr).toFixed(1)}" y="${H-8}" text-anchor="end">${a[a.length-1].year}</text>`;
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">${g}</svg>`;
 }

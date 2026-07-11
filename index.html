@@ -335,7 +335,7 @@ const SERIES_META={
   'banxico-reservas':{label:'Reserves',href:'/money.html'},
   'banxico-remesas':{label:'Remittances',href:'/money.html'},
   'banxico-pib-crecimiento':{label:'Growth',href:'/economy.html'},
-  'banxico-igae':{label:'Monthly activity',href:'/economy.html'},
+  'banxico-igae':{label:'Economic activity',href:'/economy.html'},
 };
 const metaFor=(id)=>SERIES_META[id]||{label:id,href:'/data.html'};
 
@@ -401,7 +401,7 @@ function scoreRow(r,w){
   const factors=[
     {key:'magnitude', label:'Magnitude', v:r.mag,        weight:w.magnitude,  ph:false, note:r.magNote||''},
     {key:'exposure',  label:'Exposure',  v:r.exposure,   weight:w.exposure,   ph:false, note:r.crosser?'crosses a threshold':(r.watched?'on the watch list':'not on watch')},
-    {key:'freshness', label:'Freshness', v:r.freshness,  weight:w.freshness,  ph:false, note:r.freshNote?('detected '+r.freshNote):''},
+    {key:'freshness', label:'Freshness', v:r.freshness,  weight:w.freshness,  ph:false, note:r.freshNote||''},
     {key:'surprise',  label:'Surprise',  v:(isFinite(r.surprise)?r.surprise:1),   weight:w.surprise,   ph:true, note:'not yet wired (=1)'},
     {key:'confidence',label:'Confidence',v:(isFinite(r.confidence)?r.confidence:1),weight:w.confidence, ph:true, note:'not yet wired (=1)'},
   ];
@@ -455,7 +455,7 @@ function eventRow(e,lens){
           mag:magnitudeOf(chg,e.series,prevAbs),exposure:exposureOf(watched,crosser),
           freshness:freshnessOf(freshT),surprise:1,confidence:1,
           magNote:hasSeries(e.series)?'move ÷ recent volatility':'move ÷ previous level',
-          freshNote:isFinite(freshT)?relTime(freshT):''};
+          freshNote:isFinite(freshT)?('detected '+relTime(freshT)):'detection time unknown'};
 }
 
 /* fallback = the series-delta computation the old "what moved" strip used, reused here.
@@ -467,7 +467,7 @@ const MOVERS=[
   {id:'banxico-tasa-objetivo', label:'Banxico policy rate',href:'/money.html',days:50, unit:'pp',  when:'past 6 weeks'},
   {id:'banxico-reservas',      label:'International reserves',href:'/money.html',days:8,unit:'pct', when:'past week'},
   {id:'banxico-remesas',       label:'Remittances',       href:'/money.html', days:32, unit:'pct', when:'past month'},
-  {id:'banxico-igae',          label:'Monthly activity (IGAE)',href:'/economy.html',days:32,unit:'pp',when:'past month'},
+  {id:'banxico-igae',          label:'Economic activity (IGAE)',href:'/economy.html',days:32,unit:'pp',when:'past month'},
 ];
 function moveOver(s,days){
   const d=s&&s.data; if(!d||d.length<2) return null;
@@ -475,7 +475,7 @@ function moveOver(s,days){
   let best=d[0],bd=1e18; for(const p of d){const dd=Math.abs(+new Date(p.date)-tgt); if(dd<bd){bd=dd;best=p;}}
   if(best.date===last.date) return null;                       // no earlier point → no delta
   if(lastT-(+new Date(best.date)) < days*0.4*864e5) return null; // comparison point too close to now
-  return {cur:last.value, prev:best.value, date:last.date};
+  return {cur:last.value, prev:best.value};
 }
 function fallbackRows(exclude,lens){
   const out=[];
@@ -489,13 +489,17 @@ function fallbackRows(exclude,lens){
     // scored the SAME way as an event: run it through crosses() with a pseudo-event
     const pseudo={series:m.id,value:mv.cur,prev_value:mv.prev,change:diff};
     const watched=Array.isArray(lens&&lens.watch)&&lens.watch.indexOf(m.id)>=0, crosser=crosses(pseudo,lens);
-    const ts=Date.parse(mv.date), prevAbs=Math.abs(mv.prev);
+    const prevAbs=Math.abs(mv.prev);
+    // no detection event here — the delta is computed NOW from the freshest print, so
+    // freshness is neutral (1). It must NOT decay with data vintage: that would penalise
+    // slow-cadence series (a monthly inflation print is structurally ~weeks old) and sink
+    // real crossers. freshness goes live once the event log (detected_at) feeds this queue.
     out.push({series:m.id,href:m.href,label:m.label,move,meta:m.when,crosser,watched,
       rel:Math.abs(diff)/(Math.abs(mv.prev)||1),
       mag:magnitudeOf(diff,m.id,prevAbs),exposure:exposureOf(watched,crosser),
-      freshness:freshnessOf(ts),surprise:1,confidence:1,
+      freshness:1,surprise:1,confidence:1,
       magNote:hasSeries(m.id)?'move ÷ recent volatility':'move ÷ previous level',
-      freshNote:isFinite(ts)?relTime(ts):''});
+      freshNote:'computed now (series-delta)'});
   }
   return out;
 }

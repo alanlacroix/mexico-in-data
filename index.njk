@@ -308,7 +308,7 @@ const SERIES_META={
   'banxico-reservas':{label:'Reserves',href:'/money.html'},
   'banxico-remesas':{label:'Remittances',href:'/money.html'},
   'banxico-pib-crecimiento':{label:'Growth',href:'/economy.html'},
-  'banxico-igae':{label:'Monthly activity',href:'/economy.html'},
+  'banxico-igae':{label:'Economic activity',href:'/economy.html'},
 };
 const metaFor=(id)=>SERIES_META[id]||{label:id,href:'/data.html'};
 
@@ -440,7 +440,7 @@ const MOVERS=[
   {id:'banxico-tasa-objetivo', label:'Banxico policy rate',href:'/money.html',days:50, unit:'pp',  when:'past 6 weeks'},
   {id:'banxico-reservas',      label:'International reserves',href:'/money.html',days:8,unit:'pct', when:'past week'},
   {id:'banxico-remesas',       label:'Remittances',       href:'/money.html', days:32, unit:'pct', when:'past month'},
-  {id:'banxico-igae',          label:'Monthly activity (IGAE)',href:'/economy.html',days:32,unit:'pp',when:'past month'},
+  {id:'banxico-igae',          label:'Economic activity (IGAE)',href:'/economy.html',days:32,unit:'pp',when:'past month'},
 ];
 function moveOver(s,days){
   const d=s&&s.data; if(!d||d.length<2) return null;

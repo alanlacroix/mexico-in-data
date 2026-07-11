@@ -293,8 +293,8 @@ function renderTiles(TRADE){
     const expByMonth=Object.fromEntries((TRADE.series.exports||[]).map(m=>[m.month,m.value]));
     const twoway=(TRADE.series.imports||[]).filter(m=>expByMonth[m.month]!=null).map(m=>({date:m.month,value:m.value+expByMonth[m.month]}));
     const surplus=(TRADE.series.imports||[]).filter(m=>expByMonth[m.month]!=null).map(m=>({date:m.month,value:m.value-expByMonth[m.month]}));
-    out+=ctile({l:'Two-way trade · monthly', v:'$'+Math.round(L.twoway_bn), s:'bn / month', dl:pctDelta(twoway), spark:sparkSVG(twoway), tb:'U.S.–Mexico goods, both directions', stamp:'MONTHLY · '+mo, src:'U.S. Census Bureau'});
-    out+=ctile({l:"Mexico's surplus · monthly", v:'$'+Math.round(-L.balance_bn), s:'bn / month', dl:pctDelta(surplus), spark:sparkSVG(surplus), tb:'Mexico sells the U.S. more than it buys', stamp:'MONTHLY · '+mo, src:'U.S. Census Bureau'});
+    out+=ctile({l:'Two-way trade · monthly', v:'$'+Math.round(L.twoway_bn), s:'bn / month', dl:pctDelta(twoway), spark:'', tb:'U.S.–Mexico goods, both directions', stamp:'MONTHLY · '+mo, src:'U.S. Census Bureau'});
+    out+=ctile({l:"Mexico's surplus · monthly", v:'$'+Math.round(-L.balance_bn), s:'bn / month', dl:pctDelta(surplus), spark:'', tb:'Mexico sells the U.S. more than it buys', stamp:'MONTHLY · '+mo, src:'U.S. Census Bureau'});
   } else {
     out+=ctile({l:'Two-way trade · monthly', v:'<span style="font-size:15px;color:var(--amber2)">NOT YET WIRED</span>', s:'', tb:'feed unavailable', stamp:''});
     out+=ctile({l:"Mexico's surplus · monthly", v:'<span style="font-size:15px;color:var(--amber2)">NOT YET WIRED</span>', s:'', tb:'feed unavailable', stamp:''});

@@ -204,7 +204,7 @@ export function tile(t,opts){
   const h=tileVal(t.id,s),st=stampFor(s.meta),arw=dirArrow(s),bf=BENCH[t.id];
   const src=opts.src?`<span class="tsrc">${s.meta.source||''}</span>`:'';
   return `<div class="tile" data-go="${t.id}"><div class="tl">${t.l}</div><div class="tv">${h.v} <small>${h.s}</small></div>`+
-    tileDelta(t.id,s)+ sparkSVG(s.data)+
+    tileDelta(t.id,s)+
     `<div class="tb">${bf?bf(s):(t.per?'<span class="arw">'+arw+'</span> '+t.per:'')}</div>`+
     `<span class="stamp ${st.cls}">${st.t}${t.ph?'<span class="chip-ph">'+t.ph+'</span>':''}</span>`+src+`</div>`;
 }
@@ -215,7 +215,7 @@ export function mrow(cfg){
   if(!s) return construccion({l:cfg.label,src:cfg.src||'feed in progress',cad:cfg.cad||'',eta:cfg.eta||''});
   const h=cfg.id==='banxico-remesas'?fmtRem(s.data.at(-1).value):fmt(cfg.id,s.data.at(-1).value,s.meta.units),st=stampFor(s.meta),vf=VERDICT[cfg.id],bf=BENCH[cfg.id];
   return `<div class="mrow" data-metric="${cfg.id}"><div class="mr-top"><span class="mr-label">${cfg.label}</span><span class="stamp ${st.cls}">${st.t}${cfg.ph?'<span class="chip-ph">'+cfg.ph+'</span>':''}</span></div>`+
-    `<div class="mr-main"><span class="mr-val">${h.v} <small>${h.s}</small></span><span class="mr-spark">${sparkSVG(s.data)}</span></div>`+
+    `<div class="mr-main"><span class="mr-val">${h.v} <small>${h.s}</small></span></div>`+
     (vf?`<div class="mr-verdict">${vf(s)}</div>`:'')+(bf?`<div class="mr-bench">${bf(s)}</div>`:'')+srcDetails(s.meta)+`</div>`;
 }
 export function construccion(o){ return `<div class="constr-lite"><span class="cl-l">${o.l}</span><span class="cl-s">not yet wired</span><span class="cl-d">${o.src}${o.cad?' · '+o.cad:''}</span></div>`; }
