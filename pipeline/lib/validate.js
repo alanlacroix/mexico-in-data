@@ -66,7 +66,27 @@ export function validate(m, out, prior) {
   if (!out.meta.vintage || out.meta.vintage === 'null')
     throw new HardFail(`${m.id}: missing data vintage`);
 
+  // ---- freshness gate (Fable's anti-rot): a series whose latest observation is past its cadence's
+  // grace window gets flagged stale, so a feed that quietly stops updating shows amber on the health
+  // page instead of silently looking fresh. Soft (flag, keep serving) — a legit mid-cycle lag never
+  // blocks a deploy; a genuinely dead feed surfaces.
+  const stale = stalenessFlag(m, out.meta.vintage);
+  if (stale) flags.push(stale);
+
   return flags;
+}
+
+// How old the latest observation may be, per cadence, before we call it stale.
+const GRACE_DAYS = { '4-hour': 2, 'business-daily': 5, daily: 5, weekly: 12, monthly: 58, quarter: 135, annual: 430, yearly: 430 };
+function stalenessFlag(m, vintage) {
+  const cad = String(m.cadence || '');
+  const key = Object.keys(GRACE_DAYS).find((k) => cad.includes(k));
+  if (!key) return null;
+  const iso = String(vintage).length === 7 ? `${vintage}-01` : String(vintage);
+  const v = Date.parse(`${iso}T00:00:00Z`);
+  if (Number.isNaN(v)) return null;
+  const ageDays = (Date.now() - v) / 864e5;
+  return ageDays > GRACE_DAYS[key] ? `stale_${key}_${Math.round(ageDays)}d` : null;
 }
 
 // Compare a handful of overlapping keys/dates; flag if any jumped more than the
