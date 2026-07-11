@@ -45,6 +45,15 @@ jobs:
         continue-on-error: true   # deterministic, reads local JSON; a miss keeps last-good
         run: node build-analysis.js
 
+      - name: Log the historical vintage store (Supabase)
+        working-directory: pipeline
+        continue-on-error: true   # fail-soft; no-op without SUPABASE secrets, never blocks deploy
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: node db-sync.js
+
       - name: Build the news wire (Q12)
         working-directory: pipeline
         continue-on-error: true   # GDELT is flaky; a miss must not fail the run — the site fail-closes

@@ -60,3 +60,25 @@ export async function recentIssues(limit = 8) {
 export const upsertItems = (items) => upsertChunked('mb_items', items, 'id', 200);
 export const upsertBodies = (bodies) => upsertChunked('mb_item_bodies', bodies, 'item_id', 20);
 export const upsertIssue = (issue) => upsert('mb_issues', [issue], 'week');
+
+// ---- The Read's historical vintage store (mb_runs / mb_metrics / mb_observations; schema in db/observations.sql) ----
+export async function insertRun(row) {
+  if (!hasStore()) return null;
+  const r = await fetch(`${URL}/rest/v1/mb_runs`, {
+    method: 'POST',
+    headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, 'Content-Type': 'application/json', Prefer: 'return=representation' },
+    body: JSON.stringify([row]), signal: AbortSignal.timeout(45000),
+  });
+  if (!r.ok) throw new Error(`mb_runs ${r.status}: ${(await r.text().catch(() => '')).slice(0, 200)}`);
+  const j = await r.json(); return j[0] && j[0].run_id;
+}
+export const upsertMetrics = (rows) => upsertChunked('mb_metrics', rows, 'metric_id', 200);
+// the DB's current value per period for one metric — the diff basis for change-only inserts
+export async function latestObsFor(metricId) {
+  if (!hasStore()) return new Map();
+  const q = `${URL}/rest/v1/mb_latest_observations?metric_id=eq.${encodeURIComponent(metricId)}&select=period,value`;
+  const r = await fetch(q, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, signal: AbortSignal.timeout(45000) });
+  if (!r.ok) return new Map();
+  const m = new Map(); for (const row of await r.json()) m.set(String(row.period).slice(0, 10), Number(row.value)); return m;
+}
+export const insertObservations = (rows) => upsertChunked('mb_observations', rows, 'metric_id,period,fetched_at', 500);
