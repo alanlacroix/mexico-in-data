@@ -20,12 +20,46 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   .metastrip{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:18px;font-family:var(--mono);font-size:11.5px;color:var(--mut);border-top:1px solid var(--line);padding-top:14px}
   .metastrip b{color:var(--ink);font-variant-numeric:tabular-nums}
 
-  /* legend */
-  .legend{margin:26px 0 6px;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:16px 18px}
-  .legend .lh{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:12px}
-  .legend .row{display:flex;flex-wrap:wrap;gap:12px 20px}
-  .legend .item{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--ink-2);line-height:1.4;max-width:31ch}
-  .legend .item .lt{color:var(--mut)}
+  /* LIVE NOW — the freshness-forward lead table */
+  .livenow{margin-top:54px;scroll-margin-top:66px}
+  .livenow .fresh-intro{font-size:16px;color:var(--ink-2);margin-top:12px;max-width:76ch;line-height:1.55}
+  .livenow .fresh-intro b{color:var(--ink)}
+  .freshwrap{margin-top:16px}
+  table.mck.fresh{table-layout:fixed;font-size:14px}
+  table.mck.fresh th,table.mck.fresh td{padding:11px 14px;vertical-align:middle}
+  table.mck.fresh thead th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);background:var(--paper-2);white-space:nowrap}
+  table.mck.fresh thead th.upd{color:var(--ink)}
+  table.mck.fresh col.c-cad{width:120px}
+  table.mck.fresh col.c-upd{width:150px}
+  table.mck.fresh col.c-src{width:222px}
+  /* owner-band subheader row */
+  table.mck.fresh tr.band td{background:var(--paper);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);padding:13px 14px 7px;border-top:2px solid var(--line-2);border-bottom:1px solid var(--line)}
+  table.mck.fresh tr.band .bar{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:9px;vertical-align:-1px}
+  table.mck.fresh tr.band .bandn{float:right;text-transform:none;letter-spacing:.02em;color:var(--mut)}
+  /* feed cell */
+  table.mck.fresh td.c-feed .nm{display:block;font-weight:600;color:var(--ink);font-size:14px;line-height:1.3}
+  table.mck.fresh td.c-feed .fd{display:block;font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:3px;line-height:1.35}
+  table.mck.fresh td.c-cad{font-family:var(--mono);font-size:12px;color:var(--ink-2);white-space:nowrap}
+  /* LAST UPDATED — the headline column: larger + bolder */
+  table.mck.fresh td.c-upd{font-family:var(--mono);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+  table.mck.fresh td.c-src{font-family:var(--mono);font-size:11px;overflow-wrap:break-word;line-height:1.4}
+  table.mck.fresh td.c-src a{color:var(--green)}
+  .fresherr{font-family:var(--mono);font-size:13px;color:var(--red);padding:12px 0}
+  /* status dot */
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:0}
+  .dot.green{background:var(--green)}
+  .dot.amber{background:var(--amber)}
+  .dot.red{background:var(--red)}
+  .dot.grey{background:var(--line-2)}
+  @media(max-width:820px){
+    .livenow .freshwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    table.mck.fresh{min-width:600px}
+  }
+
+  /* catalog intro — the plain replacement for the old ACCESS METHOD legend box */
+  .catintro{margin:16px 0 6px}
+  .catintro .access{font-size:14.5px;color:var(--ink-2);line-height:1.6;max-width:820px;margin-top:8px}
+  .catintro .access b{color:var(--ink);font-weight:600}
 
   /* chips: reuse .chip .g/.r/.a; add a neutral fill */
   .chip.n{background:var(--paper-3);color:var(--ink-2)}
@@ -109,8 +143,8 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   <section class="hero">
     <span class="eyebrow">What we draw on</span>
     <h1>Sources</h1>
-    <p class="dek">Every figure on the brief links to the <b>official or first-party source</b> it came from, with its date. This page is the full catalog of those sources. Each row shows how the data comes out — a public API, a bulk file, a scrape — and marks the sources not yet wired. Proprietary, discontinued, and unconfirmed-endpoint sources carry a label saying which.</p>
-    <p class="live"><a href="/data.html">See which are live right now &rarr;</a></p>
+    <p class="dek">Every figure on the brief links to the <b>official or first-party source</b> it came from, with its date. This page leads with the feeds that are <b>live right now</b>, then the full catalog below. Each catalog row shows how the data comes out — a public API, a bulk file, a scrape — and marks the sources not yet wired. Proprietary, discontinued, and unconfirmed-endpoint sources carry a label saying which.</p>
+    <p class="live"><a href="#livenow">See which are live right now &rarr;</a></p>
     <div class="metastrip">
       <span><b>97</b> catalog entries</span>
       <span><b>7</b> groups</span>
@@ -119,20 +153,21 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
     </div>
   </section>
 
-  <!-- LEGEND -->
-  <div class="legend">
-    <div class="lh">Access method — how the data comes out</div>
-    <div class="row">
-      <div class="item"><span class="chip g">API</span><span class="lt">A documented, public, machine-readable API. We pull it directly on a schedule.</span></div>
-      <div class="item"><span class="chip n">BULK</span><span class="lt">Downloadable files (XLS/ZIP/portal). Machine-usable, no live endpoint.</span></div>
-      <div class="item"><span class="chip n">CSV</span><span class="lt">Direct CSV / XML downloads, structured but manually fetched.</span></div>
-      <div class="item"><span class="chip n">SDMX</span><span class="lt">Statistical standard (IMF/OECD/BIS). API-like, treated as structured feed.</span></div>
-      <div class="item"><span class="chip n">RSS</span><span class="lt">A syndication feed we can poll for releases and headlines.</span></div>
-      <div class="item"><span class="chip a">SCRAPE</span><span class="lt">No feed offered; extracted from the page. Fragile, needs maintenance.</span></div>
-      <div class="item"><span class="chip a">REG</span><span class="lt">Free but behind registration / a key request wall.</span></div>
-      <div class="item"><span class="chip r">NO FREE API</span><span class="lt">Proprietary or commercial. No free first-party feed, so these are linked rather than wired.</span></div>
+  <!-- ============ LIVE NOW — the freshness-forward lead ============ -->
+  <section class="livenow" id="livenow">
+    <div class="section-head">
+      <div class="no">Live now</div>
+      <h2>What&rsquo;s fresh right now</h2>
     </div>
-    <p class="cadnote"><b>Cadence</b> is how often a source releases new data — daily, monthly, once a year. It's the publishing rhythm, not the freshness of any one figure. For when each wired feed last updated and what's due next, see the <a href="/data.html">live status &rarr;</a></p>
+    <p class="fresh-intro">These <b>27 feeds</b> power the brief — <b style="color:var(--green)">green</b> means fresh, <b style="color:var(--amber)">amber</b> means overdue. Every number on the site is one of these, dated.</p>
+    <div class="freshwrap tblwrap"><div id="livenow-tbl"></div></div>
+  </section>
+
+  <!-- ============ THE FULL CATALOG — the reference below ============ -->
+  <div class="catintro">
+    <span class="eyebrow">The full catalog</span>
+    <p class="access">Each source in the catalog below shows <b>how its data comes out</b> — a public <b>API</b>, a <b>bulk file</b>, or a <b>scrape</b> — in the small tag in its Access column.</p>
+    <p class="cadnote"><b>Cadence</b> is how often a source releases new data — daily, monthly, once a year. It&rsquo;s the publishing rhythm, not the freshness of any one figure. For when each wired feed last updated, see the <a href="#livenow">live table above &uarr;</a></p>
   </div>
 
   <!-- ============ GROUP A ============ -->
@@ -1015,9 +1050,155 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
       <li><b>Endpoint unconfirmed.</b> <b>DataMéxico</b> (Tesseract OLAP), <b>CEPALSTAT</b>, <b>SENER</b>, <b>CNH</b>, <b>IFT</b>, and several <b>gob.mx / news RSS</b> paths have live platforms but an API endpoint we haven't confirmed. Each is flagged <span class="chip a">verify endpoint</span> above.</li>
       <li><b>Deprecated feed.</b> <b>Reuters</b> retired its public RSS; we read it via the site, not a feed.</li>
       <li><b>Unofficial.</b> <b>Google Trends</b> comes from Google, not a statistics agency. When it appears, it carries a search-interest label.</li>
-      <li>Every figure the brief publishes links to the official source it came from, with its date. <a href="/data.html">See which feeds are live right now &rarr;</a></li>
+      <li>Every figure the brief publishes links to the official source it came from, with its date. <a href="#livenow">See which feeds are live right now &rarr;</a></li>
     </ul>
   </div>
 
 </div>
+
+<!-- LIVE NOW — renders ./data/health.json into the #livenow-tbl table above.
+     The freshness block below (SRC_META, OWNER_BANDS, the cadence model, and
+     statusColor) is copied VERBATIM from the data-health page (data.njk) so both
+     surfaces compute freshness identically — one source of truth. -->
+<script>
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+const SRC_META = {
+  'banxico-pib-crecimiento':      { name: 'Real GDP growth',         feeds: 'Q4 · growth',                owner: 'Banco de México',            ownerType: 'central-bank',   cadence: 'Quarterly', db: 'https://www.banxico.org.mx/SieAPIRest/' },
+  'banxico-igae':                 { name: 'Monthly activity (IGAE)', feeds: 'Q4 · activity',              owner: 'Banco de México / INEGI',    ownerType: 'central-bank',   cadence: 'Monthly',   db: 'https://www.banxico.org.mx/SieAPIRest/' },
+  'banxico-inflacion':            { name: 'Headline inflation (CPI)',feeds: 'Q2 board · Q3 · money',      owner: 'Banco de México / INEGI',    ownerType: 'central-bank',   cadence: 'Monthly',   db: 'https://www.banxico.org.mx/SieAPIRest/' },
+  'banxico-inflacion-subyacente': { name: 'Core inflation',          feeds: 'Q3 · money',                 owner: 'Banco de México / INEGI',    ownerType: 'central-bank',   cadence: 'Monthly',   db: 'https://www.banxico.org.mx/SieAPIRest/' },
+  'banxico-tasa-objetivo':        { name: 'Policy rate',             feeds: 'Q2 board · Q3 · markets strip',owner: 'Banco de México',          ownerType: 'central-bank',   cadence: 'Daily',     db: 'https://www.banxico.org.mx/SieAPIRest/' },
+  'banxico-usdmxn-fix':           { name: 'Peso (FIX rate)',         feeds: 'Q2 board · Q3 · markets strip',owner: 'Banco de México',          ownerType: 'central-bank',   cadence: 'Daily',     db: 'https://www.banxico.org.mx/SieAPIRest/' },
+  'banxico-reservas':             { name: "Int'l reserves",          feeds: 'Q3 · money',                 owner: 'Banco de México',            ownerType: 'central-bank',   cadence: 'Weekly',    db: 'https://www.banxico.org.mx/SieAPIRest/' },
+  'banxico-remesas':              { name: 'Remittances',             feeds: 'Q6 · households',            owner: 'Banco de México',            ownerType: 'central-bank',   cadence: 'Monthly',   db: 'https://www.banxico.org.mx/SieAPIRest/' },
+  'banxico-salario-minimo':       { name: 'Minimum wage',            feeds: 'Q6 · households',            owner: 'Banco de México / CONASAMI', ownerType: 'central-bank',   cadence: 'Annual',    db: 'https://www.banxico.org.mx/SieAPIRest/' },
+  'cre-gasolina-regular':         { name: 'Gasoline · regular',      feeds: 'Q2 board · Q6',              owner: 'CNE / Sener (ex-CRE)',       ownerType: 'energy',         cadence: 'Every 4h',  db: 'https://www.gob.mx/cre' },
+  'cre-gasolina-premium':         { name: 'Gasoline · premium',      feeds: 'Q6 · households',            owner: 'CNE / Sener (ex-CRE)',       ownerType: 'energy',         cadence: 'Every 4h',  db: 'https://www.gob.mx/cre' },
+  'cre-diesel':                   { name: 'Diesel',                  feeds: 'Q6 · households',            owner: 'CNE / Sener (ex-CRE)',       ownerType: 'energy',         cadence: 'Every 4h',  db: 'https://www.gob.mx/cre' },
+  'se-ied':                       { name: 'Foreign direct investment',feeds: 'Q5 · nearshoring',          owner: 'Secretaría de Economía',     ownerType: 'national-stats', cadence: 'Quarterly', db: 'https://www.economia.gob.mx/datamexico/' },
+  'coneval-pobreza':              { name: 'Poverty by municipality', feeds: 'Atlas map',                  owner: 'CONEVAL (via INEGI)',        ownerType: 'national-stats', cadence: '5-yr',      db: 'https://www.coneval.org.mx/' },
+  'sesnsp-delitos':               { name: 'Reported crime by muni.', feeds: 'not mapped (see Q9)',        owner: 'SESNSP',                     ownerType: 'security',       cadence: 'Monthly',   db: 'https://www.gob.mx/sesnsp' },
+  'imss-empleo':                  { name: 'Formal jobs (registered)',feeds: 'Q6 · households',            owner: 'IMSS (Datos Abiertos)',      ownerType: 'social-security',cadence: 'Monthly',   db: 'https://www.imss.gob.mx/' },
+  'wb-gdp-usd':                   { name: 'GDP (current US$)',       feeds: 'Orientation · fact strip',   owner: 'World Bank',                 ownerType: 'multilateral',   cadence: 'Annual',    db: 'https://data.worldbank.org/country/mexico' },
+  'wb-gdp-per-capita':            { name: 'GDP per capita (US$)',    feeds: 'Q4 · context',               owner: 'World Bank',                 ownerType: 'multilateral',   cadence: 'Annual',    db: 'https://data.worldbank.org/country/mexico' },
+  'wb-inflation':                 { name: 'Inflation (annual, WB)',  feeds: 'context',                    owner: 'World Bank',                 ownerType: 'multilateral',   cadence: 'Annual',    db: 'https://data.worldbank.org/country/mexico' },
+  'wb-population':                { name: 'Population',              feeds: 'Orientation · fact strip',   owner: 'World Bank',                 ownerType: 'multilateral',   cadence: 'Annual',    db: 'https://data.worldbank.org/country/mexico' },
+  'wb-unemployment':              { name: 'Unemployment',            feeds: 'Q2 board',                   owner: 'World Bank',                 ownerType: 'multilateral',   cadence: 'Annual',    db: 'https://data.worldbank.org/country/mexico' },
+  'fred-fedfunds':                { name: 'US Fed funds rate',       feeds: '', owner: 'Federal Reserve (FRED)', ownerType: 'us-macro', cadence: 'Daily',   db: 'https://fred.stlouisfed.org/series/DFF' },
+  'fred-ust10':                   { name: 'US 10-yr Treasury yield', feeds: '', owner: 'Federal Reserve (FRED)', ownerType: 'us-macro', cadence: 'Daily',   db: 'https://fred.stlouisfed.org/series/DGS10' },
+  'fred-ust2':                    { name: 'US 2-yr Treasury yield',  feeds: '', owner: 'Federal Reserve (FRED)', ownerType: 'us-macro', cadence: 'Daily',   db: 'https://fred.stlouisfed.org/series/DGS2' },
+  'fred-usd-broad':               { name: 'US dollar index (broad)', feeds: '', owner: 'Federal Reserve (FRED)', ownerType: 'us-macro', cadence: 'Weekly',  db: 'https://fred.stlouisfed.org/series/DTWEXBGS' },
+  'fred-us-indpro':               { name: 'US industrial production',feeds: '', owner: 'Federal Reserve (FRED)', ownerType: 'us-macro', cadence: 'Monthly', db: 'https://fred.stlouisfed.org/series/INDPRO' },
+  'fred-us-autosales':            { name: 'US auto sales',           feeds: '', owner: 'Federal Reserve (FRED)', ownerType: 'us-macro', cadence: 'Monthly', db: 'https://fred.stlouisfed.org/series/TOTALSA' },
+};
+const OWNER_BANDS = [
+  { key: 'central-bank',   label: 'Central bank (Banxico)',                    chip: '#075b38' },
+  { key: 'national-stats', label: 'National statistics (INEGI · CONEVAL · SE)',chip: '#0a7d4d' },
+  { key: 'social-security',label: 'Social security (IMSS)',                    chip: '#5c5c55' },
+  { key: 'security',       label: 'Security & justice (SESNSP)',               chip: '#5c5c55' },
+  { key: 'energy',         label: 'Energy (CRE / Sener)',                      chip: '#a6791a' },
+  { key: 'multilateral',   label: 'Multilateral context (World Bank)',         chip: '#6f6f6f' },
+  { key: 'us-macro',       label: 'US macro context (FRED)',                   chip: '#6f6f6f' },
+];
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function addMonths(d,n){const x=new Date(d.getTime());const day=x.getDate();x.setMonth(x.getMonth()+n);if(x.getDate()<day)x.setDate(0);return x;}
+const CAD={
+  'Every 4h':{rank:0,add:d=>new Date(d.getTime()+4*3600e3)},
+  'Daily':   {rank:1,add:d=>new Date(d.getTime()+864e5)},
+  'Weekly':  {rank:2,add:d=>new Date(d.getTime()+7*864e5)},
+  'Monthly': {rank:3,add:d=>addMonths(d,1)},
+  'Quarterly':{rank:4,add:d=>addMonths(d,3)},
+  'Annual':  {rank:5,add:d=>addMonths(d,12)},
+  '5-yr':    {rank:6,add:d=>addMonths(d,60)},
+};
+function cadRank(c){return CAD[c]?CAD[c].rank:99;}
+function parseVintage(v){
+  if(v==null||v==='')return null;
+  const s=String(v).trim();
+  if(/^\d{4}$/.test(s))return {d:new Date(+s,0,1),g:'y'};
+  let m=/^(\d{4})-(\d{2})$/.exec(s);
+  if(m)return {d:new Date(+m[1],+m[2]-1,1),g:'m'};
+  m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+  if(m)return {d:new Date(+m[1],+m[2]-1,+m[3]),g:'d'};
+  const d=new Date(s);
+  return isNaN(d)?null:{d,g:'d'};
+}
+function fmtVintage(v){
+  const p=parseVintage(v);
+  if(!p)return v?String(v):'—';
+  if(p.g==='y')return String(p.d.getFullYear());
+  if(p.g==='m')return MON[p.d.getMonth()]+' '+p.d.getFullYear();
+  const now=new Date();
+  return MON[p.d.getMonth()]+' '+p.d.getDate()+(p.d.getFullYear()!==now.getFullYear()?' '+p.d.getFullYear():'');
+}
+function fmtDay(iso){const d=new Date(iso);if(isNaN(d))return '—';return MON[d.getMonth()]+' '+d.getDate();}
+function nextDue(meta,vintage){
+  if(!meta||!CAD[meta.cadence])return null;
+  const p=parseVintage(vintage);
+  return p?CAD[meta.cadence].add(p.d):null;
+}
+function statusColor(r,meta,now){
+  if(r.status==='skipped'||r.gatedBy)return 'grey';
+  if(r.status==='failed')return 'red';
+  const C=meta&&CAD[meta.cadence];
+  const p=parseVintage(r.vintage);
+  if(!C||!p)return r.status==='ok'?'green':'grey';
+  if(C.rank<=1){ // Every 4h · Daily — a same-day successful fetch is fresh
+    const f=new Date(r.finishedAt||r.fetchedAt);
+    return (!isNaN(f)&&(now-f)<=36*3600e3)?'green':'amber';
+  }
+  const graceDue=C.add(C.add(p.d)); // next point + one cadence of lag tolerance
+  return now<=graceDue?'green':'amber';
+}
+function host(u){try{return new URL(u).host.replace(/^www\./,'');}catch(e){return u;}}
+
+// local: humanize a metric id for feeds not in SRC_META (e.g. FRED US-macro context)
+function human(s){return String(s||'').replace(/_/g,' ').replace(/\b(us|usd|gdp|fdi|cpi|ied)\b/gi,m=>m.toUpperCase()).replace(/^./,c=>c.toUpperCase());}
+
+(async()=>{
+  const box=document.getElementById('livenow-tbl');
+  if(!box)return;
+  let h;
+  try{const resp=await fetch('./data/health.json');if(!resp.ok)throw new Error('health.json '+resp.status);h=await resp.json();}
+  catch(e){box.innerHTML='<p class="fresherr">Couldn&rsquo;t load live status right now — '+esc(e.message)+'</p>';return;}
+  const now=new Date();
+  const byBand={};
+  (h.sources||[]).forEach(r=>{const m=SRC_META[r.id];const key=(m&&m.ownerType)||'other';(byBand[key]=byBand[key]||[]).push(r);});
+  const bands=OWNER_BANDS.slice();
+  if(byBand.other){
+    const allFred=byBand.other.every(r=>/fred/i.test(r.source||''));
+    bands.push({key:'other',label:allFred?'US macro context (FRED)':'Other sources',chip:'#9a9a94'});
+  }
+  let html='<table class="mck fresh"><colgroup><col><col class="c-cad"><col class="c-upd"><col class="c-src"></colgroup>'+
+    '<thead><tr><th>Feed</th><th>Cadence</th><th class="upd">Last updated</th><th>Source</th></tr></thead><tbody>';
+  bands.forEach(band=>{
+    const list=(byBand[band.key]||[]).slice().sort((a,b)=>{
+      const ma=SRC_META[a.id],mb=SRC_META[b.id];
+      const ra=cadRank(ma&&ma.cadence),rb=cadRank(mb&&mb.cadence);
+      if(ra!==rb)return ra-rb;
+      const na=(ma&&ma.name)||a.source||a.id,nb=(mb&&mb.name)||b.source||b.id;
+      return na.localeCompare(nb);
+    });
+    if(!list.length)return;
+    html+=`<tr class="band"><td colspan="4"><span class="bar" style="background:${band.chip}"></span>${esc(band.label)}<span class="bandn">${list.length} feed${list.length>1?'s':''}</span></td></tr>`;
+    list.forEach(r=>{
+      const m=SRC_META[r.id];
+      const name=(m&&m.name)||human(r.metric)||r.source||r.id;
+      const feeds=(m&&m.owner)||r.source||'';   // plain publisher name, not internal feed codes
+      const cad=(m&&m.cadence)||'—';
+      const col=statusColor(r,m,now);
+      const upd=r.finishedAt||r.fetchedAt;
+      const src=(m&&m.db)?`<a href="${esc(m.db)}" target="_blank" rel="noopener">${esc(host(m.db))}&nbsp;↗</a>`:esc(r.source||'—');
+      html+=`<tr>`+
+        `<td class="c-feed"><span class="nm">${esc(name)}</span>${feeds?`<span class="fd">${esc(feeds)}</span>`:''}</td>`+
+        `<td class="c-cad">${esc(cad)}</td>`+
+        `<td class="c-upd"><span class="dot ${col}"></span>${upd?esc(fmtDay(upd)):'—'}</td>`+
+        `<td class="c-src">${src}</td>`+
+      `</tr>`;
+    });
+  });
+  html+='</tbody></table>';
+  box.innerHTML=html;
+})();
+</script>
 {% endraw %}
