@@ -149,8 +149,8 @@ export const connectors = [
   // ---- TRADE PILLAR (Banxico SIE cuadro CE125 — Balanza comercial de mercancías, monthly, thousands US$).
   // Mexican-official, validates dollar-for-dollar against INEGI's BCMM boletín. The trade-over-time
   // backbone; treemap/partner detail comes from UN COMTRADE (context-tier, reconciled to these totals).
-  makeConnector({ id: 'banxico-exports-total',       title: 'Exportaciones totales de mercancías',        metric: 'exports_total',       serie: 'SE36593', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 3 }),
-  makeConnector({ id: 'banxico-imports-total',       title: 'Importaciones totales de mercancías',        metric: 'imports_total',       serie: 'SE36595', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 3 }),
+  makeConnector({ id: 'banxico-exports-total',       title: 'Exportaciones totales de mercancías',        metric: 'exports_total',       serie: 'SE36593', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 27 }), // long window → the two-decade arc
+  makeConnector({ id: 'banxico-imports-total',       title: 'Importaciones totales de mercancías',        metric: 'imports_total',       serie: 'SE36595', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 27 }),
   makeConnector({ id: 'banxico-trade-balance',       title: 'Balanza comercial (saldo)',                  metric: 'trade_balance',       serie: 'SE28294', units: 'thousand US$', cadence: 'monthly', maxPct: 400, years: 3 }),
   makeConnector({ id: 'banxico-exports-nonoil',      title: 'Exportaciones no petroleras',                metric: 'exports_nonoil',      serie: 'SE35397', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 3 }),
   makeConnector({ id: 'banxico-exports-oil',         title: 'Exportaciones petroleras',                   metric: 'exports_oil',         serie: 'SE32150', units: 'thousand US$', cadence: 'monthly', maxPct: 70, years: 3 }),
