@@ -97,7 +97,7 @@ ogDescription: "The rails, the cards, the cash, and the reasons cash still wins 
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, tile, exhibit, timeChart, barChart, wireCharts, enNum } from '/assets/mb.js?v=8';
+import { loadSeries, S, tile, exhibit, timeChart, barChart, wireCharts, enNum } from '/assets/mb.js?v=11';
 
 const IDS = [
   'banxico-spei-operaciones','banxico-spei-monto','banxico-codi-operaciones',
@@ -281,8 +281,7 @@ function accessExhibits(){
   // sources note
   document.getElementById('srcnote').innerHTML=
     `All figures are system totals from <a href="${SIE}" target="_blank" rel="noopener">Banco de México (SIE)</a> and <a href="${ENIF_SRC}" target="_blank" rel="noopener">INEGI's ENIF</a> survey. `+
-    `No private company appears on this page — the card and ATM numbers are the clearing-house aggregates Banxico publishes for the whole system. `+
-    `SPEI SF273317/SF273318 · CoDi SF335701 · POS debit SF62273/SF62279 · POS credit SF62274/SF62280 · e-commerce SF273475/SF273476 · ATM SF62269/SF62275 · cards SF61870/SF61871 · remittances SE27806 · consumption SR17449.`;
+    `No private company appears on this page — the card and ATM numbers are the clearing-house aggregates Banxico publishes for the whole system. Each chart above cites its exact series.`;
 
   wireCharts();
 })().catch(e=>{ const b=document.getElementById('brief'); if(b) b.textContent='Error loading payments data: '+e.message; });

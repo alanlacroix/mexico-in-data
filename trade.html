@@ -219,7 +219,7 @@
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="https://atlas.hks.harvard.edu/countries/484" target="_blank" rel="noopener"><div class="tk">Interactive</div><div class="th">The Atlas of Economic Complexity ↗</div><div class="td">For the full interactive map of every product Mexico makes — and could make next — the Harvard Growth Lab's Atlas is the best tool there is. We link it rather than rebuild it worse.</div></a>
+      <a href="/the-read.html"><div class="tk">Analysis</div><div class="th">The Read →</div><div class="td">Our read of what the trade numbers are saying — nearshoring, the peso, and what moved this week.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
     <p class="srcnote">Sources for this section: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE, cuadro CE125</a> (exports, imports, balance, imports by use) · <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a> (export basket, trade partners) · <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank WDI</a> (exports % of GDP, high-tech share). The COMTRADE figures are cross-checked against Banxico's official annual total and shown only when they reconcile within 2% — the gap is printed under each chart.</p>
@@ -230,7 +230,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, storyBlock, wireCharts } from '/assets/mb.js?v=10';
+import { loadSeries, S, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, storyBlock, wireCharts } from '/assets/mb.js?v=11';
 
 /* Trade data: Banxico CE125 series (into S) + three reconciled JSON datasets fetched alongside. */
 const CE125=['banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-imports-capital','banxico-imports-consumer'];
@@ -324,7 +324,7 @@ function renderBackground(){
   document.getElementById('tablero').innerHTML=renderTiles();
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Jul 2026',
     p1:`Mexico now exports at an annual pace near <b>$700bn</b>, running about even with imports, and about <b>four-fifths of it goes to the United States</b>. Three chapters — vehicles, electronics and machinery — are roughly <b>60%</b> of the basket, so this is a factory economy, not a commodity one: it imports parts and ships finished goods north.`,
-    p2:`Underneath the totals, Mexico has climbed the ladder for two decades — more machines and instruments, fewer raw materials, and one of the higher shares of high-tech exports in the region. For the full interactive map of that shift, the Harvard Growth Lab's <a href="https://atlas.hks.harvard.edu/countries/484" target="_blank" rel="noopener">Atlas of Economic Complexity</a> is the best tool there is.`,
+    p2:`Underneath the totals, Mexico has climbed the ladder for two decades — more machines and instruments, fewer raw materials, and one of the higher shares of high-tech exports in the region.`,
     src:'Banco de México (CE125), UN COMTRADE, World Bank WDI'});
   wireCharts();
 })().catch(e=>{ const b=document.getElementById('background'); if(b) b.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading trade data: '+e.message+'</p>'; });
