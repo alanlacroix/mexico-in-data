@@ -35,9 +35,9 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
      then up to 3 standardized headline line-items (claim + muted source · date). 2-col on desktop.
      One visual grammar, hard caps, fixed order — the anti-'articles all over the place' rules. */
   .areas{display:grid;grid-template-columns:1fr;gap:8px;margin:2px 0 4px}
-  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:11px;overflow:hidden}}
+  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden}}
   .area{background:var(--paper);padding:21px 21px 19px}
-  @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:11px}}
+  @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:4px}}
   .area-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none;margin-bottom:8px}
   .area-k{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600}
   .area-go{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
@@ -62,7 +62,7 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
   .board-lbl .k{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
   .board-lbl h2{font-family:var(--serif);font-size:clamp(19px,2.6vw,24px);color:var(--ink);display:inline;letter-spacing:-.01em}
   .board-lbl .asof{font-family:var(--mono);font-size:12px;color:var(--mut);white-space:nowrap}
-  .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
+  .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
   @media(min-width:560px){.tablero{grid-template-columns:repeat(4,1fr)}}
   .tilelink{display:contents}
   .tile{background:var(--paper);padding:19px 18px 17px;cursor:pointer;height:100%}
@@ -79,13 +79,13 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
   .tile .tb{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:7px;line-height:1.4}
   .tile .tb .arw{font-weight:700}
   .tile .stamp{margin-top:6px;display:block}
-  .tile .tsrc{font-family:var(--mono);font-size:9.5px;letter-spacing:.02em;color:var(--mut);margin-top:4px;display:block;line-height:1.35}
+  .tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:4px;display:block;line-height:1.35}
   .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
   .stamp.live{color:var(--green-d);font-weight:600}
   .chip-ph{font-family:var(--mono);font-size:9px;letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
 
   /* 2b · WHAT CHANGED — the lead queue (event log + series-delta fallback, one treatment) */
-  .chg{border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
+  .chg{border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
   .chg-item{border-bottom:1px solid var(--line);background:var(--paper)}
   .chg-item:last-child{border-bottom:none}
   .chgrow{display:flex;align-items:center;gap:12px;padding:12px 15px}
@@ -101,7 +101,7 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
   .cg-src{font-family:var(--mono);font-size:11px;color:var(--green-d);white-space:nowrap;text-decoration:none;flex:none}
   .cg-src:hover{text-decoration:underline}
   .cg-go{font-family:var(--mono);font-size:13px;color:var(--green-d);flex:none}
-  .chg-quiet{border:1px solid var(--line-2);border-radius:11px;background:var(--paper);padding:15px 16px;font-size:15px;color:var(--ink-2);margin:2px 0 4px}
+  .chg-quiet{border:1px solid var(--line-2);border-radius:4px;background:var(--paper);padding:15px 16px;font-size:15px;color:var(--ink-2);margin:2px 0 4px}
 
   /* 2c · IMPACT SCORE — expand a row (caret) to see its components + weights */
   .cg-caret{flex:none;font-family:var(--mono);font-size:12px;line-height:1;color:var(--mut);background:none;border:none;cursor:pointer;padding:4px 3px;transition:transform .15s ease}
@@ -155,7 +155,7 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
   .sub .samplelink{display:inline-block;margin-top:13px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);text-decoration:none;border-bottom:2px solid #daf0e2;padding-bottom:1px}
 
   /* 5 · SECTION CARDS */
-  .seccards{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:11px;overflow:hidden;margin:2px 0 4px}
+  .seccards{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
   @media(min-width:560px){.seccards{grid-template-columns:repeat(2,1fr)}}
   @media(min-width:900px){.seccards{grid-template-columns:repeat(3,1fr)}}
   .seccard{background:var(--paper);padding:17px 18px 15px;text-decoration:none;display:flex;flex-direction:column;gap:0}
@@ -199,7 +199,7 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
 
   /* 7 · PRIMER — evergreen orientation, moved out of the top and collapsed */
   .primer{margin-top:30px}
-  .primerbox{border:1px solid var(--line);border-radius:11px;background:var(--paper)}
+  .primerbox{border:1px solid var(--line);border-radius:4px;background:var(--paper)}
   .primerbox summary{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600;cursor:pointer;padding:14px 16px;list-style:none;display:flex;justify-content:space-between;gap:10px}
   .primerbox summary::-webkit-details-marker{display:none}
   .primerbox summary::after{content:"+";color:var(--mut)}
