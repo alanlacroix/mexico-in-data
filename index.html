@@ -271,7 +271,7 @@
     </div>
     <div class="tablero" id="tablero"></div>
     <button class="board-more" id="board-more" type="button" aria-expanded="false">Show all indicators</button>
-    <p class="wire-note">Every tile links to the section that owns it, where the same figure is shown with its full history and source. Every number on the brief is first-party and dated — <a href="/sources.html">see all sources &rarr;</a></p>
+    <p class="wire-note">Every tile links to the section that owns it, where the same figure is shown with its full history and source. Mexican official data (Banxico, INEGI) is the core; U.S. and multilateral sources add context, each labeled — <a href="/sources.html">see all sources &rarr;</a></p>
   </section>
 
   <!-- 3b · THE AREAS — the topic browse: each area = a 1–2 sentence read + its top headlines -->
@@ -282,19 +282,12 @@
 
 
 
-  <!-- 6 · WHAT TO WATCH + THE WIRE -->
+  <!-- 6 · WHAT TO WATCH — the next dated catalysts. The raw headline wire was retired from public
+       surfaces (Fable, 2026-07-11): the homepage carries curated developments only — in The Brief
+       and the areas. The wire keeps running internally as the feed that curation draws from. -->
   <section id="wire">
-    <div class="coverband">
-      <div>
-        <div class="cb-h"><span class="k">What to watch</span></div>
-        <div id="watch-list"></div>
-      </div>
-      <div>
-        <div class="cb-h"><span class="k">Headlines</span><a class="a" href="/weekly.html">This week →</a></div>
-        <div id="wire-list"></div>
-        <p class="wire-note">Headlines from a trusted-source allowlist, each dated and linked to its origin, unsummarized. The tag links to the section it belongs to.</p>
-      </div>
-    </div>
+    <div class="board-lbl"><div><span class="k">What to watch</span> &nbsp; <h2 style="display:inline">The calendar</h2></div></div>
+    <div id="watch-list"></div>
   </section>
 
   <!-- 7 · PRIMER — new to Mexico? the evergreen basics, moved out of the top -->
@@ -328,7 +321,7 @@
 </div>
 
 <script type="module">
-import { loadSeries, S, NEWS, EVENTS, HAPPENING, tile, relTime, evDate, enNum } from '/assets/mb.js?v=2';
+import { loadSeries, S, EVENTS, tile, fmt, relTime, evDate, enNum } from '/assets/mb.js?v=2';
 
 /* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
    Every topic now owns a page, so a bookmarked #q link should land on it. */
@@ -376,13 +369,25 @@ function writeVisit(){ try{ localStorage.setItem('mb_lastvisit',new Date().toISO
    law). Each sentence is a link to the source item it cites; the page never invents — it only
    renders what the generator (or its deterministic fallback) already validated. */
 const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* A board-number sentence carries s.live = [{series,tmpl}], so we re-render its numbers from the
+   SAME live series the board reads (S), formatted the SAME way (fmt) — the brief can never drift
+   from the board. If a series is missing (fetch/JS failure), fall back to the baked text. */
+function liveText(s){
+  if(!s.live||!s.live.length) return s.text;
+  try{
+    const parts=s.live.map(L=>{ const ser=S[L.series]; if(!ser||!ser.data||!ser.data.length) throw 0;
+      const f=fmt(L.series, ser.data.at(-1).value, ser.meta&&ser.meta.units); return L.tmpl.replace('{v}', f.v); });
+    let t=parts.join(', '); t=t.charAt(0).toUpperCase()+t.slice(1); if(!/[.!?]$/.test(t)) t+='.'; return t;
+  }catch(e){ return s.text; }
+}
 function renderBrief(brief){
   const paras=(brief&&brief.paragraphs)||[];
   if(!paras.length||!paras.flat().length) return '';
   return paras.map(p=>`<p>`+p.map(s=>{
+    const txt=liveText(s);
     const ext=/^https?:/.test(s.href||'');
-    if(!s.href) return `<span class="s">${esc(s.text)}</span>`;
-    return `<a class="s" href="${esc(s.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(s.source||'source')}">${esc(s.text)}</a>`;
+    if(!s.href) return `<span class="s">${esc(txt)}</span>`;
+    return `<a class="s" href="${esc(s.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(s.source||'source')}">${esc(txt)}</a>`;
   }).join(' ')+`</p>`).join('');
 }
 
@@ -415,22 +420,9 @@ function renderWatch(){
       `<div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
-/* ============ THE WIRE (block 6, right) — latest ~10, each tagged to its section ============ */
-function secOf(a){
-  const t=(a.tag||'').toLowerCase(), s=(a.title||'')+' '+(a.beat||'');
-  if(SEC_RX.test(a.title||'')) return {l:'Security',h:'/security.html'};
-  if(['politics','government','policy'].includes(t)||POL_RX.test(s)) return {l:'Politics',h:'/politics.html'};
-  if(t==='trade'||USMX_RX.test(a.title||'')) return {l:'U.S.–Mexico',h:'/us-mexico.html'};
-  if(SOC_RX.test(a.title||'')) return {l:'Society',h:'/society.html'};
-  if(t==='markets'||MONEY_RX.test(a.title||'')) return {l:'Money',h:'/money.html'};
-  return {l:'Economy',h:'/economy.html'};
-}
-function renderWire(){
-  const A=(NEWS&&NEWS.articles)||[];
-  if(!A.length) return `<div class="cb-empty">No headlines in the latest run — the next scheduled fetch will post them here.</div>`;
-  return `<div class="wire">`+A.slice(0,10).map(a=>{const sec=secOf(a);const dd=a.date?new Date(a.date):null;const w=dd&&!isNaN(dd)?relTime(dd.getTime()):'';
-    return `<div class="wi"><a class="wtag" href="${sec.h}">${sec.l}</a><div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
-}
+/* THE WIRE (raw automated headlines) was retired from the homepage on 2026-07-11 (Fable): the public
+   page carries curated developments only — in The Brief and the areas. The wire still runs internally
+   (data/news/*.json) as the inbox curation draws from; it just never renders unreviewed to a reader. */
 
 /* ============ boot ============ */
 (async()=>{
@@ -472,7 +464,6 @@ function renderWire(){
   writeVisit();                     // stamp this visit so the next one has a "since" point
 
   document.getElementById('watch-list').innerHTML=renderWatch();
-  document.getElementById('wire-list').innerHTML=renderWire();
 
   // "Show all indicators" — reveals the .extra tiles on mobile
   const bm=document.getElementById('board-more'), tbl=document.getElementById('tablero');
@@ -488,7 +479,7 @@ function renderWire(){
 
 <footer class="foot"><div class="wrap">
   <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a><a href="/journal.html">Journal</a></nav>
-  <p class="fblurb">A free public briefing on Mexico, built from official first-party data. Every figure is dated and one tap from its source.</p>
+  <p class="fblurb">A free public briefing on Mexico. Official data — Mexican institutions at the core, U.S. and multilateral sources for context — every figure dated and one tap from its source.</p>
 </div></footer>
 
 <script>document.addEventListener('click',function(e){var b=e.target.closest('.navtoggle');if(!b)return;b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');});</script>

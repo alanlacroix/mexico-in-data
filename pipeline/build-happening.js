@@ -112,7 +112,11 @@ function mkEvent(x, section, importance, title, why) {
 // importance at 2 so a fallback item never outranks a real (model- or hand-curated) event
 // on the homepage. It's a safety net to keep the log fresh when the LLM is down, not a
 // substitute for it.
-const JUNK_RX = /¿(qui[eé]n|c[óo]mo|qu[eé]|cu[áa]l)|vs\.?\s|los? m[áa]s (barat|car|vendid)|\branking\b|paso a paso|hor[óo]scopo|receta|qu[eé] ver|streaming|nfl|nba|mlb|liga mx|fichaje|premios|celebr|tel[ei]nov|checa (las|los)|te decimos|aqu[íi] (los|las)/i;
+// Bars the soft-feature classes a keyless fallback can't tell from real events: quizzes, versus
+// listicles, "the N most ___" rankings, brand-history features ("la historia de…"), routine FX
+// open/close recaps ("así abre el tipo de cambio", "peso busca rescatar…"), forecast-cut rehashes,
+// sports, how-tos, entertainment. The model path filters on meaning; this keeps the fallback honest.
+const JUNK_RX = /¿(qui[eé]n|c[óo]mo|qu[eé]|cu[áa]l)|vs\.?\s|los? m[áa]s (barat|car|vendid)|entre l[ao]s \d+ m[áa]s|la historia de|as[íi] (abre|cierra)|busca rescatar|(d[óo]lar|tipo de cambio) hoy|precio del d[óo]lar|recorte de expectativas|\branking\b|paso a paso|hor[óo]scopo|receta|qu[eé] ver|streaming|nfl|nba|mlb|liga mx|fichaje|premios|celebr|tel[ei]nov|checa (las|los)|te decimos|aqu[íi] (los|las)/i;
 const MX_RX = /m[eé]xic|mexican|\bcdmx\b|banxico|sheinbaum|\bpemex\b|\bfemsa\b|\boxxo\b|\bmorena\b|\binegi\b|\bcnbv\b|\bpeso(s)?\b|monterrey|guadalajara|\bbmv\b|nearshor|maquila|tmec|usmca|\bdof\b|hacienda|sat\b/i;
 function curateFallback(cands, now) {
   const tierW = (t) => (t === 1 ? 4 : t === 'specialist' ? 3 : t === 2 ? 2 : 1);

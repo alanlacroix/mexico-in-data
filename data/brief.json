@@ -3,7 +3,7 @@
     "title": "The brief",
     "updated": "2026-07-11",
     "asOf": "Jul 11",
-    "generatedAt": "2026-07-11T02:18:14.083Z",
+    "generatedAt": "2026-07-11T06:35:59.286Z",
     "mode": "stitch",
     "llm": false,
     "words": 114
@@ -61,7 +61,21 @@
           "board-rate"
         ],
         "href": "/money.html",
-        "source": "Banco de México"
+        "source": "Banco de México",
+        "live": [
+          {
+            "series": "banxico-usdmxn-fix",
+            "tmpl": "the peso trades at {v} to the dollar"
+          },
+          {
+            "series": "banxico-inflacion",
+            "tmpl": "inflation is {v}%"
+          },
+          {
+            "series": "banxico-tasa-objetivo",
+            "tmpl": "the policy rate is {v}%"
+          }
+        ]
       },
       {
         "text": "The USMCA is now in an annual-review cycle running to 2036 after the U.S. declined to renew it in 2026 — the single biggest swing factor for the economy.",

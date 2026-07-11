@@ -39,26 +39,17 @@ const norm = (t) => (t || '').toLowerCase().replace(/[^a-z0-9áéíóúñü ]/g,
 function jaccard(a, b) { const A = new Set(a.split(' ').filter((w) => w.length > 3)), B = new Set(b.split(' ').filter((w) => w.length > 3)); if (!A.size || !B.size) return 0; let i = 0; for (const w of A) if (B.has(w)) i++; return i / (A.size + B.size - i); }
 function weekKey(dt) { const d = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate())); const day = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - day); const ys = new Date(Date.UTC(d.getUTCFullYear(), 0, 1)); return d.getUTCFullYear() + '-W' + String(Math.ceil((((d - ys) / 864e5) + 1) / 7)).padStart(2, '0'); }
 
-// gather everything once: curated events (rich, hand/model-written) + news wire (raw headlines)
+// gather the CURATED events only (happening.json). The raw news wire was retired from public
+// surfaces (Fable, 2026-07-11): the areas render human-curated developments only — ten curated
+// items beat eighty raw ones, and "Chocolate Abuelita under Security" is what auto-filing looks
+// like without a human. The wire still runs internally as the inbox curation draws from.
 function allItems(now) {
-  const cutoff = now.getTime() - WINDOW_DAYS * 864e5;
   const events = arr(readJson(D('happening.json'), { events: [] }).events).map((e) => ({
     kind: 'event', section: e.section, beat: e.section, title: e.title, why: e.why || '',
     source: e.source, url: e.url, date: (e.date || '').slice(0, 10), importance: e.importance || 3,
     _t: Date.parse(e.date) || 0,
   }));
-  const seen = new Set(events.map((e) => norm(e.title))), news = [];
-  for (let i = 0; i <= 5; i++) {
-    for (const x of arr(readJson(D('news', weekKey(new Date(now.getTime() - i * 7 * 864e5)) + '.json'), []))) {
-      if (!x || !x.title || !x.url) continue;
-      const t = Date.parse(x.published_at); if (!(t >= cutoff)) continue;
-      const n = norm(x.title); if (seen.has(n) || news.some((k) => jaccard(k._n, n) >= 0.6)) continue;
-      seen.add(n);
-      news.push({ kind: 'news', beat: x.beat, section: x.beat, title: x.title, why: (x.dek || '').trim(),
-        source: x.sourceName || x.source, url: x.url, date: (x.published_at || '').slice(0, 10), importance: 2, _t: t, _n: n });
-    }
-  }
-  return { events, news };
+  return { events, news: [] };
 }
 
 function forArea(area, items, used) {
