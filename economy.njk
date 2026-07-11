@@ -99,20 +99,28 @@ function divBar(items){
 /* ---- line (growth) ---- */
 function line(pts,opts){
   opts=opts||{}; const W=720,H=300,pl=40,pr=54,pt=12,pb=28,iw=W-pl-pr,ih=H-pt-pb;
-  const vals=pts.map(p=>p.value); let mn=Math.min(...vals,0),mx=Math.max(...vals,0);const pad=(mx-mn)*0.1||1;mn-=pad;mx+=pad;
+  const vals=pts.map(p=>p.value); const dmn=Math.min(...vals,0),dmx=Math.max(...vals,0);
+  // nice, round, evenly-spaced axis (−10,−5,0,5,10) — not the raw min/max divided by 4, which gave odd labels
+  const span=dmx-dmn||1,rawStep=span/4,magn=Math.pow(10,Math.floor(Math.log10(rawStep))),nrm=rawStep/magn;
+  const step=(nrm<1.5?1:nrm<3?2:nrm<7?5:10)*magn;
+  const mn=Math.floor(dmn/step)*step,mx=Math.ceil(dmx/step)*step;
   const X=(i)=>pl+i/(pts.length-1)*iw,Y=(v)=>pt+ih-((v-mn)/(mx-mn))*ih;
-  let g='';for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${pl-5}" y="${(y+3).toFixed(1)}" text-anchor="end">${v.toFixed(0)}%</text>`;}
+  let g='';for(let v=mn;v<=mx+1e-9;v+=step){const y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${pl-5}" y="${(y+3).toFixed(1)}" text-anchor="end">${(+v.toFixed(2))}%</text>`;}
   if(mn<0&&mx>0){const yz=Y(0);g+=`<line class="zero" x1="${pl}" y1="${yz.toFixed(1)}" x2="${W-pr}" y2="${yz.toFixed(1)}"/>`;}
   g+=`<path class="ln" d="${pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.value).toFixed(1)).join(' ')}"/>`;
-  pts.forEach((p,i)=>{const anc=i===0?'start':(i===pts.length-1?'end':'middle');g+=`<circle class="dot" cx="${X(i).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="3.4" fill="var(--ink)"/><text class="axl" x="${X(i).toFixed(1)}" y="${H-8}" text-anchor="${anc}">${p.year}</text><text class="vlab" x="${X(i).toFixed(1)}" y="${(Y(p.value)-9).toFixed(1)}" text-anchor="${anc}">${(p.value>0?'+':'')+p.value}</text>`;});
+  pts.forEach((p,i)=>{const anc=i===0?'start':(i===pts.length-1?'end':'middle');g+=`<circle class="dot" cx="${X(i).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="3.4" fill="var(--ink)"/><text class="axl" x="${X(i).toFixed(1)}" y="${H-8}" text-anchor="${anc}">${p.year}</text><text class="vlab" x="${X(i).toFixed(1)}" y="${(Y(p.value)-9).toFixed(1)}" text-anchor="${anc}">${(p.value>0?'+':'')+p.value.toFixed(1)}</text>`;});
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">${g}</svg>`;
 }
 /* ---- dual line (exports vs imports) ---- */
 function dualLine(a,b,opts){
   opts=opts||{}; const W=720,H=320,pl=44,pr=120,pt=12,pb=28,iw=W-pl-pr,ih=H-pt-pb;
-  const all=a.concat(b).map(p=>p.value);let mn=Math.min(...all),mx=Math.max(...all);const pad=(mx-mn)*0.1||1;mn-=pad;mx+=pad;
+  const all=a.concat(b).map(p=>p.value);const dmn=Math.min(...all),dmx=Math.max(...all);
+  // nice, round, evenly-spaced $ axis — not raw min/max divided by 4
+  const span=dmx-dmn||1,rawStep=span/4,magn=Math.pow(10,Math.floor(Math.log10(rawStep))),nrm=rawStep/magn;
+  const step=(nrm<1.5?1:nrm<3?2:nrm<7?5:10)*magn;
+  const mn=Math.floor(dmn/step)*step,mx=Math.ceil(dmx/step)*step;
   const n=a.length,X=(i)=>pl+i/(n-1)*iw,Y=(v)=>pt+ih-((v-mn)/(mx-mn))*ih;
-  let g='';for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${pl-5}" y="${(y+3).toFixed(1)}" text-anchor="end">$${v.toFixed(0)}</text>`;}
+  let g='';for(let v=mn;v<=mx+1e-9;v+=step){const y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${pl-5}" y="${(y+3).toFixed(1)}" text-anchor="end">$${(+v.toFixed(2))}</text>`;}
   const path=(arr,cls)=>`<path class="${cls}" d="${arr.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.value).toFixed(1)).join(' ')}"/>`;
   g+=path(a,'ln')+path(b,'ln2');
   const la=a[a.length-1],lb=b[b.length-1],ex=X(n-1),ya=Y(la.value),yb=Y(lb.value);
