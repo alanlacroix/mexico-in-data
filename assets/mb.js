@@ -29,6 +29,12 @@ export function fmt(id,v,units){
   if(id==='banxico-spei-operaciones') return {v:enNum(Math.round(v/1e6)), s:'mn/mo'};        // millions of transfers per month
   if(id==='banxico-spei-monto') return {v:'$'+(v/1e12).toFixed(1), s:'tn MXN/mo'};           // trillions of pesos per month
   if(id==='banxico-codi-operaciones') return {v:enNum(Math.round(v/1e3)), s:'k ops/mo'};     // thousands of operations per month
+  // Payments — cards + ATM + e-commerce (quarterly) and cards-in-circulation / consumption / cash.
+  if(id==='banxico-tpv-debito-ops'||id==='banxico-tpv-credito-ops'||id==='banxico-cajeros-ops'||id==='banxico-ecommerce-ops') return {v:enNum(Math.round(v/1e6)), s:'mn/qtr'};
+  if(id==='banxico-tpv-debito-monto'||id==='banxico-tpv-credito-monto'||id==='banxico-cajeros-monto'||id==='banxico-ecommerce-monto') return {v:'$'+(v/1e6).toFixed(2), s:'tn/qtr'};  // importe is in millones de pesos → /1e6 = billones (trillions)
+  if(id==='banxico-tarjetas-credito'||id==='banxico-tarjetas-debito') return {v:enNum(Math.round(v/1e6)), s:'mn cards'};
+  if(id==='banxico-consumo-privado') return {v:v.toFixed(1), s:'index'};
+  if(id==='banxico-circulante') return {v:'$'+(v/1e6).toFixed(2), s:'tn MXN'};                // billetes y monedas, millones de pesos → trillions
   if(id==='wb-gdp-usd') return {v:'$'+(v/1e12).toFixed(2), s:'tn USD'};
   if(id==='wb-population') return {v:(v/1e6).toFixed(1), s:'mn'};
   if(id==='wb-gdp-per-capita') return {v:'$'+enNum(Math.round(v)), s:'USD'};
