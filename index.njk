@@ -185,7 +185,8 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
   .watchtbl .wtr .wm{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:2px}
   .watchtbl .wtr .wsrc{font-family:var(--mono);font-size:9.5px}
   .cb-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0}
-  .wire .wi{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:11px;align-items:baseline}
+  .wire .wi{padding:11px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:98px 1fr;gap:11px;align-items:baseline}
+  .wire .wtag{justify-self:start}
   .wire .wi:last-child{border-bottom:none}
   .wire .wtag{font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px;text-decoration:none}
   .wire .wtag:hover{color:var(--green-d);border-color:var(--green-bg)}
@@ -251,21 +252,6 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
     <div class="areas" id="areas"></div>
   </section>
 
-  <!-- 4 · NEWSLETTER -->
-  <section>
-    <div class="sub">
-      <div class="lab">The brief — free</div>
-      <p class="line"><b>The brief, in your inbox</b> — two or three mornings a week.</p>
-      <!-- Buttondown embed. Replace `mexicobrief` with the Buttondown username once the account exists. Keyless: posts straight to Buttondown, works on a static host. -->
-      <form action="https://buttondown.email/api/emails/embed-subscribe/mexicobrief" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/mexicobrief','popupwindow')">
-        <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
-        <input type="hidden" value="1" name="embed" />
-        <button type="submit">Get the brief</button>
-      </form>
-      <div class="fine">The address is used only for the brief and never shared, and one tap unsubscribes.</div>
-      <a class="samplelink" href="/weekly-sample.html">See a past issue →</a>
-    </div>
-  </section>
 
 
   <!-- 6 · WHAT TO WATCH + THE WIRE -->
@@ -293,6 +279,22 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
         It elects a president every six years, now <b>Claudia Sheinbaum (Morena)</b>, through 2030.<a class="ref" href="/politics.html" title="INE; Presidencia">3</a>
       </p>
     </details>
+  </section>
+
+  <!-- NEWSLETTER — moved to the bottom, the last thing before the footer -->
+  <section>
+    <div class="sub">
+      <div class="lab">The brief — free</div>
+      <p class="line"><b>The brief, in your inbox</b> — two or three mornings a week.</p>
+      <!-- Buttondown embed. Replace `mexicobrief` with the Buttondown username once the account exists. Keyless: posts straight to Buttondown, works on a static host. -->
+      <form action="https://buttondown.email/api/emails/embed-subscribe/mexicobrief" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/mexicobrief','popupwindow')">
+        <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
+        <input type="hidden" value="1" name="embed" />
+        <button type="submit">Get the brief</button>
+      </form>
+      <div class="fine">The address is used only for the brief and never shared, and one tap unsubscribes.</div>
+      <a class="samplelink" href="/weekly-sample.html">See a past issue →</a>
+    </div>
   </section>
 
 </div>

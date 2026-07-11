@@ -8,7 +8,9 @@ description: "A free weekly email on Mexico: what moved in politics, business, a
 <style>
   :root{--ink-3:#4d4d4d}
   body{font-size:17px}
-  .wrap{max-width:760px;margin:0 auto;padding:0 clamp(16px,5vw,32px)}
+  /* content width inherits the shared .wrap component (--maxw:1120) — no per-page override, so the page and nav match every other page */
+  .sub{max-width:600px}          /* signup box: a readable measure inside the full-width page */
+  .hero .dek, .blk p{max-width:64ch}   /* prose caps, left-aligned like the section pages */
 
   .hero{padding:30px 0 8px}
   .hero h1{font-family:var(--serif);font-size:clamp(30px,6vw,44px);line-height:1.03;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
