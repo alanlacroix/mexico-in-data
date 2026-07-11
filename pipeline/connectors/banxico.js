@@ -23,7 +23,7 @@ function yearAgo(nowIso) {
   return d.toISOString().slice(0, 10);
 }
 
-function makeConnector({ id, title, metric, serie, units, cadence, maxPct }) {
+function makeConnector({ id, title, metric, serie, units, cadence, maxPct, years = 1 }) {
   return {
     manifest: {
       id,
@@ -43,7 +43,10 @@ function makeConnector({ id, title, metric, serie, units, cadence, maxPct }) {
     async fetchRaw(ctx) {
       const token = TOKEN();
       if (!token) throw new Error('missing BANXICO_TOKEN (fail-closed)');
-      const start = yearAgo(ctx.now);
+      // Window scales with cadence: monthly needs ~1yr for a trend, quarterly needs several
+      // years to clear the 3-row completeness floor. `years` overrides the default.
+      const d = new Date(ctx.now); d.setFullYear(d.getFullYear() - years);
+      const start = d.toISOString().slice(0, 10);
       const end = ctx.now.slice(0, 10);
       const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/${serie}/datos/${start}/${end}?token=${token}`;
       return getJson(url);
@@ -77,10 +80,10 @@ export const connectors = [
   // Cards + ATM (Fable's merchant frontier). Quarterly, Banxico SIE — switch-sourced SYSTEM aggregates,
   // never a named private company. Debit-at-POS + ATM cash confirmed; credit + e-commerce added once
   // their specific series ids are pinned. (SF62272 total-TPV went dark, so we use the debit series.)
-  makeConnector({ id: 'banxico-tpv-debito-ops',   title: 'TPV — operaciones con tarjeta de débito', metric: 'debit_pos_ops',   serie: 'SF62273', units: 'operaciones',  cadence: 'quarterly', maxPct: 45 }),
-  makeConnector({ id: 'banxico-tpv-debito-monto', title: 'TPV — importe con tarjeta de débito',     metric: 'debit_pos_value', serie: 'SF62279', units: 'million MXN', cadence: 'quarterly', maxPct: 45 }),
-  makeConnector({ id: 'banxico-cajeros-ops',      title: 'Cajeros — retiros de efectivo (operaciones)', metric: 'atm_ops',    serie: 'SF62269', units: 'operaciones',  cadence: 'quarterly', maxPct: 40 }),
-  makeConnector({ id: 'banxico-cajeros-monto',    title: 'Cajeros — retiros de efectivo (importe)',     metric: 'atm_value',  serie: 'SF62275', units: 'million MXN', cadence: 'quarterly', maxPct: 40 }),
+  makeConnector({ id: 'banxico-tpv-debito-ops',   title: 'TPV — operaciones con tarjeta de débito', metric: 'debit_pos_ops',   serie: 'SF62273', units: 'operaciones',  cadence: 'quarterly', maxPct: 45, years: 6 }),
+  makeConnector({ id: 'banxico-tpv-debito-monto', title: 'TPV — importe con tarjeta de débito',     metric: 'debit_pos_value', serie: 'SF62279', units: 'million MXN', cadence: 'quarterly', maxPct: 45, years: 6 }),
+  makeConnector({ id: 'banxico-cajeros-ops',      title: 'Cajeros — retiros de efectivo (operaciones)', metric: 'atm_ops',    serie: 'SF62269', units: 'operaciones',  cadence: 'quarterly', maxPct: 40, years: 6 }),
+  makeConnector({ id: 'banxico-cajeros-monto',    title: 'Cajeros — retiros de efectivo (importe)',     metric: 'atm_value',  serie: 'SF62275', units: 'million MXN', cadence: 'quarterly', maxPct: 40, years: 6 }),
   makeConnector({ id: 'banxico-remesas-electronicas', title: 'Remesas — transferencias electrónicas', metric: 'remittances_electronic', serie: 'SE27806', units: 'million US$', cadence: 'monthly', maxPct: 25 }),
   // CoDi is published DAILY (SF335701). Aggregate to monthly totals; drop the trailing partial month so a
   // half-summed current month never reads as a crash.
