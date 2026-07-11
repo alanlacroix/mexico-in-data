@@ -94,6 +94,24 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
   .bd-eq{font-size:9px;color:var(--mut);margin-top:10px;line-height:1.55}
   .bd-eq code{font-family:var(--mono);color:var(--ink-2)}
 
+  /* what's happening — the cross-domain lead; reuses the .chg row shell, adds a why line */
+  .hap-row{align-items:flex-start;gap:13px}
+  .hap-tag{flex:none;font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:3px 7px;white-space:nowrap;margin-top:2px;text-decoration:none}
+  .hap-tag:hover{color:var(--green-d);border-color:var(--green-bg)}
+  .hap-b{padding:0}
+  .hap-line{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .hap-date{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);flex:none}
+  .hap-title{font-size:15px;color:var(--ink);font-weight:600;line-height:1.32}
+  .hap-why{font-size:13.5px;color:var(--ink-2);line-height:1.5;margin-top:5px;max-width:82ch}
+  .hap .cg-src{align-self:flex-start;margin-top:3px}
+  /* mobile: the 3-column row (tag / body / source) can't fit — stack it cleanly */
+  @media(max-width:640px){
+    .hap-row{flex-direction:column;align-items:stretch;gap:7px}
+    .hap-tag{align-self:flex-start;margin-top:0}
+    .hap-b{width:100%}
+    .hap .cg-src{align-self:flex-start;margin-top:2px}
+  }
+
   /* 4 · NEWSLETTER (from weekly.njk .sub) */
   .sub{margin:8px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
   .sub .lab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
@@ -181,9 +199,9 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
     <h1>Mexico, right now.</h1>
   </section>
 
-  <!-- 2 · WHAT CHANGED — the lead: the event log since your last visit -->
+  <!-- 2 · WHAT'S HAPPENING — the lead: the cross-domain event log, what's moving Mexico now -->
   <section>
-    <div class="bh"><div><span class="k">What changed</span></div><span class="asof" id="chg-since">Recently</span></div>
+    <div class="bh"><div><span class="k">What's happening</span> &nbsp; <h2 style="display:inline">This week in Mexico</h2></div><span class="asof" id="chg-since">Recently</span></div>
     <div id="changed"></div>
   </section>
 
@@ -252,7 +270,7 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
 </div>
 
 <script type="module">
-import { loadSeries, S, NEWS, EVENTS, tile, relTime, evDate, enNum } from '/assets/mb.js';
+import { loadSeries, S, NEWS, EVENTS, HAPPENING, tile, relTime, evDate, enNum } from '/assets/mb.js';
 
 /* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
    Every topic now owns a page, so a bookmarked #q link should land on it. */
@@ -518,6 +536,45 @@ function renderChanged(releases,since,lens){
   return `<div class="chg">`+rows.map((r,i)=>chgRow(r,i)).join('')+`</div>`;
 }
 
+/* ============ WHAT'S HAPPENING (the lead) — curated cross-domain event log ============
+   The daily reason to open: the developments moving Mexico across every domain — economy,
+   money, politics, security, U.S.–Mexico — each dated and linked to a first-party or record
+   source, with one line on why it matters. Ranked by importance, then recency. Seeded and
+   hand-curated in data/happening.json for now; the auto-pipeline (DOF, Banxico, SESNSP, USTR
+   connectors) appends to the same log as the additive next layer. */
+const HAP_SECTIONS={
+  'economy':{label:'Economy',href:'/economy.html'},
+  'money':{label:'Money',href:'/money.html'},
+  'politics':{label:'Politics',href:'/politics.html'},
+  'security':{label:'Security',href:'/security.html'},
+  'us-mexico':{label:'U.S.–Mexico',href:'/us-mexico.html'},
+  'society':{label:'Society',href:'/society.html'},
+};
+function hapDate(iso){ if(!iso) return ''; const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso); const d=m?new Date(+m[1],+m[2]-1,+m[3]):new Date(iso); if(isNaN(d)) return ''; return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function renderHappening(feed,since){
+  const evs=((feed&&feed.events)||[]).slice();
+  if(!evs.length) return `<div class="chg-quiet">No developments logged yet — the next run will post them here.</div>`;
+  evs.forEach(e=>{ e._t=Date.parse(e.date)||0; });
+  evs.sort((a,b)=>(b.importance-a.importance)||(b._t-a._t));
+  // diversity-aware pick: at most 2 per section so the lead stays cross-domain (the whole point),
+  // then fill any remaining slots by importance. Keeps security/politics from being buried under econ.
+  const CAP=2, N=8, seen={}, rows=[];
+  for(const e of evs){ if(rows.length>=N) break; const c=seen[e.section]||0; if(c<CAP){ rows.push(e); seen[e.section]=c+1; } }
+  for(const e of evs){ if(rows.length>=N) break; if(rows.indexOf(e)<0) rows.push(e); }
+  return `<div class="chg hap">`+rows.map(e=>{
+    const sec=HAP_SECTIONS[e.section]||{label:e.section||'',href:'#'};
+    const isNew=since&&!since.first&&e._t>since.since;
+    return `<div class="chg-item"><div class="chgrow hap-row">`+
+      `<a class="hap-tag" href="${sec.href}">${sec.label}</a>`+
+      `<div class="cg-body hap-b">`+
+        `<div class="hap-line"><span class="hap-date">${hapDate(e.date)}</span>`+(isNew?`<span class="cg-flag">New</span>`:``)+`<span class="hap-title">${e.title}</span></div>`+
+        (e.why?`<div class="hap-why">${e.why}</div>`:``)+
+      `</div>`+
+      (e.url?`<a class="cg-src" href="${e.url}" target="_blank" rel="noopener">${e.source||'source'} →</a>`:``)+
+    `</div></div>`;
+  }).join('')+`</div>`;
+}
+
 /* ============ SECTION CARDS (block 5) ============ */
 function renderCards(){
   const A=(NEWS&&NEWS.articles)||[];
@@ -590,7 +647,7 @@ function renderWire(){
 
   // the lead: what changed since your last visit (event log → series-delta fallback)
   const changedEl=document.getElementById('changed');
-  changedEl.innerHTML=renderChanged(releases,since,lens);
+  changedEl.innerHTML=renderHappening(HAPPENING,since);
   // expand a row (caret) to reveal its impact-score breakdown — delegated, one listener
   changedEl.addEventListener('click',(ev)=>{
     const btn=ev.target.closest('.cg-caret'); if(!btn||!changedEl.contains(btn)) return;
@@ -599,7 +656,7 @@ function renderWire(){
     if(opening) panel.removeAttribute('hidden'); else panel.setAttribute('hidden','');
     btn.classList.toggle('open',opening); btn.setAttribute('aria-expanded',opening?'true':'false');
   });
-  const cs=document.getElementById('chg-since'); if(cs) cs.textContent=since.label;
+  const cs=document.getElementById('chg-since'); if(cs) cs.textContent=(HAPPENING&&HAPPENING.meta&&HAPPENING.meta.updated)?('Updated '+hapDate(HAPPENING.meta.updated)):since.label;
   writeVisit();                     // stamp this visit so the next one has a "since" point
 
   document.getElementById('seccards').innerHTML=renderCards();

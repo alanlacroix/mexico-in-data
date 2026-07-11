@@ -10,7 +10,7 @@ async function J(p){ const r=await fetch(p); if(!r.ok) throw new Error(p+' '+r.s
 
 /* ---- the series map + composites (module state; loadSeries() populates these) ---- */
 export const S = {};
-export let NEWS = null, EVENTS = null;
+export let NEWS = null, EVENTS = null, HAPPENING = null;
 
 export const MON  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 export const MONL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -237,14 +237,15 @@ export function tagChip(t){ return `<span class="wtag ${t||''}">${t||'econ'}</sp
 const MONEY_SERIES=['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-reservas','banxico-remesas'];
 export async function loadSeries(ids){
   const SER=ids||MONEY_SERIES;
-  const [news,events,...ser]=await Promise.all([
+  const [news,events,happening,...ser]=await Promise.all([
     J('./data/news/wire.json').catch(()=>J('./data/news.json').catch(()=>null)),
     J('./data/events.json').catch(()=>null),
+    J('./data/happening.json').catch(()=>null),
     ...SER.map(id=>J('./data/series/'+id+'.json').then(s=>({id,s})).catch(()=>({id,s:null})))
   ]);
   ser.forEach(x=>{ if(x.s) S[x.id]=x.s; });
-  NEWS=news; EVENTS=events;
-  return { S, NEWS, EVENTS };
+  NEWS=news; EVENTS=events; HAPPENING=happening;
+  return { S, NEWS, EVENTS, HAPPENING };
 }
 
 export { sparkSVG as sparkline, hbarChart as hbar, barChart as bar };
