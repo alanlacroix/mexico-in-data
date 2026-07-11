@@ -176,7 +176,7 @@
   <section class="hero">
     <span class="eyebrow">What we draw on</span>
     <h1>Sources</h1>
-    <p class="dek">Every figure on the brief links to the <b>source it came from</b>, with its date — <b>Mexican official data</b> (Banxico, INEGI, Hacienda) at the core, with U.S. agencies, multilateral institutions, polls and market data for context, each labeled. This page leads with the feeds that are <b>live right now</b>, then the full catalog below. Each catalog row shows how the data comes out — a public API, a bulk file, a scrape — and marks the sources not yet wired. Proprietary, discontinued, and unconfirmed-endpoint sources carry a label saying which.</p>
+    <p class="dek">The brief relies first on <b>Banxico, INEGI and Hacienda</b>. U.S. agencies, multilateral institutions, polls and market data are labeled separately. This page leads with the feeds that are <b>live right now</b>, then the full catalog. Each row shows how the data comes out — a public API, a bulk file, a scrape — and marks the sources not yet wired.</p>
     <p class="live"><a href="#livenow">See which are live right now &rarr;</a></p>
     <div class="metastrip">
       <span><b>97</b> catalog entries</span>
@@ -1083,7 +1083,7 @@
       <li><b>Endpoint unconfirmed.</b> <b>DataMéxico</b> (Tesseract OLAP), <b>CEPALSTAT</b>, <b>SENER</b>, <b>CNH</b>, <b>IFT</b>, and several <b>gob.mx / news RSS</b> paths have live platforms but an API endpoint we haven't confirmed. Each is flagged <span class="chip a">verify endpoint</span> above.</li>
       <li><b>Deprecated feed.</b> <b>Reuters</b> retired its public RSS; we read it via the site, not a feed.</li>
       <li><b>Unofficial.</b> <b>Google Trends</b> comes from Google, not a statistics agency. When it appears, it carries a search-interest label.</li>
-      <li>Every figure the brief publishes links to the official source it came from, with its date. <a href="#livenow">See which feeds are live right now &rarr;</a></li>
+      <li>Each catalog entry links to its source and shows when it last published. <a href="#livenow">See which feeds are live right now &rarr;</a></li>
     </ul>
   </div>
 
@@ -1238,7 +1238,7 @@ function human(s){return String(s||'').replace(/_/g,' ').replace(/\b(us|usd|gdp|
 
 <footer class="foot"><div class="wrap">
   <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a><a href="/journal.html">Journal</a></nav>
-  <p class="fblurb">A free public briefing on Mexico. Official data — Mexican institutions at the core, U.S. and multilateral sources for context — every figure dated and one tap from its source.</p>
+  <p class="fblurb">A free public briefing on Mexico. Official Mexican data comes first; U.S. and multilateral sources provide context.</p>
 </div></footer>
 
 <script>document.addEventListener('click',function(e){var b=e.target.closest('.navtoggle');if(!b)return;b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');});</script>
