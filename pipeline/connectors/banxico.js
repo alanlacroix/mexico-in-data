@@ -69,6 +69,40 @@ export const connectors = [
   // Remittances — ~4% of GDP, the most-felt first-party number. Verified SE27803.
   makeConnector({ id: 'banxico-remesas', title: 'Remesas familiares (total)', metric: 'remittances', serie: 'SE27803', units: 'million US$', cadence: 'monthly', maxPct: 25 }),
 
+  // ---- PAYMENTS PILLAR (Fable 2026-07-11): the country's payment rails + system aggregates only,
+  // never a private company. Series ids found + cross-verified against the SIE catalog. All fail-closed:
+  // a wrong id shows "awaiting", never a fabricated number, and each carries its cadence for the freshness gate.
+  makeConnector({ id: 'banxico-spei-operaciones', title: 'SPEI — número de operaciones (tercero a tercero)', metric: 'spei_ops', serie: 'SF273317', units: 'operaciones', cadence: 'monthly', maxPct: 40 }),
+  makeConnector({ id: 'banxico-spei-monto', title: 'SPEI — monto total operado', metric: 'spei_value', serie: 'SF273318', units: 'MXN', cadence: 'monthly', maxPct: 40 }),
+  makeConnector({ id: 'banxico-tpv-operaciones', title: 'Pagos con tarjeta en TPV — número de operaciones', metric: 'card_pos_ops', serie: 'SF62272', units: 'operaciones', cadence: 'quarterly', maxPct: 45 }),
+  makeConnector({ id: 'banxico-remesas-electronicas', title: 'Remesas — transferencias electrónicas', metric: 'remittances_electronic', serie: 'SE27806', units: 'million US$', cadence: 'monthly', maxPct: 25 }),
+  // CoDi is published DAILY (SF335701). Aggregate to monthly totals; drop the trailing partial month so a
+  // half-summed current month never reads as a crash.
+  {
+    manifest: {
+      id: 'banxico-codi-operaciones', title: 'CoDi — operaciones (mensual)', metric: 'codi_ops', canonicalSource: true,
+      source: 'Banco de México (SIE)', sourceUrl: 'https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF335701/datos',
+      license: 'Banxico Términos de Uso (attribution; not open — Clause 8)', cadence: 'monthly', units: 'operaciones',
+      track: 'pulse', kind: 'series', granularity: 'national', thresholds: { maxPctChange: 120, minRows: 3 },
+    },
+    async fetchRaw(ctx) {
+      const token = TOKEN(); if (!token) throw new Error('missing BANXICO_TOKEN (fail-closed)');
+      const d = new Date(ctx.now); d.setFullYear(d.getFullYear() - 2);
+      const start = d.toISOString().slice(0, 10), end = ctx.now.slice(0, 10);
+      return getJson(`https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF335701/datos/${start}/${end}?token=${token}`);
+    },
+    normalize(raw) {
+      const s = raw?.bmx?.series?.[0]; if (!s || !Array.isArray(s.datos)) throw new Error('SF335701: no datos');
+      const daily = s.datos.filter((d) => d.dato && d.dato !== 'N/E')
+        .map((d) => ({ date: isoFrom(d.fecha), v: Number(String(d.dato).replace(/,/g, '')) })).filter((p) => Number.isFinite(p.v));
+      const byMonth = new Map(); for (const p of daily) { const m = p.date.slice(0, 7); byMonth.set(m, (byMonth.get(m) || 0) + p.v); }
+      const months = [...byMonth.entries()].map(([m, v]) => ({ date: m + '-01', value: v })).sort((a, b) => a.date.localeCompare(b.date));
+      const data = months.length > 3 ? months.slice(0, -1) : months;
+      if (!data.length) throw new Error('CoDi: no monthly totals');
+      return { vintage: data[data.length - 1].date, data, notes: 'Suma mensual de operaciones diarias CoDi (SF335701)' };
+    },
+  },
+
   // Inflation — Banxico republishes INEGI's INPC (SP1 = índice general). We emit
   // headline ANNUAL inflation, computed the standard way (YoY on the official
   // index). First-party (central bank + INEGI), and it dodges INEGI's flaky API.
