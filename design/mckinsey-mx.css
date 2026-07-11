@@ -115,7 +115,7 @@ header.mast .wrap{display:flex;align-items:center;justify-content:space-between;
 .brand{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;text-decoration:none}
 .brand:hover{text-decoration:none}
 .brand .u{border-bottom:2px solid var(--green);padding-bottom:1px}
-.mnav{display:flex;align-items:center;gap:22px;font-family:var(--mono);font-size:12px}
+.mnav{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:13px}
 .mnav a{color:var(--mut);text-decoration:none;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
 .mnav a:hover{color:var(--ink)}
 .mnav a.here{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--green);text-decoration-thickness:2px;text-underline-offset:7px}
@@ -123,11 +123,11 @@ header.mast .wrap{display:flex;align-items:center;justify-content:space-between;
 .mnav a.cta:hover{background:var(--green-d);color:#fff}
 .mnav a.cta.here{background:var(--green-d);color:#fff;text-decoration:none}
 /* menu button — shown only on narrow screens, where the links collapse into a drop panel */
-.navtoggle{display:none;flex-direction:column;justify-content:center;gap:4px;width:34px;height:30px;padding:0;background:none;border:0;cursor:pointer}
+.navtoggle{display:none;flex-direction:column;justify-content:center;align-items:center;gap:4px;width:44px;height:44px;margin-right:-10px;padding:0;background:none;border:0;cursor:pointer}
 .navtoggle span{display:block;width:20px;height:2px;background:var(--ink);border-radius:2px}
 @media(max-width:1000px){
   .navtoggle{display:flex}
-  .mnav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:#fff;border-bottom:1px solid var(--line);padding:2px clamp(18px,4vw,44px) 10px;box-shadow:0 12px 30px rgba(20,20,20,.09)}
+  .mnav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:#fff;border-bottom:1px solid var(--line-2);padding:2px clamp(18px,4vw,44px) 10px}
   .navtoggle[aria-expanded="true"] ~ .mnav{display:flex}
   .mnav a{padding:12px 2px;font-size:13px;border-bottom:1px solid var(--line)}
   .mnav a:last-child{border-bottom:0}
@@ -160,3 +160,27 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .tbadge{margin-top:7px;line-height:1}
 .srcb{display:inline-block;font-family:var(--mono);font-size:11px;line-height:1.3;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:4px;padding:0 5px;white-space:nowrap}
 .srcb.core{color:var(--green-d);border-color:var(--green-bg);background:var(--green-bg)}
+
+/* Topics dropdown (Fable's six-slot nav): a hover-popup on desktop, inline in the collapsed menu on
+   mobile. Border only — no shadow (the record is square). */
+.navdrop{position:relative;display:inline-flex;align-items:center}
+.navdrop-t{font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);background:none;border:0;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:5px}
+.navdrop-t:hover{color:var(--ink)}
+.navdrop-t .caret{font-size:8px;position:relative;top:1px}
+.navdrop.here-sec>.navdrop-t{color:var(--ink);font-weight:600}
+.navdrop-menu{position:absolute;top:100%;left:0;margin-top:6px;background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:8px 0;min-width:210px;display:none;z-index:60}
+.navdrop:hover .navdrop-menu,.navdrop:focus-within .navdrop-menu{display:block}
+.navdrop-grp+.navdrop-grp{border-top:1px solid var(--line);margin-top:6px;padding-top:8px}
+.navdrop-gl{display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);padding:2px 16px 5px}
+.navdrop-menu a{display:block;font-family:var(--mono);font-size:12.5px;text-transform:none;letter-spacing:0;color:var(--ink-2);padding:6px 16px;white-space:nowrap;border:0}
+.navdrop-menu a:hover{color:var(--green-d)}
+.navdrop-menu a.here{color:var(--green-d);font-weight:600}
+@media(max-width:1000px){
+  .navdrop{display:block;width:100%}
+  .navdrop-t{width:100%;justify-content:flex-start;min-height:44px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:13px}
+  .navdrop-t .caret{display:none}
+  .navdrop-menu{position:static;display:block;border:0;border-radius:0;padding:0;margin:0;min-width:0}
+  .navdrop-grp+.navdrop-grp{border-top:0;margin:0;padding:0}
+  .navdrop-gl{padding:10px 2px 2px}
+  .navdrop-menu a{padding:11px 2px 11px 16px;border-bottom:1px solid var(--line);font-size:13px}
+}
