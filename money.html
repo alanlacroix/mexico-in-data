@@ -241,7 +241,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments } from '/assets/mb.js?v=4';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments } from '/assets/mb.js?v=5';
 
 /* the live tile board (block 2) — same JSON as the metric rows below */
 const TILES=[
@@ -257,6 +257,7 @@ const TILES=[
    as index.njk builds it (inflation vs policy rate, band = 3% ± 1, chart<->table toggle) */
 function renderBackground(){
   const rate=S['banxico-tasa-objetivo'],inf=S['banxico-inflacion'];
+  const infV=inf?inf.data.at(-1).value:null, inBand=infV!=null&&infV>2&&infV<4;   // in-band is computed from the live series, never hand-asserted (Fable's law)
   let ex='';
   if(rate&&inf){
     const rr=rate.data.filter(p=>new Date(p.date)>=new Date(Date.now()-2.2*365*864e5)).filter((_,i)=>i%6===0);
@@ -264,10 +265,10 @@ function renderBackground(){
     const svg=timeChart([{name:'Inflation',color:'var(--ink)',pts:ii},{name:'Policy rate',color:'green',pts:rr.length?rr:rate.data.slice(-30)}],{unit:'%',band:[2,4],bandLabel:'3% ± 1 target'});
     const rateAt=(d)=>{const t=+new Date(d);let best=rate.data[0],bd=1e18;for(const q of rate.data){const dd=Math.abs(+new Date(q.date)-t);if(dd<bd){bd=dd;best=q;}}return best.value;};
     const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p)=>[qtrOf(p.date),p.value.toFixed(1),rateAt(p.date).toFixed(2)]));
-    ex=exhibit('3.1','Banxico is holding rates high while inflation stays above target','Policy rate vs headline inflation, % · shaded band = 3% ± 1 target',svg,
+    ex=exhibit('3.1',inBand?'Headline inflation is back inside the target band; policy stays restrictive':'Banxico is holding rates high while inflation runs above target','Policy rate vs headline inflation, % · shaded band = 3% ± 1 target',svg,
       `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> · INPC + target rate.`,tbl,true);
   }
-  return sectionHead('Background',"Where Mexico's money stands","Inflation sits above Banxico's target, so the bank is holding rates high, and the peso is holding with them.")+
+  return sectionHead('Background',"Where Mexico's money stands",inBand?"Headline inflation is back inside Banxico's 2–4% target range. The bank is holding its policy rate after last year's cuts, and the peso is holding with it.":"Inflation is above Banxico's target, so the bank is holding rates high and the peso is holding with them.")+
     ex+
     mrow({id:'banxico-inflacion',label:'Inflation, annual (CPI)'})+
     mrow({id:'banxico-inflacion-subyacente',label:'Core inflation, annual'})+

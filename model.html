@@ -146,15 +146,15 @@
       <div id="levers"></div>
     </div>
     <div class="card">
-      <h3>What it does <span class="mst">MODEL</span></h3>
-      <div class="csub">Baseline → modeled (vs. today's readings)</div>
+      <h3>Results <span class="mst">MODEL</span></h3>
+      <div class="csub">Baseline → modeled (baseline pulled live from the board)</div>
       <div id="outputs"></div>
     </div>
   </div>
 
   <div class="scenarios">
     <div class="section-head"><h2>Saved scenarios</h2></div>
-    <p class="scen-intro">Save the current levers as a named scenario you can reload later. Scenarios are stored <b>only in this browser</b> — they're private to you and never leave this device. When the inputs behind a scenario move in the real data, this will flag it; that watch is coming next, and nothing is monitored yet.</p>
+    <p class="scen-intro">Save the current levers as a named scenario you can reload later. Scenarios are stored <b>only in this browser</b>. They are private to you and never leave this device.</p>
     <div class="scen-save">
       <input id="scen-name" type="text" maxlength="80" placeholder="Name this scenario (e.g. USMCA review fails)" aria-label="Scenario name">
       <button id="scen-save-btn" type="button">Save this scenario</button>
@@ -178,7 +178,7 @@
 const $=(s)=>document.querySelector(s);
 // ---- baseline (anchored to the Briefing's current readings / consensus) ----
 const BASE={ tariff:4, fed:0, oil:65, usg:2.3 };            // lever baselines
-const OUT0={ peso:17.60, infl:3.9, rate:6.50, gdp:1.1 };    // output baselines — anchored to the Briefing's current readings
+const OUT0={ peso:17.5, infl:3.4, rate:6.5, gdp:1.1 };    // fallback only; bindBaseline() overwrites these from the live board series at load (never say "today's" against a stale hardcode)
 
 const LEVERS=[
   {k:'tariff',l:'US tariff on Mexican goods',min:0,max:25,step:1,unit:'%',
@@ -239,7 +239,7 @@ function renderOutputs(){
     let vt=val.toFixed(D.dp); if(vt==='-0.0'||vt==='-0.00')vt=vt.slice(1);
     return `<div class="out"><div class="o-top"><span class="o-l">${D.l} <span class="mst">MODEL</span></span></div>
       <div class="o-main"><span class="o-base">${base.toFixed(D.dp)}</span><span class="o-arw">→</span><span class="o-v">${vt}</span><small style="color:var(--mut);font-family:var(--mono)">${D.unit}</small><span class="o-d ${a.c}">${a.t}</span></div>
-      <div class="o-note">${D.note(o)}</div></div>`;
+      <div class="o-note">${Math.abs(delta)<0.005?'':D.note(o)}</div></div>`;
   }).join('');
 }
 
@@ -410,8 +410,24 @@ function wireScenarios(){
 }
 
 function update(){ LEVERS.forEach(L=>{$('#lvv-'+L.k).textContent=fmtLever(L);}); renderOutputs(); renderDiagram(); }
+// Anchor the baseline to the live board series so "baseline → modeled" is measured from today's
+// actual readings, not a hardcode (the peso 17.60-vs-17.48 bug, again). Fetch-fail keeps the fallback.
+function bindBaseline(){
+  const last=(s)=>s&&s.data&&s.data.length?s.data[s.data.length-1].value:null;
+  Promise.all([
+    fetch('./data/series/banxico-usdmxn-fix.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/series/banxico-inflacion.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/series/banxico-tasa-objetivo.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/series/banxico-pib-crecimiento.json').then(r=>r.ok?r.json():null).catch(()=>null),
+  ]).then(([p,i,r,g])=>{
+    const P=last(p),I=last(i),R=last(r),G=last(g);
+    if(P!=null)OUT0.peso=+P.toFixed(2); if(I!=null)OUT0.infl=+I.toFixed(1);
+    if(R!=null)OUT0.rate=+R.toFixed(2); if(G!=null)OUT0.gdp=+G.toFixed(1);
+    update();
+  }).catch(()=>{});
+}
 renderPresets(); renderLevers(); renderElast(); update();
-renderScenarios(); wireScenarios(); loadReleases();
+renderScenarios(); wireScenarios(); loadReleases(); bindBaseline();
 </script>
 
 

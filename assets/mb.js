@@ -36,9 +36,11 @@ export function fmt(id,v,units){
   return {v:enNum(Math.round(v)), s:''};
 }
 export function fmtRem(v){ return {v:'$'+enNum(Math.round(v)), s:'mn USD'}; }
-export function stampFor(m){
+export function stampFor(m, id){
   const cad=(m.cadence||'')+'', v=m.vintage;
-  if(/4-hour|business-daily|daily/.test(cad)) return {cls:'live',t:'● LIVE'};
+  if(id==='banxico-tasa-objetivo') return {cls:'',t:'CURRENT SETTING'};   // a discrete Banxico decision, not live market data
+  if(/4-hour|business-daily/.test(cad)) return {cls:'live',t:'● LIVE'};   // genuinely live market data (the peso FIX)
+  if(/daily/.test(cad)) return {cls:'',t:'DAILY · '+dayShort(v)};
   if(/weekly/.test(cad)) return {cls:'',t:'WEEKLY · '+dayShort(v)};
   if(/monthly/.test(cad)) return {cls:'',t:'MONTHLY · '+monLong(v)+' data'};
   if(/quarter/.test(cad)) return {cls:'',t:'QUARTERLY · '+qtrOf(v)};
@@ -215,7 +217,7 @@ export function srcBadge(source){ if(!source) return ''; const c=sourceClass(sou
 export function tile(t,opts){
   opts=opts||{}; const s=S[t.id];
   if(!s) return `<div class="tile"><div class="tl">${t.l}</div><div class="tv" style="font-size:15px;color:var(--amber2)">NOT YET WIRED</div><div class="tb">feed unavailable</div></div>`;
-  const h=tileVal(t.id,s),st=stampFor(s.meta),arw=dirArrow(s),bf=BENCH[t.id];
+  const h=tileVal(t.id,s),st=stampFor(s.meta,t.id),arw=dirArrow(s),bf=BENCH[t.id];
   const src=opts.src?`<span class="tsrc">${s.meta.source||''}</span>`:'';
   return `<div class="tile" data-go="${t.id}"><div class="tl">${t.l}</div><div class="tv">${h.v} <small>${h.s}</small></div>`+
     tileDelta(t.id,s)+
@@ -228,7 +230,7 @@ export function tile(t,opts){
 export function mrow(cfg){
   const s=S[cfg.id];
   if(!s) return construccion({l:cfg.label,src:cfg.src||'feed in progress',cad:cfg.cad||'',eta:cfg.eta||''});
-  const h=cfg.id==='banxico-remesas'?fmtRem(s.data.at(-1).value):fmt(cfg.id,s.data.at(-1).value,s.meta.units),st=stampFor(s.meta),vf=VERDICT[cfg.id],bf=BENCH[cfg.id];
+  const h=cfg.id==='banxico-remesas'?fmtRem(s.data.at(-1).value):fmt(cfg.id,s.data.at(-1).value,s.meta.units),st=stampFor(s.meta,cfg.id),vf=VERDICT[cfg.id],bf=BENCH[cfg.id];
   return `<div class="mrow" data-metric="${cfg.id}"><div class="mr-top"><span class="mr-label">${cfg.label}</span><span class="stamp ${st.cls}">${st.t}${cfg.ph?'<span class="chip-ph">'+cfg.ph+'</span>':''}</span></div>`+
     `<div class="mr-main"><span class="mr-val">${h.v} <small>${h.s}</small></span></div>`+
     (vf?`<div class="mr-verdict">${vf(s)}</div>`:'')+(bf?`<div class="mr-bench">${bf(s)}</div>`:'')+srcDetails(s.meta)+`</div>`;

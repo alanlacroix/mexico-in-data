@@ -293,7 +293,7 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
 </div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, tile, fmt, srcBadge, relTime, evDate, enNum } from '/assets/mb.js?v=4';
+import { loadSeries, S, EVENTS, tile, fmt, srcBadge, relTime, evDate, enNum } from '/assets/mb.js?v=5';
 
 /* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
    Every topic now owns a page, so a bookmarked #q link should land on it. */
@@ -420,8 +420,8 @@ function renderWatch(){
   // dateline: N sources · updated Xh ago (from data health + freshest series fetch)
   const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
   const newest=times.length?Math.max(...times):0;
-  const ok=(health&&health.summary&&health.summary.ok)||0;
-  const st=document.getElementById('status'); if(st) st.textContent=(ok?`● ${ok} sources · `:'● ')+(newest?'updated '+relTime(newest):'updated live');
+  const sm=health&&health.summary; const total=sm?((sm.ok||0)+(sm.flagged||0)+(sm.failed||0)+(sm.skipped||0)):0;
+  const st=document.getElementById('status'); if(st) st.textContent=(total?`● ${total} feeds · `:'● ')+(newest?'updated '+relTime(newest):'updated live');
   const ba=document.getElementById('board-asof'); if(ba&&newest) ba.textContent='as of '+new Date(newest).toLocaleDateString('en-US',{month:'short',day:'numeric'});
 
   document.getElementById('tablero').innerHTML=renderBoard();
