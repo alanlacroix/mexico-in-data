@@ -1,7 +1,7 @@
 {
   "meta": {
     "note": "Phase-1 news source registry for The Mexico Brief. All RSS/API, no scrapes. Adding a source = one line here. Pan-LatAm/global feeds set mx:true and get a Mexico keyword filter; Mexico-native feeds set mx:false and pass through. GDELT (build-news.js) stays as the wire backstop for Reuters/AP/Bloomberg. Verified 2026-07-10.",
-    "beatToTag": { "politics": "politics", "economy": "economy", "companies": "markets", "fintech": "markets", "deals": "trade", "us-mexico": "trade" }
+    "beatToTag": { "politics": "politics", "economy": "economy", "companies": "markets", "fintech": "markets", "deals": "trade", "us-mexico": "trade", "security": "security" }
   },
   "sources": [
     { "id": "elfin-empresas", "name": "El Financiero — Empresas", "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/empresas/?outputType=xml", "beat": "companies", "tier": 2, "lang": "es", "mx": false },
@@ -17,6 +17,9 @@
     { "id": "bloomberglinea", "name": "Bloomberg Línea", "url": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml", "beat": "economy", "tier": 2, "lang": "es", "mx": true },
     { "id": "techcrunch-mx", "name": "TechCrunch — Mexico", "url": "https://techcrunch.com/tag/mexico/feed/", "beat": "deals", "tier": 2, "lang": "en", "mx": false },
     { "id": "gnews-usmca", "name": "Google News — trade & tariffs", "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(aranceles%20OR%20USMCA%20OR%20TMEC%20OR%20Trump%20comercio)&hl=es-419&gl=MX&ceid=MX:es", "beat": "us-mexico", "tier": "aggregator", "lang": "es", "mx": false },
-    { "id": "gnews-politics", "name": "Google News — politics", "url": "https://news.google.com/rss/search?q=(Sheinbaum%20OR%20Morena%20OR%20%22reforma%20judicial%22)%20M%C3%A9xico&hl=es-419&gl=MX&ceid=MX:es", "beat": "politics", "tier": "aggregator", "lang": "es", "mx": false }
+    { "id": "gnews-politics", "name": "Google News — politics", "url": "https://news.google.com/rss/search?q=(Sheinbaum%20OR%20Morena%20OR%20%22reforma%20judicial%22)%20M%C3%A9xico&hl=es-419&gl=MX&ceid=MX:es", "beat": "politics", "tier": "aggregator", "lang": "es", "mx": false },
+    { "id": "gnews-security", "name": "Google News — security", "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(seguridad%20OR%20homicidios%20OR%20c%C3%A1rtel%20OR%20violencia%20OR%20Harfuch%20OR%20extorsi%C3%B3n)&hl=es-419&gl=MX&ceid=MX:es", "beat": "security", "tier": "aggregator", "lang": "es", "mx": false },
+    { "id": "gnews-dof", "name": "Google News — policy & DOF", "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(DOF%20OR%20decreto%20OR%20%22reforma%20constitucional%22%20OR%20Congreso%20OR%20Hacienda)&hl=es-419&gl=MX&ceid=MX:es", "beat": "politics", "tier": "aggregator", "lang": "es", "mx": false },
+    { "id": "animalpolitico", "name": "Animal Político", "url": "https://www.animalpolitico.com/feed", "beat": "politics", "tier": 2, "lang": "es", "mx": true }
   ]
 }
