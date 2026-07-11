@@ -217,7 +217,7 @@ function spendExhibits(){
   if(has('banxico-consumo-privado'))
     h+=exhibit('8','What households buy','Private consumption · monthly volume index',
       timeChart([{name:'Consumption',color:'green',pts:pts('banxico-consumo-privado',1,1)}],{xfmt:moFmt}),
-      src('SR16563 (INEGI, via Banxico)'),'',false);
+      src('SR17449 (INEGI IMCPMI, via Banxico)'),'',false);
   if(has('banxico-remesas-electronicas'))
     h+=exhibit('9','Remittances arrive electronically','Electronic-transfer remittances · million US$ per month',
       timeChart([{name:'Remittances',color:'green',pts:pts('banxico-remesas-electronicas',1,0)}],{xfmt:moFmt}),
@@ -281,7 +281,7 @@ function accessExhibits(){
   document.getElementById('srcnote').innerHTML=
     `All figures are system totals from <a href="${SIE}" target="_blank" rel="noopener">Banco de México (SIE)</a> and <a href="${ENIF_SRC}" target="_blank" rel="noopener">INEGI's ENIF</a> survey. `+
     `No private company appears on this page — the card and ATM numbers are the clearing-house aggregates Banxico publishes for the whole system. `+
-    `SPEI SF273317/SF273318 · CoDi SF335701 · POS debit SF62273/SF62279 · POS credit SF62274/SF62280 · e-commerce SF273475/SF273476 · ATM SF62269/SF62275 · cards SF61870/SF61871 · remittances SE27806 · consumption SR16563.`;
+    `SPEI SF273317/SF273318 · CoDi SF335701 · POS debit SF62273/SF62279 · POS credit SF62274/SF62280 · e-commerce SF273475/SF273476 · ATM SF62269/SF62275 · cards SF61870/SF61871 · remittances SE27806 · consumption SR17449.`;
 
   wireCharts();
 })().catch(e=>{ const b=document.getElementById('brief'); if(b) b.textContent='Error loading payments data: '+e.message; });
