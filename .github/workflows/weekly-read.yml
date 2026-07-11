@@ -25,6 +25,11 @@ jobs:
         working-directory: pipeline
         run: node build-analysis.js
 
+      - name: Refresh CONAPO demographics
+        working-directory: pipeline
+        continue-on-error: true   # 45MB CONAPO CSV; a miss keeps last-good
+        run: node build-demographics.js
+
       - name: Draft The Read (Claude, placeholder-validated, fail-closed)
         working-directory: pipeline
         continue-on-error: true
