@@ -33,6 +33,7 @@
     </div>
     <a href="/atlas.html" class="here">Atlas</a>
     <a href="/sources.html">Sources</a>
+    <a href="/about.html">About</a>
     <a href="/weekly.html" class="cta">Subscribe</a>
   </nav>
 </div></header>
@@ -379,7 +380,7 @@ function wireMini(){const mini=$('#miniback');const io=new IntersectionObserver(
   const hash=(location.hash.match(/m\/(\d{5})/)||[])[1];
   const saved=(()=>{try{return localStorage.getItem('mx_mun');}catch(e){return null;}})();
   const start=(hash&&REG[hash])?hash:(saved&&REG[saved]?saved:null);
-  if(start)selectMuni(start);
+  if(hash&&REG[hash]){const ent=hash.slice(0,2);drill(ent,true);renderFicha(hash);} /* deep-link only; render in place, no auto-scroll (was jarring) */
 })().catch(e=>{const h=$('#map');if(h)h.insertAdjacentHTML('afterend','<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading map: '+e.message+'</p>');});
 </script>
 
