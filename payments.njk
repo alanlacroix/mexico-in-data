@@ -28,6 +28,7 @@ ogDescription: "The rails, the cards, the cash, and the reasons cash still wins 
   .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:16px 0 4px}
   @media(min-width:640px){.tablero.c4{grid-template-columns:repeat(4,1fr)}.tablero.c3{grid-template-columns:repeat(3,1fr)}.tablero.c2{grid-template-columns:repeat(2,1fr)}}
   @media(max-width:420px){.tablero{grid-template-columns:1fr}}
+  .tablero.c1{display:block;max-width:340px;background:var(--paper)}
   .tilelink{display:contents;text-decoration:none}
   .tile{background:var(--paper);padding:15px 16px 14px;height:100%}
   a.tilelink:hover .tile{background:var(--paper-2)}
@@ -56,10 +57,10 @@ ogDescription: "The rails, the cards, the cash, and the reasons cash still wins 
   .ex-src a{color:var(--green)}
   svg.chart{display:block;width:100%;height:auto}
   .chart .gl{stroke:var(--line);stroke-width:1}
-  .chart .axl{font-family:var(--mono);font-size:10px;fill:var(--mut)}
+  .chart .axl{font-family:var(--mono);font-size:11px;fill:var(--ink-2)}
   .chart .ln{fill:none;stroke:var(--ink);stroke-width:2}
   .chart .ln2{fill:none;stroke:var(--green);stroke-width:2}
-  .chart .bar{fill:var(--ink);opacity:.16} .chart .bar2{fill:var(--green)}
+  .chart .bar{fill:#8f8f88} .chart .bar2{fill:var(--green)}
   .chart .vlab{font-family:var(--mono);font-size:10px;font-variant-numeric:tabular-nums}
   .chart .dot{fill:var(--green);stroke:#fff;stroke-width:1.5}
   .chart .endlab{font-family:var(--mono);font-size:10.5px;font-variant-numeric:tabular-nums}
@@ -149,7 +150,7 @@ function renderSection(elId, eyebrow, title, dek, tilesArr, exhibitsHtml, missNo
   const liveTiles=tilesArr.filter(t=>has(t.id));
   const hasContent = liveTiles.length || (exhibitsHtml&&exhibitsHtml.trim());
   if(!hasContent && !missNote){ el.style.display='none'; return; }
-  const cols=liveTiles.length>=4?'c4':liveTiles.length===3?'c3':'c2';
+  const cols=liveTiles.length>=4?'c4':liveTiles.length===3?'c3':liveTiles.length===2?'c2':'c1';
   const board=liveTiles.length?`<div class="tablero ${cols}">`+liveTiles.map(t=>`<a class="tilelink" href="#${elId}">${tile(t,{})}</a>`).join('')+`</div>`:'';
   el.innerHTML=`<div class="sec-head"><span class="sec-eyebrow">${eyebrow}</span><h2>${title}</h2></div>`+
     (dek?`<p class="sec-dek">${dek}</p>`:'')+board+

@@ -33,7 +33,7 @@ description: "What Mexico's economy is made of: GDP by sector and spending, grow
   .ex-src a{color:var(--green)}
   svg.chart{display:block;width:100%;height:auto;margin-top:4px}
   .chart .gl{stroke:var(--line);stroke-width:1}
-  .chart .axl{font-family:var(--mono);font-size:11px;fill:var(--mut)}
+  .chart .axl{font-family:var(--mono);font-size:11px;fill:var(--ink-2)}
   .chart .ln{fill:none;stroke:var(--ink);stroke-width:2.2}
   .chart .ln2{fill:none;stroke:var(--green);stroke-width:2.2}
   .chart .zero{stroke:var(--ink-3);stroke-width:1}
@@ -167,6 +167,10 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
 (async()=>{
   const E=await J('./data/economy.json');
   const TR=await J('./data/trade-us.json').catch(()=>null);   // US Census, monthly (may be absent locally)
+  // Trade files — the SAME data the /trade section renders. Economy cites; Trade owns (Fable: one series, one room).
+  const TP=await J('./data/trade/exports-by-partner.json').catch(()=>null);
+  const XT=await J('./data/series/banxico-exports-total.json').catch(()=>null);
+  const MT=await J('./data/series/banxico-imports-total.json').catch(()=>null);
   $('#thesis').innerHTML=E.meta.thesis.replace('US-welded assembly economy','<b>US-welded assembly economy</b>').replace('imports parts and exports cars','<b>imports parts and exports cars</b>');
   $('#heroband').innerHTML=E.hero.map(h=>`<div class="hb"><div class="hk">${h.k}</div><div class="hv">${h.v}</div><div class="hs">${h.sub}</div></div>`).join('');
   let H='';
@@ -182,16 +186,18 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   // 4 · growth
   H+=ex('3','The post-COVID rebound is spent','Real GDP growth, % change year-on-year',
     line(E.growth.points),E.growth.note,srcLine(E.growth));
-  // 5 · the machine (exports vs imports + imports by use)
-  H+=ex('4','It imports parts and exports finished goods','Goods exports vs imports, US$ bn, 2015–2024',
-    dualLine(E.trade.series.imports,E.trade.series.exports),
-    `2024: <b>$${E.trade.exports}bn exports, $${E.trade.imports}bn imports</b>, a $${Math.abs(E.trade.balance)}bn deficit. Most of those imports are factory inputs:`+
-    stack100(E.trade.importsByUse)+ E.trade.note, srcLine(E.trade));
-  // 6 · partners
-  H+=ex('5','Most exports go to the United States; imports come from many countries','Trade partners, share, 2024',
-    `<div style="font-family:var(--mono);font-size:12px;color:var(--mut);margin:2px 0 4px">Exports go to →</div>`+ranked(E.partners.exports,{pl:150})+
-    `<div style="font-family:var(--mono);font-size:12px;color:var(--mut);margin:14px 0 4px">Imports come from ←</div>`+ranked(E.partners.imports,{pl:150}),
-    E.partners.note,srcLine(E.partners));
+  // 4 · trade — ONE single-sourced pointer. Numbers bound to the SAME files that render /trade,
+  //     never hand-typed (Fable: kill the hand-typed-number class; Trade owns the charts).
+  const annualBn=(s,y)=>{ if(!s)return null; const r=(s.data||[]).filter(p=>p.date.slice(0,4)===String(y)); return r.length>=12?r.reduce((a,p)=>a+p.value,0)/1e6:null; };
+  const yFull=XT?[...new Set(XT.data.map(p=>p.date.slice(0,4)))].filter(y=>XT.data.filter(p=>p.date.slice(0,4)===y).length>=12).sort().at(-1):null;
+  const xbn=annualBn(XT,yFull), mbn=annualBn(MT,yFull), usSh=TP&&TP.exports?TP.exports.items[0].share:null;
+  if(xbn){
+    const st=(k,v)=>`<div><div style="font-family:var(--mono);font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.03em">${k}</div><div style="font-family:var(--serif);font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05">${v}</div></div>`;
+    H+=ex('4','Trade is huge on both sides — and it points north','Goods trade, latest full year ('+yFull+')',
+      `<div style="display:flex;gap:32px;flex-wrap:wrap;margin:2px 0 4px">`+st('Exports','$'+Math.round(xbn)+'bn')+st('Imports','$'+Math.round(mbn)+'bn')+st('Balance',(xbn-mbn>=0?'+':'−')+'$'+Math.abs(Math.round(xbn-mbn))+'bn')+`</div>`,
+      `About <b>${usSh?Math.round(usSh)+'%':'four-fifths'}</b> of exports go to the United States, and most imports are factory inputs. <a href="/trade.html" style="color:var(--green);font-weight:500">See the full picture — the export basket, every partner, and the 20-year balance → Trade</a>`,
+      `Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (CE125) &amp; UN COMTRADE · ${yFull}. The same data that render the Trade section.`);
+  }
   // 6 · the US relationship, live monthly (US Census)
   if(TR&&TR.topImports){H+=ex('6','What the United States buys from Mexico','US imports from Mexico by product, trailing 12 months, US$ bn',
     ranked(TR.topImports.map((t,i)=>({label:t.name,value:t.value_bn,hi:i===0})),{vfmt:(v)=>'$'+v+'bn',pl:210}),

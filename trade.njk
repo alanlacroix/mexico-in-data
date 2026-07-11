@@ -57,14 +57,14 @@ ogDescription: "Mexico's export basket, partners, and balance — official Banxi
   .recon b{color:var(--green-d)} .recon .fail{color:var(--red)}
   svg.chart{display:block;width:100%;height:auto}
   .chart .gl{stroke:var(--line);stroke-width:1}
-  .chart .axl{font-family:var(--mono);font-size:10px;fill:var(--mut)}
+  .chart .axl{font-family:var(--mono);font-size:11px;fill:var(--ink-2)}
   .chart .ln{fill:none;stroke:var(--ink);stroke-width:2}
   .chart .ln2{fill:none;stroke:var(--green);stroke-width:2}
   .chart .dot{fill:var(--green);stroke:#fff;stroke-width:1.5}
   .chart .endlab{font-family:var(--mono);font-size:10.5px;font-variant-numeric:tabular-nums}
   .chart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2;opacity:0}
   .chart .hdot{opacity:0}
-  .chart .bar{fill:var(--ink);opacity:.16} .chart .bar2{fill:var(--green)}
+  .chart .bar{fill:#8f8f88} .chart .bar2{fill:var(--green)}
   .chart .vlab{font-family:var(--mono);font-size:10.5px;font-variant-numeric:tabular-nums}
   .chart .cat{font-family:var(--mono);font-size:11px;fill:var(--ink-2)}
   /* treemap */
@@ -151,9 +151,10 @@ function reconFooter(rc){
   const pass=rc.pass!==false;
   return `<div class="recon">COMTRADE total <b>$${(rc.reconTotal/1e9).toFixed(1)}B</b> — reconciles to Banxico/INEGI official <b>$${(rc.official/1e9).toFixed(1)}B</b>, <span class="${pass?'':'fail'}">Δ ${rc.deltaPct}%</span> ${pass?'✓ within 2% tolerance':'✗ EXCEEDS tolerance'}.</div>`;
 }
+// Fable's format: no labels — two short woven paragraphs (latest+arc, then the stake), a person talking.
 function storyBlock(o){
-  return `<div class="story"><div class="st-lbl"><span>The story</span><span class="asof">${o.asof||''}</span></div>`+
-    `<p><b>Latest.</b> ${o.latest}</p><p><b>Background.</b> ${o.background}</p><p><b>Why it matters.</b> ${o.why}</p>`+
+  return `<div class="story"><div class="st-lbl"><span>The story</span><span class="asof">updated ${o.asof||''}</span></div>`+
+    `<p>${o.p1}</p>`+(o.p2?`<p>${o.p2}</p>`:'')+
     (o.src?`<div class="st-src">${o.src}</div>`:'')+`</div>`;
 }
 function exhibit(no,tier,title,sub,svg,src,recon){
@@ -246,10 +247,9 @@ function briefHTML(){
       .filter(t=>has(t.id)).map(t=>tile(t,{})).join('')+`</div>`;
     document.getElementById(el).insertAdjacentHTML('beforeend',tiles+ex+storyBlock({
       asof:document.getElementById('asof').textContent,
-      latest:`Mexico is exporting at an annual pace of about <b>$${xT?xT.toFixed(0):'—'} billion</b>, near a record and running ahead of imports.`,
-      background:`Trade rose steadily after NAFTA, dropped sharply in 2009, recovered, and dipped again in 2020. Since 2022 exports have surged as companies relocated supply chains closer to the US market.`,
-      why:`In 2023 Mexico passed China as the United States’ top source of imports (US Census Bureau). Trade near 38% of GDP means a US slowdown or a tariff is felt across the whole economy.`,
-      src:'Banxico CE125 · nearshoring milestone: U.S. Census Bureau.'}));
+      p1:`Mexico is exporting at an annual pace of about <b>$${xT?xT.toFixed(0):’—‘} billion</b> (Banxico, ${document.getElementById(‘asof’).textContent}), near a record and running ahead of imports. It’s the latest turn in a long climb: trade rose steadily after NAFTA, fell hard in 2009, dipped in 2020, then surged after 2022 as companies moved supply chains closer to the US — by 2023 Mexico had passed China as America’s top source of imports (US Census).`,
+      p2:`With trade near <b>38% of GDP</b>, a US slowdown isn’t foreign news here; it lands on the whole Mexican economy, fast.`,
+      src:’Banxico CE125 · nearshoring milestone: U.S. Census Bureau.’}));
   })();
 
   /* ===== 3. What we sell (COMTRADE treemap, context) ===== */
@@ -264,10 +264,9 @@ function briefHTML(){
     document.getElementById(el).insertAdjacentHTML('beforeend',
       exhibit('2','ctx','What Mexico exports, by product',`HS chapters, ${PROD.year} · share of goods exports`,treemapSVG(tm),
         'Source: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a> · HS 2-digit, all transport modes.',reconFooter(rc))+
-      storyBlock({asof:PROD.year,
-        latest:`The three biggest chapters — <b>vehicles &amp; parts (${Math.round(items[0].share)}%)</b>, <b>electronics (${Math.round(items[1].share)}%)</b> and <b>machinery (${Math.round(items[2].share)}%)</b> — are about <b>${Math.round(top3)}%</b> of everything Mexico exports.`,
-        background:`This is a manufacturing export economy, not a commodity one. Crude oil, once dominant, is now under 5%. The basket is factory output — much of it assembled from imported parts.`,
-        why:`Concentration cuts both ways: it lifted Mexico up the value chain, but it ties the economy tightly to the US auto cycle and to any tariff on cars.`,
+      storyBlock({asof:PROD.year+' data',
+        p1:`Three chapters carry the basket: <b>vehicles &amp; parts (${Math.round(items[0].share)}%)</b>, <b>electronics (${Math.round(items[1].share)}%)</b> and <b>machinery (${Math.round(items[2].share)}%)</b> are together about <b>${Math.round(top3)}%</b> of what Mexico exports. Crude oil, once the country's headline export, is now under 5% — this is a factory economy, and much of what leaves is assembled from imported parts.`,
+        p2:`That concentration lifted Mexico up the value chain, but it ties the economy to the US auto cycle and to any tariff aimed at cars.`,
         src:`UN COMTRADE, reconciled to Banxico/INEGI (Δ ${PROD.reconciliation.deltaPct}%).`}));
   })();
 
@@ -284,10 +283,9 @@ function briefHTML(){
       exhibit('3','ctx','Where Mexico’s exports go',`Top destinations, ${PART.year} · share of goods exports`,
         hbarChart(bars,{vfmt:(v)=>v+'%'}),
         'Source: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a> · bilateral totals. Aggregates (“nes”) are COMTRADE’s own unspecified-destination buckets, shown as reported.',reconFooter(rc))+
-      storyBlock({asof:PART.year,
-        latest:`About <b>${us}%</b> of Mexico’s goods exports go to the <b>United States</b>. No other partner reaches ${xitems[1]?Math.ceil(xitems[1].value):5}%.`,
-        background:`That concentration is a feature of the integrated North American factory: parts cross the border several times before a finished good is sold. ${usImp&&chImp?`On the import side it is more mixed — the US supplies about ${Math.round(usImp.share)}% and China about ${Math.round(chImp.share)}%.`:''}`,
-        why:`With four of every five export dollars riding on one customer, US trade policy — USMCA, tariffs, border rules — is, in effect, Mexico’s trade policy.`,
+      storyBlock({asof:PART.year+’ data’,
+        p1:`About <b>${us}%</b> of Mexico’s goods exports go to the <b>United States</b>, and no other partner reaches ${xitems[1]?Math.ceil(xitems[1].value):5}%. That’s the integrated North American factory at work — parts cross the border several times before a finished good is sold${usImp&&chImp?`, and on the import side it’s more mixed, with the US supplying about <b>${Math.round(usImp.share)}%</b> and China about <b>${Math.round(chImp.share)}%</b>`:’’}.`,
+        p2:`With four of every five export dollars riding on one customer, US trade policy — USMCA, tariffs, border rules — is, in effect, Mexico’s trade policy.`,
         src:`UN COMTRADE, reconciled to Banxico/INEGI (Δ ${PART.exports.reconciliation.deltaPct}%).`}));
   })();
 
@@ -308,9 +306,8 @@ function briefHTML(){
     const tiles=`<div class="tablero c3">`+[{id:'banxico-imports-intermediate',l:'Intermediate imports'},{id:'banxico-imports-capital',l:'Capital imports'},{id:'banxico-imports-consumer',l:'Consumer imports'}].filter(t=>has(t.id)).map(t=>tile(t,{})).join('')+`</div>`;
     document.getElementById(el).insertAdjacentHTML('beforeend',tiles+ex+storyBlock({
       asof:document.getElementById('asof').textContent,
-      latest:`Intermediate goods — components and materials — are about <b>${inter?Math.round(inter):'—'}%</b> of imports. These are inputs, not final products.`,
-      background:`It is the maquila logic at national scale: import a part, add work, export the assembly. That is why imports and exports rise and fall together, and why the trade balance stays small.`,
-      why:`It also means “made in Mexico” is really “assembled in Mexico.” Rising local content is the slow, hard work of turning assembly into deeper manufacturing.`,
+      p1:`Most of what Mexico buys abroad is not for the shelf: intermediate goods — parts and materials — are about <b>${inter?Math.round(inter):'—'}%</b> of imports, because the same factories that export finished goods first import the inputs. That's why imports and exports rise and fall together, and why the trade balance stays small.`,
+      p2:`It also means “made in Mexico” is often “assembled in Mexico” — and raising local content is the slow work of turning assembly into deeper manufacturing.`,
       src:'Banxico CE125 (imports by economic use).'}));
   })();
 
@@ -327,11 +324,10 @@ function briefHTML(){
     if(t) ex+=exhibit('6','ctx',t.label,`${t.values[0]?.year||''} · Mexico vs regional peers`,hbarChart(mkBars(t),{vfmt:(v)=>v+'%'}),
       'Source: <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank</a> · World Development Indicators.','');
     const mexG=g?g.values.find(v=>v.iso==='MEX'):null, mexT=t?t.values.find(v=>v.iso==='MEX'):null;
-    document.getElementById(el).insertAdjacentHTML('beforeend',ex+storyBlock({asof:(g&&g.values[0]?.year)||'',
-      latest:`Exports are about <b>${mexG?mexG.value:'—'}% of Mexico’s GDP</b> — the highest among the region’s big economies. High-tech goods are about <b>${mexT?mexT.value:'—'}%</b> of manufactured exports, second only to the US.`,
-      background:`Brazil and Colombia are larger or more commodity-based and trade less of their output. Chile is open but sells copper and fruit; Mexico sells cars and electronics.`,
-      why:`Trading a big share of a manufacturing economy is Mexico’s advantage and its exposure: it captures global demand fast, and it imports global shocks just as fast.`,
-      src:'World Bank WDI (exports %GDP; high-tech share of manufactured exports).'}));
+    document.getElementById(el).insertAdjacentHTML(‘beforeend’,ex+storyBlock({asof:((g&&g.values[0]?.year)||’’)+’ data’,
+      p1:`Exports are about <b>${mexG?mexG.value:’—‘}% of Mexico’s GDP</b> — the highest among the region’s big economies, well above Brazil or Colombia — and high-tech goods are about <b>${mexT?mexT.value:’—‘}%</b> of its manufactured exports, second only to the US. Chile is open too, but it sells copper and fruit; Mexico sells cars and electronics.`,
+      p2:`Trading a big share of a manufacturing economy is Mexico’s edge and its exposure: it captures global demand fast, and imports global shocks just as fast.`,
+      src:’World Bank WDI (exports %GDP; high-tech share of manufactured exports).’}));
   })();
 
   /* closing + sources */
