@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1fd9a063" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=832e4c0e" />
 
 
 </head>
@@ -230,7 +230,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, storyBlock, wireCharts } from '/assets/mb.js?v=11';
+import { loadSeries, S, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, treemapSVG, storyBlock, wireCharts } from '/assets/mb.js?v=12';
 
 /* Trade data: Banxico CE125 series (into S) + three reconciled JSON datasets fetched alongside. */
 const CE125=['banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-imports-capital','banxico-imports-consumer'];
@@ -273,6 +273,35 @@ const SIE='https://www.banxico.org.mx/SieInternet/';
 const bx=(ids)=>`Source: <a href="${SIE}" target="_blank" rel="noopener">Banco de México (SIE)</a> · ${ids}`;
 const comtrade=(rc)=>`Source: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a>, reconciled to Banxico CE125${rc?` (Δ ${rc.deltaPct}%)`:''}.`;
 
+/* Our own product-space treemap. The 97 HS2 chapters, grouped into 9 readable sectors and colored
+   like a product map (agri warm, chemicals violet, machinery blue, transport indigo, instruments cyan).
+   This is the Harvard Atlas view, built on our own COMTRADE-reconciled data instead of linking out. */
+const TSECT=[
+  {max:24,key:'Food & agriculture',c:'#d9b13a'},
+  {max:27,key:'Minerals & fuels',c:'#b07a52'},
+  {max:40,key:'Chemicals & plastics',c:'#b184cf'},
+  {max:67,key:'Textiles & leather',c:'#5fb885'},
+  {max:83,key:'Metals, stone & gems',c:'#e0776d'},
+  {max:85,key:'Machinery & electronics',c:'#4f9ed0'},
+  {max:89,key:'Transport equipment',c:'#8a8ae0'},
+  {max:92,key:'Precision instruments',c:'#63c6cf'},
+  {max:99,key:'Other manufactures',c:'#4a6f92'},
+];
+const tsectOf=(code)=>{const c=parseInt(code,10);return TSECT.find(s=>c<=s.max)||TSECT[TSECT.length-1];};
+function basketItems(){
+  const items=[]; let ov=0,on=0,os=0;
+  for(const p of PROD.items){
+    if(p.share>=0.3){ const s=tsectOf(p.code); items.push({name:p.name,value:p.value,share:p.share,color:s.c,key:s.key}); }
+    else { ov+=p.value; os+=p.share; on++; }
+  }
+  if(on) items.push({name:`Other (${on} small chapters)`,value:ov,share:os,color:'#9aa6b0',key:'Other — small chapters'});
+  return items;
+}
+function basketLegend(){
+  const present=new Set(PROD.items.filter(p=>p.share>=0.3).map(p=>tsectOf(p.code).key));
+  return `<div class="tmleg">`+TSECT.filter(s=>present.has(s.key)).map(s=>`<span class="tmlg"><i style="background:${s.c}"></i>${s.key}</span>`).join('')+`</div>`;
+}
+
 function renderBackground(){
   let ex='';
   const xa=annual('banxico-exports-total'),ma=annual('banxico-imports-total');
@@ -282,10 +311,10 @@ function renderBackground(){
       timeChart([{name:'Exports',color:'green',pts:xa},{name:'Imports',color:'var(--ink)',pts:ma}],{unit:'$',xfmt:yr}),
       bx('CE125 (SE36593, SE36595). The 2024 sum, $617.7bn, matches the official INEGI total.'),tbl,true);
   }
-  if(PROD&&PROD.items){const it=topN(PROD.items,10);
-    ex+=exhibit('2','What Mexico sells: cars, electronics, machinery','Exports by product, share of the basket, '+PROD.year,
-      hbarChart(it.map(i=>({label:i.name,value:i.share,hi:i===it[0]})),{vfmt:(v)=>v+'%'}),
-      comtrade(PROD.reconciliation),dataTable(['Product','Share'],it.map(i=>[i.name,i.share+'%'])),true);
+  if(PROD&&PROD.items){
+    ex+=exhibit('2','What Mexico sells, mapped: cars, electronics, machinery','Every chapter of the export basket, sized by value — hover any cell. Share of goods exports, '+PROD.year,
+      `<div id="tm-basket">`+treemapSVG(basketItems(),{W:720,H:460})+basketLegend()+`</div>`,
+      comtrade(PROD.reconciliation),dataTable(['Product','Share'],topN(PROD.items,12).map(i=>[i.name,i.share+'%'])),true);
   }
   if(PART&&PART.exports){const it=topN(PART.exports.items.map(i=>({name:i.name,share:i.share,value:i.value})),8);
     ex+=exhibit('3','Almost everything goes to one customer','Export destinations, share of goods exports, '+PART.year,
@@ -327,7 +356,20 @@ function renderBackground(){
     p2:`Underneath the totals, Mexico has climbed the ladder for two decades — more machines and instruments, fewer raw materials, and one of the higher shares of high-tech exports in the region.`,
     src:'Banco de México (CE125), UN COMTRADE, World Bank WDI'});
   wireCharts();
+  wireTreemap();
 })().catch(e=>{ const b=document.getElementById('background'); if(b) b.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading trade data: '+e.message+'</p>'; });
+
+// hover any treemap cell → the shared chart tooltip with product, share, value, sector
+function wireTreemap(){
+  const tm=document.querySelector('#tm-basket svg.treemap'); const tip=document.getElementById('charttip');
+  if(!tm||!tip) return;
+  tm.addEventListener('pointermove',(e)=>{ const g=e.target.closest('.tmc'); if(!g){tip.style.opacity=0;return;}
+    const nm=g.getAttribute('data-nm'),sh=+g.getAttribute('data-share'),val=+g.getAttribute('data-val'),sec=g.getAttribute('data-sec');
+    tip.innerHTML=`<b>${nm}</b><div class="tr"><span class="nm">Share of exports</span><span class="vv">${sh.toFixed(1)}%</span></div><div class="tr"><span class="nm">Value ${PROD.year}</span><span class="vv">$${(val/1e9).toFixed(1)}B</span></div><div class="tr"><span class="nm">Sector</span><span class="vv">${sec}</span></div>`;
+    tip.style.opacity=1; tip.style.left=Math.min(e.clientX+14,innerWidth-180)+'px'; tip.style.top=(e.clientY+14)+'px';
+  });
+  tm.addEventListener('pointerleave',()=>{ tip.style.opacity=0; });
+}
 </script>
 
 

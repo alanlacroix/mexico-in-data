@@ -140,6 +140,49 @@ export function hbarChart(items,opts){
     g+=`<text class="vlab" x="${(pl+bw+7).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="var(--ink)">${vfmt(d.value)}</text>`;});
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">${g}</svg>`;
 }
+
+// Squarified treemap — our own version of the product-space treemap, built on our data. Cells sized
+// by value, colored by an already-assigned d.color, hoverable (data attrs → wireTreemap tooltip).
+// items:[{name,value,share,color,key}]. Returns an SVG string sized to viewBox W×H (uniform scale).
+function tmSquarify(items, X, Y, W, H){
+  const out=[]; let x=X,y=Y,w=W,h=H; const n=items.length; let idx=0;
+  const worst=(row,side)=>{ const s=row.reduce((a,r)=>a+r.area,0); const mx=Math.max(...row.map(r=>r.area)), mn=Math.min(...row.map(r=>r.area)); return Math.max(side*side*mx/(s*s), s*s/(side*side*mn)); };
+  while(idx<n){
+    const side=Math.min(w,h)||1; const row=[items[idx]]; let j=idx+1;
+    while(j<n){ const cand=row.concat(items[j]); if(worst(cand,side)>worst(row,side)) break; row.push(items[j]); j++; }
+    const rowArea=row.reduce((a,r)=>a+r.area,0)||1;
+    if(w>=h){ const thick=rowArea/h; let yy=y; for(const r of row){ const rh=r.area/rowArea*h; out.push({d:r.d,x,y:yy,w:thick,h:rh}); yy+=rh; } x+=thick; w-=thick; }
+    else { const thick=rowArea/w; let xx=x; for(const r of row){ const rw=r.area/rowArea*w; out.push({d:r.d,x:xx,y,w:rw,h:thick}); xx+=rw; } y+=thick; h-=thick; }
+    idx=j;
+  }
+  return out;
+}
+function tmLuma(hex){ hex=(hex||'#888888').replace('#',''); if(hex.length===3)hex=hex.split('').map(c=>c+c).join(''); const r=parseInt(hex.slice(0,2),16)/255,g=parseInt(hex.slice(2,4),16)/255,b=parseInt(hex.slice(4,6),16)/255; return 0.2126*r+0.7152*g+0.0722*b; }
+function tmEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+export function treemapSVG(items, opts){
+  opts=opts||{}; const W=opts.W||720, H=opts.H||460, pad=1;
+  const data=items.slice().filter(d=>d.value>0).sort((a,b)=>b.value-a.value);
+  const total=data.reduce((s,d)=>s+d.value,0)||1;
+  const scaled=data.map(d=>({d, area:d.value/total*(W*H)}));
+  const rects=tmSquarify(scaled,0,0,W,H);
+  let svg=`<svg class="treemap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block" role="img">`;
+  for(const r of rects){
+    const d=r.d, x=r.x+pad, y=r.y+pad, w=Math.max(0,r.w-2*pad), h=Math.max(0,r.h-2*pad);
+    const tc=tmLuma(d.color)>0.62?'#1a1a1a':'#fff';
+    svg+=`<g class="tmc" data-nm="${tmEsc(d.name)}" data-share="${d.share}" data-val="${d.value}" data-sec="${tmEsc(d.key||'')}">`;
+    svg+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${d.color}" stroke="#fff" stroke-width="0.6"/>`;
+    if(w>78 && h>36){
+      const cap=Math.max(3,Math.floor(w/6.6)); const nm=d.name.length>cap?d.name.slice(0,cap-1)+'…':d.name;
+      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="${tc}" font-size="11.5" font-weight="600" style="font-family:var(--sans,-apple-system,sans-serif)">${tmEsc(nm)}</text>`;
+      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+31).toFixed(1)}" fill="${tc}" font-size="12.5" style="font-family:var(--serif,Georgia,serif)">${d.share.toFixed(1)}%</text>`;
+    } else if(w>34 && h>15){
+      svg+=`<text x="${(x+4).toFixed(1)}" y="${(y+12).toFixed(1)}" fill="${tc}" font-size="9" style="font-family:var(--sans,-apple-system,sans-serif)">${d.share>=0.4?d.share.toFixed(1)+'%':''}</text>`;
+    }
+    svg+=`</g>`;
+  }
+  svg+=`</svg>`;
+  return svg;
+}
 // exhibit frame; optional table alt for chart<->table toggle
 export function exhibit(no,finding,sub,svg,src,tableHtml,wide){
   const tid='ex'+(CID++);
