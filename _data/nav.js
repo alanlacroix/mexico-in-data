@@ -8,7 +8,7 @@ module.exports = [
   { label: 'Brief', href: '/' },
   {
     label: 'Topics',
-    match: ['/economy.html', '/money.html', '/payments.html', '/trade.html', '/politics.html', '/security.html', '/society.html', '/us-mexico.html', '/model.html'],
+    match: ['/economy.html', '/money.html', '/payments.html', '/trade.html', '/politics.html', '/security.html', '/society.html', '/us-mexico.html', '/trade.html', '/model.html', '/the-read.html'],
     menu: [
       { group: 'Sections', links: [
         { label: 'Economy', href: '/economy.html' },
@@ -21,6 +21,7 @@ module.exports = [
         { label: 'U.S.–Mexico', href: '/us-mexico.html' },
       ] },
       { group: 'Lab', links: [
+        { label: 'The Read', href: '/the-read.html' },
         { label: 'The Model', href: '/model.html' },
         // Decision Journal cut from the nav (Fable 2026-07-11): a standalone tool disconnected from the
         // briefing confuses even its owner. It returns only when it's fed by real briefing items ("pin

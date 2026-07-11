@@ -1,0 +1,2525 @@
+{
+  "generatedAt": "2026-07-11T22:25:29.077Z",
+  "whatMoved": {
+    "quiet": false,
+    "items": [
+      {
+        "id": "banxico-inflacion",
+        "label": "Headline inflation",
+        "value": 3.37,
+        "units": "% anual",
+        "changePct": -14.47,
+        "z": -1.41,
+        "dir": -1,
+        "cadence": "monthly",
+        "date": "2026-06-01",
+        "flags": [
+          "3 declines in a row"
+        ]
+      },
+      {
+        "id": "banxico-inflacion-subyacente",
+        "label": "Core inflation",
+        "value": 4.03,
+        "units": "% anual",
+        "changePct": -3.82,
+        "z": -1.28,
+        "dir": -1,
+        "cadence": "monthly",
+        "date": "2026-06-01",
+        "flags": [
+          "5 declines in a row"
+        ]
+      }
+    ]
+  },
+  "metrics": {
+    "banxico-cajeros-monto": {
+      "id": "banxico-cajeros-monto",
+      "source": "Banco de México (SIE)",
+      "sid": "SF62275",
+      "cadence": "quarterly",
+      "units": "million MXN",
+      "vintage": "2026-01-01",
+      "date": "2026-01-01",
+      "value": 916910,
+      "prev": 997385,
+      "change": -80475,
+      "changePct": -8.07,
+      "dir": -1,
+      "z": -1.11,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": true,
+      "trend3": -3.9,
+      "trend12": -10.3
+    },
+    "banxico-cajeros-ops": {
+      "id": "banxico-cajeros-ops",
+      "source": "Banco de México (SIE)",
+      "sid": "SF62269",
+      "cadence": "quarterly",
+      "units": "operaciones",
+      "vintage": "2026-01-01",
+      "date": "2026-01-01",
+      "value": 341416449,
+      "prev": 389680809,
+      "change": -48264360,
+      "changePct": -12.39,
+      "dir": -1,
+      "z": -2.08,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": true,
+      "trend3": -8.9,
+      "trend12": -21.8
+    },
+    "banxico-circulante": {
+      "id": "banxico-circulante",
+      "source": "Banco de México (SIE)",
+      "sid": "SF1",
+      "cadence": "monthly",
+      "units": "million MXN",
+      "vintage": "2026-06-01",
+      "date": "2026-06-01",
+      "value": 3495394.248,
+      "prev": 3529789.962,
+      "change": -34395.714,
+      "changePct": -0.97,
+      "dir": -1,
+      "z": -1.02,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": -0.1,
+      "trend12": 7.5
+    },
+    "banxico-codi-operaciones": {
+      "id": "banxico-codi-operaciones",
+      "source": "Banco de México (SIE)",
+      "sid": "SF335701",
+      "cadence": "monthly",
+      "units": "operaciones",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 356355,
+      "prev": 338713,
+      "change": 17642,
+      "changePct": 5.21,
+      "dir": 1,
+      "z": 0.32,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 10.6,
+      "trend12": -4.1
+    },
+    "banxico-consumo-privado": {
+      "id": "banxico-consumo-privado",
+      "source": "Banco de México (SIE)",
+      "sid": "SR17449",
+      "cadence": "monthly",
+      "units": "index 2018=100",
+      "vintage": "2026-04-01",
+      "date": "2026-04-01",
+      "value": 113.74,
+      "prev": 113.63,
+      "change": 0.11,
+      "changePct": 0.1,
+      "dir": 1,
+      "z": -0.01,
+      "streak": 2,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 1.1,
+      "trend12": 2.1
+    },
+    "banxico-ecommerce-monto": {
+      "id": "banxico-ecommerce-monto",
+      "source": "Banco de México (SIE)",
+      "sid": "SF273476",
+      "cadence": "quarterly",
+      "units": "million MXN",
+      "vintage": "2025-10-01",
+      "date": "2025-10-01",
+      "value": 310733,
+      "prev": 285526,
+      "change": 25207,
+      "changePct": 8.83,
+      "dir": 1,
+      "z": 0.85,
+      "streak": 1,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 9,
+      "trend12": 74.5
+    },
+    "banxico-ecommerce-ops": {
+      "id": "banxico-ecommerce-ops",
+      "source": "Banco de México (SIE)",
+      "sid": "SF273475",
+      "cadence": "quarterly",
+      "units": "operaciones",
+      "vintage": "2025-10-01",
+      "date": "2025-10-01",
+      "value": 415359429,
+      "prev": 406686393,
+      "change": 8673036,
+      "changePct": 2.13,
+      "dir": 1,
+      "z": -0.15,
+      "streak": 1,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 6.9,
+      "trend12": 86.9
+    },
+    "banxico-exports-manufactures": {
+      "id": "banxico-exports-manufactures",
+      "source": "Banco de México (SIE)",
+      "sid": "SE35398",
+      "cadence": "monthly",
+      "units": "thousand US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 62990058,
+      "prev": 65687011,
+      "change": -2696953,
+      "changePct": -4.11,
+      "dir": -1,
+      "z": -0.55,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 21.7,
+      "trend12": 25.1
+    },
+    "banxico-exports-nonoil": {
+      "id": "banxico-exports-nonoil",
+      "source": "Banco de México (SIE)",
+      "sid": "SE35397",
+      "cadence": "monthly",
+      "units": "thousand US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 67121164,
+      "prev": 69994827,
+      "change": -2873663,
+      "changePct": -4.11,
+      "dir": -1,
+      "z": -0.57,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 21.2,
+      "trend12": 25.6
+    },
+    "banxico-exports-oil": {
+      "id": "banxico-exports-oil",
+      "source": "Banco de México (SIE)",
+      "sid": "SE32150",
+      "cadence": "monthly",
+      "units": "thousand US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 2423327,
+      "prev": 2047002,
+      "change": 376325,
+      "changePct": 18.38,
+      "dir": 1,
+      "z": 1.02,
+      "streak": 4,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 63,
+      "trend12": 17.9
+    },
+    "banxico-exports-total": {
+      "id": "banxico-exports-total",
+      "source": "Banco de México (SIE)",
+      "sid": "SE36593",
+      "cadence": "monthly",
+      "units": "thousand US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 69544491,
+      "prev": 72041829,
+      "change": -2497338,
+      "changePct": -3.47,
+      "dir": -1,
+      "z": -0.49,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 22.3,
+      "trend12": 25.4
+    },
+    "banxico-igae": {
+      "id": "banxico-igae",
+      "source": "Banco de México / INEGI (SIE SR17693)",
+      "sid": "SR17693",
+      "cadence": "monthly",
+      "units": "% anual",
+      "vintage": "2026-04-01",
+      "date": "2026-04-01",
+      "value": 2.17,
+      "prev": 0.74,
+      "change": 1.43,
+      "changePct": 193.24,
+      "dir": 1,
+      "z": 1.3,
+      "streak": 2,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 393.2,
+      "trend12": 133.3
+    },
+    "banxico-imports-capital": {
+      "id": "banxico-imports-capital",
+      "source": "Banco de México (SIE)",
+      "sid": "SE36599",
+      "cadence": "monthly",
+      "units": "thousand US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 4666534,
+      "prev": 4794263,
+      "change": -127729,
+      "changePct": -2.66,
+      "dir": -1,
+      "z": -0.22,
+      "streak": 2,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 16.1,
+      "trend12": 1.6
+    },
+    "banxico-imports-consumer": {
+      "id": "banxico-imports-consumer",
+      "source": "Banco de México (SIE)",
+      "sid": "SE36597",
+      "cadence": "monthly",
+      "units": "thousand US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 8304791,
+      "prev": 8499279,
+      "change": -194488,
+      "changePct": -2.29,
+      "dir": -1,
+      "z": -0.21,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 17.8,
+      "trend12": 6.5
+    },
+    "banxico-imports-intermediate": {
+      "id": "banxico-imports-intermediate",
+      "source": "Banco de México (SIE)",
+      "sid": "SE36598",
+      "cadence": "monthly",
+      "units": "thousand US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 54313998,
+      "prev": 54228256,
+      "change": 85742,
+      "changePct": 0.16,
+      "dir": 1,
+      "z": -0.14,
+      "streak": 4,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 17.5,
+      "trend12": 29.8
+    },
+    "banxico-imports-total": {
+      "id": "banxico-imports-total",
+      "source": "Banco de México (SIE)",
+      "sid": "SE36595",
+      "cadence": "monthly",
+      "units": "thousand US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 67285323,
+      "prev": 67521798,
+      "change": -236475,
+      "changePct": -0.35,
+      "dir": -1,
+      "z": -0.18,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 17.4,
+      "trend12": 24
+    },
+    "banxico-inflacion-subyacente": {
+      "id": "banxico-inflacion-subyacente",
+      "source": "Banco de México / INEGI (SIE SP74625)",
+      "sid": "SP74625",
+      "cadence": "monthly",
+      "units": "% anual",
+      "vintage": "2026-06-01",
+      "date": "2026-06-01",
+      "value": 4.03,
+      "prev": 4.19,
+      "change": -0.16,
+      "changePct": -3.82,
+      "dir": -1,
+      "z": -1.28,
+      "streak": 5,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": -9.4,
+      "trend12": -5
+    },
+    "banxico-inflacion": {
+      "id": "banxico-inflacion",
+      "source": "Banco de México / INEGI — INPC",
+      "sid": "SP1",
+      "cadence": "monthly",
+      "units": "% anual",
+      "vintage": "2026-06-01",
+      "date": "2026-06-01",
+      "value": 3.37,
+      "prev": 3.94,
+      "change": -0.57,
+      "changePct": -14.47,
+      "dir": -1,
+      "z": -1.41,
+      "streak": 3,
+      "isRecordHigh": false,
+      "isRecordLow": true,
+      "trend3": -26.6,
+      "trend12": -22
+    },
+    "banxico-pib-crecimiento": {
+      "id": "banxico-pib-crecimiento",
+      "source": "Banco de México / INEGI (SIE SR17622)",
+      "sid": "SR17622",
+      "cadence": "quarterly",
+      "units": "% anual",
+      "vintage": "2026-01-01",
+      "date": "2026-01-01",
+      "value": 0.37,
+      "prev": 1.61,
+      "change": -1.24,
+      "changePct": -77.02,
+      "dir": -1,
+      "z": -1.25,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": -61.5,
+      "trend12": -90.2
+    },
+    "banxico-remesas-electronicas": {
+      "id": "banxico-remesas-electronicas",
+      "source": "Banco de México (SIE)",
+      "sid": "SE27806",
+      "cadence": "monthly",
+      "units": "million US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 5577.3206,
+      "prev": 4941.5869,
+      "change": 635.7337,
+      "changePct": 12.86,
+      "dir": 1,
+      "z": 1.18,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 23.8,
+      "trend12": null
+    },
+    "banxico-remesas": {
+      "id": "banxico-remesas",
+      "source": "Banco de México (SIE)",
+      "sid": "SE27803",
+      "cadence": "monthly",
+      "units": "million US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 5611.0024,
+      "prev": 4978.0514,
+      "change": 632.951,
+      "changePct": 12.71,
+      "dir": 1,
+      "z": 1.15,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 23.5,
+      "trend12": null
+    },
+    "banxico-reservas": {
+      "id": "banxico-reservas",
+      "source": "Banco de México (SIE)",
+      "sid": "SF43707",
+      "cadence": "weekly",
+      "units": "million US$",
+      "vintage": "2026-07-03",
+      "date": "2026-07-03",
+      "value": 255496.4,
+      "prev": 255180.7,
+      "change": 315.7,
+      "changePct": 0.12,
+      "dir": 1,
+      "z": 0.25,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 0.1,
+      "trend12": -0.3
+    },
+    "banxico-salario-minimo": {
+      "id": "banxico-salario-minimo",
+      "source": "Banco de México (SIE SL11298)",
+      "sid": "SL11298",
+      "cadence": "annual",
+      "units": "MXN per day",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 315.04,
+      "prev": 315.04,
+      "change": 0,
+      "changePct": 0,
+      "dir": 0,
+      "z": -0.3,
+      "streak": 0,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 0,
+      "trend12": 13
+    },
+    "banxico-spei-monto": {
+      "id": "banxico-spei-monto",
+      "source": "Banco de México (SIE)",
+      "sid": "SF273318",
+      "cadence": "monthly",
+      "units": "MXN",
+      "vintage": "2026-06-01",
+      "date": "2026-06-01",
+      "value": 31956242740950,
+      "prev": 29035556874185,
+      "change": 2920685866765,
+      "changePct": 10.06,
+      "dir": 1,
+      "z": 0.72,
+      "streak": 2,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 1.6,
+      "trend12": null
+    },
+    "banxico-spei-operaciones": {
+      "id": "banxico-spei-operaciones",
+      "source": "Banco de México (SIE)",
+      "sid": "SF273317",
+      "cadence": "monthly",
+      "units": "operaciones",
+      "vintage": "2026-06-01",
+      "date": "2026-06-01",
+      "value": 810982881,
+      "prev": 725940062,
+      "change": 85042819,
+      "changePct": 11.71,
+      "dir": 1,
+      "z": 0.79,
+      "streak": 2,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 7.4,
+      "trend12": null
+    },
+    "banxico-tarjetas-credito": {
+      "id": "banxico-tarjetas-credito",
+      "source": "Banco de México (SIE)",
+      "sid": "SF61870",
+      "cadence": "quarterly",
+      "units": "tarjetas",
+      "vintage": "2026-01-01",
+      "date": "2026-01-01",
+      "value": 48942782,
+      "prev": 50046737,
+      "change": -1103955,
+      "changePct": -2.21,
+      "dir": -1,
+      "z": -1.11,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 4.3,
+      "trend12": 42.8
+    },
+    "banxico-tarjetas-debito": {
+      "id": "banxico-tarjetas-debito",
+      "source": "Banco de México (SIE)",
+      "sid": "SF61871",
+      "cadence": "quarterly",
+      "units": "tarjetas",
+      "vintage": "2026-01-01",
+      "date": "2026-01-01",
+      "value": 210126187,
+      "prev": 209217003,
+      "change": 909184,
+      "changePct": 0.43,
+      "dir": 1,
+      "z": -0.23,
+      "streak": 3,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 5.7,
+      "trend12": 19.9
+    },
+    "banxico-tasa-objetivo": {
+      "id": "banxico-tasa-objetivo",
+      "source": "Banco de México (SIE)",
+      "sid": "SF61745",
+      "cadence": "daily",
+      "units": "%",
+      "vintage": "2026-07-11",
+      "date": "2026-07-11",
+      "value": 6.5,
+      "prev": 6.5,
+      "change": 0,
+      "changePct": 0,
+      "dir": 0,
+      "z": 0,
+      "streak": 0,
+      "isRecordHigh": false,
+      "isRecordLow": true,
+      "trend3": 0,
+      "trend12": 0
+    },
+    "banxico-tpv-credito-monto": {
+      "id": "banxico-tpv-credito-monto",
+      "source": "Banco de México (SIE)",
+      "sid": "SF62280",
+      "cadence": "quarterly",
+      "units": "million MXN",
+      "vintage": "2026-01-01",
+      "date": "2026-01-01",
+      "value": 355391,
+      "prev": 363855,
+      "change": -8464,
+      "changePct": -2.33,
+      "dir": -1,
+      "z": -0.49,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 11.2,
+      "trend12": 58.9
+    },
+    "banxico-tpv-credito-ops": {
+      "id": "banxico-tpv-credito-ops",
+      "source": "Banco de México (SIE)",
+      "sid": "SF62274",
+      "cadence": "quarterly",
+      "units": "operaciones",
+      "vintage": "2026-01-01",
+      "date": "2026-01-01",
+      "value": 348802720,
+      "prev": 341104059,
+      "change": 7698661,
+      "changePct": 2.26,
+      "dir": 1,
+      "z": 0.07,
+      "streak": 4,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 11,
+      "trend12": 47.4
+    },
+    "banxico-tpv-debito-monto": {
+      "id": "banxico-tpv-debito-monto",
+      "source": "Banco de México (SIE)",
+      "sid": "SF62279",
+      "cadence": "quarterly",
+      "units": "million MXN",
+      "vintage": "2026-01-01",
+      "date": "2026-01-01",
+      "value": 1169004,
+      "prev": 646248,
+      "change": 522756,
+      "changePct": 80.89,
+      "dir": 1,
+      "z": 4.18,
+      "streak": 2,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 106.3,
+      "trend12": 156.7
+    },
+    "banxico-tpv-debito-ops": {
+      "id": "banxico-tpv-debito-ops",
+      "source": "Banco de México (SIE)",
+      "sid": "SF62273",
+      "cadence": "quarterly",
+      "units": "operaciones",
+      "vintage": "2026-01-01",
+      "date": "2026-01-01",
+      "value": 1082819258,
+      "prev": 1150324076,
+      "change": -67504818,
+      "changePct": -5.87,
+      "dir": -1,
+      "z": -1.44,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": -3.9,
+      "trend12": 27.3
+    },
+    "banxico-trade-balance": {
+      "id": "banxico-trade-balance",
+      "source": "Banco de México (SIE)",
+      "sid": "SE28294",
+      "cadence": "monthly",
+      "units": "thousand US$",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 2259168,
+      "prev": 4520031,
+      "change": -2260863,
+      "changePct": -50.02,
+      "dir": -1,
+      "z": -0.6,
+      "streak": 2,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 588.2,
+      "trend12": 83.4
+    },
+    "banxico-usdmxn-fix": {
+      "id": "banxico-usdmxn-fix",
+      "source": "Banco de México (SIE)",
+      "sid": "SF43718",
+      "cadence": "business-daily",
+      "units": "MXN per USD",
+      "vintage": "2026-07-10",
+      "date": "2026-07-10",
+      "value": 17.4842,
+      "prev": 17.535,
+      "change": -0.0508,
+      "changePct": -0.29,
+      "dir": -1,
+      "z": -0.64,
+      "streak": 2,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": -0.1,
+      "trend12": -0.8
+    },
+    "cre-diesel": {
+      "id": "cre-diesel",
+      "source": "CNE / Sener (ex-CRE), precios de combustibles",
+      "sid": null,
+      "cadence": "4-hourly",
+      "units": "MXN per liter",
+      "vintage": "2026-07-11",
+      "date": "2026-07-11",
+      "value": 27.07,
+      "prev": 27.08,
+      "change": -0.01,
+      "changePct": -0.04,
+      "dir": -1,
+      "z": -0.71,
+      "streak": 2,
+      "isRecordHigh": false,
+      "isRecordLow": true,
+      "trend3": -0.1,
+      "trend12": null
+    },
+    "cre-gasolina-premium": {
+      "id": "cre-gasolina-premium",
+      "source": "CNE / Sener (ex-CRE), precios de combustibles",
+      "sid": null,
+      "cadence": "4-hourly",
+      "units": "MXN per liter",
+      "vintage": "2026-07-11",
+      "date": "2026-07-11",
+      "value": 28.46,
+      "prev": 28.46,
+      "change": 0,
+      "changePct": 0,
+      "dir": 0,
+      "z": 0,
+      "streak": 0,
+      "isRecordHigh": true,
+      "isRecordLow": true,
+      "trend3": 0,
+      "trend12": null
+    },
+    "cre-gasolina-regular": {
+      "id": "cre-gasolina-regular",
+      "source": "CNE / Sener (ex-CRE), precios de combustibles",
+      "sid": null,
+      "cadence": "4-hourly",
+      "units": "MXN per liter",
+      "vintage": "2026-07-11",
+      "date": "2026-07-11",
+      "value": 23.69,
+      "prev": 23.68,
+      "change": 0.01,
+      "changePct": 0.04,
+      "dir": 1,
+      "z": 0.71,
+      "streak": 1,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 0,
+      "trend12": null
+    },
+    "fred-fedfunds": {
+      "id": "fred-fedfunds",
+      "source": "FRED, Federal Reserve Bank of St. Louis",
+      "sid": null,
+      "cadence": "monthly",
+      "units": "%",
+      "vintage": "2026-06-01",
+      "date": "2026-06-01",
+      "value": 3.63,
+      "prev": 3.63,
+      "change": 0,
+      "changePct": 0,
+      "dir": 0,
+      "z": 0.78,
+      "streak": 0,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": -0.3,
+      "trend12": -16.2
+    },
+    "fred-us-autosales": {
+      "id": "fred-us-autosales",
+      "source": "FRED, Federal Reserve Bank of St. Louis",
+      "sid": null,
+      "cadence": "monthly",
+      "units": "million units (SAAR)",
+      "vintage": "2026-06-01",
+      "date": "2026-06-01",
+      "value": 16.949,
+      "prev": 16.506,
+      "change": 0.443,
+      "changePct": 2.68,
+      "dir": 1,
+      "z": 0.49,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 1.6,
+      "trend12": 4.1
+    },
+    "fred-us-indpro": {
+      "id": "fred-us-indpro",
+      "source": "FRED, Federal Reserve Bank of St. Louis",
+      "sid": null,
+      "cadence": "monthly",
+      "units": "index (2017 = 100)",
+      "vintage": "2026-05-01",
+      "date": "2026-05-01",
+      "value": 102.6475,
+      "prev": 102.509,
+      "change": 0.1385,
+      "changePct": 0.14,
+      "dir": 1,
+      "z": 0.12,
+      "streak": 2,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 0.7,
+      "trend12": 1.7
+    },
+    "fred-usd-broad": {
+      "id": "fred-usd-broad",
+      "source": "FRED, Federal Reserve Bank of St. Louis",
+      "sid": null,
+      "cadence": "weekly",
+      "units": "index (Jan 2006 = 100)",
+      "vintage": "2026-07-02",
+      "date": "2026-07-02",
+      "value": 120.6902,
+      "prev": 121.1455,
+      "change": -0.4553,
+      "changePct": -0.38,
+      "dir": -1,
+      "z": -1.49,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": -0.2,
+      "trend12": 1.2
+    },
+    "fred-ust10": {
+      "id": "fred-ust10",
+      "source": "FRED, Federal Reserve Bank of St. Louis",
+      "sid": "DGS10",
+      "cadence": "daily",
+      "units": "%",
+      "vintage": "2026-07-09",
+      "date": "2026-07-09",
+      "value": 4.54,
+      "prev": 4.56,
+      "change": -0.02,
+      "changePct": -0.44,
+      "dir": -1,
+      "z": -0.5,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 1.3,
+      "trend12": 0.7
+    },
+    "fred-ust2": {
+      "id": "fred-ust2",
+      "source": "FRED, Federal Reserve Bank of St. Louis",
+      "sid": "DGS2",
+      "cadence": "daily",
+      "units": "%",
+      "vintage": "2026-07-09",
+      "date": "2026-07-09",
+      "value": 4.16,
+      "prev": 4.21,
+      "change": -0.05,
+      "changePct": -1.19,
+      "dir": -1,
+      "z": -0.99,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 0.7,
+      "trend12": -1.9
+    },
+    "se-ied": {
+      "id": "se-ied",
+      "source": "Secretaría de Economía (Data México)",
+      "sid": null,
+      "cadence": "quarterly",
+      "units": "million US$",
+      "vintage": "2024-10",
+      "date": "2024-10",
+      "value": 676.4837,
+      "prev": 3062.3667,
+      "change": -2385.883,
+      "changePct": -77.91,
+      "dir": -1,
+      "z": -0.19,
+      "streak": 3,
+      "isRecordHigh": false,
+      "isRecordLow": true,
+      "trend3": -97.5,
+      "trend12": -85.7
+    },
+    "wb-gdp-per-capita": {
+      "id": "wb-gdp-per-capita",
+      "source": "Banco Mundial (Indicators API)",
+      "sid": null,
+      "cadence": "annual",
+      "units": "current US$",
+      "vintage": "2025",
+      "date": "2025",
+      "value": 13889.234,
+      "prev": 13988.0424,
+      "change": -98.8084,
+      "changePct": -0.71,
+      "dir": -1,
+      "z": -0.35,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 21.8,
+      "trend12": 23.8
+    },
+    "wb-gdp-usd": {
+      "id": "wb-gdp-usd",
+      "source": "Banco Mundial (Indicators API)",
+      "sid": null,
+      "cadence": "annual",
+      "units": "current US$",
+      "vintage": "2025",
+      "date": "2025",
+      "value": 1832641364775.52,
+      "prev": 1830489311088.89,
+      "change": 2152053686.6301,
+      "changePct": 0.12,
+      "dir": 1,
+      "z": -0.35,
+      "streak": 5,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 24.9,
+      "trend12": 38.1
+    },
+    "wb-inflation": {
+      "id": "wb-inflation",
+      "source": "Banco Mundial (Indicators API)",
+      "sid": null,
+      "cadence": "annual",
+      "units": "% annual",
+      "vintage": "2025",
+      "date": "2025",
+      "value": 3.8067,
+      "prev": 4.7223,
+      "change": -0.9156,
+      "changePct": -19.39,
+      "dir": -1,
+      "z": -0.64,
+      "streak": 3,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": -51.8,
+      "trend12": 0
+    },
+    "wb-population": {
+      "id": "wb-population",
+      "source": "Banco Mundial (Indicators API)",
+      "sid": null,
+      "cadence": "annual",
+      "units": "people",
+      "vintage": "2025",
+      "date": "2025",
+      "value": 131946900,
+      "prev": 130861007,
+      "change": 1085893,
+      "changePct": 0.83,
+      "dir": 1,
+      "z": -1.07,
+      "streak": 65,
+      "isRecordHigh": true,
+      "isRecordLow": false,
+      "trend3": 2.6,
+      "trend12": 11.5
+    },
+    "wb-unemployment": {
+      "id": "wb-unemployment",
+      "source": "Banco Mundial (Indicators API)",
+      "sid": null,
+      "cadence": "annual",
+      "units": "% labor force",
+      "vintage": "2025",
+      "date": "2025",
+      "value": 2.673,
+      "prev": 2.678,
+      "change": -0.005,
+      "changePct": -0.19,
+      "dir": -1,
+      "z": -0.01,
+      "streak": 5,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": -17.9,
+      "trend12": -45.7
+    }
+  },
+  "cross": {
+    "realRate": {
+      "label": "Real policy rate (policy − core inflation)",
+      "value": 2.47,
+      "unit": "%",
+      "from": [
+        "banxico-tasa-objetivo",
+        "banxico-inflacion-subyacente"
+      ],
+      "neutralLow": 2.6,
+      "neutralHigh": 3.3
+    },
+    "rateSpread": {
+      "label": "Mexico − US policy-rate spread",
+      "value": 2.87,
+      "unit": "pp",
+      "from": [
+        "banxico-tasa-objetivo",
+        "fred-fedfunds"
+      ],
+      "series": [
+        {
+          "date": "2025-07-11",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-12",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-13",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-14",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-15",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-16",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-17",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-18",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-19",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-20",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-21",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-22",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-23",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-24",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-25",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-26",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-27",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-28",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-29",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-30",
+          "value": 3.67
+        },
+        {
+          "date": "2025-07-31",
+          "value": 3.67
+        },
+        {
+          "date": "2025-08-01",
+          "value": 3.67
+        },
+        {
+          "date": "2025-08-02",
+          "value": 3.67
+        },
+        {
+          "date": "2025-08-03",
+          "value": 3.67
+        },
+        {
+          "date": "2025-08-04",
+          "value": 3.67
+        },
+        {
+          "date": "2025-08-05",
+          "value": 3.67
+        },
+        {
+          "date": "2025-08-06",
+          "value": 3.67
+        },
+        {
+          "date": "2025-08-07",
+          "value": 3.67
+        },
+        {
+          "date": "2025-08-08",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-09",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-10",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-11",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-12",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-13",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-14",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-15",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-16",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-17",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-18",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-19",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-20",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-21",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-22",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-23",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-24",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-25",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-26",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-27",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-28",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-29",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-30",
+          "value": 3.42
+        },
+        {
+          "date": "2025-08-31",
+          "value": 3.42
+        },
+        {
+          "date": "2025-09-01",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-02",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-03",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-04",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-05",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-06",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-07",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-08",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-09",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-10",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-11",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-12",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-13",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-14",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-15",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-16",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-17",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-18",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-19",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-20",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-21",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-22",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-23",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-24",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-25",
+          "value": 3.53
+        },
+        {
+          "date": "2025-09-26",
+          "value": 3.28
+        },
+        {
+          "date": "2025-09-27",
+          "value": 3.28
+        },
+        {
+          "date": "2025-09-28",
+          "value": 3.28
+        },
+        {
+          "date": "2025-09-29",
+          "value": 3.28
+        },
+        {
+          "date": "2025-09-30",
+          "value": 3.28
+        },
+        {
+          "date": "2025-10-01",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-02",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-03",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-04",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-05",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-06",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-07",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-08",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-09",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-10",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-11",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-12",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-13",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-14",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-15",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-16",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-17",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-18",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-19",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-20",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-21",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-22",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-23",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-24",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-25",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-26",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-27",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-28",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-29",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-30",
+          "value": 3.41
+        },
+        {
+          "date": "2025-10-31",
+          "value": 3.41
+        },
+        {
+          "date": "2025-11-01",
+          "value": 3.62
+        },
+        {
+          "date": "2025-11-02",
+          "value": 3.62
+        },
+        {
+          "date": "2025-11-03",
+          "value": 3.62
+        },
+        {
+          "date": "2025-11-04",
+          "value": 3.62
+        },
+        {
+          "date": "2025-11-05",
+          "value": 3.62
+        },
+        {
+          "date": "2025-11-06",
+          "value": 3.62
+        },
+        {
+          "date": "2025-11-07",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-08",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-09",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-10",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-11",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-12",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-13",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-14",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-15",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-16",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-17",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-18",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-19",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-20",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-21",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-22",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-23",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-24",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-25",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-26",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-27",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-28",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-29",
+          "value": 3.37
+        },
+        {
+          "date": "2025-11-30",
+          "value": 3.37
+        },
+        {
+          "date": "2025-12-01",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-02",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-03",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-04",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-05",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-06",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-07",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-08",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-09",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-10",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-11",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-12",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-13",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-14",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-15",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-16",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-17",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-18",
+          "value": 3.53
+        },
+        {
+          "date": "2025-12-19",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-20",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-21",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-22",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-23",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-24",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-25",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-26",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-27",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-28",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-29",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-30",
+          "value": 3.28
+        },
+        {
+          "date": "2025-12-31",
+          "value": 3.28
+        },
+        {
+          "date": "2026-01-01",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-02",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-03",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-04",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-05",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-06",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-07",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-08",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-09",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-10",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-11",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-12",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-13",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-14",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-15",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-16",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-17",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-18",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-19",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-20",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-21",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-22",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-23",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-24",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-25",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-26",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-27",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-28",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-29",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-30",
+          "value": 3.36
+        },
+        {
+          "date": "2026-01-31",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-01",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-02",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-03",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-04",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-05",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-06",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-07",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-08",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-09",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-10",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-11",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-12",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-13",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-14",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-15",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-16",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-17",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-18",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-19",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-20",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-21",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-22",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-23",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-24",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-25",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-26",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-27",
+          "value": 3.36
+        },
+        {
+          "date": "2026-02-28",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-01",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-02",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-03",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-04",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-05",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-06",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-07",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-08",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-09",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-10",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-11",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-12",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-13",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-14",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-15",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-16",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-17",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-18",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-19",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-20",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-21",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-22",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-23",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-24",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-25",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-26",
+          "value": 3.36
+        },
+        {
+          "date": "2026-03-27",
+          "value": 3.11
+        },
+        {
+          "date": "2026-03-28",
+          "value": 3.11
+        },
+        {
+          "date": "2026-03-29",
+          "value": 3.11
+        },
+        {
+          "date": "2026-03-30",
+          "value": 3.11
+        },
+        {
+          "date": "2026-03-31",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-01",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-02",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-03",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-04",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-05",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-06",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-07",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-08",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-09",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-10",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-11",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-12",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-13",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-14",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-15",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-16",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-17",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-18",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-19",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-20",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-21",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-22",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-23",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-24",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-25",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-26",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-27",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-28",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-29",
+          "value": 3.11
+        },
+        {
+          "date": "2026-04-30",
+          "value": 3.11
+        },
+        {
+          "date": "2026-05-01",
+          "value": 3.12
+        },
+        {
+          "date": "2026-05-02",
+          "value": 3.12
+        },
+        {
+          "date": "2026-05-03",
+          "value": 3.12
+        },
+        {
+          "date": "2026-05-04",
+          "value": 3.12
+        },
+        {
+          "date": "2026-05-05",
+          "value": 3.12
+        },
+        {
+          "date": "2026-05-06",
+          "value": 3.12
+        },
+        {
+          "date": "2026-05-07",
+          "value": 3.12
+        },
+        {
+          "date": "2026-05-08",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-09",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-10",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-11",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-12",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-13",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-14",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-15",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-16",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-17",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-18",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-19",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-20",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-21",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-22",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-23",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-24",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-25",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-26",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-27",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-28",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-29",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-30",
+          "value": 2.87
+        },
+        {
+          "date": "2026-05-31",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-02",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-03",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-04",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-05",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-06",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-07",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-08",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-09",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-10",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-11",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-12",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-13",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-14",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-15",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-16",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-17",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-18",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-19",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-20",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-21",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-22",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-23",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-24",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-25",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-26",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-27",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-28",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-29",
+          "value": 2.87
+        },
+        {
+          "date": "2026-06-30",
+          "value": 2.87
+        }
+      ]
+    },
+    "pesoRemittances": {
+      "label": "Remittances converted to pesos (bn)",
+      "unit": "bn MXN",
+      "from": [
+        "banxico-remesas",
+        "banxico-usdmxn-fix"
+      ],
+      "series": [
+        {
+          "date": "2025-08-01",
+          "value": 105.408
+        },
+        {
+          "date": "2025-09-01",
+          "value": 96.807
+        },
+        {
+          "date": "2025-10-01",
+          "value": 106.053
+        },
+        {
+          "date": "2025-11-01",
+          "value": 95.083
+        },
+        {
+          "date": "2025-12-01",
+          "value": 96.922
+        },
+        {
+          "date": "2026-01-01",
+          "value": 80.702
+        },
+        {
+          "date": "2026-02-01",
+          "value": 78.211
+        },
+        {
+          "date": "2026-03-01",
+          "value": 99.015
+        },
+        {
+          "date": "2026-04-01",
+          "value": 87.175
+        },
+        {
+          "date": "2026-05-01",
+          "value": 97.354
+        }
+      ],
+      "latest": {
+        "date": "2026-05-01",
+        "value": 97.354
+      }
+    },
+    "pesoVol": {
+      "label": "Peso 90-day realized volatility (annualized)",
+      "value": 9,
+      "unit": "%",
+      "from": [
+        "banxico-usdmxn-fix"
+      ]
+    }
+  },
+  "note": "Every figure is computed by code from an official series in data/series/. The Read may state only what appears here."
+}
