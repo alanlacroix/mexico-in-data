@@ -11,7 +11,7 @@ ogDescription: "The homicide rate is the one danger number that compares across 
   /* section-specific tokens the shared CSS doesn't carry (mirrors index.njk's inline :root) */
   :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
   body{font-size:17px}
-  .wrap{max-width:900px;margin:0 auto;padding:0 clamp(16px,5vw,32px)}
+  /* content width inherits the shared .wrap component (--maxw:1120) — no per-page override (was the homepage-wider-than-sections bug) */
 
   /* 1 · header */
   .hero{padding:28px 0 6px}
