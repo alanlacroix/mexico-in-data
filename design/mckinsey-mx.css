@@ -233,3 +233,11 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .tmleg{display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px 0 0}
 .tmlg{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;color:var(--ink-2);letter-spacing:.02em}
 .tmlg i{width:11px;height:11px;border-radius:2px;display:inline-block;flex:0 0 auto}
+
+/* Population explorer — horizon toggle over the CONAPO projection chart */
+.horizon{display:flex;align-items:center;gap:8px;margin:0 0 12px}
+.horizon .hz-lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+.horizon button{font-family:var(--mono);font-size:11px;padding:4px 13px;border:1px solid var(--line);background:var(--paper);color:var(--ink-2);border-radius:4px;cursor:pointer;transition:background .12s}
+.horizon button:hover{border-color:var(--green)}
+.horizon button.on{background:var(--green);color:#fff;border-color:var(--green)}
+.projchart{cursor:crosshair}

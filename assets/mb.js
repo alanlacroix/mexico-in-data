@@ -183,6 +183,33 @@ export function treemapSVG(items, opts){
   svg+=`</svg>`;
   return svg;
 }
+
+// Projection line chart — Fable's grammar: solid = measured, dashed = projected; a labeled seam at the
+// projection start; an in-canvas PROJECTION badge; the peak marked; a solid/dashed legend. Every point
+// carries an invisible hit-target for hover. opts:{series:[{year,value}], seamYear, unit, peak, xmax}.
+export function projectionChart(opts){
+  opts=opts||{}; const W=720,H=430,pl=48,pr=110,pt=34,pb=28,iw=W-pl-pr,ih=H-pt-pb;
+  const seam=opts.seamYear, unit=opts.unit||'';
+  const data=opts.series.filter(p=>p.year<=(opts.xmax||1e9));
+  const xs=data.map(p=>p.year), ys=data.map(p=>p.value);
+  const xmn=Math.min(...xs), xmx=opts.xmax||Math.max(...xs);
+  let ymn=Math.min(...ys), ymx=Math.max(...ys); const pd=(ymx-ymn)*0.16||1; ymn=Math.max(0,ymn-pd); ymx+=pd;
+  const X=y=>pl+((y-xmn)/((xmx-xmn)||1))*iw, Y=v=>pt+ih-((v-ymn)/((ymx-ymn)||1))*ih;
+  let g='';
+  for(let k=0;k<=4;k++){const v=ymn+(ymx-ymn)*k/4,y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${pl-6}" y="${(y+3).toFixed(1)}" text-anchor="end">${niceStr(v,unit)}</text>`;}
+  const meas=data.filter(p=>p.year<=seam), proj=data.filter(p=>p.year>=seam);
+  const path=pts=>pts.map((p,i)=>(i?'L':'M')+X(p.year).toFixed(1)+' '+Y(p.value).toFixed(1)).join(' ');
+  if(meas.length>1) g+=`<path fill="none" stroke="var(--green)" stroke-width="2.4" d="${path(meas)}"/>`;
+  if(proj.length>1) g+=`<path fill="none" stroke="var(--green)" stroke-width="2.2" stroke-dasharray="5 4" opacity="0.85" d="${path(proj)}"/>`;
+  if(seam>xmn&&seam<xmx){const sx=X(seam);g+=`<line x1="${sx.toFixed(1)}" y1="${pt}" x2="${sx.toFixed(1)}" y2="${pt+ih}" stroke="var(--mut)" stroke-width="1" stroke-dasharray="2 3"/><text class="axl" x="${(sx+4).toFixed(1)}" y="${(pt+11)}" fill="var(--mut)">projection begins ${seam}</text>`;}
+  if(opts.peak && opts.peak.year<xmx && opts.peak.year>xmn){const px=X(opts.peak.year),py=Y(opts.peak.value);g+=`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="3.6" fill="var(--ink)"/><text class="axl" x="${px.toFixed(1)}" y="${(py-8).toFixed(1)}" text-anchor="middle" fill="var(--ink)" style="font-weight:600">peak ${niceStr(opts.peak.value,unit)} · ${opts.peak.year}</text>`;}
+  const last=data[data.length-1];g+=`<circle cx="${X(last.year).toFixed(1)}" cy="${Y(last.value).toFixed(1)}" r="3.2" fill="var(--green)"/><text class="endlab" style="fill:var(--green)" x="${(X(last.year)+7).toFixed(1)}" y="${(Y(last.value)+4).toFixed(1)}">${last.year} · ${niceStr(last.value,unit)}</text>`;
+  g+=`<text class="axl" x="${pl}" y="${H-8}" text-anchor="start">${xmn}</text><text class="axl" x="${W-pr}" y="${H-8}" text-anchor="end">${xmx}</text>`;
+  g+=`<g transform="translate(${pl+4},${pt-18})"><rect x="0" y="-11" width="198" height="16" rx="3" fill="var(--paper-2)" stroke="var(--line)"/><text x="7" y="1" font-size="9.5" style="font-family:var(--mono)" fill="var(--ink-2)">PROJECTION · CONAPO, 2023 vintage</text></g>`;
+  g+=`<g font-size="10" style="font-family:var(--mono)" fill="var(--ink-2)"><line x1="${W-pr+8}" y1="${pt+ih-26}" x2="${W-pr+24}" y2="${pt+ih-26}" stroke="var(--green)" stroke-width="2.4"/><text x="${W-pr+28}" y="${pt+ih-23}">observed</text><line x1="${W-pr+8}" y1="${pt+ih-10}" x2="${W-pr+24}" y2="${pt+ih-10}" stroke="var(--green)" stroke-width="2.2" stroke-dasharray="4 3"/><text x="${W-pr+28}" y="${pt+ih-7}">projected</text></g>`;
+  data.forEach(p=>{g+=`<circle class="pph" data-year="${p.year}" data-value="${p.value}" data-proj="${p.year>seam?1:0}" cx="${X(p.year).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="7" fill="transparent"/>`;});
+  return `<svg class="chart projchart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">${g}</svg>`;
+}
 // exhibit frame; optional table alt for chart<->table toggle
 export function exhibit(no,finding,sub,svg,src,tableHtml,wide){
   const tid='ex'+(CID++);

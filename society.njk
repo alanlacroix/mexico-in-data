@@ -219,7 +219,7 @@ ogDescription: "Poverty, wages, jobs and migration in official numbers, updated 
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=12';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock, projectionChart } from '/assets/mb.js?v=12';
 
 /* series this section reads — the Q6 numbers plus the same-file living-standards /
    demography series (World Bank). loadSeries also pulls the news wire + events. */
@@ -322,9 +322,35 @@ function renderDemographics(DEMO,VIT){
   if(VIT&&VIT.births) strip+=dstat('Births',(VIT.births.latest.value/1e6).toFixed(2)+'M',`${VIT.births.latest.year} · INEGI`,'measured');
   if(VIT&&VIT.deaths) strip+=dstat('Deaths',Math.round(VIT.deaths.latest.value/1e3)+'k',`${VIT.deaths.latest.year} · INEGI`,'measured');
   if(strip) out+=`<div class="dstrip">${strip}</div>`;
+  // population trajectory — the interactive projection (horizon buttons re-scale to 2050 / 2070)
+  if(DEMO&&DEMO.population&&DEMO.population.series&&DEMO.population.series.length>2){
+    const SR=DEMO.population.series; let peak=SR[0]; for(const p of SR) if(p.value>peak.value) peak=p;
+    const chart=projectionChart({series:SR.map(p=>({year:p.year,value:p.value/1e6})),seamYear:2020,unit:'M',peak:{year:peak.year,value:peak.value/1e6},xmax:2070});
+    out+=exhibit('Trajectory','CONAPO projects the population keeps rising to about '+(peak.value/1e6).toFixed(0)+'M near '+peak.year+', then slowly declines',
+      'Total population, millions — observed to 2020, then CONAPO’s projection to 2070. Set the horizon to look further out.',
+      `<div id="pop-explorer"><div class="horizon"><span class="hz-lbl">Look ahead to</span><button type="button" data-xmax="2050">2050</button><button type="button" data-xmax="2070" class="on">2070</button></div>${chart}</div>`,
+      `Source: <a href="https://www.gob.mx/conapo" target="_blank" rel="noopener">CONAPO</a> — Proyecciones de la Población de México 2020–2070. A projection is CONAPO’s model output, not a measurement and not our forecast.`);
+  }
   // census anchor line — kept separate from the projection, never mixed
   if(DEMO&&DEMO.censusAnchor) out+=`<p class="ctxline">The last hard count was the <b>${(DEMO.censusAnchor.population/1e6).toFixed(1)}M</b> of the ${DEMO.censusAnchor.year} Census (INEGI). Figures above the count are CONAPO's 2023-base projection, shown as a projection, not a measurement.</p>`;
   return out;
+}
+// interactive population explorer — horizon buttons re-render the projection chart; hover any point
+function wirePopExplorer(DEMO){
+  const box=document.getElementById('pop-explorer'); if(!box||!DEMO||!DEMO.population||!DEMO.population.series) return;
+  const SR=DEMO.population.series; let peak=SR[0]; for(const p of SR) if(p.value>peak.value) peak=p;
+  const tip=document.getElementById('charttip');
+  const wireHover=()=>{ const svg=box.querySelector('svg'); if(!svg||!tip) return;
+    svg.addEventListener('pointermove',(e)=>{ const c=e.target.closest('.pph'); if(!c){tip.style.opacity=0;return;}
+      const y=c.getAttribute('data-year'),v=(+c.getAttribute('data-value')).toFixed(1),pr=c.getAttribute('data-proj')==='1';   // data-value is already in millions
+      tip.innerHTML=`<b>${y}</b><div class="tr"><span class="nm">Population</span><span class="vv">${v}M</span></div><div class="tr"><span class="nm">${pr?'Projected':'Observed'}</span><span class="vv">CONAPO</span></div>`;
+      tip.style.opacity=1; tip.style.left=Math.min(e.clientX+14,innerWidth-160)+'px'; tip.style.top=(e.clientY+14)+'px'; });
+    svg.addEventListener('pointerleave',()=>{tip.style.opacity=0;}); };
+  box.querySelector('.horizon').addEventListener('click',(e)=>{ const b=e.target.closest('button'); if(!b) return;
+    box.querySelectorAll('.horizon button').forEach(x=>x.classList.toggle('on',x===b));
+    const svg=projectionChart({series:SR.map(p=>({year:p.year,value:p.value/1e6})),seamYear:2020,unit:'M',peak:{year:peak.year,value:peak.value/1e6},xmax:+b.dataset.xmax});
+    const old=box.querySelector('svg'); if(old) old.outerHTML=svg; wireHover(); });
+  wireHover();
 }
 // a year past CONAPO's 2023 base is a projected year; 2020–2023 are the reconciled/measured base
 function projTierFor(y){ return y>2023?'projection':'measured'; }
@@ -349,6 +375,7 @@ function renderWire(){ return renderDevelopments('society'); }   // curated even
   }
   document.getElementById('tablero').innerHTML=povertyTile(POVERTY)+TILES.map(t=>tile(t,{src:true})).join('');
   document.getElementById('demographics').innerHTML=renderDemographics(DEMO,VIT);
+  wirePopExplorer(DEMO);
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Poverty 2024 · wages May 2026',
     p1:`Poverty fell to <b>29.6%</b> in 2024, the lowest on record and down <b>12.3 points</b> from 41.9% in 2018 — about <b>13.4M</b> fewer people. It's the first poverty read INEGI has published since taking over from CONEVAL, and it lands while the minimum wage keeps rising by policy, now <b>$315 a day</b> and roughly double its 2018 level, with remittances near record highs at <b>$5.6bn</b> in May.`,
     p2:`So the gains here run on policy, not on a booming economy: a wage floor lifted by decree rather than earned by growth, which caps how much further living standards can climb while output grows slowly.`,
