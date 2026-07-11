@@ -155,9 +155,9 @@ export const connectors = [
   makeConnector({ id: 'banxico-exports-nonoil',      title: 'Exportaciones no petroleras',                metric: 'exports_nonoil',      serie: 'SE35397', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 3 }),
   makeConnector({ id: 'banxico-exports-oil',         title: 'Exportaciones petroleras',                   metric: 'exports_oil',         serie: 'SE32150', units: 'thousand US$', cadence: 'monthly', maxPct: 70, years: 3 }),
   makeConnector({ id: 'banxico-exports-manufactures',title: 'Exportaciones manufactureras',               metric: 'exports_manuf',       serie: 'SE35398', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 3 }),
-  makeConnector({ id: 'banxico-imports-consumer',    title: 'Importaciones de bienes de consumo',         metric: 'imports_consumer',    serie: 'SE36597', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 3 }),
-  makeConnector({ id: 'banxico-imports-intermediate',title: 'Importaciones de bienes intermedios',        metric: 'imports_intermediate',serie: 'SE36598', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 3 }),
-  makeConnector({ id: 'banxico-imports-capital',     title: 'Importaciones de bienes de capital',         metric: 'imports_capital',     serie: 'SE36599', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 3 }),
+  makeConnector({ id: 'banxico-imports-consumer',    title: 'Importaciones de bienes de consumo',         metric: 'imports_consumer',    serie: 'SE36597', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 27 }),
+  makeConnector({ id: 'banxico-imports-intermediate',title: 'Importaciones de bienes intermedios',        metric: 'imports_intermediate',serie: 'SE36598', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 27 }),
+  makeConnector({ id: 'banxico-imports-capital',     title: 'Importaciones de bienes de capital',         metric: 'imports_capital',     serie: 'SE36599', units: 'thousand US$', cadence: 'monthly', maxPct: 40, years: 27 }),
 
   // Inflation — Banxico republishes INEGI's INPC (SP1 = índice general). We emit
   // headline ANNUAL inflation, computed the standard way (YoY on the official

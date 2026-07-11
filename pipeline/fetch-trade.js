@@ -175,16 +175,19 @@ async function regional() {
   const out = { asOf: nowIso, source: 'World Bank (World Development Indicators)', countries: COUNTRIES.split(';'), metrics: {} };
   try {
     for (const ind of IND) {
-      // date-range form (mrnev multi-country 400s); pick the latest non-null year per country ourselves.
-      const j = await getJson(`https://api.worldbank.org/v2/country/${COUNTRIES}/indicator/${ind.code}?format=json&per_page=500&date=2015:${YEAR}`);
+      // full history (1995→) so the section can chart the post-NAFTA divergence, plus the latest value per country.
+      const j = await getJson(`https://api.worldbank.org/v2/country/${COUNTRIES}/indicator/${ind.code}?format=json&per_page=2000&date=1995:${YEAR}`);
       const rows = (j[1] || []).filter((r) => r && r.value != null);
       if (!rows.length) throw new Error('no data for ' + ind.code);
-      const latest = {};
+      const byC = {};
       for (const r of rows) {
         const c = r.countryiso3code;
-        if (!latest[c] || r.date > latest[c].year) latest[c] = { iso: c, country: r.country?.value, year: r.date, value: +Number(r.value).toFixed(2) };
+        (byC[c] = byC[c] || { iso: c, country: r.country?.value, pts: [] }).pts.push({ date: r.date + '-01-01', value: +Number(r.value).toFixed(2) });
       }
-      out.metrics[ind.key] = { label: ind.label, unit: ind.unit, indicator: ind.code, values: Object.values(latest).sort((a, b) => b.value - a.value) };
+      const series = Object.values(byC).map((s) => ({ ...s, pts: s.pts.sort((a, b) => a.date.localeCompare(b.date)) }));
+      const latest = {};
+      for (const s of series) { const last = s.pts[s.pts.length - 1]; latest[s.iso] = { iso: s.iso, country: s.country, year: last.date.slice(0, 4), value: last.value }; }
+      out.metrics[ind.key] = { label: ind.label, unit: ind.unit, indicator: ind.code, series, values: Object.values(latest).sort((a, b) => b.value - a.value) };
     }
   } catch (e) { return safeWrite('regional.json', null, false, 'World Bank fetch failed: ' + e.message); }
   const ok = Object.keys(out.metrics).length === IND.length;
