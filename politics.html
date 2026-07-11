@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=b41bf716" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=627392fa" />
 
 
 </head>
@@ -209,7 +209,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, EVENTS, NEWS, sectionHead, staticRow, fwd, evDate, relTime, tagChip, renderDevelopments } from '/assets/mb.js?v=3';
+import { loadSeries, EVENTS, NEWS, sectionHead, staticRow, fwd, evDate, relTime, tagChip, renderDevelopments, srcBadge } from '/assets/mb.js?v=4';
 
 /* the politics keyword filter — shared by the calendar (block 4) and the wire (block 5).
    Spanish + English institution words; \b guards stop "selecciones" matching "elecci" etc. */
@@ -231,7 +231,7 @@ function renderTiles(){
     `<div class="tv"${t.sz?` style="font-size:${t.sz}px"`:''}>${t.tv}</div>`+
     `<div class="tb">${t.tb}</div>`+
     `<span class="stamp ${t.stamp&&/POLL/.test(t.stamp)?'':''}">${t.stamp}${t.chip?'<span class="chip-ph">'+t.chip+'</span>':''}</span>`+
-    (t.tsrc?`<span class="tsrc">${t.tsrc}</span>`:'')+`</div>`).join('');
+    (t.tsrc?`<span class="tsrc">${t.tsrc}</span><div class="tbadge">${srcBadge(t.tsrc)}</div>`:'')+`</div>`).join('');
 }
 
 /* block 3 — the migrated Q7 "who governs" fact card + honesty note + approval poll row +

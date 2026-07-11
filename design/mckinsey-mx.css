@@ -152,3 +152,11 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .foot .fnav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:12px}
 .foot .fnav a{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--green)}
 .foot .fblurb{font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.7;max-width:66ch;margin:0}
+
+/* Source-class badge — the honest-source policy made visible (Fable 2026-07-11): every figure
+   wears its provenance. Mexican-official data is the CORE (green); context sources (US,
+   multilateral, poll, market, modeled) read muted ink, the class named in the label. Palette
+   stays closed — green + ink only, purely typographic, no new hues. */
+.tbadge{margin-top:7px;line-height:1}
+.srcb{display:inline-block;font-family:var(--mono);font-size:11px;line-height:1.3;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:4px;padding:0 5px;white-space:nowrap}
+.srcb.core{color:var(--green-d);border-color:var(--green-bg);background:var(--green-bg)}

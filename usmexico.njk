@@ -227,7 +227,7 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, valueAgo, monLong, renderDevelopments } from '/assets/mb.js?v=3';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, valueAgo, monLong, renderDevelopments, srcBadge } from '/assets/mb.js?v=4';
 
 /* US–Mexico keyword filters — the task's keyword set (USMCA/TMEC/arancel/tariff/EEUU/
    Estados Unidos/frontera/border/comercio/exportaciones/Trump) plus the border/migration
@@ -246,7 +246,7 @@ function ctile(o){
     (o.dl||'')+(o.spark||'')+
     `<div class="tb">${o.tb||''}</div>`+
     `<span class="stamp ${o.stampCls||''}">${o.stamp||''}</span>`+
-    (o.src?`<span class="tsrc">${o.src}</span>`:'')+`</div>`;
+    (o.src?`<span class="tsrc">${o.src}</span><div class="tbadge">${srcBadge(o.src)}</div>`:'')+`</div>`;
 }
 function pctDelta(series){
   if(!series||series.length<13) return '';

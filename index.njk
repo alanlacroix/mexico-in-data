@@ -293,7 +293,7 @@ ogDescription: "Mexico's economy in official numbers, each linked to its officia
 </div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, tile, fmt, relTime, evDate, enNum } from '/assets/mb.js?v=2';
+import { loadSeries, S, EVENTS, tile, fmt, srcBadge, relTime, evDate, enNum } from '/assets/mb.js?v=4';
 
 /* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
    Every topic now owns a page, so a bookmarked #q link should land on it. */
@@ -327,10 +327,10 @@ function renderBoard(){
   // two dated static tiles (no live series exists yet) — links to their owning sections
   h+=`<a class="tilelink extra" href="/security.html"><div class="tile"><div class="tl">Homicide rate · national</div>`+
      `<div class="tv">~26 <small>per 100k</small></div><div class="tb">vs US ~6 per 100k</div>`+
-     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span></div></a>`;
+     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div></div></a>`;
   h+=`<a class="tilelink extra" href="/politics.html"><div class="tile"><div class="tl">Presidential approval</div>`+
      `<div class="tv">49–68 <small>%</small></div><div class="tb">Mitofsky ~68 · AtlasIntel ~49</div>`+
-     `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span></div></a>`;
+     `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span><div class="tbadge">${srcBadge('AS/COA tracker')}</div></div></a>`;
   return h;
 }
 

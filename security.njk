@@ -224,7 +224,7 @@ ogDescription: "The homicide rate is the one danger number that compares across 
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, staticRow, sectionHead, fwd, evDate, relTime, tagChip, wireCharts, renderDevelopments } from '/assets/mb.js?v=3';
+import { loadSeries, S, EVENTS, NEWS, staticRow, sectionHead, fwd, evDate, relTime, tagChip, wireCharts, renderDevelopments, srcBadge } from '/assets/mb.js?v=4';
 
 /* The one hard security number, authored ONCE — the tile board (block 2) and the
    Background metric row (block 3) both render from this object, so a tile and its
@@ -250,11 +250,11 @@ function renderBoard(){
   const now=`<div class="tile" data-go="background"><div class="tl">Homicide rate · national</div>`+
     `<div class="tv">~26 <small>per 100k · 2024</small></div>`+
     `<div class="tb">vs US ~6 per 100k</div>`+
-    `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span></div>`;
+    `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div></div>`;
   const peak=`<div class="tile" data-go="background"><div class="tl">2018 peak</div>`+
     `<div class="tv">~29 <small>per 100k</small></div>`+
     `<div class="tb">the high it's easing from</div>`+
-    `<span class="stamp">ANNUAL · 2018</span><span class="tsrc">SESNSP / INEGI</span></div>`;
+    `<span class="stamp">ANNUAL · 2018</span><span class="tsrc">SESNSP / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div></div>`;
   return now+peak;
 }
 

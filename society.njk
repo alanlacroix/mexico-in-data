@@ -216,7 +216,7 @@ ogDescription: "Poverty, wages, jobs and migration in official numbers, updated 
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments } from '/assets/mb.js?v=3';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, srcBadge } from '/assets/mb.js?v=4';
 
 /* series this section reads — the Q6 numbers plus the same-file living-standards /
    demography series (World Bank). loadSeries also pulls the news wire + events. */
@@ -237,7 +237,7 @@ function povertyTile(P){
     `<div class="tv">${P.rate} <small>${P.tileUnit}</small></div>`+
     `<span class="dl dn">−${P.dropPp}pp <small>vs ${P.priorYear}</small></span>`+
     `<div class="tb">lowest on record</div>`+
-    `<span class="stamp">${P.stamp}</span><span class="tsrc">INEGI / CONEVAL</span></div>`;
+    `<span class="stamp">${P.stamp}</span><span class="tsrc">INEGI / CONEVAL</span><div class="tbadge">${srcBadge('INEGI / CONEVAL')}</div></div>`;
 }
 
 /* the live tile board (block 2) — poverty headline + the same JSON as the metric rows below */

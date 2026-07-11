@@ -197,6 +197,21 @@ function tileDelta(id,s){
   return `<span class="dl ${cls}">${mag} <small>vs a year ago</small></span>`;
 }
 function tileVal(id,s){ if(id==='banxico-remesas')return fmtRem(s.data.at(-1).value); return fmt(id,s.data.at(-1).value,s.meta.units); }
+/* ---- source-class badge: the honest-source policy made visible (Fable 2026-07-11) ----
+   Mexican official data is the CORE; US, multilateral, poll, market and modeled sources are
+   CONTEXT, each labeled. Match on the source string. Palette stays closed — green (core) + ink
+   (context) only, never six colors; the class lives in the label text, not a new hue. */
+const SRC_CLASSES=[
+  {key:'mx',    label:'MX OFFICIAL',  core:true,  rx:/banco de m|banxico|inegi|hacienda|coneval|conasami|sesnsp|secretar[íi]a de econom|presidencia|\bsre\b|diario oficial|\bdof\b|\bine\b|pemex|\bcfe\b|gobierno|ma[ñn]anera|security cabinet|c[áa]mara de diputad|\bsenado\b|\bcongreso\b|\bcpeum\b|constituci[óo]n|suprema corte|\bscjn\b|\bsat\b|banco de méxico/i},
+  {key:'us',    label:'US OFFICIAL',  core:false, rx:/census|\bbea\b|\bbls\b|ustr|white house|federal circuit|court of appeals|u\.s\.|united states|federal reserve/i},
+  {key:'multi', label:'MULTILATERAL', core:false, rx:/world bank|banco mundial|\bimf\b|\bfmi\b|ocde|oecd|comtrade|\boec\b|united nations/i},
+  {key:'poll',  label:'POLL',         core:false, rx:/mitofsky|atlasintel|\bpoll\b|encuesta|as\/coa|tracker/i},
+  {key:'mkt',   label:'MARKET',       core:false, rx:/moody|fitch|s&p|\bmarket\b|\bbmv\b|embi|bloomberg|reuters|\brating/i},
+  {key:'model', label:'MODELED',      core:false, rx:/\bmodel|illustrat|estimate/i},
+];
+export function sourceClass(source){ const t=String(source||''); for(const c of SRC_CLASSES){ if(c.rx.test(t)) return c; } return {key:'other',label:'SOURCE',core:false}; }
+export function srcBadge(source){ if(!source) return ''; const c=sourceClass(source); return `<span class="srcb${c.core?' core':''}" title="${c.core?'Mexican official source':'Context source — labeled, not the Mexican-official core'}">${c.label}</span>`; }
+
 export function tile(t,opts){
   opts=opts||{}; const s=S[t.id];
   if(!s) return `<div class="tile"><div class="tl">${t.l}</div><div class="tv" style="font-size:15px;color:var(--amber2)">NOT YET WIRED</div><div class="tb">feed unavailable</div></div>`;
@@ -205,7 +220,8 @@ export function tile(t,opts){
   return `<div class="tile" data-go="${t.id}"><div class="tl">${t.l}</div><div class="tv">${h.v} <small>${h.s}</small></div>`+
     tileDelta(t.id,s)+
     `<div class="tb">${bf?bf(s):(t.per?'<span class="arw">'+arw+'</span> '+t.per:'')}</div>`+
-    `<span class="stamp ${st.cls}">${st.t}${t.ph?'<span class="chip-ph">'+t.ph+'</span>':''}</span>`+src+`</div>`;
+    `<span class="stamp ${st.cls}">${st.t}${t.ph?'<span class="chip-ph">'+t.ph+'</span>':''}</span>`+src+
+    `<div class="tbadge">${srcBadge(s.meta.source)}</div>`+`</div>`;
 }
 
 /* ============ metric rows ============ */

@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=b41bf716" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=627392fa" />
 
 
 </head>
@@ -321,7 +321,7 @@
 </div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, tile, fmt, relTime, evDate, enNum } from '/assets/mb.js?v=2';
+import { loadSeries, S, EVENTS, tile, fmt, srcBadge, relTime, evDate, enNum } from '/assets/mb.js?v=4';
 
 /* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
    Every topic now owns a page, so a bookmarked #q link should land on it. */
@@ -355,10 +355,10 @@ function renderBoard(){
   // two dated static tiles (no live series exists yet) — links to their owning sections
   h+=`<a class="tilelink extra" href="/security.html"><div class="tile"><div class="tl">Homicide rate · national</div>`+
      `<div class="tv">~26 <small>per 100k</small></div><div class="tb">vs US ~6 per 100k</div>`+
-     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span></div></a>`;
+     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div></div></a>`;
   h+=`<a class="tilelink extra" href="/politics.html"><div class="tile"><div class="tl">Presidential approval</div>`+
      `<div class="tv">49–68 <small>%</small></div><div class="tb">Mitofsky ~68 · AtlasIntel ~49</div>`+
-     `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span></div></a>`;
+     `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span><div class="tbadge">${srcBadge('AS/COA tracker')}</div></div></a>`;
   return h;
 }
 
