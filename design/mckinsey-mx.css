@@ -184,3 +184,20 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
   .navdrop-gl{padding:10px 2px 2px}
   .navdrop-menu a{padding:11px 2px 11px 16px;border-bottom:1px solid var(--line);font-size:13px}
 }
+
+/* Source disclosure — real <summary> text (a11y) at a 44px target, with the series id, observation
+   date and retrieval date shown (the review's #1 trust ask). Overrides the per-page ::before label. */
+.srcd{margin-top:6px}
+.srcd summary{list-style:none;cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--green-d);display:inline-flex;align-items:center;gap:5px;min-height:44px;padding:2px 0}
+.srcd summary::-webkit-details-marker{display:none}
+.srcd summary::before{content:"▸";font-size:9px}
+.srcd[open] summary::before{content:"▾"}
+.mrow .srcd summary{font-size:11px;min-height:44px;color:var(--green-d)}
+.mrow .srcd summary::before{content:"▸"!important}
+.mrow .srcd[open] summary::before{content:"▾"!important}
+.srcd .src-body{font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.7;padding:2px 0 6px}
+.srcd .src-body a{color:var(--green)}
+.srcd .src-body b{color:var(--ink)}
+
+/* Section-page hero deck — the short-title + deck grammar (Fable: kill the sentence-length H1s). */
+.hero .dek{font-family:var(--serif);font-size:clamp(18px,2.4vw,22px);line-height:1.4;color:var(--ink-2);margin:10px 0 0;max-width:60ch;font-weight:400;letter-spacing:-.005em}

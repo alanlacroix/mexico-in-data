@@ -257,7 +257,7 @@ function renderZoomCtl(){$('#zoomctl').innerHTML= LEVEL==='muni'?`<button class=
 
 /* ================= FICHA ================= */
 function fstrip(val,nat,dmax){const c=(x)=>Math.max(0,Math.min(1,x/dmax));const dp=c(val)*100,np=c(nat)*100;return `<div class="fstrip"><div class="tk"></div><div class="nat" style="left:${np}%"></div><div class="natl" style="left:${np}%">national</div><div class="dot" data-to="${dp}"></div></div>`;}
-function frow(o){return `<div class="fmetric"><div class="fm-l">${o.label} <span class="stamp">${o.stamp}</span></div><div class="fm-v">${o.valHTML}</div>${o.strip||''}${o.verdict?`<div class="fm-verdict">${o.verdict}</div>`:''}${o.rank?`<div class="fm-rank">${o.rank}</div>`:''}<details><summary></summary><div class="fs-b">${o.src}</div></details></div>`;}
+function frow(o){return `<div class="fmetric"><div class="fm-l">${o.label} <span class="stamp">${o.stamp}</span></div><div class="fm-v">${o.valHTML}</div>${o.strip||''}${o.verdict?`<div class="fm-verdict">${o.verdict}</div>`:''}${o.rank?`<div class="fm-rank">${o.rank}</div>`:''}<details class="srcd"><summary>Source &amp; date</summary><div class="fs-b">${o.src}</div></details></div>`;}
 function rankAmong(mk,v){const vals=Object.values(STVAL[mk]).filter(x=>x!=null);const higher=vals.filter(x=>x>v).length;return{top:higher+1,of:vals.length};}
 function ordinal(n){const t=['th','st','nd','rd'],x=n%100;return n+(t[(x-20)%10]||t[x]||t[0]);}
 function renderStateFicha(cve){

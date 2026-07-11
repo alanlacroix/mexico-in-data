@@ -50,7 +50,19 @@ export function stampFor(m, id){
 export function valueAgo(data,days){ const last=new Date(data[data.length-1].date), tgt=last-days*864e5; let best=data[0],bd=1e18; for(const p of data){const d=Math.abs(new Date(p.date)-tgt);if(d<bd){bd=d;best=p;}} return best.value; }
 // Send source links to a human-readable page, not the raw API endpoint.
 export function humanSrc(u){ if(!u)return u; if(/SieAPIRest/i.test(u))return 'https://www.banxico.org.mx/SieInternet/'; if(/apidatamexico|tesseract|economia\.gob\.mx\/api/i.test(u))return 'https://www.economia.gob.mx/datamexico/'; return u; }
-export const srcDetails = (m)=>`<details><summary></summary><div class="src-body">Source: <a href="${humanSrc(m.sourceUrl)}" target="_blank" rel="noopener">${m.source}</a><br>Vintage: ${m.vintage} · retrieved ${new Date(m.fetchedAt).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})}<br>License: ${m.license}</div></details>`;
+// Pull the exact series id out of the API endpoint (e.g. .../series/SF43718/datos → SF43718) so the
+// disclosure names the precise series, not just the agency (the review's #1 trust ask).
+export const seriesId = (u)=>{ const m=/\/series\/([A-Za-z]{2,4}\d+)/.exec(u||''); return m?m[1]:''; };
+export const srcDetails = (m)=>{
+  const sid=seriesId(m.sourceUrl), ret=m.fetchedAt?new Date(m.fetchedAt).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'}):'';
+  return `<details class="srcd"><summary>Source &amp; date</summary><div class="src-body">`+
+    `<div><b>${m.source||''}</b>${sid?' · series '+sid:''}</div>`+
+    (m.vintage?`<div>Observation: ${m.vintage}</div>`:'')+
+    (ret?`<div>Retrieved: ${ret}</div>`:'')+
+    (m.license?`<div>License: ${m.license}</div>`:'')+
+    `<div><a href="${humanSrc(m.sourceUrl)}" target="_blank" rel="noopener">Open the official series ↗</a></div>`+
+    `</div></details>`;
+};
 
 /* ============ CHART ENGINE (bigger, value-labels, end-labels, hover) ============ */
 let CID=0; const CHARTS={};
@@ -240,7 +252,7 @@ export function staticRow(o){
   return `<div class="mrow"><div class="mr-top"><span class="mr-label">${o.label}</span><span class="stamp">${o.stamp}</span></div>`+
     `<div class="mr-main"><span class="mr-val">${o.value} <small>${o.unit||''}</small></span></div>`+
     (o.verdict?`<div class="mr-verdict">${o.verdict}</div>`:'')+(o.bench?`<div class="mr-bench">${o.bench}</div>`:'')+
-    `<details><summary></summary><div class="src-body">Source: <a href="${o.srcUrl}" target="_blank" rel="noopener">${o.srcName}</a></div></details></div>`;
+    `<details class="srcd"><summary>Source &amp; date</summary><div class="src-body">Source: <a href="${o.srcUrl}" target="_blank" rel="noopener">${o.srcName}</a></div></details></div>`;
 }
 export function sectionHead(no,title,dek){ return `<div class="section-head"><span class="no">${no}</span><h2>${title}</h2>${dek?`<p class="dek">${dek}</p>`:''}</div>`; }
 export function fwd(html){ return `<div class="fwdline">Forward · ${html}</div>`; }
