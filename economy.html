@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=318fd96c" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=2668fd5b" />
 
 
 </head>
@@ -141,7 +141,12 @@ function line(pts,opts){
   let g='';for(let v=mn;v<=mx+1e-9;v+=step){const y=Y(v);g+=`<line class="gl" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${pl-5}" y="${(y+3).toFixed(1)}" text-anchor="end">${(+v.toFixed(2))}%</text>`;}
   if(mn<0&&mx>0){const yz=Y(0);g+=`<line class="zero" x1="${pl}" y1="${yz.toFixed(1)}" x2="${W-pr}" y2="${yz.toFixed(1)}"/>`;}
   g+=`<path class="ln" d="${pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.value).toFixed(1)).join(' ')}"/>`;
-  pts.forEach((p,i)=>{const anc=i===0?'start':(i===pts.length-1?'end':'middle');g+=`<circle class="dot" cx="${X(i).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="3.4" fill="var(--ink)"/><text class="axl" x="${X(i).toFixed(1)}" y="${H-8}" text-anchor="${anc}">${p.year}</text><text class="vlab" x="${X(i).toFixed(1)}" y="${(Y(p.value)-9).toFixed(1)}" text-anchor="${anc}">${(p.value>0?'+':'')+p.value.toFixed(1)}</text>`;});
+  pts.forEach((p,i)=>{const anc=i===0?'start':(i===pts.length-1?'end':'middle');
+    // a trough's value label goes BELOW its point, clear of the V it sits in — fixes 2020's -8.4
+    // colliding with the steeply-rising line and the y-axis at the left edge.
+    const isMin=i===0?(pts.length>1&&p.value<pts[1].value):(i===pts.length-1?p.value<pts[i-1].value:(p.value<pts[i-1].value&&p.value<pts[i+1].value));
+    const ly=isMin?Y(p.value)+18:Y(p.value)-9;
+    g+=`<circle class="dot" cx="${X(i).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="3.4" fill="var(--ink)"/><text class="axl" x="${X(i).toFixed(1)}" y="${H-8}" text-anchor="${anc}">${p.year}</text><text class="vlab" x="${X(i).toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anc}">${(p.value>0?'+':'')+p.value.toFixed(1)}</text>`;});
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">${g}</svg>`;
 }
 /* ---- dual line (exports vs imports) ---- */
@@ -250,7 +255,15 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   <p class="fblurb">A free public briefing on Mexico. Official Mexican data comes first; U.S. and multilateral sources provide context.</p>
 </div></footer>
 
-<script>document.addEventListener('click',function(e){var b=e.target.closest('.navtoggle');if(!b)return;b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');});</script>
+<script>document.addEventListener('click',function(e){
+  var b=e.target.closest('.navtoggle');
+  if(b){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');return;}
+  // Topics dropdown: click to open/close (a reliable backstop to hover). Clicking outside closes it.
+  var inDrop=e.target.closest('.navdrop');
+  document.querySelectorAll('.navdrop.open').forEach(function(o){if(o!==inDrop)o.classList.remove('open');});
+  var t=e.target.closest('.navdrop-t');
+  if(t){var d=t.closest('.navdrop');var on=d.classList.toggle('open');t.setAttribute('aria-expanded',on?'true':'false');}
+});</script>
 
 </body>
 </html>

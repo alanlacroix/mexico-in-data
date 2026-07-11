@@ -25,7 +25,15 @@
 {% include "partials/header.njk" %}
 {{ content | safe }}
 {% include "partials/footer.njk" %}
-<script>document.addEventListener('click',function(e){var b=e.target.closest('.navtoggle');if(!b)return;b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');});</script>
+<script>document.addEventListener('click',function(e){
+  var b=e.target.closest('.navtoggle');
+  if(b){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');return;}
+  // Topics dropdown: click to open/close (a reliable backstop to hover). Clicking outside closes it.
+  var inDrop=e.target.closest('.navdrop');
+  document.querySelectorAll('.navdrop.open').forEach(function(o){if(o!==inDrop)o.classList.remove('open');});
+  var t=e.target.closest('.navdrop-t');
+  if(t){var d=t.closest('.navdrop');var on=d.classList.toggle('open');t.setAttribute('aria-expanded',on?'true':'false');}
+});</script>
 {% if pageScript %}<script type="module">{{ pageScript | safe }}</script>{% endif %}
 </body>
 </html>

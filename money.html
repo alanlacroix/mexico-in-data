@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=318fd96c" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=2668fd5b" />
 
 
 </head>
@@ -323,7 +323,15 @@ function renderWire(){ return renderDevelopments('money'); }   // curated events
   <p class="fblurb">A free public briefing on Mexico. Official Mexican data comes first; U.S. and multilateral sources provide context.</p>
 </div></footer>
 
-<script>document.addEventListener('click',function(e){var b=e.target.closest('.navtoggle');if(!b)return;b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');});</script>
+<script>document.addEventListener('click',function(e){
+  var b=e.target.closest('.navtoggle');
+  if(b){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');return;}
+  // Topics dropdown: click to open/close (a reliable backstop to hover). Clicking outside closes it.
+  var inDrop=e.target.closest('.navdrop');
+  document.querySelectorAll('.navdrop.open').forEach(function(o){if(o!==inDrop)o.classList.remove('open');});
+  var t=e.target.closest('.navdrop-t');
+  if(t){var d=t.closest('.navdrop');var on=d.classList.toggle('open');t.setAttribute('aria-expanded',on?'true':'false');}
+});</script>
 
 </body>
 </html>
