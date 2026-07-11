@@ -6,6 +6,13 @@
 /design/*
   Cache-Control: public, max-age=31536000, immutable
 
+# assets/mb.js is an ES module the HTML imports by a fixed URL (not content-hashed),
+# so it MUST revalidate in lockstep with the HTML. If it were cached independently, a
+# fresh index.html could pair with a stale cached mb.js that lacks a newly-added export —
+# the module throws at load and the whole page renders blank. Revalidate always.
+/assets/*
+  Cache-Control: public, max-age=0, must-revalidate
+
 /data/*
   Cache-Control: public, max-age=300
 
