@@ -74,9 +74,13 @@ export const connectors = [
   // a wrong id shows "awaiting", never a fabricated number, and each carries its cadence for the freshness gate.
   makeConnector({ id: 'banxico-spei-operaciones', title: 'SPEI — número de operaciones (tercero a tercero)', metric: 'spei_ops', serie: 'SF273317', units: 'operaciones', cadence: 'monthly', maxPct: 40 }),
   makeConnector({ id: 'banxico-spei-monto', title: 'SPEI — monto total operado', metric: 'spei_value', serie: 'SF273318', units: 'MXN', cadence: 'monthly', maxPct: 40 }),
-  // card-POS (SF62272) did NOT resolve on the SIE API (fail-closed, went dark) — disabled so it isn't a
-  // permanently-failed feed. Re-add for v1.1 once the correct card-terminal series id is pinned.
-  // makeConnector({ id: 'banxico-tpv-operaciones', title: 'Pagos con tarjeta en TPV — número de operaciones', metric: 'card_pos_ops', serie: 'SF62272', units: 'operaciones', cadence: 'quarterly', maxPct: 45 }),
+  // Cards + ATM (Fable's merchant frontier). Quarterly, Banxico SIE — switch-sourced SYSTEM aggregates,
+  // never a named private company. Debit-at-POS + ATM cash confirmed; credit + e-commerce added once
+  // their specific series ids are pinned. (SF62272 total-TPV went dark, so we use the debit series.)
+  makeConnector({ id: 'banxico-tpv-debito-ops',   title: 'TPV — operaciones con tarjeta de débito', metric: 'debit_pos_ops',   serie: 'SF62273', units: 'operaciones',  cadence: 'quarterly', maxPct: 45 }),
+  makeConnector({ id: 'banxico-tpv-debito-monto', title: 'TPV — importe con tarjeta de débito',     metric: 'debit_pos_value', serie: 'SF62279', units: 'million MXN', cadence: 'quarterly', maxPct: 45 }),
+  makeConnector({ id: 'banxico-cajeros-ops',      title: 'Cajeros — retiros de efectivo (operaciones)', metric: 'atm_ops',    serie: 'SF62269', units: 'operaciones',  cadence: 'quarterly', maxPct: 40 }),
+  makeConnector({ id: 'banxico-cajeros-monto',    title: 'Cajeros — retiros de efectivo (importe)',     metric: 'atm_value',  serie: 'SF62275', units: 'million MXN', cadence: 'quarterly', maxPct: 40 }),
   makeConnector({ id: 'banxico-remesas-electronicas', title: 'Remesas — transferencias electrónicas', metric: 'remittances_electronic', serie: 'SE27806', units: 'million US$', cadence: 'monthly', maxPct: 25 }),
   // CoDi is published DAILY (SF335701). Aggregate to monthly totals; drop the trailing partial month so a
   // half-summed current month never reads as a crash.
