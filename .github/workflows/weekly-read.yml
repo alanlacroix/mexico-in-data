@@ -1,0 +1,45 @@
+name: weekly-read
+# The LLM layer for The Read — WEEKLY, not per-pull (Fable: the model doesn't need to re-narrate every
+# 6 hours, and this is the only step that costs money). Rebuilds the deterministic facts pack, then has
+# Claude draft the narrative with every number a validated placeholder. Output is a DRAFT for review —
+# it does not auto-publish. No-op without ANTHROPIC_API_KEY.
+
+on:
+  schedule:
+    - cron: '0 13 * * 1'   # Mondays 13:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Rebuild the facts pack (deterministic)
+        working-directory: pipeline
+        run: node build-analysis.js
+
+      - name: Draft The Read (Claude, placeholder-validated, fail-closed)
+        working-directory: pipeline
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node build-read.js
+
+      - name: Commit the draft for review
+        run: |
+          git config user.name  "mexico-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/analysis/
+          if git diff --cached --quiet; then
+            echo "no draft change"
+          else
+            git commit -m "read: weekly draft $(date -u +%Y-%m-%d)"
+            git push
+          fi
