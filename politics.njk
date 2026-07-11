@@ -4,7 +4,7 @@ permalink: /politics.html
 title: "Politics — The Mexico Brief"
 description: "Who governs Mexico, in dated facts: President Sheinbaum, Morena's congressional supermajority, the elected judiciary, presidential approval, and the June 2027 midterm calendar. Every figure links to its source with the date it was published."
 ogTitle: "Politics — The Mexico Brief"
-ogDescription: "Sheinbaum, Morena's supermajority, and the June 2027 midterms. Every figure links to its source with its date; the one poll is stamped as a poll."
+ogDescription: "Sheinbaum, Morena's supermajority, and the June 2027 midterms. The one poll is stamped as a poll."
 ---
 {% raw %}
 <style>
@@ -148,7 +148,7 @@ ogDescription: "Sheinbaum, Morena's supermajority, and the June 2027 midterms. E
       <span class="asof" id="board-asof"></span>
     </div>
     <div class="tablero" id="tablero"></div>
-    <p class="blk-note">Politics has no official real-time series, so these are dated facts rather than a live feed. The one poll figure is stamped with its polling house and field date.</p>
+    <p class="blk-note">Politics has no official real-time series, so these are dated facts rather than a live feed.</p>
   </section>
 
   <!-- 3 · BACKGROUND (migrated from the homepage's Q7) -->
@@ -162,7 +162,7 @@ ogDescription: "Sheinbaum, Morena's supermajority, and the June 2027 midterms. E
 
   <!-- 5 · LATEST -->
   <section class="blk" id="latest">
-    <div class="section-head"><span class="no">News</span><h2>Latest</h2><p class="dek">Government and politics headlines, each dated and linked to its source.</p></div>
+    <div class="section-head"><span class="no">News</span><h2>Latest</h2><p class="dek">Government and politics headlines.</p></div>
     <div id="wire-list"></div>
   </section>
 
@@ -173,7 +173,7 @@ ogDescription: "Sheinbaum, Morena's supermajority, and the June 2027 midterms. E
       <a href="/#q7"><div class="tk">Context</div><div class="th">The full briefing →</div><div class="td">The full governance question on the homepage, alongside the US relationship, security, and the outlook.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.ine.mx/voto-y-elecciones/calendario-electoral/" target="_blank" rel="noopener">INE</a> (electoral calendar &amp; results) · <a href="https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum" target="_blank" rel="noopener">AS/COA Approval Tracker</a> (Mitofsky · AtlasIntel) · <a href="https://www.diputados.gob.mx" target="_blank" rel="noopener">Cámara de Diputados</a> &amp; <a href="https://www.gob.mx/presidencia" target="_blank" rel="noopener">Presidencia</a> (composition, the Informe). Each fact above carries its date and links to the source listed here.</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.ine.mx/voto-y-elecciones/calendario-electoral/" target="_blank" rel="noopener">INE</a> (electoral calendar &amp; results) · <a href="https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum" target="_blank" rel="noopener">AS/COA Approval Tracker</a> (Mitofsky · AtlasIntel) · <a href="https://www.diputados.gob.mx" target="_blank" rel="noopener">Cámara de Diputados</a> &amp; <a href="https://www.gob.mx/presidencia" target="_blank" rel="noopener">Presidencia</a> (composition, the Informe). </p>
   </section>
 
 </div>
@@ -217,7 +217,7 @@ function renderBackground(){
       `<div class="fc-row"><span class="fc-k">Signature change</span><span class="fc-v">2024–25 judicial reform: judges now <b>elected by popular vote</b></span></div>`+
       `<div class="fc-row"><span class="fc-k">Next federal vote</span><span class="fc-v"><b>Jun 6, 2027</b> — midterms: all 500 deputies + 17 governorships</span></div>`+
     `</div>`+
-    `<div class="honesty">No official real-time series exists for political sentiment. The figure below is a named poll, stamped with its polling house and field date.</div>`+
+    `<div class="honesty">No official real-time series exists for political sentiment. The approval figure below is a poll range, and the two houses sit almost 20 points apart.</div>`+
     staticRow({label:'Presidential approval (Sheinbaum)',value:'49–68',unit:'% (by pollster)',stamp:'POLL · Jun 2026',verdict:'Wide range by method: Mitofsky ~68%, AtlasIntel ~49% (first read below 50%). Trend is gently down from very high levels.',bench:'vs ~60% first-year average',srcName:'AS/COA Approval Tracker (Mitofsky · AtlasIntel)',srcUrl:'https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum'})+
     fwd(`The <b>2027 midterms</b> are the next scheduled test of the supermajority. <a href="#watch">See what to watch ↓</a>`)+
     `<div class="ctxline">Gloss: <b>Morena</b> = the governing party (founded 2014) · <b>qualified supermajority</b> = a two-thirds bloc able to amend the constitution · <b>midterms</b> = the mid-sexenio federal vote that renews the entire Chamber of Deputies.</div>`;
@@ -231,7 +231,7 @@ function renderWatch(){
     return POL_RX.test((e.label||'')+' '+(e.mechanism||''));});
   const now=Date.now();
   const up=pol.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
-  if(!up.length) return `<div class="cb-empty">Nothing dated on the political calendar yet — scheduled events will appear here as they are set.</div>`;
+  if(!up.length) return `<div class="cb-empty">No political events are dated on the calendar yet.</div>`;
   return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind||''}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }

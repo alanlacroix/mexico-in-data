@@ -2,7 +2,7 @@
 layout: base.njk
 permalink: /society.html
 title: "Society — The Mexico Brief"
-description: "Mexico's society in official numbers: poverty at a record low, the minimum wage rising by policy, remittances, jobs and population. Every figure is dated and links to its source."
+description: "Mexico's society in official numbers: poverty at a record low, the minimum wage rising by policy, remittances, jobs and population."
 ogTitle: "Society — The Mexico Brief"
 ogDescription: "Poverty, wages, jobs and migration in official numbers, updated every six hours."
 ---
@@ -197,7 +197,7 @@ ogDescription: "Poverty, wages, jobs and migration in official numbers, updated 
 
   <!-- 5 · LATEST -->
   <section class="blk" id="latest">
-    <div class="section-head"><span class="no">News</span><h2>Latest</h2><p class="dek">Wages, jobs, poverty and migration headlines, each dated and linked to its source.</p></div>
+    <div class="section-head"><span class="no">News</span><h2>Latest</h2><p class="dek">Wages, jobs, poverty and migration headlines.</p></div>
     <div id="wire-list"></div>
   </section>
 
@@ -208,7 +208,7 @@ ogDescription: "Poverty, wages, jobs and migration in official numbers, updated 
       <a href="/atlas.html"><div class="tk">By municipality</div><div class="th">The Atlas →</div><div class="td">Poverty for each of 2,469 municipalities. The national average hides wide differences between them; search or tap one to see its rate against the national benchmark.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / CONEVAL (multidimensional poverty) · <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE</a> / CONASAMI (minimum wage, remittances) · <a href="https://data.worldbank.org/country/mexico" target="_blank" rel="noopener">World Bank</a> (unemployment, population, GDP per capita) · CNE / Sener (fuel prices). Each figure above shows its publication date and links to the series it came from.</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / CONEVAL (multidimensional poverty) · <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE</a> / CONASAMI (minimum wage, remittances) · <a href="https://data.worldbank.org/country/mexico" target="_blank" rel="noopener">World Bank</a> (unemployment, population, GDP per capita) · CNE / Sener (fuel prices).</p>
   </section>
 
 </div>
@@ -268,7 +268,7 @@ function renderBackground(){
     staticRow({label:'Poverty (national)',value:P.rate,unit:P.unit,stamp:P.stamp,
       verdict:`Multidimensional poverty fell to <b>${P.rate}%</b> in ${P.year}, the lowest on record, down ${P.dropPp} points from ${P.prior}% in ${P.priorYear} (${P.fewer} fewer people in poverty). It is INEGI's first poverty measurement since it took over from CONEVAL.`,
       bench:`vs ${P.prior}% in ${P.priorYear}`,srcName:P.srcName,srcUrl:P.srcUrl})+
-    construccion({l:'Formal jobs & average formal wage (IMSS)',src:'IMSS (Datos Abiertos)',cad:'monthly',eta:'National totals — connecting next.'})+
+    construccion({l:'Formal jobs & average formal wage (IMSS)',src:'IMSS (Datos Abiertos)',cad:'monthly',eta:'National totals; feed not yet connected.'})+
     fwd(`No official forecast exists for household welfare. Real wages keep rising by policy, but weak GDP growth (<a href="/#q4">Q4</a>) caps the pace.`)+
     `<div class="ctxline">Gloss: <b>CONEVAL</b> = the federal poverty agency · <b>IMSS</b> = social security, i.e. the formal-jobs registry · <b>remittances</b> = money Mexicans abroad send home.</div>`;
 }

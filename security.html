@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Security — The Mexico Brief</title>
-<meta name="description" content="Mexico&#39;s security in official numbers: the national homicide rate, its easing from the 2018–19 peak, and why place-level crime statistics mislead. Every figure links to its source, with the date it was published." />
+<meta name="description" content="Mexico&#39;s security in official numbers: the national homicide rate, its easing from the 2018–19 peak, and why place-level crime statistics mislead." />
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Security — The Mexico Brief" />
@@ -236,7 +236,7 @@
 
   <!-- 5 · LATEST -->
   <section class="blk" id="latest">
-    <div class="section-head"><span class="no">News</span><h2>Latest</h2><p class="dek">Security and violence headlines, each dated and linked to its source.</p></div>
+    <div class="section-head"><span class="no">News</span><h2>Latest</h2><p class="dek">Security and violence headlines.</p></div>
     <div id="wire-list"></div>
   </section>
 
@@ -247,7 +247,7 @@
       <a href="./atlas.html"><div class="tk">Municipal detail</div><div class="th">The Atlas →</div><div class="td">A national number hides local variation. Search or tap any of 2,469 municipalities for its poverty rate against the national benchmark.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.gob.mx/sesnsp" target="_blank" rel="noopener">SESNSP</a> (Sistema Nacional de Seguridad Pública — reported homicides) and <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (the statistical audit of the count). Each figure above links to its source, with the date it was published.</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.gob.mx/sesnsp" target="_blank" rel="noopener">SESNSP</a> (Sistema Nacional de Seguridad Pública — reported homicides) and <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (the statistical audit of the count).</p>
   </section>
 
 </div>
@@ -308,7 +308,7 @@ function renderWatch(){
   const sec=ev.filter(e=>SEC_RE.test((e.label||'')+' '+(e.mechanism||'')+' '+(e.kind||'')));
   const now=Date.now();
   const up=sec.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
-  if(!up.length) return `<div class="cb-empty">Nothing dated on the calendar yet. Official crime releases and security hearings will appear here as they're scheduled.</div>`;
+  if(!up.length) return `<div class="cb-empty">No security releases are dated on the calendar yet.</div>`;
   return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind||''}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
