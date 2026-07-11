@@ -208,7 +208,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, EVENTS, NEWS, sectionHead, staticRow, fwd, evDate, relTime, tagChip } from '/assets/mb.js?v=2';
+import { loadSeries, EVENTS, NEWS, sectionHead, staticRow, fwd, evDate, relTime, tagChip, renderDevelopments } from '/assets/mb.js?v=3';
 
 /* the politics keyword filter — shared by the calendar (block 4) and the wire (block 5).
    Spanish + English institution words; \b guards stop "selecciones" matching "elecci" etc. */
@@ -264,15 +264,7 @@ function renderWatch(){
 }
 
 /* block 5 — latest government/politics headlines */
-function renderWire(){
-  const arts=(NEWS&&NEWS.articles)||[];
-  const pol=arts.filter(a=>{const t=(a.tag||'').toLowerCase();
-    if(['politics','government','policy'].includes(t))return true;
-    return POL_RX.test((a.title||'')+' '+(a.beat||''));});
-  if(!pol.length) return `<div class="cb-empty">No political headlines in the latest run — the next scheduled fetch will post them here.</div>`;
-  return `<div class="wire">`+pol.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
-    return `<div class="wi">${tagChip(a.tag)}<div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
-}
+function renderWire(){ return renderDevelopments('politics'); }   // curated events for this section, not the raw wire
 
 /* boot */
 (async()=>{

@@ -234,6 +234,22 @@ export function tagChip(t){ return `<span class="wtag ${t||''}">${t||'econ'}</sp
    root-level page, e.g. /money.html). Missing files resolve to null / a skipped series,
    never an exception — callers render "not yet wired" rather than an error. */
 const MONEY_SERIES=['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-reservas','banxico-remesas'];
+// Curated developments for one section — the event log (happening.json) filtered to a section,
+// most-recent first. Public surfaces render THIS, never the raw news wire (curated-only law,
+// Fable 2026-07-11). HAPPENING is populated by loadSeries(); markup reuses each page's existing
+// .wire / .wi / .wt / .wm styles.
+export function renderDevelopments(section, opts){
+  opts=opts||{};
+  const ev=((HAPPENING&&HAPPENING.events)||[]).filter(e=>e.section===section)
+    .sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))).slice(0, opts.max||6);
+  if(!ev.length) return `<div style="font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0">No major developments logged yet.</div>`;
+  return `<div class="wire">`+ev.map(e=>{
+    const ext=/^https?:/.test(e.url||''); const d=e.date?new Date(e.date+'T00:00:00'):null;
+    const dd=d&&!isNaN(d)?d.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+    return `<div class="wi"><div class="wbody"><a class="wt" href="${e.url||'#'}"${ext?' target="_blank" rel="noopener"':''}>${e.title||''}</a><div class="wm">${e.source||''}${dd?' · '+dd:''}</div></div></div>`;
+  }).join('')+`</div>`;
+}
+
 export async function loadSeries(ids){
   const SER=ids||MONEY_SERIES;
   const [news,events,happening,...ser]=await Promise.all([

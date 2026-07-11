@@ -251,7 +251,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, staticRow, sectionHead, fwd, evDate, relTime, tagChip, wireCharts } from '/assets/mb.js?v=2';
+import { loadSeries, S, EVENTS, NEWS, staticRow, sectionHead, fwd, evDate, relTime, tagChip, wireCharts, renderDevelopments } from '/assets/mb.js?v=3';
 
 /* The one hard security number, authored ONCE — the tile board (block 2) and the
    Background metric row (block 3) both render from this object, so a tile and its
@@ -310,13 +310,7 @@ function renderWatch(){
 }
 
 /* block 5 — latest security / violence headlines */
-function renderWire(){
-  const arts=(NEWS&&NEWS.articles)||[];
-  const sec=arts.filter(a=>SEC_RE.test(a.title||''));
-  if(!sec.length) return `<div class="cb-empty">No security headlines yet. The next scheduled run will post them here.</div>`;
-  return `<div class="wire">`+sec.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
-    return `<div class="wi">${tagChip(a.tag)}<div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
-}
+function renderWire(){ return renderDevelopments('security'); }   // curated events for this section, not the raw wire
 
 /* boot */
 (async()=>{

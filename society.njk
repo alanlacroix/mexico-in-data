@@ -215,7 +215,7 @@ ogDescription: "Poverty, wages, jobs and migration in official numbers, updated 
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts } from '/assets/mb.js?v=2';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments } from '/assets/mb.js?v=3';
 
 /* series this section reads — the Q6 numbers plus the same-file living-standards /
    demography series (World Bank). loadSeries also pulls the news wire + events. */
@@ -285,14 +285,7 @@ function renderWatch(){
 }
 
 /* block 5 — latest society headlines (wages, jobs, poverty, migration) */
-function renderWire(){
-  const arts=(NEWS&&NEWS.articles)||[];
-  const rx=/pobreza|salario|salarial|empleo|desempleo|desigualdad|migraci|migrante|remesas|remittance|poblaci|imss|trabajador|informal|welfare|bienestar|coneval|conasami|pension|jornada|desarrollo humano|social|wage|poverty|inequality|\bjobs\b|\blabor\b/i;
-  const soc=arts.filter(a=>rx.test(a.title||''));
-  if(!soc.length) return `<div class="cb-empty">No society headlines yet. The next scheduled run will post them here.</div>`;
-  return `<div class="wire">`+soc.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
-    return `<div class="wi">${tagChip(a.tag)}<div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
-}
+function renderWire(){ return renderDevelopments('society'); }   // curated events for this section, not the raw wire
 
 /* boot */
 (async()=>{

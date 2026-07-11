@@ -237,7 +237,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts } from '/assets/mb.js?v=2';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments } from '/assets/mb.js?v=3';
 
 /* the live tile board (block 2) — same JSON as the metric rows below */
 const TILES=[
@@ -288,15 +288,7 @@ function renderWatch(){
 }
 
 /* block 5 — latest markets/money headlines */
-function renderWire(){
-  const arts=(NEWS&&NEWS.articles)||[];
-  const money=arts.filter(a=>{const t=(a.tag||'');
-    if(['markets','money','economy','trade'].includes(t))return true;
-    return /peso|inflation|banxico|rate|remittance|remesas|market|econom|tariff|trade|usmca|nearshor|invest/i.test(a.title||'');});
-  if(!money.length) return `<div class="cb-empty">No headlines yet — the next scheduled run will post them here.</div>`;
-  return `<div class="wire">`+money.slice(0,8).map(a=>{const d=a.date?new Date(a.date):null;const w=d&&!isNaN(d)?relTime(d.getTime()):'';
-    return `<div class="wi">${tagChip(a.tag)}<div class="wbody"><a class="wt" href="${a.url}" target="_blank" rel="noopener">${a.title}</a><div class="wm">${a.domain||''}${w?' · '+w:''}</div></div></div>`;}).join('')+`</div>`;
-}
+function renderWire(){ return renderDevelopments('money'); }   // curated events for this section, not the raw wire
 
 /* boot */
 (async()=>{
