@@ -241,6 +241,9 @@
   .masthead .fresh{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .masthead .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
   .hero h1#lead{margin-top:16px}
+  .hero + section .bh{margin-top:26px}   /* the Brief follows the hero closely, not a full section gap */
+  .hero h1#lead a{color:inherit;text-decoration:none;border-bottom:3px solid transparent;transition:border-color .12s}
+  .hero h1#lead a:hover{border-bottom-color:var(--green)}
   .wire-note a{color:var(--green)}
 
   /* 7 · PRIMER — evergreen orientation, moved out of the top and collapsed */
@@ -495,7 +498,12 @@ function renderWatch(){
   let briefBody=brief;
   if(brief&&brief.paragraphs&&brief.paragraphs[0]&&brief.paragraphs[0].length){
     const lead=brief.paragraphs[0][0];
-    if(lead&&lead.text){ const le=document.getElementById('lead'); if(le) le.textContent=liveText(lead).replace(/\s*—\s*/g,', ').replace(/\.\s*$/,''); }
+    if(lead&&lead.text){ const le=document.getElementById('lead');
+      if(le){ const t=liveText(lead).replace(/\s*—\s*/g,', ').replace(/\.\s*$/,'');
+        // the headline is a link to the lead story's source, same rule as every Brief line
+        le.innerHTML=lead.href?`<a href="${esc(lead.href)}"${/^https?:/.test(lead.href)?' target="_blank" rel="noopener"':''} title="Source: ${esc(lead.source||'source')}">${esc(t)}</a>`:esc(t);
+      }
+    }
     briefBody=Object.assign({},brief,{paragraphs:[brief.paragraphs[0].slice(1)].concat(brief.paragraphs.slice(1)).filter(p=>p&&p.length)});
   }
   // the lead: the brief synthesis (built by the pipeline; each sentence links to its source).
