@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Politics — The Mexico Brief</title>
+<title>Politics · The Mexico Brief</title>
 <meta name="description" content="Who governs Mexico, in dated facts: President Sheinbaum, Morena&#39;s congressional supermajority, the elected judiciary, presidential approval, and the June 2027 midterm calendar. Every figure links to its source with the date it was published." />
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Politics — The Mexico Brief" />
+<meta property="og:title" content="Politics · The Mexico Brief" />
 <meta property="og:description" content="Sheinbaum, Morena&#39;s supermajority, and the June 2027 midterms. The one poll is stamped as a poll." />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1063d0e5" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=b116ada5" />
 
 
 </head>
@@ -168,15 +168,15 @@
   <!-- 1 · HEADER -->
   <section class="hero" id="top">
     <span class="eyebrow">Politics</span>
-    <h1 class="state">One party, a supermajority</h1>
-    <p class="dek">Morena and its allies hold a constitution-amending majority, and President Sheinbaum remains broadly popular.</p>
+    <h1 class="state">One coalition holds two-thirds of Congress</h1>
+    <p class="dek">Morena and its allies hold the two-thirds of Congress needed to amend the constitution. Polls put President Sheinbaum's approval between 49% and 68% (Jun 2026).</p>
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
-      <div><h2 style="display:inline">The state of play now</h2></div>
+      <div><h2 style="display:inline">Who governs, in dated facts</h2></div>
       <span class="asof" id="board-asof"></span>
     </div>
     <div class="tablero" id="tablero"></div>
@@ -188,7 +188,7 @@
 
   <!-- 4 · WHAT TO WATCH -->
   <section class="blk" id="watch">
-    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">Scheduled political events: the annual Informe, the June 2027 midterms, and the events that test the supermajority.</p></div>
+    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">Scheduled political events: the president's annual Informe report to Congress, and the June 2027 midterms.</p></div>
     <div id="watch-list"></div>
   </section>
 
@@ -202,10 +202,10 @@
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="/#q7"><div class="tk">Context</div><div class="th">The full briefing →</div><div class="td">The full governance question on the homepage, alongside the US relationship, security, and the outlook.</div></a>
+      <a href="/#q7"><div class="tk">Context</div><div class="th">The full briefing →</div><div class="td">The homepage briefing: who governs, the US relationship, security, and what to watch next.</div></a>
       <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.ine.mx/voto-y-elecciones/calendario-electoral/" target="_blank" rel="noopener">INE</a> (electoral calendar &amp; results) · <a href="https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum" target="_blank" rel="noopener">AS/COA Approval Tracker</a> (Mitofsky · AtlasIntel) · <a href="https://www.diputados.gob.mx" target="_blank" rel="noopener">Cámara de Diputados</a> &amp; <a href="https://www.gob.mx/presidencia" target="_blank" rel="noopener">Presidencia</a> (composition, the Informe). </p>
+    <p class="srcnote">Sources for this section: <a href="https://www.ine.mx/voto-y-elecciones/calendario-electoral/" target="_blank" rel="noopener">INE</a> (electoral calendar &amp; results) · <a href="https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum" target="_blank" rel="noopener">Americas Society/Council of the Americas (AS/COA) Approval Tracker</a> (Mitofsky · AtlasIntel) · <a href="https://www.diputados.gob.mx" target="_blank" rel="noopener">Cámara de Diputados</a> &amp; <a href="https://www.gob.mx/presidencia" target="_blank" rel="noopener">Presidencia</a> (composition, the Informe) · Constitution (CPEUM) &amp; <a href="https://www.dof.gob.mx" target="_blank" rel="noopener">Diario Oficial de la Federación (DOF)</a> (presidential term, the judicial reform). </p>
   </section>
 
 </div>
@@ -224,11 +224,11 @@ const POL_RX=/sheinbaum|morena|gobierno|pol[ií]tic|\belecc|\belect|comicios|con
    re-authored live number). The one poll figure carries a "not live" chip. */
 const TILES=[
   {tl:'Head of government', tv:'Sheinbaum', sz:23, tb:'Claudia Sheinbaum · Morena', stamp:'SWORN IN OCT 2024', tsrc:'Presidencia / INE'},
-  {tl:'Presidential term', tv:'2024–2030', sz:29, tb:'The six-year sexenio · no re-election', stamp:'TO 2030', tsrc:'CPEUM'},
-  {tl:'Congress', tv:'Supermajority', sz:19, tb:'Morena + allies — a qualified bloc able to amend the constitution', stamp:'SINCE 2024', tsrc:'Cámara de Diputados'},
-  {tl:'Judiciary', tv:'Elected', sz:26, tb:'Judges now chosen by popular vote — the 2024–25 reform', stamp:'REFORM 2024–25', tsrc:'DOF / reform'},
+  {tl:'Presidential term', tv:'2024–2030', sz:29, tb:'The six-year sexenio · no re-election', stamp:'TO 2030', tsrc:'Constitution (CPEUM)'},
+  {tl:'Congress', tv:'Two-thirds', sz:19, tb:'Morena + allies, enough to amend the constitution', stamp:'SINCE 2024', tsrc:'Cámara de Diputados'},
+  {tl:'Judiciary', tv:'Elected', sz:26, tb:'Judges now chosen by popular vote under the 2024–25 reform', stamp:'REFORM 2024–25', tsrc:'Diario Oficial (DOF)'},
   {tl:'Presidential approval', tv:'49–68 <small>%</small>', tb:'By pollster · Mitofsky ~68, AtlasIntel ~49', stamp:'POLL · JUN 2026', chip:'not live', tsrc:'AS/COA tracker'},
-  {tl:'Next federal vote', tv:'Jun 2027', sz:27, tb:'Midterms — all 500 deputies + 17 governorships', stamp:'SCHEDULED', tsrc:'INE'},
+  {tl:'Next federal vote', tv:'Jun 2027', sz:27, tb:'Midterms: all 500 deputies + 17 governorships', stamp:'SCHEDULED', tsrc:'INE'},
 ];
 function renderTiles(){
   return TILES.map(t=>`<div class="tile" data-go="background"><div class="tl">${t.tl}</div>`+
@@ -242,17 +242,17 @@ function renderTiles(){
    forward line, built exactly as index.njk builds it. No chart: q7 carries no political
    time series (none exists), so this stays a fact card, not a fabricated exhibit. */
 function renderBackground(){
-  return sectionHead('Background',"Who governs, and is it stable?","One party governs with a supermajority; the president is popular but slipping.")+
+  return sectionHead('Background',"Morena and its allies can amend the constitution on their own","The bloc has held two-thirds of Congress since 2024. Sheinbaum's approval ranges from 49% to 68% by pollster (Jun 2026).")+
     `<div class="factcard">`+
       `<div class="fc-row"><span class="fc-k">Head of government</span><span class="fc-v"><b>Claudia Sheinbaum</b> (Morena) · sworn in Oct 2024, term to 2030</span></div>`+
-      `<div class="fc-row"><span class="fc-k">Legislature</span><span class="fc-v">Morena + allies hold a <b>qualified supermajority</b> — able to amend the constitution</span></div>`+
+      `<div class="fc-row"><span class="fc-k">Legislature</span><span class="fc-v">Morena + allies hold a <b>two-thirds supermajority</b>, enough to amend the constitution</span></div>`+
       `<div class="fc-row"><span class="fc-k">Signature change</span><span class="fc-v">2024–25 judicial reform: judges now <b>elected by popular vote</b></span></div>`+
-      `<div class="fc-row"><span class="fc-k">Next federal vote</span><span class="fc-v"><b>Jun 6, 2027</b> — midterms: all 500 deputies + 17 governorships</span></div>`+
+      `<div class="fc-row"><span class="fc-k">Next federal vote</span><span class="fc-v">Midterms on <b>Jun 6, 2027</b>: all 500 deputies + 17 governorships</span></div>`+
     `</div>`+
-    `<div class="honesty">No official real-time series exists for political sentiment. The approval figure below is a poll range, and the two houses sit almost 20 points apart.</div>`+
-    staticRow({label:'Presidential approval (Sheinbaum)',value:'49–68',unit:'% (by pollster)',stamp:'POLL · Jun 2026',verdict:'Wide range by method: Mitofsky ~68%, AtlasIntel ~49% (first read below 50%). Trend is gently down from very high levels.',bench:'vs ~60% first-year average',srcName:'AS/COA Approval Tracker (Mitofsky · AtlasIntel)',srcUrl:'https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum'})+
-    fwd(`The <b>2027 midterms</b> are the next scheduled test of the supermajority. <a href="#watch">See what to watch ↓</a>`)+
-    `<div class="ctxline">Gloss: <b>Morena</b> = the governing party (founded 2014) · <b>qualified supermajority</b> = a two-thirds bloc able to amend the constitution · <b>midterms</b> = the mid-sexenio federal vote that renews the entire Chamber of Deputies.</div>`;
+    `<div class="honesty">No official real-time series exists for political sentiment. The approval figure below is a poll range, and the two pollsters differ by almost 20 points.</div>`+
+    staticRow({label:'Presidential approval (Sheinbaum)',value:'49–68',unit:'% (by pollster)',stamp:'POLL · Jun 2026',verdict:'Mitofsky puts approval near 68% and AtlasIntel near 49%, almost 20 points apart. AtlasIntel\'s first read came in below 50%. The trend in both series is down.',bench:'vs a ~60% average over her first year',srcName:'AS/COA Approval Tracker (Mitofsky · AtlasIntel)',srcUrl:'https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum'})+
+    fwd(`Morena's two-thirds bloc next faces voters at the <b>June 6, 2027</b> midterms. <a href="#watch">See what to watch ↓</a>`)+
+    `<div class="ctxline">Gloss: <b>Morena</b> = the governing party (founded 2014) · <b>supermajority</b> = a two-thirds bloc able to amend the constitution · <b>midterms</b> = the federal vote halfway through the six-year presidential term that renews the entire Chamber of Deputies.</div>`;
 }
 
 /* block 4 — politics-relevant catalyst calendar (kind political/election + keyword match) */
@@ -282,8 +282,8 @@ function renderWire(){ return renderDevelopments('politics'); }   // curated eve
   document.getElementById('board-asof').textContent='as of '+asof;
   document.getElementById('tablero').innerHTML=renderTiles();
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Jun 2026 poll',
-    p1:`Morena and its allies hold a qualified supermajority in Congress, enough to amend the constitution on their own, and they've already used it: after the <b>2024–25</b> judicial reform, judges are now chosen by popular vote. President Sheinbaum, sworn in <b>October 2024</b> for a term running to <b>2030</b>, stays broadly popular, but how popular depends on who's asking — Mitofsky puts her near <b>68%</b>, AtlasIntel at <b>49%</b>, its first read below half, and the trend is gently down from high levels.`,
-    p2:`That spread matters because no official real-time gauge of political sentiment exists — only polls that disagree by almost 20 points — and the next test is the <b>June 6, 2027</b> midterms, when all <b>500 deputies</b> and <b>17 governorships</b> are on the ballot and the supermajority is at stake.`,
+    p1:`Morena and its allies hold a two-thirds supermajority in Congress, enough to amend the constitution on their own. They have already used it: after the <b>2024–25</b> judicial reform, judges are now chosen by popular vote. President Sheinbaum, sworn in <b>October 2024</b>, serves a term that runs to <b>2030</b>. Her approval depends on the pollster: Mitofsky puts her near <b>68%</b>, AtlasIntel at <b>49%</b>. It was AtlasIntel's first reading below 50%, and the trend in both series is down.`,
+    p2:`No official real-time gauge of political sentiment exists: only polls that disagree by almost 20 points. The next federal vote is the <b>June 6, 2027</b> midterms. All <b>500 deputies</b> and <b>17 governorships</b> are on the ballot, and the result decides whether the two-thirds bloc holds.`,
     src:'INE, Cámara de Diputados, AS/COA Approval Tracker (Mitofsky, AtlasIntel)'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();

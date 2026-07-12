@@ -1,10 +1,10 @@
 ---
 layout: base.njk
 permalink: /security.html
-title: "Security — The Mexico Brief"
-description: "Mexico's security in official numbers: the national homicide rate, its easing from the 2018–19 peak, and why place-level crime statistics mislead."
-ogTitle: "Security — The Mexico Brief"
-ogDescription: "The homicide rate is the one danger number that compares across places, shown with its source and date. This page also explains why place-level crime maps mislead."
+title: "Security · The Mexico Brief"
+description: "Mexico's homicide rate fell to about 26 per 100,000 in 2024 from a 2018 peak of about 29. The page also covers why place-level crime statistics mislead."
+ogTitle: "Security · The Mexico Brief"
+ogDescription: "Mexico's homicide rate fell to about 26 per 100,000 in 2024 from a 2018 peak of about 29, with source and date. Place-level crime maps mislead, and the page shows why."
 ---
 {% raw %}
 <style>
@@ -179,9 +179,9 @@ ogDescription: "The homicide rate is the one danger number that compares across 
   <!-- 1 · HEADER -->
   <section class="hero" id="top">
     <span class="eyebrow">Security</span>
-    <h1 class="state">Homicides, off the peak</h1>
-    <p class="dek">The national homicide rate is high but down from its 2018–19 high, the most comparable measure of lethal violence across states.</p>
-    <p class="statedate">as of <b id="asof">—</b></p>
+    <h1 class="state">The homicide rate fell to ~26 per 100,000 in 2024</h1>
+    <p class="dek">Mexico recorded about 26 homicides per 100,000 people in 2024, down from a peak of about 29 in 2018. The rate is the most comparable official measure of lethal violence across states.</p>
+    <p class="statedate">as of <b id="asof">…</b></p>
   </section>
 
   <!-- 2 · THE NUMBERS NOW -->
@@ -191,7 +191,7 @@ ogDescription: "The homicide rate is the one danger number that compares across 
       <span class="asof" id="board-asof"></span>
     </div>
     <div class="tablero" id="tablero"></div>
-    <p class="blk-note">This section compares places on one metric, the homicide rate, because it is the most comparable official measure of lethal violence across states. Reported-crime counts are harder to compare, since reporting varies widely by place.</p>
+    <p class="blk-note">About 90% of crimes never get reported to police (ENVIPE, INEGI), so reported-crime counts track filing habits, not danger. The board shows one metric, the homicide rate.</p>
   </section>
 
   <!-- 3 · BACKGROUND (migrated from the homepage's Q9) -->
@@ -199,7 +199,7 @@ ogDescription: "The homicide rate is the one danger number that compares across 
 
   <!-- 4 · WHAT TO WATCH -->
   <section class="blk" id="watch">
-    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">Official crime releases, hearings, and reviews that are already scheduled, each with its date.</p></div>
+    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">Official crime releases, hearings, and reviews that are already scheduled.</p></div>
     <div id="watch-list"></div>
   </section>
 
@@ -213,10 +213,10 @@ ogDescription: "The homicide rate is the one danger number that compares across 
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="./atlas.html"><div class="tk">Municipal detail</div><div class="th">The Atlas →</div><div class="td">A national number hides local variation. Search or tap any of 2,469 municipalities for its poverty rate against the national benchmark.</div></a>
-      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
+      <a href="./atlas.html"><div class="tk">Municipal detail</div><div class="th">The Atlas →</div><div class="td">Poverty rates for all 2,469 municipalities against the national benchmark. The Atlas maps poverty, not crime, because reported-crime counts do not compare across places.</div></a>
+      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its license, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.gob.mx/sesnsp" target="_blank" rel="noopener">SESNSP</a> (Sistema Nacional de Seguridad Pública — reported homicides) and <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (the statistical audit of the count).</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.gob.mx/sesnsp" target="_blank" rel="noopener">SESNSP</a> (Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública, reported homicides) and <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (homicides counted from death certificates). The ~90% unreported figure comes from ENVIPE, INEGI's crime victimization survey.</p>
   </section>
 
 </div>
@@ -235,25 +235,25 @@ const HOMICIDE={
   label:'Homicide rate (national)',
   value:'~26', unit:'per 100,000 · 2024',
   stamp:'ANNUAL · 2024',
-  verdict:'It runs well above the US rate (~6 per 100,000) and below the most violent Latin American peers. It has fallen from the 2018–19 peak and kept falling through 2025; September 2025 was the lowest month in nine years.',
+  verdict:'The 2024 rate ran more than four times the US rate of ~6 per 100,000. It fell from the ~29 peak in 2018.',
   bench:'vs US ~6 · peak ~29 in 2018',
   srcName:'SESNSP / INEGI',
   srcUrl:'https://www.gob.mx/sesnsp'
 };
 
 /* the place-level honesty caveat — migrated VERBATIM from Q9 */
-const HONESTY=`Why there's no per-municipality crime map: total reported crime measures how often people file police reports, not how dangerous a place is. With <b>~90% of crime unreported</b>, that inverts: quiet tourist towns with diligent reporting look "worse" than places where almost no one files. So the Atlas maps poverty, which is measured directly. Municipal homicide data is the next layer down.`;
+const HONESTY=`Why there's no per-municipality crime map: total reported crime measures how often people file police reports, not how dangerous a place is. With <b>~90% of crime unreported</b> (ENVIPE victimization survey, INEGI), the ranking inverts: quiet tourist towns where people file reports look "worse" than places where almost no one does. The Atlas maps poverty instead, which is measured directly. Municipal homicide data is not on the site yet.`;
 
 /* block 2 — the numbers now. Two dated tiles, both drawn from the Q9 homicide figure:
    the current rate and the peak it is easing from (no invented numbers). */
 function renderBoard(){
   const now=`<div class="tile" data-go="background"><div class="tl">Homicide rate · national</div>`+
-    `<div class="tv">~26 <small>per 100k · 2024</small></div>`+
-    `<div class="tb">vs US ~6 per 100k</div>`+
+    `<div class="tv">~26 <small>per 100,000 · 2024</small></div>`+
+    `<div class="tb">vs US ~6 per 100,000</div>`+
     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div></div>`;
   const peak=`<div class="tile" data-go="background"><div class="tl">2018 peak</div>`+
-    `<div class="tv">~29 <small>per 100k</small></div>`+
-    `<div class="tb">the high it's easing from</div>`+
+    `<div class="tv">~29 <small>per 100,000</small></div>`+
+    `<div class="tb">down to ~26 by 2024</div>`+
     `<span class="stamp">ANNUAL · 2018</span><span class="tsrc">SESNSP / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div></div>`;
   return now+peak;
 }
@@ -261,11 +261,11 @@ function renderBoard(){
 /* block 3 — Background, migrated from the homepage's Q9 (staticRow + honesty note +
    Atlas teaser + forward line), built exactly as index.njk builds it. */
 function renderBackground(){
-  return sectionHead('Background','How dangerous Mexico is, and why crime maps by place mislead','The homicide rate is the security number that compares across places; it has been easing from the 2018–19 peak.')+
+  return sectionHead('Background','How dangerous Mexico is, and why crime maps by place mislead','The national homicide rate fell from ~29 per 100,000 in 2018 to about 26 in 2024 and kept falling through 2025.')+
     staticRow({label:HOMICIDE.label,value:HOMICIDE.value,unit:HOMICIDE.unit,stamp:HOMICIDE.stamp,verdict:HOMICIDE.verdict,bench:HOMICIDE.bench,srcName:HOMICIDE.srcName,srcUrl:HOMICIDE.srcUrl})+
     `<div class="honesty">${HONESTY}</div>`+
-    `<a class="teaser" href="./atlas.html" style="margin-top:12px"><div class="tz-body"><div class="tz-k">The next layer down</div><div class="tz-h">Poverty in any of 2,469 municipalities →</div><div class="tz-d">A national number hides local variation. In the Atlas, search or tap a municipality for its poverty rate against the national benchmark.</div><span class="tz-go">Open the Atlas →</span></div></a>`+
-    fwd(`No credible short-term forecast exists for violence, so this section shows the current level and its trend rather than a predicted number.`);
+    `<a class="teaser" href="./atlas.html" style="margin-top:12px"><div class="tz-body"><div class="tz-k">Municipal detail</div><div class="tz-h">Poverty in any of 2,469 municipalities →</div><div class="tz-d">A national number hides local variation. In the Atlas, search or tap a municipality for its poverty rate against the national benchmark.</div><span class="tz-go">Open the Atlas →</span></div></a>`+
+    fwd(`No credible short-term forecast exists for violence. This section states the 2024 level and the change since the 2018 peak, not a predicted number.`);
 }
 
 /* security keyword filter — shared by the calendar and the wire */
@@ -293,8 +293,8 @@ function renderWire(){ return renderDevelopments('security'); }   // curated eve
   document.getElementById('board-asof').textContent='as of 2024 (latest annual)';
   document.getElementById('tablero').innerHTML=renderBoard();
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'2024 rate · trend to Sep 2025',
-    p1:`Mexico's homicide rate sits around <b>26 per 100,000</b> in 2024, still high but off its <b>~29</b> peak in 2018, and it kept easing through 2025 — <b>September 2025</b> was the lowest month in nine years. That's the number worth watching, because it's the one measure of lethal violence that compares cleanly across states. Reported-crime counts don't, since roughly <b>90%</b> of crime never gets filed, so a place that reports diligently can look worse than one where almost nobody does.`,
-    p2:`So the level is genuinely improving, but at more than four times the US rate of <b>~6 per 100,000</b>, Mexico is still far from safe, and one national figure hides how uneven the danger is from one state to the next.`,
+    p1:`Mexico's homicide rate fell to about <b>26 per 100,000</b> in 2024 from its <b>~29</b> peak in 2018. The decline held through 2025: SESNSP's monthly homicide count hit a nine-year low in <b>September 2025</b>.`,
+    p2:`The 2024 rate still ran more than four times the US rate of <b>~6 per 100,000</b>. One national figure hides the spread between states, and this page does not break that spread out yet.`,
     src:'SESNSP, INEGI'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();

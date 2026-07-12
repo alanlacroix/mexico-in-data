@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 permalink: /
-title: "The Mexico Brief — a live briefing on Mexico's economy in official numbers."
+title: "The Mexico Brief: Mexico's economy in official numbers."
 description: "Mexico's economy in official numbers: growth, the peso, inflation, jobs, investment, politics and security."
 ogTitle: "The Mexico Brief"
 ogDescription: "Mexico's economy in official numbers."
@@ -225,8 +225,8 @@ ogDescription: "Mexico's economy in official numbers."
 
   <!-- 1 · HERO -->
   <section class="hero">
-    <a class="dateline" href="/sources.html"><span class="dot"></span><span id="status">Official data · updated live</span></a>
-    <h1>Mexico, right now.</h1>
+    <a class="dateline" href="/sources.html"><span class="dot"></span><span id="status">Official data</span></a>
+    <h1>Mexico's economy produces about $1.9 trillion a year. We track it in official numbers.</h1>
   </section>
 
   <!-- 2 · THE BRIEF — the lead: a 2-paragraph synthesis, every sentence linked to the source below it -->
@@ -248,7 +248,7 @@ ogDescription: "Mexico's economy in official numbers."
 
   <!-- 3b · THE AREAS — the topic browse: each area = a 1–2 sentence read + its top headlines -->
   <section>
-    <div class="board-lbl"><div><span class="k">The areas</span> &nbsp; <h2 style="display:inline">Mexico by topic</h2></div><span class="asof" id="areas-asof"></span></div>
+    <div class="board-lbl"><div><span class="k">This week</span> &nbsp; <h2 style="display:inline">Mexico by topic</h2></div><span class="asof" id="areas-asof"></span></div>
     <div class="areas" id="areas"></div>
   </section>
 
@@ -265,11 +265,11 @@ ogDescription: "Mexico's economy in official numbers."
   <!-- 7 · PRIMER — new to Mexico? the evergreen basics, moved out of the top -->
   <section class="primer">
     <details class="primerbox">
-      <summary>New to Mexico? — the basics</summary>
+      <summary>New to Mexico: the basics</summary>
       <p class="country">
-        Mexico is a country of <b>131 million people</b> with a <b>~$1.9 trillion economy</b>, the world's ~14th-largest and the <b>largest US trading partner</b>.<a class="ref" href="/economy.html" title="World Bank; US Census Bureau">1</a>
-        It manufactures and exports: about <b>80% of its exports go to the United States</b>.<a class="ref" href="/us-mexico.html" title="INEGI / Banxico balance of trade">2</a>
-        It elects a president every six years, now <b>Claudia Sheinbaum (Morena)</b>, through 2030.<a class="ref" href="/politics.html" title="INE; Presidencia">3</a>
+        Mexico has <b>131 million people</b> and a <b>~$1.9 trillion economy</b>, the world's ~14th-largest.<a class="ref" href="/economy.html" title="World Bank">1</a>
+        It is the <b>largest US trading partner</b>. Mexico mostly sells manufactured goods abroad, and about <b>80% of its exports go to the United States</b>.<a class="ref" href="/us-mexico.html" title="US Census Bureau; INEGI / Banxico balance of trade">2</a>
+        It elects a president every six years. <b>Claudia Sheinbaum</b> of Morena holds the office through 2030.<a class="ref" href="/politics.html" title="INE; Presidencia">3</a>
       </p>
     </details>
   </section>
@@ -277,15 +277,15 @@ ogDescription: "Mexico's economy in official numbers."
   <!-- NEWSLETTER — moved to the bottom, the last thing before the footer -->
   <section>
     <div class="sub">
-      <div class="lab">The brief — free</div>
-      <p class="line"><b>The brief, in your inbox</b> — once a week.</p>
+      <div class="lab">The brief · free</div>
+      <p class="line"><b>The brief</b> arrives in your inbox once a week.</p>
       <!-- Buttondown embed. Replace `mexicobrief` with the Buttondown username once the account exists. Keyless: posts straight to Buttondown, works on a static host. -->
       <form action="https://buttondown.email/api/emails/embed-subscribe/mexicobrief" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/mexicobrief','popupwindow')">
         <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
         <input type="hidden" value="1" name="embed" />
         <button type="submit">Get the brief</button>
       </form>
-      <div class="fine">The address is used only for the brief and never shared, and one tap unsubscribes.</div>
+      <div class="fine">We use your address only for the brief and never share it. Unsubscribe with one tap.</div>
       <!-- past-issue link removed until the rebuilt weekly email ships (was pointing at an obsolete sample) -->
     </div>
   </section>
@@ -293,7 +293,7 @@ ogDescription: "Mexico's economy in official numbers."
 </div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, tile, fmt, srcBadge, relTime, evDate, enNum } from '/assets/mb.js?v=6';
+import { loadSeries, S, EVENTS, tile, fmt, srcBadge, relTime, evDate, enNum } from '/assets/mb.js?v=11';
 
 /* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
    Every topic now owns a page, so a bookmarked #q link should land on it. */
@@ -314,11 +314,11 @@ const MONEY_RX=/peso|inflaci|inflation|banxico|\brate\b|\btasa\b|remittance|reme
 /* ============ THE BOARD (block 3) — same tile() render + same JSON as the sections ============ */
 const CORE=new Set(['banxico-usdmxn-fix','banxico-inflacion','banxico-tasa-objetivo','banxico-pib-crecimiento']); // shown by default on mobile
 const TILES=[
-  {id:'banxico-usdmxn-fix',   l:'Peso · MXN/USD',      href:'/money.html'},
+  {id:'banxico-usdmxn-fix',   l:'Peso · per US dollar',      href:'/money.html'},
   {id:'banxico-inflacion',    l:'Inflation · annual',  href:'/money.html'},
   {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',href:'/money.html'},
   {id:'banxico-pib-crecimiento',l:'Growth · real GDP', href:'/economy.html'},
-  {id:'banxico-remesas',      l:'Remittances · month', href:'/money.html'},
+  {id:'banxico-remesas',      l:'Remittances · monthly total', href:'/money.html'},
   {id:'banxico-reservas',     l:"Int'l reserves",      href:'/money.html'},
 ];
 function renderBoard(){
@@ -327,9 +327,9 @@ function renderBoard(){
   // two dated static tiles (no live series exists yet) — links to their owning sections
   h+=`<a class="tilelink extra" href="/security.html"><div class="tile"><div class="tl">Homicide rate · national</div>`+
      `<div class="tv">~26 <small>per 100k</small></div><div class="tb">vs US ~6 per 100k</div>`+
-     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div></div></a>`;
+     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP (federal crime data) / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div></div></a>`;
   h+=`<a class="tilelink extra" href="/politics.html"><div class="tile"><div class="tl">Presidential approval</div>`+
-     `<div class="tv">49–68 <small>%</small></div><div class="tb">Mitofsky ~68 · AtlasIntel ~49</div>`+
+     `<div class="tv">49–68 <small>%</small></div><div class="tb">Mitofsky ~68 · AtlasIntel ~49 · methods differ</div>`+
      `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span><div class="tbadge">${srcBadge('AS/COA tracker')}</div></div></a>`;
   return h;
 }
@@ -386,7 +386,7 @@ function hapDate(iso){ if(!iso) return ''; const m=/^(\d{4})-(\d{2})-(\d{2})/.ex
 function renderWatch(){
   const ev=(EVENTS&&EVENTS.events)||[]; const now=Date.now();
   const up=ev.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3);
-  if(!up.length) return `<div class="cb-empty">No dated catalysts on the calendar yet.</div>`;
+  if(!up.length) return `<div class="cb-empty">No dated events on the calendar yet.</div>`;
   return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}<small>${d.y}${e.approx?' ~':''}</small></div><div class="wk ${e.kind||''}"></div>`+
       `<div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
@@ -421,7 +421,7 @@ function renderWatch(){
   const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
   const newest=times.length?Math.max(...times):0;
   const sm=health&&health.summary; const total=sm?((sm.ok||0)+(sm.flagged||0)+(sm.failed||0)+(sm.skipped||0)):0;
-  const st=document.getElementById('status'); if(st) st.textContent=(total?`● ${total} feeds · `:'● ')+(newest?'updated '+relTime(newest):'updated live');
+  const st=document.getElementById('status'); if(st) st.textContent=(total?`● ${total} feeds · `:'● ')+(newest?'updated '+relTime(newest):'update time unknown');
   const ba=document.getElementById('board-asof'); if(ba&&newest) ba.textContent='as of '+new Date(newest).toLocaleDateString('en-US',{month:'short',day:'numeric'});
 
   document.getElementById('tablero').innerHTML=renderBoard();

@@ -210,6 +210,19 @@ export function projectionChart(opts){
   data.forEach(p=>{g+=`<circle class="pph" data-year="${p.year}" data-value="${p.value}" data-proj="${p.year>seam?1:0}" cx="${X(p.year).toFixed(1)}" cy="${Y(p.value).toFixed(1)}" r="7" fill="transparent"/>`;});
   return `<svg class="chart projchart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img">${g}</svg>`;
 }
+// Page orientation block (Fable): 3 rows below the hero. WHAT = evergreen framing (hand-written).
+// NOW = current headline, every number computed by the page from live data (drops if no binding).
+// NEXT = the next scheduled release. Mono labels, serif body, reads as furniture, cannot drift.
+export function pageIntro(o){
+  o=o||{}; let rows='';
+  if(o.what) rows+=`<div class="pi-row"><span class="pi-k">What</span><span class="pi-v">${o.what}</span></div>`;
+  if(o.now)  rows+=`<div class="pi-row"><span class="pi-k">Now</span><span class="pi-v">${o.now}</span></div>`;
+  if(o.next) rows+=`<div class="pi-row"><span class="pi-k">Next</span><span class="pi-v">${o.next}</span></div>`;
+  return rows?`<div class="pageintro">${rows}</div>`:'';
+}
+// direction verb from a signed change, per the voice law (high-frequency verbs, no adjectives)
+export function dirWord(delta,opts){ opts=opts||{}; const e=opts.eps!=null?opts.eps:0.05; return delta>e?(opts.up||'rose'):(delta<-e?(opts.down||'fell'):(opts.flat||'held')); }
+
 // exhibit frame; optional table alt for chart<->table toggle
 export function exhibit(no,finding,sub,svg,src,tableHtml,wide){
   const tid='ex'+(CID++);

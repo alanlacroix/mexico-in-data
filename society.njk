@@ -1,10 +1,10 @@
 ---
 layout: base.njk
 permalink: /society.html
-title: "Society — The Mexico Brief"
-description: "Mexico's society in official numbers: poverty at a record low, the minimum wage rising by policy, remittances, jobs and population."
-ogTitle: "Society — The Mexico Brief"
-ogDescription: "Poverty, wages, jobs and migration in official numbers, updated every six hours."
+title: "Society · The Mexico Brief"
+description: "Mexico's society in official numbers: poverty fell to 29.6% in 2024, the minimum wage has doubled since 2018, plus remittances, jobs and population."
+ogTitle: "Society · The Mexico Brief"
+ogDescription: "Poverty, wages, jobs and population in official numbers, updated every six hours."
 ---
 {% raw %}
 <style>
@@ -172,9 +172,9 @@ ogDescription: "Poverty, wages, jobs and migration in official numbers, updated 
   <!-- 1 · HEADER -->
   <section class="hero" id="top">
     <span class="eyebrow">Society</span>
-    <h1 class="state">Poverty down, growth the ceiling</h1>
-    <p class="dek">Poverty is at a record low and the minimum wage keeps rising by policy, but weak growth limits how far living standards can climb.</p>
-    <p class="statedate">as of <b id="asof">—</b></p>
+    <h1 class="state">Poverty fell to a record 29.6% in 2024</h1>
+    <p class="dek">The minimum wage has doubled since 2018 while GDP grows slowly. This page tracks poverty, wages, remittances, jobs and population.</p>
+    <p class="statedate">as of <b id="asof">loading</b></p>
   </section>
 
   <!-- 2 · THE NUMBERS NOW -->
@@ -208,10 +208,10 @@ ogDescription: "Poverty, wages, jobs and migration in official numbers, updated 
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="/atlas.html"><div class="tk">By municipality</div><div class="th">The Atlas →</div><div class="td">Poverty for each of 2,469 municipalities. The national average hides wide differences between them; search or tap one to see its rate against the national benchmark.</div></a>
-      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
+      <a href="/atlas.html"><div class="tk">By municipality</div><div class="th">The Atlas →</div><div class="td">Poverty for each of 2,469 municipalities. The national average hides wide differences between them. Search or tap one to see its rate against the national benchmark.</div></a>
+      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its license, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / CONEVAL (multidimensional poverty) · <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE</a> / CONASAMI (minimum wage, remittances) · <a href="https://data.worldbank.org/country/mexico" target="_blank" rel="noopener">World Bank</a> (unemployment, population, GDP per capita) · CNE / Sener (fuel prices).</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / CONEVAL (multidimensional poverty) · <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México (SIE)</a> / CONASAMI (minimum wage, remittances) · <a href="https://data.worldbank.org/country/mexico" target="_blank" rel="noopener">World Bank</a> (unemployment, population, GDP per capita) · CONAPO (population projection) · INEGI (registered births and deaths) · CNE / Sener (fuel prices).</p>
   </section>
 
 </div>
@@ -245,10 +245,10 @@ function povertyTile(P){
 
 /* the live tile board (block 2) — poverty headline + the same JSON as the metric rows below */
 const TILES=[
-  {id:'banxico-salario-minimo',l:'Minimum wage · daily',per:'vs a year ago'},
+  {id:'banxico-salario-minimo',l:'Minimum wage · daily',per:'vs prior year'},
   {id:'banxico-remesas',l:'Remittances · month',per:'vs prior month'},
   {id:'wb-unemployment',l:'Unemployment',per:'vs prior year'},
-  {id:'wb-gdp-per-capita',l:'Income per person',per:'vs prior year'},
+  {id:'wb-gdp-per-capita',l:'GDP per person',per:'vs prior year'},
   // population lives in the demographics block below (CONAPO, Mexican-official, with the census anchor) —
   // we don't also show the World Bank estimate as a tile, so a reader never sees two population numbers.
 ];
@@ -260,21 +260,21 @@ function renderBackground(){
   let ex='';
   if(sal){
     const svg=timeChart([{name:'Min wage',color:'green',pts:sal.data.slice(-14)}],{unit:'$',xfmt:(d)=>String(new Date(d).getUTCFullYear())});
-    ex=exhibit('6.1','The minimum wage has doubled since 2018, by policy','General minimum wage, MXN per day (nominal)',svg,
+    ex=exhibit('6.1','The government has doubled the minimum wage since 2018','General minimum wage, MXN per day (nominal)',svg,
       `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> / CONASAMI.`);
   }
   const P=POVERTY;
-  return sectionHead('Background','Living standards are rising, but weak growth caps the pace.','The minimum wage has doubled since 2018, remittances are near record highs, and poverty fell to a record low in 2024.')+
+  return sectionHead('Background','Wages, remittances and poverty since 2018','The minimum wage reached 315 pesos a day in 2026, double its 2018 level. Remittances hit $5.6bn in May 2026. Poverty fell to 29.6% in 2024, down from 41.9% in 2018.')+
     ex+
     mrow({id:'banxico-salario-minimo',label:'General minimum wage'})+
     mrow({id:'banxico-remesas',label:'Remittances (family, monthly)'})+
     mrow({id:'cre-gasolina-regular',label:'Gasoline · regular (national avg)'})+
     staticRow({label:'Poverty (national)',value:P.rate,unit:P.unit,stamp:P.stamp,
-      verdict:`Multidimensional poverty fell to <b>${P.rate}%</b> in ${P.year}, the lowest on record, down ${P.dropPp} points from ${P.prior}% in ${P.priorYear} (${P.fewer} fewer people in poverty). It is INEGI's first poverty measurement since it took over from CONEVAL.`,
+      verdict:`Multidimensional poverty fell to <b>${P.rate}%</b> in ${P.year}, the lowest on record, down ${P.dropPp} points from ${P.prior}% in ${P.priorYear}. The drop moved ${P.fewer} people out of poverty. INEGI published the figure as its first poverty measurement since taking over from CONEVAL.`,
       bench:`vs ${P.prior}% in ${P.priorYear}`,srcName:P.srcName,srcUrl:P.srcUrl})+
-    construccion({l:'Formal jobs & average formal wage (IMSS)',src:'IMSS (Datos Abiertos)',cad:'monthly',eta:'National totals; feed not yet connected.'})+
-    fwd(`No official forecast exists for household welfare. Real wages keep rising by policy, but weak GDP growth (<a href="/#q4">Q4</a>) caps the pace.`)+
-    `<div class="ctxline">Gloss: <b>CONEVAL</b> = the federal poverty agency · <b>IMSS</b> = social security, i.e. the formal-jobs registry · <b>remittances</b> = money Mexicans abroad send home.</div>`;
+    construccion({l:'Formal jobs & average formal wage (IMSS)',src:'IMSS (Datos Abiertos)',cad:'monthly',eta:'National totals. Feed not yet connected.'})+
+    fwd(`No official forecast exists for household welfare. The government sets the nominal minimum wage each year, and slow GDP growth (<a href="/#q4">Q4</a>) limits gains beyond it.`)+
+    `<div class="ctxline">Gloss: <b>CONEVAL</b> = the agency that measured poverty before INEGI took it over · <b>multidimensional poverty</b> = a measure that counts income plus access to food, health care, housing and schooling · <b>IMSS</b> = social security, i.e. the formal-jobs registry · <b>remittances</b> = money Mexicans abroad send home · <b>nominal</b> = not adjusted for inflation.</div>`;
 }
 
 /* block 4 — society-relevant catalyst calendar (poverty / wages / jobs / migration) */
@@ -301,16 +301,16 @@ function dstat(label,value,sub,tier){
 function renderDemographics(DEMO,VIT){
   if(!DEMO&&!VIT) return '';
   let out=sectionHead('Population','Mexico’s demographic turn',
-    'Births are falling and deaths rising, the population is aging, and CONAPO projects it peaks near 2053 before it starts to shrink.');
+    'Births have fallen since 2010 while deaths rise. CONAPO projects the population peaks near 2053, then shrinks.');
   if(VIT&&VIT.births&&VIT.deaths){
     const toPts=s=>s.series.map(p=>({date:p.year+'-07-01',value:p.value/1e6}));   // millions
     const svg=timeChart([
       {name:'Deaths',color:'var(--red)',pts:toPts(VIT.deaths)},
       {name:'Births',color:'green',pts:toPts(VIT.births)},
     ],{unit:'M',xfmt:(d)=>String(new Date(d).getUTCFullYear())});
-    out+=exhibit('Vital signs','Births have fallen toward rising deaths — the yearly gap has narrowed by two-thirds since 2010',
-      'Registered births and deaths per year. Births 2010–2024; deaths 1990–2024.',svg,
-      `Source: <a href="${VIT.deaths.sourceUrl}" target="_blank" rel="noopener">INEGI</a> — Estadísticas de Nacimientos y Defunciones Registradas. Read the two COVID marks honestly: the 2020–21 jump in deaths is real excess mortality; the 2020 dip in births is a registration effect — civil-registry offices closed, so births were recorded late and rebound in 2021 — not a fertility collapse.`);
+    out+=exhibit('Vital signs','The yearly gap between births and deaths has narrowed by two-thirds since 2010',
+      'Registered births and deaths per year. Births 2010–2024. Deaths 1990–2024. The 2020–21 jump in deaths is COVID excess mortality. The 2020 dip in births is a registration effect, not a fertility drop: civil-registry offices closed and recorded births late, so the 2021 count rebounded.',svg,
+      `Source: <a href="${VIT.deaths.sourceUrl}" target="_blank" rel="noopener">INEGI</a>, Estadísticas de Nacimientos y Defunciones Registradas.`);
   }
   // stat strip — population/median/dependency are CONAPO projection; births/deaths are measured
   let strip='';
@@ -327,12 +327,12 @@ function renderDemographics(DEMO,VIT){
     const SR=DEMO.population.series; let peak=SR[0]; for(const p of SR) if(p.value>peak.value) peak=p;
     const chart=projectionChart({series:SR.map(p=>({year:p.year,value:p.value/1e6})),seamYear:2020,unit:'M',peak:{year:peak.year,value:peak.value/1e6},xmax:2070});
     out+=exhibit('Trajectory','CONAPO projects the population keeps rising to about '+(peak.value/1e6).toFixed(0)+'M near '+peak.year+', then slowly declines',
-      'Total population, millions — observed to 2020, then CONAPO’s projection to 2070. Set the horizon to look further out.',
+      'Total population, millions: observed to 2020, then CONAPO’s projection to 2070. Set the horizon to look further out.',
       `<div id="pop-explorer"><div class="horizon"><span class="hz-lbl">Look ahead to</span><button type="button" data-xmax="2050">2050</button><button type="button" data-xmax="2070" class="on">2070</button></div>${chart}</div>`,
-      `Source: <a href="https://www.gob.mx/conapo" target="_blank" rel="noopener">CONAPO</a> — Proyecciones de la Población de México 2020–2070. A projection is CONAPO’s model output, not a measurement and not our forecast.`);
+      `Source: <a href="https://www.gob.mx/conapo" target="_blank" rel="noopener">CONAPO</a> — Proyecciones de la Población de México 2020–2070. A projection is CONAPO’s model output, not a measurement. The Mexico Brief publishes no forecasts of its own.`);
   }
   // census anchor line — kept separate from the projection, never mixed
-  if(DEMO&&DEMO.censusAnchor) out+=`<p class="ctxline">The last hard count was the <b>${(DEMO.censusAnchor.population/1e6).toFixed(1)}M</b> of the ${DEMO.censusAnchor.year} Census (INEGI). Figures above the count are CONAPO's 2023-base projection, shown as a projection, not a measurement.</p>`;
+  if(DEMO&&DEMO.censusAnchor) out+=`<p class="ctxline">The ${DEMO.censusAnchor.year} Census counted <b>${(DEMO.censusAnchor.population/1e6).toFixed(1)}M</b> people (INEGI). Figures for years after the census are CONAPO's 2023-base projection, not a measurement.</p>`;
   return out;
 }
 // interactive population explorer — horizon buttons re-render the projection chart; hover any point
@@ -377,8 +377,8 @@ function renderWire(){ return renderDevelopments('society'); }   // curated even
   document.getElementById('demographics').innerHTML=renderDemographics(DEMO,VIT);
   wirePopExplorer(DEMO);
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Poverty 2024 · wages May 2026',
-    p1:`Poverty fell to <b>29.6%</b> in 2024, the lowest on record and down <b>12.3 points</b> from 41.9% in 2018 — about <b>13.4M</b> fewer people. It's the first poverty read INEGI has published since taking over from CONEVAL, and it lands while the minimum wage keeps rising by policy, now <b>$315 a day</b> and roughly double its 2018 level, with remittances near record highs at <b>$5.6bn</b> in May.`,
-    p2:`So the gains here run on policy, not on a booming economy: a wage floor lifted by decree rather than earned by growth, which caps how much further living standards can climb while output grows slowly.`,
+    p1:`Poverty fell to <b>29.6%</b> in 2024, the lowest on record, down <b>12.3 points</b> from 41.9% in 2018. The drop moved about <b>13.4M</b> people out of poverty. INEGI published the figure as its first poverty measurement since taking over from CONEVAL. The minimum wage stands at <b>315 pesos a day</b> in 2026, roughly double its 2018 level. Remittances reached <b>$5.6bn</b> in May 2026.`,
+    p2:`Poverty fell 12.3 points between 2018 and 2024 while GDP grew slowly. The gains rest on wage policy, which limits how much further living standards can rise without faster growth.`,
     src:'INEGI / CONEVAL, Banco de México (SIE), CONASAMI'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();

@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>The Economy — The Mexico Brief</title>
+<title>The Economy · The Mexico Brief</title>
 <meta name="description" content="What Mexico&#39;s economy is made of: GDP by sector and spending, growth, exports and imports broken out, the trade balance, the informal economy, and the money flowing in." />
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="The Economy — The Mexico Brief" />
+<meta property="og:title" content="The Economy · The Mexico Brief" />
 <meta property="og:description" content="What Mexico&#39;s economy is made of: GDP by sector and spending, growth, exports and imports broken out, the trade balance, the informal economy, and the money flowing in." />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1063d0e5" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=b116ada5" />
 
 
 </head>
@@ -83,7 +83,7 @@
 </style>
 <div class="wrap">
   <section class="hero">
-    <span class="eyebrow">What Mexico is made of</span>
+    <span class="eyebrow">What Mexico's economy is made of</span>
     <h1>The Economy</h1>
     <p class="thesis" id="thesis"></p>
     <div class="heroband" id="heroband"></div>
@@ -97,7 +97,9 @@ async function J(p){const r=await fetch(p);if(!r.ok)throw new Error(p+' '+r.stat
 const GRAYS=['#38382f','#7d7d72','#b3b3a8','#d7d4c9'];
 
 /* ---- exhibit frame ---- */
+let exSeq=0;
 function ex(no,title,sub,svg,cap,src){
+  no=++exSeq; // number exhibits in render order: fixes the missing Exhibit 5 and the gap when the US Census file is absent
   return `<div class="exwrap"><div class="ex-tag"></div><div class="ex-no">Exhibit ${no}</div>`+
     `<div class="ex-title">${title}</div><div class="ex-sub">${sub}</div>${svg}`+
     (cap?`<div class="ex-cap">${cap}</div>`:'')+(src?`<div class="ex-src">${src}</div>`:'')+`</div>`;
@@ -127,7 +129,7 @@ function divBar(items){
     g+=`<rect x="${x.toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="22" rx="2" fill="${c}"/>`;
     const lx=neg?(zx+8):(x+w+6);
     g+=`<text class="vlab" x="${lx.toFixed(1)}" y="${(y+16).toFixed(1)}" text-anchor="start">${(d.value>0?'+':'')}${d.value}%</text>`;});
-  g+=`<text class="axl" x="${zx}" y="${pt+items.length*rowH+14}" text-anchor="middle">0 · % of GDP</text>`;
+  g+=`<text class="axl" x="${zx}" y="${pt+items.length*rowH+14}" text-anchor="middle">0%</text>`;
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">${g}</svg>`;
 }
 /* ---- line (growth) ---- */
@@ -205,20 +207,20 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   const TP=await J('./data/trade/exports-by-partner.json').catch(()=>null);
   const XT=await J('./data/series/banxico-exports-total.json').catch(()=>null);
   const MT=await J('./data/series/banxico-imports-total.json').catch(()=>null);
-  $('#thesis').innerHTML=E.meta.thesis.replace('US-welded assembly economy','<b>US-welded assembly economy</b>').replace('imports parts and exports cars','<b>imports parts and exports cars</b>');
+  $('#thesis').innerHTML='Mexico runs an assembly economy built around the United States: it <b>imports parts and exports cars</b>. About '+E.partners.exports[0].value+'% of its <b>$'+Math.round(E.trade.exports)+'bn</b> in goods exports went to the US in 2024. A second, informal economy employs <b>'+E.informal.dumbbells[0].jobs+'%</b> of workers (2025, INEGI).';
   $('#heroband').innerHTML=E.hero.map(h=>`<div class="hb"><div class="hk">${h.k}</div><div class="hv">${h.v}</div><div class="hs">${h.sub}</div></div>`).join('');
   let H='';
   // 2 · what Mexico makes
-  H+=ex('1','It\'s a services economy with an unusually big factory floor','Gross value added by sector, '+E.sectors.unit,
+  H+=ex('1','Services produce '+E.sectors.segments[0].value+'% of GDP, and manufacturing adds about a fifth','By sector, '+E.sectors.unit,
     stack100(E.sectors.segments),
-    'Services are nearly <b>60% of output</b>; industry a third (manufacturing alone is a fifth). Agriculture is under 4%.',
+    'Services are nearly <b>60% of output</b>. Industry is a third, and manufacturing alone is a fifth. Agriculture is under 4%.',
     srcLine(E.sectors));
   // 3 · who spends it
-  H+=ex('2','Consumption dominates; trade is large on both sides and nets to roughly zero','GDP by expenditure, '+E.expenditure.unit,
+  H+=ex('2','Private consumption is '+E.expenditure.items[0].value+'% of GDP, and exports and imports nearly cancel','GDP by expenditure, '+E.expenditure.unit,
     divBar(E.expenditure.items),
     E.expenditure.note,srcLine(E.expenditure));
   // 4 · growth
-  H+=ex('3','The post-COVID rebound is spent','Real GDP growth, % change year-on-year',
+  H+=ex('3','Growth slowed to +1.4% in 2024, down from +6.0% in 2021','Real GDP growth, % change year-on-year',
     line(E.growth.points),E.growth.note,srcLine(E.growth));
   // 4 · trade — ONE single-sourced pointer. Numbers bound to the SAME files that render /trade,
   //     never hand-typed (Fable: kill the hand-typed-number class; Trade owns the charts).
@@ -227,35 +229,35 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   const xbn=annualBn(XT,yFull), mbn=annualBn(MT,yFull), usSh=TP&&TP.exports?TP.exports.items[0].share:null;
   if(xbn){
     const st=(k,v)=>`<div><div style="font-family:var(--mono);font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.03em">${k}</div><div style="font-family:var(--serif);font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05">${v}</div></div>`;
-    H+=ex('4','Trade is huge on both sides — and it points north','Goods trade, latest full year ('+yFull+')',
+    H+=ex('4','Mexico exported $'+Math.round(xbn)+'bn of goods and imported $'+Math.round(mbn)+'bn','Goods trade, latest full year ('+yFull+')',
       `<div style="display:flex;gap:32px;flex-wrap:wrap;margin:2px 0 4px">`+st('Exports','$'+Math.round(xbn)+'bn')+st('Imports','$'+Math.round(mbn)+'bn')+st('Balance',(xbn-mbn>=0?'+':'−')+'$'+Math.abs(Math.round(xbn-mbn))+'bn')+`</div>`,
-      `About <b>${usSh?Math.round(usSh)+'%':'four-fifths'}</b> of exports go to the United States, and most imports are factory inputs. <a href="/trade.html" style="color:var(--green);font-weight:500">See the full picture — the export basket, every partner, and the 20-year balance → Trade</a>`,
-      `Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (CE125) &amp; UN COMTRADE · ${yFull}. The same data that render the Trade section.`);
+      `About <b>${usSh?Math.round(usSh)+'%':'four-fifths'}</b> of exports go to the United States, and most imports are factory inputs. <a href="/trade.html" style="color:var(--green);font-weight:500">The export basket, every partner, and the 20-year balance → Trade</a>`,
+      `Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (series CE125) &amp; UN COMTRADE · ${yFull}. The same figures shown in the Trade section.`);
   }
   // 6 · the US relationship, live monthly (US Census)
   if(TR&&TR.topImports){H+=ex('6','What the United States buys from Mexico','US imports from Mexico by product, trailing 12 months, US$ bn',
     ranked(TR.topImports.map((t,i)=>({label:t.name,value:t.value_bn,hi:i===0})),{vfmt:(v)=>'$'+v+'bn',pl:210}),
-    `In ${TR.latest.month} the US bought <b>$${TR.latest.imports_bn}bn</b> from Mexico and sold it $${TR.latest.exports_bn}bn, for <b>$${TR.latest.twoway_bn}bn</b> of two-way trade in the month. Machinery, vehicles, and electronics are most of what Mexico sends north.`,
+    `In ${TR.latest.month} the US bought <b>$${TR.latest.imports_bn}bn</b> of goods from Mexico and sold Mexico $${TR.latest.exports_bn}bn. Two-way trade totaled <b>$${TR.latest.twoway_bn}bn</b> in the month. Machinery, vehicles, and electronics make up most of what the US buys from Mexico.`,
     srcLine({source:TR.meta.source,sourceUrl:TR.meta.sourceUrl,unit:'US$ bn · monthly · latest '+TR.meta.latestMonth}));}
   // 7 · what comes in / goes out
-  H+=ex('7','Imports are factory inputs; the top export is vehicles','Top import products, US$ bn, 2024',
+  H+=ex('7',E.products.exportsHi.label+' led 2024 exports at $'+E.products.exportsHi.value+'bn, and the top imports are factory inputs','Top import products, US$ bn, 2024',
     ranked(E.products.imports,{vfmt:(v)=>'$'+v+'bn',pl:160})+
-    `<div style="margin-top:14px;font-size:14px;color:var(--ink-2)">Out: <b>${E.products.exportsHi.label} — $${E.products.exportsHi.value}bn</b>, and manufactured goods are 89.8% of exports. <span class="nyw">export ranking not yet wired</span></div>`,
+    `<div style="margin-top:14px;font-size:14px;color:var(--ink-2)">Manufactured goods were <b>89.8%</b> of exports in 2024. <span class="nyw">full export ranking not yet available</span></div>`,
     E.products.note,srcLine(E.products));
   // 8 · two economies
-  H+=ex('8','Half the country works off the books and makes a quarter of the output','Informal vs formal: share of jobs vs share of GDP',
+  H+=ex('8','Informal workers hold '+E.informal.dumbbells[0].jobs+'% of jobs and produce '+E.informal.dumbbells[0].gdp+'% of output','Informal vs formal: share of jobs vs share of GDP',
     dumbbell(E.informal.dumbbells)+
-    `<div style="margin-top:16px"><div style="font-family:var(--mono);font-size:12px;color:var(--mut);margin-bottom:4px">Informality by state: highest in the south, lowest in the north</div>`+
+    `<div style="margin-top:16px"><div style="font-family:var(--mono);font-size:12px;color:var(--mut);margin-bottom:4px">Informality by state: highest in Mexico's south, lowest in its north</div>`+
     ranked(E.informal.states,{vfmt:(v)=>v+'%',pl:150})+`</div>`,
     E.informal.note,srcLine(E.informal));
   // 9 · money flows
-  H+=ex('9','Even the non-factory dollars come from the north','External money into Mexico, US$ bn, 2024',
+  H+=ex('9','Remittances reached $'+E.moneyflows.items[0].value+'bn in 2024, more than FDI or tourism brought in','External money into Mexico, US$ bn, 2024',
     ranked(E.moneyflows.items,{vfmt:(v)=>'$'+v+'bn',pl:150}),
     E.moneyflows.note,srcLine(E.moneyflows));
-  const STORY=`<div class="story"><div class="st-lbl"><span>The story</span><span class="asof">updated 2024 data</span></div>`+
-    `<p>Growth cooled to <b>+1.4%</b> in 2024 because the post-COVID rebound is spent: after the <b>−8.4%</b> pandemic crash and a <b>+6.0%</b> snapback in 2021, the economy has drifted back toward its long-run ~2% trend. Underneath, the structure holds — services are nearly <b>60%</b> of output, private consumption alone is <b>70.7%</b> of GDP, and trade is huge on both sides, with about <b>four-fifths</b> of the <b>$617bn</b> in exports going to the United States.</p>`+
-    `<p>So the headline economy leans hard on a single customer, while beneath it half the country works off the books — <b>55%</b> of jobs producing just <b>25.4%</b> of output — and even the outside money comes from the north: <b>$64.75bn</b> in remittances, <b>96.6%</b> of it from the US.</p>`+
-    `<div class="st-src">Source: World Bank, INEGI, Banco de México.</div></div>`;
+  const STORY=`<div class="story"><div class="st-lbl"><span>The story</span><span class="asof">based on 2024 data</span></div>`+
+    `<p>Growth slowed to <b>+1.4%</b> in 2024, the weakest year since the <b>−8.4%</b> contraction of 2020. Growth has fallen every year since the <b>+6.0%</b> rebound of 2021, back toward the long-run trend of about 2%. Services make up nearly <b>60%</b> of output, and private consumption alone is <b>70.7%</b> of GDP. Exports reached <b>$617bn</b> in 2024, and about <b>four-fifths</b> went to the United States.</p>`+
+    `<p>Informal work makes up <b>55%</b> of jobs and <b>25.4%</b> of output. Remittances brought in <b>$64.75bn</b> in 2024, and <b>96.6%</b> of that came from the US. Most of Mexico's external income, exports and remittances alike, comes from the United States.</p>`+
+    `<div class="st-src">Source: World Bank (growth, sectors, spending, 2024) · INEGI (exports 2024, informality 2024–2025) · Banco de México (remittances, 2024). Each exhibit above links to its source.</div></div>`;
   $('#exhibits').innerHTML=H+STORY;
 })().catch(e=>{$('#exhibits').innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading economy data: '+e.message+'</p>';});
 </script>

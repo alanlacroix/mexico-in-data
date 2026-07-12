@@ -1,10 +1,10 @@
 ---
 layout: base.njk
 permalink: /payments.html
-title: "Payments — The Mexico Brief"
-description: "How Mexico pays, in official numbers: the SPEI and CoDi rails, cards at the counter, e-commerce, ATM cash, currency in circulation, consumption, and account access — from Banco de México and INEGI."
-ogTitle: "Payments — The Mexico Brief"
-ogDescription: "The rails, the cards, the cash, and the reasons cash still wins at the counter — official Banxico + INEGI data, no company named."
+title: "Payments · The Mexico Brief"
+description: "How Mexico pays, in official numbers: the SPEI and CoDi rails, cards at the counter, e-commerce, ATM cash, currency in circulation, consumption, and account access, from Banco de México and INEGI."
+ogTitle: "Payments · The Mexico Brief"
+ogDescription: "How Mexico pays: SPEI transfers, card spending, ATM cash, currency in circulation, and account access, in official Banco de México and INEGI data."
 ---
 {% raw %}
 <style>
@@ -112,7 +112,7 @@ const IDS = [
 const ENIF_ACCOUNT = [{year:2015,value:44.1},{year:2018,value:47.1},{year:2021,value:49.1},{year:2024,value:63}]; // adults 18–70 with a formal savings account, %
 const ENIF_CASH    = [{year:2018,value:95},{year:2021,value:90.1},{year:2024,value:85.2}];                        // most-frequent payment for purchases ≤$500 is cash, %
 const ENIF_SRC     = 'https://www.inegi.org.mx/programas/enif/2024/';
-const ENIF_CASH_NOTE = 'Share whose most-frequent payment for purchases of $500 pesos or less is cash.';
+const ENIF_CASH_NOTE = 'Adults who most often pay for purchases of 500 pesos or less in cash.';
 
 // present AND fresh — a discontinued series (e.g. a rebased index that stops years ago) must not
 // render as if current. Display-side grace, a touch looser than the pipeline gate: period + lag.
@@ -136,11 +136,11 @@ function briefHTML(){
   const speiM=Math.round(lastv('banxico-spei-operaciones')/1e6);
   const codiK=has('banxico-codi-operaciones')?Math.round(lastv('banxico-codi-operaciones')/1e3):null;
   const acct=ENIF_ACCOUNT.length?ENIF_ACCOUNT.at(-1).value:null;
-  let s=`Mexico's payment rails are not the problem. <b>SPEI</b>, the central bank's interbank system, clears about <b>${enNum(speiM)} million</b> transfers a month — instant, free, account to account. What holds digital payments back is adoption, not plumbing.`;
-  s+=` Currency in circulation keeps <b>growing</b>.`;
-  if(acct!=null) s+=` Roughly <b>${Math.round(acct)}%</b> of adults have a bank account.`;
-  if(codiK!=null) s+=` The central bank's QR experiment, CoDi, is still tiny — about <b>${enNum(codiK)} thousand</b> operations a month against SPEI's hundreds of millions.`;
-  s+=` This page follows both sides: the rails that work, and the reasons cash still wins at the counter.`;
+  let s=`<b>SPEI</b>, the central bank's interbank system, clears about <b>${enNum(speiM)} million</b> transfers a month. The transfers are instant, free, and account to account.`;
+  s+=(()=>{const d=has('banxico-circulante')?S['banxico-circulante'].data:null;if(!d||!d.length)return'';const n=(d.at(-1).value/1e6).toFixed(1);return d.length>12?` Currency in circulation stood at <b>${n} trillion pesos</b> in ${moFmt(d.at(-1).date)}, compared with ${(d.at(-13).value/1e6).toFixed(1)} trillion a year earlier.`:` Currency in circulation stood at <b>${n} trillion pesos</b> in ${moFmt(d.at(-1).date)}.`;})();
+  if(acct!=null) s+=` <b>${Math.round(acct)}%</b> of adults held a bank account in ${ENIF_ACCOUNT.at(-1).year} (INEGI ENIF), up from ${ENIF_ACCOUNT[0].value}% in ${ENIF_ACCOUNT[0].year}. Account access, not the rails, limits how far digital payments reach.`;
+  if(codiK!=null) s+=` CoDi, the central bank's QR payment system, handles about <b>${enNum(codiK)} thousand</b> operations a month, against SPEI's ${enNum(speiM)} million.`;
+  s+=` This page tracks both sides: the transfer rails, and the cash they have not replaced.`;
   return s;
 }
 
@@ -164,63 +164,63 @@ const src=(ids)=>`Source: <a href="${SIE}" target="_blank" rel="noopener">Banco 
 function railsExhibits(){
   let h='<div class="exgrid two">';
   if(has('banxico-spei-operaciones'))
-    h+=exhibit('1','SPEI keeps climbing','Interbank transfers · millions per month',
+    h+=exhibit('1',(()=>{const d=S['banxico-spei-operaciones'].data,n=Math.round(d.at(-1).value/1e6);return d.length>12?`SPEI cleared ${enNum(n)} million transfers in ${moFmt(d.at(-1).date)}, compared with ${enNum(Math.round(d.at(-13).value/1e6))} million a year earlier`:`SPEI cleared ${enNum(n)} million transfers in ${moFmt(d.at(-1).date)}`;})(),'Interbank transfers · millions per month',
       timeChart([{name:'SPEI',color:'green',pts:pts('banxico-spei-operaciones',1e6,1)}],{xfmt:moFmt}),
       src('SF273317'),'',false);
   if(has('banxico-codi-operaciones'))
-    h+=exhibit('2','CoDi never took off','QR/mobile payments · thousands of operations per month',
+    h+=exhibit('2',(()=>{const k=enNum(Math.round(lastv('banxico-codi-operaciones')/1e3));return has('banxico-spei-operaciones')?`CoDi handles about ${k} thousand operations a month, against ${enNum(Math.round(lastv('banxico-spei-operaciones')/1e6))} million on SPEI`:`CoDi handles about ${k} thousand operations a month`;})(),'QR/mobile payments · thousands of operations per month',
       timeChart([{name:'CoDi',color:'green',pts:pts('banxico-codi-operaciones',1e3,0)}],{xfmt:moFmt}),
       src('SF335701, summed to monthly'),'',false);
   h+='</div>';
-  h+=`<p class="ex-note"><b>Two experiments on the same rail.</b> Both CoDi (2019, QR codes) and DiMo (2023, send to a phone number) run on top of SPEI. CoDi stalled — the chart above. DiMo, the newer bet, reached <b>more than 11 million users</b> by November 2024 (Banco de México), but isn't broken out as its own series; its volume rides inside the SPEI totals in Exhibit 1.</p>`;
+  h+=`<p class="ex-note"><b>CoDi and DiMo both run on top of SPEI.</b> CoDi launched in 2019 for QR-code payments and stalled at the volumes in Exhibit 2. DiMo launched in 2023 to send money to a phone number and reached <b>more than 11 million users</b> by November 2024 (Banco de México). Banxico does not break DiMo out as its own series, so its volume is counted inside the SPEI totals in Exhibit 1.</p>`;
   return h;
 }
 function cardsExhibits(){
   let h='<div class="exgrid two">';
   if(has('banxico-tpv-debito-monto')&&has('banxico-tpv-credito-monto'))
-    h+=exhibit('3','Debit rules the counter','Card spend at point of sale · trillion pesos per quarter',
+    h+=exhibit('3',`Debit card spend at the terminal runs ${(lastv('banxico-tpv-debito-monto')/lastv('banxico-tpv-credito-monto')).toFixed(1)} times credit`,'Card spend at point of sale · trillion pesos per quarter',
       timeChart([
         {name:'Debit',color:'green',pts:pts('banxico-tpv-debito-monto',1e6,2)},
         {name:'Credit',color:'var(--ink-2)',pts:pts('banxico-tpv-credito-monto',1e6,2)}
       ],{}),
       src('SF62279 (debit), SF62280 (credit)'),'',false);
   if(has('banxico-ecommerce-monto'))
-    h+=exhibit('4','Online is the fast edge','Card spend at e-commerce sites · trillion pesos per quarter',
+    h+=exhibit('4',(()=>{const d=S['banxico-ecommerce-monto'].data;return d.length>4?`E-commerce card spend ${d.at(-1).value>=d.at(-5).value?'grew':'fell'} ${Math.abs((d.at(-1).value/d.at(-5).value-1)*100).toFixed(0)}% year over year`:`E-commerce card spend by quarter`;})(),'Card spend at e-commerce sites · trillion pesos per quarter',
       timeChart([{name:'E-commerce',color:'green',pts:pts('banxico-ecommerce-monto',1e6,2)}],{}),
       src('SF273476'),'',false);
   if(has('banxico-cajeros-monto'))
-    h+=exhibit('5','Cash-out stays huge','ATM withdrawals · trillion pesos per quarter',
+    h+=exhibit('5',`Mexicans withdrew ${(lastv('banxico-cajeros-monto')/1e6).toFixed(1)} trillion pesos from ATMs in ${qFmt(S['banxico-cajeros-monto'].data.at(-1).date)}`,'ATM withdrawals · trillion pesos per quarter',
       timeChart([{name:'ATM',color:'green',pts:pts('banxico-cajeros-monto',1e6,2)}],{}),
       src('SF62275'),'',false);
   h+='</div>';
   // derived: e-commerce share of card spend
   const eb=lastv('banxico-ecommerce-monto'), db=lastv('banxico-tpv-debito-monto'), cb=lastv('banxico-tpv-credito-monto');
   if(eb&&db&&cb){ const share=(eb/(eb+db+cb)*100);
-    h+=`<p class="ex-note"><b>Card-not-present is about ${share.toFixed(0)}% of card spend</b> and rising — the rest still happens with a card in hand at a terminal.</p>`; }
+    h+=`<p class="ex-note">Card-not-present spend, mostly online purchases, takes about <b>${share.toFixed(0)}%</b> of card spend. The rest happens with a physical card at a terminal.</p>`; }
   return h;
 }
 function cashExhibits(){
   let h='<div class="exgrid two">';
   if(has('banxico-circulante'))
-    h+=exhibit('6','Cash keeps growing','Currency in circulation · trillion pesos',
+    h+=exhibit('6',(()=>{const d=S['banxico-circulante'].data,n=(d.at(-1).value/1e6).toFixed(1);return d.length>12?`Currency in circulation stood at ${n} trillion pesos, compared with ${(d.at(-13).value/1e6).toFixed(1)} trillion a year earlier`:`Currency in circulation stood at ${n} trillion pesos`;})(),'Currency in circulation · trillion pesos',
       timeChart([{name:'Currency',color:'green',pts:pts('banxico-circulante',1e6,2)}],{xfmt:moFmt}),
-      src('billetes y monedas en circulación'),'',false);
+      src('billetes y monedas en circulación, notes and coins in circulation'),'',false);
   if(ENIF_CASH.length)
-    h+=exhibit('7','Small purchases are still cash','Share paying in cash · INEGI ENIF survey waves',
+    h+=exhibit('7',`${ENIF_CASH.at(-1).value}% of adults paid small purchases mostly in cash in ${ENIF_CASH.at(-1).year}, down from ${ENIF_CASH[0].value}% in ${ENIF_CASH[0].year}`,'Share paying mostly in cash · INEGI National Survey of Financial Inclusion (ENIF)',
       barChart(ENIF_CASH.map(p=>({label:String(p.year),value:p.value,hi:p===ENIF_CASH.at(-1)})),{unit:'%',everyLabel:1}),
       `Source: <a href="${ENIF_SRC}" target="_blank" rel="noopener">INEGI · ENIF</a>.${ENIF_CASH_NOTE?' '+ENIF_CASH_NOTE:''}`,'',false);
   h+='</div>';
-  h+=`<p class="ex-note"><b>The paradox.</b> Digital rails grow every year, and so does the cash in people's pockets. New rails are adding to how Mexico pays; they are not yet replacing cash.</p>`;
+  h+=`<p class="ex-note">Currency in circulation rises in Exhibit 6, and SPEI and card volumes rise in the sections above. The new rails add to how Mexico pays. They have not yet replaced cash.</p>`;
   return h;
 }
 function spendExhibits(){
   let h='<div class="exgrid two">';
   if(has('banxico-consumo-privado'))
-    h+=exhibit('8','What households buy','Private consumption · monthly volume index',
+    h+=exhibit('8',(()=>{const d=S['banxico-consumo-privado'].data;if(d.length<13)return 'Household consumption by month';const g=(d.at(-1).value/d.at(-13).value-1)*100;return `Household consumption ${g>=0?'grew':'fell'} ${Math.abs(g).toFixed(1)}% in the year to ${moFmt(d.at(-1).date)}`;})(),'Private consumption · index of how much households buy, monthly',
       timeChart([{name:'Consumption',color:'green',pts:pts('banxico-consumo-privado',1,1)}],{xfmt:moFmt}),
-      src('SR17449 (INEGI IMCPMI, via Banxico)'),'',false);
+      src('SR17449, INEGI monthly private-consumption indicator, via Banxico'),'',false);
   if(has('banxico-remesas-electronicas'))
-    h+=exhibit('9','Remittances arrive electronically','Electronic-transfer remittances · million US$ per month',
+    h+=exhibit('9',`Electronic remittances reached ${(lastv('banxico-remesas-electronicas')/1e3).toFixed(1)} billion US dollars in ${moFmt(S['banxico-remesas-electronicas'].data.at(-1).date)}`,'Electronic-transfer remittances · million US$ per month',
       timeChart([{name:'Remittances',color:'green',pts:pts('banxico-remesas-electronicas',1,0)}],{xfmt:moFmt}),
       src('SE27806'),'',false);
   h+='</div>';
@@ -229,11 +229,11 @@ function spendExhibits(){
 function accessExhibits(){
   let h='<div class="exgrid two">';
   if(ENIF_ACCOUNT.length)
-    h+=exhibit('10','Account access is the ceiling','Adults with a financial account · INEGI ENIF waves',
+    h+=exhibit('10',`${ENIF_ACCOUNT.at(-1).value}% of adults held an account in ${ENIF_ACCOUNT.at(-1).year}, up from ${ENIF_ACCOUNT[0].value}% in ${ENIF_ACCOUNT[0].year}`,'Adults with a financial account · INEGI National Survey of Financial Inclusion (ENIF)',
       barChart(ENIF_ACCOUNT.map(p=>({label:String(p.year),value:p.value,hi:p===ENIF_ACCOUNT.at(-1)})),{unit:'%',everyLabel:1}),
       `Source: <a href="${ENIF_SRC}" target="_blank" rel="noopener">INEGI · ENIF</a>.`,'',false);
   if(has('banxico-tarjetas-debito')&&has('banxico-tarjetas-credito'))
-    h+=exhibit('11','Debit outnumbers credit','Cards in circulation · millions, all brands',
+    h+=exhibit('11',`Mexico has ${enNum(Math.round(lastv('banxico-tarjetas-debito')/1e6))} million debit cards in circulation and ${enNum(Math.round(lastv('banxico-tarjetas-credito')/1e6))} million credit cards`,'Cards in circulation · millions, all brands',
       timeChart([
         {name:'Debit',color:'green',pts:pts('banxico-tarjetas-debito',1e6,0)},
         {name:'Credit',color:'var(--ink-2)',pts:pts('banxico-tarjetas-credito',1e6,0)}
@@ -252,36 +252,36 @@ function accessExhibits(){
   if(newest){ const el=document.getElementById('asof'); if(el) el.textContent=new Date(newest).toLocaleDateString('en-US',{month:'long',year:'numeric',timeZone:'UTC'}); }
   document.getElementById('brief').innerHTML=briefHTML();
 
-  renderSection('sec-rails','The rails','Account-to-account money runs on public pipes',
-    `SPEI moves the country's money between banks — instant, free, and by far the biggest rail. The central bank's retail experiments on top of it are a different story.`,
-    [{id:'banxico-spei-operaciones',l:'SPEI · transfers / month'},{id:'banxico-spei-monto',l:'SPEI · value / month'},{id:'banxico-codi-operaciones',l:'CoDi · operations / month'}],
+  renderSection('sec-rails','The rails','SPEI moves the money between banks',
+    `${has('banxico-spei-operaciones')?`SPEI, the country's biggest payment rail, clears about ${enNum(Math.round(lastv('banxico-spei-operaciones')/1e6))} million transfers a month. `:`SPEI, the country's biggest payment rail, moves money between bank accounts. `}This section tracks that rail and the two retail products built on it, CoDi and DiMo.`,
+    [{id:'banxico-spei-operaciones',l:'SPEI · transfers / month'},{id:'banxico-spei-monto',l:'SPEI · pesos / month'},{id:'banxico-codi-operaciones',l:'CoDi · operations / month'}],
     railsExhibits());
 
   renderSection('sec-cards','Cards & the counter','What happens at the point of sale',
-    `Cards are where most tracked digital spending shows up. Debit dwarfs credit, e-commerce is the fast-growing edge, and the ATM shows how much of the system still exists to hand out cash.`,
-    [{id:'banxico-tpv-debito-ops',l:'Debit · ops / quarter'},{id:'banxico-tpv-credito-ops',l:'Credit · ops / quarter'},{id:'banxico-ecommerce-monto',l:'E-commerce · value / qtr'},{id:'banxico-cajeros-ops',l:'ATM · withdrawals / qtr'}],
+    `${has('banxico-tpv-debito-monto')&&has('banxico-tpv-credito-monto')?`Debit cards carried ${(lastv('banxico-tpv-debito-monto')/lastv('banxico-tpv-credito-monto')).toFixed(1)} times the credit-card spend at the terminal in the latest quarter. `:''}This section tracks card spending at the counter, card spending online, and the cash still drawn from ATMs.`,
+    [{id:'banxico-tpv-debito-ops',l:'Debit · ops / quarter'},{id:'banxico-tpv-credito-ops',l:'Credit · ops / quarter'},{id:'banxico-ecommerce-monto',l:'E-commerce · pesos / quarter'},{id:'banxico-cajeros-ops',l:'ATM · withdrawals / quarter'}],
     cardsExhibits());
 
-  renderSection('sec-cash','The cash paradox','Digital rises. So does cash.',
-    `Every one of the rails above is growing. So is the cash in circulation. That is the central fact of how Mexico pays.`,
+  renderSection('sec-cash','Cash','Cash in circulation grows alongside the rails',
+    `${ENIF_CASH.length?`${ENIF_CASH.at(-1).value}% of adults paid mostly in cash for purchases of 500 pesos or less in ${ENIF_CASH.at(-1).year} (INEGI ENIF), down from ${ENIF_CASH[0].value}% in ${ENIF_CASH[0].year}. `:''}This section tracks the cash the digital rails have not replaced.`,
     [{id:'banxico-circulante',l:'Currency in circulation'}],
     cashExhibits(),
-    (!has('banxico-circulante')&&!ENIF_CASH.length)?'Currency-in-circulation and the ENIF cash-share series are being wired — this section fills in on the next data refresh.':'');
+    (!has('banxico-circulante')&&!ENIF_CASH.length)?'The currency-in-circulation and ENIF cash-share series are not connected yet. This section fills in on the next data refresh.':'');
 
-  renderSection('sec-spend','What people spend','The money has to come from somewhere',
-    `Payments are a share of consumption. Two official gauges of where the spending comes from: what households buy at home, and what arrives from abroad.`,
+  renderSection('sec-spend','What people spend','What households buy and what arrives from abroad',
+    `The rails above move money that households spend. Two official gauges track where it comes from: household purchases at home, and remittances from abroad${has('banxico-remesas-electronicas')?`, which brought in ${(lastv('banxico-remesas-electronicas')/1e3).toFixed(1)} billion US dollars in ${moFmt(S['banxico-remesas-electronicas'].data.at(-1).date)}`:''}.`,
     [{id:'banxico-consumo-privado',l:'Private consumption · index'},{id:'banxico-remesas-electronicas',l:'Remittances · electronic'}],
     spendExhibits());
 
   renderSection('sec-access','Access','You cannot pay digitally without an account',
-    `Every digital rail has the same ceiling: how many people hold an account and a card in the first place. This is what has to rise for the rails above to replace cash.`,
+    `${ENIF_ACCOUNT.at(-1).value}% of adults held a financial account in ${ENIF_ACCOUNT.at(-1).year} (INEGI ENIF), up from ${ENIF_ACCOUNT[0].value}% in ${ENIF_ACCOUNT[0].year}. Every rail above depends on that share. This section tracks account access and the cards in circulation.`,
     [{id:'banxico-tarjetas-debito',l:'Debit cards · in circulation'},{id:'banxico-tarjetas-credito',l:'Credit cards · in circulation'}],
     accessExhibits());
 
   // sources note
   document.getElementById('srcnote').innerHTML=
-    `All figures are system totals from <a href="${SIE}" target="_blank" rel="noopener">Banco de México (SIE)</a> and <a href="${ENIF_SRC}" target="_blank" rel="noopener">INEGI's ENIF</a> survey. `+
-    `No private company appears on this page — the card and ATM numbers are the clearing-house aggregates Banxico publishes for the whole system. Each chart above cites its exact series.`;
+    `All figures are system totals from <a href="${SIE}" target="_blank" rel="noopener">Banco de México (SIE)</a> and <a href="${ENIF_SRC}" target="_blank" rel="noopener">INEGI's National Survey of Financial Inclusion (ENIF)</a>. `+
+    `The card and ATM figures are the totals Banxico publishes for the whole system, not numbers from any single company. Each chart above cites its exact series.`;
 
   wireCharts();
 })().catch(e=>{ const b=document.getElementById('brief'); if(b) b.textContent='Error loading payments data: '+e.message; });

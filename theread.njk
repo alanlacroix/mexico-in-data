@@ -1,10 +1,10 @@
 ---
 layout: base.njk
 permalink: /the-read.html
-title: "The Read — The Mexico Brief"
-description: "The Read — our analysis of what Mexico's official numbers are saying right now: what moved, the real policy rate, the peso, remittances, cash vs digital, and nearshoring. Interpretation, with every figure linked to its source."
-ogTitle: "The Read — The Mexico Brief"
-ogDescription: "Analysis, not data: what Mexico's numbers are saying this week."
+title: "The Read | The Mexico Brief"
+description: "Our analysis of Mexico's official data: what moved this week, plus five standing dashboards on the policy rate, the peso, remittances, cash, and exports. Every figure links to its source."
+ogTitle: "The Read | The Mexico Brief"
+ogDescription: "Analysis, not data: our read of what moved in Mexico's official series this week."
 ---
 {% raw %}
 <style>
@@ -187,9 +187,9 @@ ogDescription: "Analysis, not data: what Mexico's numbers are saying this week."
   <!-- 1 · HEADER + disclosure -->
   <section class="hero" id="top">
     <span class="eyebrow">Analysis · The Read</span>
-    <h1 class="state">What Mexico's numbers are saying</h1>
-    <p class="dek">Our read of the official data — what moved this week, and what it means through the numbers.</p>
-    <div class="disclosure">Analysis, not data. Below is my read of Mexico's official numbers — the figures are theirs, the interpretation is mine.</div>
+    <h1 class="state">Our read of Mexico's official data</h1>
+    <p class="dek">What moved beyond its normal range this week, plus five standing dashboards on prices, the peso, remittances, cash, and exports.</p>
+    <div class="disclosure">Analysis, not data. The figures come from the official sources named at the bottom of this page, and the interpretation is ours.</div>
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
@@ -204,9 +204,9 @@ ogDescription: "Analysis, not data: what Mexico's numbers are saying this week."
 
   <!-- 4 · RECEIPTS -->
   <section class="blk" id="tools">
-    <div class="section-head"><span class="no">Receipts</span><h2>The data behind this read</h2><p class="dek">Every series used above, with the date it was pulled. The Read is built from these and nothing else.</p></div>
+    <div class="section-head"><span class="no">Sources</span><h2>The data behind this read</h2><p class="dek">Every series used above, with the date it was pulled. The Read is built from these and nothing else.</p></div>
     <div id="receipts"></div>
-    <p class="srcnote">Analysis by The Mexico Brief from official series — <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a>, <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a>, <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank</a>, <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a>. It states only what the data shows.</p>
+    <p class="srcnote">Analysis by The Mexico Brief from official series: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a>, <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a>, <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank</a>, <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a>. Every figure above traces to one of these series.</p>
   </section>
 
 </div>
@@ -245,32 +245,32 @@ function fmtMoved(m){
 function renderMoved(){
   const wm=FACTS&&FACTS.whatMoved;
   if(!wm) return '<div class="moved-quiet">Loading…</div>';
-  if(wm.quiet||!wm.items.length) return '<div class="moved-quiet"><b>Quiet week.</b> Nothing in the data moved beyond its normal range. That is usually the honest read — the standing dashboards below are the picture worth holding.</div>';
+  if(wm.quiet||!wm.items.length) return '<div class="moved-quiet"><b>Quiet week.</b> No series moved beyond its normal range of the last two years. The standing dashboards below show where each one stands.</div>';
   return '<div class="moved">'+wm.items.map((m)=>{
     const zc=m.dir>0?'up':(m.dir<0?'dn':'');
     const zt=(m.z>=0?'+':'')+Number(m.z).toFixed(1)+'σ';
     const flag=m.flags&&m.flags.length?m.flags[0]:'';
     const chg=m.changePct!=null?((m.changePct>=0?'+':'')+m.changePct+'% '+cadLbl(m.cadence)):'';
-    return `<div class="mv"><span class="mv-z ${zc}">${zt}</span><div class="mv-b"><div class="mv-l">${m.label}${flag?' — <b>'+flag+'</b>':''}</div><div class="mv-m">${fmtMoved(m)}${chg?' · '+chg:''}</div></div></div>`;
+    return `<div class="mv"><span class="mv-z ${zc}">${zt}</span><div class="mv-b"><div class="mv-l">${m.label}${flag?': <b>'+flag+'</b>':''}</div><div class="mv-m">${fmtMoved(m)}${chg?' · '+chg:''}</div></div></div>`;
   }).join('')+'</div>'+
-  `<p class="readnote" style="margin-top:14px">The board scores every series' latest move against its own last two years. Only moves beyond the normal range, threshold crossings, and streaks show up — the rest is suppressed on purpose. A quiet board is a real signal, not an empty one.</p>`;
+  `<p class="readnote" style="margin-top:14px">The board scores each series' latest move against its own last two years. The σ chip counts standard deviations from that two-year norm: +2.0σ means the latest move ran twice the series' typical variation. Rows also appear for record highs and long streaks. Ordinary moves stay hidden, so an empty board means no series left its normal range.</p>`;
 }
 
 /* ---- the reads (standing dashboards) ---- */
 function readnote(html){ return `<p class="readnote">${html}</p>`; }
 
 function renderReads(){
-  let H=sectionHead('The reads','What the data is saying','Five standing views we watch. Each is computed from the series named beneath it; the sentence only ever states what the chart shows.');
+  let H=sectionHead('The reads','Five standing dashboards','Each chart is computed from the official series named beneath it. The note under each chart states the finding, then what it means.');
 
   // 1 — Money: inflation path and the real rate
   if(has('banxico-inflacion')&&has('banxico-inflacion-subyacente')){
     const hd=S['banxico-inflacion'].data.slice(-36), co=S['banxico-inflacion-subyacente'].data.slice(-36);
     const rr=FACTS&&FACTS.cross&&FACTS.cross.realRate;
-    const svg=timeChart([{name:'Headline',color:'var(--ink)',pts:hd},{name:'Core',color:'green',pts:co}],{unit:'%',band:[2,4],bandLabel:'3% ± 1 target',xfmt:moFmt});
+    const svg=timeChart([{name:'Headline',color:'var(--ink)',pts:hd},{name:'Core',color:'green',pts:co}],{unit:'%',band:[2,4],bandLabel:'3% ±1pp target',xfmt:moFmt});
     let note='';
-    if(rr){ const stance=rr.value<rr.neutralLow?'below neutral — the bank has room to keep easing':rr.value>rr.neutralHigh?'above neutral — policy is still restrictive':'around neutral';
-      note=`The number under the noise is the <b>real policy rate</b> — the rate minus core inflation — now about <span class="em">${rr.value}%</span>. Banxico's neutral range is roughly 2.6–3.3%, so today's setting is <b>${stance}</b>. Core, not headline, is the gauge the bank actually tracks.`; }
-    H+=exhibit('1','The real rate is the dial that matters','Headline vs core inflation, %, last 3 years · shaded band = 3% ± 1 target',svg,
+    if(rr){ const stance=rr.value<rr.neutralLow?'below neutral, with room to keep easing':rr.value>rr.neutralHigh?'above neutral, still restricting demand':'around neutral';
+      note=`The <b>real policy rate</b>, the policy rate minus core inflation, now runs about <span class="em">${rr.value}%</span>. Banxico puts its neutral range at 2.6–3.3%, which leaves today's setting <b>${stance}</b>. Banxico tracks core, not headline, as its working gauge.`; }
+    H+=exhibit('1','Headline and core inflation against the 3% target','Headline vs core inflation, %, last 3 years · shaded band = Banxico target of 3% ±1pp',svg,
       'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> · INPC + policy rate.','',true)+readnote(note);
   }
 
@@ -279,17 +279,17 @@ function renderReads(){
     const px=S['banxico-usdmxn-fix'].data.slice(-780).filter((_,i)=>i%3===0);
     const vol=FACTS&&FACTS.cross&&FACTS.cross.pesoVol, sp=FACTS&&FACTS.cross&&FACTS.cross.rateSpread;
     const svg=timeChart([{name:'MXN/USD',color:'green',pts:px}],{xfmt:moFmt});
-    const note=`The level moves less than the headlines suggest; what matters for anyone pricing cross-border risk is <b>volatility</b> — about <span class="em">${vol?vol.value:'—'}%</span> annualized over 90 days — and the <b>carry</b>: Mexico's policy rate sits roughly <span class="em">${sp?sp.value:'—'} points</span> above the US, and that spread, not trade, is what holds the peso up. Narrow it and the peso feels it.`;
-    H+=exhibit('2','The peso runs on carry, not trade','Peso, MXN per USD, last 3 years',svg,
-      'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (FIX) · <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a> (US fed funds).','',true)+readnote(note);
+    const note=`Peso <b>volatility</b> runs about <span class="em">${vol?vol.value:'—'}%</span> annualized over the last 90 days. Mexico's policy rate sits roughly <span class="em">${sp?sp.value:'—'} points</span> above the US rate. That spread pays investors to hold pesos, and it supports the peso more than trade flows do. A narrower spread would weaken that support.`;
+    H+=exhibit('2','The rate spread over the US, not trade, supports the peso','Peso, MXN per USD, last 3 years',svg,
+      'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a>, FIX reference rate · <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a>, US fed funds.','',true)+readnote(note);
   }
 
   // 3 — Remittances in pesos (the super-peso)
   const pr=FACTS&&FACTS.cross&&FACTS.cross.pesoRemittances;
   if(pr&&pr.series){
     const svg=timeChart([{name:'Remittances, bn MXN',color:'green',pts:pr.series.slice(-48)}],{unit:'$',xfmt:moFmt});
-    const note=`Remittances keep setting <b>dollar</b> records, but families spend pesos — and a strong peso quietly shrinks what those dollars buy at home. Converting the flow at the going exchange rate (dollars × FX) shows the number that actually reaches Mexican households, near <span class="em">$${pr.latest?Math.round(pr.latest.value):'—'} billion pesos</span> a month. When the peso is strong, record dollars can mean flat pesos.`;
-    H+=exhibit('3','Record dollars, flatter pesos','Remittances converted to pesos, bn per month, last 4 years',svg,
+    const note=`Remittances arrive in dollars, but families spend pesos. Converted at the exchange rate, the flow reaching Mexican households runs near <span class="em">$${pr.latest?Math.round(pr.latest.value):'—'} billion pesos</span> a month. A strong peso converts each dollar into fewer pesos, so record dollar months can arrive as flat peso months.`;
+    H+=exhibit('3','Remittances set records in dollars, not in pesos','Remittances converted to pesos, bn per month, last 4 years',svg,
       'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> · remittances (USD) × the peso FIX.','',true)+readnote(note);
   }
 
@@ -297,9 +297,9 @@ function renderReads(){
   if(has('banxico-circulante')){
     const cc=S['banxico-circulante'].data.slice(-60).map((p)=>({date:p.date,value:+(p.value/1e6).toFixed(2)}));
     const svg=timeChart([{name:'Currency in circulation, tn MXN',color:'green',pts:cc}],{unit:'$',xfmt:moFmt});
-    const note=`Every digital rail — SPEI, cards, e-commerce — is growing. So is the cash. Currency in circulation keeps climbing in <b>peso terms</b>, which means new rails are being <b>added to</b> how Mexico pays, not yet replacing cash. For anyone in payments, that gap is the headroom.`;
-    H+=exhibit('4','Digital grows. So does cash.','Currency in circulation, trillion pesos, last 5 years',svg,
-      'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> · billetes y monedas en circulación.','',true)+readnote(note);
+    const note=`SPEI, Banxico's interbank transfer system, keeps growing, and so do card payments and e-commerce. Currency in circulation keeps rising too in <b>nominal pesos</b>, and part of that rise is inflation. Digital payments are adding to how Mexico pays, not yet replacing cash.`;
+    H+=exhibit('4','Cash in circulation grows alongside digital payments','Currency in circulation, trillion pesos, last 5 years',svg,
+      'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> · billetes y monedas en circulación, notes and coins in circulation.','',true)+readnote(note);
   }
 
   // 5 — Nearshoring
@@ -309,8 +309,8 @@ function renderReads(){
     const ann=Object.keys(sum).filter((y)=>cnt[y]>=12).sort().map((y)=>({date:y+'-01-01',value:+(sum[y]/1e6).toFixed(1)}));
     const gdp=REG&&REG.metrics&&REG.metrics.exportsPctGdp&&REG.metrics.exportsPctGdp.values.find((v)=>v.iso==='MEX');
     const svg=timeChart([{name:'Manufacturing exports, $bn/yr',color:'green',pts:ann}],{unit:'$',xfmt:yr});
-    const note=`Manufacturing exports are the nearshoring scoreboard, and they have surged since 2022. The honest test is whether that shows up in jobs, not just shipments${gdp?`; exports are already about <span class="em">${gdp.value}% of GDP</span>, the highest among big Latin American economies`:''}. Watch export momentum and formal employment together — one without the other is a story, not a shift.`;
-    H+=exhibit('5','Nearshoring, measured','Manufacturing exports, US$ bn per year',svg,
+    const note=`Manufacturing exports measure nearshoring directly, and they have grown since 2022.${gdp?` Exports already run about <span class="em">${gdp.value}% of GDP</span>, the highest share among Latin America's large economies (World Bank).`:''} The test is whether export growth shows up in formal employment, not just in shipments.`;
+    H+=exhibit('5','Manufacturing exports have grown since 2022','Manufacturing exports, US$ bn per year, full years on record',svg,
       'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (CE125) · <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank</a> (exports % GDP).','',true)+readnote(note);
   }
   return H;

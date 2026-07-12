@@ -241,3 +241,11 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .horizon button:hover{border-color:var(--green)}
 .horizon button.on{background:var(--green);color:#fff;border-color:var(--green)}
 .projchart{cursor:crosshair}
+
+/* Page orientation block — WHAT / NOW / NEXT, between the hero and the numbers board */
+.pageintro{margin:0 0 6px;border-left:2px solid var(--green);padding:3px 0 3px 16px;display:grid;gap:8px}
+.pi-row{display:grid;grid-template-columns:50px 1fr;gap:14px;align-items:baseline}
+.pi-k{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+.pi-v{font-family:var(--serif);font-size:15px;line-height:1.5;color:var(--ink-2)}
+.pi-v b{color:var(--ink);font-weight:600}
+@media(max-width:640px){.pi-row{grid-template-columns:42px 1fr;gap:10px}.pi-v{font-size:14px}}

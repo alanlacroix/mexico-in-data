@@ -1,9 +1,9 @@
 ---
 layout: base.njk
 permalink: /money.html
-title: "Money — The Mexico Brief"
+title: "Money · The Mexico Brief"
 description: "Mexico's money, in official numbers: the peso, headline and core inflation, Banxico's policy rate, international reserves and remittances."
-ogTitle: "Money — The Mexico Brief"
+ogTitle: "Money · The Mexico Brief"
 ogDescription: "The peso, inflation, and Banxico's rate."
 ---
 {% raw %}
@@ -166,9 +166,9 @@ ogDescription: "The peso, inflation, and Banxico's rate."
   <!-- 1 · HEADER -->
   <section class="hero" id="top">
     <span class="eyebrow">Money</span>
-    <h1 class="state">Inflation cools, rates stay high</h1>
-    <p class="dek">Headline inflation is back inside Banxico's 2–4% band. The bank is holding its rate after last year's cuts, and the peso is holding with it.</p>
-    <p class="statedate">as of <b id="asof">—</b></p>
+    <h1 class="state">Inflation, the peso, and the cost of borrowing</h1>
+    <p class="dek">This page tracks consumer prices, Banxico's policy rate, and the peso against the dollar, each updated as new data lands.</p>
+    <p class="statedate">as of <b id="asof">…</b></p>
   </section>
 
   <!-- 2 · THE NUMBERS NOW -->
@@ -185,7 +185,7 @@ ogDescription: "The peso, inflation, and Banxico's rate."
 
   <!-- 4 · WHAT TO WATCH -->
   <section class="blk" id="watch">
-    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">The next Banxico and Fed decisions and the INEGI inflation prints, with the dates already set.</p></div>
+    <div class="section-head"><span class="no">Calendar</span><h2>What to watch</h2><p class="dek">This calendar lists the next rate decisions from Banxico and the US Federal Reserve, plus INEGI's inflation releases. Every date comes from the issuer's published calendar.</p></div>
     <div id="watch-list"></div>
   </section>
 
@@ -199,10 +199,10 @@ ogDescription: "The peso, inflation, and Banxico's rate."
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Pull a lever (the Fed, tariffs, oil) and see how the peso, inflation, and Banxico's rate respond. It shows the modeled direction and rough size of the move.</div></a>
-      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
+      <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Set the Fed rate, tariffs, or the oil price, and see how the peso, inflation, and Banxico's rate respond. It shows the modeled direction and rough size of the move.</div></a>
+      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its license, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE</a> (peso FIX, policy rate, reserves, remittances) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (INPC, the consumer-price index).</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México (SIE, its statistics system)</a> (peso FIX, policy rate, reserves, remittances) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> (INPC, the consumer-price index).</p>
   </section>
 
 </div>
@@ -210,41 +210,43 @@ ogDescription: "The peso, inflation, and Banxico's rate."
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, storyBlock } from '/assets/mb.js?v=11';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, monLong, relTime, evDate, tagChip, wireCharts, renderDevelopments, storyBlock } from '/assets/mb.js?v=11';
 
 /* the live tile board (block 2) — same JSON as the metric rows below */
 const TILES=[
-  {id:'banxico-usdmxn-fix',l:'Peso · MXN/USD',per:'vs yesterday'},
+  {id:'banxico-usdmxn-fix',l:'Peso · pesos per dollar',per:'vs yesterday'},
   {id:'banxico-inflacion',l:'Inflation · annual',per:'vs prior month'},
   {id:'banxico-inflacion-subyacente',l:'Core inflation · annual',per:'vs prior month'},
-  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',per:'vs 2024'},
+  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',per:'vs 2024 peak 11.25%'},
   {id:'banxico-reservas',l:"Int'l reserves",per:'vs prior week'},
-  {id:'banxico-remesas',l:'Remittances · month',per:'vs prior month'},
+  {id:'banxico-remesas',l:'Remittances · monthly total',per:'vs prior month'},
 ];
 
 /* block 3 — the migrated Q3 "money" exhibit + metric rows + forward line, built exactly
    as index.njk builds it (inflation vs policy rate, band = 3% ± 1, chart<->table toggle) */
 function renderBackground(){
   const rate=S['banxico-tasa-objetivo'],inf=S['banxico-inflacion'];
-  const infV=inf?inf.data.at(-1).value:null, inBand=infV!=null&&infV>2&&infV<4;   // in-band is computed from the live series, never hand-asserted (Fable's law)
+  const infV=inf?inf.data.at(-1).value:null, rateV=rate?rate.data.at(-1).value:null, inBand=infV!=null&&infV>2&&infV<4;   // in-band is computed from the live series, never hand-asserted (Fable's law)
   let ex='';
   if(rate&&inf){
     const rr=rate.data.filter(p=>new Date(p.date)>=new Date(Date.now()-2.2*365*864e5)).filter((_,i)=>i%6===0);
     const ii=inf.data.slice(-Math.min(inf.data.length,30));
-    const svg=timeChart([{name:'Inflation',color:'var(--ink)',pts:ii},{name:'Policy rate',color:'green',pts:rr.length?rr:rate.data.slice(-30)}],{unit:'%',band:[2,4],bandLabel:'3% ± 1 target'});
+    const svg=timeChart([{name:'Inflation',color:'var(--ink)',pts:ii},{name:'Policy rate',color:'green',pts:rr.length?rr:rate.data.slice(-30)}],{unit:'%',band:[2,4],bandLabel:'2–4% target'});
     const rateAt=(d)=>{const t=+new Date(d);let best=rate.data[0],bd=1e18;for(const q of rate.data){const dd=Math.abs(+new Date(q.date)-t);if(dd<bd){bd=dd;best=q;}}return best.value;};
-    const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p)=>[qtrOf(p.date),p.value.toFixed(1),rateAt(p.date).toFixed(2)]));
-    ex=exhibit('3.1',inBand?'Headline inflation is back inside the target band; policy stays restrictive':'Banxico is holding rates high while inflation runs above target','Policy rate vs headline inflation, % · shaded band = 3% ± 1 target',svg,
-      `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> · INPC + target rate.`,tbl,true);
+    const tbl=dataTable(['Month','Inflation %','Policy rate %'], ii.slice(-8).map((p)=>[monLong(p.date),p.value.toFixed(1),rateAt(p.date).toFixed(2)]));
+    ex=exhibit('3.1',inBand?`Headline inflation is back inside the 2–4% band at ${infV.toFixed(2)}%, and Banxico holds its rate at ${rateV.toFixed(2)}%`:`Headline inflation, at ${infV.toFixed(2)}%, is outside the 2–4% band, and Banxico holds its rate at ${rateV.toFixed(2)}%`,'Policy rate vs headline inflation, % · shaded band = the 2–4% inflation target',svg,
+      `Source: <a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banco de México (SIE)</a> · INPC, the consumer price index, and Banxico's policy target rate.`,tbl,true);
   }
-  return sectionHead('Background',"Where Mexico's money stands",inBand?"Headline inflation is back inside Banxico's 2–4% target range. The bank is holding its policy rate after last year's cuts, and the peso is holding with it.":"Inflation is above Banxico's target, so the bank is holding rates high and the peso is holding with them.")+
+  const dek=(infV!=null?`Headline inflation stands at ${infV.toFixed(2)}%, ${inBand?'inside':'outside'} Banxico's 2–4% target band.`:`Banxico targets inflation of 2–4%.`)+(rateV!=null?` The policy rate stands at ${rateV.toFixed(2)}%.`:'')+(ex?' Exhibit 3.1 below plots the two together.':'');
+  return sectionHead('Background',"Where Mexico's money stands",dek)+
+
     ex+
     mrow({id:'banxico-inflacion',label:'Inflation, annual (CPI)'})+
     mrow({id:'banxico-inflacion-subyacente',label:'Core inflation, annual'})+
     mrow({id:'banxico-tasa-objetivo',label:'Banxico policy rate'})+
     mrow({id:'banxico-usdmxn-fix',label:'Peso · exchange rate (FIX)'})+
     mrow({id:'banxico-reservas',label:'International reserves'})+
-    fwd(`Banxico's survey (Jul 2026) sees inflation at <b>4.2%</b> end-2026, the rate on hold at <b>6.50%</b>, the peso near <b>17.95</b>. <a href="/#q10">Outlook →</a>`)+
+    fwd(`Banxico's survey of private-sector forecasters (Jul 2026) puts inflation at <b>4.2%</b> at end-2026, back above the 2–4% band. The same forecasters put the rate at <b>6.50%</b> and the peso near <b>17.95</b>. <a href="/#q10">Outlook →</a>`)+
     `<div class="ctxline">Gloss: <b>Banxico</b> = the central bank · <b>INPC</b> = the consumer price index · <b>FIX</b> = Banxico's official daily reference rate.</div>`;
 }
 
@@ -276,8 +278,8 @@ function renderWire(){ return renderDevelopments('money'); }   // curated events
   }
   document.getElementById('tablero').innerHTML=TILES.map(t=>tile(t,{src:true})).join('');
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'July 2026',
-    p1:`Headline inflation slid from <b>4.59%</b> in March back inside Banxico's <b>2–4%</b> target, printing <b>3.37%</b> in June, so prices are finally cooling. But the bank is holding its policy rate at <b>6.50%</b> after last year's cuts, because core inflation, the stickier gauge, is still <b>4.03%</b>, just above the band. The peso has held with it, near <b>17.48</b> per dollar.`,
-    p2:`Inflation back inside the band is real relief for stretched household budgets, but with core still above target the first cut stays off the table, so credit stays expensive for anyone borrowing to buy a home or a car.`,
+    p1:`Headline inflation fell from <b>4.59%</b> in March to <b>3.37%</b> in June, back inside Banxico's <b>2–4%</b> target. Prices are still rising, only more slowly. The bank holds its policy rate at <b>6.50%</b> because core inflation, the stickier gauge, is still <b>4.03%</b>, just above the band. The peso trades near <b>17.48</b> per dollar.`,
+    p2:`Households get slower price growth, but not cheaper credit. Core inflation of <b>4.03%</b> keeps Banxico's rate at <b>6.50%</b>, and that rate sets the cost of home and car loans.`,
     src:'Banco de México (SIE), INEGI'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();

@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Trade — The Mexico Brief</title>
+<title>Trade · The Mexico Brief</title>
 <meta name="description" content="Mexico&#39;s trade, in official numbers: exports and imports over two decades, what the country sells, who it sells to, what it buys, and how open it is versus its neighbors." />
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Trade — The Mexico Brief" />
-<meta property="og:description" content="What Mexico sells, to whom, and what it buys — official Banxico and UN COMTRADE data, reconciled." />
+<meta property="og:title" content="Trade · The Mexico Brief" />
+<meta property="og:description" content="What Mexico sells, to whom, and what it buys: official Banxico and UN COMTRADE data, reconciled." />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=1063d0e5" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=b116ada5" />
 
 
 </head>
@@ -199,7 +199,7 @@
   <section class="hero" id="top">
     <span class="eyebrow">Trade</span>
     <h1 class="state">What Mexico sells, and to whom</h1>
-    <p class="dek">Mexico sells about $600bn of goods a year, four-fifths of it to the United States. It imports parts, adds work, and ships finished goods north.</p>
+    <p class="dek">Mexico exported $617.7bn of goods in 2024, four-fifths of it to the United States. It imports parts, adds work, and ships finished goods north.</p>
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
@@ -219,10 +219,10 @@
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="/the-read.html"><div class="tk">Analysis</div><div class="th">The Read →</div><div class="td">Our read of what the trade numbers are saying — nearshoring, the peso, and what moved this week.</div></a>
-      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
+      <a href="/the-read.html"><div class="tk">Analysis</div><div class="th">The Read →</div><div class="td">Our read of the trade numbers: nearshoring, the shift of factories from Asia to Mexico, the peso, and what changed this week.</div></a>
+      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its license, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México — SIE, cuadro CE125</a> (exports, imports, balance, imports by use) · <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a> (export basket, trade partners) · <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank WDI</a> (exports % of GDP, high-tech share). The COMTRADE figures are cross-checked against Banxico's official annual total and shown only when they reconcile within 2% — the gap is printed under each chart.</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México, SIE table CE125</a> (exports, imports, balance, imports by use) · <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a> (export basket, trade partners) · <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank WDI</a> (exports % of GDP, high-tech share). The COMTRADE figures are cross-checked against Banxico's official annual total and shown only when they reconcile within 2%. The gap is printed under each chart.</p>
   </section>
 
 </div>
@@ -260,18 +260,18 @@ function renderTiles(){
   const mo=has('banxico-exports-total')?moLbl(S['banxico-exports-total'].data.at(-1).date):'';
   const x=ttm('banxico-exports-total'),m=ttm('banxico-imports-total');
   let out='';
-  if(x!=null) out+=ctile({l:'Exports · last 12 months',v:'$'+Math.round(bn(x))+'bn',dl:deltaSpan(yoy('banxico-exports-total')),tb:'Goods, trailing twelve months',stamp:'BANXICO · 12m to '+mo});
-  if(m!=null) out+=ctile({l:'Imports · last 12 months',v:'$'+Math.round(bn(m))+'bn',dl:deltaSpan(yoy('banxico-imports-total')),tb:'Goods, trailing twelve months',stamp:'BANXICO · 12m to '+mo});
+  if(x!=null) out+=ctile({l:'Exports · last 12 months',v:'$'+Math.round(bn(x))+'bn',dl:deltaSpan(yoy('banxico-exports-total')),tb:'Goods only, services not included',stamp:'BANXICO · 12m to '+mo});
+  if(m!=null) out+=ctile({l:'Imports · last 12 months',v:'$'+Math.round(bn(m))+'bn',dl:deltaSpan(yoy('banxico-imports-total')),tb:'Goods only, services not included',stamp:'BANXICO · 12m to '+mo});
   if(x!=null&&m!=null){const b=bn(x-m);out+=ctile({l:'Trade balance · last 12 months',v:(b>=0?'+$':'−$')+Math.abs(Math.round(b))+'bn',tb:'Exports minus imports',stamp:'BANXICO · 12m to '+mo});}
-  if(PART&&PART.exports) out+=ctile({l:'Exports to the U.S.',v:'~'+Math.round(PART.exports.items[0].share),s:'% of total',tb:'Four of five export dollars go north',stamp:'COMTRADE · '+PART.year});
-  if(REG&&REG.metrics&&REG.metrics.exportsPctGdp){const mx=REG.metrics.exportsPctGdp.values.find(v=>v.iso==='MEX');if(mx)out+=ctile({l:'Exports · share of GDP',v:mx.value.toFixed(0),s:'%',tb:'Highest among big Latin economies',stamp:'WORLD BANK · '+mx.year});}
-  if(PROD&&PROD.items){const t=PROD.items[0];out+=ctile({l:'Top export',v:Math.round(t.share),s:'% · '+t.name.toLowerCase(),tb:'Vehicles and parts lead the basket',stamp:'COMTRADE · '+PROD.year});}
+  if(PART&&PART.exports) out+=ctile({l:'Exports to the U.S.',v:'~'+Math.round(PART.exports.items[0].share),s:'% of total',tb:'Four of five export dollars go to the United States',stamp:'COMTRADE · '+PART.year});
+  if(REG&&REG.metrics&&REG.metrics.exportsPctGdp){const mx=REG.metrics.exportsPctGdp.values.find(v=>v.iso==='MEX');if(mx)out+=ctile({l:'Exports · share of GDP',v:mx.value.toFixed(0),s:'%',tb:'Higher than Brazil, Colombia, and Chile',stamp:'WORLD BANK · '+mx.year});}
+  if(PROD&&PROD.items){const t=PROD.items[0];out+=ctile({l:'Top export',v:Math.round(t.share),s:'% · '+t.name.toLowerCase(),tb:'Vehicles and parts are the largest export',stamp:'COMTRADE · '+PROD.year});}
   return out;
 }
 
 const SIE='https://www.banxico.org.mx/SieInternet/';
 const bx=(ids)=>`Source: <a href="${SIE}" target="_blank" rel="noopener">Banco de México (SIE)</a> · ${ids}`;
-const comtrade=(rc)=>`Source: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a>, reconciled to Banxico CE125${rc?` (Δ ${rc.deltaPct}%)`:''}.`;
+const comtrade=(rc)=>`Source: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a>, reconciled to Banxico CE125${rc?` (gap ${rc.deltaPct}%)`:''}.`;
 
 /* Our own product-space treemap. The 97 HS2 chapters, grouped into 9 readable sectors and colored
    like a product map (agri warm, chemicals violet, machinery blue, transport indigo, instruments cyan).
@@ -294,7 +294,7 @@ function basketItems(){
     if(p.share>=0.3){ const s=tsectOf(p.code); items.push({name:p.name,value:p.value,share:p.share,color:s.c,key:s.key}); }
     else { ov+=p.value; os+=p.share; on++; }
   }
-  if(on) items.push({name:`Other (${on} small chapters)`,value:ov,share:os,color:'#9aa6b0',key:'Other — small chapters'});
+  if(on) items.push({name:`Other (${on} small product groups)`,value:ov,share:os,color:'#9aa6b0',key:'Other small product groups'});
   return items;
 }
 function basketLegend(){
@@ -307,17 +307,17 @@ function renderBackground(){
   const xa=annual('banxico-exports-total'),ma=annual('banxico-imports-total');
   if(xa.length>=3){
     const tbl=dataTable(['Year','Exports $bn','Imports $bn'],xa.slice(-8).map((p)=>{const im=ma.find(q=>q.date===p.date);return [yr(p.date),p.value.toFixed(0),im?im.value.toFixed(0):'—'];}));
-    ex+=exhibit('1','Trade is enormous on both sides, and close to balanced','Goods exports vs imports, US$ bn per year',
+    ex+=exhibit('1','Exports ran $617.7bn in 2024, about even with imports','Goods exports vs imports, US$ bn per year',
       timeChart([{name:'Exports',color:'green',pts:xa},{name:'Imports',color:'var(--ink)',pts:ma}],{unit:'$',xfmt:yr}),
       bx('CE125 (SE36593, SE36595). The 2024 sum, $617.7bn, matches the official INEGI total.'),tbl,true);
   }
   if(PROD&&PROD.items){
-    ex+=exhibit('2','What Mexico sells, mapped: cars, electronics, machinery','Every chapter of the export basket, sized by value — hover any cell. Share of goods exports, '+PROD.year,
+    ex+=exhibit('2','Vehicles, electronics and machinery are roughly 60% of exports','Every product group in the export mix, sized by value. Share of goods exports, '+PROD.year,
       `<div id="tm-basket">`+treemapSVG(basketItems(),{W:720,H:460})+basketLegend()+`</div>`,
       comtrade(PROD.reconciliation),dataTable(['Product','Share'],topN(PROD.items,12).map(i=>[i.name,i.share+'%'])),true);
   }
   if(PART&&PART.exports){const it=topN(PART.exports.items.map(i=>({name:i.name,share:i.share,value:i.value})),8);
-    ex+=exhibit('3','Almost everything goes to one customer','Export destinations, share of goods exports, '+PART.year,
+    ex+=exhibit('3','Four-fifths of exports go to the United States','Export destinations, share of goods exports, '+PART.year,
       hbarChart(it.map(i=>({label:i.name.length>24?i.name.slice(0,23)+'…':i.name,value:i.share,hi:i===it[0]})),{vfmt:(v)=>v+'%'}),
       comtrade(PART.exports.reconciliation),dataTable(['Destination','Share'],it.map(i=>[i.name,i.share+'%'])),true);
   }
@@ -325,12 +325,12 @@ function renderBackground(){
   if(ii.length>=2){
     ex+=exhibit('4','Imports are inputs: Mexico buys parts to export goods','Imports by economic use, US$ bn per year',
       timeChart([{name:'Intermediate',color:'green',pts:ii},{name:'Capital',color:'var(--ink)',pts:ic},{name:'Consumer',color:'var(--ink-2)',pts:io}],{unit:'$',xfmt:yr}),
-      bx('CE125 (SE36597–99). Intermediate goods — parts and materials — are most of the bill.'),'',true);
+      bx('CE125 (SE36597–99). Intermediate goods, meaning parts and materials, are most of the bill.'),'',true);
   }
   if(REG&&REG.metrics&&REG.metrics.exportsPctGdp&&REG.metrics.exportsPctGdp.series){
     const s=REG.metrics.exportsPctGdp.series, pick=(iso,c)=>{const r=s.find(x=>x.iso===iso);return r?{name:iso,color:c,pts:r.pts}:null;};
     const series=[pick('MEX','green'),pick('BRA','var(--ink-2)'),pick('COL','var(--ink-2)'),pick('CHL','var(--ink-2)'),pick('USA','var(--ink)')].filter(Boolean);
-    ex+=exhibit('5','More open than its neighbors, and pulling away','Exports as a share of GDP, %, Mexico vs regional peers',
+    ex+=exhibit('5','Mexico exports a larger share of GDP than Brazil, Colombia or Chile, and the gap has widened','Exports as a share of GDP, %, Mexico vs regional peers',
       timeChart(series,{unit:'%',xfmt:yr}),
       `Source: <a href="https://data.worldbank.org" target="_blank" rel="noopener">World Bank</a> · World Development Indicators (NE.EXP.GNFS.ZS).`,'',true);
   }
@@ -338,9 +338,9 @@ function renderBackground(){
   if(REG&&REG.metrics&&REG.metrics.highTechPct){const v=REG.metrics.highTechPct.values,mx=v.find(x=>x.iso==='MEX'),us=v.find(x=>x.iso==='USA');
     ht=`<div class="mrow"><div class="mr-top"><span class="mr-label">High-tech goods · share of manufactured exports</span><span class="stamp">WORLD BANK · ${mx?mx.year:''}</span></div>`+
       `<div class="mr-main"><span class="mr-val">${mx?mx.value.toFixed(0):'—'} <small>%</small></span></div>`+
-      `<div class="mr-verdict">Second only to the United States (${us?us.value.toFixed(0):'—'}%) and well ahead of the region — Mexico exports advanced goods, not raw materials.</div></div>`;
+      `<div class="mr-verdict">Mexico ranks second to the United States, where the share is ${us?us.value.toFixed(0):'—'}%, and above its regional peers. Mexico exports advanced goods, not raw materials.</div></div>`;
   }
-  return sectionHead('Background',"What Mexico trades, and with whom","Mexico is a manufacturing export economy welded to the United States: it imports parts, adds work, and ships finished goods north.")+ex+ht;
+  return sectionHead('Background',"Exports, imports, and trading partners","Mexico buys parts and materials abroad, assembles them, and sells the finished goods, mostly to the United States. Vehicles, electronics and machinery make up roughly 60% of exports.")+ex+ht;
 }
 
 (async()=>{
@@ -352,8 +352,8 @@ function renderBackground(){
     document.getElementById('board-asof').textContent='as of '+nw.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
   document.getElementById('tablero').innerHTML=renderTiles();
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Jul 2026',
-    p1:`Mexico now exports at an annual pace near <b>$700bn</b>, running about even with imports, and about <b>four-fifths of it goes to the United States</b>. Three chapters — vehicles, electronics and machinery — are roughly <b>60%</b> of the basket, so this is a factory economy, not a commodity one: it imports parts and ships finished goods north.`,
-    p2:`Underneath the totals, Mexico has climbed the ladder for two decades — more machines and instruments, fewer raw materials, and one of the higher shares of high-tech exports in the region.`,
+    p1:`Mexico exports at an annual pace near <b>$700bn</b> as of July 2026, about even with imports. About <b>four-fifths of it goes to the United States</b>. Vehicles, electronics and machinery are roughly <b>60%</b> of those exports. Mexico imports parts and materials and sells finished manufactured goods.`,
+    p2:`Mexico's export mix has shifted over two decades toward machines and instruments and away from raw materials. Its high-tech share of manufactured exports trails only the United States among the economies compared here.`,
     src:'Banco de México (CE125), UN COMTRADE, World Bank WDI'});
   wireCharts();
   wireTreemap();

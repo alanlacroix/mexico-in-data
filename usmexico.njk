@@ -1,9 +1,9 @@
 ---
 layout: base.njk
 permalink: /us-mexico.html
-title: "U.S.–Mexico — The Mexico Brief"
-description: "Mexico's trade with the United States, in official numbers: the ~80% of exports that go north, two-way trade and the balance, the post-SCOTUS tariff level, remittances, and the peso."
-ogTitle: "U.S.–Mexico — The Mexico Brief"
+title: "U.S.–Mexico · The Mexico Brief"
+description: "Mexico's trade with the United States, in official numbers: the ~80% of exports that go north, two-way trade and the balance, the tariff level after the Supreme Court ruling, remittances, and the peso."
+ogTitle: "U.S.–Mexico · The Mexico Brief"
 ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Court, and the ~80% of exports that go to the United States."
 ---
 {% raw %}
@@ -183,9 +183,9 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
   <!-- 1 · HEADER -->
   <section class="hero" id="top">
     <span class="eyebrow">U.S.–Mexico</span>
-    <h1 class="state">Mexico's biggest external risk</h1>
-    <p class="dek">Trade with the U.S. drives the economy; about 80% of exports go north, and the 2026 USMCA review is unresolved.</p>
-    <p class="statedate">as of <b id="asof">—</b></p>
+    <h1 class="state">The U.S. buys about 80% of Mexico's exports</h1>
+    <p class="dek">USMCA governs that trade, and its 2026 review is unresolved: Washington declined to renew on schedule on July 1.</p>
+    <p class="statedate">as of <b id="asof">loading…</b></p>
   </section>
 
   <!-- 2 · THE NUMBERS NOW -->
@@ -216,10 +216,10 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
   <section class="blk" id="tools">
     <div class="section-head"><span class="no">Tools &amp; sources</span><h2>Go deeper</h2></div>
     <div class="tools-grid">
-      <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Pull the USMCA-review lever, or tariffs, the Fed, or oil, and watch the peso, inflation, and growth respond. It shows the modeled direction and rough size of each move.</div></a>
-      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its licence, and when it last updated.</div></a>
+      <a href="/model.html"><div class="tk">Interactive</div><div class="th">The Model →</div><div class="td">Set the USMCA outcome, tariffs, the Fed rate, or oil. The model shows the direction and rough size of the effect on the peso, inflation, and growth.</div></a>
+      <a href="/sources.html"><div class="tk">Provenance</div><div class="th">All sources →</div><div class="td">Every feed on the site, what it measures, its license, and when it last updated.</div></a>
     </div>
-    <p class="srcnote">Sources for this section: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">U.S. Census Bureau</a> (two-way trade, balance) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (export destinations, peso, remittances) · <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a> and <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a> (USMCA, tariffs). <b style="color:var(--ink-2);font-weight:500">A note on the numbers:</b> U.S. Census and Banxico measure the same trade differently — valuation, timing, and re-exports — so their totals never match exactly. We use Banxico for Mexico's trade accounts, and the U.S. Census ledger only for the U.S.-side view.</p>
+    <p class="srcnote">Sources for this section: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">U.S. Census Bureau</a> (two-way trade, balance) · <a href="https://www.inegi.org.mx" target="_blank" rel="noopener">INEGI</a> / <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> (export destinations, peso, remittances) · <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a> and <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a> (USMCA, tariffs). <b style="color:var(--ink-2);font-weight:500">A note on the numbers:</b> U.S. Census and Banxico measure the same trade differently: valuation, timing, and re-exports differ. Their totals never match exactly. We use Banxico for Mexico's trade accounts, and the U.S. Census ledger only for the U.S.-side view.</p>
   </section>
 
 </div>
@@ -262,7 +262,7 @@ function pctDelta(series){
 function renderTiles(TRADE, PART){
   let out='';
   const usSh=PART&&PART.exports?Math.round(PART.exports.items[0].share):80;   // bound to the same file /trade renders — can't drift
-  out+=ctile({l:'Exports to the U.S.', v:'~'+usSh, s:'% of total', tb:'Four of five export dollars go north', stamp:'ANNUAL · '+(PART?PART.year:'2024'), src:'UN COMTRADE / Banxico'});
+  out+=ctile({l:'Exports to the U.S.', v:'~'+usSh, s:'% of total', tb:'The next buyer, Canada, takes 3%', stamp:'ANNUAL · '+(PART?PART.year:'2024'), src:'UN COMTRADE / Banxico'});
   if(TRADE&&TRADE.latest&&TRADE.series){
     const L=TRADE.latest, mo=monLong(L.month);
     const expByMonth=Object.fromEntries((TRADE.series.exports||[]).map(m=>[m.month,m.value]));
@@ -271,10 +271,10 @@ function renderTiles(TRADE, PART){
     out+=ctile({l:'Two-way trade · monthly', v:'$'+Math.round(L.twoway_bn), s:'bn / month', dl:pctDelta(twoway), spark:'', tb:'U.S.–Mexico goods, both directions', stamp:'MONTHLY · '+mo, src:'U.S. Census Bureau'});
     out+=ctile({l:"Mexico's surplus · monthly", v:'$'+Math.round(-L.balance_bn), s:'bn / month', dl:pctDelta(surplus), spark:'', tb:'Mexico sells the U.S. more than it buys', stamp:'MONTHLY · '+mo, src:'U.S. Census Bureau'});
   } else {
-    out+=ctile({l:'Two-way trade · monthly', v:'<span style="font-size:15px;color:var(--amber2)">NOT YET WIRED</span>', s:'', tb:'feed unavailable', stamp:''});
-    out+=ctile({l:"Mexico's surplus · monthly", v:'<span style="font-size:15px;color:var(--amber2)">NOT YET WIRED</span>', s:'', tb:'feed unavailable', stamp:''});
+    out+=ctile({l:'Two-way trade · monthly', v:'<span style="font-size:15px;color:var(--amber2)">Data unavailable</span>', s:'', tb:'U.S. Census Bureau feed did not load', stamp:''});
+    out+=ctile({l:"Mexico's surplus · monthly", v:'<span style="font-size:15px;color:var(--amber2)">Data unavailable</span>', s:'', tb:'U.S. Census Bureau feed did not load', stamp:''});
   }
-  out+=ctile({l:'Effective US tariff', v:'~4', s:'%', tb:'Blanket IEEPA tariffs struck down (SCOTUS)', stamp:'AS OF FEB 2026', src:'USTR · U.S. Supreme Court'});
+  out+=ctile({l:'Effective U.S. tariff', v:'~4', s:'%', tb:'The U.S. Supreme Court struck down the blanket IEEPA tariffs', stamp:'AS OF FEB 2026', src:'USTR · U.S. Supreme Court'});
   out+=tile({id:'banxico-remesas',l:'Remittances · month'},{src:true});
   out+=tile({id:'banxico-usdmxn-fix',l:'Peso · MXN/USD'},{src:true});
   return out;
@@ -286,18 +286,18 @@ function renderTiles(TRADE, PART){
 function renderBackground(TRADE, PART){
   // 8.1 retired: the export-destination split now lives on /trade (Fable: one series, one room). Pointer only.
   const usSh=PART&&PART.exports?Math.round(PART.exports.items[0].share):80;
-  const ex1=exhibit('8.1','Almost everything Mexico sells goes to one customer','Export destinations — the full picture lives on Trade',
-    `<p style="font-size:15px;line-height:1.55;color:var(--ink-2);margin:0 0 8px">About <b>${usSh}%</b> of Mexico's goods exports go to the United States — the single fact that shapes this whole page. The export basket, every trading partner, and the balance over two decades are charted in one place.</p><a href="/trade.html" style="color:var(--green);font-weight:500">See the full trade picture → Trade</a>`,
+  const ex1=exhibit('8.1',`The United States buys about ${usSh}% of Mexico's goods exports`,'Export destinations · full detail on the Trade page',
+    `<p style="font-size:15px;line-height:1.55;color:var(--ink-2);margin:0 0 8px">Canada takes 3% of Mexico's exports and China takes 2%. The Trade page charts the export basket, every trading partner, and the balance over two decades.</p><a href="/trade.html" style="color:var(--green);font-weight:500">See the full trade picture → Trade</a>`,
     `Source: <a href="https://comtradeapi.un.org" target="_blank" rel="noopener">UN COMTRADE</a>, reconciled to <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banxico</a>. Detailed charts on Trade.`,
     '', true);
 
   // the live story — fact card migrated VERBATIM from the homepage's Q8 (internal ref rewritten to the homepage anchor)
   const fc=`<div class="factcard">`+
-      `<div class="fc-row"><span class="fc-k">Trade pact</span><span class="fc-v"><b>USMCA</b> in force to 2036, but the <b>2026 joint review is unresolved</b> — the US declined to renew on schedule (Jul 1, 2026)</span></div>`+
-      `<div class="fc-row"><span class="fc-k">Tariffs</span><span class="fc-v">Blanket IEEPA tariffs struck down by the US Supreme Court (Feb 2026); effective US tariff now <b>~4%</b>, but sector threats recur</span></div>`+
-      `<div class="fc-row"><span class="fc-k">Why it matters</span><span class="fc-v">With ~80% of exports going north (<a href="/#q4">Q4</a>), trade terms are the economy's single biggest risk</span></div>`+
+      `<div class="fc-row"><span class="fc-k">Trade pact</span><span class="fc-v"><b>USMCA</b> is in force to 2036. The <b>2026 joint review is unresolved</b>: the U.S. declined to renew on schedule (Jul 1, 2026)</span></div>`+
+      `<div class="fc-row"><span class="fc-k">Tariffs</span><span class="fc-v">The U.S. Supreme Court struck down the blanket IEEPA tariffs (Feb 2026). The effective U.S. tariff is now <b>~4%</b>. Washington still threatens tariffs on individual sectors</span></div>`+
+      `<div class="fc-row"><span class="fc-k">Why it matters</span><span class="fc-v">The U.S. buys ~80% of Mexico's exports, so trade terms are the economy's single biggest external risk. <a href="/#q4">Homepage question 4 →</a></span></div>`+
     `</div>`+
-    `<div class="oc-src">Sources: <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a>; <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a>; verified Jul 2026.</div>`;
+    `<div class="oc-src">Sources: <a href="https://ustr.gov" target="_blank" rel="noopener">USTR</a> · <a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía</a> · verified Jul 2026.</div>`;
 
   // exhibit 8.2 — two-way goods trade over time (US Census ledger)
   let ex2='';
@@ -307,10 +307,10 @@ function renderBackground(TRADE, PART){
     if(imp.length&&exp.length){
       const expByMonth=Object.fromEntries((TRADE.series.exports||[]).map(m=>[m.month,m.value]));
       const rows=(TRADE.series.imports||[]).filter(m=>expByMonth[m.month]!=null).slice(-8).map(m=>[monLong(m.month),m.value.toFixed(1),expByMonth[m.month].toFixed(1),(m.value-expByMonth[m.month]).toFixed(1)]);
-      ex2=exhibit('8.2','The US buys more from Mexico than it sells, month after month','U.S.–Mexico goods trade, monthly, US$ bn · U.S. Census ledger',
-        timeChart([{name:'US buys',color:'green',pts:imp},{name:'US sells',color:'var(--ink)',pts:exp}],{unit:'$'}),
+      ex2=exhibit('8.2','The U.S. buys more from Mexico than it sells, every month','U.S.–Mexico goods trade, monthly, US$ bn · U.S. Census ledger',
+        timeChart([{name:'U.S. buys',color:'green',pts:imp},{name:'U.S. sells',color:'var(--ink)',pts:exp}],{unit:'$'}),
         `Source: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">U.S. Census Bureau</a>, International Trade · US imports from / exports to Mexico.`,
-        dataTable(['Month','US buys','US sells','MX surplus'],rows),true);
+        dataTable(['Month','U.S. buys','U.S. sells','MX surplus'],rows),true);
     }
   }
 
@@ -318,19 +318,19 @@ function renderBackground(TRADE, PART){
   let ex3='';
   if(TRADE&&TRADE.topImports&&TRADE.topImports.length){
     const buys=TRADE.topImports.map((x,i)=>({label:x.name,value:x.value_bn,hi:i===0}));
-    ex3=exhibit('8.3','Cars, computers, and electronics top what the US buys from Mexico','Top U.S. goods imports from Mexico, trailing 12 months, US$ bn',
+    ex3=exhibit('8.3','Cars, computers, and electronics top what the U.S. buys from Mexico','Top U.S. goods imports from Mexico, trailing 12 months, US$ bn',
       hbarChart(buys,{vfmt:(v)=>'$'+v+'B'}),
       `Source: <a href="https://www.census.gov/foreign-trade/" target="_blank" rel="noopener">U.S. Census Bureau</a>, HS2 chapters, trailing 12 months.`,
       dataTable(['Product','Imports','HS'],TRADE.topImports.map(x=>[x.name,'$'+x.value_bn+'B',x.hs])),true);
   }
 
-  return sectionHead('Background',"Where the U.S. relationship stands","Trade terms with the United States are Mexico's biggest external risk. The 2026 USMCA review is unresolved.")+
+  return sectionHead('Background',"Where the U.S. relationship stands","The effective U.S. tariff is about 4% and the 2026 USMCA review is unresolved. This section tracks the trade terms, the monthly balance, the peso, and remittances.")+
     ex1+ fc+ ex2+
-    mrow({id:'banxico-usdmxn-fix',label:'Peso · exchange rate (FIX)'})+
-    mrow({id:'banxico-remesas',label:'Remittances (family, monthly)'})+
-    (ex3?`<details class="more"><summary>More — what the US actually buys from Mexico</summary>${ex3}</details>`:'')+
-    fwd(`The <b>USMCA review timeline</b> is the lever to watch. Test it in the model: <a href="/model.html">"USMCA review fails" →</a>.`)+
-    `<div class="ctxline">Gloss: <b>USMCA / T-MEC</b> = the North American trade pact · <b>IEEPA</b> = the US emergency-powers law behind the blanket tariffs the Supreme Court struck down · <b>USTR</b> = the US Trade Representative.</div>`;
+    mrow({id:'banxico-usdmxn-fix',label:'Peso · Banxico reference rate'})+
+    mrow({id:'banxico-remesas',label:'Remittances · monthly'})+
+    (ex3?`<details class="more"><summary>More: what the U.S. buys from Mexico</summary>${ex3}</details>`:'')+
+    fwd(`Watch the <b>USMCA review timeline</b>: scheduled review rounds appear in the calendar below. Test the downside in the model: <a href="/model.html">"USMCA review fails" →</a>.`)+
+    `<div class="ctxline">Terms: <b>USMCA / T-MEC</b> = the North American trade pact · <b>IEEPA</b> = the U.S. emergency-powers law behind the blanket tariffs the Supreme Court struck down · <b>USTR</b> = the U.S. Trade Representative.</div>`;
 }
 
 /* block 4 — the US–Mexico catalyst calendar (USMCA review rounds + any trade-tagged events) */
@@ -339,7 +339,7 @@ function renderWatch(){
   const rel=ev.filter(e=>e.kind==='trade'||RE_EV.test((e.label||'')+' '+(e.mechanism||'')));
   const now=Date.now();
   const up=rel.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
-  if(!up.length) return `<div class="cb-empty">Nothing on the calendar yet. The next scheduled run will post US–Mexico events here.</div>`;
+  if(!up.length) return `<div class="cb-empty">Nothing on the calendar yet. U.S.–Mexico dates will appear here as they are announced.</div>`;
   return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind||''}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
@@ -361,8 +361,8 @@ function renderWire(){ return renderDevelopments('us-mexico'); }   // curated ev
   }
   document.getElementById('tablero').innerHTML=renderTiles(TRADE, PART);
   document.getElementById('background').innerHTML=renderBackground(TRADE, PART)+storyBlock({asof:'Jul 2026',
-    p1:`About <b>four-fifths</b> of Mexico's exports go to the United States, so the terms of that one relationship set the weather for the whole economy. Right now those terms are unsettled: the US Supreme Court struck down the blanket IEEPA tariffs in February, pulling the effective rate back to about <b>4%</b>, but the <b>2026 USMCA review</b> is unresolved — Washington declined to renew on schedule on July 1. Month to month, Mexico still sells the US more than it buys.`,
-    p2:`That's why trade terms, not oil or the peso, are Mexico's single biggest external risk: with four of five export dollars riding on one buyer, a stalled review or a new sector tariff lands straight on the country's factories, jobs, and growth.`,
+    p1:`About <b>80%</b> of Mexico's exports go to the United States. The U.S. Supreme Court struck down the blanket IEEPA tariffs in February, and the effective rate fell back to about <b>4%</b>. The <b>2026 USMCA review</b> is unresolved: Washington declined to renew on schedule on July 1. Month to month, Mexico still sells the U.S. more than it buys.`,
+    p2:`Trade terms, not oil or the peso, are Mexico's single biggest external risk. A stalled review or a new sector tariff would hit most of what the country exports, and the factories, jobs, and growth behind those exports.`,
     src:'U.S. Census Bureau, USTR, Banco de México'});
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
