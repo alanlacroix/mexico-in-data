@@ -36,6 +36,13 @@ ogDescription: "Mexico's economy in official numbers."
   .brief .bsrc:hover{color:var(--green-d)}
   .brief .brief-nums{font-size:var(--fs-small);color:var(--ink-2);border-top:1px solid var(--line);padding-top:12px;margin-top:16px;font-variant-numeric:tabular-nums}
   @media(max-width:560px){ .brief p{font-size:var(--fs-small)} }
+  /* Mobile Brief compression (Fable 2026-07-12): keep all 5 stories visible, shrink the tails, never
+     truncate. Sublines tighten; ranks 4-5 go headline-only so the whole week fits ~2 phone screens. */
+  @media(max-width:640px){
+    .brief .bi{margin-bottom:11px;line-height:1.5}
+    .brief .bi[data-rank="4"] .bctx, .brief .bi[data-rank="5"] .bctx{display:none}
+    .brief .bi[data-rank="4"], .brief .bi[data-rank="5"]{margin-bottom:8px}
+  }
 
   /* THE AREAS — the topic browse. Each area: a header (→ its section page), a 1–2 sentence read,
      then up to 3 standardized headline line-items (claim + muted source · date). 2-col on desktop.
@@ -215,23 +222,40 @@ ogDescription: "Mexico's economy in official numbers."
   .masthead .fresh{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .masthead .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
   .hero h1#lead{margin-top:16px}
-  .hero + section .bh, .hero + .homegrid .bh{margin-top:26px}   /* the Brief follows the hero closely, not a full section gap */
+  .hero + section .bh, .hero + .homegrid .hg-brief .bh{margin-top:26px}   /* the Brief follows the hero closely; other grid sections keep the full gap */
   .hero h1#lead a{color:inherit;text-decoration:none;border-bottom:3px solid transparent;transition:border-color .12s}
   .hero h1#lead a:hover{border-bottom-color:var(--green)}
   .wire-note a{color:var(--green)}
 
-  /* Homepage grid (Fable 2026-07-12): the Brief holds a reading measure; the watch rail fills the
-     wide-desktop gutter so the top reads like a front page, not a lone padded column. Stacks < 1080. */
+  /* Homepage grid (Fable 2026-07-12 hierarchy). DOM order Brief → What stood out → Numbers → Next up =
+     the mobile reading order. On desktop grid-template-areas lift the quiet "Next up" rail top-right
+     beside the Brief; What stood out and the board span full width below. No `order` (a11y = visual). */
   .homegrid{display:block}
-  .homegrid .hg-rail #wire{margin-top:26px}
-  .homegrid .hg-rail .board-lbl{margin-top:0}
   @media(min-width:1080px){
-    .homegrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:clamp(36px,4.5vw,64px);align-items:start}
-    .homegrid .hg-main{min-width:0}
-    .homegrid .hg-rail{position:sticky;top:24px}
-    .homegrid .hg-rail #wire{margin-top:0}
-    .homegrid .hg-rail .watch{max-height:none}
+    .homegrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;
+      column-gap:clamp(36px,4.5vw,64px);
+      grid-template-areas:"brief nextup" "stood stood" "numbers numbers";align-items:start}
+    .hg-brief{grid-area:brief;min-width:0}
+    .hg-stood{grid-area:stood;min-width:0}
+    .hg-numbers{grid-area:numbers;min-width:0}
+    .hg-nextup{grid-area:nextup;position:sticky;top:24px}
+    .hg-nextup .nextup-lbl{margin-top:29px}   /* align the kicker with the Brief heading */
   }
+
+  /* NEXT UP — a margin note, not a second column: hairline rule, muted kicker, date/title/source only */
+  .nextup-lbl{border-top:1px solid var(--line);padding-top:12px;margin-bottom:6px}
+  .nextup-lbl .k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600}
+  .hg-nextup .nur{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .hg-nextup .nur:last-child{border-bottom:none}
+  .hg-nextup .nud{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:44px;font-variant-numeric:tabular-nums;line-height:1.3;flex:0 0 auto}
+  .hg-nextup .nud small{color:var(--mut);display:block;font-size:var(--fs-label)}
+  .hg-nextup .nut{font-size:var(--fs-small);color:var(--ink);line-height:1.35}
+  .hg-nextup .num{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:3px;line-height:1.42}
+  .hg-nextup .nusrc{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);display:inline-block;margin-top:3px;text-decoration:none}
+  .hg-nextup a.nusrc{color:var(--green-d)}
+  .hg-nextup a.nusrc:hover{text-decoration:underline}
+  .nextup-toggle{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;color:var(--green-d);background:none;border:none;padding:11px 0 0;cursor:pointer}
+  .nextup-toggle:hover{text-decoration:underline}
 
   /* 7 · PRIMER — evergreen orientation, moved out of the top and collapsed */
   .primer{margin-top:30px}
@@ -268,38 +292,42 @@ ogDescription: "Mexico's economy in official numbers."
     <h1 id="lead">The week's major changes in Mexico.</h1>
   </section>
 
-  <!-- 2 · THE BRIEF + WATCH RAIL — the lead synthesis holds a reading measure on the left; the
-       "what to watch" calendar fills the wide-desktop gutter on the right instead of orphaning at
-       the page bottom (Fable 2026-07-12). Below 1080px the rail stacks under the Brief. -->
+  <!-- 2 · THE HOMEGRID — Fable 2026-07-12 hierarchy. DOM order is Lead(hero) → Brief → What stood out →
+       Numbers → Next up, which IS the mobile reading order (understand the present before the schedule).
+       On desktop, grid-template-areas lift the quiet "Next up" rail into the top-right beside the Brief
+       while What stood out and the board run full width below. No CSS `order`: screen-reader/tab order
+       must equal the visual order. -->
   <div class="homegrid">
-    <section class="hg-main">
+    <section class="hg-brief">
       <div class="bh"><div><span class="k">The Brief</span></div><span class="asof" id="brief-asof"></span></div>
       <div id="brief" class="brief"></div>
     </section>
-    <aside class="hg-rail">
-      <section id="wire">
-        <div class="board-lbl"><div><span class="k">What to watch</span> &nbsp; <h2 style="display:inline">The calendar</h2></div></div>
-        <div id="watch-list"></div>
-      </section>
+
+    <!-- 2b · WHAT STOOD OUT — first data interpretation, right after the Brief -->
+    <section id="stood-sec" class="hg-stood">
+      <div class="bh"><div><span class="k">The Read</span> &nbsp; <h2 style="display:inline">What stood out</h2></div><a class="asof stood-link" href="/the-read.html">See the analysis &rarr;</a></div>
+      <div id="stood"></div>
+    </section>
+
+    <!-- 3 · THE BOARD -->
+    <section class="hg-numbers">
+      <div class="board-lbl">
+        <div><span class="k">Where things stand</span> &nbsp; <h2 style="display:inline">The numbers</h2></div>
+        <span class="asof" id="board-asof"></span>
+      </div>
+      <div class="tablero" id="tablero"></div>
+      <button class="board-more" id="board-more" type="button" aria-expanded="false">Show all indicators</button>
+      <p class="wire-note">Open a tile for its full history and source. <a href="/sources.html">See all sources &rarr;</a></p>
+    </section>
+
+    <!-- 4 · NEXT UP — quiet dated-catalyst rail (Fable: date/title/source only; the event that echoes the
+         lead story is suppressed; "All N dates" inline-expands with the why). Last in DOM = last on
+         mobile; the grid lifts it top-right on desktop. -->
+    <aside id="wire" class="hg-nextup">
+      <div class="nextup-lbl"><span class="k">Next up</span></div>
+      <div id="watch-list"></div>
     </aside>
   </div>
-
-  <!-- 2b · WHAT STOOD OUT — the analysis surfaced: movers + computed connections from the facts pack -->
-  <section id="stood-sec">
-    <div class="bh"><div><span class="k">The Read</span> &nbsp; <h2 style="display:inline">What stood out</h2></div><a class="asof stood-link" href="/the-read.html">See the analysis &rarr;</a></div>
-    <div id="stood"></div>
-  </section>
-
-  <!-- 3 · THE BOARD -->
-  <section>
-    <div class="board-lbl">
-      <div><span class="k">Where things stand</span> &nbsp; <h2 style="display:inline">The numbers</h2></div>
-      <span class="asof" id="board-asof"></span>
-    </div>
-    <div class="tablero" id="tablero"></div>
-    <button class="board-more" id="board-more" type="button" aria-expanded="false">Show all indicators</button>
-    <p class="wire-note">Open a tile for its full history and source. <a href="/sources.html">See all sources &rarr;</a></p>
-  </section>
 
   <!-- 3b · THE AREAS — the topic browse: each area = a 1–2 sentence read + its top headlines -->
   <section>
@@ -411,7 +439,7 @@ function renderBrief(brief){
     return ` <a class="bsrc" href="${esc(o.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(o.source||'source')}">${esc(o.source||'source')}${d}</a>`; };
   let html='';
   if(brief.lead.context) html+=`<p class="bi">${ctx(brief.lead)}</p>`;
-  for(const it of (brief.items||[])) html+=`<p class="bi"><b class="bhl">${esc(it.headline)}.</b> ${ctx(it)}${src(it)}</p>`;
+  (brief.items||[]).forEach((it,i)=>{ html+=`<p class="bi" data-rank="${i+1}"><b class="bhl">${esc(it.headline)}.</b> <span class="bctx">${ctx(it)}</span>${src(it)}</p>`; });
   if(brief.standing) html+=`<p class="brief-nums">${esc(liveText(brief.standing))}</p>`;
   return html;
 }
@@ -458,15 +486,35 @@ function renderAreas(data){
 
 function hapDate(iso){ if(!iso) return ''; const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso); const d=m?new Date(+m[1],+m[2]-1,+m[3]):new Date(iso); if(isNaN(d)) return ''; return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
 /* ============ WHAT TO WATCH (block 6, left) — next 3 dated catalysts ============ */
-function renderWatch(){
+// classify an event or the lead headline into a topic bucket, so the compact rail can suppress the
+// event that merely echoes the lead story (Fable 2026-07-12: don't shrink the echo, drop it).
+function evClass(s){s=String(s||'').toLowerCase();
+  if(/usmca|t-?mec|tratado|us[\s.–-]*mexico\s*(trade|talks|review)|trade\s*(review|talks|deal|agreement|war)|tariff|arancel|census|\bexport/.test(s)) return 'trade';
+  if(/banxico|inflaci|inflation|\brate\b|\btasa\b|monetary|fomc|\bfed\b|\bcpi\b|igae|activity/.test(s)) return 'rates';
+  if(/presupuesto|budget|fiscal|hacienda|paquete/.test(s)) return 'fiscal';
+  if(/remesa|remittance/.test(s)) return 'remit';
+  if(/elecci|election|\bvote\b|midterm|governor|ballot/.test(s)) return 'political';
+  return null;
+}
+function renderWatch(brief){
   const ev=(EVENTS&&EVENTS.events)||[]; const now=Date.now();
-  const up=ev.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
-  if(!up.length) return `<div class="cb-empty">No dated events on the calendar yet.</div>`;
-  const KEY=/banxico|inflaci|inflation|\brate\b|\btasa\b|usmca|t-?mec|presupuesto|budget|decision|remesa|remittance/i;
-  const nd=(s)=>String(s||'').replace(/\s*—\s*/g,', ');   // strip em-dashes from event copy (keeps en-dash ranges like US–Mexico)
-  return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e); const key=KEY.test((e.label||'')+' '+(e.mechanism||''));
-    return `<div class="wtr"><div class="wd">${d.mo} ${d.day}<small>${d.y}${e.approx?' ~':''}</small></div><div class="wk ${e.kind||''}"></div>`+
-      `<div class="wt">${nd(e.label)}${key?' <span class="wflag">watch</span>':''}<div class="wm">${nd(e.mechanism)}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
+  const up=ev.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!up.length) return `<div class="cb-empty">Nothing dated on the calendar yet.</div>`;
+  const nd=(s)=>String(s||'').replace(/\s*—\s*/g,', ');   // strip em-dashes (keeps en-dash ranges like US–Mexico)
+  const leadClass=(brief&&brief.lead)?evClass((brief.lead.h1||'')+' '+(brief.lead.source||'')):null;
+  // compact rail: suppress any event in the lead story's topic (the third echo of the headline); show 3
+  let compact=up.filter(e=>!(leadClass&&evClass((e.label||'')+' '+(e.mechanism||''))===leadClass)).slice(0,3);
+  if(!compact.length) compact=up.slice(0,3);   // never render an empty rail
+  const row=(e,full)=>{const d=evDate(e);
+    const src=e.sourceUrl?`<a class="nusrc" href="${esc(e.sourceUrl)}" target="_blank" rel="noopener">${esc(e.source||'source')}</a>`
+      :(e.source?`<span class="nusrc">${esc(e.source)}</span>`:'');
+    return `<div class="nur"><div class="nud">${d.mo} ${d.day}<small>${d.y}${e.approx?' ~':''}</small></div>`+
+      `<div class="nut">${nd(e.label)}`+(full&&e.mechanism?`<div class="num">${nd(e.mechanism)}</div>`:'')+
+      (src?`<div>${src}</div>`:'')+`</div></div>`;};
+  const more=up.length>compact.length;
+  return `<div class="nextup-compact">${compact.map(e=>row(e,false)).join('')}</div>`+
+    `<div class="nextup-full" hidden>${up.map(e=>row(e,true)).join('')}</div>`+
+    (more?`<button type="button" class="nextup-toggle" aria-expanded="false" data-label="All ${up.length} dates &rarr;">All ${up.length} dates &rarr;</button>`:'');
 }
 
 /* THE WIRE (raw automated headlines) was retired from the homepage on 2026-07-11 (Fable): the public
@@ -526,7 +574,14 @@ function renderWatch(){
   }
   writeVisit();                     // stamp this visit so the next one has a "since" point
 
-  document.getElementById('watch-list').innerHTML=renderWatch();
+  document.getElementById('watch-list').innerHTML=renderWatch(brief);
+  // "All N dates" — inline-expand the quiet rail to the full calendar (with the why on each)
+  (function(){ const nu=document.getElementById('watch-list'); if(!nu) return;
+    const tg=nu.querySelector('.nextup-toggle'); if(!tg) return;
+    tg.addEventListener('click',()=>{ const c=nu.querySelector('.nextup-compact'), f=nu.querySelector('.nextup-full');
+      const open=f.hidden; c.hidden=open; f.hidden=!open;
+      tg.setAttribute('aria-expanded',String(open)); tg.innerHTML=open?'Show less &uarr;':tg.dataset.label; });
+  })();
 
   // "Show all indicators" — reveals the .extra tiles on mobile
   const bm=document.getElementById('board-more'), tbl=document.getElementById('tablero');
