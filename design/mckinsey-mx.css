@@ -54,7 +54,10 @@
   --fs-display:clamp(32px,5vw,44px);   /* h1 — one treatment, every page */
 
   --measure:66ch;
-  --maxw:1120px;
+  /* Width system (Fable 2026-07-12): the shell spans 1240; running prose holds a reading measure.
+     De-squeezes wide desktops without widening text. Exhibits/board/tables use the full shell. */
+  --maxw:1240px;
+  --w-prose:680px;
 }
 
 *{box-sizing:border-box}
