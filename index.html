@@ -247,10 +247,23 @@
   .masthead .fresh{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .masthead .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
   .hero h1#lead{margin-top:16px}
-  .hero + section .bh{margin-top:26px}   /* the Brief follows the hero closely, not a full section gap */
+  .hero + section .bh, .hero + .homegrid .bh{margin-top:26px}   /* the Brief follows the hero closely, not a full section gap */
   .hero h1#lead a{color:inherit;text-decoration:none;border-bottom:3px solid transparent;transition:border-color .12s}
   .hero h1#lead a:hover{border-bottom-color:var(--green)}
   .wire-note a{color:var(--green)}
+
+  /* Homepage grid (Fable 2026-07-12): the Brief holds a reading measure; the watch rail fills the
+     wide-desktop gutter so the top reads like a front page, not a lone padded column. Stacks < 1080. */
+  .homegrid{display:block}
+  .homegrid .hg-rail #wire{margin-top:26px}
+  .homegrid .hg-rail .board-lbl{margin-top:0}
+  @media(min-width:1080px){
+    .homegrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:clamp(36px,4.5vw,64px);align-items:start}
+    .homegrid .hg-main{min-width:0}
+    .homegrid .hg-rail{position:sticky;top:24px}
+    .homegrid .hg-rail #wire{margin-top:0}
+    .homegrid .hg-rail .watch{max-height:none}
+  }
 
   /* 7 · PRIMER — evergreen orientation, moved out of the top and collapsed */
   .primer{margin-top:30px}
@@ -287,11 +300,21 @@
     <h1 id="lead">The week's major changes in Mexico.</h1>
   </section>
 
-  <!-- 2 · THE BRIEF — the lead: a 2-paragraph synthesis, every sentence linked to the source below it -->
-  <section>
-    <div class="bh"><div><span class="k">The Brief</span></div><span class="asof" id="brief-asof"></span></div>
-    <div id="brief" class="brief"></div>
-  </section>
+  <!-- 2 · THE BRIEF + WATCH RAIL — the lead synthesis holds a reading measure on the left; the
+       "what to watch" calendar fills the wide-desktop gutter on the right instead of orphaning at
+       the page bottom (Fable 2026-07-12). Below 1080px the rail stacks under the Brief. -->
+  <div class="homegrid">
+    <section class="hg-main">
+      <div class="bh"><div><span class="k">The Brief</span></div><span class="asof" id="brief-asof"></span></div>
+      <div id="brief" class="brief"></div>
+    </section>
+    <aside class="hg-rail">
+      <section id="wire">
+        <div class="board-lbl"><div><span class="k">What to watch</span> &nbsp; <h2 style="display:inline">The calendar</h2></div></div>
+        <div id="watch-list"></div>
+      </section>
+    </aside>
+  </div>
 
   <!-- 2b · WHAT STOOD OUT — the analysis surfaced: movers + computed connections from the facts pack -->
   <section id="stood-sec">
@@ -318,13 +341,7 @@
 
 
 
-  <!-- 6 · WHAT TO WATCH — the next dated catalysts. The raw headline wire was retired from public
-       surfaces (Fable, 2026-07-11): the homepage carries curated developments only — in The Brief
-       and the areas. The wire keeps running internally as the feed that curation draws from. -->
-  <section id="wire">
-    <div class="board-lbl"><div><span class="k">What to watch</span> &nbsp; <h2 style="display:inline">The calendar</h2></div></div>
-    <div id="watch-list"></div>
-  </section>
+  <!-- (WHAT TO WATCH moved into the Brief's right rail above — Fable 2026-07-12) -->
 
   <!-- 7 · PRIMER — new to Mexico? the evergreen basics, moved out of the top -->
   <section class="primer">
