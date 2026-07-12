@@ -7,27 +7,27 @@ description: "What Mexico's economy is made of: GDP by sector and spending, grow
 {% raw %}
 <style>
   :root{--ink-3:#4d4d4d}
-  body{font-size:17px}
+  body{font-size:var(--fs-body)}
   /* content width inherits the shared .wrap component (--maxw:1120) — no per-page override (was the homepage-wider-than-sections bug) */
 
   .hero{padding:26px 0 6px}
-  .hero h1{font-family:var(--serif);font-size:clamp(30px,6vw,46px);line-height:1.0;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
-  .hero .thesis{font-size:17px;color:var(--ink-2);margin-top:12px;max-width:64ch;line-height:1.5}
+  .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.0;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
+  .hero .thesis{font-size:var(--fs-body);color:var(--ink-2);margin-top:12px;max-width:64ch;line-height:1.5}
   .hero .thesis b{color:var(--ink)}
 
   .heroband{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:10px;overflow:hidden;margin:20px 0 4px}
   @media(min-width:620px){.heroband{grid-template-columns:repeat(4,1fr)}}
   .hb{background:var(--paper);padding:15px 16px}
   .hb .hk{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut)}
-  .hb .hv{font-family:var(--serif);font-size:30px;color:var(--ink);margin-top:4px;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .hb .hv{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);margin-top:4px;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .hb .hs{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:5px}
 
   .exwrap{margin:34px 0 8px}
   .ex-tag{width:26px;height:5px;background:var(--green);border-radius:1px;margin-bottom:7px}
   .ex-no{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .ex-title{font-family:var(--serif);font-size:22px;line-height:1.2;margin:4px 0 3px;color:var(--ink);letter-spacing:-.01em;max-width:40ch}
-  .ex-sub{font-family:var(--mono);font-size:12px;color:var(--mut);margin-bottom:10px}
-  .ex-cap{font-size:14.5px;color:var(--ink-2);line-height:1.5;margin-top:10px;max-width:66ch}
+  .ex-title{font-family:var(--sans);font-size:22px;line-height:1.2;margin:4px 0 3px;color:var(--ink);letter-spacing:-.01em;max-width:40ch}
+  .ex-sub{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-bottom:10px}
+  .ex-cap{font-size:var(--fs-small);color:var(--ink-2);line-height:1.5;margin-top:10px;max-width:66ch}
   .ex-cap b{color:var(--ink)}
   .ex-src{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:8px}
   .ex-src a{color:var(--green)}
@@ -38,12 +38,12 @@ description: "What Mexico's economy is made of: GDP by sector and spending, grow
   .chart .ln2{fill:none;stroke:var(--green);stroke-width:2.2}
   .chart .zero{stroke:var(--ink-3);stroke-width:1}
   .chart .dot{stroke:#fff;stroke-width:1.5}
-  .chart .vlab{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;fill:var(--ink)}
-  .chart .endlab{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums}
+  .chart .vlab{font-family:var(--mono);font-size:var(--fs-label);font-variant-numeric:tabular-nums;fill:var(--ink)}
+  .chart .endlab{font-family:var(--mono);font-size:var(--fs-label);font-variant-numeric:tabular-nums}
   .chart .seglab{font-family:var(--sans);font-size:13px;font-weight:600;fill:#fff}
-  .chart .segval{font-family:var(--mono);font-size:12.5px;fill:#fff}
+  .chart .segval{font-family:var(--mono);font-size:var(--fs-label);fill:#fff}
   .chart .cat{font-family:var(--sans);font-size:13px;fill:var(--ink)}
-  .leg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-family:var(--mono);font-size:11.5px;color:var(--ink-2)}
+  .leg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2)}
   .leg i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:middle}
   .nyw{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--amber);background:var(--amber-bg);border:1px dashed var(--amber);border-radius:5px;padding:3px 8px;display:inline-block}
 </style>
@@ -213,7 +213,7 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   const yFull=XT?[...new Set(XT.data.map(p=>p.date.slice(0,4)))].filter(y=>XT.data.filter(p=>p.date.slice(0,4)===y).length>=12).sort().at(-1):null;
   const xbn=annualBn(XT,yFull), mbn=annualBn(MT,yFull), usSh=TP&&TP.exports?TP.exports.items[0].share:null;
   if(xbn){
-    const st=(k,v)=>`<div><div style="font-family:var(--mono);font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.03em">${k}</div><div style="font-family:var(--serif);font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05">${v}</div></div>`;
+    const st=(k,v)=>`<div><div style="font-family:var(--mono);font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.03em">${k}</div><div style="font-family:var(--sans);font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05">${v}</div></div>`;
     H+=ex('4','Mexico exported $'+Math.round(xbn)+'bn of goods and imported $'+Math.round(mbn)+'bn','Goods trade, latest full year ('+yFull+')',
       `<div style="display:flex;gap:32px;flex-wrap:wrap;margin:2px 0 4px">`+st('Exports','$'+Math.round(xbn)+'bn')+st('Imports','$'+Math.round(mbn)+'bn')+st('Balance',(xbn-mbn>=0?'+':'−')+'$'+Math.abs(Math.round(xbn-mbn))+'bn')+`</div>`,
       `About <b>${usSh?Math.round(usSh)+'%':'four-fifths'}</b> of exports go to the United States, and most imports are factory inputs. <a href="/trade.html" style="color:var(--green);font-weight:500">The export basket, every partner, and the 20-year balance → Trade</a>`,
@@ -227,12 +227,12 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   // 7 · what comes in / goes out
   H+=ex('7',E.products.exportsHi.label+' led 2024 exports at $'+E.products.exportsHi.value+'bn, and the top imports are factory inputs','Top import products, US$ bn, 2024',
     ranked(E.products.imports,{vfmt:(v)=>'$'+v+'bn',pl:160})+
-    `<div style="margin-top:14px;font-size:14px;color:var(--ink-2)">Manufactured goods were <b>89.8%</b> of exports in 2024. <span class="nyw">full export ranking not yet available</span></div>`,
+    `<div style="margin-top:14px;font-size:var(--fs-small);color:var(--ink-2)">Manufactured goods were <b>89.8%</b> of exports in 2024. <span class="nyw">full export ranking not yet available</span></div>`,
     E.products.note,srcLine(E.products));
   // 8 · two economies
   H+=ex('8','Informal workers hold '+E.informal.dumbbells[0].jobs+'% of jobs and produce '+E.informal.dumbbells[0].gdp+'% of output','Informal vs formal: share of jobs vs share of GDP',
     dumbbell(E.informal.dumbbells)+
-    `<div style="margin-top:16px"><div style="font-family:var(--mono);font-size:12px;color:var(--mut);margin-bottom:4px">Informality by state: highest in Mexico's south, lowest in its north</div>`+
+    `<div style="margin-top:16px"><div style="font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-bottom:4px">Informality by state: highest in Mexico's south, lowest in its north</div>`+
     ranked(E.informal.states,{vfmt:(v)=>v+'%',pl:150})+`</div>`,
     E.informal.note,srcLine(E.informal));
   // 9 · money flows
@@ -244,6 +244,6 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
     `<p>Informal work makes up <b>55%</b> of jobs and <b>25.4%</b> of output. Remittances brought in <b>$64.75bn</b> in 2024, and <b>96.6%</b> of that came from the US. Most of Mexico's external income, exports and remittances alike, comes from the United States.</p>`+
     `<div class="st-src">Source: World Bank (growth, sectors, spending, 2024) · INEGI (exports 2024, informality 2024–2025) · Banco de México (remittances, 2024). Each exhibit above links to its source.</div></div>`;
   $('#exhibits').innerHTML=H+STORY;
-})().catch(e=>{$('#exhibits').innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading economy data: '+e.message+'</p>';});
+})().catch(e=>{$('#exhibits').innerHTML='<p style="font-family:var(--mono);font-size:var(--fs-label);color:var(--red)">Error loading economy data: '+e.message+'</p>';});
 </script>
 {% endraw %}

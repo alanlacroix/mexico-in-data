@@ -7,11 +7,11 @@ description: "A map of Mexico's 32 states and 2,469 municipalities: poverty vers
 {% raw %}
 <style>
   :root{--ink-3:#555}
-  body{font-size:16px}
+  body{font-size:var(--fs-small)}
   /* content width inherits the shared .wrap component (--maxw:1120) — no per-page override (was the homepage-wider-than-sections bug) */
-  .stamp{font-family:var(--mono);font-size:9.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+  .stamp{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
   .hero{padding:22px 0 4px}
-  .hero h1{font-family:var(--serif);font-size:clamp(26px,6vw,40px);line-height:1.02;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
+  .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.02;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
   .hero .dek{font-size:15px;color:var(--ink-2);margin-top:10px;max-width:66ch}
 
   /* controls */
@@ -20,12 +20,12 @@ description: "A map of Mexico's 32 states and 2,469 municipalities: poverty vers
   .searchhelp{font-family:var(--mono);font-size:11px;color:var(--mut);margin-bottom:7px;letter-spacing:.02em}
   .searchbox{position:relative;max-width:420px}
   .searchbox .mag{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--mut);pointer-events:none}
-  .searchbox input{width:100%;padding:14px 16px 14px 44px;border:1.5px solid var(--line-2);border-radius:12px;font-family:var(--sans);font-size:16px;background:var(--paper);color:var(--ink)}
+  .searchbox input{width:100%;padding:14px 16px 14px 44px;border:1.5px solid var(--line-2);border-radius:12px;font-family:var(--sans);font-size:var(--fs-small);background:var(--paper);color:var(--ink)}
   .searchbox input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-bg)}
   .sugg{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--paper);border:1px solid var(--line-2);border-radius:4px;box-shadow:0 10px 30px rgba(0,0,0,.13);z-index:30;overflow:hidden;max-width:420px}
   .sugg div{padding:11px 15px;cursor:pointer;font-size:15px;border-bottom:1px solid var(--line);color:var(--ink)}
   .sugg div:last-child{border-bottom:none}.sugg div.hi{background:var(--green-bg)}
-  .sugg .s-ent{color:var(--mut);font-size:12.5px}
+  .sugg .s-ent{color:var(--mut);font-size:var(--fs-meta)}
   .metricsel{display:flex;gap:0;border:1px solid var(--line-2);border-radius:10px;overflow:hidden}
   .metricsel button{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:10px 16px;border:none;background:var(--paper);color:var(--ink-2);cursor:pointer;border-right:1px solid var(--line-2)}
   .metricsel button:last-child{border-right:none}
@@ -41,8 +41,8 @@ description: "A map of Mexico's 32 states and 2,469 municipalities: poverty vers
   .crumb .bc{font-family:var(--mono);font-size:11px;color:var(--green-d);cursor:pointer;text-transform:uppercase;letter-spacing:.03em}
   .crumb .bc.plain{color:var(--mut);cursor:default}
   .crumb .bc .arw{color:var(--line-2)}
-  .crumb h2{font-family:var(--serif);font-size:20px;color:var(--ink)}
-  .statesum{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin:2px 0 6px;line-height:1.5}
+  .crumb h2{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink)}
+  .statesum{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin:2px 0 6px;line-height:1.5}
   .statesum b{color:var(--ink)}
 
   /* map */
@@ -56,17 +56,17 @@ description: "A map of Mexico's 32 states and 2,469 municipalities: poverty vers
   .munilayer path:hover{stroke:var(--ink);stroke-width:.6}
   .munilayer path.sel{stroke:var(--green);stroke-width:1.3;paint-order:stroke}
   @media(prefers-reduced-motion:reduce){#map path{transition:none}}
-  .stlabel{font-family:var(--sans);font-size:8.5px;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:2.4px;stroke-linejoin:round;pointer-events:none;font-weight:500}
-  .stlabel.big{font-size:10px}
+  .stlabel{font-family:var(--sans);font-size:var(--fs-label);fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:2.4px;stroke-linejoin:round;pointer-events:none;font-weight:500}
+  .stlabel.big{font-size:var(--fs-label)}
   .zoomctl{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;z-index:4}
   .zbtn{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:8px 13px;border:1px solid var(--line-2);background:rgba(255,255,255,.95);border-radius:9px;color:var(--ink);cursor:pointer;white-space:nowrap}
   .zbtn:hover{border-color:var(--green);color:var(--green-d)}
   .maptip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 11px;border-radius:6px;opacity:0;transition:opacity .1s;z-index:50;max-width:230px}
-  .maptip b{font-family:var(--serif);font-size:13px;color:#fff}.maptip .n{color:#9fd9bd}.maptip .r{color:#cfcfc9}
+  .maptip b{font-family:var(--sans);font-size:13px;color:#fff}.maptip .n{color:#9fd9bd}.maptip .r{color:#cfcfc9}
 
   /* legend */
-  .legend{margin-top:12px;font-family:var(--mono);font-size:10px;color:var(--mut)}
-  .legend .lt{font-size:10.5px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}
+  .legend{margin-top:12px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .legend .lt{font-size:var(--fs-label);color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}
   .legend .sw-row{display:flex;align-items:flex-end;gap:0}
   .legend .sw{width:46px;height:12px}
   .legend .brk{display:flex;justify-content:space-between;max-width:230px;margin-top:3px}
@@ -78,29 +78,29 @@ description: "A map of Mexico's 32 states and 2,469 municipalities: poverty vers
   .ficha.in{opacity:1;transform:none;transition:.4s}
   @media(prefers-reduced-motion:reduce){.ficha,.ficha.in{opacity:1;transform:none;transition:none}}
   .ficha .fhead{padding:16px 18px 13px;border-bottom:1px solid var(--line);background:var(--paper-2)}
-  .ficha .fh-name{font-family:var(--serif);font-size:23px;color:var(--ink);line-height:1.08}
-  .ficha .fh-ent{font-size:13.5px;color:var(--ink-2);margin-top:2px}
-  .ficha .fh-pob{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:7px}
-  .ficha .fh-x{float:right;font-size:12px;color:var(--green-d);cursor:pointer}
+  .ficha .fh-name{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);line-height:1.08}
+  .ficha .fh-ent{font-size:var(--fs-meta);color:var(--ink-2);margin-top:2px}
+  .ficha .fh-pob{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px}
+  .ficha .fh-x{float:right;font-size:var(--fs-meta);color:var(--green-d);cursor:pointer}
   .fmetric{padding:15px 18px;border-bottom:1px solid var(--line)}
   .fmetric:last-of-type{border-bottom:none}
   .fmetric .fm-l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut)}
-  .fmetric .fm-v{font-family:var(--serif);font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1;margin-top:5px}
+  .fmetric .fm-v{font-family:var(--sans);font-size:28px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1;margin-top:5px}
   .fmetric .fm-v small{font-size:13px;color:var(--mut)}
-  .fmetric .fm-verdict{font-size:14px;color:var(--ink);margin-top:8px}
+  .fmetric .fm-verdict{font-size:var(--fs-small);color:var(--ink);margin-top:8px}
   .fstrip{position:relative;height:30px;margin:26px 0 8px}
   .fstrip .tk{position:absolute;left:0;right:0;top:13px;height:4px;background:var(--paper-3);border-radius:3px}
   .fstrip .nat{position:absolute;top:2px;height:26px;width:2px;background:var(--ink-3);border-radius:1px}
-  .fstrip .natl{position:absolute;top:-15px;font-family:var(--mono);font-size:9.5px;color:var(--ink-3);transform:translateX(-50%);white-space:nowrap}
+  .fstrip .natl{position:absolute;top:-15px;font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-3);transform:translateX(-50%);white-space:nowrap}
   .fstrip .dot{position:absolute;top:8px;width:14px;height:14px;border-radius:50%;background:var(--green);border:2.5px solid #fff;box-shadow:0 0 0 1.5px var(--green);transform:translateX(-50%);left:0;transition:left .8s cubic-bezier(.2,.7,.2,1)}
   @media(prefers-reduced-motion:reduce){.fstrip .dot{transition:none}}
-  .fmetric .fm-rank{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);margin-top:7px}.fmetric .fm-rank b{color:var(--green-d)}
-  .fmetric details{margin-top:9px}.fmetric summary{font-family:var(--mono);font-size:10px;color:var(--mut);cursor:pointer;list-style:none}
+  .fmetric .fm-rank{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:7px}.fmetric .fm-rank b{color:var(--green-d)}
+  .fmetric details{margin-top:9px}.fmetric summary{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);cursor:pointer;list-style:none}
   .fmetric summary::-webkit-details-marker{display:none}.fmetric summary::before{content:"▸ source"}.fmetric details[open] summary::before{content:"▾ source"}
-  .fmetric .fs-b{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:5px;line-height:1.6}.fmetric .fs-b a{color:var(--green)}
-  .ficha .fclose{padding:12px 18px;font-size:12px;color:var(--mut);background:var(--paper-2);line-height:1.5}
+  .fmetric .fs-b{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:5px;line-height:1.6}.fmetric .fs-b a{color:var(--green)}
+  .ficha .fclose{padding:12px 18px;font-size:var(--fs-meta);color:var(--mut);background:var(--paper-2);line-height:1.5}
   .miniback{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:11px clamp(16px,5vw,32px);display:none;align-items:center;justify-content:space-between;z-index:45}
-  .miniback.show{display:flex}.miniback .mb-n{font-family:var(--serif);font-size:15px}.miniback .mb-a{font-family:var(--mono);font-size:11px;color:#9fd9bd;cursor:pointer}
+  .miniback.show{display:flex}.miniback .mb-n{font-family:var(--sans);font-size:15px}.miniback .mb-a{font-family:var(--mono);font-size:11px;color:#9fd9bd;cursor:pointer}
   @media(max-width:640px){.zoomctl{top:6px;right:6px}}
 </style>
 <div class="wrap">
@@ -347,6 +347,6 @@ function wireMini(){const mini=$('#miniback');const io=new IntersectionObserver(
   const saved=(()=>{try{return localStorage.getItem('mx_mun');}catch(e){return null;}})();
   const start=(hash&&REG[hash])?hash:(saved&&REG[saved]?saved:null);
   if(hash&&REG[hash]){const ent=hash.slice(0,2);drill(ent,true);renderFicha(hash);} /* deep-link only; render in place, no auto-scroll (was jarring) */
-})().catch(e=>{const h=$('#map');if(h)h.insertAdjacentHTML('afterend','<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading map: '+e.message+'</p>');});
+})().catch(e=>{const h=$('#map');if(h)h.insertAdjacentHTML('afterend','<p style="font-family:var(--mono);font-size:var(--fs-label);color:var(--red)">Error loading map: '+e.message+'</p>');});
 </script>
 {% endraw %}

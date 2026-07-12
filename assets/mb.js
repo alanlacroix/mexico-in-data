@@ -176,10 +176,10 @@ export function treemapSVG(items, opts){
     const val=d.value>=1e9?'$'+(d.value/1e9).toFixed(1)+'bn':'$'+Math.round(d.value/1e6)+'m';
     if(sh>=5 && nameFits && h>34){
       svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="${tc}" font-size="11.5" font-weight="600" style="font-family:var(--sans,-apple-system,sans-serif)">${tmEsc(d.name)}</text>`;
-      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+31).toFixed(1)}" fill="${tc}" font-size="12.5" style="font-family:var(--serif,Georgia,serif)">${sh.toFixed(1)}%<tspan font-size="10" dx="5" opacity="0.75">${val}</tspan></text>`;
+      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+31).toFixed(1)}" fill="${tc}" font-size="12.5" style="font-family:var(--sans,Georgia,serif)">${sh.toFixed(1)}%<tspan font-size="10" dx="5" opacity="0.75">${val}</tspan></text>`;
     } else if(sh>=2 && nameFits && h>30){
       svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="${tc}" font-size="11" font-weight="600" style="font-family:var(--sans,-apple-system,sans-serif)">${tmEsc(d.name)}</text>`;
-      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+30).toFixed(1)}" fill="${tc}" font-size="11" style="font-family:var(--serif,Georgia,serif)">${sh.toFixed(1)}%</text>`;
+      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+30).toFixed(1)}" fill="${tc}" font-size="11" style="font-family:var(--sans,Georgia,serif)">${sh.toFixed(1)}%</text>`;
     } else if(sh>=1 && w>38 && h>15){
       svg+=`<text x="${(x+5).toFixed(1)}" y="${(y+13).toFixed(1)}" fill="${tc}" font-size="9.5" style="font-family:var(--sans,-apple-system,sans-serif)">${sh.toFixed(1)}%</text>`;
     }

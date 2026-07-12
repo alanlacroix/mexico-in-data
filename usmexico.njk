@@ -10,14 +10,14 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
 <style>
   /* section-specific tokens the shared CSS doesn't carry (mirrors index.njk's inline :root) */
   :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
-  body{font-size:17px}
+  body{font-size:var(--fs-body)}
   /* content width inherits the shared .wrap component (--maxw:1120) — no per-page override (was the homepage-wider-than-sections bug) */
 
   /* 1 · header */
   .hero{padding:28px 0 6px}
-  .hero .state{font-family:var(--serif);font-size:clamp(26px,4.4vw,38px);line-height:1.12;letter-spacing:-.02em;margin:10px 0 0;color:var(--ink);max-width:22ch}
+  .hero .state{font-family:var(--sans);font-size:var(--fs-display);line-height:1.12;letter-spacing:-.02em;margin:10px 0 0;color:var(--ink);max-width:22ch}
   .hero .state{max-width:30ch}
-  .hero .statedate{font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);margin-top:14px}
+  .hero .statedate{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--mut);margin-top:14px}
   .hero .statedate b{color:var(--green-d)}
 
   /* section rhythm */
@@ -26,23 +26,23 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
 
   /* 2 · the numbers now — board (from index.njk) */
   .board-lbl{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 8px;border-top:2px solid var(--green);padding-top:11px}
-  .board-lbl .no{font-family:var(--mono);font-size:12px;color:var(--green);font-weight:600}
-  .board-lbl h2{font-family:var(--serif);font-size:clamp(20px,3.2vw,26px);color:var(--ink)}
-  .board-lbl .asof{font-family:var(--mono);font-size:12px;color:var(--mut);white-space:nowrap}
+  .board-lbl .no{font-family:var(--mono);font-size:var(--fs-label);color:var(--green);font-weight:600}
+  .board-lbl h2{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink)}
+  .board-lbl .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
   .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
   @media(min-width:560px){.tablero{grid-template-columns:repeat(3,1fr)}}
   @media(max-width:480px){.tablero{grid-template-columns:1fr}}   /* narrow phones: one column so wide values never clip (Fable design pass) */
   .tile{background:var(--paper);padding:16px 17px 15px;cursor:pointer}
   .tile:hover{background:var(--paper-2)}
-  .tile .tl{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
-  .tile .tv{font-family:var(--serif);font-size:38px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .tile .tl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
+  .tile .tv{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
   .tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
-  .tile .dl{font-family:var(--mono);font-size:12.5px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
-  .tile .dl.up::before{content:"▲ ";font-size:10px} .tile .dl.dn::before{content:"▼ ";font-size:10px}
+  .tile .dl{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
+  .tile .dl.up::before{content:"▲ ";font-size:var(--fs-label)} .tile .dl.dn::before{content:"▼ ";font-size:var(--fs-label)}
   .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
   .tile svg.spark{margin-top:7px}
   .tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
-  .tile .tb{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);margin-top:7px;line-height:1.4}
+  .tile .tb{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:7px;line-height:1.4}
   .tile .tb .arw{font-weight:700}
   .tile .stamp{margin-top:6px;display:block}
   .tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:4px;display:block;line-height:1.35}
@@ -50,26 +50,26 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
   /* freshness stamp */
   .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
   .stamp.live{color:var(--green-d);font-weight:600}
-  .chip-ph{font-family:var(--mono);font-size:9px;letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
+  .chip-ph{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
 
   /* 3 · metric rows */
   .mrow{border-bottom:1px solid var(--line);padding:15px 0}
   .mrow:last-child{border-bottom:none}
   .mrow .mr-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-  .mrow .mr-label{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut)}
+  .mrow .mr-label{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut)}
   .mrow .mr-main{display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap}
-  .mrow .mr-val{font-family:var(--serif);font-size:27px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
+  .mrow .mr-val{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
   .mrow .mr-val small{font-size:13px;color:var(--mut);font-weight:400}
   .mrow .mr-spark{margin-left:auto}
-  .mrow .mr-verdict{font-size:14px;color:var(--ink-2);margin-top:8px;line-height:1.45}
+  .mrow .mr-verdict{font-size:var(--fs-small);color:var(--ink-2);margin-top:8px;line-height:1.45}
   .mrow .mr-verdict b{color:var(--ink)}
-  .mrow .mr-bench{font-family:var(--mono);font-size:12px;color:var(--green-d);margin-top:6px}
+  .mrow .mr-bench{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);margin-top:6px}
   .mrow details{margin-top:8px}
-  .mrow summary{font-family:var(--mono);font-size:10px;color:var(--mut);cursor:pointer;list-style:none}
+  .mrow summary{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);cursor:pointer;list-style:none}
   .mrow summary::-webkit-details-marker{display:none}
   .mrow summary::before{content:"▸ source & date"}
   .mrow details[open] summary::before{content:"▾ source & date"}
-  .mrow .src-body{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:5px;line-height:1.6}
+  .mrow .src-body{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:5px;line-height:1.6}
   .mrow .src-body a{color:var(--green)}
   svg.spark{display:block}
   svg.spark path{fill:none;stroke:var(--ink-3);stroke-width:1.3}
@@ -80,10 +80,10 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
   .exwrap.wide{background:var(--paper-2);border-radius:5px;padding:18px 20px;margin:16px 0}
   .ex-tag{width:26px;height:5px;background:var(--green);border-radius:1px;margin-bottom:7px}
   .ex-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-  .ex-no{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .ex-title{font-family:var(--serif);font-size:19px;line-height:1.22;margin:3px 0 2px;color:var(--ink);letter-spacing:-.005em}
-  .ex-sub{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-bottom:8px}
-  .ex-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:7px;line-height:1.5}
+  .ex-no{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .ex-title{font-family:var(--sans);font-size:var(--fs-body);line-height:1.22;margin:3px 0 2px;color:var(--ink);letter-spacing:-.005em}
+  .ex-sub{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-bottom:8px}
+  .ex-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px;line-height:1.5}
   .ex-src a{color:var(--green)}
   .ex-toggle{display:flex;gap:5px}
   .ex-toggle button{font-family:var(--mono);font-size:11px;text-transform:uppercase;padding:0 13px;min-height:44px;border:1px solid var(--line-2);background:var(--paper);border-radius:8px;color:var(--mut);cursor:pointer}
@@ -92,19 +92,19 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
   .chart .gl{stroke:var(--line);stroke-width:1}
   .chart .axl{font-family:var(--mono);font-size:11px;fill:var(--ink-2)}
   .chart .band{fill:var(--green-bg);opacity:.55}
-  .chart .bandl{font-family:var(--mono);font-size:9px;fill:var(--green-d)}
+  .chart .bandl{font-family:var(--mono);font-size:var(--fs-label);fill:var(--green-d)}
   .chart .ln{fill:none;stroke:var(--ink);stroke-width:2}
   .chart .ln2{fill:none;stroke:var(--green);stroke-width:2}
   .chart .zero{stroke:var(--ink-3);stroke-width:1}
   .chart .bar{fill:#8f8f88} .chart .bar2{fill:var(--green)}
   .chart .dot{fill:var(--green);stroke:#fff;stroke-width:1.5}
-  .chart .vlab{font-family:var(--mono);font-size:10px;font-variant-numeric:tabular-nums}
+  .chart .vlab{font-family:var(--mono);font-size:var(--fs-label);font-variant-numeric:tabular-nums}
   .chart .endlab{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
   .chart .cat{font-family:var(--sans);font-size:11px;fill:var(--ink)}
   .chart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2;opacity:0}
   .chart .hdot{opacity:0}
   .charttip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 10px;border-radius:6px;opacity:0;transition:opacity .08s;z-index:70;min-width:120px}
-  .charttip b{font-family:var(--serif);font-size:12px;color:#fff}
+  .charttip b{font-family:var(--sans);font-size:var(--fs-meta);color:#fff}
   .charttip .tr{display:flex;justify-content:space-between;gap:12px;margin-top:3px}
   .charttip .tr i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px;vertical-align:middle}
   .charttip .tr .nm{color:#cfcfc9}
@@ -114,26 +114,26 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
   .dtbl{overflow-x:auto}
   table.dt{border-collapse:collapse;width:100%;font-size:13px}
   table.dt th,table.dt td{padding:7px 12px;border-bottom:1px solid var(--line);text-align:right}
-  table.dt thead th{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border-bottom:1.5px solid var(--line-2)}
+  table.dt thead th{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border-bottom:1.5px solid var(--line-2)}
   table.dt td.k,table.dt th.k{text-align:left;font-family:var(--sans);color:var(--ink)}
   table.dt td{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
 
   /* forward line + gloss + honesty */
-  .fwdline{font-size:14px;color:var(--ink-2);margin:10px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:3px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
+  .fwdline{font-size:var(--fs-small);color:var(--ink-2);margin:10px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:3px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
   .fwdline b{color:var(--green-d)} .fwdline a{color:var(--green)}
   .ctxline{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.6;padding-top:10px;border-top:1px solid var(--line)}
   .ctxline b{color:var(--ink)}
 
   /* fact card + source note + honesty (migrated from index.njk's inline style) */
-  .honesty{font-size:14.5px;color:var(--ink-2);background:var(--amber-bg2);border-left:3px solid var(--amber2);border-radius:0 8px 8px 0;padding:14px 17px;margin:14px 0 4px;line-height:1.58;max-width:82ch}
+  .honesty{font-size:var(--fs-small);color:var(--ink-2);background:var(--amber-bg2);border-left:3px solid var(--amber2);border-radius:0 8px 8px 0;padding:14px 17px;margin:14px 0 4px;line-height:1.58;max-width:82ch}
   .factcard{border:1px solid var(--line-2);border-radius:10px;padding:15px 17px;margin:14px 0 4px}
-  .factcard .fc-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .factcard .fc-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:var(--fs-small)}
   .factcard .fc-row:last-child{border-bottom:none}
-  .factcard .fc-k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);flex:1}
+  .factcard .fc-k{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.03em;color:var(--mut);flex:1}
   .factcard .fc-v{color:var(--ink);text-align:right;flex:1.3;line-height:1.4}
   .factcard .fc-v b{color:var(--ink)}
   .factcard .fc-v a{color:var(--green)}
-  .oc-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:8px;line-height:1.6}
+  .oc-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:8px;line-height:1.6}
   .oc-src a{color:var(--green)}
   details.more{margin:6px 0 4px;border-top:1px solid var(--line)}
   details.more>summary{font-family:var(--mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);cursor:pointer;list-style:none;padding:10px 0 2px}
@@ -149,30 +149,30 @@ ogDescription: "The unresolved 2026 USMCA review, tariffs after the Supreme Cour
   .watchtbl .wtr .wk{width:3px;align-self:stretch;border-radius:2px;background:var(--line-2)}
   .watchtbl .wtr .wk.banxico,.watchtbl .wtr .wk.fomc{background:var(--green)}
   .watchtbl .wtr .wk.trade{background:var(--amber2)}
-  .watchtbl .wtr .wt{font-size:14px;color:var(--ink);flex:1}
-  .watchtbl .wtr .wm{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:2px}
-  .watchtbl .wtr .wsrc{font-family:var(--mono);font-size:9.5px}
+  .watchtbl .wtr .wt{font-size:var(--fs-small);color:var(--ink);flex:1}
+  .watchtbl .wtr .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:2px}
+  .watchtbl .wtr .wsrc{font-family:var(--mono);font-size:var(--fs-label)}
   .cb-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0}
 
   /* 5 · latest (the wire) */
   .wire .wi{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:11px;align-items:baseline}
   .wire .wi:last-child{border-bottom:none}
-  .wire .wtag{font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px}
+  .wire .wtag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px}
   .wire .wtag.markets{color:var(--green-d);border-color:var(--green-bg)}
   .wire .wtag.trade{color:var(--amber2);border-color:var(--amber-bg2)}
   .wire .wbody{flex:1}
-  .wire .wt{font-size:14px;color:var(--ink);line-height:1.35;text-decoration:none}
+  .wire .wt{font-size:var(--fs-small);color:var(--ink);line-height:1.35;text-decoration:none}
   .wire .wt:hover{color:var(--green-d);text-decoration:underline}
-  .wire .wm{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:3px}
-  .wire-note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:10px;line-height:1.6}
+  .wire .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:3px}
+  .wire-note{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.6}
 
   /* 6 · tools & sources */
   .tools-grid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:6px 0 4px}
   @media(min-width:560px){.tools-grid{grid-template-columns:1fr 1fr}}
   .tools-grid a{display:block;background:var(--paper);padding:14px 16px;text-decoration:none}
   .tools-grid a:hover{background:var(--paper-2)}
-  .tools-grid .tk{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--green)}
-  .tools-grid .th{font-family:var(--serif);font-size:16px;color:var(--ink);margin:4px 0 3px}
+  .tools-grid .tk{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.04em;color:var(--green)}
+  .tools-grid .th{font-family:var(--sans);font-size:var(--fs-small);color:var(--ink);margin:4px 0 3px}
   .tools-grid .td{font-size:13px;color:var(--ink-2);line-height:1.45}
   .srcnote{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.7}
   .srcnote a{color:var(--green)}
@@ -382,7 +382,7 @@ function renderWire(){ return renderDevelopments('us-mexico'); }   // curated ev
   // tile → scroll to its metric row in Background (peso / remittances tiles carry data-go)
   document.getElementById('tablero').addEventListener('click',(e)=>{const t=e.target.closest('[data-go]');if(!t)return;const row=document.querySelector('[data-metric="'+t.getAttribute('data-go')+'"]');if(row)row.scrollIntoView({behavior:'smooth',block:'center'});});
 })().catch(e=>{
-  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading U.S.–Mexico data: '+e.message+'</p>';
+  const h=document.getElementById('background'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:var(--fs-label);color:var(--red)">Error loading U.S.–Mexico data: '+e.message+'</p>';
 });
 </script>
 {% endraw %}

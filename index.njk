@@ -9,18 +9,18 @@ ogDescription: "Mexico's economy in official numbers."
 {% raw %}
 <style>
   :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
-  body{font-size:17px}
+  body{font-size:var(--fs-body)}
   .home{max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,44px)}
 
   /* 1 · HERO */
   .hero{padding:36px 0 8px}
-  .hero h1{font-family:var(--serif);font-size:clamp(32px,6vw,50px);line-height:1.0;letter-spacing:-.025em;margin:9px 0 0;color:var(--ink)}
-  .country{font-size:16.5px;line-height:1.62;color:var(--ink-2);margin:18px 0 4px;max-width:66ch}
+  .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.0;letter-spacing:-.025em;margin:9px 0 0;color:var(--ink)}
+  .country{font-size:var(--fs-small);line-height:1.62;color:var(--ink-2);margin:18px 0 4px;max-width:66ch}
   .country b{color:var(--ink);font-weight:600}
-  .country .ref{font-family:var(--mono);font-size:9.5px;color:var(--green);vertical-align:super;text-decoration:none;padding:0 1px}
+  .country .ref{font-family:var(--mono);font-size:var(--fs-label);color:var(--green);vertical-align:super;text-decoration:none;padding:0 1px}
   .bottomline{font-size:15px;line-height:1.5;color:var(--ink-2);margin:16px 0 2px;max-width:70ch;padding:12px 15px;background:var(--paper-2);border-left:3px solid var(--green);border-radius:0 8px 8px 0}
   .bottomline b{color:var(--ink)}
-  .bottomline .bl-k{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);font-weight:600}
+  .bottomline .bl-k{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);font-weight:600}
 
   /* THE BRIEF — the 2-paragraph synthesis lead. Every sentence is a link to the source it
      cites (dotted = sourced, solid green on hover) — the "no sentence without a link" law made visible. */
@@ -29,7 +29,7 @@ ogDescription: "Mexico's economy in official numbers."
   .brief p:last-child{margin-bottom:0}
   .brief .s{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--line-2);cursor:pointer}
   .brief .s:hover{border-bottom:1px solid var(--green)}
-  @media(max-width:560px){ .brief p{font-size:16.5px} }
+  @media(max-width:560px){ .brief p{font-size:var(--fs-small)} }
 
   /* THE AREAS — the topic browse. Each area: a header (→ its section page), a 1–2 sentence read,
      then up to 3 standardized headline line-items (claim + muted source · date). 2-col on desktop.
@@ -39,50 +39,50 @@ ogDescription: "Mexico's economy in official numbers."
   .area{background:var(--paper);padding:21px 21px 19px}
   @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:4px}}
   .area-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none;margin-bottom:8px}
-  .area-k{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .area-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600}
   .area-go{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
   .area-h:hover .area-go{color:var(--green-d)}
-  .area-syn{font-size:14.5px;line-height:1.6;color:var(--ink-2);margin:0 0 13px}
+  .area-syn{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);margin:0 0 13px}
   .area-hl .hl{display:block;padding:9px 0;border-top:1px solid var(--line);text-decoration:none}
   .area-hl .hl:first-child{border-top:none;padding-top:1px}
-  .hl-t{display:block;font-size:14px;color:var(--ink);font-weight:500;line-height:1.36}
+  .hl-t{display:block;font-size:var(--fs-small);color:var(--ink);font-weight:500;line-height:1.36}
   .area-hl .hl:hover .hl-t{color:var(--green-d)}
-  .hl-m{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
-  .area-empty{font-size:13.5px;color:var(--mut);padding:2px 0 4px}
+  .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
+  .area-empty{font-size:var(--fs-meta);color:var(--mut);padding:2px 0 4px}
 
   /* block headers */
   .bh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-top:2px solid var(--green);padding-top:15px;margin:54px 0 16px}
-  .bh .k{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .bh h2{font-family:var(--serif);font-size:clamp(19px,2.6vw,24px);color:var(--ink);display:inline;letter-spacing:-.01em}
+  .bh .k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .bh h2{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);display:inline;letter-spacing:-.01em}
   .bh .a{font-family:var(--mono);font-size:11px;color:var(--green-d);white-space:nowrap}
-  .bh .asof{font-family:var(--mono);font-size:12px;color:var(--mut);white-space:nowrap}
+  .bh .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
 
   /* 2 · THE BOARD */
   .board-lbl{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:54px 0 16px;border-top:2px solid var(--green);padding-top:15px}
-  .board-lbl .k{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .board-lbl h2{font-family:var(--serif);font-size:clamp(19px,2.6vw,24px);color:var(--ink);display:inline;letter-spacing:-.01em}
-  .board-lbl .asof{font-family:var(--mono);font-size:12px;color:var(--mut);white-space:nowrap}
+  .board-lbl .k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .board-lbl h2{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);display:inline;letter-spacing:-.01em}
+  .board-lbl .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
   .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
   @media(min-width:560px){.tablero{grid-template-columns:repeat(4,1fr)}}
   .tilelink{display:contents}
   .tile{background:var(--paper);padding:19px 18px 17px;cursor:pointer;height:100%}
   .tilelink:hover .tile{background:var(--paper-2)}
-  .tile .tl{font-family:var(--mono);font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
-  .tile .tv{font-family:var(--serif);font-size:34px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .tile .tl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
+  .tile .tv{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
   .tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
-  .tile .dl{font-family:var(--mono);font-size:12.5px;color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
-  .tile .dl.up::before{content:"▲ ";font-size:10px} .tile .dl.dn::before{content:"▼ ";font-size:10px}
+  .tile .dl{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
+  .tile .dl.up::before{content:"▲ ";font-size:var(--fs-label)} .tile .dl.dn::before{content:"▼ ";font-size:var(--fs-label)}
   .tile .dl.up{color:var(--green-d)} .tile .dl.dn{color:var(--red)}
   .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
   .tile svg.spark{margin-top:7px}
   .tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
-  .tile .tb{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:7px;line-height:1.4}
+  .tile .tb{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:7px;line-height:1.4}
   .tile .tb .arw{font-weight:700}
   .tile .stamp{margin-top:6px;display:block}
   .tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:4px;display:block;line-height:1.35}
   .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
   .stamp.live{color:var(--green-d);font-weight:600}
-  .chip-ph{font-family:var(--mono);font-size:9px;letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
+  .chip-ph{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
 
   /* 2b · WHAT CHANGED — the lead queue (event log + series-delta fallback, one treatment) */
   .chg{border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
@@ -94,44 +94,44 @@ ogDescription: "Mexico's economy in official numbers."
   .chgrow.cross:hover{background:#dcefe3}
   .cg-body{flex:1;min-width:0;display:block;text-decoration:none}
   .cg-line{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-  .cg-flag{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border-radius:3px;padding:1px 6px;white-space:nowrap}
+  .cg-flag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border-radius:3px;padding:1px 6px;white-space:nowrap}
   .cg-lbl{font-size:15px;color:var(--ink);font-weight:600}
-  .cg-move{font-family:var(--serif);font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-  .cg-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
+  .cg-move{font-family:var(--sans);font-size:var(--fs-body);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .cg-meta{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
   .cg-src{font-family:var(--mono);font-size:11px;color:var(--green-d);white-space:nowrap;text-decoration:none;flex:none}
   .cg-src:hover{text-decoration:underline}
-  .cg-go{font-family:var(--mono);font-size:13px;color:var(--green-d);flex:none}
+  .cg-go{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);flex:none}
   .chg-quiet{border:1px solid var(--line-2);border-radius:4px;background:var(--paper);padding:15px 16px;font-size:15px;color:var(--ink-2);margin:2px 0 4px}
 
   /* 2c · IMPACT SCORE — expand a row (caret) to see its components + weights */
-  .cg-caret{flex:none;font-family:var(--mono);font-size:12px;line-height:1;color:var(--mut);background:none;border:none;cursor:pointer;padding:4px 3px;transition:transform .15s ease}
+  .cg-caret{flex:none;font-family:var(--mono);font-size:var(--fs-label);line-height:1;color:var(--mut);background:none;border:none;cursor:pointer;padding:4px 3px;transition:transform .15s ease}
   .cg-caret:hover{color:var(--green-d)}
   .cg-caret.open{transform:rotate(90deg)}
   .cg-breakdown{background:var(--paper-2);border-top:1px solid var(--line);padding:11px 15px 12px;font-family:var(--mono)}
   .bd-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px}
-  .bd-k{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700}
-  .bd-score{font-family:var(--serif);font-size:21px;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .bd-k{font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700}
+  .bd-score{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .bd-grid{display:flex;flex-direction:column;gap:6px}
   .bd-hd,.bd-f{display:grid;grid-template-columns:1fr 46px 32px 52px;gap:2px 8px;align-items:baseline}
-  .bd-hd{font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);padding-bottom:4px;border-bottom:1px solid var(--line)}
+  .bd-hd{font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);padding-bottom:4px;border-bottom:1px solid var(--line)}
   .bd-hd span:nth-child(n+2){text-align:right}
   .bd-fn{font-size:11px;color:var(--ink)}
   .bd-fv,.bd-fw,.bd-fc{font-size:11px;text-align:right;font-variant-numeric:tabular-nums}
   .bd-fv{color:var(--ink-2)} .bd-fw{color:var(--mut)} .bd-fc{color:var(--ink);font-weight:600}
-  .bd-note{grid-column:1 / -1;font-size:9px;color:var(--mut);letter-spacing:.02em;line-height:1.35}
+  .bd-note{grid-column:1 / -1;font-size:var(--fs-label);color:var(--mut);letter-spacing:.02em;line-height:1.35}
   .bd-f.ph .bd-fv,.bd-f.ph .bd-fc,.bd-f.ph .bd-note{color:var(--amber2)}
-  .bd-eq{font-size:9px;color:var(--mut);margin-top:10px;line-height:1.55}
+  .bd-eq{font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.55}
   .bd-eq code{font-family:var(--mono);color:var(--ink-2)}
 
   /* what's happening — the cross-domain lead; reuses the .chg row shell, adds a why line */
   .hap-row{align-items:flex-start;gap:13px}
-  .hap-tag{flex:none;font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:3px 7px;white-space:nowrap;margin-top:2px;text-decoration:none}
+  .hap-tag{flex:none;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:3px 7px;white-space:nowrap;margin-top:2px;text-decoration:none}
   .hap-tag:hover{color:var(--green-d);border-color:var(--green-bg)}
   .hap-b{padding:0}
   .hap-line{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-  .hap-date{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);flex:none}
+  .hap-date{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);flex:none}
   .hap-title{font-size:15px;color:var(--ink);font-weight:600;line-height:1.32}
-  .hap-why{font-size:13.5px;color:var(--ink-2);line-height:1.5;margin-top:5px;max-width:82ch}
+  .hap-why{font-size:var(--fs-meta);color:var(--ink-2);line-height:1.5;margin-top:5px;max-width:82ch}
   .hap .cg-src{align-self:flex-start;margin-top:3px}
   /* mobile: the 3-column row (tag / body / source) can't fit — stack it cleanly */
   @media(max-width:640px){
@@ -143,16 +143,16 @@ ogDescription: "Mexico's economy in official numbers."
 
   /* 4 · NEWSLETTER (from weekly.njk .sub) */
   .sub{margin:8px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
-  .sub .lab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
-  .sub .line{font-size:16px;color:var(--ink-2);margin-top:8px;line-height:1.5}
+  .sub .lab{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
+  .sub .line{font-size:var(--fs-small);color:var(--ink-2);margin-top:8px;line-height:1.5}
   .sub .line b{color:var(--ink)}
   .sub form{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:var(--fs-small);padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
   .sub input[type=email]:focus{outline:none;border-color:var(--green)}
-  .sub button{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:9px;padding:12px 24px;cursor:pointer}
+  .sub button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:9px;padding:12px 24px;cursor:pointer}
   .sub button:hover{background:var(--green-d)}
   .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:11px;line-height:1.6}
-  .sub .samplelink{display:inline-block;margin-top:13px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);text-decoration:none;border-bottom:2px solid #daf0e2;padding-bottom:1px}
+  .sub .samplelink{display:inline-block;margin-top:13px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);text-decoration:none;border-bottom:2px solid #daf0e2;padding-bottom:1px}
 
   /* 5 · SECTION CARDS */
   .seccards{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
@@ -161,51 +161,51 @@ ogDescription: "Mexico's economy in official numbers."
   .seccard{background:var(--paper);padding:17px 18px 15px;text-decoration:none;display:flex;flex-direction:column;gap:0}
   .seccard:hover{background:var(--paper-2)}
   .seccard .sc-k{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .seccard .sc-stat{font-family:var(--serif);font-size:28px;color:var(--ink);margin-top:8px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
-  .seccard .sc-stat small{font-size:12px;color:var(--mut);font-weight:400}
+  .seccard .sc-stat{font-family:var(--sans);font-size:28px;color:var(--ink);margin-top:8px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .seccard .sc-stat small{font-size:var(--fs-meta);color:var(--mut);font-weight:400}
   .seccard .sc-wire{font-size:13px;color:var(--ink-2);line-height:1.4;margin-top:11px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .seccard .sc-wire .sc-none{color:var(--mut);font-family:var(--mono);font-size:11px}
-  .seccard .sc-go{font-family:var(--mono);font-size:11.5px;color:var(--green-d);margin-top:12px}
+  .seccard .sc-go{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);margin-top:12px}
 
   /* 6 · WHAT TO WATCH + THE WIRE */
   .coverband{display:grid;grid-template-columns:1fr;gap:22px;margin:2px 0 4px}
   @media(min-width:760px){.coverband{grid-template-columns:minmax(240px,320px) 1fr;gap:34px}}
   .cb-h{display:flex;align-items:baseline;justify-content:space-between;border-top:2px solid var(--green);padding-top:9px;margin-bottom:6px}
   .cb-h .k{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .cb-h .a{font-family:var(--mono);font-size:10px;color:var(--green-d)}
+  .cb-h .a{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
   .watchtbl .wtr{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);align-items:baseline}
   .watchtbl .wtr:last-child{border-bottom:none}
   .watchtbl .wtr .wd{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:50px;font-variant-numeric:tabular-nums;line-height:1.3}
-  .watchtbl .wtr .wd small{color:var(--mut);display:block;font-size:9px}
+  .watchtbl .wtr .wd small{color:var(--mut);display:block;font-size:var(--fs-label)}
   .watchtbl .wtr .wk{width:3px;align-self:stretch;border-radius:2px;background:var(--line-2)}
   .watchtbl .wtr .wk.banxico,.watchtbl .wtr .wk.fomc,.watchtbl .wtr .wk.inegi{background:var(--green)}
   .watchtbl .wtr .wk.political,.watchtbl .wtr .wk.election{background:var(--red)}
   .watchtbl .wtr .wk.trade,.watchtbl .wtr .wk.fiscal{background:var(--amber2)}
-  .watchtbl .wtr .wt{font-size:13.5px;color:var(--ink);flex:1;line-height:1.35}
-  .watchtbl .wtr .wm{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:2px}
-  .watchtbl .wtr .wsrc{font-family:var(--mono);font-size:9.5px}
+  .watchtbl .wtr .wt{font-size:var(--fs-small);color:var(--ink);flex:1;line-height:1.35}
+  .watchtbl .wtr .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:2px}
+  .watchtbl .wtr .wsrc{font-family:var(--mono);font-size:var(--fs-label)}
   .cb-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0}
   .wire .wi{padding:11px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:98px 1fr;gap:11px;align-items:baseline}
   .wire .wtag{justify-self:start}
   .wire .wi:last-child{border-bottom:none}
-  .wire .wtag{font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px;text-decoration:none}
+  .wire .wtag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px;text-decoration:none}
   .wire .wtag:hover{color:var(--green-d);border-color:var(--green-bg)}
   .wire .wbody{flex:1}
-  .wire .wt{font-size:14px;color:var(--ink);line-height:1.35;text-decoration:none}
+  .wire .wt{font-size:var(--fs-small);color:var(--ink);line-height:1.35;text-decoration:none}
   .wire .wt:hover{color:var(--green-d);text-decoration:underline}
-  .wire .wm{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:3px}
-  .wire-note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:10px;line-height:1.6}
+  .wire .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:3px}
+  .wire-note{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.6}
   /* what stood out — the analysis surfaced */
   #stood{display:grid;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:8px;overflow:hidden;margin:2px 0 4px}
   .stoodrow{display:flex;gap:14px;align-items:baseline;background:var(--paper);padding:13px 16px;text-decoration:none}
   .stoodrow:hover{background:var(--paper-2)}
-  .stoodrow .stag{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700;flex:0 0 74px;padding-top:2px}
+  .stoodrow .stag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700;flex:0 0 74px;padding-top:2px}
   .stoodrow .stxt{font-size:15px;color:var(--ink);line-height:1.45}
   a.stood-link{color:var(--green-d)}
-  .wflag{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle}
+  .wflag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle}
   /* masthead — a clear, dated top like a morning paper */
   .masthead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:9px;flex-wrap:wrap}
-  .masthead .today{font-family:var(--serif);font-size:clamp(18px,2.6vw,24px);color:var(--ink);font-weight:600;letter-spacing:-.01em}
+  .masthead .today{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);font-weight:600;letter-spacing:-.01em}
   .masthead .fresh{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .masthead .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
   .hero h1#lead{margin-top:16px}
@@ -217,7 +217,7 @@ ogDescription: "Mexico's economy in official numbers."
   /* 7 · PRIMER — evergreen orientation, moved out of the top and collapsed */
   .primer{margin-top:30px}
   .primerbox{border:1px solid var(--line);border-radius:4px;background:var(--paper)}
-  .primerbox summary{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600;cursor:pointer;padding:14px 16px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+  .primerbox summary{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600;cursor:pointer;padding:14px 16px;list-style:none;display:flex;justify-content:space-between;gap:10px}
   .primerbox summary::-webkit-details-marker{display:none}
   .primerbox summary::after{content:"+";color:var(--mut)}
   .primerbox[open] summary::after{content:"–"}
@@ -513,7 +513,7 @@ function renderWatch(){
   // #q12 / #wire from an old link → scroll to the Wire block on this page
   if(location.hash==='#q12'||location.hash==='#wire'){const w=document.getElementById('wire'); if(w)w.scrollIntoView();}
 })().catch(e=>{
-  const h=document.getElementById('areas'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:12px;color:var(--red)">Error loading data: '+e.message+'</p>';
+  const h=document.getElementById('areas'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:var(--fs-label);color:var(--red)">Error loading data: '+e.message+'</p>';
 });
 </script>
 {% endraw %}

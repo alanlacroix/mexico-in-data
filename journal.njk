@@ -10,14 +10,14 @@ ogDescription: "Record the call when something changes, then score whether it wa
 <style>
   /* section-local tokens the shared CSS doesn't carry (mirrors money.njk) */
   :root{--ink-3:#4d4d4d}
-  body{font-size:17px}
+  body{font-size:var(--fs-body)}
   .wrap{max-width:860px;margin:0 auto;padding:0 clamp(16px,5vw,32px)}
 
   /* 1 · header */
   .hero{padding:30px 0 6px}
-  .hero h1{font-family:var(--serif);font-size:clamp(24px,4vw,34px);line-height:1.14;letter-spacing:-.02em;margin:10px 0 0;color:var(--ink);max-width:26ch}
-  .hero .lede{font-size:17px;color:var(--ink-2);margin-top:16px;line-height:1.55;max-width:62ch}
-  .hero .priv{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin-top:12px;letter-spacing:.02em}
+  .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.14;letter-spacing:-.02em;margin:10px 0 0;color:var(--ink);max-width:26ch}
+  .hero .lede{font-size:var(--fs-body);color:var(--ink-2);margin-top:16px;line-height:1.55;max-width:62ch}
+  .hero .priv{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:12px;letter-spacing:.02em}
 
   /* section rhythm */
   section.blk{margin:32px 0 0}
@@ -27,53 +27,53 @@ ogDescription: "Record the call when something changes, then score whether it wa
   .form-help{font-family:var(--mono);font-size:11px;color:var(--mut);margin:0 0 15px;line-height:1.6}
   .field{margin:0 0 13px}
   .field.narrow{max-width:220px}
-  .field label{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
+  .field label{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
   .field label .req{color:var(--green-d)}
   .field textarea,.field input[type=date]{width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:5px;padding:9px 11px;line-height:1.5;resize:vertical}
-  .field input[type=date]{font-family:var(--mono);font-size:13px}
+  .field input[type=date]{font-family:var(--mono);font-size:var(--fs-label)}
   .field textarea:focus,.field input:focus{outline:none;border-color:var(--green)}
   .form-foot{display:flex;align-items:center;gap:14px;margin-top:4px;flex-wrap:wrap}
-  .form-err{font-family:var(--mono);font-size:11.5px;color:var(--red)}
+  .form-err{font-family:var(--mono);font-size:var(--fs-label);color:var(--red)}
 
   /* buttons */
-  .btn{font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;border:1px solid var(--green-d);border-radius:3px;padding:8px 16px;cursor:pointer;background:var(--green-d);color:#fff}
+  .btn{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;border:1px solid var(--green-d);border-radius:3px;padding:8px 16px;cursor:pointer;background:var(--green-d);color:#fff}
   .btn:hover{background:var(--green);border-color:var(--green)}
   .btn.sm{padding:6px 12px;font-size:11px}
   .btn.ghost{background:transparent;color:var(--green-d);border-color:var(--line-2)}
   .btn.ghost:hover{background:var(--paper-2);color:var(--green-d);border-color:var(--line-2)}
   .btn:disabled{opacity:.4;cursor:not-allowed}
   .btn:disabled:hover{background:transparent;color:var(--green-d);border-color:var(--line-2)}
-  .lnk{background:none;border:0;font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);cursor:pointer;padding:0}
+  .lnk{background:none;border:0;font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.03em;color:var(--mut);cursor:pointer;padding:0}
   .lnk:hover{color:var(--red);text-decoration:underline}
 
   /* 3 · ledger tools + calibration */
   .toolbar{display:flex;gap:9px;align-items:center;margin:12px 0 0}
   .calib{border-top:2px solid var(--green);padding:13px 0 4px;margin:16px 0 10px}
-  .calib-line{font-family:var(--serif);font-size:clamp(17px,2.6vw,21px);color:var(--ink);letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1.3}
+  .calib-line{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1.3}
   .calib-break{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
-  .calib-note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:10px;line-height:1.6}
+  .calib-note{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.6}
 
   /* entry cards */
   #entries{margin-top:4px}
   .entry{border:1px solid var(--line);border-radius:6px;padding:15px 17px;margin:0 0 12px;background:var(--paper)}
   .entry-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:11px}
-  .entry-date{font-family:var(--mono);font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .entry-date{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.02em}
   .chip.open{background:var(--paper-3);color:var(--mut)}
   .kvlist{margin:0}
   .kv{display:grid;grid-template-columns:158px 1fr;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
   .kv:first-child{border-top:none;padding-top:0}
-  .kv dt{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);line-height:1.55}
-  .kv dd{margin:0;font-size:14.5px;color:var(--ink-2);line-height:1.5;white-space:pre-wrap}
+  .kv dt{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);line-height:1.55}
+  .kv dd{margin:0;font-size:var(--fs-small);color:var(--ink-2);line-height:1.5;white-space:pre-wrap}
   .kv.res dt{color:var(--green-d)}
   .kv.res dd{color:var(--ink)}
   @media(max-width:560px){.kv{grid-template-columns:1fr;gap:3px}}
   .entry-actions{margin-top:13px}
-  .entry-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:13px;padding-top:10px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
+  .entry-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:13px;padding-top:10px;border-top:1px solid var(--line);font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
 
   /* resolve panel */
   .resolve{margin-top:13px;padding:14px 15px 15px;border:1px dashed var(--line-2);border-radius:5px;background:var(--paper-2)}
-  .resolve .rlab{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
-  .resolve textarea{width:100%;font-family:var(--sans);font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:5px;padding:8px 10px;line-height:1.5;resize:vertical}
+  .resolve .rlab{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+  .resolve textarea{width:100%;font-family:var(--sans);font-size:var(--fs-small);color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:5px;padding:8px 10px;line-height:1.5;resize:vertical}
   .resolve textarea:focus{outline:none;border-color:var(--green)}
   .seg{display:inline-flex;margin:12px 0;border:1px solid var(--line-2);border-radius:5px;overflow:hidden}
   .seg-b{font-family:var(--mono);font-size:11px;letter-spacing:.03em;text-transform:uppercase;padding:7px 15px;border:0;border-right:1px solid var(--line-2);background:var(--paper);color:var(--mut);cursor:pointer}
@@ -85,7 +85,7 @@ ogDescription: "Record the call when something changes, then score whether it wa
 
   /* empty state */
   .empty{border:1px dashed var(--line-2);border-radius:6px;padding:26px 24px;background:var(--paper-2);color:var(--ink-2)}
-  .empty .empty-h{font-family:var(--serif);font-size:19px;color:var(--ink);margin:0 0 12px}
+  .empty .empty-h{font-family:var(--sans);font-size:var(--fs-body);color:var(--ink);margin:0 0 12px}
   .empty p{margin:0 0 11px;line-height:1.62;font-size:15px;max-width:64ch}
   .empty p:last-child{margin-bottom:0}
 

@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=b116ada5" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=ecd446a1" />
 
 
 </head>
@@ -41,14 +41,14 @@
 
 <style>
   :root{--ink-3:#555}
-  body{font-size:16px}
+  body{font-size:var(--fs-small)}
   /* content width inherits the shared .wrap component (--maxw:1120) — no per-page override, so every nav tab frames identically */
   .hero{padding:22px 0 6px}
-  .hero h1{font-family:var(--serif);font-size:clamp(26px,6vw,38px);line-height:1.04;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
+  .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.04;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
   .hero .dek{font-size:15px;color:var(--ink-2);margin-top:10px;max-width:66ch}
   .modelnote{font-family:var(--mono);font-size:11px;color:var(--ink-2);background:#fff;border:1px dashed var(--line-2);border-radius:9px;padding:11px 14px;margin:14px 0 4px;line-height:1.55}
   .modelnote b{color:var(--ink)}
-  .mst{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;display:inline-block}
+  .mst{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;display:inline-block}
 
   .presetbar{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
   .presetbar button{font-family:var(--mono);font-size:11px;padding:0 14px;min-height:44px;border:1.5px solid var(--line-2);background:var(--paper);border-radius:8px;color:var(--ink-2);cursor:pointer}
@@ -58,29 +58,29 @@
   .panel{display:grid;gap:16px;margin-top:16px;grid-template-columns:1fr}
   @media(min-width:720px){.panel{grid-template-columns:1fr 1fr}}
   .card{border:1px solid var(--line-2);border-radius:8px;padding:16px 18px}
-  .card h3{font-family:var(--serif);font-size:16px;color:var(--ink);margin-bottom:4px}
-  .card .csub{font-family:var(--mono);font-size:10px;color:var(--mut);margin-bottom:12px}
+  .card h3{font-family:var(--sans);font-size:var(--fs-small);color:var(--ink);margin-bottom:4px}
+  .card .csub{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-bottom:12px}
 
   .lever{margin:14px 0}
   .lever .lv-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
   .lever .lv-l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-2)}
-  .lever .lv-v{font-family:var(--serif);font-size:17px;color:var(--green-d);font-variant-numeric:tabular-nums}
+  .lever .lv-v{font-family:var(--sans);font-size:var(--fs-body);color:var(--green-d);font-variant-numeric:tabular-nums}
   .lever input[type=range]{width:100%;margin-top:6px;height:40px;accent-color:var(--green)}
-  .lever .lv-hint{font-size:12px;color:var(--ink-2);margin-top:6px;line-height:1.45}
+  .lever .lv-hint{font-size:var(--fs-meta);color:var(--ink-2);margin-top:6px;line-height:1.45}
   .lever .lv-hint b{color:var(--ink);font-weight:600}
-  .lever .lv-now{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);background:var(--green-bg);border-radius:3px;padding:1px 6px;margin-left:6px}
+  .lever .lv-now{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);background:var(--green-bg);border-radius:3px;padding:1px 6px;margin-left:6px}
 
   .out{padding:12px 0;border-bottom:1px solid var(--line)}
   .out:last-child{border-bottom:none}
   .out .o-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
   .out .o-l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut)}
   .out .o-main{display:flex;align-items:baseline;gap:10px;margin-top:4px}
-  .out .o-base{font-family:var(--mono);font-size:12px;color:var(--mut)}
-  .out .o-arw{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
-  .out .o-v{font-family:var(--serif);font-size:24px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
+  .out .o-base{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .out .o-arw{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-3)}
+  .out .o-v{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
   .out .o-d{font-family:var(--mono);font-size:11px;margin-left:auto}
   .out .o-d.up{color:var(--green-d)}.out .o-d.dn{color:var(--red)}.out .o-d.fl{color:var(--mut)}
-  .out .o-note{font-size:12px;color:var(--ink-2);margin-top:5px;line-height:1.4}
+  .out .o-note{font-size:var(--fs-meta);color:var(--ink-2);margin-top:5px;line-height:1.4}
 
   .diagram{margin:20px 0 4px}
   .diagram svg{width:100%;height:auto;border:1px solid var(--line);border-radius:4px;background:var(--paper)}
@@ -91,31 +91,31 @@
   .edge.hot{stroke:var(--green);stroke-width:2}
   .edge.neg{stroke:var(--red)}
   .elast{margin:22px 0 4px}
-  table.mck td small{color:var(--mut);font-family:var(--mono);font-size:10px}
+  table.mck td small{color:var(--mut);font-family:var(--mono);font-size:var(--fs-label)}
   .section-head{border-top:2px solid var(--green);padding-top:12px;margin:24px 0 8px}
-  .section-head h2{font-family:var(--serif);font-size:clamp(19px,3vw,24px);color:var(--ink)}
+  .section-head h2{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink)}
 
   /* saved scenarios (Feature 1) — durable, private, localStorage */
   .scenarios{margin:22px 0 4px}
-  .scen-intro{font-size:13.5px;color:var(--ink-2);margin:2px 0 12px;max-width:66ch;line-height:1.5}
+  .scen-intro{font-size:var(--fs-meta);color:var(--ink-2);margin:2px 0 12px;max-width:66ch;line-height:1.5}
   .scen-intro b{color:var(--ink)}
   .scen-save{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
-  .scen-save input{flex:1 1 260px;min-width:0;font-family:var(--sans);font-size:14px;padding:10px 13px;border:1.5px solid var(--line-2);border-radius:9px;background:var(--paper);color:var(--ink)}
+  .scen-save input{flex:1 1 260px;min-width:0;font-family:var(--sans);font-size:var(--fs-small);padding:10px 13px;border:1.5px solid var(--line-2);border-radius:9px;background:var(--paper);color:var(--ink)}
   .scen-save input::placeholder{color:var(--mut)}
   .scen-save input:focus{outline:none;border-color:var(--green)}
-  .scen-save button{font-family:var(--mono);font-size:12px;padding:0 18px;min-height:44px;border:1.5px solid var(--green-d);background:var(--green-d);color:#fff;border-radius:8px;cursor:pointer;white-space:nowrap}
+  .scen-save button{font-family:var(--mono);font-size:var(--fs-label);padding:0 18px;min-height:44px;border:1.5px solid var(--green-d);background:var(--green-d);color:#fff;border-radius:8px;cursor:pointer;white-space:nowrap}
   .scen-save button:hover{background:var(--green);border-color:var(--green)}
   .scen-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:9px 0;line-height:1.5}
   .scen-list{display:grid;gap:8px}
   .scen-item{display:flex;align-items:stretch;border:1px solid var(--line-2);border-radius:10px;overflow:hidden}
   .scen-restore{flex:1;min-width:0;text-align:left;background:none;border:0;cursor:pointer;padding:11px 14px;font-family:inherit}
   .scen-restore:hover{background:var(--paper-2)}
-  .scen-name{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);line-height:1.2}
-  .scen-meta{font-family:var(--mono);font-size:10.5px;color:var(--ink-2);margin-top:5px;line-height:1.65;word-break:break-word}
+  .scen-name{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);line-height:1.2}
+  .scen-meta{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:5px;line-height:1.65;word-break:break-word}
   .scen-meta .sv{color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
-  .scen-when{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:6px;letter-spacing:.03em}
+  .scen-when{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:6px;letter-spacing:.03em}
   .scen-side{display:flex;align-items:center;justify-content:center;padding:8px 10px;border-left:1px solid var(--line)}
-  .scen-del{font-family:var(--mono);font-size:16px;line-height:1;color:var(--mut);background:none;border:1px solid var(--line-2);border-radius:7px;width:28px;height:28px;cursor:pointer;padding:0}
+  .scen-del{font-family:var(--mono);font-size:var(--fs-small);line-height:1;color:var(--mut);background:none;border:1px solid var(--line-2);border-radius:7px;width:28px;height:28px;cursor:pointer;padding:0}
   .scen-del:hover{color:var(--red);border-color:var(--red);background:var(--red-bg)}
 
   /* live event overlay on the transmission diagram (Feature 2) — amber = a real logged release */
@@ -123,7 +123,7 @@
   .node.pressure rect{stroke:var(--amber);stroke-width:1.4;stroke-dasharray:3 2.5}
   .ev-dot.changed{fill:var(--amber);stroke:var(--paper);stroke-width:1}
   .ev-dot.pressure{fill:none;stroke:var(--amber);stroke-width:1.5}
-  .ev-legend{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:9px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;line-height:1.5}
+  .ev-legend{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:9px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;line-height:1.5}
   .ev-legend .dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 auto}
   .ev-legend .dot.c{background:var(--amber)}
   .ev-legend .dot.p{background:transparent;border:1.5px solid var(--amber)}
@@ -170,7 +170,7 @@
 
   <div class="elast">
     <div class="section-head"><h2>The elasticities (footnoted)</h2></div>
-    <p style="font-size:13.5px;color:var(--ink-2);margin-bottom:10px">These coefficients are directional. They capture the mechanism and rough scale rather than values estimated to the last basis point, and they come from the standard literature and the structure of Banxico and INEGI data; a real forecast would estimate them on data. Two limits to read them by. First, Banxico's rate here feeds only growth, so a hike neither disinflates nor defends the peso in this model. Second, the coefficients are marginal, so the far ends of the sliders understate a real crisis rather than exaggerate it.</p>
+    <p style="font-size:var(--fs-meta);color:var(--ink-2);margin-bottom:10px">These coefficients are directional. They capture the mechanism and rough scale rather than values estimated to the last basis point, and they come from the standard literature and the structure of Banxico and INEGI data; a real forecast would estimate them on data. Two limits to read them by. First, Banxico's rate here feeds only growth, so a hike neither disinflates nor defends the peso in this model. Second, the coefficients are marginal, so the far ends of the sliders understate a real crisis rather than exaggerate it.</p>
     <div class="tblwrap"><table class="mck" id="elast"></table></div>
   </div>
 </div>
@@ -345,7 +345,7 @@ function renderDiagram(){
     <defs><marker id="arw" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--line-2)"/></marker></defs>
     ${edges}${nodes}</svg>
     ${legend}
-    <div style="font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:8px">Green path = a lever you've moved. Red edge = an inverse relationship (tariffs cut exports; a higher Banxico rate slows growth).</div>`;
+    <div style="font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:8px">Green path = a lever you've moved. Red edge = an inverse relationship (tariffs cut exports; a higher Banxico rate slows growth).</div>`;
 }
 
 const ELAST=[

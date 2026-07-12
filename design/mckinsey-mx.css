@@ -38,11 +38,20 @@
   --line:#e6e6e2;
   --line-2:#ccccc6;
 
-  /* type — one clean sans, McKinsey-style. --serif is kept as the "display"
-     token so every heading flips in one place; it now resolves to Inter. */
-  --serif:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
+  /* Type — two families, fixed roles (Fable 2026-07-12). Inter for anything a reader
+     reads (headings, prose, links); IBM Plex Mono for the label layer (eyebrows, meta,
+     source tags, nav, datelines) + data figures. No serif — the old --serif was Inter. */
   --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
   --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,Consolas,monospace;
+
+  /* The scale — the ONLY seven sizes on the site. Every font-size resolves to one of these. */
+  --fs-label:11px;                     /* mono label layer, uppercase + tracked (floor: nothing smaller) */
+  --fs-meta:13px;                      /* Inter secondary: captions, keys, footnotes */
+  --fs-small:15px;                     /* compact prose: cards, calendar entries, lists */
+  --fs-body:18px;                      /* prose default */
+  --fs-h3:22px;                        /* card titles, h3 */
+  --fs-h2:28px;                        /* section heads, h2 */
+  --fs-display:clamp(32px,5vw,44px);   /* h1 — one treatment, every page */
 
   --measure:66ch;
   --maxw:1120px;
@@ -52,50 +61,57 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;background:var(--bg);color:var(--ink-2);
-  font-family:var(--sans);font-size:18px;line-height:1.62;
+  font-family:var(--sans);font-size:var(--fs-body);line-height:1.6;
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
 }
-h1,h2,h3,h4{font-family:var(--serif);color:var(--ink);font-weight:700;line-height:1.16;margin:0;text-wrap:balance;letter-spacing:-.014em}
+h1,h2,h3,h4{font-family:var(--sans);color:var(--ink);font-weight:700;line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.014em}
+h1{font-size:var(--fs-display)}
+h2{font-size:var(--fs-h2)}
+h3{font-size:var(--fs-h3)}
 p{margin:0}
 a{color:var(--green);text-decoration:none}
 a:hover{text-decoration:underline;text-underline-offset:2px}
 a:focus-visible,button:focus-visible{outline:2.5px solid var(--green);outline-offset:2px}
 ::selection{background:#cbe8d9}
+/* controls inherit the type system — kills the Arial/UA-size leak on any unstyled button/input */
+button,input,select,textarea,optgroup{font:inherit;letter-spacing:inherit;color:inherit}
+/* <small> never drops below the 11px floor (Fable 2026-07-12); explicit .x small sizes still win */
+small{font-size:var(--fs-label)}
 
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
 .col{max-width:var(--measure)}
 .mono{font-family:var(--mono)} .tnum{font-variant-numeric:tabular-nums}
-.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
+.eyebrow{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
 
 /* section head — the signature hairline green rule is the tweak */
 .section-head{border-top:2px solid var(--green);padding-top:14px;margin-bottom:14px}
-.section-head .no{font-family:var(--mono);font-size:12px;color:var(--green);font-weight:600;letter-spacing:.04em}
-.section-head h2{font-size:clamp(22px,3.2vw,32px);margin-top:6px}
-.section-head .dek{color:var(--ink-2);font-size:16px;margin-top:8px;max-width:66ch}
+.section-head .no{font-family:var(--mono);font-size:var(--fs-label);color:var(--green);font-weight:600;letter-spacing:.04em}
+.section-head h2{font-size:var(--fs-h2);margin-top:6px}
+.section-head .dek{color:var(--ink-2);font-size:var(--fs-small);margin-top:8px;max-width:66ch}
 
 /* THE EXHIBIT — copied from McKinsey, kept exactly: numbered,
    conclusion-title, units, footnotes, Source line with links. */
 .exhibit{border:1px solid var(--line-2);background:var(--paper);border-radius:4px;overflow:hidden}
 .exhibit .ex-head{padding:16px 22px 2px}
-.exhibit .ex-no{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:600}
-.exhibit .ex-title{font-family:var(--serif);font-weight:700;font-size:19px;line-height:1.25;margin-top:5px;color:var(--ink);max-width:80ch}
-.exhibit .ex-units{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin-top:6px}
+.exhibit .ex-no{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:600}
+.exhibit .ex-title{font-family:var(--sans);font-weight:700;font-size:var(--fs-body);line-height:1.25;margin-top:5px;color:var(--ink);max-width:80ch}
+.exhibit .ex-units{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:6px}
 .exhibit .ex-body{padding:10px 22px 6px}
 .exhibit .ex-foot{border-top:1px solid var(--line);margin-top:8px;padding:11px 22px 15px}
-.exhibit .ex-fn{font-size:11.5px;color:var(--mut);line-height:1.5}
-.exhibit .ex-src{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:7px}
+.exhibit .ex-fn{font-size:var(--fs-label);color:var(--mut);line-height:1.5}
+.exhibit .ex-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px}
 .exhibit .ex-src a{color:var(--green)}
 
 /* verdict / status chips — green good, red concern, amber neutral */
-.chip{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:3px;font-weight:600;white-space:nowrap}
+.chip{display:inline-block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:3px;font-weight:600;white-space:nowrap}
 .chip.g{background:var(--green-bg);color:var(--green-d)}
 .chip.r{background:var(--red-bg);color:var(--red)}
 .chip.a{background:var(--amber-bg);color:var(--amber)}
 
 /* tables — McKinsey clean: hairline rules, mono header */
-table.mck{border-collapse:collapse;width:100%;font-size:14px}
+table.mck{border-collapse:collapse;width:100%;font-size:var(--fs-small)}
 table.mck th,table.mck td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
-table.mck thead th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);background:var(--paper-2)}
+table.mck thead th{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);background:var(--paper-2)}
 table.mck td.k{font-weight:600;color:var(--ink);white-space:nowrap}
 
 .tblwrap{overflow-x:auto}
@@ -112,10 +128,10 @@ table.mck td.k{font-weight:600;color:var(--ink);white-space:nowrap}
 /* masthead — identical on every page; solid white, fixed height, nothing animated */
 header.mast{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line)}
 header.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:52px;padding-top:0;padding-bottom:0}
-.brand{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--ink);letter-spacing:-.01em;white-space:nowrap;text-decoration:none}
+.brand{font-family:var(--sans);font-weight:600;font-size:var(--fs-body);color:var(--ink);letter-spacing:-.01em;white-space:nowrap;text-decoration:none}
 .brand:hover{text-decoration:none}
 .brand .u{border-bottom:2px solid var(--green);padding-bottom:1px}
-.mnav{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:13px}
+.mnav{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:var(--fs-label)}
 .mnav a{color:var(--mut);text-decoration:none;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
 .mnav a:hover{color:var(--ink)}
 .mnav a.here{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--green);text-decoration-thickness:2px;text-underline-offset:7px}
@@ -164,17 +180,17 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 /* Topics dropdown (Fable's six-slot nav): a hover-popup on desktop, inline in the collapsed menu on
    mobile. Border only — no shadow (the record is square). */
 .navdrop{position:relative;display:inline-flex;align-items:center}
-.navdrop-t{font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);background:none;border:0;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:5px}
+.navdrop-t{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.05em;color:var(--mut);background:none;border:0;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:5px}
 .navdrop-t:hover{color:var(--ink)}
-.navdrop-t .caret{font-size:8px;position:relative;top:1px}
+.navdrop-t .caret{font-size:var(--fs-label);position:relative;top:1px}
 .navdrop.here-sec>.navdrop-t{color:var(--ink);font-weight:600}
 .navdrop-menu{position:absolute;top:100%;left:0;margin-top:6px;background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:8px 0;min-width:210px;display:none;z-index:60}
 .navdrop:hover .navdrop-menu,.navdrop:focus-within .navdrop-menu,.navdrop.open .navdrop-menu{display:block}
 /* bridge the 6px gap between the button and the menu so hover doesn't drop mid-travel (desktop only) */
 @media(min-width:1001px){.navdrop-menu::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}}
 .navdrop-grp+.navdrop-grp{border-top:1px solid var(--line);margin-top:6px;padding-top:8px}
-.navdrop-gl{display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);padding:2px 16px 5px}
-.navdrop-menu a{display:block;font-family:var(--mono);font-size:12.5px;text-transform:none;letter-spacing:0;color:var(--ink-2);padding:6px 16px;white-space:nowrap;border:0}
+.navdrop-gl{display:block;font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.05em;color:var(--mut);padding:2px 16px 5px}
+.navdrop-menu a{display:block;font-family:var(--mono);font-size:var(--fs-label);text-transform:none;letter-spacing:0;color:var(--ink-2);padding:6px 16px;white-space:nowrap;border:0}
 .navdrop-menu a:hover{color:var(--green-d)}
 .navdrop-menu a.here{color:var(--green-d);font-weight:600}
 @media(max-width:1000px){
@@ -192,7 +208,7 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .srcd{margin-top:6px}
 .srcd summary{list-style:none;cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--green-d);display:inline-flex;align-items:center;gap:5px;min-height:44px;padding:2px 0}
 .srcd summary::-webkit-details-marker{display:none}
-.srcd summary::before{content:"▸";font-size:9px}
+.srcd summary::before{content:"▸";font-size:var(--fs-label)}
 .srcd[open] summary::before{content:"▾"}
 .mrow .srcd summary{font-size:11px;min-height:44px;color:var(--green-d)}
 .mrow .srcd summary::before{content:"▸"!important}
@@ -202,26 +218,26 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .srcd .src-body b{color:var(--ink)}
 
 /* Section-page hero deck — the short-title + deck grammar (Fable: kill the sentence-length H1s). */
-.hero .dek{font-family:var(--serif);font-size:clamp(18px,2.4vw,22px);line-height:1.4;color:var(--ink-2);margin:10px 0 0;max-width:60ch;font-weight:400;letter-spacing:-.005em}
+.hero .dek{font-family:var(--sans);font-size:var(--fs-h3);line-height:1.4;color:var(--ink-2);margin:10px 0 0;max-width:60ch;font-weight:400;letter-spacing:-.005em}
 
 /* "The story" — Fable's site-wide sourced-narrative block that closes each section. Two plain
    paragraphs, no labels; every number in it is visible in a chart above. */
 .story{margin:26px 0 0;background:var(--paper-2);border:1px solid var(--line);border-radius:4px;padding:16px 18px;max-width:68ch}
-.story .st-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green-d);font-weight:600;display:flex;justify-content:space-between;gap:12px}
+.story .st-lbl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--green-d);font-weight:600;display:flex;justify-content:space-between;gap:12px}
 .story .st-lbl .asof{color:var(--mut);font-weight:400;white-space:nowrap}
-.story p{font-size:15.5px;line-height:1.58;color:var(--ink-2);margin:9px 0 0}
+.story p{font-size:var(--fs-small);line-height:1.58;color:var(--ink-2);margin:9px 0 0}
 .story p b{color:var(--ink)}
-.story .st-src{font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:10px}
+.story .st-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px}
 .story .st-src a{color:var(--green)}
 
 /* Demographics stat strip — a row of headline stats, each tagged Projection (CONAPO model output)
    or Measured (a real count/registration), so a projected figure can never be read as a measurement. */
 .dstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:22px 0 0}
 .dstat{background:var(--paper);padding:14px 16px 12px;position:relative}
-.dstat .dsl{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
-.dstat .dsv{font-family:var(--serif);font-size:26px;line-height:1.05;color:var(--ink);margin-top:4px;letter-spacing:-.01em}
-.dstat .dss{font-size:12px;color:var(--ink-2);margin-top:3px}
-.dbadge{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:3px;font-weight:600}
+.dstat .dsl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.dstat .dsv{font-family:var(--sans);font-size:var(--fs-h2);line-height:1.05;color:var(--ink);margin-top:4px;letter-spacing:-.01em}
+.dstat .dss{font-size:var(--fs-meta);color:var(--ink-2);margin-top:3px}
+.dbadge{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:3px;font-weight:600}
 .dbadge.proj{background:rgba(180,120,20,.12);color:#8a5a10}
 .dbadge.meas{background:var(--green-wash,rgba(30,120,80,.10));color:var(--green-d)}
 @media (prefers-color-scheme:dark){.dbadge.proj{background:rgba(220,160,60,.16);color:#e0b060}}
@@ -231,12 +247,12 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 #tm-basket .tmc{cursor:crosshair}
 #tm-basket .tmc:hover rect{stroke:var(--ink);stroke-width:1.4}
 .tmleg{display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px 0 0}
-.tmlg{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;color:var(--ink-2);letter-spacing:.02em}
+.tmlg{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);letter-spacing:.02em}
 .tmlg i{width:11px;height:11px;border-radius:2px;display:inline-block;flex:0 0 auto}
 
 /* Population explorer — horizon toggle over the CONAPO projection chart */
 .horizon{display:flex;align-items:center;gap:8px;margin:0 0 12px}
-.horizon .hz-lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+.horizon .hz-lbl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
 .horizon button{font-family:var(--mono);font-size:11px;padding:4px 13px;border:1px solid var(--line);background:var(--paper);color:var(--ink-2);border-radius:4px;cursor:pointer;transition:background .12s}
 .horizon button:hover{border-color:var(--green)}
 .horizon button.on{background:var(--green);color:#fff;border-color:var(--green)}
@@ -245,7 +261,7 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 /* Page orientation block — WHAT / NOW / NEXT, between the hero and the numbers board */
 .pageintro{margin:0 0 6px;border-left:2px solid var(--green);padding:3px 0 3px 16px;display:grid;gap:8px}
 .pi-row{display:grid;grid-template-columns:50px 1fr;gap:14px;align-items:baseline}
-.pi-k{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--green-d);font-weight:600}
-.pi-v{font-family:var(--serif);font-size:15px;line-height:1.5;color:var(--ink-2)}
+.pi-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.09em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+.pi-v{font-family:var(--sans);font-size:15px;line-height:1.5;color:var(--ink-2)}
 .pi-v b{color:var(--ink);font-weight:600}
-@media(max-width:640px){.pi-row{grid-template-columns:42px 1fr;gap:10px}.pi-v{font-size:14px}}
+@media(max-width:640px){.pi-row{grid-template-columns:42px 1fr;gap:10px}.pi-v{font-size:var(--fs-small)}}
