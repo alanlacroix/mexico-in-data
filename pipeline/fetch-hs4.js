@@ -37,10 +37,14 @@ function shortName(code, h6) {
   if (s.length > 34) s = s.split(',')[0].trim();
   return s || ('HS ' + code);
 }
-async function getJson(url) {
-  const r = await fetch(url, { headers: { accept: 'application/json' }, signal: AbortSignal.timeout(60000) });
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  return r.json();
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+async function getJson(url, tries = 4) {
+  for (let t = 0; t < tries; t++) {
+    const r = await fetch(url, { headers: { accept: 'application/json' }, signal: AbortSignal.timeout(60000) });
+    if (r.ok) return r.json();
+    if ((r.status === 429 || r.status >= 500) && t < tries - 1) { await sleep(1500 * (t + 1)); continue; } // COMTRADE preview rate-limits; back off
+    throw new Error('HTTP ' + r.status);
+  }
 }
 
 (async () => {
@@ -56,6 +60,22 @@ async function getJson(url) {
     rows = (j.data || []).filter((r) => Number(r.motCode) === 0 && r.primaryValue > 0);
   } catch (e) { console.error('hs4: COMTRADE AG4 fetch failed (keeping last-good):', e.message); process.exit(0); }
   if (rows.length < 100) { console.error('hs4: only', rows.length, 'rows; abort'); process.exit(0); }
+  // The preview returns only the global top-500 HS4 lines, which DROPS big products that rank below the
+  // cut — auto parts (8708, ~$41bn, Mexico's #3 export) is missing, and would otherwise disappear into an
+  // "Other in chapter" block. An explicit code list is NOT subject to that truncation, so re-request every
+  // curated code we didn't already get and merge, guaranteeing no named product ever hides inside "Other".
+  const have = new Set(rows.map((r) => String(r.cmdCode).padStart(4, '0')));
+  const want = Object.keys(OVERRIDE).filter((c) => !have.has(c));
+  for (let i = 0; i < want.length; i += 20) {
+    const batch = want.slice(i, i + 20);
+    try {
+      const j = await getJson(AG4.replace('cmdCode=AG4', 'cmdCode=' + batch.join(',')));
+      for (const r of (j.data || [])) {
+        const c = String(r.cmdCode).padStart(4, '0');
+        if (Number(r.motCode) === 0 && r.primaryValue > 0 && !have.has(c)) { rows.push(r); have.add(c); }
+      }
+    } catch (e) { console.error('hs4: supplemental fetch failed (batch', i + '):', e.message); }
+  }
   try { const h = await getJson(H6); for (const x of (h.results || h.data || h)) names[String(x.id)] = x.text; }
   catch (e) { console.error('hs4: H6 names unavailable, deriving from codes only'); }
 

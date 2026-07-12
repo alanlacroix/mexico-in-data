@@ -145,6 +145,8 @@
   #tm-crumb a.tmcrumb-root:hover{border-bottom-color:var(--green)}
   #tm-crumb .tmcrumb-sep{color:var(--mut);margin:0 6px}
   #tm-crumb .tmcrumb-cur{color:var(--ink);font-weight:600}
+  .exwrap.wide:has(#tm-basket){background:#fff;border:1px solid var(--line-2)}   /* the product map sits on clean white, not the cream exhibit mat */
+  #tm-basket{line-height:0}
   .treemap .tmdrill{cursor:pointer}
   .treemap .tmdrill:hover rect{stroke:var(--ink);stroke-width:1.6}
   .charttip .tr .nm{color:#cfcfc9}
@@ -312,19 +314,37 @@ function basketItems(){
     const ov=small.reduce((a,p)=>a+p.value,0), os=small.reduce((a,p)=>a+p.share,0);
     const top=small.slice().sort((a,b)=>b.value-a.value);
     const more=top.slice(0,5).map(p=>p.name).join(' · ')+(top.length>5?`, and ${top.length-5} more`:'');
-    items.push({name:`Everything else (${small.length} groups)`,value:ov,share:os,color:'#9aa6b0',key:'Everything else',more,isElse:1,_small:top});
+    // Not drillable: opening a 60-chapter tail into a grid of unlabeled slivers is unreadable (Alan).
+    // The box stays, and its tooltip names the top 5, but there is no zoom into microscopic chapters.
+    items.push({name:`Everything else (${small.length} groups)`,value:ov,share:os,color:'#9aa6b0',key:'Everything else',more});
   }
   return items;
 }
-// HS4 children of a chapter, as treemap items (Fable: one level deep). Sub-0.15%-of-total lines fold
-// into "Smaller lines" so the drilled view stays readable; each carries its share-of-parent for the tooltip.
+// Mix a hex color toward white (f>0) or black (f<0) — gives a chapter's products a readable monochrome
+// ramp (Atlas-style shades of the sector color) instead of one flat block of the identical color.
+function mix(hex,f){
+  hex=String(hex||'#888').replace('#',''); if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');
+  const t=f>=0?255:0, a=Math.min(1,Math.abs(f));
+  const ch=(i)=>{const v=parseInt(hex.slice(i,i+2),16);return Math.round(v+(t-v)*a).toString(16).padStart(2,'0');};
+  return '#'+ch(0)+ch(2)+ch(4);
+}
+// HS4 children of a chapter, as treemap items (Fable: one level deep). Named products get a shade of the
+// parent sector color so they read apart; the COMTRADE residual and any sub-0.15% lines fold into ONE
+// honest gray "Rest of this group" box, never a big sector-colored block that reads like a real product.
 function hs4Items(chap,parentColor){
-  const kids=(HS4&&HS4.byChapter&&HS4.byChapter[chap])||[]; const items=[]; let ov=0,on=0,os=0,osp=0;
+  const kids=(HS4&&HS4.byChapter&&HS4.byChapter[chap])||[];
+  const named=[]; let rv=0,rShare=0,rsp=0;
   for(const k of kids){
-    if(k.shareTotal>=0.15) items.push({name:k.name,value:k.value,share:k.shareTotal,shareParent:k.shareParent,full:k.full,color:parentColor,key:''});
-    else { ov+=k.value; os+=k.shareTotal; osp+=k.shareParent; on++; }
+    const isRest=/xx$/.test(k.code||'')||/^other in chapter$/i.test(k.name||'');
+    if(!isRest && k.shareTotal>=0.15) named.push(k);
+    else { rv+=k.value; rShare+=k.shareTotal; rsp+=k.shareParent; }
   }
-  if(on) items.push({name:`Smaller lines (${on})`,value:ov,share:os,shareParent:osp,color:'#9aa6b0',key:''});
+  named.sort((a,b)=>b.value-a.value);
+  const N=named.length;
+  const items=named.map((k,i)=>({name:k.name,value:k.value,share:k.shareTotal,shareParent:k.shareParent,full:k.full,
+    color:mix(parentColor, N>1?(i/(N-1))*0.52-0.06:0.12), key:''}));
+  if(rv>0) items.push({name:'Rest of this group',value:rv,share:rShare,shareParent:rsp,
+    color:'#c2c8ce',key:'',full:'Smaller product lines in this group, combined'});
   return items;
 }
 // the sub-0.5% chapters, as their own treemap (what "Everything else" opens into), colored by sector
