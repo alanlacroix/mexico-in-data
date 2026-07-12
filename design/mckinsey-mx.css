@@ -92,6 +92,18 @@ small{font-size:var(--fs-label)}
 .section-head h2{font-size:var(--fs-h2);margin-top:6px}
 .section-head .dek{color:var(--ink-2);font-size:var(--fs-small);margin-top:8px;max-width:66ch}
 
+/* Header primitive (Fable 2026-07-12, permanent fix for mobile mid-phrase wrap). THE RULE: a headline
+   never shares a line with meta type. The eyebrow (kicker) and any as-of/link label are small meta and
+   may share one row; the H2 ALWAYS owns its own full-width block line. No inline H2s, ever. */
+.eyebrow-row{display:flex;align-items:baseline;justify-content:space-between;gap:4px 14px;flex-wrap:wrap}
+.eyebrow-row .no{text-transform:uppercase;letter-spacing:.05em}
+.eyebrow-row .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
+.eyebrow-row .asof a,.eyebrow-row a.asof{color:var(--green-d);text-decoration:none}
+.eyebrow-row .asof a:hover,.eyebrow-row a.asof:hover{text-decoration:underline}
+/* Homepage module header = the section-head pattern at H3 scale + module spacing (denser stacked cards) */
+.section-head--tight{margin:54px 0 16px;padding-top:15px}
+.section-head--tight h2{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);letter-spacing:-.01em;margin-top:4px;display:block}
+
 /* THE EXHIBIT — copied from McKinsey, kept exactly: numbered,
    conclusion-title, units, footnotes, Source line with links. */
 .exhibit{border:1px solid var(--line-2);background:var(--paper);border-radius:4px;overflow:hidden}

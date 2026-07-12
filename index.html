@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-<link rel="stylesheet" href="/design/mckinsey-mx.css?v=37cda2ed" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=61324951" />
 
 
 </head>
@@ -95,18 +95,11 @@
   .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
   .area-empty{font-size:var(--fs-meta);color:var(--mut);padding:2px 0 4px}
 
-  /* block headers */
-  .bh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-top:2px solid var(--green);padding-top:15px;margin:54px 0 16px}
-  .bh .k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .bh h2{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);display:inline;letter-spacing:-.01em}
-  .bh .a{font-family:var(--mono);font-size:11px;color:var(--green-d);white-space:nowrap}
-  .bh .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
+  /* block headers use the shared .section-head / .section-head--tight primitive (master stylesheet);
+     the old inline-kicker .bh/.board-lbl patterns were deleted 2026-07-12 (they wrapped mid-phrase on
+     mobile). THE RULE: a headline never shares a line with meta type. No inline H2s. */
 
   /* 2 · THE BOARD */
-  .board-lbl{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:54px 0 16px;border-top:2px solid var(--green);padding-top:15px}
-  .board-lbl .k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .board-lbl h2{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);display:inline;letter-spacing:-.01em}
-  .board-lbl .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
   .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
   @media(min-width:560px){.tablero{grid-template-columns:repeat(4,1fr)}}
   .tilelink{display:contents}
@@ -254,7 +247,7 @@
   .masthead .fresh{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .masthead .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
   .hero h1#lead{margin-top:16px}
-  .hero + section .bh, .hero + .homegrid .hg-brief .bh{margin-top:26px}   /* the Brief follows the hero closely; other grid sections keep the full gap */
+  .hero + .homegrid .hg-brief .section-head--tight{margin-top:26px}   /* the Brief follows the hero closely; other grid sections keep the full gap */
   .hero h1#lead a{color:inherit;text-decoration:none;border-bottom:3px solid transparent;transition:border-color .12s}
   .hero h1#lead a:hover{border-bottom-color:var(--green)}
   .wire-note a{color:var(--green)}
@@ -331,21 +324,21 @@
        must equal the visual order. -->
   <div class="homegrid">
     <section class="hg-brief">
-      <div class="bh"><div><span class="k">The Brief</span></div><span class="asof" id="brief-asof"></span></div>
+      <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">The Brief</span><span class="asof" id="brief-asof"></span></div></div>
       <div id="brief" class="brief"></div>
     </section>
 
     <!-- 2b · WHAT STOOD OUT — first data interpretation, right after the Brief -->
     <section id="stood-sec" class="hg-stood">
-      <div class="bh"><div><span class="k">The Read</span> &nbsp; <h2 style="display:inline">What stood out</h2></div><a class="asof stood-link" href="/the-read.html">See the analysis &rarr;</a></div>
+      <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">The Read</span><a class="asof stood-link" href="/the-read.html">See the analysis &rarr;</a></div><h2>What stood out</h2></div>
       <div id="stood"></div>
     </section>
 
     <!-- 3 · THE BOARD -->
     <section class="hg-numbers">
-      <div class="board-lbl">
-        <div><span class="k">Where things stand</span> &nbsp; <h2 style="display:inline">The numbers</h2></div>
-        <span class="asof" id="board-asof"></span>
+      <div class="section-head section-head--tight">
+        <div class="eyebrow-row"><span class="no">Where things stand</span><span class="asof" id="board-asof"></span></div>
+        <h2>The numbers</h2>
       </div>
       <div class="tablero" id="tablero"></div>
       <button class="board-more" id="board-more" type="button" aria-expanded="false">Show all indicators</button>
@@ -363,7 +356,7 @@
 
   <!-- 3b · THE AREAS — the topic browse: each area = a 1–2 sentence read + its top headlines -->
   <section>
-    <div class="board-lbl"><div><span class="k">This week</span> &nbsp; <h2 style="display:inline">Mexico by topic</h2></div><span class="asof" id="areas-asof"></span></div>
+    <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">This week</span><span class="asof" id="areas-asof"></span></div><h2>Mexico by topic</h2></div>
     <div class="areas" id="areas"></div>
   </section>
 
