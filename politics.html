@@ -245,6 +245,21 @@ function renderWire(){ return renderDevelopments('politics'); }   // curated eve
   document.querySelectorAll('.navdrop.open').forEach(function(o){if(o!==inDrop)o.classList.remove('open');});
   var t=e.target.closest('.navdrop-t');
   if(t){var d=t.closest('.navdrop');var on=d.classList.toggle('open');t.setAttribute('aria-expanded',on?'true':'false');}
+});
+/* Our own subscribe form -> /api/subscribe (a Cloudflare function that calls beehiiv server-side).
+   Any form.subform on any page: inline result, no popup, no third-party UI. */
+document.addEventListener('submit',function(e){var f=e.target;if(!f.classList||!f.classList.contains('subform'))return;e.preventDefault();
+  var inp=f.querySelector('input[type=email]'),btn=f.querySelector('button'),msg=f.parentNode.querySelector('.submsg');
+  var email=(inp&&inp.value||'').trim();
+  var say=function(t,ok){if(msg){msg.textContent=t;msg.style.color=ok?'var(--green-d)':'var(--red)';}};
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){say('Enter a valid email address.',false);return;}
+  var old=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='Subscribing…';}
+  fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
+    .then(function(r){return r.json().catch(function(){return{ok:r.ok};});})
+    .then(function(d){if(btn){btn.disabled=false;btn.textContent=old;}
+      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm, and see you Monday.',true);}
+      else{say((d&&d.error)||'Could not subscribe, please try again.',false);}})
+    .catch(function(){if(btn){btn.disabled=false;btn.textContent=old;}say('Network error, please try again.',false);});
 });</script>
 
 </body>

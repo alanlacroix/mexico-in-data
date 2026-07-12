@@ -35,14 +35,13 @@ description: "A free email on Mexico every Monday: what changed in the economy, 
     <h1>What's changing in Mexico.</h1>
     <p class="thesis">Every Monday, I look at what changed in Mexico's economy, politics, business, crime, and relationship with the United States. The numbers come from original sources. The links are there too, in case you want to check my work.</p>
 
-    <!-- Buttondown embed. Replace `mexicobrief` with the real username once the account exists. -->
+    <!-- Our own form -> /api/subscribe (Cloudflare function -> beehiiv, key server-side). No third-party UI. -->
     <div class="signup">
-      <form action="https://buttondown.email/api/emails/embed-subscribe/mexicobrief" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/mexicobrief','popupwindow')">
+      <form class="subform" novalidate>
         <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
-        <input type="hidden" value="1" name="embed" />
         <button type="submit">Subscribe</button>
       </form>
-      <div class="fine">Free. One email, Monday mornings.</div>
+      <div class="fine submsg">Free. One email, Monday mornings.</div>
     </div>
   </section>
 </div>
