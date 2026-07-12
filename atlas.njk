@@ -2,7 +2,7 @@
 layout: base.njk
 permalink: /atlas.html
 title: "The Atlas · The Mexico Brief"
-description: "A map of Mexico's 32 states and 2,469 municipalities: poverty versus the national benchmark. Search, or explore state by state."
+description: "A map of Mexico's 32 states and 2,478 municipalities: poverty versus the national benchmark. Search, or explore state by state."
 ---
 {% raw %}
 <style>
@@ -105,13 +105,13 @@ description: "A map of Mexico's 32 states and 2,469 municipalities: poverty vers
 </style>
 <div class="wrap">
   <section class="hero">
-    <span class="eyebrow">32 states · 2,469 municipalities</span>
+    <span class="eyebrow">32 states · 2,478 municipalities</span>
     <h1>Mexico, state by state</h1>
-    <p class="dek">The national average hides a country split in two. Colour the 32 states by <b>GDP per person</b>, total GDP, poverty, or informality, then tap any state for its full profile. GDP per person runs from about $4,800 in Chiapas to $36,000 in Campeche. <span style="color:var(--mut)">We map the economy and poverty, not reported crime: crime reports track who files a report, not danger (see the Briefing, Q9).</span></p>
+    <p class="dek">The national average hides a country split in two. Color the 32 states by <b>GDP per person</b>, total GDP, poverty, or informality, then tap any state for its full profile. GDP per person runs from about $4,800 in Chiapas to $36,000 in Campeche. <span style="color:var(--mut)">We map the economy and poverty, not reported crime: crime reports track who files a report, not danger (see the Briefing, Q9).</span></p>
 
     <div class="controls">
       <div class="searchcol">
-        <div class="searchhelp">Search 2,469 municipalities</div>
+        <div class="searchhelp">Search 2,478 municipalities</div>
         <div class="searchbox">
           <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
           <input id="q" type="text" inputmode="search" placeholder="Type a municipality…" autocomplete="off" aria-label="Search municipality">
@@ -158,7 +158,7 @@ const NAT={}, MUNIVAL={pov:{}}, STVAL={gdppc:{},gdp:{},pov:{},inf:{}};
 const RAMP_G=['#e7f2ec','#b7dcc5','#79bd96','#3a9866','#0a7d4d']; // economy (green)
 const RAMP_A=['#f4f0e6','#e7c893','#d99a4f','#c26a26','#8f4110']; // deprivation (amber)
 const METRICS={
-  gdppc:{label:'GDP per person',unit:'US$ per person',fmt:(v)=>'$'+enNum(Math.round(v)),dir:'richer',ramp:RAMP_G,stateOnly:true},
+  gdppc:{label:'GDP per person',unit:'US$ per person',fmt:(v)=>'$'+enNum(Math.round(v)),dir:'higher GDP per person',ramp:RAMP_G,stateOnly:true},
   gdp:{label:'Total GDP',unit:'US$ billions',fmt:(v)=>'$'+enNum(Math.round(v))+'bn',dir:'a bigger economy',ramp:RAMP_G,stateOnly:true},
   pov:{label:'Poverty',unit:'% of people',fmt:(v)=>Math.round(v)+'%',dir:'more poverty',ramp:RAMP_A,stateOnly:false},
   inf:{label:'Informality',unit:'% of workers',fmt:(v)=>Math.round(v)+'%',dir:'more informal',ramp:RAMP_A,stateOnly:true}
@@ -234,7 +234,7 @@ function drill(cve,keepSel){
   renderLegend(qs,'pov');
   $('#crumb').innerHTML=`<span class="bc" id="bc-all">← All 32 states</span><span class="bc plain"><span class="arw">/</span> ${f.name}</span>`;
   $('#bc-all').addEventListener('click',allStates);
-  $('#statesum').innerHTML=`Municipalities coloured by <b>poverty</b> (2020). Tap any one for its profile.`;
+  $('#statesum').innerHTML=`Municipalities colored by <b>poverty</b> (2020). Poverty data covers 2,466 of the 2,478. Tap any one for its profile.`;
   ml.onpointermove=(e)=>{const t=e.target,tip=$('#maptip');if(t.tagName!=='path'){tip.style.opacity=0;return;}const id=t.getAttribute('data-id'),info=REG[id],v=MUNIVAL.pov[id];const bench=v!=null&&NAT.pov?(v>=NAT.pov*1.1?'above':v<=NAT.pov*0.9?'below':'≈'):'';tip.innerHTML=`<b>${info?info.nom:id}</b><br><span class="n">${v!=null?Math.round(v)+'% in poverty':'no data'}</span>${bench?`<br><span class="r">${bench} national</span>`:''}`;tip.style.left=Math.min(e.clientX+14,innerWidth-180)+'px';tip.style.top=(e.clientY+14)+'px';tip.style.opacity=1;};
   ml.onpointerleave=()=>{$('#maptip').style.opacity=0;};
   ml.onclick=(e)=>{const t=e.target;if(t.tagName==='path')goFicha(t.getAttribute('data-id'));};
@@ -279,7 +279,7 @@ function renderStateFicha(cve){
    rows+=frow({label:'Informal work',stamp:'INEGI ENOE · Q1 2026',valHTML:`${v.toFixed(1)} <small>% of workers</small>`,
      verdict:`${v.toFixed(0)}% of workers are off the books, more than ${r.of-r.top} of the 32 states.`,
      src:'Source: INEGI, ENOE labour-informality rate, first quarter 2026.'});}
-  wrap.innerHTML=`<div class="fhead"><span class="fh-x" id="fx">Clear ✕</span><div class="fh-name">${s.name}</div><div class="fh-ent">State profile</div><div class="fh-pob">${enNum(s.pop)} people · CONAPO 2023</div></div>`+rows+`<div class="fclose">Municipalities below are coloured by poverty. GDP is measured at the state level; Mexico has no official municipal GDP.</div>`;
+  wrap.innerHTML=`<div class="fhead"><span class="fh-x" id="fx">Clear ✕</span><div class="fh-name">${s.name}</div><div class="fh-ent">State profile</div><div class="fh-pob">${enNum(s.pop)} people · CONAPO 2023</div></div>`+rows+`<div class="fclose">Municipalities below are colored by poverty. GDP is measured at the state level; Mexico has no official municipal GDP.</div>`;
   requestAnimationFrame(()=>wrap.classList.add('in'));
   $('#fx').addEventListener('click',()=>{wrap.hidden=true;});
 }

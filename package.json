@@ -1,6 +1,9 @@
 {
   "name": "mexico-brief-site",
   "private": true,
-  "scripts": { "build": "eleventy" },
+  "scripts": {
+    "build": "eleventy",
+    "check-links": "node pipeline/check-links.mjs"
+  },
   "devDependencies": { "@11ty/eleventy": "^3.0.0" }
 }

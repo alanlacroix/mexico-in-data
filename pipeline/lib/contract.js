@@ -26,15 +26,33 @@ export function assertManifest(m) {
     throw new Error(`manifest ${m.id}: layers must join on canonicalKey "cvegeo"`);
 }
 
+// Pull the publisher's own series code out of a manifest sourceUrl so the sources
+// page can print it (Banxico SIE, FRED, World Bank indicator). Returns '' when the
+// source has no clean code (CRE, CONEVAL, SESNSP, IMSS, Data México). One extractor,
+// used by both the live run and the no-network backfill, so the code shown always
+// matches the URL the connector actually calls.
+export function seriesIdFromUrl(u) {
+  if (!u) return '';
+  let m = /\/series\/([A-Za-z0-9._-]+?)(?:\/datos)?(?:[/?]|$)/.exec(u); // Banxico SIE + FRED
+  if (m) return m[1];
+  m = /\/indicator\/([A-Za-z0-9._-]+)/.exec(u); // World Bank Indicators API
+  if (m) return m[1];
+  return '';
+}
+
 /** Run one connector end-to-end. Never throws — returns a health record. */
 export async function runConnector(mod, ctx) {
   const m = mod.manifest;
   const rec = {
     id: m.id,
+    title: m.title,
     metric: m.metric,
     source: m.source,
+    seriesId: seriesIdFromUrl(m.sourceUrl),
+    sourceUrl: m.sourceUrl,
     track: m.track,
     kind: m.kind,
+    cadence: m.cadence,
     canonicalSource: !!m.canonicalSource,
     status: 'ok',
     flags: [],

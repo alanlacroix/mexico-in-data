@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-12T13:53:55.922Z",
-  "runId": "20260712135355",
+  "generatedAt": "2026-07-11T19:48:52.862Z",
+  "runId": "20260711194852",
   "geoEpoch": {
     "epoch": "mg-2020",
     "source": "INEGI Marco Geoestadístico",
@@ -8,7 +8,7 @@
     "count": 2478
   },
   "summary": {
-    "ok": 41,
+    "ok": 32,
     "flagged": 9,
     "failed": 0,
     "skipped": 2,
@@ -26,12 +26,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 18,
       "file": "data/series/banxico-pib-crecimiento.json",
-      "finishedAt": "2026-07-12T13:53:56.499Z"
+      "finishedAt": "2026-07-11T19:48:53.286Z",
+      "title": "Crecimiento del PIB (anual, real)",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SR17622/datos",
+      "seriesId": "SR17622"
     },
     {
       "id": "banxico-igae",
@@ -42,14 +46,18 @@
       "canonicalSource": true,
       "status": "ok_flagged",
       "flags": [
-        "stale_monthly_103d"
+        "stale_monthly_102d"
       ],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-04-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 57,
       "file": "data/series/banxico-igae.json",
-      "finishedAt": "2026-07-12T13:53:56.614Z"
+      "finishedAt": "2026-07-11T19:48:53.416Z",
+      "title": "IGAE — actividad económica (anual)",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SR17693/datos",
+      "seriesId": "SR17693"
     },
     {
       "id": "banxico-inflacion-subyacente",
@@ -60,12 +68,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 59,
       "file": "data/series/banxico-inflacion-subyacente.json",
-      "finishedAt": "2026-07-12T13:53:56.729Z"
+      "finishedAt": "2026-07-11T19:48:53.546Z",
+      "title": "Inflación subyacente (anual)",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP74625/datos",
+      "seriesId": "SP74625"
     },
     {
       "id": "banxico-salario-minimo",
@@ -76,12 +88,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 70,
       "file": "data/series/banxico-salario-minimo.json",
-      "finishedAt": "2026-07-12T13:53:56.841Z"
+      "finishedAt": "2026-07-11T19:48:53.670Z",
+      "title": "Salario mínimo general",
+      "cadence": "annual",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SL11298/datos",
+      "seriesId": "SL11298"
     },
     {
       "id": "banxico-tasa-objetivo",
@@ -92,12 +108,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-07-11",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 365,
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
+      "rowCount": 366,
       "file": "data/series/banxico-tasa-objetivo.json",
-      "finishedAt": "2026-07-12T13:53:56.969Z"
+      "finishedAt": "2026-07-11T19:48:53.808Z",
+      "title": "Tasa objetivo (política monetaria)",
+      "cadence": "daily",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF61745/datos",
+      "seriesId": "SF61745"
     },
     {
       "id": "banxico-usdmxn-fix",
@@ -108,12 +128,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-07-10",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 250,
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
+      "rowCount": 251,
       "file": "data/series/banxico-usdmxn-fix.json",
-      "finishedAt": "2026-07-12T13:53:57.201Z"
+      "finishedAt": "2026-07-11T19:48:53.947Z",
+      "title": "Tipo de cambio USD/MXN (FIX)",
+      "cadence": "business-daily",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43718/datos",
+      "seriesId": "SF43718"
     },
     {
       "id": "banxico-reservas",
@@ -124,12 +148,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-07-03",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 51,
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
+      "rowCount": 52,
       "file": "data/series/banxico-reservas.json",
-      "finishedAt": "2026-07-12T13:53:57.320Z"
+      "finishedAt": "2026-07-11T19:48:54.071Z",
+      "title": "Reservas internacionales",
+      "cadence": "weekly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43707/datos",
+      "seriesId": "SF43707"
     },
     {
       "id": "banxico-remesas",
@@ -140,12 +168,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 10,
       "file": "data/series/banxico-remesas.json",
-      "finishedAt": "2026-07-12T13:53:57.434Z"
+      "finishedAt": "2026-07-11T19:48:54.195Z",
+      "title": "Remesas familiares (total)",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SE27803/datos",
+      "seriesId": "SE27803"
     },
     {
       "id": "banxico-spei-operaciones",
@@ -156,12 +188,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 11,
       "file": "data/series/banxico-spei-operaciones.json",
-      "finishedAt": "2026-07-12T13:53:57.576Z"
+      "finishedAt": "2026-07-11T19:48:54.320Z",
+      "title": "SPEI — número de operaciones (tercero a tercero)",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF273317/datos",
+      "seriesId": "SF273317"
     },
     {
       "id": "banxico-spei-monto",
@@ -172,12 +208,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 11,
       "file": "data/series/banxico-spei-monto.json",
-      "finishedAt": "2026-07-12T13:53:57.712Z"
+      "finishedAt": "2026-07-11T19:48:54.442Z",
+      "title": "SPEI — monto total operado",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF273318/datos",
+      "seriesId": "SF273318"
     },
     {
       "id": "banxico-tpv-debito-ops",
@@ -188,12 +228,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 22,
       "file": "data/series/banxico-tpv-debito-ops.json",
-      "finishedAt": "2026-07-12T13:53:57.845Z"
+      "finishedAt": "2026-07-11T19:48:54.563Z",
+      "title": "TPV — operaciones con tarjeta de débito",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF62273/datos",
+      "seriesId": "SF62273"
     },
     {
       "id": "banxico-tpv-debito-monto",
@@ -204,12 +248,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 22,
       "file": "data/series/banxico-tpv-debito-monto.json",
-      "finishedAt": "2026-07-12T13:53:57.986Z"
+      "finishedAt": "2026-07-11T19:48:54.688Z",
+      "title": "TPV — importe con tarjeta de débito",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF62279/datos",
+      "seriesId": "SF62279"
     },
     {
       "id": "banxico-cajeros-ops",
@@ -220,12 +268,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 22,
       "file": "data/series/banxico-cajeros-ops.json",
-      "finishedAt": "2026-07-12T13:53:58.118Z"
+      "finishedAt": "2026-07-11T19:48:54.810Z",
+      "title": "Cajeros — retiros de efectivo (operaciones)",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF62269/datos",
+      "seriesId": "SF62269"
     },
     {
       "id": "banxico-cajeros-monto",
@@ -236,12 +288,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 22,
       "file": "data/series/banxico-cajeros-monto.json",
-      "finishedAt": "2026-07-12T13:53:58.249Z"
+      "finishedAt": "2026-07-11T19:48:54.932Z",
+      "title": "Cajeros — retiros de efectivo (importe)",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF62275/datos",
+      "seriesId": "SF62275"
     },
     {
       "id": "banxico-tpv-credito-ops",
@@ -252,12 +308,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 22,
       "file": "data/series/banxico-tpv-credito-ops.json",
-      "finishedAt": "2026-07-12T13:53:58.380Z"
+      "finishedAt": "2026-07-11T19:48:55.134Z",
+      "title": "TPV — operaciones con tarjeta de crédito",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF62274/datos",
+      "seriesId": "SF62274"
     },
     {
       "id": "banxico-tpv-credito-monto",
@@ -268,12 +328,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 22,
       "file": "data/series/banxico-tpv-credito-monto.json",
-      "finishedAt": "2026-07-12T13:53:58.516Z"
+      "finishedAt": "2026-07-11T19:48:55.288Z",
+      "title": "TPV — importe con tarjeta de crédito",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF62280/datos",
+      "seriesId": "SF62280"
     },
     {
       "id": "banxico-ecommerce-ops",
@@ -284,12 +348,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2025-10-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 21,
       "file": "data/series/banxico-ecommerce-ops.json",
-      "finishedAt": "2026-07-12T13:53:58.629Z"
+      "finishedAt": "2026-07-11T19:48:55.448Z",
+      "title": "Comercio electrónico — operaciones con tarjeta",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF273475/datos",
+      "seriesId": "SF273475"
     },
     {
       "id": "banxico-ecommerce-monto",
@@ -300,12 +368,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2025-10-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 21,
       "file": "data/series/banxico-ecommerce-monto.json",
-      "finishedAt": "2026-07-12T13:53:58.745Z"
+      "finishedAt": "2026-07-11T19:48:55.598Z",
+      "title": "Comercio electrónico — importe con tarjeta",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF273476/datos",
+      "seriesId": "SF273476"
     },
     {
       "id": "banxico-tarjetas-credito",
@@ -316,12 +388,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 22,
       "file": "data/series/banxico-tarjetas-credito.json",
-      "finishedAt": "2026-07-12T13:53:58.855Z"
+      "finishedAt": "2026-07-11T19:48:55.720Z",
+      "title": "Tarjetas de crédito vigentes (todas las marcas)",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF61870/datos",
+      "seriesId": "SF61870"
     },
     {
       "id": "banxico-tarjetas-debito",
@@ -332,12 +408,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 22,
       "file": "data/series/banxico-tarjetas-debito.json",
-      "finishedAt": "2026-07-12T13:53:58.987Z"
+      "finishedAt": "2026-07-11T19:48:55.868Z",
+      "title": "Tarjetas de débito vigentes (todas las marcas)",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF61871/datos",
+      "seriesId": "SF61871"
     },
     {
       "id": "banxico-consumo-privado",
@@ -348,14 +428,18 @@
       "canonicalSource": true,
       "status": "ok_flagged",
       "flags": [
-        "stale_monthly_103d"
+        "stale_monthly_102d"
       ],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-04-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 69,
       "file": "data/series/banxico-consumo-privado.json",
-      "finishedAt": "2026-07-12T13:53:59.101Z"
+      "finishedAt": "2026-07-11T19:48:55.987Z",
+      "title": "Consumo privado — índice mensual (desest.)",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SR17449/datos",
+      "seriesId": "SR17449"
     },
     {
       "id": "banxico-remesas-electronicas",
@@ -366,12 +450,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 10,
       "file": "data/series/banxico-remesas-electronicas.json",
-      "finishedAt": "2026-07-12T13:53:59.215Z"
+      "finishedAt": "2026-07-11T19:48:56.109Z",
+      "title": "Remesas — transferencias electrónicas",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SE27806/datos",
+      "seriesId": "SE27806"
     },
     {
       "id": "banxico-circulante",
@@ -382,12 +470,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 71,
       "file": "data/series/banxico-circulante.json",
-      "finishedAt": "2026-07-12T13:53:59.326Z"
+      "finishedAt": "2026-07-11T19:48:56.230Z",
+      "title": "Billetes y monedas en circulación",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF1/datos",
+      "seriesId": "SF1"
     },
     {
       "id": "banxico-codi-operaciones",
@@ -398,156 +490,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 23,
       "file": "data/series/banxico-codi-operaciones.json",
-      "finishedAt": "2026-07-12T13:53:59.447Z"
-    },
-    {
-      "id": "banxico-exports-total",
-      "metric": "exports_total",
-      "source": "Banco de México (SIE)",
-      "track": "pulse",
-      "kind": "series",
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 322,
-      "file": "data/series/banxico-exports-total.json",
-      "finishedAt": "2026-07-12T13:53:59.564Z"
-    },
-    {
-      "id": "banxico-imports-total",
-      "metric": "imports_total",
-      "source": "Banco de México (SIE)",
-      "track": "pulse",
-      "kind": "series",
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 322,
-      "file": "data/series/banxico-imports-total.json",
-      "finishedAt": "2026-07-12T13:53:59.680Z"
-    },
-    {
-      "id": "banxico-trade-balance",
-      "metric": "trade_balance",
-      "source": "Banco de México (SIE)",
-      "track": "pulse",
-      "kind": "series",
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 34,
-      "file": "data/series/banxico-trade-balance.json",
-      "finishedAt": "2026-07-12T13:53:59.792Z"
-    },
-    {
-      "id": "banxico-exports-nonoil",
-      "metric": "exports_nonoil",
-      "source": "Banco de México (SIE)",
-      "track": "pulse",
-      "kind": "series",
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 34,
-      "file": "data/series/banxico-exports-nonoil.json",
-      "finishedAt": "2026-07-12T13:53:59.904Z"
-    },
-    {
-      "id": "banxico-exports-oil",
-      "metric": "exports_oil",
-      "source": "Banco de México (SIE)",
-      "track": "pulse",
-      "kind": "series",
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 34,
-      "file": "data/series/banxico-exports-oil.json",
-      "finishedAt": "2026-07-12T13:54:00.019Z"
-    },
-    {
-      "id": "banxico-exports-manufactures",
-      "metric": "exports_manuf",
-      "source": "Banco de México (SIE)",
-      "track": "pulse",
-      "kind": "series",
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 34,
-      "file": "data/series/banxico-exports-manufactures.json",
-      "finishedAt": "2026-07-12T13:54:00.132Z"
-    },
-    {
-      "id": "banxico-imports-consumer",
-      "metric": "imports_consumer",
-      "source": "Banco de México (SIE)",
-      "track": "pulse",
-      "kind": "series",
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 322,
-      "file": "data/series/banxico-imports-consumer.json",
-      "finishedAt": "2026-07-12T13:54:00.244Z"
-    },
-    {
-      "id": "banxico-imports-intermediate",
-      "metric": "imports_intermediate",
-      "source": "Banco de México (SIE)",
-      "track": "pulse",
-      "kind": "series",
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 322,
-      "file": "data/series/banxico-imports-intermediate.json",
-      "finishedAt": "2026-07-12T13:54:00.532Z"
-    },
-    {
-      "id": "banxico-imports-capital",
-      "metric": "imports_capital",
-      "source": "Banco de México (SIE)",
-      "track": "pulse",
-      "kind": "series",
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 322,
-      "file": "data/series/banxico-imports-capital.json",
-      "finishedAt": "2026-07-12T13:54:00.654Z"
+      "finishedAt": "2026-07-11T19:48:56.359Z",
+      "title": "CoDi — operaciones (mensual)",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF335701/datos",
+      "seriesId": "SF335701"
     },
     {
       "id": "banxico-inflacion",
@@ -558,12 +510,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 23,
       "file": "data/series/banxico-inflacion.json",
-      "finishedAt": "2026-07-12T13:54:00.767Z"
+      "finishedAt": "2026-07-11T19:48:56.489Z",
+      "title": "Inflación anual (INPC)",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SP1/datos",
+      "seriesId": "SP1"
     },
     {
       "id": "coneval-pobreza",
@@ -574,18 +530,22 @@
       "canonicalSource": true,
       "status": "ok_flagged",
       "flags": [
-        "stale_yearly_2385d"
+        "stale_yearly_2384d"
       ],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2020",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 2466,
       "file": "data/layers/coneval-pobreza.json",
       "coverage": {
         "covered": 2466,
         "universe": 2478
       },
-      "finishedAt": "2026-07-12T13:54:01.432Z"
+      "finishedAt": "2026-07-11T19:48:57.640Z",
+      "title": "Pobreza municipal",
+      "cadence": "~5-yearly",
+      "sourceUrl": "https://www.coneval.org.mx/Informes/Pobreza/Datos_abiertos/pobreza_municipal_2010-2020/indicadores%20de%20pobreza%20municipal_2020.csv",
+      "seriesId": ""
     },
     {
       "id": "cre-gasolina-regular",
@@ -596,12 +556,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-07-12",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 5,
+      "startedAt": "2026-07-11T19:48:52.862Z",
+      "vintage": "2026-07-11",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
+      "rowCount": 4,
       "file": "data/series/cre-gasolina-regular.json",
-      "finishedAt": "2026-07-12T13:54:01.913Z"
+      "finishedAt": "2026-07-11T19:48:58.019Z",
+      "title": "Gasolina regular (precio nacional)",
+      "cadence": "4-hourly",
+      "sourceUrl": "https://publicacionexterna.azurewebsites.net/publicaciones/prices",
+      "seriesId": ""
     },
     {
       "id": "cre-gasolina-premium",
@@ -612,12 +576,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-07-12",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 5,
+      "startedAt": "2026-07-11T19:48:52.862Z",
+      "vintage": "2026-07-11",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
+      "rowCount": 4,
       "file": "data/series/cre-gasolina-premium.json",
-      "finishedAt": "2026-07-12T13:54:02.077Z"
+      "finishedAt": "2026-07-11T19:48:58.208Z",
+      "title": "Gasolina premium (precio nacional)",
+      "cadence": "4-hourly",
+      "sourceUrl": "https://publicacionexterna.azurewebsites.net/publicaciones/prices",
+      "seriesId": ""
     },
     {
       "id": "cre-diesel",
@@ -628,12 +596,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
-      "vintage": "2026-07-12",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
-      "rowCount": 5,
+      "startedAt": "2026-07-11T19:48:52.862Z",
+      "vintage": "2026-07-11",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
+      "rowCount": 4,
       "file": "data/series/cre-diesel.json",
-      "finishedAt": "2026-07-12T13:54:02.251Z"
+      "finishedAt": "2026-07-11T19:48:58.391Z",
+      "title": "Diésel (precio nacional)",
+      "cadence": "4-hourly",
+      "sourceUrl": "https://publicacionexterna.azurewebsites.net/publicaciones/prices",
+      "seriesId": ""
     },
     {
       "id": "se-ied",
@@ -644,14 +616,18 @@
       "canonicalSource": true,
       "status": "ok_flagged",
       "flags": [
-        "stale_quarter_650d"
+        "stale_quarter_649d"
       ],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2024-10",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 104,
       "file": "data/series/se-ied.json",
-      "finishedAt": "2026-07-12T13:54:02.751Z"
+      "finishedAt": "2026-07-11T19:48:58.909Z",
+      "title": "Inversión Extranjera Directa (flujo trimestral)",
+      "cadence": "quarterly",
+      "sourceUrl": "https://www.economia.gob.mx/datamexico/",
+      "seriesId": ""
     },
     {
       "id": "fred-ust10",
@@ -662,12 +638,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-07-09",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 2880,
       "file": "data/series/fred-ust10.json",
-      "finishedAt": "2026-07-12T13:54:02.982Z"
+      "finishedAt": "2026-07-11T19:48:59.266Z",
+      "title": "US 10-year Treasury yield",
+      "cadence": "daily",
+      "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
+      "seriesId": "DGS10"
     },
     {
       "id": "fred-ust2",
@@ -678,12 +658,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-07-09",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 2880,
       "file": "data/series/fred-ust2.json",
-      "finishedAt": "2026-07-12T13:54:03.172Z"
+      "finishedAt": "2026-07-11T19:48:59.514Z",
+      "title": "US 2-year Treasury yield",
+      "cadence": "daily",
+      "sourceUrl": "https://fred.stlouisfed.org/series/DGS2",
+      "seriesId": "DGS2"
     },
     {
       "id": "fred-fedfunds",
@@ -694,12 +678,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 138,
       "file": "data/series/fred-fedfunds.json",
-      "finishedAt": "2026-07-12T13:54:03.334Z"
+      "finishedAt": "2026-07-11T19:48:59.698Z",
+      "title": "US federal funds rate",
+      "cadence": "monthly",
+      "sourceUrl": "https://fred.stlouisfed.org/series/FEDFUNDS",
+      "seriesId": "FEDFUNDS"
     },
     {
       "id": "fred-usd-broad",
@@ -710,12 +698,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-07-02",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 2867,
       "file": "data/series/fred-usd-broad.json",
-      "finishedAt": "2026-07-12T13:54:03.511Z"
+      "finishedAt": "2026-07-11T19:48:59.905Z",
+      "title": "US dollar index (broad, nominal)",
+      "cadence": "weekly",
+      "sourceUrl": "https://fred.stlouisfed.org/series/DTWEXBGS",
+      "seriesId": "DTWEXBGS"
     },
     {
       "id": "fred-us-autosales",
@@ -726,12 +718,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 138,
       "file": "data/series/fred-us-autosales.json",
-      "finishedAt": "2026-07-12T13:54:03.692Z"
+      "finishedAt": "2026-07-11T19:49:00.887Z",
+      "title": "US total vehicle sales",
+      "cadence": "monthly",
+      "sourceUrl": "https://fred.stlouisfed.org/series/TOTALSA",
+      "seriesId": "TOTALSA"
     },
     {
       "id": "fred-us-indpro",
@@ -742,26 +738,38 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 137,
       "file": "data/series/fred-us-indpro.json",
-      "finishedAt": "2026-07-12T13:54:03.876Z"
+      "finishedAt": "2026-07-11T19:49:01.681Z",
+      "title": "US industrial production",
+      "cadence": "monthly",
+      "sourceUrl": "https://fred.stlouisfed.org/series/INDPRO",
+      "seriesId": "INDPRO"
     },
     {
       "id": "imss-empleo",
       "metric": "formal_jobs",
       "source": "IMSS (Datos Abiertos)",
       "status": "skipped",
-      "gatedBy": "ENABLE_IMSS"
+      "gatedBy": "ENABLE_IMSS",
+      "title": "Empleo formal (puestos IMSS)",
+      "cadence": "monthly",
+      "sourceUrl": "http://datos.imss.gob.mx/group/asegurados",
+      "seriesId": ""
     },
     {
       "id": "sesnsp-delitos",
       "metric": "crime_total",
       "source": "SESNSP (Secretariado Ejecutivo del SNSP)",
       "status": "skipped",
-      "gatedBy": "ENABLE_SESNSP"
+      "gatedBy": "ENABLE_SESNSP",
+      "title": "Incidencia delictiva (total)",
+      "cadence": "monthly",
+      "sourceUrl": "https://www.gob.mx/sesnsp/acciones-y-programas/datos-abiertos-de-incidencia-delictiva",
+      "seriesId": ""
     },
     {
       "id": "wb-gdp-usd",
@@ -772,14 +780,18 @@
       "canonicalSource": false,
       "status": "ok_flagged",
       "flags": [
-        "stale_annual_558d"
+        "stale_annual_557d"
       ],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 66,
       "file": "data/series/wb-gdp-usd.json",
-      "finishedAt": "2026-07-12T13:54:04.007Z"
+      "finishedAt": "2026-07-11T19:49:01.780Z",
+      "title": "PIB (GDP, US$ corrientes)",
+      "cadence": "annual",
+      "sourceUrl": "https://api.worldbank.org/v2/country/MEX/indicator/NY.GDP.MKTP.CD?format=json&per_page=300",
+      "seriesId": "NY.GDP.MKTP.CD"
     },
     {
       "id": "wb-gdp-per-capita",
@@ -790,14 +802,18 @@
       "canonicalSource": false,
       "status": "ok_flagged",
       "flags": [
-        "stale_annual_558d"
+        "stale_annual_557d"
       ],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 66,
       "file": "data/series/wb-gdp-per-capita.json",
-      "finishedAt": "2026-07-12T13:54:04.078Z"
+      "finishedAt": "2026-07-11T19:49:01.835Z",
+      "title": "PIB per cápita (US$)",
+      "cadence": "annual",
+      "sourceUrl": "https://api.worldbank.org/v2/country/MEX/indicator/NY.GDP.PCAP.CD?format=json&per_page=300",
+      "seriesId": "NY.GDP.PCAP.CD"
     },
     {
       "id": "wb-inflation",
@@ -808,14 +824,18 @@
       "canonicalSource": false,
       "status": "ok_flagged",
       "flags": [
-        "stale_annual_558d"
+        "stale_annual_557d"
       ],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 66,
       "file": "data/series/wb-inflation.json",
-      "finishedAt": "2026-07-12T13:54:04.400Z"
+      "finishedAt": "2026-07-11T19:49:01.919Z",
+      "title": "Inflación anual (World Bank)",
+      "cadence": "annual",
+      "sourceUrl": "https://api.worldbank.org/v2/country/MEX/indicator/FP.CPI.TOTL.ZG?format=json&per_page=300",
+      "seriesId": "FP.CPI.TOTL.ZG"
     },
     {
       "id": "wb-population",
@@ -826,14 +846,18 @@
       "canonicalSource": false,
       "status": "ok_flagged",
       "flags": [
-        "stale_annual_558d"
+        "stale_annual_557d"
       ],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 66,
       "file": "data/series/wb-population.json",
-      "finishedAt": "2026-07-12T13:54:04.651Z"
+      "finishedAt": "2026-07-11T19:49:01.973Z",
+      "title": "Población total",
+      "cadence": "annual",
+      "sourceUrl": "https://api.worldbank.org/v2/country/MEX/indicator/SP.POP.TOTL?format=json&per_page=300",
+      "seriesId": "SP.POP.TOTL"
     },
     {
       "id": "wb-unemployment",
@@ -844,14 +868,18 @@
       "canonicalSource": false,
       "status": "ok_flagged",
       "flags": [
-        "stale_annual_558d"
+        "stale_annual_557d"
       ],
-      "startedAt": "2026-07-12T13:53:55.922Z",
+      "startedAt": "2026-07-11T19:48:52.862Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-12T13:53:55.922Z",
+      "fetchedAt": "2026-07-11T19:48:52.862Z",
       "rowCount": 35,
       "file": "data/series/wb-unemployment.json",
-      "finishedAt": "2026-07-12T13:54:04.723Z"
+      "finishedAt": "2026-07-11T19:49:02.022Z",
+      "title": "Desempleo (World Bank est.)",
+      "cadence": "annual",
+      "sourceUrl": "https://api.worldbank.org/v2/country/MEX/indicator/SL.UEM.TOTL.ZS?format=json&per_page=300",
+      "seriesId": "SL.UEM.TOTL.ZS"
     }
   ]
 }

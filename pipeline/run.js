@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { runConnector } from './lib/contract.js';
+import { runConnector, seriesIdFromUrl } from './lib/contract.js';
 import { collectedAlerts } from './lib/alert.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -59,7 +59,8 @@ async function main() {
     // env gate is set or it was explicitly asked for. Skipping never alerts.
     if (g && process.env[g] !== '1' && !only) {
       console.log(`  · ${c.manifest.id.padEnd(26)} skipped     (gated by ${g})`);
-      records.push({ id: c.manifest.id, metric: c.manifest.metric, source: c.manifest.source, status: 'skipped', gatedBy: g });
+      const sm = c.manifest;
+      records.push({ id: sm.id, title: sm.title, metric: sm.metric, source: sm.source, seriesId: seriesIdFromUrl(sm.sourceUrl), sourceUrl: sm.sourceUrl, track: sm.track, kind: sm.kind, cadence: sm.cadence, status: 'skipped', gatedBy: g });
       continue;
     }
     const rec = await runConnector(c, ctx);
