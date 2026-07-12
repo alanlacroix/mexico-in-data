@@ -103,7 +103,7 @@ export function timeChart(series,opts){
     g+=`<path class="${cls}" style="stroke:${stroke}" d="${d}"/>`;
     const last=s.pts[s.pts.length-1],lx=X(+new Date(last.date)),ly=Y(last.value);
     g+=`<circle class="dot" style="fill:${stroke}" cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="3.2"/>`;
-    g+=`<text class="endlab" style="fill:${stroke}" x="${(lx+7).toFixed(1)}" y="${(ly+4).toFixed(1)}">${s.name} ${niceStr(last.value,opts.unit)}</text>`;
+    g+=`<text class="endlab" style="fill:${stroke}" x="${(lx+10).toFixed(1)}" y="${(ly+4).toFixed(1)}">${s.name} ${niceStr(last.value,opts.unit)}</text>`;
   });
   // x labels: first, last
   const f=series[0].pts, l=f[f.length-1];
