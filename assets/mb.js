@@ -82,7 +82,11 @@ let CID=0; const CHARTS={};
 export function niceStr(v,unit){ unit=unit||''; if(unit==='%')return v.toFixed(v>=10?0:1)+'%'; if(unit==='$')return '$'+(Math.abs(v)>=1000?(v/1000).toFixed(1)+'k':v.toFixed(0)); if(unit==='M')return v.toFixed(Math.abs(v)>=10?0:1)+'M'; return v.toFixed(Math.abs(v)>=10?0:1); }
 // Multi-series time-series. series=[{name,color,pts:[{date,value}]}]. opts:{unit,band,zero,green}
 export function timeChart(series,opts){
-  opts=opts||{}; const W=720,H=400,pl=44,pr=104,pt=10,pb=30,iw=W-pl-pr,ih=H-pt-pb;
+  opts=opts||{}; const W=720,H=400,pl=44,pt=10,pb=30;
+  // reserve right space for the longest end label ("name value") so it never clips at the SVG edge
+  const _lbls=series.map(s=>`${s.name} ${niceStr(s.pts[s.pts.length-1].value,opts.unit)}`);
+  const pr=Math.max(104, Math.round(Math.max(..._lbls.map(l=>l.length))*6.7)+18);
+  const iw=W-pl-pr,ih=H-pt-pb;
   const all=series.flatMap(s=>s.pts.map(p=>p.value));
   let mn=opts.min!=null?opts.min:Math.min(...all), mx=opts.max!=null?opts.max:Math.max(...all);
   if(opts.zero){ if(mn>0)mn=0; if(mx<0)mx=0; }
@@ -159,6 +163,20 @@ function tmSquarify(items, X, Y, W, H){
 }
 function tmLuma(hex){ hex=(hex||'#888888').replace('#',''); if(hex.length===3)hex=hex.split('').map(c=>c+c).join(''); const r=parseInt(hex.slice(0,2),16)/255,g=parseInt(hex.slice(2,4),16)/255,b=parseInt(hex.slice(4,6),16)/255; return 0.2126*r+0.7152*g+0.0722*b; }
 function tmEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+// Greedy word-wrap for a treemap label: fit the WHOLE name into <=maxLines lines at the given font
+// size, or return null if it can't (a word too wide, or too many lines). Never drops or clips a word.
+function tmWrap(name, w, fs, maxLines){
+  const cpl=Math.max(3, Math.floor(w/(fs*0.56)));           // chars/line (Inter semibold ≈ .56em advance)
+  const words=String(name).split(/\s+/), lines=[]; let cur='';
+  for(const wd of words){
+    if(wd.length>cpl) return null;
+    if(!cur) cur=wd;
+    else if((cur+' '+wd).length<=cpl) cur+=' '+wd;
+    else { lines.push(cur); cur=wd; if(lines.length>=maxLines) return null; }
+  }
+  if(cur) lines.push(cur);
+  return lines.length<=maxLines ? lines : null;
+}
 export function treemapSVG(items, opts){
   opts=opts||{}; const W=opts.W||720, H=opts.H||460, pad=1;
   const data=items.slice().filter(d=>d.value>0).sort((a,b)=>b.value-a.value);
@@ -171,17 +189,20 @@ export function treemapSVG(items, opts){
     const tc=tmLuma(d.color)>0.62?'#1a1a1a':'#fff';
     svg+=`<g class="tmc${(d.code||d.isElse)?' tmdrill':''}" data-nm="${tmEsc(d.name)}" data-share="${d.share}" data-val="${d.value}" data-sec="${tmEsc(d.key||'')}"${d.more?` data-more="${tmEsc(d.more)}"`:''}${d.code?` data-code="${d.code}"`:''}${d.shareParent!=null?` data-sp="${d.shareParent}"`:''}${d.isElse?' data-else="1"':''}${d.full?` data-full="${tmEsc(d.full)}"`:''}>`;
     svg+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${d.color}" stroke="#fff" stroke-width="0.6"/>`;
-    // label tiers by share of view; never ellipsize — the name only appears if it fits the cell
-    const sh=d.share, nameFits=(d.name.length*6.4)<=(w-12);
+    // Label: show the WRAPPED name on any cell big enough to hold it (top cells get named, not just %),
+    // then % (and $value on the big ones). Names wrap up to 3 lines and never ellipsize (Fable). Small
+    // cells fall back to % only; the tiniest to nothing. Everything is >=11px (the floor).
+    const sh=d.share, FF='style="font-family:var(--sans,-apple-system,sans-serif)"';
     const val=d.value>=1e9?'$'+(d.value/1e9).toFixed(1)+'bn':'$'+Math.round(d.value/1e6)+'m';
-    if(sh>=5 && nameFits && h>34){
-      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="${tc}" font-size="11.5" font-weight="600" style="font-family:var(--sans,-apple-system,sans-serif)">${tmEsc(d.name)}</text>`;
-      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+31).toFixed(1)}" fill="${tc}" font-size="12.5" style="font-family:var(--sans,Georgia,serif)">${sh.toFixed(1)}%<tspan font-size="10" dx="5" opacity="0.75">${val}</tspan></text>`;
-    } else if(sh>=2 && nameFits && h>30){
-      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="${tc}" font-size="11" font-weight="600" style="font-family:var(--sans,-apple-system,sans-serif)">${tmEsc(d.name)}</text>`;
-      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+30).toFixed(1)}" fill="${tc}" font-size="11" style="font-family:var(--sans,Georgia,serif)">${sh.toFixed(1)}%</text>`;
-    } else if(sh>=1 && w>38 && h>15){
-      svg+=`<text x="${(x+5).toFixed(1)}" y="${(y+13).toFixed(1)}" fill="${tc}" font-size="9.5" style="font-family:var(--sans,-apple-system,sans-serif)">${sh.toFixed(1)}%</text>`;
+    const big=sh>=4, nfs=big?12:11, lh=nfs+3;
+    const roomLines=Math.floor((h-13)/lh)-1;                 // text lines that fit above the % line
+    const nm=(w>46 && roomLines>=1) ? tmWrap(d.name, w-12, nfs, Math.min(3,roomLines)) : null;
+    if(nm){
+      let yy=y+(big?16:14);
+      for(const ln of nm){ svg+=`<text x="${(x+6).toFixed(1)}" y="${yy.toFixed(1)}" fill="${tc}" font-size="${nfs}" font-weight="600" ${FF}>${tmEsc(ln)}</text>`; yy+=lh; }
+      svg+=`<text x="${(x+6).toFixed(1)}" y="${(yy+1).toFixed(1)}" fill="${tc}" font-size="11" ${FF}>${sh.toFixed(1)}%${big?`<tspan font-size="11" dx="5" opacity="0.72">${val}</tspan>`:''}</text>`;
+    } else if(w>32 && h>15){
+      svg+=`<text x="${(x+5).toFixed(1)}" y="${(y+14).toFixed(1)}" fill="${tc}" font-size="11" ${FF}>${sh.toFixed(1)}%</text>`;
     }
     svg+=`</g>`;
   }
@@ -193,7 +214,10 @@ export function treemapSVG(items, opts){
 // projection start; an in-canvas PROJECTION badge; the peak marked; a solid/dashed legend. Every point
 // carries an invisible hit-target for hover. opts:{series:[{year,value}], seamYear, unit, peak, xmax}.
 export function projectionChart(opts){
-  opts=opts||{}; const W=720,H=430,pl=48,pr=110,pt=34,pb=28,iw=W-pl-pr,ih=H-pt-pb;
+  opts=opts||{}; const W=720,H=430,pl=48,pt=34,pb=28;
+  const _le=opts.series[opts.series.length-1];
+  const pr=Math.max(110, Math.round((`${_le.year} · ${niceStr(_le.value,opts.unit||'')}`).length*6.7)+18);
+  const iw=W-pl-pr,ih=H-pt-pb;
   const seam=opts.seamYear, unit=opts.unit||'';
   const data=opts.series.filter(p=>p.year<=(opts.xmax||1e9));
   const xs=data.map(p=>p.year), ys=data.map(p=>p.value);
