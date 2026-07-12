@@ -16,20 +16,14 @@ ogDescription: "Sheinbaum, Morena's supermajority, and the June 2027 midterms. T
   /* 1 · header */
 
   /* section rhythm */
-  section.blk{margin:34px 0 0}
 
   /* 2 · the numbers now — board (from index.njk) */
   @media(min-width:560px){.tablero{grid-template-columns:repeat(3,1fr)}}
   @media(max-width:480px){.tablero{grid-template-columns:1fr}}   /* narrow phones: one column so wide values never clip (Fable design pass) */
-  .tile .dl.up::before{content:"▲ ";font-size:var(--fs-label)} .tile .dl.dn::before{content:"▼ ";font-size:var(--fs-label)}
-  .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
 
   /* freshness stamp */
 
   /* 3 · metric rows */
-  svg.spark{display:block}
-  svg.spark path{fill:none;stroke:var(--ink-3);stroke-width:1.3}
-  svg.spark circle{fill:var(--green)}
 
   /* fact card (migrated from index.njk's inline style — q7 uses it) */
   .factcard{border:1px solid var(--line-2);border-radius:10px;padding:15px 17px;margin:10px 0 4px}
@@ -44,8 +38,6 @@ ogDescription: "Sheinbaum, Morena's supermajority, and the June 2027 midterms. T
   .honesty{font-size:var(--fs-small);color:var(--ink-2);background:var(--amber-bg2);border-left:3px solid var(--amber2);border-radius:0 8px 8px 0;padding:14px 17px;margin:14px 0 4px;line-height:1.58;max-width:82ch}
 
   /* forward line */
-  .fwdline{font-size:var(--fs-small);color:var(--ink-2);margin:10px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:3px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
-  .fwdline b{color:var(--green-d)} .fwdline a{color:var(--green)}
 
   /* 4 · what to watch */
   .watchtbl .wtr .wk.political,.watchtbl .wtr .wk.election{background:var(--green)}
