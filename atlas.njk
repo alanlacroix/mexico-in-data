@@ -58,9 +58,11 @@ description: "A map of Mexico's 32 states and 2,478 municipalities: poverty vers
   @media(prefers-reduced-motion:reduce){#map path{transition:none}}
   .stlabel{font-family:var(--sans);font-size:var(--fs-label);fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:2.4px;stroke-linejoin:round;pointer-events:none;font-weight:500}
   .stlabel.big{font-size:var(--fs-label)}
-  .zoomctl{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;z-index:4}
-  .zbtn{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:8px 13px;border:1px solid var(--line-2);background:rgba(255,255,255,.95);border-radius:9px;color:var(--ink);cursor:pointer;white-space:nowrap}
+  .zoomctl{position:absolute;bottom:12px;right:12px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;z-index:4}
+  .zbtn{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:8px 13px;border:1px solid var(--line-2);background:rgba(255,255,255,.96);border-radius:9px;color:var(--ink);cursor:pointer;white-space:nowrap}
   .zbtn:hover{border-color:var(--green);color:var(--green-d)}
+  .zbtn:disabled{opacity:.38;cursor:default;border-color:var(--line-2);color:var(--mut)}
+  .zsq{width:36px;height:36px;padding:0;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.09)}
   .maptip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 11px;border-radius:6px;opacity:0;transition:opacity .1s;z-index:50;max-width:230px}
   .maptip b{font-family:var(--sans);font-size:13px;color:#fff}.maptip .n{color:#9fd9bd}.maptip .r{color:#cfcfc9}
 
@@ -101,7 +103,16 @@ description: "A map of Mexico's 32 states and 2,478 municipalities: poverty vers
   .ficha .fclose{padding:12px 18px;font-size:var(--fs-meta);color:var(--mut);background:var(--paper-2);line-height:1.5}
   .miniback{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:11px clamp(16px,5vw,32px);display:none;align-items:center;justify-content:space-between;z-index:45}
   .miniback.show{display:flex}.miniback .mb-n{font-family:var(--sans);font-size:15px}.miniback .mb-a{font-family:var(--mono);font-size:11px;color:#9fd9bd;cursor:pointer}
-  @media(max-width:640px){.zoomctl{top:6px;right:6px}}
+  @media(max-width:640px){.zoomctl{bottom:8px;right:8px}}
+
+  /* Desktop: the profile sits in a sticky panel BESIDE the map (Fable 2026-07-12) so a click fills the
+     panel with no page movement. Below 1000px it stacks under the map with a gentle scroll on select. */
+  .mapgrid{display:block}
+  @media(min-width:1000px){
+    .mapgrid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:26px;align-items:start}
+    .mapgrid #ficha-wrap{position:sticky;top:16px}
+    .mapgrid .ficha{margin:0}
+  }
 </style>
 <div class="wrap">
   <section class="hero">
@@ -131,13 +142,19 @@ description: "A map of Mexico's 32 states and 2,478 municipalities: poverty vers
   <div class="crumb" id="crumb"></div>
   <div class="statesum" id="statesum"></div>
 
-  <div class="mapstage">
-    <svg id="map" viewBox="0 0 800 560" role="img" aria-label="Map of Mexico"></svg>
-    <div class="zoomctl" id="zoomctl"></div>
+  <div class="mapgrid">
+    <div class="mapcol">
+      <div class="mapstage">
+        <svg id="map" viewBox="0 0 800 560" role="img" aria-label="Map of Mexico"></svg>
+        <div class="zoomctl" id="zoomctl">
+          <button class="zbtn zsq" id="zin" type="button" aria-label="Zoom in">+</button>
+          <button class="zbtn zsq" id="zout" type="button" aria-label="Zoom out">&minus;</button>
+        </div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <section id="ficha-wrap" hidden></section>
   </div>
-  <div class="legend" id="legend"></div>
-
-  <section id="ficha-wrap" hidden></section>
 
 </div>
 
@@ -237,36 +254,52 @@ function paintStates(){
 function drill(cve,keepSel){
   CURSTATE=cve; LEVEL='muni'; const f=SFEAT.find(x=>x.cve===cve); if(!f)return;
   const munis=MBY[cve]||[];
+  const stPov=munis.map(mu=>MUNIVAL.pov[mu.id]).filter(v=>v!=null).sort((a,b)=>a-b);   // for rank-of-siblings in the tooltip
   // GDP is state-level only, so the zoomed municipio map always shows poverty (the one municipal metric we have)
   const qs=quantiles(Object.values(MUNIVAL.pov),5);
   const svg=$('#map'); const ml=svg.querySelector('.munilayer'), sl=svg.querySelector('.stlayer'), lb=svg.querySelector('.labels');
   ml.innerHTML=munis.map(mu=>`<path d="${mu.d}" data-id="${mu.id}" fill="${colorOf(MUNIVAL.pov[mu.id],qs,RAMP_A)}"></path>`).join('');
   ml.style.display=''; sl.querySelectorAll('path').forEach(p=>p.classList.toggle('dim',p.getAttribute('data-cve')!==cve)); if(lb)lb.style.display='none';
   const b=f.bounds,pad=Math.max((b.x1-b.x0)*0.08,10);
-  setViewBox(b.x0-pad,b.y0-pad,(b.x1-b.x0)+2*pad,(b.y1-b.y0)+2*pad);
+  fitViewBox(b.x0-pad,b.y0-pad,(b.x1-b.x0)+2*pad,(b.y1-b.y0)+2*pad);
   renderLegend(qs,'pov');
   $('#crumb').innerHTML=`<span class="bc" id="bc-all">← All 32 states</span><span class="bc plain"><span class="arw">/</span> ${f.name}</span>`;
   $('#bc-all').addEventListener('click',allStates);
   $('#statesum').innerHTML=`Municipalities colored by <b>poverty</b> (2020). Poverty data covers 2,466 of the 2,478. Tap any one for its profile.`;
-  ml.onpointermove=(e)=>{const t=e.target,tip=$('#maptip');if(t.tagName!=='path'){tip.style.opacity=0;return;}const id=t.getAttribute('data-id'),info=REG[id],v=MUNIVAL.pov[id];const bench=v!=null&&NAT.pov?(v>=NAT.pov*1.1?'above':v<=NAT.pov*0.9?'below':'≈'):'';tip.innerHTML=`<b>${info?info.nom:id}</b><br><span class="n">${v!=null?Math.round(v)+'% in poverty':'no data'}</span>${bench?`<br><span class="r">${bench} national</span>`:''}`;tip.style.left=Math.min(e.clientX+14,innerWidth-180)+'px';tip.style.top=(e.clientY+14)+'px';tip.style.opacity=1;};
+  ml.onpointermove=(e)=>{const t=e.target,tip=$('#maptip');if(t.tagName!=='path'){tip.style.opacity=0;return;}const id=t.getAttribute('data-id'),info=REG[id],v=MUNIVAL.pov[id];const rk=v!=null?stPov.filter(x=>x<v).length:null;tip.innerHTML=`<b>${info?info.nom:id}</b><br><span class="n">${v!=null?Math.round(v)+'% in poverty':'no data'}</span>${rk!=null?`<br><span class="r">more poverty than ${rk} of ${stPov.length} in ${f.name}</span>`:''}`;tip.style.left=Math.min(e.clientX+14,innerWidth-180)+'px';tip.style.top=(e.clientY+14)+'px';tip.style.opacity=1;};
   ml.onpointerleave=()=>{$('#maptip').style.opacity=0;};
   ml.onclick=(e)=>{const t=e.target;if(t.tagName==='path')goFicha(t.getAttribute('data-id'));};
   renderZoomCtl();
   if(!keepSel)renderStateFicha(cve);
   else if(SEL)markMuni(SEL);
 }
-function allStates(){LEVEL='states';CURSTATE=null;SEL=null;setViewBox(0,0,800,560);
+function allStates(){LEVEL='states';CURSTATE=null;SEL=null;fitViewBox(0,0,800,560);
   const svg=$('#map');svg.querySelector('.munilayer').style.display='none';svg.querySelectorAll('.stlayer path').forEach(p=>p.classList.remove('dim'));const lb=svg.querySelector('.labels');if(lb)lb.style.display='';
   $('#crumb').innerHTML=`<span class="bc plain">All 32 states. Tap one to zoom in, or search a municipality</span>`;$('#statesum').innerHTML='';
   $('#ficha-wrap').hidden=true;renderZoomCtl();$('#maptip').style.opacity=0;paintStates();}
 function markMuni(id){const p=$('#map').querySelector('.munilayer path[data-id="'+id+'"]');if(p){$('#map').querySelectorAll('.munilayer path.sel').forEach(x=>x.classList.remove('sel'));p.classList.add('sel');p.parentNode.appendChild(p);}}
 
-/* ---- viewBox ---- */
-function setViewBox(x,y,w,h){ // keep aspect ~800:560
-  const ar=800/560; if(w/h>ar)h=w/ar; else w=h*ar;
-  $('#map').setAttribute('viewBox',`${x.toFixed(1)} ${y.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`);
+/* ---- viewBox + zoom (Fable 2026-07-12) ---- drill stays the semantic zoom (national ⇄ one state).
+   +/- MAGNIFY the current level toward the last pointer, clamped to the drawing; minus at 1x on a
+   drilled state steps back out to all Mexico. No wheel/pinch/drag, no map library. ---- */
+let BASE={x:0,y:0,w:800,h:560}, ZS=1, ZCX=400, ZCY=280, LPX=400, LPY=280;
+function fitViewBox(x,y,w,h){const ar=800/560;if(w/h>ar)h=w/ar;else w=h*ar;BASE={x,y,w,h};ZS=1;ZCX=x+w/2;ZCY=y+h/2;applyZoom();}
+function applyZoom(){const w=BASE.w/ZS,h=BASE.h/ZS;
+  const x=Math.max(BASE.x,Math.min(ZCX-w/2,BASE.x+BASE.w-w)),y=Math.max(BASE.y,Math.min(ZCY-h/2,BASE.y+BASE.h-h));
+  $('#map').setAttribute('viewBox',`${x.toFixed(1)} ${y.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`);syncZoomBtns();}
+function zoomBy(f){const cap=LEVEL==='muni'?8:4;const ns=Math.max(1,Math.min(cap,ZS*f));
+  if(ns===ZS){if(f<1&&ZS<=1.001&&LEVEL==='muni')allStates();return;}
+  if(f>1){ZCX=LPX;ZCY=LPY;}                 // zoom in toward where you last pointed
+  ZS=ns;applyZoom();}
+function syncZoomBtns(){const zi=$('#zin'),zo=$('#zout');if(!zi)return;const cap=LEVEL==='muni'?8:4;
+  zi.disabled=ZS>=cap-0.001;zo.disabled=(ZS<=1.001&&LEVEL==='states');}
+function renderZoomCtl(){syncZoomBtns();}   // +/- buttons are static in the HTML now; just sync enabled state
+function wireZoom(){
+  $('#zin').addEventListener('click',()=>zoomBy(1.7));
+  $('#zout').addEventListener('click',()=>zoomBy(1/1.7));
+  $('#map').addEventListener('pointermove',(e)=>{const m=$('#map'),vb=m.viewBox.baseVal,r=m.getBoundingClientRect();if(!r.width)return;LPX=vb.x+(e.clientX-r.left)/r.width*vb.width;LPY=vb.y+(e.clientY-r.top)/r.height*vb.height;});
+  syncZoomBtns();
 }
-function renderZoomCtl(){$('#zoomctl').innerHTML= LEVEL==='muni'?`<button class="zbtn" id="zall">See all Mexico</button>`:'';const z=$('#zall');if(z)z.addEventListener('click',allStates);}
 
 /* ================= FICHA ================= */
 function fstrip(val,nat,dmax){const c=(x)=>Math.max(0,Math.min(1,x/dmax));const dp=c(val)*100,np=c(nat)*100;return `<div class="fstrip"><div class="tk"></div><div class="nat" style="left:${np}%"></div><div class="natl" style="left:${np}%">national</div><div class="dot" data-to="${dp}"></div></div>`;}
@@ -294,7 +327,7 @@ function renderStateFicha(cve){
      src:'Source: INEGI, ENOE labour-informality rate, first quarter 2026.'});}
   wrap.innerHTML=`<div class="fhead"><span class="fh-x" id="fx">Clear ✕</span><div class="fh-name">${s.name}</div><div class="fh-ent">State profile</div><div class="fh-pob">${enNum(s.pop)} people · CONAPO 2023</div></div>`+rows+`<div class="fclose">Municipalities below are colored by poverty. GDP is measured at the state level; Mexico has no official municipal GDP.</div>`;
   requestAnimationFrame(()=>wrap.classList.add('in'));
-  $('#fx').addEventListener('click',()=>{wrap.hidden=true;});
+  $('#fx').addEventListener('click',clearFicha);
 }
 function renderFicha(cve){
   const info=REG[cve];if(!info)return;SEL=cve;location.hash='m/'+cve;try{localStorage.setItem('mx_mun',cve);}catch(e){}
@@ -311,10 +344,28 @@ function renderFicha(cve){
     src:'GDP is measured at the state level; Mexico has no official municipal GDP. Source: INEGI, PIB por Entidad Federativa 2023.'});}
   wrap.innerHTML=`<div class="fhead"><span class="fh-x" id="fx">Clear ✕</span><div class="fh-name">${info.nom}</div><div class="fh-ent">${info.ent}</div><div class="fh-pob">${info.pob?enNum(info.pob)+' people':''} · INEGI 2020</div></div>`+rows+`<div class="fclose">Formal employment (IMSS) and remittances by municipality will appear here once verified.</div>`;
   requestAnimationFrame(()=>{wrap.classList.add('in');wrap.querySelectorAll('.fstrip .dot').forEach(d=>{const to=d.getAttribute('data-to');if(RM)d.style.left=to+'%';else requestAnimationFrame(()=>d.style.left=to+'%');});});
-  $('#fx').addEventListener('click',()=>{wrap.hidden=true;SEL=null;try{localStorage.removeItem('mx_mun');}catch(e){}history.replaceState(null,'','./atlas.html');$('#q').value='';$('#map').querySelectorAll('.munilayer path.sel').forEach(p=>p.classList.remove('sel'));});
+  $('#fx').addEventListener('click',clearFicha);
   markMuni(cve);
 }
-function goFicha(cve){renderFicha(cve);$('#sugg').hidden=true;$('#q').value=REG[cve]?REG[cve].nom:'';$('#ficha-wrap').scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'});}
+function goFicha(cve){renderFicha(cve);$('#sugg').hidden=true;$('#q').value=REG[cve]?REG[cve].nom:'';
+  // desktop shows the profile in the sticky side panel (no page movement); only narrow screens scroll to it
+  if(innerWidth<1000)$('#ficha-wrap').scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'});}
+/* national profile = the default panel state on desktop, so the panel is never an empty column and every
+   place you click compares against the baseline already on screen (Fable 2026-07-12). */
+function renderNationalFicha(){
+  const wrap=$('#ficha-wrap');wrap.hidden=false;wrap.className='ficha';SEL=null;
+  const rows=frow({label:'GDP per person',stamp:'INEGI · 2023',valHTML:`$${enNum(NAT.gdppc)} <small>US$ per person</small>`,
+      verdict:'The national average. Pick a state or municipality to compare it against this.',
+      src:'Source: INEGI, PIB por Entidad Federativa 2023, over CONAPO 2023 population, at 17.5 MXN per USD.'})
+    +frow({label:'Poverty',stamp:'CONEVAL / INEGI',valHTML:`${NAT.pov.toFixed(1)} <small>% of people</small>`,
+      verdict:'The national poverty rate. Every place is shown against it.',
+      src:'Source: CONEVAL multidimensional poverty, population-weighted to a national rate.'});
+  wrap.innerHTML=`<div class="fhead"><div class="fh-name">Mexico</div><div class="fh-ent">National average</div><div class="fh-pob">Tap a state to zoom in, then a municipality</div></div>`+rows+`<div class="fclose">The map is colored by the metric you pick above. Click any state for its municipalities, then any municipality for its profile.</div>`;
+  requestAnimationFrame(()=>wrap.classList.add('in'));
+}
+function clearFicha(){SEL=null;try{localStorage.removeItem('mx_mun');}catch(e){}history.replaceState(null,'','./atlas.html');$('#q').value='';
+  $('#map').querySelectorAll('.munilayer path.sel').forEach(p=>p.classList.remove('sel'));
+  if(innerWidth>=1000)renderNationalFicha(); else $('#ficha-wrap').hidden=true;}
 function selectMuni(cve){ // search/geo entry: drill into state then select
   const ent=cve.slice(0,2); drill(ent,true); goFicha(cve);
 }
@@ -352,7 +403,7 @@ function wireMini(){const mini=$('#miniback');const io=new IntersectionObserver(
   // decode municipios, group by state
   MUNI=decodeTopo(topo,Object.keys(topo.objects)[0]).map(g=>({id:g.id,polys:g.polys}));
   for(const g of MUNI){if(!g.polys.length)continue;g.d=ringsPath(g.polys);g.bounds=boundsOf(g.polys);const ent=String(g.id).slice(0,2);(MBY[ent]=MBY[ent]||[]).push(g);}
-  wireSearch();wireMetric();wireMini();
+  wireSearch();wireMetric();wireMini();wireZoom();
   paintStates();
   $('#crumb').innerHTML=`<span class="bc plain">All 32 states. Tap one to zoom in, or search a municipality</span>`;
   // deep-link / returning
@@ -360,6 +411,7 @@ function wireMini(){const mini=$('#miniback');const io=new IntersectionObserver(
   const saved=(()=>{try{return localStorage.getItem('mx_mun');}catch(e){return null;}})();
   const start=(hash&&REG[hash])?hash:(saved&&REG[saved]?saved:null);
   if(hash&&REG[hash]){const ent=hash.slice(0,2);drill(ent,true);renderFicha(hash);} /* deep-link only; render in place, no auto-scroll (was jarring) */
+  else if(innerWidth>=1000){renderNationalFicha();}   /* desktop: the sticky side panel opens on the national baseline, never an empty column */
 })().catch(e=>{const h=$('#map');if(h)h.insertAdjacentHTML('afterend','<p style="font-family:var(--mono);font-size:var(--fs-label);color:var(--red)">Error loading map: '+e.message+'</p>');});
 </script>
 {% endraw %}
