@@ -242,8 +242,8 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   const STORY=`<div class="story"><div class="st-lbl"><span>The story</span><span class="asof">based on 2024 data</span></div>`+
     `<p>Growth slowed to <b>+1.4%</b> in 2024, the weakest year since the <b>−8.4%</b> contraction of 2020. Growth has fallen every year since the <b>+6.0%</b> rebound of 2021, back toward the long-run trend of about 2%. Services make up nearly <b>60%</b> of output, and private consumption alone is <b>70.7%</b> of GDP. Exports reached <b>$617bn</b> in 2024, and about <b>four-fifths</b> went to the United States.</p>`+
     `<p>Informal work makes up <b>55%</b> of jobs and <b>25.4%</b> of output. Remittances brought in <b>$64.75bn</b> in 2024, and <b>96.6%</b> of that came from the US. Most of Mexico's external income, exports and remittances alike, comes from the United States.</p>`+
-    `<div class="st-src">Source: World Bank (growth, sectors, spending, 2024) · INEGI (exports 2024, informality 2024–2025) · Banco de México (remittances, 2024). Each exhibit above links to its source.</div></div>`;
-  $('#exhibits').innerHTML=H+STORY;
+    `<div class="st-src">Source: World Bank (growth, sectors, spending, 2024) · INEGI (exports 2024, informality 2024–2025) · Banco de México (remittances, 2024). Each exhibit below links to its source.</div></div>`;
+  $('#exhibits').innerHTML=STORY+H;
 })().catch(e=>{$('#exhibits').innerHTML='<p style="font-family:var(--mono);font-size:var(--fs-label);color:var(--red)">Error loading economy data: '+e.message+'</p>';});
 </script>
 {% endraw %}
