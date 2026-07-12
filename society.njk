@@ -60,6 +60,9 @@ ogDescription: "Poverty, wages, jobs and population in official numbers, updated
   <!-- 1.5 · WHAT / NOW / NEXT — page orientation (shared pageIntro component) -->
   <section class="blk" id="pageintro"></section>
 
+  <!-- STORY, slow-changing context hoisted to the top (Alan 2026-07-12) -->
+  <section id="story"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -276,10 +279,11 @@ function renderWire(){ return renderDevelopments('society'); }   // curated even
   }
   document.getElementById('demographics').innerHTML=renderDemographics(DEMO,VIT);
   wirePopExplorer(DEMO);
-  document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Poverty 2024 · wages May 2026',
-    p1:`Poverty fell to <b>29.6%</b> in 2024, the lowest on record, down <b>12.3 points</b> from 41.9% in 2018. The drop moved about <b>13.4M</b> people out of poverty. INEGI published the figure as its first poverty measurement since taking over from CONEVAL. The minimum wage stands at <b>315 pesos a day</b> in 2026, roughly double its 2018 level. Remittances reached <b>$5.6bn</b> in May 2026.`,
-    p2:`Poverty fell 12.3 points between 2018 and 2024 while GDP grew slowly. The gains rest on wage policy, which limits how much further living standards can rise without faster growth.`,
+  document.getElementById('story').innerHTML=storyBlock({asof:'2024',
+    p1:`Poverty fell to <b>29.6%</b> in 2024, the lowest on record, down <b>12.3 points</b> from 41.9% in 2018. The drop moved about <b>13.4M</b> people out of poverty. INEGI published the figure as its first poverty measurement since taking over from CONEVAL. The government sets the minimum wage each year and has roughly doubled it since 2018.`,
+    p2:`Poverty fell 12.3 points between 2018 and 2024 while GDP grew slowly. The gains rest largely on wage policy, which limits how much further living standards can rise without faster growth.`,
     src:'INEGI / CONEVAL, Banco de México (SIE), CONASAMI'});
+  document.getElementById('background').innerHTML=renderBackground();
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   wireCharts();

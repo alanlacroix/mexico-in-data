@@ -95,6 +95,9 @@
   <!-- 1b · WHAT / NOW / NEXT (shared page-orientation block) -->
   <section class="blk" id="pageintro"></section>
 
+  <!-- STORY, slow-changing context hoisted to the top (Alan 2026-07-12) -->
+  <section id="story"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -314,10 +317,11 @@ function renderBackground(){
     next:piNext
   });
 
-  document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Jul 2026',
-    p1:`Mexico exports at an annual pace near <b>$700bn</b> as of July 2026, about even with imports. About <b>four-fifths of it goes to the United States</b>. Vehicles, electronics and machinery are roughly <b>60%</b> of those exports. Mexico imports parts and materials and sells finished manufactured goods.`,
+  document.getElementById('story').innerHTML=storyBlock({asof:'2024',
+    p1:`Mexico's goods exports and imports run close to balanced, and about <b>four-fifths of exports go to the United States</b>. Vehicles, electronics and machinery are roughly <b>60%</b> of what the country sells abroad. Mexico imports parts and materials, adds work, and ships finished manufactured goods.`,
     p2:`Mexico's export mix has shifted over two decades toward machines and instruments and away from raw materials. Its high-tech share of manufactured exports trails only the United States among the economies compared here.`,
     src:'Banco de México (CE125), UN COMTRADE, World Bank WDI'});
+  document.getElementById('background').innerHTML=renderBackground();
   wireCharts();
   TMROOT=basketItems(); wireTM();
   // mobile: a dense treemap needs the area and hover a phone lacks (Fable), so default the export

@@ -103,6 +103,9 @@
   <!-- 1.5 · PAGE INTRO (WHAT / NOW / NEXT) -->
   <section class="blk" id="pageintro"></section>
 
+  <!-- STORY, slow-changing context hoisted to the top (Alan 2026-07-12) -->
+  <section id="story"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -284,10 +287,11 @@ function renderWire(){ return renderDevelopments('us-mexico'); }   // curated ev
   let piNext=null; if(piEv){const d=new Date(piEv.date); piNext=`${piEv.label} on ${MONL[d.getUTCMonth()]} ${d.getUTCDate()}.`;}
   document.getElementById('pageintro').innerHTML=pageIntro({ what:"Mexico's dependence on the United States: trade, tariffs, and the USMCA review.", now:piNow, next:piNext });
 
-  document.getElementById('background').innerHTML=renderBackground(TRADE, PART)+storyBlock({asof:'Jul 2026',
-    p1:`About <b>80%</b> of Mexico's exports go to the United States. The U.S. Supreme Court struck down the blanket IEEPA tariffs in February, and the effective rate fell back to about <b>4%</b>. The <b>2026 USMCA review</b> is unresolved: Washington declined to renew on schedule on July 1. Month to month, Mexico still sells the U.S. more than it buys.`,
+  document.getElementById('story').innerHTML=storyBlock({asof:'July 2026',
+    p1:`About <b>80%</b> of Mexico's exports go to the United States. The U.S. Supreme Court struck down the blanket IEEPA tariffs in February, which lowered the effective tariff rate. The <b>2026 USMCA review</b> is unresolved: Washington declined to renew on schedule on July 1. Month to month, Mexico still sells the U.S. more than it buys.`,
     p2:`Trade terms, not oil or the peso, are Mexico's single biggest external risk. A stalled review or a new sector tariff would hit most of what the country exports, and the factories, jobs, and growth behind those exports.`,
     src:'U.S. Census Bureau, USTR, Banco de México'});
+  document.getElementById('background').innerHTML=renderBackground(TRADE, PART);
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   wireCharts();

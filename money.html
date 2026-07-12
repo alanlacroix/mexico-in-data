@@ -86,6 +86,9 @@
   <!-- 1.5 · PAGE ORIENTATION (WHAT / NOW / NEXT) -->
   <section class="blk" id="pageintro"></section>
 
+  <!-- STORY, slow-changing context hoisted to the top (Alan 2026-07-12) -->
+  <section id="story"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -205,10 +208,11 @@ function renderWire(){ return renderDevelopments('money'); }   // curated events
   const piNext=piNextEv?`${piNextLbl} on ${new Date(piNextEv.date).toLocaleDateString('en-US',{month:'long',day:'numeric',timeZone:'UTC'})}.`:null;
   document.getElementById('pageintro').innerHTML=pageIntro({what:"Prices, the peso, and the cost of borrowing, as Banxico and INEGI publish them.",now:piNow,next:piNext});
   document.getElementById('tablero').innerHTML=TILES.map(t=>tile(t,{src:true})).join('');
-  document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'July 2026',
-    p1:`Headline inflation fell from <b>4.59%</b> in March to <b>3.37%</b> in June, back inside Banxico's <b>2–4%</b> target. Prices are still rising, only more slowly. The bank holds its policy rate at <b>6.50%</b> because core inflation, the stickier gauge, is still <b>4.03%</b>, just above the band. The peso trades near <b>17.48</b> per dollar.`,
-    p2:`Households get slower price growth, but not cheaper credit. Core inflation of <b>4.03%</b> keeps Banxico's rate at <b>6.50%</b>, and that rate sets the cost of home and car loans.`,
+  document.getElementById('story').innerHTML=storyBlock({asof:'July 2026',
+    p1:`Banxico targets annual inflation of <b>2–4%</b>. When headline inflation sits inside that band, the bank can hold or lower its policy rate. When inflation runs above the band, Banxico holds the rate higher to pull prices back down. Core inflation, which strips out volatile food and energy prices, is the stickier gauge the bank watches, and it usually falls more slowly than the headline rate.`,
+    p2:`The policy rate sets the cost of borrowing across the economy, so home and car loans track it closely. Slower price growth does not automatically mean cheaper credit. As long as core inflation stays above the <b>2–4%</b> band, Banxico holds its rate higher, and households keep paying more to borrow even as inflation eases. The peso trades against the dollar at a reference rate Banxico publishes each day.`,
     src:'Banco de México (SIE), INEGI'});
+  document.getElementById('background').innerHTML=renderBackground();
   document.getElementById('watch-list').innerHTML=renderWatch();
   document.getElementById('wire-list').innerHTML=renderWire();
   wireCharts();
