@@ -169,7 +169,7 @@ export function treemapSVG(items, opts){
   for(const r of rects){
     const d=r.d, x=r.x+pad, y=r.y+pad, w=Math.max(0,r.w-2*pad), h=Math.max(0,r.h-2*pad);
     const tc=tmLuma(d.color)>0.62?'#1a1a1a':'#fff';
-    svg+=`<g class="tmc" data-nm="${tmEsc(d.name)}" data-share="${d.share}" data-val="${d.value}" data-sec="${tmEsc(d.key||'')}"${d.more?` data-more="${tmEsc(d.more)}"`:''}>`;
+    svg+=`<g class="tmc${(d.code||d.isElse)?' tmdrill':''}" data-nm="${tmEsc(d.name)}" data-share="${d.share}" data-val="${d.value}" data-sec="${tmEsc(d.key||'')}"${d.more?` data-more="${tmEsc(d.more)}"`:''}${d.code?` data-code="${d.code}"`:''}${d.shareParent!=null?` data-sp="${d.shareParent}"`:''}${d.isElse?' data-else="1"':''}${d.full?` data-full="${tmEsc(d.full)}"`:''}>`;
     svg+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${d.color}" stroke="#fff" stroke-width="0.6"/>`;
     // label tiers by share of view; never ellipsize — the name only appears if it fits the cell
     const sh=d.share, nameFits=(d.name.length*6.4)<=(w-12);
