@@ -195,6 +195,20 @@ ogDescription: "Mexico's economy in official numbers."
   .wire .wt:hover{color:var(--green-d);text-decoration:underline}
   .wire .wm{font-family:var(--mono);font-size:9.5px;color:var(--mut);margin-top:3px}
   .wire-note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:10px;line-height:1.6}
+  /* what stood out — the analysis surfaced */
+  #stood{display:grid;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:8px;overflow:hidden;margin:2px 0 4px}
+  .stoodrow{display:flex;gap:14px;align-items:baseline;background:var(--paper);padding:13px 16px;text-decoration:none}
+  .stoodrow:hover{background:var(--paper-2)}
+  .stoodrow .stag{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700;flex:0 0 74px;padding-top:2px}
+  .stoodrow .stxt{font-size:15px;color:var(--ink);line-height:1.45}
+  a.stood-link{color:var(--green-d)}
+  .wflag{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle}
+  /* masthead — a clear, dated top like a morning paper */
+  .masthead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:9px;flex-wrap:wrap}
+  .masthead .today{font-family:var(--serif);font-size:clamp(18px,2.6vw,24px);color:var(--ink);font-weight:600;letter-spacing:-.01em}
+  .masthead .fresh{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .masthead .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
+  .hero h1#lead{margin-top:16px}
   .wire-note a{color:var(--green)}
 
   /* 7 · PRIMER — evergreen orientation, moved out of the top and collapsed */
@@ -225,14 +239,23 @@ ogDescription: "Mexico's economy in official numbers."
 
   <!-- 1 · HERO -->
   <section class="hero">
-    <a class="dateline" href="/sources.html"><span class="dot"></span><span id="status">Official data</span></a>
-    <h1>Mexico's economy produces about $1.9 trillion a year. We track it in official numbers.</h1>
+    <div class="masthead">
+      <span class="today" id="today">&nbsp;</span>
+      <a class="fresh" href="/sources.html"><span class="dot"></span><span id="status">Official data</span></a>
+    </div>
+    <h1 id="lead">The week's major changes in Mexico.</h1>
   </section>
 
   <!-- 2 · THE BRIEF — the lead: a 2-paragraph synthesis, every sentence linked to the source below it -->
   <section>
     <div class="bh"><div><span class="k">The Brief</span></div><span class="asof" id="brief-asof"></span></div>
     <div id="brief" class="brief"></div>
+  </section>
+
+  <!-- 2b · WHAT STOOD OUT — the analysis surfaced: movers + computed connections from the facts pack -->
+  <section id="stood-sec">
+    <div class="bh"><div><span class="k">The Read</span> &nbsp; <h2 style="display:inline">What stood out</h2></div><a class="asof stood-link" href="/the-read.html">See the analysis &rarr;</a></div>
+    <div id="stood"></div>
   </section>
 
   <!-- 3 · THE BOARD -->
@@ -356,11 +379,33 @@ function renderBrief(brief){
   const paras=(brief&&brief.paragraphs)||[];
   if(!paras.length||!paras.flat().length) return '';
   return paras.map(p=>`<p>`+p.map(s=>{
-    const txt=liveText(s);
+    const txt=liveText(s).replace(/\s*—\s*/g,', ');   // voice law: the auto-brief must never ship an em-dash
     const ext=/^https?:/.test(s.href||'');
     if(!s.href) return `<span class="s">${esc(txt)}</span>`;
     return `<a class="s" href="${esc(s.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(s.source||'source')}">${esc(txt)}</a>`;
   }).join(' ')+`</p>`).join('');
+}
+
+/* ============ WHAT STOOD OUT — the analysis surfaced from the deterministic facts pack ============
+   Renders the week's biggest movers plus the computed cross-series connections (real rate, the
+   Mexico-US spread, peso volatility). No prose is invented: each number is computed by build-analysis.js
+   from the canonical series, and each line links into the section or The Read where it's shown in full. */
+function renderStood(F){
+  if(!F) return '';
+  const rows=[]; const pct=(u)=>/%/.test(u||'');
+  const mv=(F.whatMoved&&F.whatMoved.items)||[];
+  mv.slice(0,2).forEach(m=>{
+    const dir=m.dir<0?'fell to':(m.dir>0?'rose to':'held at');
+    const val=pct(m.units)?`${m.value}%`:`${enNum(m.value)} ${m.units}`;
+    const flag=(m.flags&&m.flags[0])?`, ${m.flags[0]}`:'';
+    rows.push({tag:'moved',t:`${m.label} ${dir} ${val}${flag}.`,href:'/money.html'});
+  });
+  const c=F.cross||{};
+  if(c.realRate&&c.realRate.value!=null) rows.push({tag:'connection',t:`The real policy rate is ${c.realRate.value}%, the Banxico rate minus core inflation.`,href:'/the-read.html'});
+  if(c.rateSpread&&c.rateSpread.value!=null) rows.push({tag:'connection',t:`Mexico's policy rate runs ${c.rateSpread.value} points above the US Fed's.`,href:'/the-read.html'});
+  if(c.pesoVol&&c.pesoVol.value!=null) rows.push({tag:'connection',t:`The peso's realized volatility is ${c.pesoVol.value}% a year.`,href:'/money.html'});
+  if(!rows.length) return '<div class="area-empty">Nothing stood out in the numbers this week.</div>';
+  return rows.map(r=>`<a class="stoodrow" href="${r.href}"><span class="stag">${r.tag}</span><span class="stxt">${esc(r.t)}</span></a>`).join('');
 }
 
 /* ============ THE AREAS — the topic browse, projected from the tagged event store ============
@@ -385,11 +430,12 @@ function hapDate(iso){ if(!iso) return ''; const m=/^(\d{4})-(\d{2})-(\d{2})/.ex
 /* ============ WHAT TO WATCH (block 6, left) — next 3 dated catalysts ============ */
 function renderWatch(){
   const ev=(EVENTS&&EVENTS.events)||[]; const now=Date.now();
-  const up=ev.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3);
+  const up=ev.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
   if(!up.length) return `<div class="cb-empty">No dated events on the calendar yet.</div>`;
-  return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
+  const KEY=/banxico|inflaci|inflation|\brate\b|\btasa\b|usmca|t-?mec|presupuesto|budget|decision|remesa|remittance/i;
+  return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e); const key=KEY.test((e.label||'')+' '+(e.mechanism||''));
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}<small>${d.y}${e.approx?' ~':''}</small></div><div class="wk ${e.kind||''}"></div>`+
-      `<div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
+      `<div class="wt">${e.label}${key?' <span class="wflag">watch</span>':''}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
 }
 
 /* THE WIRE (raw automated headlines) was retired from the homepage on 2026-07-11 (Fable): the public
@@ -399,23 +445,38 @@ function renderWatch(){
 /* ============ boot ============ */
 (async()=>{
   await loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-reservas','banxico-remesas','banxico-pib-crecimiento','banxico-igae','wb-gdp-usd','wb-population','wb-gdp-per-capita']);
-  const [health,trade,releases,brief,areasData]=await Promise.all([
+  const [health,trade,releases,brief,areasData,facts]=await Promise.all([
     fetch('./data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/trade-us.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/releases.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/brief.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/areas.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/analysis/facts.json').then(r=>r.ok?r.json():null).catch(()=>null),
   ]);
   TRADE=trade;
 
-  // the lead: the 2-paragraph brief (built by the pipeline; each sentence links to its source).
-  // If it's missing, drop the section rather than show an empty block.
+  // masthead date: the day you're reading it, spelled out clearly like a morning paper
+  const td=document.getElementById('today'); if(td) td.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+  // the headline is the lead story from the Brief (relevant, not a static label); drop it from the
+  // body below so it isn't printed twice. If there's no brief, the static fallback H1 stays.
+  let briefBody=brief;
+  if(brief&&brief.paragraphs&&brief.paragraphs[0]&&brief.paragraphs[0].length){
+    const lead=brief.paragraphs[0][0];
+    if(lead&&lead.text){ const le=document.getElementById('lead'); if(le) le.textContent=liveText(lead).replace(/\s*—\s*/g,', '); }
+    briefBody=Object.assign({},brief,{paragraphs:[brief.paragraphs[0].slice(1)].concat(brief.paragraphs.slice(1)).filter(p=>p&&p.length)});
+  }
+  // the lead: the brief synthesis (built by the pipeline; each sentence links to its source).
   const briefEl=document.getElementById('brief');
   if(briefEl){
-    const html=renderBrief(brief);
+    const html=renderBrief(briefBody);
     if(html){ briefEl.innerHTML=html; const bao=document.getElementById('brief-asof'); if(bao&&brief&&brief.meta) bao.textContent='as of '+(brief.meta.asOf||''); }
     else { const sec=briefEl.closest('section'); if(sec) sec.remove(); }
   }
+
+  // what stood out: the analysis surfaced from the facts pack (movers + computed connections)
+  const stoodEl=document.getElementById('stood');
+  if(stoodEl){ const html=renderStood(facts); if(html) stoodEl.innerHTML=html; else { const sec=document.getElementById('stood-sec'); if(sec) sec.remove(); } }
 
   // dateline: N sources · updated Xh ago (from data health + freshest series fetch)
   const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
