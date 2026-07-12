@@ -171,6 +171,9 @@ ogDescription: "What Mexico sells, to whom, and what it buys: official Banxico a
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
+  <!-- 1b · WHAT / NOW / NEXT (shared page-orientation block) -->
+  <section class="blk" id="pageintro"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -198,7 +201,7 @@ ogDescription: "What Mexico sells, to whom, and what it buys: official Banxico a
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, treemapSVG, storyBlock, wireCharts } from '/assets/mb.js?v=12';
+import { loadSeries, S, EVENTS, pageIntro, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, treemapSVG, storyBlock, wireCharts } from '/assets/mb.js?v=12';
 
 /* Trade data: Banxico CE125 series (into S) + three reconciled JSON datasets fetched alongside. */
 const CE125=['banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-imports-capital','banxico-imports-consumer'];
@@ -319,6 +322,36 @@ function renderBackground(){
     document.getElementById('asof').textContent=nw.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     document.getElementById('board-asof').textContent='as of '+nw.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
   document.getElementById('tablero').innerHTML=renderTiles();
+
+  /* WHAT / NOW / NEXT — orientation block, all computed live from this page's own data + shared calendar */
+  const piX=ttm('banxico-exports-total'), piYoy=yoy('banxico-exports-total');
+  const piUS=(PART&&PART.exports&&PART.exports.items&&PART.exports.items.length)?PART.exports.items[0].share:null;
+  let piNow=null;
+  if(piX!=null){
+    let s=`Mexico exported <b>$${Math.round(bn(piX))}bn</b> of goods over the past 12 months`;
+    if(piYoy!=null) s+=`, ${piYoy>=0?'up':'down'} ${Math.abs(piYoy).toFixed(1)}% from the prior 12 months`;
+    if(piUS!=null)  s+=`, and about ${Math.round(piUS)}% of it went to the United States`;
+    piNow=s+'.';
+  }
+  /* NEXT: next upcoming trade-relevant scheduled event, from the shared EVENTS calendar (same pattern as /usmexico) */
+  const RE_TRADE=/usmca|t-?mec|arancel|tariff|comercio|exportaci|importaci|\btrade\b|\bexport|\bimport/i;
+  let piNext=null;
+  { const evs=(EVENTS&&EVENTS.events)||[];
+    const rel=evs.filter(e=>e.kind==='trade'||RE_TRADE.test((e.label||'')+' '+(e.mechanism||'')))
+      .filter(e=>new Date(e.date)>=Date.now()-864e5)
+      .sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+    if(rel.length){ const e=rel[0], d=new Date(e.date+'T00:00:00Z');
+      const lbl=String(e.label||'').split(/[—(]/)[0].trim();
+      const ds=d.toLocaleDateString('en-US',{month:'long',day:'numeric',timeZone:'UTC'})+(d.getUTCFullYear()!==new Date().getUTCFullYear()?', '+d.getUTCFullYear():'');
+      if(lbl) piNext=`${lbl} on ${ds}.`;
+    }
+  }
+  document.getElementById('pageintro').innerHTML=pageIntro({
+    what:'What Mexico sells and buys, and how much of it depends on the United States.',
+    now:piNow,
+    next:piNext
+  });
+
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Jul 2026',
     p1:`Mexico exports at an annual pace near <b>$700bn</b> as of July 2026, about even with imports. About <b>four-fifths of it goes to the United States</b>. Vehicles, electronics and machinery are roughly <b>60%</b> of those exports. Mexico imports parts and materials and sells finished manufactured goods.`,
     p2:`Mexico's export mix has shifted over two decades toward machines and instruments and away from raw materials. Its high-tech share of manufactured exports trails only the United States among the economies compared here.`,

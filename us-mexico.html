@@ -220,6 +220,9 @@
     <p class="statedate">as of <b id="asof">loading…</b></p>
   </section>
 
+  <!-- 1.5 · PAGE INTRO (WHAT / NOW / NEXT) -->
+  <section class="blk" id="pageintro"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -259,7 +262,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, valueAgo, monLong, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=11';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, valueAgo, monLong, MONL, renderDevelopments, srcBadge, storyBlock, pageIntro } from '/assets/mb.js?v=12';
 
 /* US–Mexico keyword filters — the task's keyword set (USMCA/TMEC/arancel/tariff/EEUU/
    Estados Unidos/frontera/border/comercio/exportaciones/Trump) plus the border/migration
@@ -392,6 +395,15 @@ function renderWire(){ return renderDevelopments('us-mexico'); }   // curated ev
     document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
   document.getElementById('tablero').innerHTML=renderTiles(TRADE, PART);
+
+  // page intro (WHAT / NOW / NEXT) — NOW + NEXT are computed from this page's OWN loaded data, so they can't drift
+  const piShare=(PART&&PART.exports)?Math.round(PART.exports.items[0].share):null;   // same US export share the tiles/exhibits bind to; null (row drops) if the partner file did not load
+  const piNow=piShare!=null?`The United States buys <b>~${piShare}%</b> of Mexico's exports, and the 2026 USMCA review is unresolved.`:null;
+  // NEXT = the next upcoming U.S.–Mexico calendar item, reusing renderWatch's exact filter (RE_EV / kind==='trade')
+  const piEv=((EVENTS&&EVENTS.events)||[]).filter(e=>e.kind==='trade'||RE_EV.test((e.label||'')+' '+(e.mechanism||''))).filter(e=>new Date(e.date)>=Date.now()-864e5).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  let piNext=null; if(piEv){const d=new Date(piEv.date); piNext=`${piEv.label} on ${MONL[d.getUTCMonth()]} ${d.getUTCDate()}.`;}
+  document.getElementById('pageintro').innerHTML=pageIntro({ what:"Mexico's dependence on the United States: trade, tariffs, and the USMCA review.", now:piNow, next:piNext });
+
   document.getElementById('background').innerHTML=renderBackground(TRADE, PART)+storyBlock({asof:'Jul 2026',
     p1:`About <b>80%</b> of Mexico's exports go to the United States. The U.S. Supreme Court struck down the blanket IEEPA tariffs in February, and the effective rate fell back to about <b>4%</b>. The <b>2026 USMCA review</b> is unresolved: Washington declined to renew on schedule on July 1. Month to month, Mexico still sells the U.S. more than it buys.`,
     p2:`Trade terms, not oil or the peso, are Mexico's single biggest external risk. A stalled review or a new sector tariff would hit most of what the country exports, and the factories, jobs, and growth behind those exports.`,

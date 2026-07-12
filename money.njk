@@ -171,6 +171,9 @@ ogDescription: "The peso, inflation, and Banxico's rate."
     <p class="statedate">as of <b id="asof">…</b></p>
   </section>
 
+  <!-- 1.5 · PAGE ORIENTATION (WHAT / NOW / NEXT) -->
+  <section class="blk" id="pageintro"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -210,7 +213,7 @@ ogDescription: "The peso, inflation, and Banxico's rate."
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, monLong, relTime, evDate, tagChip, wireCharts, renderDevelopments, storyBlock } from '/assets/mb.js?v=11';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, monLong, relTime, evDate, tagChip, wireCharts, renderDevelopments, storyBlock, pageIntro } from '/assets/mb.js?v=12';
 
 /* the live tile board (block 2) — same JSON as the metric rows below */
 const TILES=[
@@ -276,6 +279,19 @@ function renderWire(){ return renderDevelopments('money'); }   // curated events
     document.getElementById('asof').textContent=newest.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
+  // page orientation (WHAT/NOW/NEXT) — every number computed from the live series, never hand-typed, so it can't drift
+  const piInf=S['banxico-inflacion'], piRate=S['banxico-tasa-objetivo'];
+  const piInfV=piInf?piInf.data.at(-1).value:null, piRateV=piRate?piRate.data.at(-1).value:null;
+  const piInBand=piInfV!=null&&piInfV>2&&piInfV<4;   // same in-band test the Background exhibit uses
+  const piNow=piInfV==null?null:`Headline inflation is ${piInBand?'inside':'outside'} Banxico's 2–4% target at <b>${piInfV.toFixed(2)}%</b>${piRateV!=null?`, and the policy rate is ${piRateV.toFixed(2)}%`:''}.`;
+  // next scheduled release — same money filter/regex as renderWatch, first upcoming event
+  const piNextEv=((EVENTS&&EVENTS.events)||[]).filter(e=>{const k=(e.kind||'');
+    if(k==='banxico'||k==='fomc')return true;
+    return /inflaci|cpi|inpc|inflation|tasa|policy rate|peso|banxico|remesas|remittance/i.test((e.label||'')+' '+(e.mechanism||''));})
+    .filter(e=>new Date(e.date)>=Date.now()-864e5).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const piNextLbl=(piNextEv&&piNextEv.label||'').replace(/\s*\u2014\s*/g,', ');   // voice law: no em-dashes in output (labels may carry one from the data file)
+  const piNext=piNextEv?`${piNextLbl} on ${new Date(piNextEv.date).toLocaleDateString('en-US',{month:'long',day:'numeric',timeZone:'UTC'})}.`:null;
+  document.getElementById('pageintro').innerHTML=pageIntro({what:"Prices, the peso, and the cost of borrowing, as Banxico and INEGI publish them.",now:piNow,next:piNext});
   document.getElementById('tablero').innerHTML=TILES.map(t=>tile(t,{src:true})).join('');
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'July 2026',
     p1:`Headline inflation fell from <b>4.59%</b> in March to <b>3.37%</b> in June, back inside Banxico's <b>2–4%</b> target. Prices are still rising, only more slowly. The bank holds its policy rate at <b>6.50%</b> because core inflation, the stickier gauge, is still <b>4.03%</b>, just above the band. The peso trades near <b>17.48</b> per dollar.`,

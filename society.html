@@ -209,6 +209,9 @@
     <p class="statedate">as of <b id="asof">loading</b></p>
   </section>
 
+  <!-- 1.5 · WHAT / NOW / NEXT — page orientation (shared pageIntro component) -->
+  <section class="blk" id="pageintro"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -251,7 +254,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock, projectionChart } from '/assets/mb.js?v=12';
+import { loadSeries, S, EVENTS, NEWS, tile, mrow, staticRow, construccion, sectionHead, exhibit, dataTable, timeChart, fwd, qtrOf, relTime, evDate, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock, projectionChart, pageIntro } from '/assets/mb.js?v=12';
 
 /* series this section reads — the Q6 numbers plus the same-file living-standards /
    demography series (World Bank). loadSeries also pulls the news wire + events. */
@@ -309,13 +312,18 @@ function renderBackground(){
     `<div class="ctxline">Gloss: <b>CONEVAL</b> = the agency that measured poverty before INEGI took it over · <b>multidimensional poverty</b> = a measure that counts income plus access to food, health care, housing and schooling · <b>IMSS</b> = social security, i.e. the formal-jobs registry · <b>remittances</b> = money Mexicans abroad send home · <b>nominal</b> = not adjusted for inflation.</div>`;
 }
 
-/* block 4 — society-relevant catalyst calendar (poverty / wages / jobs / migration) */
-function renderWatch(){
+/* block 4 — society-relevant catalyst calendar (poverty / wages / jobs / migration).
+   The filter/regex lives in societyUpcoming() so the What-to-watch list and the NEXT row
+   of the page-orientation block read the exact same upcoming events (single source). */
+function societyUpcoming(){
   const ev=(EVENTS&&EVENTS.events)||[];
   const rx=/pobreza|salario|salarial|empleo|desempleo|desigualdad|migraci|migrante|remesas|remittance|poblaci|imss|trabajador|informal|welfare|bienestar|coneval|conasami|censo|census|wage|poverty|inequality/i;
   const soc=ev.filter(e=>rx.test((e.label||'')+' '+(e.mechanism||'')+' '+(e.kind||'')));
   const now=Date.now();
-  const up=soc.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  return soc.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date));
+}
+function renderWatch(){
+  const up=societyUpcoming().slice(0,6);
   if(!up.length) return `<div class="cb-empty">Nothing is on the society calendar yet. Poverty, wage and jobs releases appear here once they're scheduled.</div>`;
   return `<div class="watchtbl">`+up.map(e=>{const d=evDate(e);
     return `<div class="wtr"><div class="wd">${d.mo} ${d.day}, ${d.y}${e.approx?' ~':''}</div><div class="wk ${e.kind||''}"></div><div class="wt">${e.label}<div class="wm">${e.mechanism||''}${e.sourceUrl?` · <a class="wsrc" href="${e.sourceUrl}" target="_blank" rel="noopener" style="color:var(--green)">${e.source||'source'}</a>`:''}</div></div></div>`;}).join('')+`</div>`;
@@ -406,6 +414,18 @@ function renderWire(){ return renderDevelopments('society'); }   // curated even
     document.getElementById('board-asof').textContent='as of '+newest.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   }
   document.getElementById('tablero').innerHTML=povertyTile(POVERTY)+TILES.map(t=>tile(t,{src:true})).join('');
+  // page-orientation block (WHAT/NOW/NEXT). NOW is computed from the page's own POVERTY figure;
+  // NEXT is the next society release from the shared calendar filter. Either row drops if unavailable.
+  {
+    const P=POVERTY;
+    const introNow=(P&&P.rate)?`Poverty fell to <b>${P.rate}%</b> of the population in ${P.year}, down from ${P.prior}% in ${P.priorYear}.`:null;
+    const nextEv=societyUpcoming()[0];
+    const ed=nextEv?evDate(nextEv):null;
+    const introNext=nextEv?`${nextEv.source} publishes ${nextEv.label.replace(/ [—–] /g,', ')} on ${ed.mo} ${ed.day}.`:null;
+    document.getElementById('pageintro').innerHTML=pageIntro({
+      what:'Living standards and population: poverty, wages, jobs, and the demographic turn.',
+      now:introNow, next:introNext});
+  }
   document.getElementById('demographics').innerHTML=renderDemographics(DEMO,VIT);
   wirePopExplorer(DEMO);
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Poverty 2024 · wages May 2026',

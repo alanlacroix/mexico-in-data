@@ -184,6 +184,9 @@ ogDescription: "Mexico's homicide rate fell to about 26 per 100,000 in 2024 from
     <p class="statedate">as of <b id="asof">…</b></p>
   </section>
 
+  <!-- 1b · PAGE ORIENTATION (what / now / next) -->
+  <section class="blk" id="pageintro"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -224,7 +227,7 @@ ogDescription: "Mexico's homicide rate fell to about 26 per 100,000 in 2024 from
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, NEWS, staticRow, sectionHead, fwd, evDate, relTime, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=11';
+import { loadSeries, S, EVENTS, NEWS, staticRow, sectionHead, fwd, evDate, relTime, tagChip, wireCharts, renderDevelopments, srcBadge, storyBlock, pageIntro, dirWord, MONL } from '/assets/mb.js?v=12';
 
 /* The one hard security number, authored ONCE — the tile board (block 2) and the
    Background metric row (block 3) both render from this object, so a tile and its
@@ -291,6 +294,31 @@ function renderWire(){ return renderDevelopments('security'); }   // curated eve
   // as-of = the vintage of the hard security number (the annual homicide count)
   document.getElementById('asof').textContent='2024';
   document.getElementById('board-asof').textContent='as of 2024 (latest annual)';
+
+  /* page orientation (what / now / next), computed from this page's own data so it
+     can never drift: NOW reads the HOMICIDE object (rate, unit-year, peak+peak-year);
+     NEXT reads the next security event via the same SEC_RE filter the calendar uses. */
+  const hRate=parseFloat(String(HOMICIDE.value).replace(/[^\d.]/g,''));          // 26
+  const hUnit=String(HOMICIDE.unit).split('·').map(s=>s.trim());                 // ['per 100,000','2024']
+  const hPer=hUnit[0], hYear=hUnit[1];
+  const pk=/peak\s*~?([\d.]+)\s*in\s*(\d{4})/.exec(String(HOMICIDE.bench||''));   // ~29 in 2018
+  const hPeak=pk?parseFloat(pk[1]):null, hPeakYear=pk?pk[2]:null;
+  const nowLine=(isFinite(hRate)&&hPeak!=null&&hPeakYear&&hYear)
+    ? `Mexico's homicide rate ${dirWord(hRate-hPeak)} to <b>${HOMICIDE.value} ${hPer}</b> in ${hYear} from about ${hPeak} in ${hPeakYear}.`
+    : null;
+  const nextEv=(()=>{
+    const ev=(EVENTS&&EVENTS.events)||[]; const t=Date.now();
+    return ev.filter(e=>SEC_RE.test((e.label||'')+' '+(e.mechanism||'')+' '+(e.kind||'')))
+      .filter(e=>new Date(e.date)>=t-864e5)
+      .sort((a,b)=>String(a.date).localeCompare(String(b.date)))[0]||null;
+  })();
+  const nextLine=nextEv?`${nextEv.label} on ${MONL[new Date(nextEv.date).getUTCMonth()]} ${new Date(nextEv.date).getUTCDate()}.`:null;
+  document.getElementById('pageintro').innerHTML=pageIntro({
+    what:'Lethal violence in Mexico: the homicide rate, and where it is rising or falling.',
+    now:nowLine,
+    next:nextLine
+  });
+
   document.getElementById('tablero').innerHTML=renderBoard();
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'2024 rate · trend to Sep 2025',
     p1:`Mexico's homicide rate fell to about <b>26 per 100,000</b> in 2024 from its <b>~29</b> peak in 2018. The decline held through 2025: SESNSP's monthly homicide count hit a nine-year low in <b>September 2025</b>.`,

@@ -54,10 +54,15 @@ description: "What Mexico's economy is made of: GDP by sector and spending, grow
     <p class="thesis" id="thesis"></p>
     <div class="heroband" id="heroband"></div>
   </section>
+
+  <!-- 1.5 · PAGE ORIENTATION (WHAT / NOW / NEXT) -->
+  <section class="blk" id="pageintro"></section>
+
   <div id="exhibits"></div>
 </div>
 
-<script>
+<script type="module">
+import { pageIntro } from '/assets/mb.js?v=12';
 const $=(s)=>document.querySelector(s);
 async function J(p){const r=await fetch(p);if(!r.ok)throw new Error(p+' '+r.status);return r.json();}
 const GRAYS=['#38382f','#7d7d72','#b3b3a8','#d7d4c9'];
@@ -175,6 +180,20 @@ const srcLine=(o)=>`Source: <a href="${o.sourceUrl||'#'}" target="_blank" rel="n
   const MT=await J('./data/series/banxico-imports-total.json').catch(()=>null);
   $('#thesis').innerHTML='Mexico runs an assembly economy built around the United States: it <b>imports parts and exports cars</b>. About '+E.partners.exports[0].value+'% of its <b>$'+Math.round(E.trade.exports)+'bn</b> in goods exports went to the US in 2024. A second, informal economy employs <b>'+E.informal.dumbbells[0].jobs+'%</b> of workers (2025, INEGI).';
   $('#heroband').innerHTML=E.hero.map(h=>`<div class="hb"><div class="hk">${h.k}</div><div class="hv">${h.v}</div><div class="hs">${h.sub}</div></div>`).join('');
+  // page orientation (Fable): WHAT is evergreen; NOW + NEXT compute from live data so they cannot drift.
+  const gPts=(E.growth&&E.growth.points)||[];
+  const gLast=gPts.length?gPts[gPts.length-1]:null, gPrev=gPts.length>1?gPts[gPts.length-2]:null;
+  const piSgn=(v)=>(v>0?'+':'')+v.toFixed(1);
+  const piNow=gLast?(gPrev
+    ? `GDP growth ${gLast.value>gPrev.value?'rose':(gLast.value<gPrev.value?'fell':'held')} to <b>${piSgn(gLast.value)}%</b> in ${gLast.year}, from ${piSgn(gPrev.value)}% in ${gPrev.year}.`
+    : `GDP grew <b>${piSgn(gLast.value)}%</b> in ${gLast.year}.`):null;
+  // next scheduled release — output / investment / jobs events from the shared calendar, first upcoming
+  const piEvents=await J('./data/events.json').then(d=>(d&&d.events)||[]).catch(()=>[]);
+  const piNextEv=piEvents.filter(e=>/\bgdp\b|igae|activity|output|econom|growth|unemploy|employ|\benoe\b|jobs|labou?r|investment|\bfdi\b|foreign direct/i.test((e.label||'')+' '+(e.mechanism||'')))
+    .filter(e=>new Date(e.date)>=Date.now()-864e5).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const piNextLbl=(piNextEv&&piNextEv.label||'').replace(/\s*\u2014\s*/g,', ');   // voice law: no em-dashes in output (labels may carry one)
+  const piNext=piNextEv?`${piNextLbl} on ${new Date(piNextEv.date).toLocaleDateString('en-US',{month:'long',day:'numeric',timeZone:'UTC'})}.`:null;
+  document.getElementById('pageintro').innerHTML=pageIntro({what:"What Mexico produces and how fast it grows: output, investment, and jobs.",now:piNow,next:piNext});
   let H='';
   // 2 · what Mexico makes
   H+=ex('1','Services produce '+E.sectors.segments[0].value+'% of GDP, and manufacturing adds about a fifth','By sector, '+E.sectors.unit,

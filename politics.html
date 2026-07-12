@@ -173,6 +173,8 @@
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
+  <section class="blk" id="pageintro"></section>
+
   <!-- 2 · THE NUMBERS NOW -->
   <section class="blk" id="numbers">
     <div class="board-lbl">
@@ -213,7 +215,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, EVENTS, NEWS, sectionHead, staticRow, fwd, evDate, relTime, tagChip, renderDevelopments, srcBadge, storyBlock } from '/assets/mb.js?v=11';
+import { loadSeries, EVENTS, NEWS, sectionHead, staticRow, fwd, evDate, relTime, tagChip, renderDevelopments, srcBadge, storyBlock, pageIntro } from '/assets/mb.js?v=12';
 
 /* the politics keyword filter — shared by the calendar (block 4) and the wire (block 5).
    Spanish + English institution words; \b guards stop "selecciones" matching "elecci" etc. */
@@ -280,6 +282,18 @@ function renderWire(){ return renderDevelopments('politics'); }   // curated eve
   if(upd){const d=new Date(upd+'T12:00:00'); if(!isNaN(d)) asof=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
   document.getElementById('asof').textContent=asof;
   document.getElementById('board-asof').textContent='as of '+asof;
+  // page orientation (WHAT/NOW/NEXT) — NOW's numbers read from this page's own facts (TILES), NEXT from the events feed; never hand-typed, so it can't drift
+  const congTile=TILES.find(t=>t.tl==='Congress'), apprTile=TILES.find(t=>t.tl==='Presidential approval');
+  const seat=congTile&&congTile.tv?String(congTile.tv).toLowerCase():null;
+  const apprRange=apprTile?((String(apprTile.tv).match(/\d+\s*[–—-]\s*\d+/)||[])[0]||'').replace(/\s+/g,''):'';
+  const piNow=seat?`Morena and its allies hold <b>${seat}</b> of Congress${apprRange?`, and Sheinbaum's approval spans ${apprRange}% by pollster`:''}.`:null;
+  // next scheduled event — same political filter/regex as renderWatch, first upcoming; em-dash clause on the label trimmed per the voice law
+  const piNextEv=((EVENTS&&EVENTS.events)||[]).filter(e=>{const k=(e.kind||'');
+    if(k==='political'||k==='election')return true;
+    return POL_RX.test((e.label||'')+' '+(e.mechanism||''));})
+    .filter(e=>new Date(e.date)>=Date.now()-864e5).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const piNext=piNextEv?`${String(piNextEv.label).split(/\s+[–—]\s+/)[0].trim()} on ${new Date(piNextEv.date).toLocaleDateString('en-US',{month:'long',day:'numeric',timeZone:'UTC'})}.`:null;
+  document.getElementById('pageintro').innerHTML=pageIntro({what:"Who holds power in Mexico, and how secure that hold is.",now:piNow,next:piNext});
   document.getElementById('tablero').innerHTML=renderTiles();
   document.getElementById('background').innerHTML=renderBackground()+storyBlock({asof:'Jun 2026 poll',
     p1:`Morena and its allies hold a two-thirds supermajority in Congress, enough to amend the constitution on their own. They have already used it: after the <b>2024–25</b> judicial reform, judges are now chosen by popular vote. President Sheinbaum, sworn in <b>October 2024</b>, serves a term that runs to <b>2030</b>. Her approval depends on the pollster: Mitofsky puts her near <b>68%</b>, AtlasIntel at <b>49%</b>. It was AtlasIntel's first reading below 50%, and the trend in both series is down.`,

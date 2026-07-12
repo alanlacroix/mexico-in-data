@@ -114,6 +114,8 @@
     <p class="statedate">latest data as of <b id="asof">—</b></p>
   </section>
 
+  <section class="blk" id="pageintro"></section>
+
   <section class="sec" id="sec-rails"></section>
   <section class="sec" id="sec-cards"></section>
   <section class="sec" id="sec-cash"></section>
@@ -129,7 +131,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, tile, exhibit, timeChart, barChart, wireCharts, enNum } from '/assets/mb.js?v=11';
+import { loadSeries, S, EVENTS, tile, exhibit, timeChart, barChart, wireCharts, enNum, pageIntro } from '/assets/mb.js?v=12';
 
 const IDS = [
   'banxico-spei-operaciones','banxico-spei-monto','banxico-codi-operaciones',
@@ -283,6 +285,28 @@ function accessExhibits(){
   const newest=times.length?Math.max(...times):0;
   if(newest){ const el=document.getElementById('asof'); if(el) el.textContent=new Date(newest).toLocaleDateString('en-US',{month:'long',year:'numeric',timeZone:'UTC'}); }
   document.getElementById('brief').innerHTML=briefHTML();
+
+  // page orientation strip (What / Now / Next). Every number is computed from the loaded series,
+  // so the block cannot drift; a row drops to null when its binding is unavailable.
+  const piWhat='How money moves in Mexico: cards, transfers, cash, and the shift to digital.';
+  const piNow=(()=>{
+    if(!has('banxico-spei-operaciones')) return null;
+    const d=S['banxico-spei-operaciones'].data;
+    const m=Math.round(d.at(-1).value/1e6);
+    if(d.length>12) return `SPEI cleared <b>${enNum(m)} million</b> interbank transfers in ${moFmt(d.at(-1).date)}, compared with ${enNum(Math.round(d.at(-13).value/1e6))} million a year earlier.`;
+    return `SPEI cleared <b>${enNum(m)} million</b> interbank transfers in ${moFmt(d.at(-1).date)}.`;
+  })();
+  const piNext=(()=>{
+    const ev=(EVENTS&&EVENTS.events)||[];
+    const rel=ev.filter(e=>/remes|remittance|spei|codi|dimo|payment|pago|tarjeta|\bcard|point of sale|e-commerce|ecommerce|consumo|consumption|circulante|currency in circulation|financial inclusion|enif/i.test((e.label||'')+' '+(e.mechanism||'')));
+    const now=Date.now();
+    const up=rel.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>String(a.date).localeCompare(String(b.date)))[0];
+    if(!up) return null;
+    const label=String(up.label||'').replace(/\s*—\s*/g,', ').replace(/\s+–\s+/g,', ');
+    const when=new Date(up.date+'T00:00:00Z').toLocaleDateString('en-US',{month:'long',day:'numeric',timeZone:'UTC'});
+    return `${up.source||'The issuer'} publishes ${label} on ${when}.`;
+  })();
+  document.getElementById('pageintro').innerHTML=pageIntro({what:piWhat,now:piNow,next:piNext});
 
   renderSection('sec-rails','The rails','SPEI moves the money between banks',
     `${has('banxico-spei-operaciones')?`SPEI, the country's biggest payment rail, clears about ${enNum(Math.round(lastv('banxico-spei-operaciones')/1e6))} million transfers a month. `:`SPEI, the country's biggest payment rail, moves money between bank accounts. `}This section tracks that rail and the two retail products built on it, CoDi and DiMo.`,

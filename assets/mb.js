@@ -214,10 +214,11 @@ export function projectionChart(opts){
 // NOW = current headline, every number computed by the page from live data (drops if no binding).
 // NEXT = the next scheduled release. Mono labels, serif body, reads as furniture, cannot drift.
 export function pageIntro(o){
-  o=o||{}; let rows='';
-  if(o.what) rows+=`<div class="pi-row"><span class="pi-k">What</span><span class="pi-v">${o.what}</span></div>`;
-  if(o.now)  rows+=`<div class="pi-row"><span class="pi-k">Now</span><span class="pi-v">${o.now}</span></div>`;
-  if(o.next) rows+=`<div class="pi-row"><span class="pi-k">Next</span><span class="pi-v">${o.next}</span></div>`;
+  o=o||{}; const clean=(s)=>s?String(s).replace(/\s*—\s*/g,', '):s;   // voice law: no em-dashes ever reach a reader
+  const w=clean(o.what), n=clean(o.now), x=clean(o.next); let rows='';
+  if(w) rows+=`<div class="pi-row"><span class="pi-k">What</span><span class="pi-v">${w}</span></div>`;
+  if(n) rows+=`<div class="pi-row"><span class="pi-k">Now</span><span class="pi-v">${n}</span></div>`;
+  if(x) rows+=`<div class="pi-row"><span class="pi-k">Next</span><span class="pi-v">${x}</span></div>`;
   return rows?`<div class="pageintro">${rows}</div>`:'';
 }
 // direction verb from a signed change, per the voice law (high-frequency verbs, no adjectives)

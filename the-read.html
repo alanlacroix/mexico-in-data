@@ -225,6 +225,9 @@
     <p class="statedate">as of <b id="asof">—</b></p>
   </section>
 
+  <!-- 1.5 · PAGE INTRO (what / now / next) -->
+  <section class="blk" id="pageintro"></section>
+
   <!-- 2 · WHAT MOVED -->
   <section class="blk" id="numbers">
     <div class="board-lbl"><div><h2 style="display:inline">What moved</h2></div><span class="asof" id="board-asof"></span></div>
@@ -246,7 +249,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, sectionHead, exhibit, dataTable, timeChart, wireCharts } from '/assets/mb.js?v=11';
+import { loadSeries, S, EVENTS, pageIntro, sectionHead, exhibit, dataTable, timeChart, wireCharts } from '/assets/mb.js?v=12';
 
 const NEED=['banxico-usdmxn-fix','banxico-tasa-objetivo','banxico-inflacion','banxico-inflacion-subyacente',
   'banxico-remesas','banxico-circulante','banxico-exports-manufactures','banxico-spei-operaciones',
@@ -369,6 +372,32 @@ function renderReceipts(){
     document.getElementById('asof').textContent=nw.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
     document.getElementById('board-asof').textContent='as of '+nw.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
   document.getElementById('whatmoved').innerHTML=renderMoved();
+
+  /* page orientation (what / now / next), every number computed from this page's own loaded data */
+  const piWhat="A weekly read of what moved most in Mexico's official numbers.";
+  let piNow=null;
+  const wm=FACTS&&FACTS.whatMoved;
+  if(wm&&!wm.quiet&&wm.items&&wm.items.length){
+    const top=wm.items.reduce((a,b)=>Math.abs(Number(b.z))>Math.abs(Number(a.z))?b:a);
+    const verb=top.dir>0?'rose to':(top.dir<0?'fell to':'held at');
+    const zmag=Math.abs(Number(top.z)).toFixed(1);
+    piNow=`${top.label} ${verb} <b>${fmtMoved(top)}</b>, the biggest mover this week at ${zmag} standard deviations from its two-year norm.`;
+  }
+  let piNext=null;
+  const evs=(EVENTS&&EVENTS.events)||[];
+  const nowMs=Date.now();
+  const upNext=evs.filter((e)=>{const k=(e.kind||'');
+      if(k==='banxico'||k==='fomc')return true;
+      return /inflaci|cpi|inpc|inflation|tasa|policy rate|peso|banxico|remesas|remittance/i.test((e.label||'')+' '+(e.mechanism||''));})
+    .filter((e)=>new Date(e.date)>=nowMs-864e5)
+    .sort((a,b)=>a.date.localeCompare(b.date))[0];
+  if(upNext){
+    const d=new Date(upNext.date).toLocaleDateString('en-US',{month:'long',day:'numeric',timeZone:'UTC'});
+    const label=(upNext.label||'').replace(/\s+[—–]\s+/g,', ');
+    piNext=`${label} on ${d}.`;
+  }
+  document.getElementById('pageintro').innerHTML=pageIntro({what:piWhat,now:piNow,next:piNext});
+
   document.getElementById('background').innerHTML=renderReads();
   document.getElementById('receipts').innerHTML=renderReceipts();
   wireCharts();
