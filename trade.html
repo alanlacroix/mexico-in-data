@@ -233,7 +233,7 @@
 <div class="charttip" id="charttip"></div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, pageIntro, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, treemapSVG, storyBlock, wireCharts } from '/assets/mb.js?v=12';
+import { loadSeries, S, EVENTS, pageIntro, tile, mrow, sectionHead, exhibit, dataTable, timeChart, hbarChart, treemapSVG, storyBlock, wireCharts } from '/assets/mb.js?v=13';
 
 /* Trade data: Banxico CE125 series (into S) + three reconciled JSON datasets fetched alongside. */
 const CE125=['banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-imports-capital','banxico-imports-consumer'];
@@ -292,16 +292,23 @@ const TSECT=[
 ];
 const tsectOf=(code)=>{const c=parseInt(code,10);return TSECT.find(s=>c<=s.max)||TSECT[TSECT.length-1];};
 function basketItems(){
-  const items=[]; let ov=0,on=0,os=0;
+  // Fable's floor: anything under 0.5% of exports folds into one "Everything else" box (kills unreadable
+  // slivers), whose tooltip names its top 5 so it's legible before anyone clicks.
+  const items=[]; const small=[];
   for(const p of PROD.items){
-    if(p.share>=0.3){ const s=tsectOf(p.code); items.push({name:p.name,value:p.value,share:p.share,color:s.c,key:s.key}); }
-    else { ov+=p.value; os+=p.share; on++; }
+    if(p.share>=0.5){ const s=tsectOf(p.code); items.push({name:p.name,value:p.value,share:p.share,color:s.c,key:s.key}); }
+    else small.push(p);
   }
-  if(on) items.push({name:`Other (${on} small product groups)`,value:ov,share:os,color:'#9aa6b0',key:'Other small product groups'});
+  if(small.length){
+    const ov=small.reduce((a,p)=>a+p.value,0), os=small.reduce((a,p)=>a+p.share,0);
+    const top=small.slice().sort((a,b)=>b.value-a.value);
+    const more=top.slice(0,5).map(p=>p.name).join(' · ')+(top.length>5?`, and ${top.length-5} more`:'');
+    items.push({name:`Everything else (${small.length} groups)`,value:ov,share:os,color:'#9aa6b0',key:'Everything else',more});
+  }
   return items;
 }
 function basketLegend(){
-  const present=new Set(PROD.items.filter(p=>p.share>=0.3).map(p=>tsectOf(p.code).key));
+  const present=new Set(PROD.items.filter(p=>p.share>=0.5).map(p=>tsectOf(p.code).key));
   return `<div class="tmleg">`+TSECT.filter(s=>present.has(s.key)).map(s=>`<span class="tmlg"><i style="background:${s.c}"></i>${s.key}</span>`).join('')+`</div>`;
 }
 
@@ -397,8 +404,9 @@ function wireTreemap(){
   const tm=document.querySelector('#tm-basket svg.treemap'); const tip=document.getElementById('charttip');
   if(!tm||!tip) return;
   tm.addEventListener('pointermove',(e)=>{ const g=e.target.closest('.tmc'); if(!g){tip.style.opacity=0;return;}
-    const nm=g.getAttribute('data-nm'),sh=+g.getAttribute('data-share'),val=+g.getAttribute('data-val'),sec=g.getAttribute('data-sec');
-    tip.innerHTML=`<b>${nm}</b><div class="tr"><span class="nm">Share of exports</span><span class="vv">${sh.toFixed(1)}%</span></div><div class="tr"><span class="nm">Value ${PROD.year}</span><span class="vv">$${(val/1e9).toFixed(1)}B</span></div><div class="tr"><span class="nm">Sector</span><span class="vv">${sec}</span></div>`;
+    const nm=g.getAttribute('data-nm'),sh=+g.getAttribute('data-share'),val=+g.getAttribute('data-val'),sec=g.getAttribute('data-sec'),more=g.getAttribute('data-more');
+    const valTxt=val>=1e9?'$'+(val/1e9).toFixed(1)+'bn':'$'+Math.round(val/1e6)+'m';
+    tip.innerHTML=`<b>${nm}</b><div class="tr"><span class="nm">Share of exports</span><span class="vv">${sh.toFixed(1)}%</span></div><div class="tr"><span class="nm">Value ${PROD.year}</span><span class="vv">${valTxt}</span></div>`+(more?`<div class="tr" style="display:block;margin-top:4px;max-width:220px;white-space:normal;line-height:1.4"><span class="nm">${more}</span></div>`:`<div class="tr"><span class="nm">Sector</span><span class="vv">${sec}</span></div>`);
     tip.style.opacity=1; tip.style.left=Math.min(e.clientX+14,innerWidth-180)+'px'; tip.style.top=(e.clientY+14)+'px';
   });
   tm.addEventListener('pointerleave',()=>{ tip.style.opacity=0; });

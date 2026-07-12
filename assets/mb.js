@@ -169,14 +169,19 @@ export function treemapSVG(items, opts){
   for(const r of rects){
     const d=r.d, x=r.x+pad, y=r.y+pad, w=Math.max(0,r.w-2*pad), h=Math.max(0,r.h-2*pad);
     const tc=tmLuma(d.color)>0.62?'#1a1a1a':'#fff';
-    svg+=`<g class="tmc" data-nm="${tmEsc(d.name)}" data-share="${d.share}" data-val="${d.value}" data-sec="${tmEsc(d.key||'')}">`;
+    svg+=`<g class="tmc" data-nm="${tmEsc(d.name)}" data-share="${d.share}" data-val="${d.value}" data-sec="${tmEsc(d.key||'')}"${d.more?` data-more="${tmEsc(d.more)}"`:''}>`;
     svg+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${d.color}" stroke="#fff" stroke-width="0.6"/>`;
-    if(w>78 && h>36){
-      const cap=Math.max(3,Math.floor(w/6.6)); const nm=d.name.length>cap?d.name.slice(0,cap-1)+'…':d.name;
-      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="${tc}" font-size="11.5" font-weight="600" style="font-family:var(--sans,-apple-system,sans-serif)">${tmEsc(nm)}</text>`;
-      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+31).toFixed(1)}" fill="${tc}" font-size="12.5" style="font-family:var(--serif,Georgia,serif)">${d.share.toFixed(1)}%</text>`;
-    } else if(w>34 && h>15){
-      svg+=`<text x="${(x+4).toFixed(1)}" y="${(y+12).toFixed(1)}" fill="${tc}" font-size="9" style="font-family:var(--sans,-apple-system,sans-serif)">${d.share>=0.4?d.share.toFixed(1)+'%':''}</text>`;
+    // label tiers by share of view; never ellipsize — the name only appears if it fits the cell
+    const sh=d.share, nameFits=(d.name.length*6.4)<=(w-12);
+    const val=d.value>=1e9?'$'+(d.value/1e9).toFixed(1)+'bn':'$'+Math.round(d.value/1e6)+'m';
+    if(sh>=5 && nameFits && h>34){
+      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="${tc}" font-size="11.5" font-weight="600" style="font-family:var(--sans,-apple-system,sans-serif)">${tmEsc(d.name)}</text>`;
+      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+31).toFixed(1)}" fill="${tc}" font-size="12.5" style="font-family:var(--serif,Georgia,serif)">${sh.toFixed(1)}%<tspan font-size="10" dx="5" opacity="0.75">${val}</tspan></text>`;
+    } else if(sh>=2 && nameFits && h>30){
+      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+16).toFixed(1)}" fill="${tc}" font-size="11" font-weight="600" style="font-family:var(--sans,-apple-system,sans-serif)">${tmEsc(d.name)}</text>`;
+      svg+=`<text x="${(x+6).toFixed(1)}" y="${(y+30).toFixed(1)}" fill="${tc}" font-size="11" style="font-family:var(--serif,Georgia,serif)">${sh.toFixed(1)}%</text>`;
+    } else if(sh>=1 && w>38 && h>15){
+      svg+=`<text x="${(x+5).toFixed(1)}" y="${(y+13).toFixed(1)}" fill="${tc}" font-size="9.5" style="font-family:var(--sans,-apple-system,sans-serif)">${sh.toFixed(1)}%</text>`;
     }
     svg+=`</g>`;
   }
