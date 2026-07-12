@@ -61,6 +61,12 @@
   .brief p:last-child{margin-bottom:0}
   .brief .s{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--line-2);cursor:pointer}
   .brief .s:hover{border-bottom:1px solid var(--green)}
+  /* 3-5 explained items: one paragraph each, bold headline lede, a mono source·date link at the end */
+  .brief .bi{margin:0 0 15px}
+  .brief .bhl{font-weight:700;color:var(--ink)}
+  .brief .bsrc{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-decoration:none;letter-spacing:.02em;white-space:nowrap}
+  .brief .bsrc:hover{color:var(--green-d)}
+  .brief .brief-nums{font-size:var(--fs-small);color:var(--ink-2);border-top:1px solid var(--line);padding-top:12px;margin-top:16px;font-variant-numeric:tabular-nums}
   @media(max-width:560px){ .brief p{font-size:var(--fs-small)} }
 
   /* THE AREAS — the topic browse. Each area: a header (→ its section page), a 1–2 sentence read,
@@ -409,15 +415,20 @@ function liveText(s){
     let t=parts.join(', '); t=t.charAt(0).toUpperCase()+t.slice(1); if(!/[.!?]$/.test(t)) t+='.'; return t;
   }catch(e){ return s.text; }
 }
+// The Brief (Fable 2026-07-12): 3-5 rubric-ranked items, one paragraph each. Item 1 = the lead story
+// EXPLAINED (the H1 above is its headline, so no repeat); items 2..N = bold headline + context + source;
+// a live standing-numbers line last. Context is em-dash-stripped; every item links to its source.
 function renderBrief(brief){
-  const paras=(brief&&brief.paragraphs)||[];
-  if(!paras.length||!paras.flat().length) return '';
-  return paras.map(p=>`<p>`+p.map(s=>{
-    const txt=liveText(s).replace(/\s*—\s*/g,', ');   // voice law: the auto-brief must never ship an em-dash
-    const ext=/^https?:/.test(s.href||'');
-    if(!s.href) return `<span class="s">${esc(txt)}</span>`;
-    return `<a class="s" href="${esc(s.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(s.source||'source')}">${esc(txt)}</a>`;
-  }).join(' ')+`</p>`).join('');
+  if(!brief||!brief.lead) return '';
+  const dt=(d)=>{ if(!d)return''; const x=new Date(d+'T00:00:00'); return isNaN(x)?'':x.toLocaleDateString('en-US',{month:'short',day:'numeric'}); };
+  const ctx=(o)=>esc(String(o.context||'').replace(/\s*—\s*/g,', '));
+  const src=(o)=>{ if(!o||!o.href) return ''; const ext=/^https?:/.test(o.href), d=o.date?(' · '+dt(o.date)):'';
+    return ` <a class="bsrc" href="${esc(o.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(o.source||'source')}">${esc(o.source||'source')}${d}</a>`; };
+  let html='';
+  if(brief.lead.context) html+=`<p class="bi">${ctx(brief.lead)}</p>`;
+  for(const it of (brief.items||[])) html+=`<p class="bi"><b class="bhl">${esc(it.headline)}.</b> ${ctx(it)}${src(it)}</p>`;
+  if(brief.standing) html+=`<p class="brief-nums">${esc(liveText(brief.standing))}</p>`;
+  return html;
 }
 
 /* ============ WHAT STOOD OUT — the analysis surfaced from the deterministic facts pack ============
@@ -493,23 +504,17 @@ function renderWatch(){
   // masthead date: the day you're reading it, spelled out clearly like a morning paper
   const td=document.getElementById('today'); if(td) td.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 
-  // the headline is the lead story from the Brief (relevant, not a static label); drop it from the
-  // body below so it isn't printed twice. If there's no brief, the static fallback H1 stays.
-  let briefBody=brief;
-  if(brief&&brief.paragraphs&&brief.paragraphs[0]&&brief.paragraphs[0].length){
-    const lead=brief.paragraphs[0][0];
-    if(lead&&lead.text){ const le=document.getElementById('lead');
-      if(le){ const t=liveText(lead).replace(/\s*—\s*/g,', ').replace(/\.\s*$/,'');
-        // the headline is a link to the lead story's source, same rule as every Brief line
-        le.innerHTML=lead.href?`<a href="${esc(lead.href)}"${/^https?:/.test(lead.href)?' target="_blank" rel="noopener"':''} title="Source: ${esc(lead.source||'source')}">${esc(t)}</a>`:esc(t);
-      }
+  // The H1 = the #1 story as a label (linked to its source); the Brief's first paragraph explains it,
+  // so the story is never printed twice. If there's no brief, the static fallback H1 stays.
+  if(brief&&brief.lead){ const le=document.getElementById('lead');
+    if(le){ const t=String(brief.lead.h1||'').replace(/\s*—\s*/g,', ').replace(/\.\s*$/,''); const h=brief.lead.href;
+      le.innerHTML=h?`<a href="${esc(h)}"${/^https?:/.test(h)?' target="_blank" rel="noopener"':''} title="Source: ${esc(brief.lead.source||'source')}">${esc(t)}</a>`:esc(t);
     }
-    briefBody=Object.assign({},brief,{paragraphs:[brief.paragraphs[0].slice(1)].concat(brief.paragraphs.slice(1)).filter(p=>p&&p.length)});
   }
-  // the lead: the brief synthesis (built by the pipeline; each sentence links to its source).
+  // the lead: 3-5 explained, linked items + a live standing-numbers line (built by the pipeline).
   const briefEl=document.getElementById('brief');
   if(briefEl){
-    const html=renderBrief(briefBody);
+    const html=renderBrief(brief);
     if(html){ briefEl.innerHTML=html; const bao=document.getElementById('brief-asof'); if(bao&&brief&&brief.meta) bao.textContent='as of '+(brief.meta.asOf||''); }
     else { const sec=briefEl.closest('section'); if(sec) sec.remove(); }
   }

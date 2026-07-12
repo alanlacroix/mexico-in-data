@@ -96,7 +96,7 @@ function candidates(now) {
 }
 
 // ---- shape an event-log entry from a news item ----
-const clampImp = (n) => Math.max(1, Math.min(5, Math.round(+n || 3)));
+const clampImp = (n) => Math.max(0, Math.min(10, Math.round(+n || 5)));   // 0-10 Brief rubric (see BRIEF-RUBRIC.md)
 const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 52);
 function mkEvent(x, section, importance, title, why) {
   const date = (x.published_at || '').slice(0, 10);
@@ -151,9 +151,9 @@ async function curate(cands, now) {
 For each item you select, return:
 - i: its index in the list
 - section: exactly one of economy | money | politics | security | us-mexico | society
-- importance: 1-5 (5 = a defining national event like USMCA or a constitutional reform; 4 = major; 3 = solid, worth a line; 2 = notable; 1 = minor)
+- importance: 0-10, scored by the Brief rubric — add 0, 1, or 2 on EACH of five criteria: (1) national consequence, (2) US-Mexico stakes, (3) model impact (does it move or explain the peso, inflation, the policy rate, or growth?), (4) durability (still matters in 30 days — a first report of a real change scores; commentary and re-reports score 0), (5) officialness (a primary source like Banxico, INEGI, DOF, SHCP, or USTR is available). A defining national event (USMCA, a constitutional reform) scores 9-10; a solid worth-a-line item lands 5-6; anything below 5 will not make the Brief.
 - title: a clean, factual headline in the present tense — rewrite the source headline for clarity, no hype, no em-dash, no clickbait
-- why: ONE sentence on why it matters, written ONLY from the provided title and dek. State the stakes plainly. No invented facts, no adjectives doing the work of an argument.
+- why: ONE or two sentences of CONTEXT on why it matters — enough to actually explain the story, not just restate the headline. Write ONLY from the provided title and dek. State the stakes plainly; no invented facts, no numbers not present in the source, no adjectives doing the work of an argument.
 Aim for BREADTH across sections — a reader should see politics, security, and U.S.–Mexico, not only economics. Prefer the most consequential item when several cover the same story. Select at most ${MAX_NEW}. Return JSON.`;
   const payload = cands.map((x, i) => ({ i, beat: x.beat, date: (x.published_at || '').slice(0, 10), title: x.title, dek: (x.dek || '').slice(0, 200) }));
   const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 3800 });

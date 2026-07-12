@@ -124,33 +124,51 @@ IRON RULES:
   return valid(paras, byId) ? paras : null;
 }
 
+// ---- the new Brief (Fable 2026-07-12): 3-5 rubric-ranked items, each headline + explained context ----
+const stripDash = (t) => String(t || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();  // voice law: no em-dash
+const WORDS = (t) => stripDash(t).split(/\s+/).filter(Boolean).length;
+// the SHIPPED context of an event: human `context`, else the curator's `why`. NEVER `context_draft`
+// (the LLM pre-draft) — the build physically refuses to render an unpromoted draft (Fable's gate).
+const ctxOf = (e) => stripDash(e.context || e.why || '');
+// select the lead items by the rubric (importance >= 5, cap 5, soft floor 3). See BRIEF-RUBRIC.md.
+function select(events) {
+  const THRESH = 5, CAP = 5, FLOOR = 3;
+  const ranked = events.slice().sort((a, b) => (b.importance - a.importance) || (b._t - a._t));
+  let picked = ranked.filter((e) => (e.importance || 0) >= THRESH).slice(0, CAP);
+  if (picked.length < FLOOR) picked = ranked.slice(0, FLOOR);
+  return picked;
+}
+function buildStanding(nums) {
+  const pick = nums.filter((n) => ['board-peso', 'board-inflation', 'board-rate'].includes(n.id));
+  if (!pick.length) return null;
+  return { text: capitalize(pick.map((n) => n.text).join(', ')) + '.', live: pick.map((n) => ({ series: n.series, tmpl: n.tmpl })),
+    refs: pick.map((n) => n.id), href: '/money.html', source: 'Banco de México / INEGI' };
+}
+
 async function main() {
   const now = new Date();
-  console.log(`\nbuild-brief · model ${hasLLM() ? model : 'none (deterministic stitch)'}`);
+  console.log(`\nbuild-brief · ${hasLLM() ? 'llm available (drafts only, gated)' : 'no llm — human context'}`);
   const P = pool();
-  if (!P.events.length && !P.standing.length) { console.warn('  no inputs — nothing to write'); return; }
+  if (!P.events.length) { console.warn('  no events — nothing to write'); return; }
 
-  let paras = null, mode = 'stitch';
-  if (hasLLM()) { paras = await modelBrief(P); if (paras) mode = 'model'; else console.warn('  model brief failed validation — falling back to stitch'); }
-  if (!paras) paras = stitch(P);
-  if (!valid(paras, P.byId)) { console.warn('  stitch invalid (thin inputs) — trimming'); paras = paras.map((p) => p.filter((s) => s.refs.every((id) => P.byId.has(id)))).filter((p) => p.length); }
+  const picked = select(P.events);
+  const lead0 = picked[0];
+  const lead = { h1: stripDash(lead0.title).replace(/\.\s*$/, ''), context: ctxOf(lead0), refs: [lead0.id],
+    href: lead0.url || '', source: lead0.source || '', section: lead0.section || '' };
+  const items = picked.slice(1).map((e) => ({ headline: stripDash(e.title).replace(/\.\s*$/, ''), context: ctxOf(e),
+    refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '' }));
+  const standing = buildStanding(P.nums);
 
-  // attach the source link + label to each sentence (from its first ref) so the page can
-  // render every sentence as a subtle link to the item it cites — the "no sentence without a link" law, made visible.
-  const linked = paras.map((p) => p.map((s) => {
-    const first = s.refs.map((id) => P.byId.get(id)).find(Boolean);
-    const o = { text: s.text, refs: s.refs, href: (first && first.url) || '', source: (first && first.source) || '' };
-    if (s.live && s.live.length) o.live = s.live;   // per-metric {series,tmpl} → the page renders the number live from S
-    return o;
-  }));
-  const out = {
-    meta: { title: 'The brief', updated: now.toISOString().slice(0, 10), asOf: `${MO[now.getUTCMonth()]} ${now.getUTCDate()}`, generatedAt: now.toISOString(), mode, llm: hasLLM(), words: wordCount(paras) },
-    mode, paragraphs: linked,
-  };
+  // the link law + word caps (warn, never truncate — the curator trims the `why`, we don't mangle it)
+  for (const it of [lead, ...items]) if (!it.href || !it.refs.length) console.warn('  WARN missing source link:', it.headline || it.h1);
+  if (WORDS(lead.context) > 70) console.warn(`  WARN lead context ${WORDS(lead.context)}w (cap 70)`);
+  items.forEach((it) => { if (WORDS(it.context) > 45) console.warn(`  WARN "${it.headline.slice(0, 30)}" ${WORDS(it.context)}w (cap 45)`); });
+
+  const words = WORDS(lead.context) + items.reduce((n, it) => n + WORDS(it.context), 0) + (standing ? WORDS(standing.text) : 0);
+  const out = { meta: { title: 'The brief', updated: now.toISOString().slice(0, 10), asOf: `${MO[now.getUTCMonth()]} ${now.getUTCDate()}`,
+    generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words }, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
-  const u = usage();
-  console.log(`  wrote ${path.relative(ROOT, OUT)} · ${paras.length} paragraphs · ${wordCount(paras)} words · mode ${mode}`);
-  console.log(`  llm: ${u.calls} calls · ~$${u.costUSD.toFixed(4)}\n`);
+  console.log(`  wrote ${path.relative(ROOT, OUT)} · ${1 + items.length} items · ${words} words · picked: ${picked.map((e) => e.importance).join('/')}`);
 }
 
 main().catch((e) => { console.error('build-brief failed:', e.stack || e.message); process.exit(1); });
