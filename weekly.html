@@ -4,11 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>The Weekly · The Mexico Brief</title>
-<meta name="description" content="A free weekly email on Mexico: what moved in politics, business, and money each week, summarized from the source reporting, with a data board computed from official sources. One email, every Monday morning." />
+<meta name="description" content="A free weekly email on Mexico: what actually happened, straight from Banxico and INEGI, with every figure linked so you can check it. One email, Monday mornings." />
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="The Weekly · The Mexico Brief" />
-<meta property="og:description" content="A free weekly email on Mexico: what moved in politics, business, and money each week, summarized from the source reporting, with a data board computed from official sources. One email, every Monday morning." />
+<meta property="og:description" content="A free weekly email on Mexico: what actually happened, straight from Banxico and INEGI, with every figure linked so you can check it. One email, Monday mornings." />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
@@ -42,87 +42,42 @@
 <style>
   :root{--ink-3:#4d4d4d}
   body{font-size:17px}
-  /* content width inherits the shared .wrap component (--maxw:1120) — no per-page override, so the page and nav match every other page */
-  .sub{max-width:600px}          /* signup box: a readable measure inside the full-width page */
-  .hero .dek, .blk p{max-width:64ch}   /* prose caps, left-aligned like the section pages */
 
-  .hero{padding:30px 0 8px}
-  .hero h1{font-family:var(--serif);font-size:clamp(30px,6vw,44px);line-height:1.03;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
-  .hero .thesis{font-size:19px;color:var(--ink-2);margin-top:16px;line-height:1.55}
-  .hero .thesis b{color:var(--ink)}
+  .lp{max-width:640px;padding:40px 0 8px}
+  @media(min-width:760px){.lp{padding:64px 0 12px}}
+  .lp .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
+  .lp h1{font-family:var(--serif);font-size:clamp(32px,5.2vw,50px);line-height:1.04;letter-spacing:-.025em;margin:14px 0 0;color:var(--ink);max-width:18ch}
+  .lp .thesis{font-size:19px;color:var(--ink-2);margin:18px 0 0;line-height:1.5;max-width:52ch}
 
-  .sub{margin:26px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:22px 22px 18px;background:#fbfaf6}
-  .sub .lab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
-  .sub form{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
-  .sub input[type=email]:focus{outline:none;border-color:var(--green)}
-  .sub button{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:9px;padding:12px 24px;cursor:pointer}
-  .sub button:hover{background:var(--green-d)}
-  .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:11px;line-height:1.6}
-  .samplelink{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);text-decoration:none;border-bottom:2px solid #daf0e2;padding-bottom:1px}
+  .signup{margin:28px 0 0;max-width:480px}
+  .signup form{display:flex;gap:10px;flex-wrap:wrap}
+  .signup input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:16px;padding:14px 15px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  .signup input[type=email]:focus{outline:none;border-color:var(--green)}
+  .signup button{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:10px;padding:14px 24px;cursor:pointer}
+  .signup button:hover{background:var(--green-d)}
+  .signup .fine{font-size:14px;color:var(--ink-2);margin-top:13px;line-height:1.55}
 
-  ul.parts{list-style:none;margin:6px 0 0;padding:0}
-  ul.parts li{position:relative;padding:0 0 0 20px;margin:0 0 12px;color:var(--ink-2);line-height:1.55}
-  ul.parts li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;background:var(--green);border-radius:2px}
-  ul.parts li b{color:var(--ink)}
-  ul.vprops{margin:24px 0 4px}
-
-  section.blk{margin:30px 0 0;border-top:1px solid var(--line);padding-top:22px}
-  section.blk h2{font-family:var(--serif);font-size:23px;line-height:1.15;color:var(--ink);letter-spacing:-.01em;margin:0 0 10px}
-  section.blk p{color:var(--ink-2);line-height:1.6;margin:0 0 12px}
-  section.blk p b{color:var(--ink)}
-  a.inline{color:var(--green);font-weight:500}
+  .who{display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);margin-top:38px;padding-top:20px;max-width:60ch}
+  .who .avatar{width:40px;height:40px;border-radius:50%;background:#e7f3ec;color:var(--green-d);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:14px;flex:0 0 auto}
+  .who p{font-size:14.5px;color:var(--ink-2);margin:0;line-height:1.5}
+  .who a{color:var(--green);font-weight:500}
 </style>
 
 <div class="wrap">
-  <section class="hero">
-    <span class="eyebrow">The email</span>
-    <h1>Mexico, from the official numbers.</h1>
-    <p class="thesis">Once a week. I start with the official releases from Banxico, INEGI, and the government record, then use reporting to explain what changed. The email is free.</p>
-  </section>
+  <section class="lp">
+    <span class="eyebrow">The weekly email · free</span>
+    <h1>The week's major changes in Mexico.</h1>
+    <p class="thesis">What happened in politics, the economy, business, security, and U.S.–Mexico relations, all through the lens of first-party data, with a link to every source so you can come to your own conclusions.</p>
 
-  <!-- Buttondown embed. Replace `mexicobrief` below with your Buttondown username once the account exists. Keyless: posts straight to Buttondown, works on a static host. -->
-  <div class="sub">
-    <div class="lab">The brief — free</div>
-    <form action="https://buttondown.email/api/emails/embed-subscribe/mexicobrief" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/mexicobrief','popupwindow')">
-      <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
-      <input type="hidden" value="1" name="embed" />
-      <button type="submit">Get the brief</button>
-    </form>
-    <div class="fine">One email a week, on Monday mornings. Unsubscribe anytime.</div>
-    <!-- past-issue link removed until the rebuilt weekly email ships (was pointing at an obsolete sample) -->
-  </div>
-
-  <ul class="parts vprops">
-    <li><b>The core numbers.</b> The peso, inflation, the Banxico rate, remittances, US–Mexico trade, and tariff actions, pulled from the institutions that produce them, each with its as-of date.</li>
-    <li><b>The week in one read.</b> Politics, companies, fintech, and deals, summarized from the original reporting, with a link to every source.</li>
-    <li><b>Sourced throughout.</b> Each figure links to the institution that published it, and each story to the original reporting.</li>
-  </ul>
-
-  <section class="blk">
-    <h2>Why it's different</h2>
-    <p>I start with the official release from Banxico, INEGI, or the government record, then use reporting to explain what changed. Each figure is dated so you can see how current it is, and linked so you can check it.</p>
-  </section>
-
-  <section class="blk">
-    <h2>What's inside</h2>
-    <ul class="parts">
-      <li><b>Top of the week.</b> The two or three stories that mattered most, ranked. The length follows the news, so a quiet week is shorter.</li>
-      <li><b>The board.</b> The peso, headline and core inflation, the Banxico rate, remittances, and two-way US–Mexico trade. Each shows the latest value, the direction it moved, and the date it is from.</li>
-      <li><b>The rooms.</b> Politics, companies and deals, economy, payments and fintech, US–Mexico. A room appears only when something happened in it.</li>
-      <li><b>What to watch.</b> The dated calendar ahead: rate decisions, inflation releases, USMCA milestones.</li>
-    </ul>
-  </section>
-
-  <section class="blk">
-    <h2>How it's made</h2>
-    <p>Code pulls the board from Banxico, INEGI, and the US Census Bureau. I review the figures before each issue goes out. The lead summaries are written from the source articles' own text, and every headline links to it. Tariff and trade items come from the US Federal Register, in the government's own words.</p>
-    <p>I review every issue before it sends.</p>
-  </section>
-
-  <section class="blk">
-    <h2>The rest of the site</h2>
-    <p>The weekly covers what moved this week. The <a class="inline" href="./">Briefing</a> answers standing questions about Mexico's economy, security, and politics, refreshed every six hours. See the <a class="inline" href="./economy.html">Economy</a> room, the state-by-state <a class="inline" href="./atlas.html">Atlas</a>, or the <a class="inline" href="./sources.html">Sources</a> catalog behind it.</p>
+    <!-- Buttondown embed. Replace `mexicobrief` with the real username once the account exists. -->
+    <div class="signup">
+      <form action="https://buttondown.email/api/emails/embed-subscribe/mexicobrief" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/mexicobrief','popupwindow')">
+        <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
+        <input type="hidden" value="1" name="embed" />
+        <button type="submit">Subscribe</button>
+      </form>
+      <div class="fine">Free. One email a week.</div>
+    </div>
   </section>
 </div>
 
