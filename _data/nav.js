@@ -6,9 +6,10 @@
 // About lives in the footer. `match` lists the pages that light "Topics" as the active section.
 module.exports = [
   { label: 'Brief', href: '/' },
+  { label: 'The Read', href: '/the-read.html' },   // top-level, next to Brief (Alan 2026-07-12): the analysis is a first-class surface, not a dropdown item
   {
     label: 'Topics',
-    match: ['/economy.html', '/money.html', '/payments.html', '/trade.html', '/politics.html', '/security.html', '/society.html', '/us-mexico.html', '/trade.html', '/model.html', '/the-read.html'],
+    match: ['/economy.html', '/money.html', '/payments.html', '/trade.html', '/politics.html', '/security.html', '/society.html', '/us-mexico.html', '/trade.html', '/model.html'],
     menu: [
       { group: 'Sections', links: [
         { label: 'Economy', href: '/economy.html' },
@@ -21,7 +22,6 @@ module.exports = [
         { label: 'U.S.–Mexico', href: '/us-mexico.html' },
       ] },
       { group: 'Lab', links: [
-        { label: 'The Read', href: '/the-read.html' },
         { label: 'The Model', href: '/model.html' },
         // Decision Journal cut from the nav (Fable 2026-07-11): a standalone tool disconnected from the
         // briefing confuses even its owner. It returns only when it's fed by real briefing items ("pin
@@ -31,6 +31,5 @@ module.exports = [
   },
   { label: 'Atlas', href: '/atlas.html' },
   { label: 'Sources', href: '/sources.html' },
-  { label: 'About', href: '/about.html' },
-  { label: 'Subscribe', href: '/weekly.html', cta: true },
+  { label: 'Subscribe', href: '/weekly.html', cta: true },   // About moved to the footer (Fable nav ruling); it's already in footernav.js
 ];
