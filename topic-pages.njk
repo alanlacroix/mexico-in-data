@@ -237,6 +237,13 @@ const signed=(v,n=1,suffix='')=>`${v>0?'+':''}${fmt(v,n)}${suffix}`;
 const pct=(a,b)=>b?((a-b)/Math.abs(b))*100:null;
 const dateObj=d=>new Date(/^\d{4}$/.test(d)?`${d}-01-01T00:00:00Z`:/^\d{4}-\d{2}$/.test(d)?`${d}-01T00:00:00Z`:`${d}T00:00:00Z`);
 const dateLabel=d=>dateObj(d).toLocaleDateString('en-US',{month:'short',year:'numeric',timeZone:'UTC'});
+const observationPeriod=meta=>{
+  const vintage=String(meta?.vintage||''),match=/^(\d{4})-(\d{2})/.exec(vintage);
+  if(!match)return vintage;
+  const end=new Date(`${match[1]}-${match[2]}-01T00:00:00Z`).toLocaleDateString('en-US',{month:'short',timeZone:'UTC'});
+  const cumulative=/acumulado del año|year[- ]to[- ]date|enero[–-]/i.test(`${meta?.units||''} ${meta?.notes||''}`);
+  return cumulative?(end==='Jan'?`Jan ${match[1]}`:`Jan–${end} ${match[1]}`):`${end} ${match[1]}`;
+};
 const quarterLabel=d=>{const x=dateObj(d);return `Q${Math.floor(x.getUTCMonth()/3)+1} ${x.getUTCFullYear()}`;};
 const shortDate=d=>dateObj(d).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});
 const seriesId=id=>/\/series\/([A-Za-z0-9._-]+)/.exec(meta(id).sourceUrl||'')?.[1]||'';
@@ -352,12 +359,12 @@ function economyTopic(){
     modulesTitle:'Activity, prices, and financial conditions',
     modules:[
       {k:'Activity',title:'Monthly activity and GDP are separate checks',value:`IGAE ${signed(G.value,2,'%')} YoY · GDP ${signed(last(s('banxico-pib-crecimiento')).value,2,'%')} YoY`,text:'IGAE moves monthly; GDP is the slower quarterly confirmation. Their observation dates stay separate.',href:'/chart.html?v=banxico-igae,banxico-pib-crecimiento',link:'Open growth charts →'},
-      {k:'Prices and rates',title:'Core inflation is above headline inflation',value:`Core ${fmt(C.value,2)}% · headline ${fmt(I.value,2)}% · rate ${fmt(R.value,2)}%`,text:'The three lines answer different questions. The chart keeps their exact observations together without claiming one caused another.',href:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente,banxico-tasa-objetivo',link:'See the underlying series →'},
+      {k:'Prices and rates',title:'Core inflation is above headline inflation',value:`Core ${fmt(C.value,2)}% · headline ${fmt(I.value,2)}% · rate ${fmt(R.value,2)}%`,text:'Headline and core inflation show different parts of price pressure. The policy rate shows where Banxico has set borrowing conditions.',href:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente,banxico-tasa-objetivo',link:'See the underlying series →'},
       {k:'Financial conditions',title:`The peso is ${fmt(Math.abs(pct(P.value,Py.value)),1)}% ${P.value<Py.value?'stronger':'weaker'} than a year ago`,value:`${fmt(P.value,2)} MXN/USD`,text:'The rate gap is one thing to compare with the currency. US rates, trade and risk also matter.',href:'/chart.html?v=banxico-usdmxn-fix,banxico-tasa-objetivo,fred-fedfunds',link:'Compare the peso and rates →'}
     ],
     updates:[
       {type:'Official data',title:`${dateLabel(I.date)} inflation fell to ${fmt(I.value,2)}%`,text:`The annual rate moved ${I.value<Ip.value?'down':'up'} ${fmt(Math.abs(I.value-Ip.value),2)} percentage points from ${dateLabel(Ip.date)}. Core inflation is ${fmt(C.value,2)}%.`,source:'INEGI / Banxico',href:sourceUrl('banxico-inflacion'),date:dateLabel(I.date)},
-      {type:'Official data',title:`${dateLabel(G.date)} activity was ${signed(G.value,2,'%')} from a year earlier`,text:'This is the latest IGAE observation in the local feed.',source:'INEGI / Banxico',href:sourceUrl('banxico-igae'),date:dateLabel(G.date)},
+      {type:'Official data',title:`${dateLabel(G.date)} activity was ${signed(G.value,2,'%')} from a year earlier`,text:'This is the latest monthly IGAE reading.',source:'INEGI / Banxico',href:sourceUrl('banxico-igae'),date:dateLabel(G.date)},
       {type:'Policy',title:`Banxico's target rate is ${fmt(R.value,2)}%`,text:'The latest setting remains above both headline and core inflation.',source:'Banxico',href:sourceUrl('banxico-tasa-objetivo'),date:shortDate(R.date)}
     ],
     upcoming:eventMatches(/CPI|INPC|IGAE|GDP|Banxico monetary|expectations/i,5),
@@ -378,7 +385,7 @@ function paymentsTopic(){
     nowTitle:`SPEI processed ${fmt(S.value/1e6,0)} million transfers in ${dateLabel(S.date)}.`,
     nowText:`In ${quarterLabel(D.date)}, Banxico reports <b>${fmt(D.value/1000,0)}bn MXN</b> in debit-card point-of-sale spending and <b>${fmt(C.value/1000,0)}bn MXN</b> on credit cards.${debitReviewText}`,
     cards:[
-      {label:'SPEI transfers · monthly',value:fmt(S.value/1e6,0),unit:'million',change:deltaText(pct(S.value,Sp.value),'%',1)+` from ${dateLabel(Sp.date)}`,context:'Third-party transfers. The local feed is not yet long enough for annual growth.',source:'Banxico',sourceHref:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date),href:'/chart.html?v=banxico-spei-operaciones'},
+      {label:'SPEI transfers · monthly',value:fmt(S.value/1e6,0),unit:'million',change:deltaText(pct(S.value,Sp.value),'%',1)+` from ${dateLabel(Sp.date)}`,context:'Third-party transfers. The series shown here does not yet include a year-earlier comparison.',source:'Banxico',sourceHref:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date),href:'/chart.html?v=banxico-spei-operaciones'},
       {label:'Debit-card spending · quarter',value:fmt(D.value/1000,0),unit:'bn MXN',change:Dy?deltaText(pct(D.value,Dy.value),'%',1)+' vs a year ago':deltaText(pct(D.value,Dp.value),'%',1)+' from previous quarter',context:debitReview?'Banxico reports this point, but the jump from the previous quarter is flagged for review.':'Nominal point-of-sale value.',source:'Banxico',sourceHref:sourceUrl('banxico-tpv-debito-monto'),date:quarterLabel(D.date),href:'/chart.html?v=banxico-tpv-debito-monto'},
       {label:'Credit-card spending · quarter',value:fmt(C.value/1000,0),unit:'bn MXN',change:Cy?deltaText(pct(C.value,Cy.value),'%',1)+' vs a year ago':deltaText(pct(C.value,Cp.value),'%',1)+' from previous quarter',context:'Nominal point-of-sale value on credit cards.',source:'Banxico',sourceHref:sourceUrl('banxico-tpv-credito-monto'),date:quarterLabel(C.date),href:'/chart.html?v=banxico-tpv-credito-monto'},
       {label:'Card e-commerce · quarter',value:fmt(E.value/1000,0),unit:'bn MXN',change:Ey?deltaText(pct(E.value,Ey.value),'%',1)+' vs a year ago':'',context:'Online card spending. The series currently ends one quarter earlier.',source:'Banxico',sourceHref:sourceUrl('banxico-ecommerce-monto'),date:quarterLabel(E.date),href:'/chart.html?v=banxico-ecommerce-monto'},
@@ -388,11 +395,11 @@ function paymentsTopic(){
     modules:[
       {k:'The rails',title:'SPEI is the useful operating pulse',value:`${fmt(S.value/1e6,0)}m operations · ${dateLabel(S.date)}`,text:'Volume says more about everyday use than the enormous nominal amount transferred through the system.',href:'/chart.html?v=banxico-spei-operaciones,banxico-spei-monto',link:'Open SPEI data →'},
       {k:'Cards',title:'Debit and credit do not move together every quarter',value:`Debit ${deltaText(pct(D.value,Dp.value),'%',1)} · credit ${deltaText(pct(C.value,Cp.value),'%',1)}`,text:'The separate series help distinguish a broad card shift from a move concentrated in one rail.',href:'/chart.html?v=banxico-tpv-debito-monto,banxico-tpv-credito-monto',link:'Compare the card series →'},
-      {k:'Online',title:'E-commerce has its own, slower clock',value:`${fmt(E.value/1000,0)}bn MXN · ${quarterLabel(E.date)}`,text:'The observation date stays visible so an older quarterly print never looks current.',href:'/chart.html?v=banxico-ecommerce-monto,banxico-ecommerce-ops',link:'Open e-commerce →'},
+      {k:'Online',title:'E-commerce has its own, slower clock',value:`${fmt(E.value/1000,0)}bn MXN · ${quarterLabel(E.date)}`,text:'The latest e-commerce reading is older than the other payment series, so its date matters.',href:'/chart.html?v=banxico-ecommerce-monto,banxico-ecommerce-ops',link:'Open e-commerce →'},
       {k:'Cash',title:'Currency in circulation is still rising in nominal pesos',value:`${fmt(Cash.value/1e6,2)}tn MXN · ${dateLabel(Cash.date)}`,text:CashY?`${deltaText(pct(Cash.value,CashY.value),'%',1)} from a year earlier. Inflation and economic growth both affect this total.`:'Inflation and economic growth both affect this total.',href:'/chart.html?v=banxico-circulante',link:'Open cash in circulation →'}
     ],
     updates:[
-      {type:'System data',title:`SPEI processed ${fmt(S.value/1e6,0)} million transfers in ${dateLabel(S.date)}`,text:`That was ${fmt(Math.abs(pct(S.value,Sp.value)),1)}% ${S.value>=Sp.value?'above':'below'} ${dateLabel(Sp.date)}. The local series begins in ${dateLabel(spei[0].date)}, so no annual comparison is shown yet.`,source:'Banxico',href:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date)},
+      {type:'System data',title:`SPEI processed ${fmt(S.value/1e6,0)} million transfers in ${dateLabel(S.date)}`,text:`That was ${fmt(Math.abs(pct(S.value,Sp.value)),1)}% ${S.value>=Sp.value?'above':'below'} ${dateLabel(Sp.date)}. The history shown here begins in ${dateLabel(spei[0].date)}, so there is no year-earlier comparison yet.`,source:'Banxico',href:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date)},
       {type:'Cards',title:`Debit-card point-of-sale value was ${fmt(D.value/1000,0)}bn MXN`,text:`The latest point was ${fmt(Math.abs(pct(D.value,Dp.value)),1)}% ${D.value>=Dp.value?'above':'below'} the previous quarter.${debitReview?' That jump is flagged for review.':''}`,source:'Banxico',href:sourceUrl('banxico-tpv-debito-monto'),date:quarterLabel(D.date)},
       {type:'Cards',title:`Credit-card point-of-sale value was ${fmt(C.value/1000,0)}bn MXN`,text:`The latest point was ${fmt(Math.abs(pct(C.value,Cp.value)),1)}% ${C.value>=Cp.value?'above':'below'} the previous quarter.`,source:'Banxico',href:sourceUrl('banxico-tpv-credito-monto'),date:quarterLabel(C.date)}
     ],
@@ -403,7 +410,7 @@ function paymentsTopic(){
     ],
     upcomingTitle:'Data schedule',
     sources:[topicSource('banxico-spei-operaciones'),topicSource('banxico-tpv-debito-monto'),topicSource('banxico-tpv-credito-monto'),topicSource('banxico-ecommerce-monto'),topicSource('banxico-circulante')],
-    method:'These are system totals, not a household survey. Nominal transaction value and transaction count answer different questions, so they stay separate. “Up” is not automatically colored as good.'
+    method:'These are system totals, not a household survey. Nominal transaction value and transaction count answer different questions, so they are shown separately.'
   };
 }
 
@@ -425,7 +432,7 @@ function tradeTopic(){
       {label:'Trade balance · monthly',value:(B.value>=0?'+':'−')+'$'+fmt(Math.abs(B.value)/1e6,1),unit:'bn',change:'Exports minus imports',context:'A monthly balance is noisy; the long-run relationship matters more.',source:'Banxico',sourceHref:sourceUrl('banxico-trade-balance'),date:dateLabel(B.date),href:'/chart.html?v=banxico-trade-balance'},
       {label:'Exports to the US',value:fmt(us.share,1),unit:'%',change:'Share of goods exports',context:`Canada is second at ${fmt(canada.share,1)}%.`,source:'UN COMTRADE',sourceHref:comtradePartnerUrl,date:String(DB.partners.year),href:'#topicModules'}
     ],
-    evidence:{k:'Scale and balance',title:'Exports and imports have risen together',sub:'Trailing 12-month goods trade · US$ billions',visual:chartSVG({series:lines,yFormat:v=>'$'+fmt(v,0),label:'Mexico goods exports and imports, trailing twelve months'}),legend:legend(lines),table:dataTable(lines),note:'Trailing 12-month sums reduce seasonal noise. Goods only. The chart uses Banxico’s Mexico-side ledger.',sources:[topicSource('banxico-exports-total','Exports'),topicSource('banxico-imports-total','Imports')],read:['Mexico imports parts and materials, assembles them, and exports finished goods. That is why both lines usually rise together.',`A surplus is not automatically good and a deficit is not automatically bad. The composition of trade matters.`]},
+    evidence:{k:'Scale and balance',title:'Exports and imports have risen together',sub:'Trailing 12-month goods trade · US$ billions',visual:chartSVG({series:lines,yFormat:v=>'$'+fmt(v,0),label:'Mexico goods exports and imports, trailing twelve months'}),legend:legend(lines),table:dataTable(lines),note:'Trailing 12-month sums reduce seasonal noise. Goods only. The chart uses Banxico’s Mexico-side ledger.',sources:[topicSource('banxico-exports-total','Exports'),topicSource('banxico-imports-total','Imports')],read:['Part of the reason both lines rise together is that Mexico imports parts and materials, then exports finished goods.',`A surplus is not automatically good and a deficit is not automatically bad. The composition of trade matters.`]},
     composition:compositionEvidence(products),
     modulesTitle:'Products, partners, and inputs',
     modules:[
@@ -457,31 +464,31 @@ function politicsTopic(){
     nowTitle:`The next dated item is ${official[0].label}.`,
     nowText:`It is scheduled for <b>${shortDate(official[0].date)}, ${dateObj(official[0].date).getUTCFullYear()}</b>. The calendar below keeps political events, fiscal deadlines and election dates tied to their original source.`,
     cards,
-    evidence:{k:'Political calendar',title:'The next official dates, in order',sub:'Political events and fiscal deadlines in the local source registry',visual:timeline(timelineItems),legend:'',table:timelineTable(timelineItems),visualLabel:'Timeline',tableLabel:'Details',note:'Dates come from the event registry. Approximate dates remain labeled approximate in the snapshot and calendar.',sources:sourceItems,read:['This is the order of the official dates currently in the registry and what each one controls.',`It does not measure political support, predict outcomes, or turn a scheduled event into a result.`]},
+    evidence:{k:'Political calendar',title:'The next official dates, in order',sub:'Political events and fiscal deadlines, ordered by date',visual:timeline(timelineItems),legend:'',table:timelineTable(timelineItems),visualLabel:'Timeline',tableLabel:'Details',note:'Dates refer to the event or official publication, not the day this page was checked. Approximate dates are labeled.',sources:sourceItems,read:['These are the next dates on the political and fiscal calendar, and what each one controls.',`A scheduled event is not a prediction of what will happen.`]},
     modulesTitle:'What the calendar controls',
     modules:official.slice(0,3).map(e=>({k:e.kind==='fiscal'?'Fiscal process':'Political process',title:e.label,value:`${shortDate(e.date)}, ${dateObj(e.date).getUTCFullYear()}`,text:e.mechanism||'Open the official record for details.',href:e.sourceUrl,link:`Open ${e.source} ↗`})),
     updates:updates.length?updates:[{type:'Calendar',title:official[0].label,text:official[0].mechanism||'Open the original source for the full record.',source:official[0].source,href:official[0].sourceUrl,date:shortDate(official[0].date)}],
     upcoming:official.slice(0,5),
     sources:sourceItems,
-    method:'The page publishes only dated items already present in the source registry. It does not infer seat counts, polling averages or outcomes. When the registry is empty, the page fails closed instead of filling the gaps with prose.'
+    method:'This page includes only political and fiscal dates tied to an original source. It does not infer seat counts, polling averages, or outcomes.'
   };
 }
 
 function societyTopic(){
   const wage=monthlyLast(s('banxico-salario-minimo')),nom=indexed(wage),real=realWage(),W=last(wage),rem=last(s('banxico-remesas'));
   const RW=last(real),RWy=yearAgo(real,RW),remY=yearAgo(s('banxico-remesas'),rem),wageYear=dateObj(W.date).getUTCFullYear(),demo=DB.demographics,vitals=DB.vitals,crime=DB.crime;
-  const pop=demo?.population?.latest,popYear=demo?.latestYear,births=vitals?.births?.latest,deaths=vitals?.deaths?.latest,crimeTotal=crime?.values?Object.values(crime.values).reduce((t,v)=>t+Number(v||0),0):null,crimeYear=crime?.meta?.vintage;
+  const pop=demo?.population?.latest,popYear=demo?.latestYear,births=vitals?.births?.latest,deaths=vitals?.deaths?.latest,crimeTotal=crime?.values?Object.values(crime.values).reduce((t,v)=>t+Number(v||0),0):null,crimePeriod=observationPeriod(crime?.meta);
   if(!W||!RW||!rem||!Number.isFinite(pop)||!births||!deaths||!Number.isFinite(crimeTotal))throw new Error('Society inputs are incomplete');
   const lines=[{name:'Cash minimum wage',points:nom,color:INK,format:v=>fmt(v,0)},{name:'After inflation',points:real,color:GREEN,format:v=>fmt(v,0)}];
   return {
     title:'Society & security',scope:'Living standards, population, household flows, and reported crime.',asof:'Observation dates vary by measure · annual figures stay visibly annual.',
-    nowTitle:RWy?`The general minimum wage is $${fmt(W.value,2)} a day. After inflation, it is ${fmt(Math.abs(pct(RW.value,RWy.value)),1)}% ${RW.value>=RWy.value?'higher':'lower'} than a year earlier.`:`The general minimum wage is $${fmt(W.value,2)} a day.`,
-    nowText:`The CONAPO population projection is <b>${fmt(pop/1e6,1)} million</b> for ${popYear}. The municipal SESNSP file contains <b>${compact(crimeTotal)}</b> reported common-jurisdiction offenses for ${crimeYear}.`,
+    nowTitle:RWy?`The general minimum wage is MX$${fmt(W.value,2)} a day. After inflation, it is ${fmt(Math.abs(pct(RW.value,RWy.value)),1)}% ${RW.value>=RWy.value?'higher':'lower'} than a year earlier.`:`The general minimum wage is MX$${fmt(W.value,2)} a day.`,
+    nowText:`The CONAPO population projection is <b>${fmt(pop/1e6,1)} million</b> for ${popYear}. The municipal SESNSP file contains <b>${compact(crimeTotal)}</b> reported common-jurisdiction offenses in ${crimePeriod}.`,
     cards:[
-      {label:'General minimum wage',value:'$'+fmt(W.value,2),unit:'per day',change:RWy?deltaText(pct(RW.value,RWy.value),'%',1)+` real vs ${wageYear-1}`:'',context:'The statutory general wage. The change shown is after inflation.',source:'CONASAMI / Banxico',sourceHref:sourceUrl('banxico-salario-minimo'),date:`Effective ${wageYear}`,href:'/chart.html?v=banxico-salario-minimo'},
+      {label:'General minimum wage',value:'MX$'+fmt(W.value,2),unit:'per day',change:RWy?deltaText(pct(RW.value,RWy.value),'%',1)+` real vs ${wageYear-1}`:'',context:'The statutory general wage. The change shown is after inflation.',source:'CONASAMI / Banxico',sourceHref:sourceUrl('banxico-salario-minimo'),date:`Effective ${wageYear}`,href:'/chart.html?v=banxico-salario-minimo'},
       {label:'Population · projection',value:fmt(pop/1e6,1),unit:'million',change:`Median age ${demo.medianAge}`,context:'CONAPO projection. The last census anchor remains in the source data.',source:'CONAPO',sourceHref:demo.sourceUrl,date:String(popYear)},
       {label:'Registered births',value:compact(births.value),change:'Annual registration count',context:'Year of registration, which is not always the year of birth.',source:'INEGI · ENR',sourceHref:vitals.births.sourceUrl,date:String(births.year)},
-      {label:'Reported offenses · municipal total',value:compact(crimeTotal),change:`Across ${compact(crime.meta.rowCount)} municipalities`,context:'Raw reported common-jurisdiction offenses. This is not a population-adjusted risk rate.',source:'SESNSP',sourceHref:crime.meta.sourceUrl,date:String(crimeYear)}
+      {label:'Reported offenses · municipal total',value:compact(crimeTotal),change:`Across ${compact(crime.meta.rowCount)} municipalities`,context:'Cumulative reported common-jurisdiction offenses for the year to date. This is not a population-adjusted risk rate.',source:'SESNSP',sourceHref:crime.meta.sourceUrl,date:crimePeriod}
     ],
     evidence:{k:'Living standards',title:'The real-wage line separates pesos from purchasing power',sub:`Index · ${dateLabel(nom[0].date)} = 100`,visual:chartSVG({series:lines,yFormat:v=>fmt(v,0),label:'Nominal and inflation-adjusted general minimum wage index'}),legend:legend(lines),table:dataTable(lines),note:'The real line adjusts the statutory general minimum wage with the official consumer-price index. It is not the wage of the typical worker.',sources:[topicSource('banxico-salario-minimo','General minimum wage'),topicSource('banxico-inpc','Consumer-price index')],read:['The announced wage tells you how many pesos someone receives. The real line asks how much more those pesos can buy.',`Minimum-wage gains do not describe everyone. Informal work, hours, regional wages and enforcement all matter.`]},
     modulesTitle:'Wages, household flows, population, and security',
@@ -489,15 +496,15 @@ function societyTopic(){
       {k:'Living standards',title:'The real-wage line is the better comparison',value:`Index ${fmt(RW.value,0)} · ${dateLabel(RW.date)}`,text:'The general minimum wage is deflated with the official consumer-price index. It is not the wage of the typical worker.',href:'#topic-evidence',link:'Open the evidence →'},
       {k:'Household income',title:'Remittances remain a major household flow',value:`$${fmt(rem.value/1000,1)}bn · ${dateLabel(rem.date)}`,text:remY?`${deltaText(pct(rem.value,remY.value),'%',1)} from a year earlier. The dollar amount and the peso exchange rate both matter to recipients.`:'The dollar amount and the peso exchange rate both matter to recipients.',href:'/chart.html?v=banxico-remesas',link:'Open remittances →'},
       {k:'Population',title:'Births and deaths are annual registered events',value:`${compact(births.value)} births · ${compact(deaths.value)} deaths · ${births.year}`,text:'Registration year and occurrence year can differ. The source file keeps that caveat with the series.',href:vitals.births.sourceUrl,link:'Open the births release ↗'},
-      {k:'Security',title:'The municipal file shows where reports are concentrated',value:`${compact(crimeTotal)} reported offenses · ${crimeYear}`,text:'Municipal totals are not risk rates. Reporting behavior, population and offense mix all matter.',href:crime.meta.sourceUrl,link:'Open the SESNSP source ↗'}
+      {k:'Security',title:'The municipal file shows where reports are concentrated',value:`${compact(crimeTotal)} reported offenses · ${crimePeriod}`,text:'Municipal totals are not risk rates. Reporting behavior, population and offense mix all matter.',href:crime.meta.sourceUrl,link:'Open the SESNSP source ↗'}
     ],
     updates:[
-      {type:'Wages',title:`The general minimum wage is $${fmt(W.value,2)} a day`,text:'The real comparison above adjusts the full history for consumer prices.',source:'CONASAMI / Banxico',href:sourceUrl('banxico-salario-minimo'),date:dateLabel(W.date)},
+      {type:'Wages',title:`The general minimum wage is MX$${fmt(W.value,2)} a day`,text:'The real comparison above adjusts the full history for consumer prices.',source:'CONASAMI / Banxico',href:sourceUrl('banxico-salario-minimo'),date:dateLabel(W.date)},
       {type:'Population',title:`The ${popYear} population projection is ${fmt(pop/1e6,1)} million`,text:`The same source file reports a median age of ${demo.medianAge}.`,source:'CONAPO',href:demo.sourceUrl,date:String(popYear)},
-      {type:'Security data',title:`The municipal layer totals ${compact(crimeTotal)} reported offenses`,text:'This is a raw annual count and stays separate from homicide records and survey measures.',source:'SESNSP',href:crime.meta.sourceUrl,date:String(crimeYear)}
+      {type:'Security data',title:`The municipal layer totals ${compact(crimeTotal)} reported offenses for ${crimePeriod}`,text:'This is a year-to-date count. It stays separate from homicide records and survey measures.',source:'SESNSP',href:crime.meta.sourceUrl,date:crimePeriod}
     ],
     upcoming:eventMatches(/unemployment|remittance|wage|poverty|population|migration|employment/i,5),
-    sources:[topicSource('banxico-salario-minimo','CONASAMI / Banxico · minimum wage'),topicSource('banxico-inpc','INEGI / Banxico · consumer prices'),topicSource('banxico-remesas','Banxico · remittances'),{label:'CONAPO · population projections',href:demo.sourceUrl,date:String(popYear)},{label:'INEGI · registered births',href:vitals.births.sourceUrl,date:String(births.year)},{label:'INEGI · registered deaths',href:vitals.deaths.sourceUrl,date:String(deaths.year)},{label:'SESNSP · municipal reported offenses',href:crime.meta.sourceUrl,date:String(crimeYear)}],
+    sources:[topicSource('banxico-salario-minimo','CONASAMI / Banxico · minimum wage'),topicSource('banxico-inpc','INEGI / Banxico · consumer prices'),topicSource('banxico-remesas','Banxico · remittances'),{label:'CONAPO · population projections',href:demo.sourceUrl,date:String(popYear)},{label:'INEGI · registered births',href:vitals.births.sourceUrl,date:String(births.year)},{label:'INEGI · registered deaths',href:vitals.deaths.sourceUrl,date:String(deaths.year)},{label:'SESNSP · municipal reported offenses',href:crime.meta.sourceUrl,date:crimePeriod}],
     method:'Every measure keeps its own observation period. Population is a projection; births and deaths are registrations; the security layer is a raw count of reported offenses. Those measures are not blended into one score.'
   };
 }

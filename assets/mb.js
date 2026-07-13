@@ -67,7 +67,8 @@ export function fmtRem(v){ return {v:'$'+enNum(Math.round(v)), s:'mn USD'}; }
 export function stampFor(m, id){
   const cad=(m.cadence||'')+'', v=m.vintage;
   if(id==='banxico-tasa-objetivo') return {cls:'',t:'CURRENT SETTING'};   // a discrete Banxico decision, not live market data
-  if(/4-hour|business-daily/.test(cad)) return {cls:'live',t:'● LIVE'};   // genuinely live market data (the peso FIX)
+  if(/4-hour/.test(cad)) return {cls:'live',t:'● LIVE'};                 // intraday feed (fuel prices)
+  if(/business-daily/.test(cad)) return {cls:'',t:'DAILY · '+dayShort(v)}; // Banxico FIX is a daily reference, not a live market quote
   if(/daily/.test(cad)) return {cls:'',t:'DAILY · '+dayShort(v)};
   if(/weekly/.test(cad)) return {cls:'',t:'WEEKLY · '+dayShort(v)};
   if(/monthly/.test(cad)) return {cls:'',t:'MONTHLY · '+monLong(v)+' data'};

@@ -1,10 +1,17 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {
   PUBLIC_TOPIC_AREAS, isSafeHttpUrl, validateNarrativeText,
   validateSeriesDocument, validateHealthDocument, validateHs4Hierarchy,
   validateTopicAreasDocument,
 } from '../lib/publication-contract.js';
 import { observationPeriodEnd, freshnessStatus, stalenessFlag } from '../lib/freshness.js';
+
+// mb.js is shipped as a browser ESM file in a package that otherwise contains
+// CommonJS pipeline scripts. Load that exact source as an ESM data URL so this
+// contract test exercises the production helper without changing package mode.
+const mbSource = fs.readFileSync(new URL('../../assets/mb.js', import.meta.url), 'utf8');
+const { stampFor } = await import(`data:text/javascript;base64,${Buffer.from(mbSource).toString('base64')}`);
 
 const NOW = new Date('2026-07-13T12:00:00Z');
 const baseSeries = () => ({
@@ -38,6 +45,17 @@ assert.equal(freshnessStatus({ cadence: 'annual' }, '2025', NOW).stale, false);
 assert.equal(freshnessStatus({ cadence: '~5-yearly' }, '2020', NOW).key, 'multi-year');
 assert.equal(stalenessFlag({ cadence: 'quarterly' }, '2024-10', NOW)?.startsWith('stale_quarter_'), true);
 assert.equal(stalenessFlag({ cadence: 'monthly' }, '2026-04-01', NOW), null);
+
+assert.deepEqual(
+  stampFor({ cadence: 'business-daily', vintage: '2026-07-13' }, 'banxico-usdmxn-fix'),
+  { cls: '', t: 'DAILY · Jul 13' },
+  'Banxico FIX must be labeled as a dated daily reference, not a live quote',
+);
+assert.deepEqual(
+  stampFor({ cadence: '4-hourly', vintage: '2026-07-13' }, 'cre-gasolina-regular'),
+  { cls: 'live', t: '● LIVE' },
+  'genuinely intraday feeds should retain the live label',
+);
 
 {
   const doc = baseSeries();

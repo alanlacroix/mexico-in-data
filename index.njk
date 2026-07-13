@@ -349,7 +349,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
     <details class="primerbox">
       <summary>New to Mexico: the basics</summary>
       <p class="country">
-        Mexico has <b>131 million people</b> and a <b>~$1.9 trillion economy</b>, the world's ~14th-largest.<a class="ref" href="/economy.html" title="World Bank">1</a>
+        Mexico has <b>131 million people</b> and a <b>~US$1.9 trillion economy</b>, the world's 13th-largest in 2024.<a class="ref" href="/economy.html" title="World Bank, 2024">1</a>
         It is the <b>largest US trading partner</b>. Mexico mostly sells manufactured goods abroad, and about <b>80% of its exports go to the United States</b>.<a class="ref" href="/us-mexico.html" title="US Census Bureau; INEGI / Banxico balance of trade">2</a>
         It elects a president every six years. <b>Claudia Sheinbaum</b> of Morena holds the office through 2030.<a class="ref" href="/politics.html" title="INE; Presidencia">3</a>
       </p>
@@ -435,7 +435,7 @@ function liveText(s){
   try{
     const parts=s.live.map(L=>{ const ser=S[L.series]; if(!ser||!ser.data||!ser.data.length) throw 0;
       const f=fmt(L.series, ser.data.at(-1).value, ser.meta&&ser.meta.units); return L.tmpl.replace('{v}', f.v); });
-    let t=parts.join(', '); t=t.charAt(0).toUpperCase()+t.slice(1); if(!/[.!?]$/.test(t)) t+='.'; return t;
+    let t=parts.join('; '); t=t.charAt(0).toUpperCase()+t.slice(1); if(!/[.!?]$/.test(t)) t+='.'; return t;
   }catch(e){ return s.text; }
 }
 // The Brief (Fable 2026-07-12): 3-5 rubric-ranked items, one paragraph each. Item 1 = the lead story
@@ -469,7 +469,7 @@ function renderStood(F){
     rows.push({tag:'moved',t:`${m.label} ${dir} ${val}${flag}.`,href:'/economy.html'});
   });
   const c=F.cross||{};
-  if(c.realRate&&c.realRate.value!=null) rows.push({tag:'Real rate',t:`The real policy rate is ${c.realRate.value}%, the Banxico rate minus core inflation.`,href:'/chart.html?v=banxico-tasa-objetivo,banxico-inflacion-subyacente'});
+  if(c.realRate&&c.realRate.value!=null) rows.push({tag:'Rate–core gap',t:`Banxico's policy rate is ${c.realRate.value} percentage points above current core inflation.`,href:'/chart.html?v=banxico-tasa-objetivo,banxico-inflacion-subyacente'});
   if(c.rateSpread&&c.rateSpread.value!=null) rows.push({tag:'Rate gap',t:`Mexico's policy rate runs ${c.rateSpread.value} points above the US Fed's.`,href:'/chart.html?v=d-rate-gap'});
   if(!rows.length) return '<div class="area-empty">Nothing stood out in the numbers this week.</div>';
   return rows.map(r=>`<a class="stoodrow" href="${r.href}"><span class="stag">${r.tag}</span><span class="stxt">${esc(r.t)}</span></a>`).join('');

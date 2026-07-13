@@ -47,7 +47,7 @@ function board() {
   // Each board item carries its series id + a {v} template, so the PAGE re-renders the number live
   // from the same series the board reads, formatted the same way — the prose can never drift from
   // the board (the 17.60-vs-17.48 bug). The baked text stays as the no-JS/fetch-fail fallback.
-  const peso = series('banxico-usdmxn-fix'); if (peso.length) items.push({ id: 'board-peso', label: 'the peso', text: `the peso trades at ${peso.at(-1).v.toFixed(2)} to the dollar`, source: 'Banco de México', url: '/economy.html', series: 'banxico-usdmxn-fix', tmpl: 'the peso trades at {v} to the dollar' });
+  const peso = series('banxico-usdmxn-fix'); if (peso.length) items.push({ id: 'board-peso', label: 'the peso', text: `the peso trades at ${peso.at(-1).v.toFixed(2)} pesos to the dollar`, source: 'Banco de México', url: '/economy.html', series: 'banxico-usdmxn-fix', tmpl: 'the peso trades at {v} pesos to the dollar' });
   const inf = series('banxico-inflacion'); if (inf.length) items.push({ id: 'board-inflation', label: 'inflation', text: `inflation is ${inf.at(-1).v.toFixed(2)}%`, source: 'INEGI', url: '/economy.html', series: 'banxico-inflacion', tmpl: 'inflation is {v}%' });
   const rate = series('banxico-tasa-objetivo'); if (rate.length) items.push({ id: 'board-rate', label: 'the policy rate', text: `the policy rate is ${rate.at(-1).v.toFixed(2)}%`, source: 'Banco de México', url: '/economy.html', series: 'banxico-tasa-objetivo', tmpl: 'the policy rate is {v}%' });
   const gdp = series('banxico-pib-crecimiento'); if (gdp.length) { const v = gdp.at(-1).v; items.push({ id: 'board-growth', label: 'growth', text: `growth is running near ${(v >= 0 ? '+' : '') + v.toFixed(1)}%`, source: 'INEGI', url: '/economy.html' }); }
@@ -83,7 +83,7 @@ function stitch({ events, standing, nums }) {
   // the live numbers, in one verbatim sentence
   if (nums.length) {
     const pick = nums.filter((n) => ['board-inflation', 'board-rate', 'board-peso'].includes(n.id));
-    if (pick.length) p2.push({ text: capitalize(pick.map((n) => n.text).join(', ')) + '.', refs: pick.map((n) => n.id), live: pick.map((n) => ({ series: n.series, tmpl: n.tmpl })) });
+    if (pick.length) p2.push({ text: capitalize(pick.map((n) => n.text).join('; ')) + '.', refs: pick.map((n) => n.id), live: pick.map((n) => ({ series: n.series, tmpl: n.tmpl })) });
   }
   if (usmca) p2.push({ text: usmca.fact, refs: [usmca.id] });
   return [p1.length ? p1 : (p2.splice(0, 1)), p2].filter((p) => p.length);
@@ -154,7 +154,7 @@ function select(events) {
 function buildStanding(nums) {
   const pick = nums.filter((n) => ['board-peso', 'board-inflation', 'board-rate'].includes(n.id));
   if (!pick.length) return null;
-  return { text: capitalize(pick.map((n) => n.text).join(', ')) + '.', live: pick.map((n) => ({ series: n.series, tmpl: n.tmpl })),
+  return { text: capitalize(pick.map((n) => n.text).join('; ')) + '.', live: pick.map((n) => ({ series: n.series, tmpl: n.tmpl })),
     refs: pick.map((n) => n.id), href: '/economy.html', source: 'Banco de México / INEGI' };
 }
 

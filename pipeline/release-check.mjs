@@ -88,6 +88,10 @@ const redirectRules = redirectsText.split(/\r?\n/).map((line) => line.trim()).fi
   const [from, to, status] = line.split(/\s+/);
   return { from, to, status };
 });
+const globalHeaders = headerRules.get('/*') || [];
+for (const required of ['X-Content-Type-Options: nosniff', 'X-Frame-Options: DENY', 'Strict-Transport-Security: max-age=31536000']) {
+  if (!globalHeaders.includes(required)) failures.push(`_headers is missing global security header: ${required}`);
+}
 for (const [from, to] of redirectRoutes) {
   const rule = redirectRules.find((item) => item.from === from);
   if (!rule || rule.to !== to || rule.status !== '301') failures.push(`_redirects must contain: ${from} ${to} 301`);
@@ -121,6 +125,14 @@ for (const item of manifest.previewRoutes) {
   if (!rules.some((rule) => /^X-Robots-Tag:\s*noindex(?:,|\b)/i.test(rule))) {
     failures.push(`${item.route}: preview is missing the Cloudflare X-Robots-Tag noindex backstop`);
   }
+}
+
+// Cloudflare Pages serves 404.html for unknown static routes. Keep it out of
+// search results; without this file, Pages falls back to the homepage and a
+// mistyped URL can look like a successful response.
+if (actualHtml.has('404.html')) {
+  const html = readOutput('404.html');
+  if (!/<meta\s+name="robots"\s+content="[^"]*noindex/i.test(html)) failures.push('404.html: error page must be noindex');
 }
 
 // Any future file named as a mockup is automatically covered, even before it is

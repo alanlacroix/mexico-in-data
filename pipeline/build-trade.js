@@ -82,7 +82,10 @@ async function fetchFlow(flow, valvar, commvar) {
     if (!last12.has(r[ti])) continue;
     const hs = r[ci]; byChap[hs] = (byChap[hs] || 0) + v;
   }
-  const series = sortedMonths.map((m) => ({ month: m, value: +(byMonth[m] / 1e9).toFixed(2) }));
+  // Keep the Census country-table precision (US$0.1m) in the stored series. Public
+  // charts can still round for display, but derived balances and month-to-month
+  // comparisons must not be calculated from already-rounded components.
+  const series = sortedMonths.map((m) => ({ month: m, value: +(byMonth[m] / 1e9).toFixed(4) }));
   const top = Object.entries(byChap)
     .filter(([hs]) => !['98', '99'].includes(hs))   // drop non-substantive special chapters from the "what" list
     .sort((a, b) => b[1] - a[1]).slice(0, 6)

@@ -28,6 +28,7 @@ import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
 import { REPORT, BAN } from './lib/voice.js';   // shared voice (Fable 2026-07-12): headlines + context REPORT plain
 import { lintReportText } from './lib/lint.js';
+import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -211,7 +212,10 @@ async function main() {
   console.log(`  candidates ${cands.length} (last ${WINDOW_DAYS}d) · existing log ${arr(existing.events).length}`);
   const fresh = await curate(cands, now);
   console.log(`  curated ${fresh.length} fresh events`);
-  const { events } = mergeLog(existing, fresh, now);
+  const merged = mergeLog(existing, fresh, now).events;
+  // Curated framing stays human; referenced values are re-derived from the stored
+  // first-party dataset on every run so corrected source data cannot leave stale copy.
+  const events = reconcileHappeningFactCopy(merged, { tradeUS: readJson(D('trade-us.json'), null) });
 
   const out = {
     meta: {

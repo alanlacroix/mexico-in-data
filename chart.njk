@@ -284,11 +284,11 @@ const M={
     def:'Monthly remittances from workers abroad, in US dollars.',
     watch:'Household income for millions of families.',
     e:['d-remesas-mxn','banxico-usdmxn-fix']},
-  'banxico-exports-total':{g:2,l:'Exports, total',u:'US$mn/mo',cad:'monthly',agg:'sum',kind:'level',r:'line',core:1,
+  'banxico-exports-total':{g:2,l:'Exports, total',u:'US$bn/mo',cad:'monthly',agg:'sum',kind:'level',r:'line',core:1,
     def:'Total monthly merchandise exports, in US dollars.',
     watch:'Four-fifths go to the US. The external engine of activity.',
     e:['d-exports-yoy','fred-us-indpro','banxico-trade-balance']},
-  'banxico-trade-balance':{g:2,l:'Trade balance',u:'US$mn/mo',cad:'monthly',agg:'sum',kind:'balance',r:'line',core:1,
+  'banxico-trade-balance':{g:2,l:'Trade balance',u:'US$bn/mo',cad:'monthly',agg:'sum',kind:'balance',r:'line',core:1,
     def:'Merchandise exports minus imports, monthly. Can be positive or negative.',
     watch:'The external-accounts pulse behind the peso.',
     e:['banxico-exports-total']},
@@ -793,7 +793,16 @@ function persist(){ try{localStorage.setItem(LS,JSON.stringify({v:state.v,r:stat
 function pushURL(){ const u=new URL(location); u.search=state.view?('?q='+state.view+'&r='+state.r+(state.mode?'&mode='+state.mode:'')):(state.v.length?('?v='+state.v.join(',')+'&r='+state.r+(state.mode?'&mode='+state.mode:'')):''); history.replaceState(null,'',u); }
 
 /* ============================ COMPARISON MODE LOGIC ============================ */
-function compatClass(id){ const k=kindOf(id); if(k==='rate'||k==='pct')return 'ratelike'; if(k==='balance')return 'balance'; return unit(id); }
+function compatClass(id){
+  const k=kindOf(id);
+  if(k==='rate'||k==='pct')return 'ratelike';
+  if(k==='balance')return 'balance';
+  // Actual overlays compare the stored numeric values. Use the source/derived
+  // data unit, not the friendlier display unit: Banxico trade is stored in
+  // thousand US$, while remittances are stored in million US$. Treating both
+  // as "US dollars per month" puts values 1,000x apart on one misleading axis.
+  return dataUnit(id)||unit(id);
+}
 function rebaseSafe(id){ const k=kindOf(id); if(!(k==='fx'||k==='level'||k==='index'))return false; const p=raw(id); if(!p.length)return false;
   return p.every(x=>x.value>0); }
 function autoMode(ids){ if(ids.length<2)return 'single';

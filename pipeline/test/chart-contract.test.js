@@ -57,6 +57,11 @@ const checks = `
 
   if(validMode('not-a-mode')!==null)throw new Error('invalid mode was accepted');
   if(modeAvail(pesoIds).actual)throw new Error('incompatible units were allowed on one actual scale');
+  const dollarFlowIds=['banxico-exports-total','banxico-remesas'];
+  if(dataUnit(dollarFlowIds[0])!=='thousand US$'||dataUnit(dollarFlowIds[1])!=='million US$')throw new Error('dollar-flow fixture no longer exercises different numeric scales');
+  if(modeAvail(dollarFlowIds).actual)throw new Error('thousand-US$ exports were allowed on the million-US$ remittance scale');
+  if(autoMode(dollarFlowIds)==='actual')throw new Error('automatic comparison ignored the source numeric units');
+  if(!modeAvail(['banxico-inflacion','banxico-tasa-objetivo']).actual)throw new Error('rate-like series with compatible numeric scales cannot share an actual axis');
   const gap=store['d-rate-gap']; store['d-rate-gap']=null;
   if(!answerPesoRates().unavailable)throw new Error('missing input did not produce an unavailable answer');
   store['d-rate-gap']=gap;
@@ -88,6 +93,7 @@ assert(context.__chartContract?.period, 'chart contract checks did not finish');
 assert(template.includes('opts.axisCad||cadOf(ser[0].id)'), 'aligned chart axis does not use the aligned cadence');
 assert(template.includes('axisCad:AL.freq'), 'comparison chart does not pass its aligned cadence');
 assert(template.includes("state.mode&&!modeAvail(ids)[state.mode]"), 'stored comparison mode is not checked against selected series');
+assert(template.includes('return dataUnit(id)||unit(id)'), 'actual-scale compatibility is not based on stored numeric units');
 assert(template.includes('Separate scales'), 'separate-scale mode is not named clearly');
 assert(template.includes('The selected data do not cover this range'), 'unsupported ranges are not explained');
 

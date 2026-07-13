@@ -338,7 +338,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
       <div class="no">Live feeds</div>
       <h2>What needs attention</h2>
     </div>
-    <p class="fresh-intro">The pipeline currently monitors <b id="feedcount">44</b> feeds. The data date and the last check are shown separately. “Update expected” means the latest observation is old. “Review flag” means an automatic check found something unusual; it does not mean the feed failed.</p>
+    <p class="fresh-intro">The site currently checks <b id="feedcount">44</b> feeds. The date of the data and the date it was last checked are shown separately. “Update expected” means the latest observation is old. “Review flag” means a check found something unusual; it does not mean the source failed.</p>
     <div id="health-summary" class="healthsum" aria-live="polite"></div>
     <p id="health-stamp" class="healthstamp"></p>
     <div class="freshwrap tblwrap"><div id="health-issues"></div></div>
@@ -348,14 +348,14 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
     <div id="allfeeds" class="allfeeds" hidden>
       <div class="freshwrap tblwrap"><div id="livenow-tbl"></div></div>
     </div>
-    <noscript><p class="fresherr">Turn on JavaScript to see the live feed check.</p></noscript>
+    <noscript><p class="fresherr">Turn on JavaScript to see the feed status.</p></noscript>
   </section>
 
   <!-- ============ THE FULL CATALOG — the reference below ============ -->
   <div class="catintro">
     <span class="eyebrow">The full catalog</span>
     <p class="access">This is the reference shelf, not the part you need to read every day. Search for an institution or topic, then open the relevant group. Each row gives the publication schedule and access route.</p>
-    <p class="access" style="margin-top:12px">The small tag describes the <b>source lane</b>: <span class="etag p">primary source</span>, <span class="etag o">official compilation</span>, <span class="etag r">reporting</span>, or <span class="etag e">proprietary estimate</span>. That is separate from the four claim labels above.</p>
+    <p class="access" style="margin-top:12px">The small tag describes the <b>source type</b>: <span class="etag p">primary source</span>, <span class="etag o">official compilation</span>, <span class="etag r">reporting</span>, or <span class="etag e">proprietary estimate</span>. That is separate from the four claim labels above.</p>
     <p class="cadnote"><b>Cadence</b> is how often a source releases new data, whether daily, monthly, or once a year. It is the publishing rhythm, not the freshness of any one figure. For when each automated feed last updated, see the <a href="#livenow">live table above &uarr;</a></p>
     <div class="catalog-tools">
       <label style="position:absolute;left:-9999px" for="catalog-search">Search sources</label>
@@ -448,7 +448,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="nm"><span class="n"><a href="https://www.economia.gob.mx/datamexico" target="_blank" rel="noopener">DataMéxico</a></span><span class="bo">Secretaría de Economía</span><span class="etag o">official compilation</span></td>
           <td class="gives">Trade, FDI, employment, complexity, 13k+ profiles</td>
           <td class="cad">By dataset</td>
-          <td class="acc"><span class="chip g">API</span><span class="note v">Tesseract OLAP · verify endpoint</span></td>
+          <td class="acc"><span class="chip n">WEB</span><span class="note">downloads vary by dataset</span></td>
           <td class="why">One-stop compiled economic profiles.</td>
         </tr>
         <tr>
@@ -483,14 +483,14 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="nm"><span class="n"><a href="https://www.cnh.gob.mx" target="_blank" rel="noopener">CNH hydrocarbons</a></span><span class="bo">Comisión Nacional de Hidrocarburos</span><span class="etag p">primary source</span></td>
           <td class="gives">Field-level oil &amp; gas production, reserves</td>
           <td class="cad">Monthly</td>
-          <td class="acc"><span class="chip n">CSV</span><span class="note v">no documented API · verify</span></td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note">public files · no documented API</span></td>
           <td class="why">Granular upstream detail.</td>
         </tr>
         <tr>
           <td class="nm"><span class="n"><a href="https://sie.energia.gob.mx" target="_blank" rel="noopener">SENER SIE energy balances</a></span><span class="bo">Secretaría de Energía</span><span class="etag p">primary source</span></td>
           <td class="gives">Petroleum, gas, electricity, and fuels supply-demand</td>
           <td class="cad">Monthly</td>
-          <td class="acc"><span class="chip n">CSV</span><span class="note v">verify endpoint</span></td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note">public files · no documented API</span></td>
           <td class="why">The national energy balance in one feed.</td>
         </tr>
         <tr>
@@ -539,7 +539,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="nm"><span class="n"><a href="https://www.gob.mx/crt/prensa/nota-informativa-412028" target="_blank" rel="noopener">CRT and legacy IFT BIT</a></span><span class="bo">CRT / ATDT · formerly IFT</span><span class="etag p">primary source</span></td>
           <td class="gives">Telecom/broadband subscribers, coverage, prices</td>
           <td class="cad">Quarterly</td>
-          <td class="acc"><span class="chip n">CSV</span><span class="note v"><a href="https://bit.ift.org.mx" target="_blank" rel="noopener">legacy BIT portal</a> · verify current endpoint</span></td>
+          <td class="acc"><span class="chip n">CSV</span><span class="note"><a href="https://bit.ift.org.mx" target="_blank" rel="noopener">legacy BIT portal</a> · current access varies</span></td>
           <td class="why">Connectivity and telecom competition. Current responsibilities sit with CRT and ATDT; older series retain the IFT name.</td>
         </tr>
         <tr>
@@ -595,7 +595,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="gives">Live commercial &amp; passenger lane wait times, 80+ land ports</td>
           <td class="cad">Hourly / near-real-time</td>
           <td class="acc"><span class="chip g">API</span><span class="note">no key</span></td>
-          <td class="why">A rare real-time congestion signal almost nobody wires.</td>
+          <td class="why">Live border congestion, by crossing and lane.</td>
         </tr>
         <tr>
           <td class="nm"><span class="n"><a href="https://www.cbp.gov/newsroom/stats/nationwide-encounters" target="_blank" rel="noopener">CBP/DHS encounters</a></span><span class="bo">CBP / DHS</span><span class="etag p">primary source</span></td>
@@ -810,7 +810,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="gives">Staff assessment of the economy and risks</td>
           <td class="cad">~Annual</td>
           <td class="acc"><span class="chip n">BULK</span><span class="note">PDF</span></td>
-          <td class="why">The definitive external diagnosis.</td>
+          <td class="why">An outside assessment of the economy and its main risks.</td>
         </tr>
         <tr>
           <td class="nm"><span class="n"><a href="https://datahelpdesk.worldbank.org/knowledgebase/articles/889392" target="_blank" rel="noopener">World Bank Open Data API</a></span><span class="bo">World Bank</span><span class="etag o">official compilation</span></td>
@@ -837,7 +837,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="nm"><span class="n"><a href="https://statistics.cepal.org" target="_blank" rel="noopener">ECLAC / CEPALSTAT</a></span><span class="bo">UN ECLAC</span><span class="etag o">official compilation</span></td>
           <td class="gives">LatAm-comparable macro and social series</td>
           <td class="cad">Annual</td>
-          <td class="acc"><span class="chip g">API</span><span class="note v">verify endpoint</span></td>
+          <td class="acc"><span class="chip n">WEB</span><span class="note">downloads vary by dataset</span></td>
           <td class="why">Regional context.</td>
         </tr>
         <tr>
@@ -926,7 +926,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="nm"><span class="n"><a href="https://www.gob.mx/presidencia" target="_blank" rel="noopener">Presidencia, versiones estenográficas</a></span><span class="bo">Presidencia · la mañanera</span><span class="etag p">primary source</span></td>
           <td class="gives">Full daily presidential press-conference transcripts</td>
           <td class="cad">Daily</td>
-          <td class="acc"><span class="chip n">RSS</span><span class="note v">web · verify</span></td>
+          <td class="acc"><span class="chip n">WEB</span><span class="note">daily transcripts</span></td>
           <td class="why">Primary-source policy signaling, verbatim.</td>
         </tr>
         <tr>
@@ -947,7 +947,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="nm"><span class="n"><a href="https://www.eleconomista.com.mx" target="_blank" rel="noopener">El Economista</a></span><span class="bo">El Economista</span><span class="etag r">reporting</span></td>
           <td class="gives">Business, finance, and economy, daily</td>
           <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">RSS</span><span class="note v">verify paths</span></td>
+          <td class="acc"><span class="chip n">WEB</span><span class="note">feed availability varies</span></td>
           <td class="why">Daily business coverage.</td>
         </tr>
         <tr>
@@ -975,7 +975,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="nm"><span class="n"><a href="https://www.eluniversal.com.mx" target="_blank" rel="noopener">National dailies</a></span><span class="bo">El Universal · Milenio · Excélsior · La Jornada</span><span class="etag r">reporting</span></td>
           <td class="gives">General and political news</td>
           <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">RSS</span><span class="note v">most · verify</span></td>
+          <td class="acc"><span class="chip n">WEB / RSS</span><span class="note">varies by outlet</span></td>
           <td class="why">The general-news baseline.</td>
         </tr>
         <tr>
@@ -1007,7 +1007,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   <div class="grp">
     <div class="section-head">
       <h2>Alternative and high-frequency signals</h2>
-      <p class="dek">Most briefings never wire these feeds: grid load, night lights, border-wait times, flights, fires, disappearances. They are harder to extract but carry high nowcasting value.</p>
+      <p class="dek">These sources cover things the standard monthly releases miss or report later: grid load, night lights, border wait times, flights, fires, and disappearances. I use them as supporting signals, not substitutes for the official releases.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
       <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
@@ -1024,7 +1024,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="gives">Real-time national / regional electricity demand and nodal prices</td>
           <td class="cad">5-min / hourly</td>
           <td class="acc"><span class="chip n">CSV/XML</span></td>
-          <td class="why">The best public high-frequency activity nowcast.</td>
+          <td class="why">A high-frequency signal of electricity demand and economic activity.</td>
         </tr>
         <tr>
           <td class="nm"><span class="n"><a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banxico remittance microdata</a></span><span class="bo">Banxico SIE</span><span class="etag p">primary source</span></td>
@@ -1045,7 +1045,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
           <td class="gives">Live crossing congestion</td>
           <td class="cad">Near-real-time</td>
           <td class="acc"><span class="chip g">API</span><span class="note">no key</span></td>
-          <td class="why">A daily-habit signal rarely wired.</td>
+          <td class="why">A current read on congestion at the border.</td>
         </tr>
         <tr>
           <td class="nm"><span class="n"><a href="https://firms.modaps.eosdis.nasa.gov/api" target="_blank" rel="noopener">NASA FIRMS active-fire API</a></span><span class="bo">NASA LANCE / EOSDIS</span><span class="etag p">primary source</span></td>
@@ -1242,7 +1242,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
     <ul>
       <li><b>Proprietary, no free feed.</b> <b>EMBI+ Mexico</b>, <b>sovereign CDS</b>, and <b>BMV real-time</b> quotes have no first-party free API. Each carries a NO FREE API or PROPRIETARY tag above. Where the brief cites the direction of country risk, it comes from secondary press, with the date.</li>
       <li><b>Discontinued.</b> <b>Google and Apple mobility</b> ended (Google in 2022, Apple after). We keep the history and mark it as a closed series that stopped updating.</li>
-      <li><b>Endpoint unconfirmed.</b> <b>DataMéxico</b> (Tesseract OLAP), <b>CEPALSTAT</b>, <b>SENER</b>, <b>CNH</b>, the current <b>CRT / ATDT</b> telecom portals, and several <b>gob.mx / news RSS</b> paths have live platforms but an API endpoint we haven't confirmed. Each is flagged <span class="chip a">verify endpoint</span> above.</li>
+      <li><b>Public access varies.</b> <b>DataMéxico</b>, <b>CEPALSTAT</b>, <b>SENER</b>, <b>CNH</b>, the current <b>CRT / ATDT</b> telecom portals, and several <b>gob.mx</b> and news sites publish useful data without a stable, documented API. I use their public files or webpages when needed.</li>
       <li><b>Deprecated feed.</b> <b>Reuters</b> retired its public RSS; we read it via the site, not a feed.</li>
       <li><b>Unofficial.</b> <b>Google Trends</b> comes from Google, not a statistics agency. When it appears, it carries a search-interest label.</li>
       <li><b>Most catalog entries link directly to their source.</b> Three proprietary series (EMBI+, sovereign CDS, mobility) have no public link. <a href="#livenow">See which feeds are live right now &rarr;</a></li>
@@ -1429,7 +1429,7 @@ function flagText(flag){
         const reason=st.w==='Update expected'?(r.flags&&r.flags.length?flagText(r.flags[0]):'latest observation is older than its cadence'):
           st.w==='Review flag'?(r.flags&&r.flags.length?flagText(r.flags[0]):'an automatic validation check needs review'):
           st.w==='Refresh overdue'?'the scheduled refresh is overdue; the last successful value remains in place':
-          st.w==='Paused'?`pipeline connector paused${r.gatedBy?' · '+r.gatedBy:''}`:
+          st.w==='Paused'?`automatic updates paused${r.gatedBy?' · '+r.gatedBy:''}`:
           st.w==='Fetch issue'?(r.error||r.message||'the last fetch did not complete'):'';
         const detail=[owner,reason].filter(Boolean).join(' · ');
         let dburl=(m&&m.db)||r.sourceUrl||'';
@@ -1455,7 +1455,7 @@ function flagText(flag){
       const st=stateOf(r);
       const owner=(m&&m.owner)||r.source||'';
       const name=nameOf(r);
-      const reason=st.w==='Paused'?`Pipeline connector paused${r.gatedBy?' · '+r.gatedBy:''}`:
+      const reason=st.w==='Paused'?`Automatic updates paused${r.gatedBy?' · '+r.gatedBy:''}`:
         st.w==='Refresh overdue'?'The scheduled refresh is overdue. The last successful value remains in place.':
         st.w==='Review flag'?(r.flags&&r.flags.length?flagText(r.flags[0]):'An automatic validation check needs review.'):
         (r.error||r.message||(r.flags&&r.flags.length?flagText(r.flags[0]):'The last fetch did not complete'));
@@ -1478,7 +1478,7 @@ function flagText(flag){
     `<div class="healthstat issue"><div class="n">${counts['Fetch issue']||0}</div><div class="label">Fetch issue</div></div>`+
     `<div class="healthstat paused"><div class="n">${counts['Paused']||0}</div><div class="label">Paused</div></div>`;
   const stamp=document.getElementById('health-stamp');
-  if(stamp&&h.generatedAt)stamp.textContent='Pipeline check: '+fmtDay(h.generatedAt);
+  if(stamp&&h.generatedAt)stamp.textContent='Last checked: '+fmtDay(h.generatedAt);
   const issues=rows.filter(r=>['Review flag','Refresh overdue','Fetch issue','Paused'].includes(stateOf(r).w));
   issueBox.innerHTML=issues.length?issueList(issues):'<p class="issue-empty">No feeds need attention.</p>';
   box.innerHTML=tableFor(rows);
