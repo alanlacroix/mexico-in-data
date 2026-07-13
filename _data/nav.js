@@ -6,7 +6,8 @@
 // About lives in the footer. `match` lists the pages that light "Topics" as the active section.
 module.exports = [
   { label: 'Brief', href: '/' },
-  { label: 'The Read', href: '/the-read.html' },   // top-level, next to Brief (Alan 2026-07-12): the analysis is a first-class surface, not a dropdown item
+  // The Read removed (Alan 2026-07-13): the Brief already carries the analysis, numbers and data. Keep only
+  // what stays incredibly accurate and name-worthy; the standalone opinion surface was neither.
   { label: 'Charts', href: '/chart.html' },         // the metric explorer: every variable, one place (Alan 2026-07-12)
   {
     label: 'Topics',

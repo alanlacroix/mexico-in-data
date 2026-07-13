@@ -1,8 +1,7 @@
-name: weekly-read
-# The LLM layer for The Read — WEEKLY, not per-pull (Fable: the model doesn't need to re-narrate every
-# 6 hours, and this is the only step that costs money). Rebuilds the deterministic facts pack, then has
-# Claude draft the narrative with every number a validated placeholder. Output is a DRAFT for review —
-# it does not auto-publish. No-op without ANTHROPIC_API_KEY.
+name: weekly-facts
+# Rebuilds the deterministic facts pack that powers "What stood out" on the Brief, plus CONAPO
+# demographics. The Read was deleted (Alan 2026-07-13), so the Claude drafting step is gone; this is now
+# a pure deterministic refresh (no model, no cost).
 
 on:
   schedule:
@@ -30,14 +29,7 @@ jobs:
         continue-on-error: true   # 45MB CONAPO CSV; a miss keeps last-good
         run: node build-demographics.js
 
-      - name: Draft The Read (Claude, placeholder-validated, fail-closed)
-        working-directory: pipeline
-        continue-on-error: true
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node build-read.js
-
-      - name: Commit the draft for review
+      - name: Commit the refreshed facts for review
         run: |
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"

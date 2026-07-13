@@ -22,7 +22,6 @@
   <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
   <nav class="mnav" id="sitenav">
     <a href="/" class="here">Brief</a>
-    <a href="/the-read.html">The Read</a>
     <a href="/chart.html">Charts</a>
     <div class="navdrop">
       <button class="navdrop-t" type="button" aria-haspopup="true" aria-expanded="false">Topics<span class="caret">▾</span></button>
@@ -341,7 +340,7 @@
 
     <!-- 2b · WHAT STOOD OUT — first data interpretation, right after the Brief -->
     <section id="stood-sec" class="hg-stood">
-      <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">The Read</span><a class="asof stood-link" href="/the-read.html">See the analysis &rarr;</a></div><h2>What stood out</h2></div>
+      <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">What stood out</span><span class="asof" id="stood-asof"></span></div></div>
       <div id="stood"></div>
     </section>
 
@@ -505,8 +504,8 @@ function renderStood(F){
     rows.push({tag:'moved',t:`${m.label} ${dir} ${val}${flag}.`,href:'/money.html'});
   });
   const c=F.cross||{};
-  if(c.realRate&&c.realRate.value!=null) rows.push({tag:'connection',t:`The real policy rate is ${c.realRate.value}%, the Banxico rate minus core inflation.`,href:'/the-read.html'});
-  if(c.rateSpread&&c.rateSpread.value!=null) rows.push({tag:'connection',t:`Mexico's policy rate runs ${c.rateSpread.value} points above the US Fed's.`,href:'/the-read.html'});
+  if(c.realRate&&c.realRate.value!=null) rows.push({tag:'connection',t:`The real policy rate is ${c.realRate.value}%, the Banxico rate minus core inflation.`,href:'/chart.html?v=banxico-tasa-objetivo,banxico-inflacion-subyacente'});
+  if(c.rateSpread&&c.rateSpread.value!=null) rows.push({tag:'connection',t:`Mexico's policy rate runs ${c.rateSpread.value} points above the US Fed's.`,href:'/chart.html?v=d-rate-gap'});
   if(c.pesoVol&&c.pesoVol.value!=null) rows.push({tag:'connection',t:`The peso's realized volatility is ${c.pesoVol.value}% a year.`,href:'/money.html'});
   if(!rows.length) return '<div class="area-empty">Nothing stood out in the numbers this week.</div>';
   return rows.map(r=>`<a class="stoodrow" href="${r.href}"><span class="stag">${r.tag}</span><span class="stxt">${esc(r.t)}</span></a>`).join('');
@@ -600,7 +599,11 @@ function renderWatch(brief){
 
   // what stood out: the analysis surfaced from the facts pack (movers + computed connections)
   const stoodEl=document.getElementById('stood');
-  if(stoodEl){ const html=renderStood(facts); if(html) stoodEl.innerHTML=html; else { const sec=document.getElementById('stood-sec'); if(sec) sec.remove(); } }
+  if(stoodEl){ const html=renderStood(facts); if(html){ stoodEl.innerHTML=html;
+      const sao=document.getElementById('stood-asof');
+      if(sao && facts && facts.generatedAt){ const d=new Date(facts.generatedAt);
+        if(!isNaN(d)) sao.textContent='updated '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+    } else { const sec=document.getElementById('stood-sec'); if(sec) sec.remove(); } }
 
   // dateline: N sources · updated Xh ago (from data health + freshest series fetch)
   const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
@@ -645,7 +648,7 @@ function renderWatch(brief){
 
 
 <footer class="foot"><div class="wrap">
-  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a><a href="/journal.html">Journal</a></nav>
+  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a></nav>
   <p class="fblurb">A free public briefing on Mexico: the official numbers, and the news that moves them. Built by Alan Lacroix.</p>
 </div></footer>
 
