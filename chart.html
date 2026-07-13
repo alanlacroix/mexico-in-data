@@ -108,6 +108,11 @@
   .sx-leg{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);margin-top:8px}
   .sx-leg span{display:inline-flex;align-items:center;gap:6px;color:var(--ink-2)}
   .sx-leg i{width:14px;height:3px;border-radius:2px;display:inline-block}
+  /* small multiples: two stacked charts, own scales, aligned time axis (Fable/audit 2026-07-12) */
+  .sm{display:grid;gap:16px;margin-top:16px}
+  .sm-one .sm-l{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+  .sm-one .sm-l span{color:var(--ink);text-transform:none;font-family:var(--sans);font-size:16px;margin-left:6px;letter-spacing:0}
+  .sm-wrap{margin-top:0}
   @media(max-width:560px){.sx-ctx{font-size:14px}}
 </style>
 
@@ -121,8 +126,12 @@
 </div>
 
 <script type="module">
-import { loadSeries, S, niceStr } from '/assets/mb.js?v=15';
+import { loadSeries, S, fmt, valueAgo, humanSrc, srcDetails, stampFor } from '/assets/mb.js?v=15';
 const $=(s,r)=>(r||document).querySelector(s);
+// CANONICAL formatting — one source of truth (audit 2026-07-12). fmt(id,value,units) knows each series'
+// real unit + conversion; valueAgo finds the point NEAREST a year ago (not the oldest). Never hand-format.
+function FV(id,v){const u=(S[id]&&S[id].meta&&S[id].meta.units)||'';return fmt(id,v,u);}   // -> {v, s(uffix)}
+function FVs(id,v){const o=FV(id,v);return o.v+(o.s?' '+o.s:'');}
 
 /* ---------- the variable registry: metrics are DATA into one component ---------- */
 // group order = Alan's lens. render: 'area' (daily/weekly levels) | 'line' (monthly) | 'step' (rates) | 'bars' (quarterly)
@@ -137,22 +146,22 @@ const M={
   'fred-usd-broad':       {g:0,l:'US dollar (broad)',u:'index',r:'area',f:v=>v.toFixed(1),tx:'The dollar’s strength against a basket. A stronger dollar tends to pressure the peso.',e:['banxico-usdmxn-fix']},
 
   'banxico-inflacion':    {g:1,l:'Inflation, headline',u:'%',r:'line',f:v=>v.toFixed(2)+'%',tx:'Moved by food, energy and the peso. Shapes how much room Banxico has to move the rate.',e:['banxico-tasa-objetivo','banxico-inflacion-subyacente','cre-gasolina-regular']},
-  'banxico-inflacion-subyacente':{g:1,l:'Inflation, core',u:'%',r:'line',f:v=>v.toFixed(2)+'%',tx:'The stickier gauge Banxico actually watches. Sits above headline and guides how fast it can cut.',e:['banxico-tasa-objetivo','banxico-inflacion']},
+  'banxico-inflacion-subyacente':{g:1,l:'Inflation, core',u:'%',r:'line',tx:'Strips out volatile food and energy. Banxico targets headline but leans on core to read the underlying trend.',e:['banxico-tasa-objetivo','banxico-inflacion']},
   'banxico-salario-minimo':{g:1,l:'Minimum wage',u:'MXN/day',r:'line',f:v=>'$'+v.toFixed(0),tx:'Set by policy, roughly doubled since 2018. Feeds household income and cost pressure.',e:['banxico-inflacion']},
   'cre-gasolina-regular': {g:1,l:'Gasoline, regular',u:'MXN/L',r:'line',f:v=>'$'+v.toFixed(2),tx:'A visible price in every budget. Feeds headline inflation and sentiment.',e:['banxico-inflacion']},
 
   'banxico-pib-crecimiento':{g:2,l:'GDP growth',u:'% YoY',r:'bars',f:v=>v.toFixed(1)+'%',tx:'Driven mainly by US demand and investment. Feeds jobs, wages and public revenue.',e:['banxico-igae','banxico-exports-total','banxico-remesas']},
-  'banxico-igae':         {g:2,l:'Activity (IGAE)',u:'index',r:'line',f:v=>v.toFixed(1),tx:'A monthly read on the economy, the GDP proxy. Driven by US demand and domestic spending.',e:['banxico-pib-crecimiento','banxico-exports-total']},
-  'banxico-remesas':      {g:2,l:'Remittances',u:'US$mn/mo',r:'line',f:v=>'$'+Math.round(v).toLocaleString(),tx:'Driven by the US job market. Household income for millions; a weaker peso raises its peso value.',e:['banxico-usdmxn-fix','fred-us-indpro']},
-  'banxico-exports-total':{g:2,l:'Exports, total',u:'US$mn/mo',r:'line',f:v=>'$'+Math.round(v).toLocaleString(),tx:'Four-fifths go to the US. Driven by US demand; feeds activity and the trade balance.',e:['fred-us-indpro','banxico-trade-balance','banxico-igae']},
-  'banxico-trade-balance':{g:2,l:'Trade balance',u:'US$mn/mo',r:'line',f:v=>(v>=0?'+$':'-$')+Math.round(Math.abs(v)).toLocaleString(),tx:'Exports minus imports. Feeds the external accounts and, with them, the peso.',e:['banxico-exports-total','banxico-usdmxn-fix']},
-  'fred-us-indpro':       {g:2,l:'US industrial output',u:'index',r:'line',f:v=>v.toFixed(1),tx:'US factory demand. The main external driver of Mexican exports and remittances.',e:['banxico-exports-total','banxico-remesas']},
+  'banxico-igae':         {g:2,l:'Activity (IGAE)',u:'% YoY',r:'line',tx:'A monthly read on the economy, the GDP proxy. Moves with US demand and domestic spending.',e:['banxico-pib-crecimiento','banxico-exports-total']},
+  'banxico-remesas':      {g:2,l:'Remittances',u:'US$mn/mo',r:'line',tx:'Driven by the US job market and migration. Household income for millions; a weaker peso raises its peso value.',e:['banxico-usdmxn-fix']},
+  'banxico-exports-total':{g:2,l:'Exports, total',u:'US$mn/mo',r:'line',tx:'Four-fifths go to the US. Move with US demand; feed activity and the trade balance.',e:['fred-us-indpro','banxico-trade-balance','banxico-igae']},
+  'banxico-trade-balance':{g:2,l:'Trade balance',u:'US$mn/mo',r:'line',tx:'Exports minus imports. Feeds the external accounts and, with them, the peso.',e:['banxico-exports-total','banxico-usdmxn-fix']},
+  'fred-us-indpro':       {g:2,l:'US industrial output',u:'index',r:'line',tx:'US factory demand, a driver of Mexican manufacturing exports.',e:['banxico-exports-total']},
 
   'banxico-spei-monto':   {g:3,l:'SPEI transfers',u:'MXN bn/mo',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Real-time interbank transfers, the rails of digital payments. Grows with digitization and activity.',e:['banxico-igae','banxico-circulante']},
-  'banxico-tarjetas-debito':{g:3,l:'Debit-card spend',u:'MXN bn/mo',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Card spending on debit. Tracks consumption and the shift away from cash.',e:['banxico-circulante','banxico-igae']},
-  'banxico-tarjetas-credito':{g:3,l:'Credit-card spend',u:'MXN bn/mo',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Card spending on credit. Tracks consumption and the cost of borrowing.',e:['banxico-tasa-objetivo','banxico-igae']},
-  'banxico-circulante':   {g:3,l:'Cash in circulation',u:'MXN bn',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Physical currency held by the public. Falls in share as digital payments grow.',e:['banxico-spei-monto','banxico-tarjetas-debito']},
-  'banxico-ecommerce-monto':{g:3,l:'E-commerce value',u:'MXN bn/mo',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Online card spending. Tracks digital-commerce adoption.',e:['banxico-tarjetas-debito','banxico-tarjetas-credito']},
+  'banxico-tarjetas-debito':{g:3,l:'Debit cards, active',u:'cards',r:'line',tx:'The number of active debit cards, a gauge of how banked the population is.',e:['banxico-circulante']},
+  'banxico-tarjetas-credito':{g:3,l:'Credit cards, active',u:'cards',r:'line',tx:'The number of active credit cards, a gauge of consumer-credit reach.',e:['banxico-tasa-objetivo']},
+  'banxico-circulante':   {g:3,l:'Cash in circulation',u:'MXN',r:'line',tx:'Physical currency held by the public. Its path against digital payments is one thing to watch.',e:['banxico-spei-monto','banxico-tarjetas-debito']},
+  'banxico-ecommerce-monto':{g:3,l:'E-commerce value',u:'MXN/qtr',r:'line',tx:'Online card purchases, reported quarterly. Tracks digital-commerce adoption.',e:['banxico-tarjetas-debito','banxico-tarjetas-credito']},
 };
 const IDS=Object.keys(M);
 
@@ -223,6 +232,9 @@ function render(state){
   else if(ids.length===1){ renderSingle(body,ids[0]); }
   else renderCatalog(body);
 }
+// sparklines use a consistent ~2-year time window (not a fixed point count, which mixed 6mo of daily
+// data with 15yr of monthly data — audit 2026-07-12)
+function sparkWindow(P){const cut=asDate(lastN(P).date)-730*dms;const s=P.filter(p=>asDate(p.date)>=cut);return s.length>=2?s:P.slice(-Math.min(P.length,24));}
 function spark(P){if(P.length<2)return'';const W=120,H=30,xs=P.map(p=>asDate(p.date)),ys=P.map(p=>p.value);const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
   const X=x=>(x-xmin)/((xmax-xmin)||1)*W,Y=v=>H-2-(v-ymin)/((ymax-ymin)||1)*(H-4);
   let d='';P.forEach((p,i)=>d+=(i?'L':'M')+X(asDate(p.date)).toFixed(1)+' '+Y(p.value).toFixed(1));
@@ -234,11 +246,14 @@ function renderCatalog(body){
     const rows=IDS.filter(id=>M[id].g===gi && pts(id).length);
     if(!rows.length)return;
     h+=`<div class="cat-grp"><div class="cat-gl">${gname}</div><div class="cat-grid">`;
-    for(const id of rows){const P=pts(id),last=lastN(P),m=M[id];
-      const yAgo=P.find(p=>asDate(p.date)<=asDate(last.date)-330*dms);
-      const rel=isRate(id)? (yAgo?((last.value-yAgo.value>=0?'+':'')+(last.value-yAgo.value).toFixed(2)+' pp'):'') : (yAgo?((pct(last.value,yAgo.value)>=0?'▲ ':'▼ ')+Math.abs(pct(last.value,yAgo.value)).toFixed(1)+'%'):'');
-      h+=`<button class="cc" data-m="${id}"><div class="cl">${m.l}</div><div class="cv">${m.f(last.value)}</div>`+
-         `<div class="cd">${rel} ${yAgo?'<small>vs a year ago</small>':''}</div>${spark(P.slice(-Math.min(P.length,180)))}</button>`;
+    for(const id of rows){const P=pts(id),last=lastN(P),m=M[id],fv=FV(id,last.value);
+      const spanYr=(asDate(last.date)-asDate(P[0].date))/dms>=330;       // only claim "a year ago" if we have a year
+      const ago=spanYr?valueAgo(P,365):null;                             // nearest to a year back, NOT the oldest point
+      const rel=ago==null?`<small>${cadence(id)} · from ${fmtDate(P[0].date,cadence(id))}</small>`
+        : isRate(id)? `${(last.value-ago>=0?'+':'−')}${Math.abs(last.value-ago).toFixed(2)} pp <small>vs a year ago</small>`
+        : `${pct(last.value,ago)>=0?'▲':'▼'} ${Math.abs(pct(last.value,ago)).toFixed(1)}% <small>vs a year ago</small>`;
+      h+=`<button class="cc" data-m="${id}"><div class="cl">${m.l}</div><div class="cv">${fv.v} <small>${fv.s}</small></div>`+
+         `<div class="cd">${rel}</div>${spark(sparkWindow(P))}</button>`;
     }
     h+=`</div></div>`;
   });
@@ -246,19 +261,19 @@ function renderCatalog(body){
   body.querySelectorAll('.cc').forEach(b=>b.addEventListener('click',()=>go({m:b.dataset.m})));
 }
 function renderSingle(body,id){
-  const m=M[id],P=pts(id),last=lastN(P),cad=cadence(id),mt=meta(id);
+  const m=M[id],P=pts(id),last=lastN(P),cad=cadence(id),mt=meta(id),fv=FV(id,last.value);
   $('#cxTitle').textContent=m.l;
   const av=ranges(id); let cur=defRange(id);
   body.innerHTML=`<button class="sx-back">← All variables</button>
-    <div class="sx-head"><div class="sx-name">${m.l}</div><div class="sx-sub">${m.u} · ${cad} series · ${mt.source||''}</div>
-      <div class="sx-val"><span class="sx-big">${m.f(last.value)}</span><span class="sx-chg" id="sxChg"></span></div></div>
+    <div class="sx-head"><div class="sx-name">${m.l}</div><div class="sx-sub">${fv.s||m.u} · ${cad} series · ${mt.source||''}</div>
+      <div class="sx-val"><span class="sx-big">${fv.v} <small>${fv.s}</small></span><span class="sx-chg" id="sxChg"></span></div></div>
     <div class="sx-wrap" id="sxWrap"><div class="sx-read"></div></div>
     <div class="sx-ranges" id="sxR">${av.map(r=>`<button data-r="${r[0]}"${r[0]===cur?' class="on"':''}>${r[0]}</button>`).join('')}</div>
     <div class="sx-cad">Snaps to real observed points (${cad}). ${P.length} observations.</div>
     <div class="sx-ctx">${m.tx}</div>
     <div class="sx-edges"><div class="el">See how it moves with</div><div class="chips">${(m.e||[]).filter(x=>M[x]&&pts(x).length).map(x=>`<button class="chip" data-pair="${x}"><span class="ar">↔</span>${M[x].l}</button>`).join('')}</div><div class="sx-caveat">Two series over their shared period. Co-movement, not cause.</div></div>
-    <div class="sx-src">Source: ${mt.sourceUrl?`<a href="${mt.sourceUrl}" target="_blank" rel="noopener">${mt.source||'source'}</a>`:(mt.source||'source')} · one tap to the exact release.</div>`;
-  const draw=(lbl)=>{cur=lbl;const P2=slice(id,lbl);const o={render:m.r,f:m.f,cad};const d=chartSVG(P2,o);
+    <div class="sx-src">${srcDetails(mt)}</div>`;
+  const draw=(lbl)=>{cur=lbl;const P2=slice(id,lbl);const o={render:m.r,f:(v)=>FV(id,v).v,cad};const d=chartSVG(P2,o);
     const wrap=$('#sxWrap');wrap.querySelector('.sx-svg')&&wrap.querySelector('.sx-svg').remove();wrap.insertAdjacentHTML('beforeend',d.svg);wireCross(wrap,d,o);
     const a=P2[0].value,b=P2[P2.length-1].value;const ch=isRate(id)?((b-a>=0?'+':'')+(b-a).toFixed(2)+' pp'):((pct(b,a)>=0?'+':'')+pct(b,a).toFixed(1)+'%');
     $('#sxChg').innerHTML=`${ch} <span class="rl">· ${lbl}</span>`;
@@ -271,28 +286,30 @@ function renderSingle(body,id){
 function renderOverlay(body,a,b){
   const ma=M[a],mb=M[b],Pa=pts(a),Pb=pts(b);
   $('#cxTitle').textContent=`${ma.l} & ${mb.l}`;
-  // shared window = intersection of spans
+  // shared window = intersection of spans (never stretch the shorter series)
   const lo=Math.max(asDate(Pa[0].date),asDate(Pb[0].date)),hi=Math.min(asDate(Pa[Pa.length-1].date),asDate(Pb[Pb.length-1].date));
   const A=Pa.filter(p=>asDate(p.date)>=lo&&asDate(p.date)<=hi),B=Pb.filter(p=>asDate(p.date)>=lo&&asDate(p.date)<=hi);
-  // normalize both to 100 at the window start so two units share an axis honestly
-  const n=P=>{const base=P[0].value||1;return P.map(p=>({date:p.date,value:p.value/base*100}));};
-  const An=n(A),Bn=n(B);
-  const W=880,H=380,pl=20,pr=20,pt=14,pb=28,iw=W-pl-pr,ih=H-pt-pb;
-  const all=An.concat(Bn),ys=all.map(p=>p.value);let ymin=Math.min(...ys),ymax=Math.max(...ys);const pad=((ymax-ymin)||1)*0.1;ymin-=pad;ymax+=pad;
-  const xs=An.map(p=>asDate(p.date)),xmin=Math.min(...xs),xmax=Math.max(...xs);
-  const X=x=>pl+(xmax===xmin?iw/2:(x-xmin)/(xmax-xmin)*iw),Y=v=>pt+ih-(v-ymin)/(ymax-ymin)*ih;
-  const path=P=>{let d='';P.forEach((p,i)=>d+=(i?'L':'M')+X(asDate(p.date)).toFixed(1)+' '+Y(p.value).toFixed(1));return d;};
-  let grid='';for(let i=0;i<=2;i++){const y=pt+ih*i/2;grid+=`<line class="grid" x1="${pl}" y1="${y}" x2="${W-pr}" y2="${y}"/>`;}
-  let xl='';[0,Math.floor(An.length/2),An.length-1].forEach((i,k)=>{const x=X(asDate(An[i].date));xl+=`<text class="axl" x="${x.toFixed(1)}" y="${H-8}" text-anchor="${k===0?'start':k===2?'end':'middle'}">${fmtDate(An[i].date,cadence(a))}</text>`;});
-  const svg=`<svg class="sx-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}<path class="ln" d="${path(An)}"/><path class="ln ln2" d="${path(Bn)}"/>${xl}</svg>`;
-  $('#cxTitle').textContent=`${ma.l} & ${mb.l}`;
-  body.innerHTML=`<button class="sx-back">← All variables</button>
-    <div class="sx-head"><div class="sx-name">${ma.l} & ${mb.l}</div><div class="sx-sub">Indexed to 100 at the start of the shared period · ${fmtDate(A[0].date,cadence(a))} to ${fmtDate(A[A.length-1].date,cadence(a))}</div></div>
-    <div class="sx-leg"><span><i style="background:var(--ink)"></i>${ma.l} (now ${ma.f(A[A.length-1].value)})</span><span><i style="background:var(--green-d)"></i>${mb.l} (now ${mb.f(B[B.length-1].value)})</span></div>
-    <div class="sx-wrap">${svg}</div>
-    <div class="sx-ctx">The channel: ${ma.tx}</div>
-    <div class="sx-caveat">Both series indexed to 100 at the start of their shared period so two different units can share one axis. This shows how they moved together. It is co-movement, not proof that one caused the other.</div>
+  const back=`<button class="sx-back">← All variables</button>`;
+  if(A.length<2||B.length<2){body.innerHTML=back+`<p style="font-family:var(--mono);font-size:14px;color:var(--mut);margin-top:20px">These two series don't overlap enough in time to compare here.</p>`;$('.sx-back',body).addEventListener('click',()=>go({}));return;}
+  // SMALL MULTIPLES (Fable + audit 2026-07-12): two aligned charts, each at its OWN honest scale, shared
+  // dates. NEVER index to 100 — that divides by a base and breaks on any series that crosses zero, and it
+  // hides magnitude. Own axes + shared time axis show co-movement without the manipulation.
+  const known=(ma.e||[]).includes(b)||(mb.e||[]).includes(a);
+  const fa=FV(a,A[A.length-1].value),fb=FV(b,B[B.length-1].value);
+  const chA=chartSVG(A,{render:ma.r,f:(v)=>FV(a,v).v,cad:cadence(a)});
+  const chB=chartSVG(B,{render:mb.r,f:(v)=>FV(b,v).v,cad:cadence(b)});
+  body.innerHTML=back+`
+    <div class="sx-head"><div class="sx-name">${ma.l} &amp; ${mb.l}</div><div class="sx-sub">Same dates, each at its own scale · ${fmtDate(A[0].date,cadence(a))} to ${fmtDate(A[A.length-1].date,cadence(a))}${A.length<12?' · short overlap':''}</div></div>
+    <div class="sm">
+      <div class="sm-one"><div class="sm-l">${ma.l} <span>${fa.v} ${fa.s}</span></div><div class="sx-wrap sm-wrap" data-k="a"><div class="sx-read"></div></div></div>
+      <div class="sm-one"><div class="sm-l">${mb.l} <span>${fb.v} ${fb.s}</span></div><div class="sx-wrap sm-wrap" data-k="b"><div class="sx-read"></div></div></div>
+    </div>
+    <div class="sx-ctx">${known?'These two sit on a known channel. Open either one for how it transmits. Below is how they actually moved over the shared dates.':'No established channel links these two directly, so read this as timing only.'}</div>
+    <div class="sx-caveat"><b>What else could move them:</b> global risk, US demand, seasonality and policy move several of these at once. <b>What it does not prove:</b> that one caused the other. Same dates, own scales, ${A.length} shared points${A.length<12?', a short window':''}.</div>
     <div class="sx-edges"><div class="el">Open one on its own</div><div class="chips"><button class="chip" data-m="${a}">${ma.l}</button><button class="chip" data-m="${b}">${mb.l}</button></div></div>`;
+  const wa=body.querySelector('.sm-wrap[data-k="a"]'),wb=body.querySelector('.sm-wrap[data-k="b"]');
+  wa.insertAdjacentHTML('beforeend',chA.svg);wireCross(wa,chA,{f:(v)=>FV(a,v).v,cad:cadence(a)});
+  wb.insertAdjacentHTML('beforeend',chB.svg);wireCross(wb,chB,{f:(v)=>FV(b,v).v,cad:cadence(b)});
   $('.sx-back',body).addEventListener('click',()=>go({}));
   body.querySelectorAll('.chip[data-m]').forEach(c=>c.addEventListener('click',()=>go({m:c.dataset.m})));
 }
