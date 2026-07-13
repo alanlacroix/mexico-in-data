@@ -193,4 +193,10 @@ export const connectors = [
       return { vintage: data[data.length - 1].date, data, notes: 'YoY del INPC general (SP1)' };
     },
   },
+
+  // INPC index LEVEL (SP1, base 2Q Jul 2018 = 100). Same series the inflation connector reads, but kept
+  // as the raw price index so the site can deflate nominal series (e.g. the minimum wage) into real terms.
+  // A 12-year window covers the "since 2018" real-wage comparison. makeConnector emits d.dato as-is, and
+  // for SP1 that IS the index level — no custom normalize needed.
+  makeConnector({ id: 'banxico-inpc', title: 'INPC — índice general (nivel)', metric: 'cpi_index', serie: 'SP1', units: 'index (2Q Jul 2018 = 100)', cadence: 'monthly', maxPct: 20, years: 12 }),
 ];
