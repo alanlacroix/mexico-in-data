@@ -1,96 +1,164 @@
 ---
 layout: base.njk
 permalink: /
-title: "The Mexico Brief: what changed in Mexico, and why it matters."
-description: "A curated starting point for understanding Mexico: what changed, where things stand, why it matters, and the original source. The important numbers and the developments that move them."
+title: "The Mexico Brief: Mexico's economy in official numbers."
+description: "Mexico's economy in official numbers: growth, the peso, inflation, jobs, investment, politics and security."
 ogTitle: "The Mexico Brief"
-ogDescription: "What changed in Mexico, where things stand, and why it matters — with the source."
+ogDescription: "Mexico's economy in official numbers."
 ---
 {% raw %}
 <style>
   :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
   body{font-size:var(--fs-body)}
-  .home{max-width:900px;margin:0 auto;padding:0 clamp(16px,4vw,44px)}
-  .blk{margin:26px 0 0}
+  .home{max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,44px)}
 
-  /* ---- masthead ---- */
-  .mb-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding:30px 0 10px;flex-wrap:wrap}
-  .mb-head .mb-t{font-family:var(--sans);font-size:var(--fs-h2);letter-spacing:-.02em;color:var(--ink);font-weight:700}
-  .mb-head .mb-m{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);text-align:right;line-height:1.5}
-  .mb-head .mb-m b{color:var(--green-d);font-weight:700}
+  /* 1 · HERO */
+  .hero{padding:36px 0 8px}
+  .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.0;letter-spacing:-.025em;margin:9px 0 0;color:var(--ink)}
+  .country{font-size:var(--fs-small);line-height:1.62;color:var(--ink-2);margin:18px 0 4px;max-width:66ch}
+  .country b{color:var(--ink);font-weight:600}
+  .country .ref{font-family:var(--mono);font-size:var(--fs-label);color:var(--green);vertical-align:super;text-decoration:none;padding:0 1px}
+  .bottomline{font-size:15px;line-height:1.5;color:var(--ink-2);margin:16px 0 2px;max-width:70ch;padding:12px 15px;background:var(--paper-2);border-left:3px solid var(--green);border-radius:0 8px 8px 0}
+  .bottomline b{color:var(--ink)}
+  .bottomline .bl-k{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);font-weight:600}
 
-  /* ---- section head (shared primitive lives in master; a couple of homepage tweaks) ---- */
-  .section-head--tight .no{color:var(--green-d)}
+  /* THE BRIEF — the 2-paragraph synthesis lead. Every sentence is a link to the source it
+     cites (dotted = sourced, solid green on hover) — the "no sentence without a link" law made visible. */
+  .brief{margin:6px 0 2px;max-width:74ch}
+  .brief p{font-size:18px;line-height:1.66;color:var(--ink);margin:0 0 13px;font-weight:400}
+  .brief p:last-child{margin-bottom:0}
+  .brief .s{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--line-2);cursor:pointer}
+  .brief .s:hover{border-bottom:1px solid var(--green)}
+  /* 3-5 explained items: one paragraph each, bold headline lede, a mono source·date link at the end */
+  .brief .bi{margin:0 0 15px}
+  .brief .bhl{font-weight:700;color:var(--ink)}
+  .brief .bsrc{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-decoration:none;letter-spacing:.02em;white-space:nowrap}
+  .brief .bsrc:hover{color:var(--green-d)}
+  .brief .brief-nums{font-size:var(--fs-small);color:var(--ink-2);border-top:1px solid var(--line);padding-top:12px;margin-top:16px;font-variant-numeric:tabular-nums}
+  @media(max-width:560px){ .brief p{font-size:var(--fs-small)} }
+  /* Mobile Brief compression (Fable 2026-07-12): keep all 5 stories visible, shrink the tails, never
+     truncate. Sublines tighten; ranks 4-5 go headline-only so the whole week fits ~2 phone screens. */
+  @media(max-width:640px){
+    .brief .bi{margin-bottom:11px;line-height:1.5}
+    .brief .bi[data-rank="4"] .bctx, .brief .bi[data-rank="5"] .bctx{display:none}
+    .brief .bi[data-rank="4"], .brief .bi[data-rank="5"]{margin-bottom:8px}
+  }
 
-  /* ---- BLOCK 1 · WHAT CHANGED ---- */
-  .chg{border:1px solid var(--line-2);border-radius:6px;overflow:hidden}
-  .chgrow{display:flex;gap:13px;align-items:baseline;padding:13px 16px;border-bottom:1px solid var(--line);background:var(--paper);text-decoration:none}
-  .chgrow:last-child{border-bottom:none}
+  /* THE AREAS — the topic browse. Each area: a header (→ its section page), a 1–2 sentence read,
+     then up to 3 standardized headline line-items (claim + muted source · date). 2-col on desktop.
+     One visual grammar, hard caps, fixed order — the anti-'articles all over the place' rules. */
+  .areas{display:grid;grid-template-columns:1fr;gap:8px;margin:2px 0 4px}
+  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden}}
+  .area{background:var(--paper);padding:21px 21px 19px}
+  @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:4px}}
+  .area-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none;margin-bottom:8px}
+  .area-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .area-go{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
+  .area-h:hover .area-go{color:var(--green-d)}
+  .area-syn{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);margin:0 0 13px}
+  .area-hl .hl{display:block;padding:9px 0;border-top:1px solid var(--line);text-decoration:none}
+  .area-hl .hl:first-child{border-top:none;padding-top:1px}
+  .hl-t{display:block;font-size:var(--fs-small);color:var(--ink);font-weight:500;line-height:1.36}
+  .area-hl .hl:hover .hl-t{color:var(--green-d)}
+  .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
+  .area-empty{font-size:var(--fs-meta);color:var(--mut);padding:2px 0 4px}
+
+  /* block headers use the shared .section-head / .section-head--tight primitive (master stylesheet);
+     the old inline-kicker .bh/.board-lbl patterns were deleted 2026-07-12 (they wrapped mid-phrase on
+     mobile). THE RULE: a headline never shares a line with meta type. No inline H2s. */
+
+  /* 2 · THE BOARD */
+  .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
+  @media(min-width:560px){.tablero{grid-template-columns:repeat(4,1fr)}}
+  .tilelink{display:contents}
+  /* TILE HIERARCHY (Fable 2026-07-12): 3 contrast-separated clusters — value dominates, context in the
+     reading face, trust recedes. The fix for "tight" is contrast + grouping, not just padding. */
+  .tile{background:var(--paper);padding:19px 18px 17px;cursor:pointer;height:100%;display:flex;flex-direction:column}
+  .tilelink:hover .tile{background:var(--paper-2)}
+  .tile .tl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
+  /* CLUSTER 1 — the value is THE anchor: it wins the eye by a lot */
+  .tile .tv{font-family:var(--sans);font-size:clamp(28px,3vw,37px);color:var(--ink);margin-top:4px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.02em}
+  .tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
+  .tile .dl{font-family:var(--mono);font-size:13px;color:var(--ink-2);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
+  .tile .dl.up::before{content:"▲ ";font-size:var(--fs-label)} .tile .dl.dn::before{content:"▼ ";font-size:var(--fs-label)}
+  .tile .dl.up,.tile .dl.dn{color:var(--ink-2)}   /* neutral: direction is the arrow + sign, not a good/bad color */
+  .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
+  .tile svg.spark{margin-top:7px}
+  .tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
+  /* CLUSTER 2 — context in the READING FACE (sans, not mono): the mono/prose split IS the hierarchy signal */
+  .tile .tx{font-family:var(--sans);font-size:14px;color:var(--ink-2);line-height:1.5;margin-top:13px;padding-top:12px;border-top:1px solid var(--line);order:2}
+  /* benchmark leaves the glance except where it IS the interpretive anchor (inflation vs target, rate vs neutral) */
+  .tile .tb{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:6px;line-height:1.4}
+  .tile .tb .arw{font-weight:700}
+  #tablero .tile .tb{display:none}
+  #tablero .tile[data-go="banxico-inflacion"] .tb,#tablero .tile[data-go="banxico-tasa-objetivo"] .tb{display:block}
+  /* CLUSTER 3 — trust rail recedes hard and sits after the context */
+  .tile .stamp{margin-top:13px;display:block;order:3}
+  .tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:3px;display:block;line-height:1.35;order:3}
+  .tile .tbadge{order:3}
+  .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+  .stamp.live{color:var(--green-d);font-weight:600}
+  .chip-ph{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
+
+  /* 2b · WHAT CHANGED — the lead queue (event log + series-delta fallback, one treatment) */
+  .chg{border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
+  .chg-item{border-bottom:1px solid var(--line);background:var(--paper)}
+  .chg-item:last-child{border-bottom:none}
+  .chgrow{display:flex;align-items:center;gap:12px;padding:12px 15px}
   .chgrow:hover{background:var(--paper-2)}
-  .chgrow .cn{font-family:var(--mono);font-size:13px;color:var(--mut);font-variant-numeric:tabular-nums;flex:none;width:16px;padding-top:2px}
-  .chgrow .cb{flex:1;min-width:0}
-  .chgrow .ct{font-size:var(--fs-small);color:var(--ink);line-height:1.5}
-  .chgrow .ct b{font-weight:700}
-  .chgrow .ct .conn{color:var(--ink-2)}
-  .chgrow .cs{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;color:var(--mut);text-decoration:none;white-space:nowrap;flex:none;padding-top:2px}
-  .chgrow .cs:hover{color:var(--green-d)}
-  .chgrow .ck{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);border:1px solid var(--green-bg);border-radius:3px;padding:1px 5px;flex:none;margin-top:2px}
-  .chg-quiet{border:1px solid var(--line-2);border-radius:6px;background:var(--paper);padding:16px;font-size:var(--fs-small);color:var(--ink-2);line-height:1.55}
-  .chg-quiet b{color:var(--ink)}
+  .chgrow.cross{background:var(--green-bg)}
+  .chgrow.cross:hover{background:#dcefe3}
+  .cg-body{flex:1;min-width:0;display:block;text-decoration:none}
+  .cg-line{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .cg-flag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border-radius:3px;padding:1px 6px;white-space:nowrap}
+  .cg-lbl{font-size:15px;color:var(--ink);font-weight:600}
+  .cg-move{font-family:var(--sans);font-size:var(--fs-body);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .cg-meta{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
+  .cg-src{font-family:var(--mono);font-size:11px;color:var(--green-d);white-space:nowrap;text-decoration:none;flex:none}
+  .cg-src:hover{text-decoration:underline}
+  .cg-go{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);flex:none}
+  .chg-quiet{border:1px solid var(--line-2);border-radius:4px;background:var(--paper);padding:15px 16px;font-size:15px;color:var(--ink-2);margin:2px 0 4px}
 
-  /* ---- BLOCK 2 · MEXICO NOW (the board) ---- */
-  .board6{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:6px;overflow:hidden}
-  @media(min-width:640px){.board6{grid-template-columns:repeat(3,1fr)}}
-  .btile{background:var(--paper);padding:16px 16px 14px;text-decoration:none;display:flex;flex-direction:column}
-  .btile:hover{background:var(--paper-2)}
-  .bt-l{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--mut);line-height:1.3}
-  .bt-v{font-family:var(--sans);font-size:clamp(26px,3.4vw,33px);color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.02em}
-  .bt-v small{font-size:12px;color:var(--mut);font-weight:400}
-  .bt-sub{font-family:var(--sans);font-size:13px;color:var(--ink-2);margin-top:6px;font-variant-numeric:tabular-nums}
-  .bt-d{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:6px;font-variant-numeric:tabular-nums}
-  .bt-s{font-family:var(--mono);font-size:10px;letter-spacing:.02em;color:var(--mut);margin-top:auto;padding-top:11px;line-height:1.4}
-  .bt-s .dated{color:var(--amber2)}
-  .board-note{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px}
-  .board-note a{color:var(--green-d)}
+  /* 2c · IMPACT SCORE — expand a row (caret) to see its components + weights */
+  .cg-caret{flex:none;font-family:var(--mono);font-size:var(--fs-label);line-height:1;color:var(--mut);background:none;border:none;cursor:pointer;padding:4px 3px;transition:transform .15s ease}
+  .cg-caret:hover{color:var(--green-d)}
+  .cg-caret.open{transform:rotate(90deg)}
+  .cg-breakdown{background:var(--paper-2);border-top:1px solid var(--line);padding:11px 15px 12px;font-family:var(--mono)}
+  .bd-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px}
+  .bd-k{font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700}
+  .bd-score{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .bd-grid{display:flex;flex-direction:column;gap:6px}
+  .bd-hd,.bd-f{display:grid;grid-template-columns:1fr 46px 32px 52px;gap:2px 8px;align-items:baseline}
+  .bd-hd{font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);padding-bottom:4px;border-bottom:1px solid var(--line)}
+  .bd-hd span:nth-child(n+2){text-align:right}
+  .bd-fn{font-size:11px;color:var(--ink)}
+  .bd-fv,.bd-fw,.bd-fc{font-size:11px;text-align:right;font-variant-numeric:tabular-nums}
+  .bd-fv{color:var(--ink-2)} .bd-fw{color:var(--mut)} .bd-fc{color:var(--ink);font-weight:600}
+  .bd-note{grid-column:1 / -1;font-size:var(--fs-label);color:var(--mut);letter-spacing:.02em;line-height:1.35}
+  .bd-f.ph .bd-fv,.bd-f.ph .bd-fc,.bd-f.ph .bd-note{color:var(--amber2)}
+  .bd-eq{font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.55}
+  .bd-eq code{font-family:var(--mono);color:var(--ink-2)}
 
-  /* ---- BLOCK 3 · WHAT MATTERS ---- */
-  .matters .mi{padding:0 0 16px;margin:0 0 16px;border-bottom:1px solid var(--line)}
-  .matters .mi:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-  .matters .mh{font-family:var(--sans);font-size:var(--fs-h3);line-height:1.2;letter-spacing:-.01em;color:var(--ink);font-weight:700;margin:0 0 7px}
-  .matters .mx{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);margin:0}
-  .matters .mv{font-family:var(--sans);font-size:14.5px;line-height:1.55;color:var(--ink);margin:9px 0 0;padding:9px 13px;background:var(--green-bg);border-left:3px solid var(--green);border-radius:0 6px 6px 0}
-  .matters .mv .mvk{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700;display:block;margin-bottom:3px}
-  .matters .msrc{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;color:var(--mut);text-decoration:none;margin-top:9px;display:inline-block}
-  .matters .msrc:hover{color:var(--green-d)}
+  /* what's happening — the cross-domain lead; reuses the .chg row shell, adds a why line */
+  .hap-row{align-items:flex-start;gap:13px}
+  .hap-tag{flex:none;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:3px 7px;white-space:nowrap;margin-top:2px;text-decoration:none}
+  .hap-tag:hover{color:var(--green-d);border-color:var(--green-bg)}
+  .hap-b{padding:0}
+  .hap-line{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+  .hap-date{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);flex:none}
+  .hap-title{font-size:15px;color:var(--ink);font-weight:600;line-height:1.32}
+  .hap-why{font-size:var(--fs-meta);color:var(--ink-2);line-height:1.5;margin-top:5px;max-width:82ch}
+  .hap .cg-src{align-self:flex-start;margin-top:3px}
+  /* mobile: the 3-column row (tag / body / source) can't fit — stack it cleanly */
+  @media(max-width:640px){
+    .hap-row{flex-direction:column;align-items:stretch;gap:7px}
+    .hap-tag{align-self:flex-start;margin-top:0}
+    .hap-b{width:100%}
+    .hap .cg-src{align-self:flex-start;margin-top:2px}
+  }
 
-  /* ---- BLOCK 4 · COMING NEXT ---- */
-  .coming .nur{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:baseline}
-  .coming .nur:last-child{border-bottom:none}
-  .coming .nud{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:52px;font-variant-numeric:tabular-nums;line-height:1.3;flex:0 0 auto}
-  .coming .nud small{color:var(--mut);display:block;font-size:var(--fs-label)}
-  .coming .nut{font-size:var(--fs-small);color:var(--ink);line-height:1.35;flex:1}
-  .coming .nusrc{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-decoration:none;flex:none}
-  .coming a.nusrc{color:var(--green-d)}
-  .coming .cb-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0}
-
-  /* ---- BLOCK 5 · GO DEEPER ---- */
-  .godeeper{margin:30px 0 0;border-top:1px solid var(--line);padding-top:16px;font-size:var(--fs-small);line-height:2;color:var(--mut)}
-  .godeeper .gd-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:600;margin-right:10px}
-  .godeeper a{color:var(--ink);text-decoration:none;font-weight:500}
-  .godeeper a:hover{color:var(--green-d);text-decoration:underline}
-  .godeeper .sep{color:var(--line-2)}
-
-  /* ---- primer (collapsed) + newsletter ---- */
-  .primer{margin-top:26px}
-  .primerbox{border:1px solid var(--line);border-radius:6px;background:var(--paper)}
-  .primerbox summary{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600;cursor:pointer;padding:14px 16px;list-style:none;display:flex;justify-content:space-between;gap:10px}
-  .primerbox summary::-webkit-details-marker{display:none}
-  .primerbox summary::after{content:"+";color:var(--mut)} .primerbox[open] summary::after{content:"–"}
-  .primerbox .country{margin:0;padding:0 16px 16px;font-size:var(--fs-small);line-height:1.62;color:var(--ink-2)}
-  .primerbox .country b{color:var(--ink);font-weight:600}
-  .primerbox .country .ref{font-family:var(--mono);font-size:var(--fs-label);color:var(--green);vertical-align:super;text-decoration:none;padding:0 1px}
-
-  .sub{margin:22px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
+  /* 4 · NEWSLETTER (from weekly.njk .sub) */
+  .sub{margin:8px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
   .sub .lab{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
   .sub .line{font-size:var(--fs-small);color:var(--ink-2);margin-top:8px;line-height:1.5}
   .sub .line b{color:var(--ink)}
@@ -100,63 +168,198 @@ ogDescription: "What changed in Mexico, where things stand, and why it matters �
   .sub button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:9px;padding:12px 24px;cursor:pointer}
   .sub button:hover{background:var(--green-d)}
   .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:11px;line-height:1.6}
+  .sub .samplelink{display:inline-block;margin-top:13px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);text-decoration:none;border-bottom:2px solid #daf0e2;padding-bottom:1px}
 
-  .hp-err{font-family:var(--mono);font-size:var(--fs-label);color:var(--red)}
-  @media(max-width:560px){ .chgrow{flex-wrap:wrap} .chgrow .cs{width:100%;padding-top:0} }
+  /* 5 · SECTION CARDS */
+  .seccards{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
+  @media(min-width:560px){.seccards{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:900px){.seccards{grid-template-columns:repeat(3,1fr)}}
+  .seccard{background:var(--paper);padding:17px 18px 15px;text-decoration:none;display:flex;flex-direction:column;gap:0}
+  .seccard:hover{background:var(--paper-2)}
+  .seccard .sc-k{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .seccard .sc-stat{font-family:var(--sans);font-size:28px;color:var(--ink);margin-top:8px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .seccard .sc-stat small{font-size:var(--fs-meta);color:var(--mut);font-weight:400}
+  .seccard .sc-wire{font-size:13px;color:var(--ink-2);line-height:1.4;margin-top:11px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .seccard .sc-wire .sc-none{color:var(--mut);font-family:var(--mono);font-size:11px}
+  .seccard .sc-go{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);margin-top:12px}
+
+  /* 6 · WHAT TO WATCH + THE WIRE */
+  .coverband{display:grid;grid-template-columns:1fr;gap:22px;margin:2px 0 4px}
+  @media(min-width:760px){.coverband{grid-template-columns:minmax(240px,320px) 1fr;gap:34px}}
+  .cb-h{display:flex;align-items:baseline;justify-content:space-between;border-top:2px solid var(--green);padding-top:9px;margin-bottom:6px}
+  .cb-h .k{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
+  .cb-h .a{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
+  .watchtbl .wtr{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .watchtbl .wtr:last-child{border-bottom:none}
+  .watchtbl .wtr .wd{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:50px;font-variant-numeric:tabular-nums;line-height:1.3}
+  .watchtbl .wtr .wd small{color:var(--mut);display:block;font-size:var(--fs-label)}
+  .watchtbl .wtr .wk{width:3px;align-self:stretch;border-radius:2px;background:var(--line-2)}
+  .watchtbl .wtr .wk.banxico,.watchtbl .wtr .wk.fomc,.watchtbl .wtr .wk.inegi{background:var(--green)}
+  .watchtbl .wtr .wk.political,.watchtbl .wtr .wk.election{background:var(--red)}
+  .watchtbl .wtr .wk.trade,.watchtbl .wtr .wk.fiscal{background:var(--amber2)}
+  .watchtbl .wtr .wt{font-size:var(--fs-small);color:var(--ink);flex:1;line-height:1.35}
+  .watchtbl .wtr .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:2px}
+  .watchtbl .wtr .wsrc{font-family:var(--mono);font-size:var(--fs-label)}
+  .cb-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0}
+  .wire .wi{padding:11px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:98px 1fr;gap:11px;align-items:baseline}
+  .wire .wtag{justify-self:start}
+  .wire .wi:last-child{border-bottom:none}
+  .wire .wtag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px;text-decoration:none}
+  .wire .wtag:hover{color:var(--green-d);border-color:var(--green-bg)}
+  .wire .wbody{flex:1}
+  .wire .wt{font-size:var(--fs-small);color:var(--ink);line-height:1.35;text-decoration:none}
+  .wire .wt:hover{color:var(--green-d);text-decoration:underline}
+  .wire .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:3px}
+  .wire-note{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.6}
+  /* what stood out — the analysis surfaced */
+  #stood{display:grid;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:8px;overflow:hidden;margin:2px 0 4px}
+  .stoodrow{display:flex;gap:14px;align-items:baseline;background:var(--paper);padding:13px 16px;text-decoration:none}
+  .stoodrow:hover{background:var(--paper-2)}
+  .stoodrow .stag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700;flex:0 0 74px;padding-top:2px}
+  .stoodrow .stxt{font-size:15px;color:var(--ink);line-height:1.45}
+  a.stood-link{color:var(--green-d)}
+  .wflag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle}
+  /* masthead — a clear, dated top like a morning paper */
+  .masthead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:9px;flex-wrap:wrap}
+  .masthead .today{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);font-weight:600;letter-spacing:-.01em}
+  .masthead .fresh{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .masthead .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
+  .hero h1#lead{margin-top:16px}
+  .hero + .homegrid .hg-brief .section-head--tight{margin-top:26px}   /* the Brief follows the hero closely; other grid sections keep the full gap */
+  .hero h1#lead a{color:inherit;text-decoration:none;border-bottom:3px solid transparent;transition:border-color .12s}
+  .hero h1#lead a:hover{border-bottom-color:var(--green)}
+  .wire-note a{color:var(--green)}
+
+  /* Homepage grid (Fable 2026-07-12 hierarchy). DOM order Brief → What stood out → Numbers → Next up =
+     the mobile reading order. On desktop grid-template-areas lift the quiet "Next up" rail top-right
+     beside the Brief; What stood out and the board span full width below. No `order` (a11y = visual). */
+  .homegrid{display:block}
+  @media(min-width:1080px){
+    .homegrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;
+      column-gap:clamp(36px,4.5vw,64px);
+      grid-template-areas:"brief nextup" "stood stood" "numbers numbers";align-items:start}
+    .hg-brief{grid-area:brief;min-width:0}
+    .hg-stood{grid-area:stood;min-width:0}
+    .hg-numbers{grid-area:numbers;min-width:0}
+    .hg-nextup{grid-area:nextup}   /* NOT sticky: a sticky rail floats over the full-width board/areas below it */
+    .hg-nextup .nextup-lbl{margin-top:29px}   /* align the kicker with the Brief heading */
+  }
+
+  /* NEXT UP — a margin note, not a second column: hairline rule, muted kicker, date/title/source only */
+  .nextup-lbl{border-top:1px solid var(--line);padding-top:12px;margin-bottom:6px}
+  .nextup-lbl .k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600}
+  .hg-nextup .nur{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .hg-nextup .nur:last-child{border-bottom:none}
+  .hg-nextup .nud{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:44px;font-variant-numeric:tabular-nums;line-height:1.3;flex:0 0 auto}
+  .hg-nextup .nud small{color:var(--mut);display:block;font-size:var(--fs-label)}
+  .hg-nextup .nut{font-size:var(--fs-small);color:var(--ink);line-height:1.35}
+  .hg-nextup .num{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:3px;line-height:1.42}
+  .hg-nextup .nusrc{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);display:inline-block;margin-top:3px;text-decoration:none}
+  .hg-nextup a.nusrc{color:var(--green-d)}
+  .hg-nextup a.nusrc:hover{text-decoration:underline}
+  .nextup-toggle{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;color:var(--green-d);background:none;border:none;padding:11px 0 0;cursor:pointer}
+  .nextup-toggle:hover{text-decoration:underline}
+
+  /* 7 · PRIMER — evergreen orientation, moved out of the top and collapsed */
+  .primer{margin-top:30px}
+  .primerbox{border:1px solid var(--line);border-radius:4px;background:var(--paper)}
+  .primerbox summary{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600;cursor:pointer;padding:14px 16px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+  .primerbox summary::-webkit-details-marker{display:none}
+  .primerbox summary::after{content:"+";color:var(--mut)}
+  .primerbox[open] summary::after{content:"–"}
+  .primerbox .country{margin:0;padding:0 16px 16px}
+
+  /* board "show all indicators" toggle — appears on mobile only */
+  .board-more{display:none}
+
+  /* MOBILE — real usability fix at ≤480px (390px target) */
+  @media(max-width:480px){
+    .tablero{grid-template-columns:1fr}                       /* was 2-up: clipped labels/sources */
+    .tile{padding:14px 15px 13px}
+    .tile .tl{min-height:0}
+    .tile .tb,.tile .tsrc,.tile svg.spark{display:none}       /* benchmark + source + sparkline behind the tile tap */
+    .tilelink.extra{display:none}                             /* only the four core tiles by default */
+    .tablero.show-all .tilelink.extra{display:contents}
+    .board-more{display:block;width:100%;font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;color:var(--green-d);background:var(--paper);border:1px solid var(--line-2);border-radius:9px;padding:11px;margin:8px 0 4px;cursor:pointer}
+  }
 </style>
 
 <div class="home">
 
-  <header class="mb-head">
-    <div class="mb-t">Mexico Brief</div>
-    <div class="mb-m"><span id="mb-updated">&nbsp;</span><br><b id="mb-nchg">&nbsp;</b></div>
-  </header>
-
-  <!-- BLOCK 1 · WHAT CHANGED -->
-  <section class="blk" id="changed-sec">
-    <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">What changed</span><span class="asof" id="changed-asof"></span></div></div>
-    <div id="changed"></div>
+  <!-- 1 · HERO -->
+  <section class="hero">
+    <div class="masthead">
+      <span class="today" id="today">&nbsp;</span>
+      <a class="fresh" href="/sources.html"><span class="dot"></span><span id="status">Official data</span></a>
+    </div>
+    <h1 id="lead">The week's major changes in Mexico.</h1>
   </section>
 
-  <!-- BLOCK 2 · MEXICO NOW -->
-  <section class="blk">
-    <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">Mexico now</span><span class="asof" id="board-asof"></span></div></div>
-    <div class="board6" id="board"></div>
-    <p class="board-note">Open a tile to see it over time. <a href="/chart.html">All the numbers &rarr;</a></p>
+  <!-- 2 · THE HOMEGRID — Fable 2026-07-12 hierarchy. DOM order is Lead(hero) → Brief → What stood out →
+       Numbers → Next up, which IS the mobile reading order (understand the present before the schedule).
+       On desktop, grid-template-areas lift the quiet "Next up" rail into the top-right beside the Brief
+       while What stood out and the board run full width below. No CSS `order`: screen-reader/tab order
+       must equal the visual order. -->
+  <div class="homegrid">
+    <section class="hg-brief">
+      <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">The Brief</span><span class="asof" id="brief-asof"></span></div></div>
+      <div id="brief" class="brief"></div>
+    </section>
+
+    <!-- 2b · WHAT STOOD OUT — first data interpretation, right after the Brief -->
+    <section id="stood-sec" class="hg-stood">
+      <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">What stood out</span><span class="asof" id="stood-asof"></span></div></div>
+      <div id="stood"></div>
+    </section>
+
+    <!-- 3 · THE BOARD -->
+    <section class="hg-numbers">
+      <div class="section-head section-head--tight">
+        <div class="eyebrow-row"><span class="no">Where things stand</span><span class="asof" id="board-asof"></span></div>
+        <h2>The numbers</h2>
+      </div>
+      <div class="tablero" id="tablero"></div>
+      <button class="board-more" id="board-more" type="button" aria-expanded="false">Show all indicators</button>
+      <p class="wire-note">Open a tile for its full history and source. <a href="/sources.html">See all sources &rarr;</a></p>
+    </section>
+
+    <!-- 4 · NEXT UP — quiet dated-catalyst rail (Fable: date/title/source only; the event that echoes the
+         lead story is suppressed; "All N dates" inline-expands with the why). Last in DOM = last on
+         mobile; the grid lifts it top-right on desktop. -->
+    <aside id="wire" class="hg-nextup">
+      <div class="nextup-lbl"><span class="k">Next up</span></div>
+      <div id="watch-list"></div>
+    </aside>
+  </div>
+
+  <!-- 3b · THE AREAS — the topic browse: each area = a 1–2 sentence read + its top headlines -->
+  <section>
+    <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">This week</span><span class="asof" id="areas-asof"></span></div><h2>Mexico by topic</h2></div>
+    <div class="areas" id="areas"></div>
   </section>
 
-  <!-- BLOCK 3 · WHAT MATTERS -->
-  <section class="blk" id="matters-sec">
-    <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">What matters</span><span class="asof" id="matters-asof"></span></div></div>
-    <div id="matters" class="matters"></div>
-  </section>
 
-  <!-- BLOCK 4 · COMING NEXT -->
-  <section class="blk" id="coming-sec">
-    <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">Coming next</span></div></div>
-    <div id="coming" class="coming"></div>
-  </section>
 
-  <!-- BLOCK 5 · GO DEEPER -->
-  <nav class="godeeper">
-    <span class="gd-k">Go deeper</span><a href="/economy.html">Economy</a> <span class="sep">·</span> <a href="/politics.html">Politics</a> <span class="sep">·</span> <a href="/trade.html">Trade &amp; US</a> <span class="sep">·</span> <a href="/security.html">Security</a> <span class="sep">·</span> <a href="/society.html">Society</a> <span class="sep">·</span> <a href="/chart.html">Charts</a> <span class="sep">·</span> <a href="/atlas.html">Atlas</a> <span class="sep">·</span> <a href="/sources.html">Sources</a>
-  </nav>
+  <!-- (WHAT TO WATCH moved into the Brief's right rail above — Fable 2026-07-12) -->
 
+  <!-- 7 · PRIMER — new to Mexico? the evergreen basics, moved out of the top -->
   <section class="primer">
     <details class="primerbox">
       <summary>New to Mexico: the basics</summary>
       <p class="country">
         Mexico has <b>131 million people</b> and a <b>~$1.9 trillion economy</b>, the world's ~14th-largest.<a class="ref" href="/economy.html" title="World Bank">1</a>
-        It is the <b>largest US trading partner</b>, and about <b>80% of its exports go to the United States</b>.<a class="ref" href="/trade.html" title="US Census Bureau; INEGI / Banxico">2</a>
+        It is the <b>largest US trading partner</b>. Mexico mostly sells manufactured goods abroad, and about <b>80% of its exports go to the United States</b>.<a class="ref" href="/us-mexico.html" title="US Census Bureau; INEGI / Banxico balance of trade">2</a>
         It elects a president every six years. <b>Claudia Sheinbaum</b> of Morena holds the office through 2030.<a class="ref" href="/politics.html" title="INE; Presidencia">3</a>
       </p>
     </details>
   </section>
 
+  <!-- NEWSLETTER — moved to the bottom, the last thing before the footer -->
   <section>
     <div class="sub">
       <div class="lab">The email · free</div>
-      <p class="line">A few times a month, I send a brief on what changed in Mexico's economy, politics, business, crime, and relationship with the United States. Sources included. <a href="/weekly.html" style="color:var(--green-d);font-weight:600">More &rarr;</a></p>
+      <p class="line">A few times a month, I send a brief on what changed in Mexico's economy, politics, business, crime, and relationship with the United States. The original sources are included if you want to go deeper. <a href="/weekly.html" style="color:var(--green-d);font-weight:600">More &rarr;</a></p>
+      <!-- Our own form -> /api/subscribe (Cloudflare function -> beehiiv, key server-side). No third-party UI. -->
       <form class="subform" novalidate>
         <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
         <button type="submit">Subscribe</button>
@@ -168,157 +371,246 @@ ogDescription: "What changed in Mexico, where things stand, and why it matters �
 </div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, fmt, valueAgo, stampFor, srcBadge, relTime, evDate, enNum } from '/assets/mb.js?v=15';
-const $=(id)=>document.getElementById(id);
-const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const nd=(s)=>String(s==null?'':s).replace(/\s*—\s*/g,', ');           // strip em-dashes (voice law)
-const firstSentence=(s)=>{ const t=nd(s); const m=t.match(/^.*?[.?!](\s|$)/); return (m?m[0]:t).trim(); };
+import { loadSeries, S, EVENTS, tile, fmt, srcBadge, relTime, evDate, enNum } from '/assets/mb.js?v=15';
 
-/* old #q anchors → their section pages */
-const RD={'#q3':'/money.html','#q4':'/economy.html','#q5':'/economy.html','#q6':'/society.html','#q7':'/politics.html','#q8':'/trade.html','#q9':'/security.html','#q10':'/economy.html'};
+/* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
+   Every topic now owns a page, so a bookmarked #q link should land on it. */
+const RD={'#q3':'/money.html','#q4':'/economy.html','#q5':'/economy.html','#q6':'/society.html','#q7':'/politics.html','#q8':'/us-mexico.html','#q9':'/security.html','#q10':'/economy.html','#q11':'/model.html'};
 if(RD[location.hash]){ location.replace(RD[location.hash]); }
 
-/* ============ BLOCK 1 · WHAT CHANGED ============
-   Two deterministic inputs merged, ranked, capped at 5 (Fable 2026-07-13):
-   (a) curated event headlines (rubric-passed, from brief.json) — the week's stories;
-   (b) data movers (from the facts pack, computed from the series) — what moved in the numbers,
-       each carrying a computed cross-series connection as a second clause when one applies.
-   Quiet day is a designed state, not a fallback: if nothing crossed the bar, say so. */
-function renderChanged(facts, brief){
-  const rows=[];
-  // (a) curated headlines: lead first, then items, in rubric order. Anchor into their What-matters card.
-  if(brief && brief.lead && brief.lead.h1){
-    rows.push({ kind:'event', headline: nd(brief.lead.h1).replace(/\.\s*$/,''), src: brief.lead.source, href:'#wm-lead' });
-  }
-  (brief && brief.items || []).forEach((it,i)=>{
-    rows.push({ kind:'event', headline: nd(it.headline).replace(/\.\s*$/,''), src: it.source, href:(i<2?`#wm-${i}`:(it.href||null)) });
-  });
-  // (b) data movers, ranked by |z|. Skip a mover whose topic a headline already carries (light dedupe).
-  const movers=((facts && facts.whatMoved && facts.whatMoved.items) || []).slice().sort((a,b)=>Math.abs(b.z||0)-Math.abs(a.z||0));
-  const cx=(facts && facts.cross) || {};
-  movers.forEach(m=>{
-    const dir=m.dir<0?'fell to':(m.dir>0?'rose to':'held at');
-    const val=/%/.test(m.units)?`${m.value}%`:`${enNum(m.value)} ${m.units}`;
-    const flag=(m.flags&&m.flags[0])?` (${nd(m.flags[0])})`:'';
-    let conn='';
-    if(/inflaci|inflation|core/i.test(m.label) && cx.realRate && cx.realRate.value!=null) conn=` The real policy rate holds at ${cx.realRate.value}%.`;
-    else if(/rate|tasa/i.test(m.label) && cx.rateSpread && cx.rateSpread.value!=null) conn=` That is ${cx.rateSpread.value} points above the US Fed.`;
-    rows.push({ kind:'data', headline:`${m.label} ${dir} ${val}${flag}`, conn, src:'chart', href:`/chart.html?v=${m.id}` });
-  });
-  const capped=rows.slice(0,5);
-  // quiet day: no curated stories AND the pack flags the data quiet
-  const quiet = (!brief || !((brief.items||[]).length) || !brief.lead) && facts && facts.whatMoved && facts.whatMoved.quiet;
-  if(!capped.length || quiet){
-    const next=nextEventLabel();
-    return { n:0, html:`<div class="chg-quiet"><b>Quiet day.</b> No major official releases moved the numbers.${next?` Next up: ${esc(next)}.`:''}</div>` };
-  }
-  const html=`<div class="chg">`+capped.map((r,i)=>{
-    const srcEl = r.kind==='data' ? `<span class="ck">chart</span>` :
-      (r.src?`<span class="cs">${esc(r.src)}</span>`:'');
-    const body = r.kind==='data'
-      ? `<span class="ct"><b>${esc(r.headline)}.</b>${r.conn?`<span class="conn">${esc(r.conn)}</span>`:''}</span>`
-      : `<span class="ct"><b>${esc(r.headline)}.</b></span>`;
-    const href = r.href||'#';
-    return `<a class="chgrow" href="${esc(href)}"><span class="cn">${i+1}</span><span class="cb">${body}</span>${srcEl}</a>`;
-  }).join('')+`</div>`;
-  return { n:capped.length, html };
-}
-function nextEventLabel(){ const ev=(EVENTS&&EVENTS.events)||[]; const up=ev.filter(e=>new Date(e.date)>=Date.now()-864e5).sort((a,b)=>a.date.localeCompare(b.date)); return up.length?nd(up[0].label):''; }
+let TRADE=null;
 
-/* ============ BLOCK 2 · MEXICO NOW ============ the small set Alan uses to orient. 6 tiles, all honest. */
-function seriesLast(id){ const s=S[id]; return (s&&s.data&&s.data.length)?s.data[s.data.length-1]:null; }
-function tileDelta(id){ const s=S[id]; if(!s||!s.data||s.data.length<3)return ''; const last=s.data.at(-1).value, ago=valueAgo(s.data,365);
-  const isRate=/%/.test(s.meta.units||'')||/tasa|inflac|rate|igae|pib/.test(id);
-  if(isRate){ const d=last-ago; return Math.abs(d)<0.05?'held vs a year ago':`${d>0?'+':'−'}${Math.abs(d).toFixed(2)} pp vs a year ago`; }
-  const p=(last-ago)/Math.abs(ago)*100; return `${p>=0?'▲':'▼'} ${Math.abs(p).toFixed(1)}% vs a year ago`; }
-function srcShort(id){ const s=S[id]; return ((s&&s.meta&&s.meta.source)||'').replace(/\s*\(SIE\)/,'').split(' / ')[0].replace('Banco de México','Banxico'); }
-function btile(id,label,href,opts){ opts=opts||{}; const last=seriesLast(id);
-  if(!last) return `<a class="btile" href="${href}"><div class="bt-l">${label}</div><div class="bt-v" style="font-size:16px;color:var(--amber2)">—</div><div class="bt-s">feed unavailable</div></a>`;
-  const s=S[id], f=opts.valOverride||fmt(id,last.value,s.meta.units), st=stampFor(s.meta,id);
-  return `<a class="btile" href="${href}"><div class="bt-l">${label}</div>`+
-    `<div class="bt-v">${f.v} <small>${f.s}</small></div>`+
-    (opts.sub?`<div class="bt-sub">${opts.sub}</div>`:'')+
-    (opts.delta!==false?`<div class="bt-d">${tileDelta(id)}</div>`:'')+
-    `<div class="bt-s">${st.t} · ${esc(srcShort(id))}</div></a>`; }
-function renderBoard(trade){
-  // inflation: 2-decimal to match the rest of the site (3.37 / 4.03), core as subline
-  const infL=seriesLast('banxico-inflacion'); const infOv=infL?{v:infL.value.toFixed(2),s:'%'}:null;
-  const coreL=seriesLast('banxico-inflacion-subyacente'); const core=coreL?coreL.value.toFixed(2):null;
-  // growth: IGAE primary, GDP quarterly subline
-  const gdpL=seriesLast('banxico-pib-crecimiento'); const gdpSub=gdpL?`GDP ${fmt('banxico-pib-crecimiento',gdpL.value,'% YoY').v}% · ${qLabel(gdpL.date)}`:'';
-  // exports: US share subline (Census US-imports-from-Mexico ÷ Banxico total exports)
-  const expL=seriesLast('banxico-exports-total'); let usSub='about 80% to the US';
-  if(trade&&trade.latest&&expL){ const totBn=expL.value/1e6; const usBn=trade.latest.imports_bn; if(totBn>0&&usBn>0) usSub=`≈${Math.round(usBn/totBn*100)}% to the US`; }
-  let h='';
-  h+=btile('banxico-usdmxn-fix','Peso','/chart.html?v=banxico-usdmxn-fix');
-  h+=btile('banxico-inflacion','Inflation','/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente',{sub:core?`Core ${core}%`:'',valOverride:infOv});
-  h+=btile('banxico-tasa-objetivo','Policy rate','/chart.html?v=banxico-tasa-objetivo',{delta:false});
-  h+=btile('banxico-igae','Growth (IGAE)','/chart.html?v=banxico-igae,banxico-pib-crecimiento',{sub:gdpSub});
-  h+=btile('banxico-exports-total','Exports','/chart.html?v=banxico-exports-total',{sub:usSub});
-  // approval: a dated poll anchor, not a live feed — marked honestly
-  h+=`<a class="btile" href="/politics.html"><div class="bt-l">Approval</div>`+
-     `<div class="bt-v">49–68 <small>%</small></div><div class="bt-sub">pollsters differ ~20 pts</div>`+
-     `<div class="bt-s"><span class="dated">POLL · JUN 2026</span> · AS/COA tracker</div></a>`;
+/* section keyword filters — reused verbatim from the section pages so a homepage
+   headline matches what the section page itself would surface first. */
+const POL_RX=/sheinbaum|morena|gobierno|pol[ií]tic|\belecc|\belect|comicios|congreso|senado|diputad|judicial|oposici|\bpan\b|\bpri\b|gobernador|gubernatur|informe|constituc|government|\bcongress|senate|\belection|midterm|opposition|\bpresident|\bminister|cabinet/i;
+const SEC_RX=/seguridad|homicid|violenc|cartel|crimen|delito|desaparec|narco|secuestr|extorsi|drone attack/i;
+const USMX_RX=/usmca|t-?mec|arancel|tariff|ee\.?uu|estados unidos|frontera|\bborder\b|comercio|exportaci|trump|remesa|remittance|\bice\b|migra|deportaci|\bustr\b|washington/i;
+const SOC_RX=/pobreza|salario|salarial|empleo|desempleo|desigualdad|migraci|migrante|remesas|remittance|poblaci|imss|trabajador|informal|welfare|bienestar|coneval|conasami|pension|jornada|desarrollo humano|social|wage|poverty|inequality|\bjobs\b|\blabor\b/i;
+const ECON_RX=/econom|\bgdp\b|\bpib\b|growth|crecimiento|manufactur|industri|inversi|invest|nearshor|export|import|sector|f[aá]brica|factory/i;
+const MONEY_RX=/peso|inflaci|inflation|banxico|\brate\b|\btasa\b|remittance|remesas|market|mercado|tariff|arancel|usmca|nearshor|invest|inversi|bolsa|divisa/i;
+
+/* ============ THE BOARD (block 3) — same tile() render + same JSON as the sections ============ */
+const CORE=new Set(['banxico-usdmxn-fix','banxico-inflacion','banxico-tasa-objetivo','banxico-pib-crecimiento']); // shown by default on mobile
+const TILES=[
+  {id:'banxico-usdmxn-fix',   l:'Peso · per US dollar',      href:'/money.html'},
+  {id:'banxico-inflacion',    l:'Inflation · annual',  href:'/money.html'},
+  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',href:'/money.html'},
+  {id:'banxico-pib-crecimiento',l:'Growth · real GDP', href:'/economy.html'},
+  {id:'banxico-remesas',      l:'Remittances · monthly total', href:'/money.html'},
+  {id:'banxico-reservas',     l:"Int'l reserves",      href:'/money.html'},
+];
+// Context floor (Fable 2026-07-12): every number carries its neutral transmission line, so it is never bare.
+// MECHANISM only — moved by / feeds — no valence (good/bad), no politics, no claim that a number CAUSED a move.
+// Human-authored + static (never model-generated), so it cannot fabricate a driver.
+const TRANSMISSION={
+  'banxico-usdmxn-fix':   {line:'Moved by the Mexico–US rate gap and global risk. Feeds import prices and the peso value of remittances.'},
+  'banxico-inflacion':    {line:'Moved by food, energy and the peso. Shapes how much room Banxico has to move the rate.'},
+  'banxico-tasa-objetivo':{line:'Set against inflation and the US Fed. Moves the peso through the rate gap, and the cost of credit.'},
+  'banxico-pib-crecimiento':{line:'Driven mainly by US demand and investment. Feeds jobs, wages and public revenue.'},
+  'banxico-remesas':      {line:'Driven by the US job market. Household income for millions; a weaker peso raises its peso value.'},
+  'banxico-reservas':     {line:'Built from external flows. A buffer against a currency shock.'},
+};
+function renderBoard(){
+  // the four core tiles always show; the rest carry .extra and collapse behind "Show all" on mobile
+  let h=TILES.map(t=>`<a class="tilelink${CORE.has(t.id)?'':' extra'}" href="/chart.html?m=${t.id}">${tile(t)}</a>`).join('');   // tiles shortcut into the explorer, pre-selected (Fable 2026-07-12)
+  // two dated static tiles (no live series exists yet) — links to their owning sections
+  h+=`<a class="tilelink extra" href="/security.html"><div class="tile"><div class="tl">Homicide rate · national</div>`+
+     `<div class="tv">~26 <small>per 100k</small></div><div class="tb">vs US ~6 per 100k</div>`+
+     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP (federal crime data) / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div><div class="tx">Weighs on investment and tourism decisions. Reported crime tracks who files a report, not danger.</div></div></a>`;
+  h+=`<a class="tilelink extra" href="/politics.html"><div class="tile"><div class="tl">Presidential approval</div>`+
+     `<div class="tv">49–68 <small>%</small></div><div class="tb">Mitofsky ~68 · AtlasIntel ~49 · methods differ</div>`+
+     `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span><div class="tbadge">${srcBadge('AS/COA tracker')}</div><div class="tx">A poll, not a measurement; pollsters differ by about 20 points. Read the range, not a point.</div></div></a>`;
   return h;
 }
-function qLabel(iso){ const d=new Date((iso&&iso.length<=7)?iso+'-01':iso); if(isNaN(d))return''; return 'Q'+(Math.floor(d.getUTCMonth()/3)+1)+' '+d.getUTCFullYear(); }
 
-/* ============ BLOCK 3 · WHAT MATTERS ============ top 3 developments, full info model + anchors. */
-function renderMatters(brief){
+function writeVisit(){ try{ localStorage.setItem('mb_lastvisit',new Date().toISOString()); }catch(e){} }
+
+/* ============ THE BRIEF (the lead) — the 2-paragraph synthesis ============
+   Rendered from data/brief.json (built by the pipeline under the "no sentence without a link"
+   law). Each sentence is a link to the source item it cites; the page never invents — it only
+   renders what the generator (or its deterministic fallback) already validated. */
+const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* A board-number sentence carries s.live = [{series,tmpl}], so we re-render its numbers from the
+   SAME live series the board reads (S), formatted the SAME way (fmt) — the brief can never drift
+   from the board. If a series is missing (fetch/JS failure), fall back to the baked text. */
+function liveText(s){
+  if(!s.live||!s.live.length) return s.text;
+  try{
+    const parts=s.live.map(L=>{ const ser=S[L.series]; if(!ser||!ser.data||!ser.data.length) throw 0;
+      const f=fmt(L.series, ser.data.at(-1).value, ser.meta&&ser.meta.units); return L.tmpl.replace('{v}', f.v); });
+    let t=parts.join(', '); t=t.charAt(0).toUpperCase()+t.slice(1); if(!/[.!?]$/.test(t)) t+='.'; return t;
+  }catch(e){ return s.text; }
+}
+// The Brief (Fable 2026-07-12): 3-5 rubric-ranked items, one paragraph each. Item 1 = the lead story
+// EXPLAINED (the H1 above is its headline, so no repeat); items 2..N = bold headline + context + source;
+// a live standing-numbers line last. Context is em-dash-stripped; every item links to its source.
+function renderBrief(brief){
   if(!brief||!brief.lead) return '';
-  const src=(o)=>{ if(!o||!o.href) return ''; const ext=/^https?:/.test(o.href), d=o.date?(' · '+shortDate(o.date)):'';
-    return `<a class="msrc" href="${esc(o.href)}"${ext?' target="_blank" rel="noopener"':''}>${esc(o.source||'source')}${d} &rarr;</a>`; };
-  const view=(o)=>{ if(!o||!o.view) return ''; return `<div class="mv"><span class="mvk">Alan's view</span>${esc(nd(o.view))}</div>`; };
-  const card=(o,id)=>`<article class="mi" id="${id}"><h3 class="mh">${esc(nd(o.headline||o.h1))}</h3>`+
-    `<p class="mx">${esc(nd(o.context||''))}</p>${view(o)}${src(o)}</article>`;
-  let h=card(brief.lead,'wm-lead');
-  (brief.items||[]).slice(0,2).forEach((it,i)=>{ h+=card(it,`wm-${i}`); });
-  return h;
+  const dt=(d)=>{ if(!d)return''; const x=new Date(d+'T00:00:00'); return isNaN(x)?'':x.toLocaleDateString('en-US',{month:'short',day:'numeric'}); };
+  const ctx=(o)=>esc(String(o.context||'').replace(/\s*—\s*/g,', '));
+  const src=(o)=>{ if(!o||!o.href) return ''; const ext=/^https?:/.test(o.href), d=o.date?(' · '+dt(o.date)):'';
+    return ` <a class="bsrc" href="${esc(o.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(o.source||'source')}">${esc(o.source||'source')}${d}</a>`; };
+  let html='';
+  if(brief.lead.context) html+=`<p class="bi">${ctx(brief.lead)}</p>`;
+  (brief.items||[]).forEach((it,i)=>{ html+=`<p class="bi" data-rank="${i+1}"><b class="bhl">${esc(it.headline)}.</b> <span class="bctx">${ctx(it)}</span>${src(it)}</p>`; });
+  if(brief.standing) html+=`<p class="brief-nums">${esc(liveText(brief.standing))}</p>`;
+  return html;
 }
-function shortDate(d){ if(!d)return''; const x=new Date(d+'T00:00:00'); return isNaN(x)?'':x.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
 
-/* ============ BLOCK 4 · COMING NEXT ============ up to 5 meaningful dated events. */
-function renderComing(){
-  const ev=(EVENTS&&EVENTS.events)||[]; const now=Date.now();
-  const up=ev.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
-  if(!up.length) return `<div class="cb-empty">Nothing dated on the calendar yet.</div>`;
-  return up.map(e=>{ const d=evDate(e);
-    const s=e.sourceUrl?`<a class="nusrc" href="${esc(e.sourceUrl)}" target="_blank" rel="noopener">${esc(e.source||'source')}</a>`:(e.source?`<span class="nusrc">${esc(e.source)}</span>`:'');
-    return `<div class="nur"><div class="nud">${d.mo} ${d.day}<small>${d.y}${e.approx?' ~':''}</small></div><div class="nut">${esc(nd(e.label))}</div>${s}</div>`;
+/* ============ WHAT STOOD OUT — the analysis surfaced from the deterministic facts pack ============
+   Renders the week's biggest movers plus the computed cross-series connections (real rate, the
+   Mexico-US spread, peso volatility). No prose is invented: each number is computed by build-analysis.js
+   from the canonical series, and each line links into the section or The Read where it's shown in full. */
+function renderStood(F){
+  if(!F) return '';
+  const rows=[]; const pct=(u)=>/%/.test(u||'');
+  const mv=(F.whatMoved&&F.whatMoved.items)||[];
+  mv.slice(0,2).forEach(m=>{
+    const dir=m.dir<0?'fell to':(m.dir>0?'rose to':'held at');
+    const val=pct(m.units)?`${m.value}%`:`${enNum(m.value)} ${m.units}`;
+    const flag=(m.flags&&m.flags[0])?`, ${m.flags[0]}`:'';
+    rows.push({tag:'moved',t:`${m.label} ${dir} ${val}${flag}.`,href:'/money.html'});
+  });
+  const c=F.cross||{};
+  if(c.realRate&&c.realRate.value!=null) rows.push({tag:'connection',t:`The real policy rate is ${c.realRate.value}%, the Banxico rate minus core inflation.`,href:'/chart.html?v=banxico-tasa-objetivo,banxico-inflacion-subyacente'});
+  if(c.rateSpread&&c.rateSpread.value!=null) rows.push({tag:'connection',t:`Mexico's policy rate runs ${c.rateSpread.value} points above the US Fed's.`,href:'/chart.html?v=d-rate-gap'});
+  if(c.pesoVol&&c.pesoVol.value!=null) rows.push({tag:'connection',t:`The peso's realized volatility is ${c.pesoVol.value}% a year.`,href:'/money.html'});
+  if(!rows.length) return '<div class="area-empty">Nothing stood out in the numbers this week.</div>';
+  return rows.map(r=>`<a class="stoodrow" href="${r.href}"><span class="stag">${r.tag}</span><span class="stxt">${esc(r.t)}</span></a>`).join('');
+}
+
+/* ============ THE AREAS — the topic browse, projected from the tagged event store ============
+   Rendered from data/areas.json. Each area = a synthesis + up to 3 headline line-items, one grammar,
+   capped. Empty areas say so. Links go to the source (headlines) and the section page (header). */
+function renderAreas(data){
+  const areas=(data&&data.areas)||[];
+  if(!areas.length) return '';
+  return areas.map(a=>{
+    const hls=(a.headlines||[]).slice(0,3);
+    const hl=hls.map(h=>{
+      const ext=/^https?:/.test(h.url||'');
+      const meta=[h.source,h.date?hapDate(h.date):''].filter(Boolean).join(' · ');
+      return `<a class="hl" href="${esc(h.url||'#')}"${ext?' target="_blank" rel="noopener"':''}><span class="hl-t">${esc(h.title)}</span><span class="hl-m">${esc(meta)}</span></a>`;
+    }).join('');
+    const body=hls.length ? `${a.synthesis?`<p class="area-syn">${esc(a.synthesis)}</p>`:''}<div class="area-hl">${hl}</div>` : `<div class="area-empty">Nothing major this week.</div>`;
+    return `<div class="area"><a class="area-h" href="${esc(a.href||'#')}"><span class="area-k">${esc(a.label)}</span><span class="area-go">${hls.length?'more &rarr;':'&rarr;'}</span></a>${body}</div>`;
   }).join('');
 }
 
+function hapDate(iso){ if(!iso) return ''; const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso); const d=m?new Date(+m[1],+m[2]-1,+m[3]):new Date(iso); if(isNaN(d)) return ''; return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+/* ============ WHAT TO WATCH (block 6, left) — next 3 dated catalysts ============ */
+// classify an event or the lead headline into a topic bucket, so the compact rail can suppress the
+// event that merely echoes the lead story (Fable 2026-07-12: don't shrink the echo, drop it).
+function evClass(s){s=String(s||'').toLowerCase();
+  if(/usmca|t-?mec|tratado|us[\s.–-]*mexico\s*(trade|talks|review)|trade\s*(review|talks|deal|agreement|war)|tariff|arancel|census|\bexport/.test(s)) return 'trade';
+  if(/banxico|inflaci|inflation|\brate\b|\btasa\b|monetary|fomc|\bfed\b|\bcpi\b|igae|activity/.test(s)) return 'rates';
+  if(/presupuesto|budget|fiscal|hacienda|paquete/.test(s)) return 'fiscal';
+  if(/remesa|remittance/.test(s)) return 'remit';
+  if(/elecci|election|\bvote\b|midterm|governor|ballot/.test(s)) return 'political';
+  return null;
+}
+function renderWatch(brief){
+  const ev=(EVENTS&&EVENTS.events)||[]; const now=Date.now();
+  const up=ev.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!up.length) return `<div class="cb-empty">Nothing dated on the calendar yet.</div>`;
+  const nd=(s)=>String(s||'').replace(/\s*—\s*/g,', ');   // strip em-dashes (keeps en-dash ranges like US–Mexico)
+  const leadClass=(brief&&brief.lead)?evClass((brief.lead.h1||'')+' '+(brief.lead.source||'')):null;
+  // compact rail: suppress any event in the lead story's topic (the third echo of the headline); show 3
+  let compact=up.filter(e=>!(leadClass&&evClass((e.label||'')+' '+(e.mechanism||''))===leadClass)).slice(0,3);
+  if(!compact.length) compact=up.slice(0,3);   // never render an empty rail
+  const row=(e,full)=>{const d=evDate(e);
+    const src=e.sourceUrl?`<a class="nusrc" href="${esc(e.sourceUrl)}" target="_blank" rel="noopener">${esc(e.source||'source')}</a>`
+      :(e.source?`<span class="nusrc">${esc(e.source)}</span>`:'');
+    return `<div class="nur"><div class="nud">${d.mo} ${d.day}<small>${d.y}${e.approx?' ~':''}</small></div>`+
+      `<div class="nut">${nd(e.label)}`+(full&&e.mechanism?`<div class="num">${nd(e.mechanism)}</div>`:'')+
+      (src?`<div>${src}</div>`:'')+`</div></div>`;};
+  const more=up.length>compact.length;
+  return `<div class="nextup-compact">${compact.map(e=>row(e,false)).join('')}</div>`+
+    `<div class="nextup-full" hidden>${up.map(e=>row(e,true)).join('')}</div>`+
+    (more?`<button type="button" class="nextup-toggle" aria-expanded="false" data-label="All ${up.length} dates &rarr;">All ${up.length} dates &rarr;</button>`:'');
+}
+
+/* THE WIRE (raw automated headlines) was retired from the homepage on 2026-07-11 (Fable): the public
+   page carries curated developments only — in The Brief and the areas. The wire still runs internally
+   (data/news/*.json) as the inbox curation draws from; it just never renders unreviewed to a reader. */
+
 /* ============ boot ============ */
 (async()=>{
-  await loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-igae','banxico-pib-crecimiento','banxico-exports-total']);
-  const [health,trade,brief,facts]=await Promise.all([
+  await loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-reservas','banxico-remesas','banxico-pib-crecimiento','banxico-igae','wb-gdp-usd','wb-population','wb-gdp-per-capita']);
+  const [health,trade,releases,brief,areasData,facts]=await Promise.all([
     fetch('./data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/trade-us.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/releases.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/brief.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('./data/areas.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('./data/analysis/facts.json').then(r=>r.ok?r.json():null).catch(()=>null),
   ]);
+  TRADE=trade;
 
-  // masthead: updated <date> · N meaningful changes  (no feed-count boast)
-  const upd=$('mb-updated'); if(upd){ const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t)); const newest=times.length?Math.max(...times):0;
-    upd.textContent='Updated '+(newest?relTime(newest):new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})); }
+  // masthead date: the day you're reading it, spelled out clearly like a morning paper
+  const td=document.getElementById('today'); if(td) td.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 
-  // Block 1
-  const chg=renderChanged(facts, brief); $('changed').innerHTML=chg.html;
-  const nEl=$('mb-nchg'); if(nEl) nEl.innerHTML = chg.n>0 ? `${chg.n} meaningful change${chg.n>1?'s':''}` : 'Quiet day';
-  const cao=$('changed-asof'); if(cao&&facts&&facts.generatedAt){ const d=new Date(facts.generatedAt); if(!isNaN(d)) cao.textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+  // The H1 = the #1 story as a label (linked to its source); the Brief's first paragraph explains it,
+  // so the story is never printed twice. If there's no brief, the static fallback H1 stays.
+  if(brief&&brief.lead){ const le=document.getElementById('lead');
+    if(le){ const t=String(brief.lead.h1||'').replace(/\s*—\s*/g,', ').replace(/\.\s*$/,''); const h=brief.lead.href;
+      le.innerHTML=h?`<a href="${esc(h)}"${/^https?:/.test(h)?' target="_blank" rel="noopener"':''} title="Source: ${esc(brief.lead.source||'source')}">${esc(t)}</a>`:esc(t);
+    }
+  }
+  // the lead: 3-5 explained, linked items + a live standing-numbers line (built by the pipeline).
+  const briefEl=document.getElementById('brief');
+  if(briefEl){
+    const html=renderBrief(brief);
+    if(html){ briefEl.innerHTML=html; const bao=document.getElementById('brief-asof'); if(bao&&brief&&brief.meta) bao.textContent='as of '+(brief.meta.asOf||''); }
+    else { const sec=briefEl.closest('section'); if(sec) sec.remove(); }
+  }
 
-  // Block 2
-  $('board').innerHTML=renderBoard(trade);
-  const bao=$('board-asof'); const times2=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t)); const newest2=times2.length?Math.max(...times2):0;
-  if(bao&&newest2) bao.textContent='as of '+new Date(newest2).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  // what stood out: the analysis surfaced from the facts pack (movers + computed connections)
+  const stoodEl=document.getElementById('stood');
+  if(stoodEl){ const html=renderStood(facts); if(html){ stoodEl.innerHTML=html;
+      const sao=document.getElementById('stood-asof');
+      if(sao && facts && facts.generatedAt){ const d=new Date(facts.generatedAt);
+        if(!isNaN(d)) sao.textContent='updated '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+    } else { const sec=document.getElementById('stood-sec'); if(sec) sec.remove(); } }
 
-  // Block 3
-  const mEl=$('matters'); if(mEl){ const h=renderMatters(brief); if(h){ mEl.innerHTML=h; const mao=$('matters-asof'); if(mao&&brief.meta) mao.textContent='as of '+(brief.meta.asOf||''); } else { const sec=$('matters-sec'); if(sec) sec.remove(); } }
+  // dateline: N sources · updated Xh ago (from data health + freshest series fetch)
+  const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
+  const newest=times.length?Math.max(...times):0;
+  const sm=health&&health.summary; const total=sm?((sm.ok||0)+(sm.flagged||0)+(sm.failed||0)+(sm.skipped||0)):0;
+  const st=document.getElementById('status'); if(st) st.textContent=(total?`● ${total} feeds · `:'● ')+(newest?'updated '+relTime(newest):'update time unknown');
+  const ba=document.getElementById('board-asof'); if(ba&&newest) ba.textContent='as of '+new Date(newest).toLocaleDateString('en-US',{month:'short',day:'numeric'});
 
-  // Block 4
-  $('coming').innerHTML=renderComing();
+  document.getElementById('tablero').innerHTML=renderBoard();
+  // context floor: attach each tile's neutral transmission line so no number is ever bare (Fable 2026-07-12)
+  document.querySelectorAll('#tablero .tile[data-go]').forEach(el=>{const t=TRANSMISSION[el.getAttribute('data-go')];
+    if(t&&t.line){const d=document.createElement('div');d.className='tx';d.textContent=t.line;el.appendChild(d);}});
 
-  try{ localStorage.setItem('mb_lastvisit',new Date().toISOString()); }catch(e){}
-})().catch(e=>{ const c=$('changed'); if(c) c.innerHTML='<div class="hp-err">Error loading data: '+esc(e.message)+'</div>'; });
+  // the topic browse: the areas (a synthesis + top headlines per topic), projected from the event store
+  const areasEl=document.getElementById('areas');
+  if(areasEl){
+    const html=renderAreas(areasData);
+    if(html){ areasEl.innerHTML=html; const aao=document.getElementById('areas-asof'); if(aao&&areasData&&areasData.meta) aao.textContent='updated '+hapDate(areasData.meta.updated); }
+    else { const sec=areasEl.closest('section'); if(sec) sec.remove(); }
+  }
+  writeVisit();                     // stamp this visit so the next one has a "since" point
+
+  document.getElementById('watch-list').innerHTML=renderWatch(brief);
+  // "All N dates" — inline-expand the quiet rail to the full calendar (with the why on each)
+  (function(){ const nu=document.getElementById('watch-list'); if(!nu) return;
+    const tg=nu.querySelector('.nextup-toggle'); if(!tg) return;
+    tg.addEventListener('click',()=>{ const c=nu.querySelector('.nextup-compact'), f=nu.querySelector('.nextup-full');
+      const open=f.hidden; c.hidden=open; f.hidden=!open;
+      tg.setAttribute('aria-expanded',String(open)); tg.innerHTML=open?'Show less &uarr;':tg.dataset.label; });
+  })();
+
+  // "Show all indicators" — reveals the .extra tiles on mobile
+  const bm=document.getElementById('board-more'), tbl=document.getElementById('tablero');
+  if(bm&&tbl) bm.addEventListener('click',()=>{ const on=tbl.classList.toggle('show-all'); bm.setAttribute('aria-expanded',on?'true':'false'); bm.textContent=on?'Show fewer':'Show all indicators'; });
+
+  // #q12 / #wire from an old link → scroll to the Wire block on this page
+  if(location.hash==='#q12'||location.hash==='#wire'){const w=document.getElementById('wire'); if(w)w.scrollIntoView();}
+})().catch(e=>{
+  const h=document.getElementById('areas'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:var(--fs-label);color:var(--red)">Error loading data: '+e.message+'</p>';
+});
 </script>
 {% endraw %}
