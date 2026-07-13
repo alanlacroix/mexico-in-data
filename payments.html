@@ -23,6 +23,7 @@
   <nav class="mnav" id="sitenav">
     <a href="/">Brief</a>
     <a href="/the-read.html">The Read</a>
+    <a href="/chart.html">Charts</a>
     <div class="navdrop here-sec">
       <button class="navdrop-t" type="button" aria-haspopup="true" aria-expanded="false">Topics<span class="caret">▾</span></button>
       <div class="navdrop-menu">
@@ -369,7 +370,7 @@ document.addEventListener('submit',function(e){var f=e.target;if(!f.classList||!
   fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
     .then(function(r){return r.json().catch(function(){return{ok:r.ok};});})
     .then(function(d){if(btn){btn.disabled=false;btn.textContent=old;}
-      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm, and see you Monday.',true);}
+      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm.',true);}
       else{say((d&&d.error)||'Could not subscribe, please try again.',false);}})
     .catch(function(){if(btn){btn.disabled=false;btn.textContent=old;}say('Network error, please try again.',false);});
 });</script>

@@ -7,6 +7,7 @@
 module.exports = [
   { label: 'Brief', href: '/' },
   { label: 'The Read', href: '/the-read.html' },   // top-level, next to Brief (Alan 2026-07-12): the analysis is a first-class surface, not a dropdown item
+  { label: 'Charts', href: '/chart.html' },         // the metric explorer: every variable, one place (Alan 2026-07-12)
   {
     label: 'Topics',
     match: ['/economy.html', '/money.html', '/payments.html', '/trade.html', '/politics.html', '/security.html', '/society.html', '/us-mexico.html', '/trade.html', '/model.html'],

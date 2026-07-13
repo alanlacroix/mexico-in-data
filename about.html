@@ -39,6 +39,7 @@ a.inline{color:var(--green);font-weight:500}
   <nav class="mnav" id="sitenav">
     <a href="/">Brief</a>
     <a href="/the-read.html">The Read</a>
+    <a href="/chart.html">Charts</a>
     <div class="navdrop">
       <button class="navdrop-t" type="button" aria-haspopup="true" aria-expanded="false">Topics<span class="caret">▾</span></button>
       <div class="navdrop-menu">
@@ -93,8 +94,8 @@ a.inline{color:var(--green);font-weight:500}
   </section>
 
   <section class="blk">
-    <h2>The Monday Brief</h2>
-    <p>Every Monday, I send an email about what changed in Mexico's economy, politics, and relationship with the US.</p>
+    <h2>The email</h2>
+    <p>A few times a month, when there's something worth sending, I write an email about what changed in Mexico's economy, politics, and relationship with the US.</p>
     <p>I look at the numbers, add the news that helps explain them, and tell you what I think. The original sources are included if you want to go deeper.</p>
     <p>Honestly, my dad could never remember the name of the site, so sending it directly to his inbox was easier. It turns out that works well for other people too.</p>
     <p><a class="abtn" href="/weekly.html">See what's in it and subscribe &rarr;</a></p>
@@ -144,7 +145,7 @@ document.addEventListener('submit',function(e){var f=e.target;if(!f.classList||!
   fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
     .then(function(r){return r.json().catch(function(){return{ok:r.ok};});})
     .then(function(d){if(btn){btn.disabled=false;btn.textContent=old;}
-      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm, and see you Monday.',true);}
+      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm.',true);}
       else{say((d&&d.error)||'Could not subscribe, please try again.',false);}})
     .catch(function(){if(btn){btn.disabled=false;btn.textContent=old;}say('Network error, please try again.',false);});
 });</script>

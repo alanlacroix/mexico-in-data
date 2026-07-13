@@ -96,7 +96,7 @@ for (const id of WATCH) {
   if (!GROWTH.test(id) && id !== 'banxico-tasa-objetivo' && (data(id) || []).length >= 40 && Math.abs(m.z || 0) >= 0.8) {
     if (m.isRecordHigh) flags.push('record high'); if (m.isRecordLow) flags.push('record low');
   }
-  moved.push({ id, label: LABEL[id] || id, value: m.value, units: m.units, changePct: m.changePct, z: m.z, dir: m.dir, cadence: m.cadence, date: m.date, flags });
+  moved.push({ id, label: LABEL[id] || id, value: m.value, units: m.units, change: m.change, changePct: m.changePct, z: m.z, dir: m.dir, cadence: m.cadence, date: m.date, flags });
 }
 // rank by |z|; a move is "notable" if |z|>=1.5 or it carries a flag
 moved.sort((a, b) => Math.abs(b.z || 0) - Math.abs(a.z || 0));
@@ -112,9 +112,10 @@ function pairSeries(aId, bId, fn) {
   return out.length ? out : null;
 }
 const cross = {};
-// real ex-post policy rate = policy rate − core inflation
+// the SIMPLE ex-post gap: policy rate − core inflation, in percentage POINTS. NOT comparable to Banxico's
+// neutral range (that is defined ex-ante, on inflation EXPECTATIONS, a series we don't track), so no neutral field.
 if (metrics['banxico-tasa-objetivo'] && metrics['banxico-inflacion-subyacente'])
-  cross.realRate = { label: 'Real policy rate (policy − core inflation)', value: round(metrics['banxico-tasa-objetivo'].value - metrics['banxico-inflacion-subyacente'].value, 2), unit: '%', from: ['banxico-tasa-objetivo','banxico-inflacion-subyacente'], neutralLow: 2.6, neutralHigh: 3.3 };
+  cross.realRate = { label: 'Policy rate minus core inflation (ex-post gap)', value: round(metrics['banxico-tasa-objetivo'].value - metrics['banxico-inflacion-subyacente'].value, 2), unit: 'pp', from: ['banxico-tasa-objetivo','banxico-inflacion-subyacente'] };
 // MX−US policy rate spread (carry)
 if (metrics['banxico-tasa-objetivo'] && metrics['fred-fedfunds'])
   cross.rateSpread = { label: 'Mexico − US policy-rate spread', value: round(metrics['banxico-tasa-objetivo'].value - metrics['fred-fedfunds'].value, 2), unit: 'pp', from: ['banxico-tasa-objetivo','fred-fedfunds'], series: pairSeries('banxico-tasa-objetivo','fred-fedfunds',(a,b)=>a-b) };

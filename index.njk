@@ -71,21 +71,31 @@ ogDescription: "Mexico's economy in official numbers."
   .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
   @media(min-width:560px){.tablero{grid-template-columns:repeat(4,1fr)}}
   .tilelink{display:contents}
-  .tile{background:var(--paper);padding:19px 18px 17px;cursor:pointer;height:100%}
+  /* TILE HIERARCHY (Fable 2026-07-12): 3 contrast-separated clusters — value dominates, context in the
+     reading face, trust recedes. The fix for "tight" is contrast + grouping, not just padding. */
+  .tile{background:var(--paper);padding:19px 18px 17px;cursor:pointer;height:100%;display:flex;flex-direction:column}
   .tilelink:hover .tile{background:var(--paper-2)}
-  .tile .tl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
-  .tile .tv{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .tile .tl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
+  /* CLUSTER 1 — the value is THE anchor: it wins the eye by a lot */
+  .tile .tv{font-family:var(--sans);font-size:clamp(28px,3vw,37px);color:var(--ink);margin-top:4px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.02em}
   .tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
-  .tile .dl{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
+  .tile .dl{font-family:var(--mono);font-size:13px;color:var(--ink-2);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
   .tile .dl.up::before{content:"▲ ";font-size:var(--fs-label)} .tile .dl.dn::before{content:"▼ ";font-size:var(--fs-label)}
-  .tile .dl.up{color:var(--green-d)} .tile .dl.dn{color:var(--red)}
+  .tile .dl.up,.tile .dl.dn{color:var(--ink-2)}   /* neutral: direction is the arrow + sign, not a good/bad color */
   .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
   .tile svg.spark{margin-top:7px}
   .tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
-  .tile .tb{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:7px;line-height:1.4}
+  /* CLUSTER 2 — context in the READING FACE (sans, not mono): the mono/prose split IS the hierarchy signal */
+  .tile .tx{font-family:var(--sans);font-size:14px;color:var(--ink-2);line-height:1.5;margin-top:13px;padding-top:12px;border-top:1px solid var(--line);order:2}
+  /* benchmark leaves the glance except where it IS the interpretive anchor (inflation vs target, rate vs neutral) */
+  .tile .tb{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:6px;line-height:1.4}
   .tile .tb .arw{font-weight:700}
-  .tile .stamp{margin-top:6px;display:block}
-  .tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:4px;display:block;line-height:1.35}
+  #tablero .tile .tb{display:none}
+  #tablero .tile[data-go="banxico-inflacion"] .tb,#tablero .tile[data-go="banxico-tasa-objetivo"] .tb{display:block}
+  /* CLUSTER 3 — trust rail recedes hard and sits after the context */
+  .tile .stamp{margin-top:13px;display:block;order:3}
+  .tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:3px;display:block;line-height:1.35;order:3}
+  .tile .tbadge{order:3}
   .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
   .stamp.live{color:var(--green-d);font-weight:600}
   .chip-ph{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
@@ -348,13 +358,13 @@ ogDescription: "Mexico's economy in official numbers."
   <section>
     <div class="sub">
       <div class="lab">The email · free</div>
-      <p class="line">Every Monday, I send a brief on what changed in Mexico's economy, politics, business, crime, and relationship with the United States. The original sources are included if you want to go deeper. <a href="/weekly.html" style="color:var(--green-d);font-weight:600">More &rarr;</a></p>
+      <p class="line">A few times a month, I send a brief on what changed in Mexico's economy, politics, business, crime, and relationship with the United States. The original sources are included if you want to go deeper. <a href="/weekly.html" style="color:var(--green-d);font-weight:600">More &rarr;</a></p>
       <!-- Our own form -> /api/subscribe (Cloudflare function -> beehiiv, key server-side). No third-party UI. -->
       <form class="subform" novalidate>
         <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
         <button type="submit">Subscribe</button>
       </form>
-      <div class="fine submsg">Free. One email, Monday mornings.</div>
+      <div class="fine submsg">Free. A few emails a month, when there's something worth sending.</div>
     </div>
   </section>
 
@@ -389,16 +399,27 @@ const TILES=[
   {id:'banxico-remesas',      l:'Remittances · monthly total', href:'/money.html'},
   {id:'banxico-reservas',     l:"Int'l reserves",      href:'/money.html'},
 ];
+// Context floor (Fable 2026-07-12): every number carries its neutral transmission line, so it is never bare.
+// MECHANISM only — moved by / feeds — no valence (good/bad), no politics, no claim that a number CAUSED a move.
+// Human-authored + static (never model-generated), so it cannot fabricate a driver.
+const TRANSMISSION={
+  'banxico-usdmxn-fix':   {line:'Moved by the Mexico–US rate gap and global risk. Feeds import prices and the peso value of remittances.'},
+  'banxico-inflacion':    {line:'Moved by food, energy and the peso. Shapes how much room Banxico has to move the rate.'},
+  'banxico-tasa-objetivo':{line:'Set against inflation and the US Fed. Moves the peso through the rate gap, and the cost of credit.'},
+  'banxico-pib-crecimiento':{line:'Driven mainly by US demand and investment. Feeds jobs, wages and public revenue.'},
+  'banxico-remesas':      {line:'Driven by the US job market. Household income for millions; a weaker peso raises its peso value.'},
+  'banxico-reservas':     {line:'Built from external flows. A buffer against a currency shock.'},
+};
 function renderBoard(){
   // the four core tiles always show; the rest carry .extra and collapse behind "Show all" on mobile
-  let h=TILES.map(t=>`<a class="tilelink${CORE.has(t.id)?'':' extra'}" href="${t.href}">${tile(t)}</a>`).join('');
+  let h=TILES.map(t=>`<a class="tilelink${CORE.has(t.id)?'':' extra'}" href="/chart.html?m=${t.id}">${tile(t)}</a>`).join('');   // tiles shortcut into the explorer, pre-selected (Fable 2026-07-12)
   // two dated static tiles (no live series exists yet) — links to their owning sections
   h+=`<a class="tilelink extra" href="/security.html"><div class="tile"><div class="tl">Homicide rate · national</div>`+
      `<div class="tv">~26 <small>per 100k</small></div><div class="tb">vs US ~6 per 100k</div>`+
-     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP (federal crime data) / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div></div></a>`;
+     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP (federal crime data) / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div><div class="tx">Weighs on investment and tourism decisions. Reported crime tracks who files a report, not danger.</div></div></a>`;
   h+=`<a class="tilelink extra" href="/politics.html"><div class="tile"><div class="tl">Presidential approval</div>`+
      `<div class="tv">49–68 <small>%</small></div><div class="tb">Mitofsky ~68 · AtlasIntel ~49 · methods differ</div>`+
-     `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span><div class="tbadge">${srcBadge('AS/COA tracker')}</div></div></a>`;
+     `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span><div class="tbadge">${srcBadge('AS/COA tracker')}</div><div class="tx">A poll, not a measurement; pollsters differ by about 20 points. Read the range, not a point.</div></div></a>`;
   return h;
 }
 
@@ -556,6 +577,9 @@ function renderWatch(brief){
   const ba=document.getElementById('board-asof'); if(ba&&newest) ba.textContent='as of '+new Date(newest).toLocaleDateString('en-US',{month:'short',day:'numeric'});
 
   document.getElementById('tablero').innerHTML=renderBoard();
+  // context floor: attach each tile's neutral transmission line so no number is ever bare (Fable 2026-07-12)
+  document.querySelectorAll('#tablero .tile[data-go]').forEach(el=>{const t=TRANSMISSION[el.getAttribute('data-go')];
+    if(t&&t.line){const d=document.createElement('div');d.className='tx';d.textContent=t.line;el.appendChild(d);}});
 
   // the topic browse: the areas (a synthesis + top headlines per topic), projected from the event store
   const areasEl=document.getElementById('areas');

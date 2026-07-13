@@ -4,11 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Subscribe · The Mexico Brief</title>
-<meta name="description" content="A free email on Mexico every Monday: what changed in the economy, politics, business, crime, and the US relationship, from original sources, every figure linked so you can check the work." />
+<meta name="description" content="A free email on Mexico, a few times a month: what changed in the economy, politics, business, crime, and the US relationship, from original sources, every figure linked so you can check the work." />
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Subscribe · The Mexico Brief" />
-<meta property="og:description" content="A free email on Mexico every Monday: what changed in the economy, politics, business, crime, and the US relationship, from original sources, every figure linked so you can check the work." />
+<meta property="og:description" content="A free email on Mexico, a few times a month: what changed in the economy, politics, business, crime, and the US relationship, from original sources, every figure linked so you can check the work." />
 <meta property="og:locale" content="en_US" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
@@ -23,6 +23,7 @@
   <nav class="mnav" id="sitenav">
     <a href="/">Brief</a>
     <a href="/the-read.html">The Read</a>
+    <a href="/chart.html">Charts</a>
     <div class="navdrop">
       <button class="navdrop-t" type="button" aria-haspopup="true" aria-expanded="false">Topics<span class="caret">▾</span></button>
       <div class="navdrop-menu">
@@ -67,7 +68,7 @@
   <section class="lp">
     <span class="eyebrow">The email · free</span>
     <h1>What's changing in Mexico.</h1>
-    <p class="thesis">Every Monday, I look at what changed in Mexico's economy, politics, business, crime, and relationship with the United States. The numbers come from original sources. The links are there too, in case you want to check my work.</p>
+    <p class="thesis">A few times a month, I look at what changed in Mexico's economy, politics, business, crime, and relationship with the United States. The numbers come from original sources. The links are there too, in case you want to check my work.</p>
 
     <!-- Our own form -> /api/subscribe (Cloudflare function -> beehiiv, key server-side). No third-party UI. -->
     <div class="signup">
@@ -75,7 +76,7 @@
         <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
         <button type="submit">Subscribe</button>
       </form>
-      <div class="fine submsg">Free. One email, Monday mornings.</div>
+      <div class="fine submsg">Free. A few emails a month, when there's something worth sending.</div>
     </div>
   </section>
 </div>
@@ -106,7 +107,7 @@ document.addEventListener('submit',function(e){var f=e.target;if(!f.classList||!
   fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
     .then(function(r){return r.json().catch(function(){return{ok:r.ok};});})
     .then(function(d){if(btn){btn.disabled=false;btn.textContent=old;}
-      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm, and see you Monday.',true);}
+      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm.',true);}
       else{say((d&&d.error)||'Could not subscribe, please try again.',false);}})
     .catch(function(){if(btn){btn.disabled=false;btn.textContent=old;}say('Network error, please try again.',false);});
 });</script>

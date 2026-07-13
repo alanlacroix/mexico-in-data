@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Charts · The Mexico Brief</title>
+<meta name="description" content="Every variable The Mexico Brief tracks, in one place: the peso, rates, prices, activity, trade and payments, each one live and one tap from its source." />
+<meta name="theme-color" content="#ffffff" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Charts · The Mexico Brief" />
+<meta property="og:description" content="Every variable The Mexico Brief tracks, in one place: the peso, rates, prices, activity, trade and payments, each one live and one tap from its source." />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/design/mckinsey-mx.css?v=61324951" />
+
+
+</head>
+<body>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
+  <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav class="mnav" id="sitenav">
+    <a href="/">Brief</a>
+    <a href="/the-read.html">The Read</a>
+    <a href="/chart.html" class="here">Charts</a>
+    <div class="navdrop">
+      <button class="navdrop-t" type="button" aria-haspopup="true" aria-expanded="false">Topics<span class="caret">▾</span></button>
+      <div class="navdrop-menu">
+        <div class="navdrop-grp"><span class="navdrop-gl">Sections</span><a href="/economy.html">Economy</a><a href="/money.html">Money</a><a href="/payments.html">Payments</a><a href="/trade.html">Trade</a><a href="/politics.html">Politics</a><a href="/security.html">Security</a><a href="/society.html">Society</a><a href="/us-mexico.html">U.S.–Mexico</a>
+        </div>
+        <div class="navdrop-grp"><span class="navdrop-gl">Lab</span><a href="/model.html">The Model</a>
+        </div>
+      </div>
+    </div>
+    <a href="/atlas.html">Atlas</a>
+    <a href="/sources.html">Sources</a>
+    <a href="/weekly.html" class="cta">Subscribe</a>
+  </nav>
+</div></header>
+
+
+<style>
+  :root{--ink-3:#4d4d4d}
+  body{font-size:var(--fs-body)}
+  .cx{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+  .cx-hd{padding:26px 0 4px}
+  .cx-hd .eyebrow{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
+  .cx-hd h1{font-family:var(--sans);font-size:var(--fs-h2);line-height:1.1;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
+  .cx-hd p{font-size:var(--fs-small);color:var(--ink-2);margin:8px 0 0;max-width:64ch;line-height:1.5}
+
+  /* ============ CATALOG ============ */
+  .cat-grp{margin-top:26px}
+  .cat-gl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600;border-top:2px solid var(--green);padding-top:10px;margin-bottom:12px}
+  .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden}
+  @media(min-width:640px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:960px){.cat-grid{grid-template-columns:repeat(4,1fr)}}
+  .cc{background:var(--paper);padding:14px 15px 13px;cursor:pointer;display:flex;flex-direction:column;gap:0;border:none;text-align:left;width:100%;font:inherit}
+  .cc:hover{background:var(--paper-2)}
+  .cc .cl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.5em}
+  .cc .cv{font-family:var(--sans);font-size:23px;color:var(--ink);margin-top:5px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
+  .cc .cv small{font-size:11px;color:var(--mut)}
+  .cc .cd{font-family:var(--mono);font-size:11px;color:var(--ink-2);margin-top:5px;font-variant-numeric:tabular-nums}
+  .cc .cd small{color:var(--mut)}
+  .cc .csp{margin-top:9px;height:30px}
+  .cc .csp path{fill:none;stroke:var(--ink-3);stroke-width:1.4;vector-effect:non-scaling-stroke}
+  .cc .csp .af{fill:var(--green-bg);stroke:none;opacity:.5}
+
+  /* ============ SINGLE / OVERLAY ============ */
+  .sx-back{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:22px 0 0;background:none;border:none;padding:0}
+  .sx-back:hover{text-decoration:underline}
+  .sx-head{margin-top:12px;border-top:2px solid var(--green);padding-top:13px}
+  .sx-name{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);line-height:1.05;letter-spacing:-.02em}
+  .sx-sub{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-transform:uppercase;letter-spacing:.03em;margin-top:5px}
+  .sx-val{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:12px}
+  .sx-big{font-family:var(--sans);font-size:clamp(30px,4vw,42px);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.02em}
+  .sx-big small{font-size:14px;color:var(--mut)}
+  .sx-chg{font-family:var(--mono);font-size:15px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .sx-chg .rl{color:var(--mut)}
+  .sx-wrap{position:relative;margin-top:16px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(180deg,#fbfbf9,#f6f6f2);padding:8px 6px 4px}
+  svg.sx-svg{width:100%;height:auto;display:block;touch-action:pan-y}
+  svg.sx-svg .grid{stroke:var(--line);stroke-width:1}
+  svg.sx-svg .axl{font-family:var(--mono);font-size:11px;fill:var(--mut)}
+  svg.sx-svg .ln{fill:none;stroke:var(--ink);stroke-width:1.6;vector-effect:non-scaling-stroke}
+  svg.sx-svg .ln2{stroke:var(--green-d)}
+  svg.sx-svg .af{fill:var(--green-bg);opacity:.45;stroke:none}
+  svg.sx-svg .mk{fill:var(--ink)}
+  svg.sx-svg .cross{stroke:var(--ink-2);stroke-width:1;stroke-dasharray:3 3}
+  svg.sx-svg .cdot{fill:var(--ink);stroke:#fff;stroke-width:1.5}
+  svg.sx-svg .cdot2{fill:var(--green-d)}
+  .sx-read{position:absolute;top:8px;left:8px;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:6px 9px;border-radius:6px;pointer-events:none;opacity:0;transition:opacity .1s;line-height:1.5;z-index:3}
+  .sx-read b{color:#9fd9bd;font-family:var(--sans);font-size:13px}
+  .sx-ranges{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+  .sx-ranges button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--ink-2);background:var(--paper);border:1px solid var(--line-2);border-radius:8px;padding:8px 12px;cursor:pointer;min-height:38px}
+  .sx-ranges button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .sx-cad{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:9px}
+  .sx-ctx{font-family:var(--sans);font-size:15px;color:var(--ink-2);line-height:1.55;margin-top:16px;padding-top:14px;border-top:1px solid var(--line);max-width:70ch}
+  .sx-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:12px}
+  .sx-src a{color:var(--green-d)}
+  /* connected-to (the transmission edges → overlay) */
+  .sx-edges{margin-top:18px}
+  .sx-edges .el{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+  .sx-edges .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .sx-edges .chip{font-family:var(--sans);font-size:14px;color:var(--ink);background:var(--paper-2);border:1px solid var(--line-2);border-radius:20px;padding:7px 14px;cursor:pointer}
+  .sx-edges .chip:hover{border-color:var(--green);color:var(--green-d)}
+  .sx-edges .chip .ar{color:var(--mut);margin-right:5px}
+  .sx-caveat{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:10px;font-style:normal}
+  .sx-leg{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);margin-top:8px}
+  .sx-leg span{display:inline-flex;align-items:center;gap:6px;color:var(--ink-2)}
+  .sx-leg i{width:14px;height:3px;border-radius:2px;display:inline-block}
+  @media(max-width:560px){.sx-ctx{font-size:14px}}
+</style>
+
+<div class="cx">
+  <section class="cx-hd">
+    <span class="eyebrow">Charts</span>
+    <h1 id="cxTitle">Every variable, in one place</h1>
+    <p id="cxIntro">The peso, rates, prices, activity, trade and payments. Tap any one to see it over time, or tap a connection to see how two move together. Every number is one tap from its source. This is a place to look, not a full analysis.</p>
+  </section>
+  <div id="cxBody"></div>
+</div>
+
+<script type="module">
+import { loadSeries, S, niceStr } from '/assets/mb.js?v=15';
+const $=(s,r)=>(r||document).querySelector(s);
+
+/* ---------- the variable registry: metrics are DATA into one component ---------- */
+// group order = Alan's lens. render: 'area' (daily/weekly levels) | 'line' (monthly) | 'step' (rates) | 'bars' (quarterly)
+// tx = the neutral MECHANISM floor (moved by / feeds); edges = curated transmission links (ids) for the overlay.
+const G=['Peso & rates','Prices','Activity & external','Payments & cash'];
+const M={
+  'banxico-usdmxn-fix':   {g:0,l:'Peso',u:'MXN / USD',r:'area',f:v=>v.toFixed(2),tx:'Moved by the Mexico–US rate gap and global risk. Feeds import prices and the peso value of remittances.',e:['banxico-tasa-objetivo','fred-fedfunds','banxico-remesas','banxico-inflacion']},
+  'banxico-tasa-objetivo':{g:0,l:'Policy rate',u:'%',r:'step',f:v=>v.toFixed(2)+'%',tx:'Set against inflation and the US Fed. Moves the peso through the rate gap, and the cost of credit.',e:['banxico-inflacion','fred-fedfunds','banxico-usdmxn-fix']},
+  'fred-fedfunds':        {g:0,l:'US Fed funds rate',u:'%',r:'step',f:v=>v.toFixed(2)+'%',tx:'The US policy rate. The gap to Banxico’s rate is what pays investors to hold pesos.',e:['banxico-tasa-objetivo','banxico-usdmxn-fix']},
+  'fred-ust10':           {g:0,l:'US 10-year yield',u:'%',r:'area',f:v=>v.toFixed(2)+'%',tx:'The US long rate. Moves global risk appetite and, with it, the peso.',e:['banxico-usdmxn-fix']},
+  'banxico-reservas':     {g:0,l:"Int'l reserves",u:'US$bn',r:'area',f:v=>'$'+v.toFixed(0)+'bn',tx:'Built from external flows. A buffer against a currency shock.',e:['banxico-usdmxn-fix']},
+  'fred-usd-broad':       {g:0,l:'US dollar (broad)',u:'index',r:'area',f:v=>v.toFixed(1),tx:'The dollar’s strength against a basket. A stronger dollar tends to pressure the peso.',e:['banxico-usdmxn-fix']},
+
+  'banxico-inflacion':    {g:1,l:'Inflation, headline',u:'%',r:'line',f:v=>v.toFixed(2)+'%',tx:'Moved by food, energy and the peso. Shapes how much room Banxico has to move the rate.',e:['banxico-tasa-objetivo','banxico-inflacion-subyacente','cre-gasolina-regular']},
+  'banxico-inflacion-subyacente':{g:1,l:'Inflation, core',u:'%',r:'line',f:v=>v.toFixed(2)+'%',tx:'The stickier gauge Banxico actually watches. Sits above headline and guides how fast it can cut.',e:['banxico-tasa-objetivo','banxico-inflacion']},
+  'banxico-salario-minimo':{g:1,l:'Minimum wage',u:'MXN/day',r:'line',f:v=>'$'+v.toFixed(0),tx:'Set by policy, roughly doubled since 2018. Feeds household income and cost pressure.',e:['banxico-inflacion']},
+  'cre-gasolina-regular': {g:1,l:'Gasoline, regular',u:'MXN/L',r:'line',f:v=>'$'+v.toFixed(2),tx:'A visible price in every budget. Feeds headline inflation and sentiment.',e:['banxico-inflacion']},
+
+  'banxico-pib-crecimiento':{g:2,l:'GDP growth',u:'% YoY',r:'bars',f:v=>v.toFixed(1)+'%',tx:'Driven mainly by US demand and investment. Feeds jobs, wages and public revenue.',e:['banxico-igae','banxico-exports-total','banxico-remesas']},
+  'banxico-igae':         {g:2,l:'Activity (IGAE)',u:'index',r:'line',f:v=>v.toFixed(1),tx:'A monthly read on the economy, the GDP proxy. Driven by US demand and domestic spending.',e:['banxico-pib-crecimiento','banxico-exports-total']},
+  'banxico-remesas':      {g:2,l:'Remittances',u:'US$mn/mo',r:'line',f:v=>'$'+Math.round(v).toLocaleString(),tx:'Driven by the US job market. Household income for millions; a weaker peso raises its peso value.',e:['banxico-usdmxn-fix','fred-us-indpro']},
+  'banxico-exports-total':{g:2,l:'Exports, total',u:'US$mn/mo',r:'line',f:v=>'$'+Math.round(v).toLocaleString(),tx:'Four-fifths go to the US. Driven by US demand; feeds activity and the trade balance.',e:['fred-us-indpro','banxico-trade-balance','banxico-igae']},
+  'banxico-trade-balance':{g:2,l:'Trade balance',u:'US$mn/mo',r:'line',f:v=>(v>=0?'+$':'-$')+Math.round(Math.abs(v)).toLocaleString(),tx:'Exports minus imports. Feeds the external accounts and, with them, the peso.',e:['banxico-exports-total','banxico-usdmxn-fix']},
+  'fred-us-indpro':       {g:2,l:'US industrial output',u:'index',r:'line',f:v=>v.toFixed(1),tx:'US factory demand. The main external driver of Mexican exports and remittances.',e:['banxico-exports-total','banxico-remesas']},
+
+  'banxico-spei-monto':   {g:3,l:'SPEI transfers',u:'MXN bn/mo',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Real-time interbank transfers, the rails of digital payments. Grows with digitization and activity.',e:['banxico-igae','banxico-circulante']},
+  'banxico-tarjetas-debito':{g:3,l:'Debit-card spend',u:'MXN bn/mo',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Card spending on debit. Tracks consumption and the shift away from cash.',e:['banxico-circulante','banxico-igae']},
+  'banxico-tarjetas-credito':{g:3,l:'Credit-card spend',u:'MXN bn/mo',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Card spending on credit. Tracks consumption and the cost of borrowing.',e:['banxico-tasa-objetivo','banxico-igae']},
+  'banxico-circulante':   {g:3,l:'Cash in circulation',u:'MXN bn',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Physical currency held by the public. Falls in share as digital payments grow.',e:['banxico-spei-monto','banxico-tarjetas-debito']},
+  'banxico-ecommerce-monto':{g:3,l:'E-commerce value',u:'MXN bn/mo',r:'line',f:v=>'$'+(v/1000).toFixed(0)+'bn',tx:'Online card spending. Tracks digital-commerce adoption.',e:['banxico-tarjetas-debito','banxico-tarjetas-credito']},
+};
+const IDS=Object.keys(M);
+
+/* ---------- helpers ---------- */
+const dms=864e5;
+const asDate=s=>+new Date(s+ (s.length<=7?'-01':'') );
+function pts(id){const s=S[id]; return (s&&s.data)?s.data.filter(p=>p&&p.value!=null):[];}
+function meta(id){const s=S[id]; return (s&&s.meta)||{};}
+function cadence(id){const p=pts(id); if(p.length<2)return 'monthly'; const gap=(asDate(p[p.length-1].date)-asDate(p[0].date))/(p.length-1)/dms; return gap<10?'daily':gap<20?'weekly':gap<45?'monthly':'quarterly';}
+function lastN(p){return p[p.length-1];}
+function fmtDate(d,cad){const x=new Date(d.length<=7?d+'-01':d); const mo=x.toLocaleDateString('en-US',{month:'short',timeZone:'UTC'}); const y=x.getUTCFullYear();
+  return cad==='daily'||cad==='weekly'?`${mo} ${x.getUTCDate()}, ${y}`:cad==='quarterly'?`Q${Math.floor(x.getUTCMonth()/3)+1} ${y}`:`${mo} ${y}`;}
+function pct(a,b){return b?((a-b)/Math.abs(b)*100):null;}
+function isRate(id){return /%|rate|inflac|tasa|yield|fedfunds|ust/.test((M[id].u+id));}
+
+/* ---------- range logic (honest, per series) ---------- */
+const RANGE=[['1M',30],['3M',91],['6M',182],['YTD',null],['1Y',365],['2Y',730],['MAX',Infinity]];
+function ranges(id){const p=pts(id); if(p.length<2)return[['MAX',Infinity]]; const span=(asDate(lastN(p).date)-asDate(p[0].date))/dms;
+  const out=RANGE.filter(([lbl,d])=>{ if(lbl==='MAX')return true; if(lbl==='YTD'){return asDate(p[0].date)<=+new Date(new Date().getUTCFullYear(),0,1);} return span>=d*0.85 && slice(id,lbl).length>=3; });
+  // dedupe a range that equals MAX span
+  return out;}
+function defRange(id){const cad=cadence(id),av=ranges(id).map(r=>r[0]); const want=cad==='daily'?'6M':cad==='weekly'?'1Y':cad==='monthly'?'1Y':'MAX'; return av.includes(want)?want:av[av.length-1];}
+function slice(id,lbl){const p=pts(id); if(lbl==='MAX')return p; const now=asDate(lastN(p).date);
+  let from; if(lbl==='YTD')from=+new Date(new Date().getUTCFullYear(),0,1); else{const d={'1M':30,'3M':91,'6M':182,'1Y':365,'2Y':730}[lbl]; from=now-d*dms;}
+  const s=p.filter(x=>asDate(x.date)>=from); return s.length>=2?s:p.slice(-2);}
+
+/* ---------- chart draw (single series, area/line/step/bars + crosshair) ---------- */
+function chartSVG(P,o){
+  const W=880,H=380,pl=52,pr=14,pt=14,pb=28,iw=W-pl-pr,ih=H-pt-pb;
+  const xs=P.map(p=>asDate(p.date)),ys=P.map(p=>p.value);
+  const xmin=Math.min(...xs),xmax=Math.max(...xs); let ymin=Math.min(...ys),ymax=Math.max(...ys);
+  if(o.render==='bars'){ymin=Math.min(0,ymin);ymax=Math.max(0,ymax);} const pad=((ymax-ymin)||1)*0.10; ymin-=pad;ymax+=pad;
+  const X=x=>pl+(xmax===xmin?iw/2:(x-xmin)/(xmax-xmin)*iw), Y=v=>pt+ih-(v-ymin)/(ymax-ymin)*ih;
+  const XY=P.map(p=>[X(asDate(p.date)),Y(p.value)]);
+  // y grid + labels (3)
+  let grid='';for(let i=0;i<=2;i++){const v=ymin+(ymax-ymin)*i/2,y=Y(v);grid+=`<line class="grid" x1="${pl}" y1="${y.toFixed(1)}" x2="${W-pr}" y2="${y.toFixed(1)}"/><text class="axl" x="${pl-8}" y="${(y+3).toFixed(1)}" text-anchor="end">${o.f(v)}</text>`;}
+  // x labels (first, mid, last)
+  const cad=o.cad; let xl='';[0,Math.floor(P.length/2),P.length-1].forEach((i,k)=>{const x=XY[i][0];xl+=`<text class="axl" x="${x.toFixed(1)}" y="${H-8}" text-anchor="${k===0?'start':k===2?'end':'middle'}">${fmtDate(P[i].date,cad)}</text>`;});
+  let body='';
+  if(o.render==='bars'){const bw=Math.min(22,iw/P.length*0.7),y0=Y(0);body=P.map((p,i)=>{const[x,y]=XY[i];return `<rect x="${(x-bw/2).toFixed(1)}" y="${Math.min(y,y0).toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.abs(y-y0).toFixed(1)}" fill="var(--ink-3)"/>`;}).join('');}
+  else{let d='';if(o.render==='step'){XY.forEach(([x,y],i)=>{d+=i?`L${x.toFixed(1)} ${XY[i-1][1].toFixed(1)} L${x.toFixed(1)} ${y.toFixed(1)}`:`M${x.toFixed(1)} ${y.toFixed(1)}`;});}
+    else{XY.forEach(([x,y],i)=>d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1));}
+    const af=o.render==='area'?`<path class="af" d="${d} L${XY[XY.length-1][0].toFixed(1)} ${(pt+ih)} L${XY[0][0].toFixed(1)} ${(pt+ih)} Z"/>`:'';
+    const mk=P.length<=30?XY.map(([x,y])=>`<circle class="mk" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2"/>`).join(''):'';
+    body=af+`<path class="ln" d="${d}"/>`+mk;}
+  return {svg:`<svg class="sx-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img">${grid}${body}${xl}<g class="cg" style="display:none"><line class="cross" y1="${pt}" y2="${pt+ih}"/><circle class="cdot" r="4"/></g></svg>`,XY,P,geo:{pl,pr,pt,pb,iw,ih,W,H}};
+}
+function wireCross(wrap,drawn,o){
+  const svg=$('.sx-svg',wrap),read=$('.sx-read',wrap),cg=$('.cg',svg),line=$('.cross',cg),dot=$('.cdot',cg);
+  const {XY,P,geo}=drawn;
+  const move=(clientX)=>{const r=svg.getBoundingClientRect();const px=(clientX-r.left)/r.width*geo.W;
+    let bi=0,bd=1e9;XY.forEach(([x],i)=>{const dd=Math.abs(x-px);if(dd<bd){bd=dd;bi=i;}});
+    const[x,y]=XY[bi];line.setAttribute('x1',x);line.setAttribute('x2',x);dot.setAttribute('cx',x);dot.setAttribute('cy',y);cg.style.display='';
+    read.innerHTML=`<b>${o.f(P[bi].value)}</b><br>${fmtDate(P[bi].date,o.cad)}`;read.style.opacity=1;};
+  const end=()=>{cg.style.display='none';read.style.opacity=0;};
+  svg.addEventListener('pointermove',e=>{move(e.clientX);});
+  svg.addEventListener('pointerleave',end);
+  svg.addEventListener('pointerdown',e=>{move(e.clientX);});
+}
+
+/* ---------- views ---------- */
+function go(state,push){const u=new URL(location);u.search=state.m?('?m='+state.m):'';if(push!==false)history.pushState(state,'',u); render(state);}
+function render(state){
+  const body=$('#cxBody');
+  if(!state.m){ renderCatalog(body); return; }
+  const ids=state.m.split(',').filter(id=>M[id]);
+  if(ids.length>=2){ renderOverlay(body,ids[0],ids[1]); }
+  else if(ids.length===1){ renderSingle(body,ids[0]); }
+  else renderCatalog(body);
+}
+function spark(P){if(P.length<2)return'';const W=120,H=30,xs=P.map(p=>asDate(p.date)),ys=P.map(p=>p.value);const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+  const X=x=>(x-xmin)/((xmax-xmin)||1)*W,Y=v=>H-2-(v-ymin)/((ymax-ymin)||1)*(H-4);
+  let d='';P.forEach((p,i)=>d+=(i?'L':'M')+X(asDate(p.date)).toFixed(1)+' '+Y(p.value).toFixed(1));
+  return `<svg class="csp" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path class="af" d="${d} L${W} ${H} L0 ${H} Z"/><path d="${d}"/></svg>`;}
+function renderCatalog(body){
+  $('#cxTitle').textContent='Every variable, in one place';
+  let h='';
+  G.forEach((gname,gi)=>{
+    const rows=IDS.filter(id=>M[id].g===gi && pts(id).length);
+    if(!rows.length)return;
+    h+=`<div class="cat-grp"><div class="cat-gl">${gname}</div><div class="cat-grid">`;
+    for(const id of rows){const P=pts(id),last=lastN(P),m=M[id];
+      const yAgo=P.find(p=>asDate(p.date)<=asDate(last.date)-330*dms);
+      const rel=isRate(id)? (yAgo?((last.value-yAgo.value>=0?'+':'')+(last.value-yAgo.value).toFixed(2)+' pp'):'') : (yAgo?((pct(last.value,yAgo.value)>=0?'▲ ':'▼ ')+Math.abs(pct(last.value,yAgo.value)).toFixed(1)+'%'):'');
+      h+=`<button class="cc" data-m="${id}"><div class="cl">${m.l}</div><div class="cv">${m.f(last.value)}</div>`+
+         `<div class="cd">${rel} ${yAgo?'<small>vs a year ago</small>':''}</div>${spark(P.slice(-Math.min(P.length,180)))}</button>`;
+    }
+    h+=`</div></div>`;
+  });
+  body.innerHTML=h;
+  body.querySelectorAll('.cc').forEach(b=>b.addEventListener('click',()=>go({m:b.dataset.m})));
+}
+function renderSingle(body,id){
+  const m=M[id],P=pts(id),last=lastN(P),cad=cadence(id),mt=meta(id);
+  $('#cxTitle').textContent=m.l;
+  const av=ranges(id); let cur=defRange(id);
+  body.innerHTML=`<button class="sx-back">← All variables</button>
+    <div class="sx-head"><div class="sx-name">${m.l}</div><div class="sx-sub">${m.u} · ${cad} series · ${mt.source||''}</div>
+      <div class="sx-val"><span class="sx-big">${m.f(last.value)}</span><span class="sx-chg" id="sxChg"></span></div></div>
+    <div class="sx-wrap" id="sxWrap"><div class="sx-read"></div></div>
+    <div class="sx-ranges" id="sxR">${av.map(r=>`<button data-r="${r[0]}"${r[0]===cur?' class="on"':''}>${r[0]}</button>`).join('')}</div>
+    <div class="sx-cad">Snaps to real observed points (${cad}). ${P.length} observations.</div>
+    <div class="sx-ctx">${m.tx}</div>
+    <div class="sx-edges"><div class="el">See how it moves with</div><div class="chips">${(m.e||[]).filter(x=>M[x]&&pts(x).length).map(x=>`<button class="chip" data-pair="${x}"><span class="ar">↔</span>${M[x].l}</button>`).join('')}</div><div class="sx-caveat">Two series over their shared period. Co-movement, not cause.</div></div>
+    <div class="sx-src">Source: ${mt.sourceUrl?`<a href="${mt.sourceUrl}" target="_blank" rel="noopener">${mt.source||'source'}</a>`:(mt.source||'source')} · one tap to the exact release.</div>`;
+  const draw=(lbl)=>{cur=lbl;const P2=slice(id,lbl);const o={render:m.r,f:m.f,cad};const d=chartSVG(P2,o);
+    const wrap=$('#sxWrap');wrap.querySelector('.sx-svg')&&wrap.querySelector('.sx-svg').remove();wrap.insertAdjacentHTML('beforeend',d.svg);wireCross(wrap,d,o);
+    const a=P2[0].value,b=P2[P2.length-1].value;const ch=isRate(id)?((b-a>=0?'+':'')+(b-a).toFixed(2)+' pp'):((pct(b,a)>=0?'+':'')+pct(b,a).toFixed(1)+'%');
+    $('#sxChg').innerHTML=`${ch} <span class="rl">· ${lbl}</span>`;
+    $('#sxR').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.r===lbl));};
+  draw(cur);
+  $('.sx-back',body).addEventListener('click',()=>go({}));
+  $('#sxR').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>draw(b.dataset.r)));
+  body.querySelectorAll('.sx-edges .chip').forEach(b=>b.addEventListener('click',()=>go({m:id+','+b.dataset.pair})));
+}
+function renderOverlay(body,a,b){
+  const ma=M[a],mb=M[b],Pa=pts(a),Pb=pts(b);
+  $('#cxTitle').textContent=`${ma.l} & ${mb.l}`;
+  // shared window = intersection of spans
+  const lo=Math.max(asDate(Pa[0].date),asDate(Pb[0].date)),hi=Math.min(asDate(Pa[Pa.length-1].date),asDate(Pb[Pb.length-1].date));
+  const A=Pa.filter(p=>asDate(p.date)>=lo&&asDate(p.date)<=hi),B=Pb.filter(p=>asDate(p.date)>=lo&&asDate(p.date)<=hi);
+  // normalize both to 100 at the window start so two units share an axis honestly
+  const n=P=>{const base=P[0].value||1;return P.map(p=>({date:p.date,value:p.value/base*100}));};
+  const An=n(A),Bn=n(B);
+  const W=880,H=380,pl=20,pr=20,pt=14,pb=28,iw=W-pl-pr,ih=H-pt-pb;
+  const all=An.concat(Bn),ys=all.map(p=>p.value);let ymin=Math.min(...ys),ymax=Math.max(...ys);const pad=((ymax-ymin)||1)*0.1;ymin-=pad;ymax+=pad;
+  const xs=An.map(p=>asDate(p.date)),xmin=Math.min(...xs),xmax=Math.max(...xs);
+  const X=x=>pl+(xmax===xmin?iw/2:(x-xmin)/(xmax-xmin)*iw),Y=v=>pt+ih-(v-ymin)/(ymax-ymin)*ih;
+  const path=P=>{let d='';P.forEach((p,i)=>d+=(i?'L':'M')+X(asDate(p.date)).toFixed(1)+' '+Y(p.value).toFixed(1));return d;};
+  let grid='';for(let i=0;i<=2;i++){const y=pt+ih*i/2;grid+=`<line class="grid" x1="${pl}" y1="${y}" x2="${W-pr}" y2="${y}"/>`;}
+  let xl='';[0,Math.floor(An.length/2),An.length-1].forEach((i,k)=>{const x=X(asDate(An[i].date));xl+=`<text class="axl" x="${x.toFixed(1)}" y="${H-8}" text-anchor="${k===0?'start':k===2?'end':'middle'}">${fmtDate(An[i].date,cadence(a))}</text>`;});
+  const svg=`<svg class="sx-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}<path class="ln" d="${path(An)}"/><path class="ln ln2" d="${path(Bn)}"/>${xl}</svg>`;
+  $('#cxTitle').textContent=`${ma.l} & ${mb.l}`;
+  body.innerHTML=`<button class="sx-back">← All variables</button>
+    <div class="sx-head"><div class="sx-name">${ma.l} & ${mb.l}</div><div class="sx-sub">Indexed to 100 at the start of the shared period · ${fmtDate(A[0].date,cadence(a))} to ${fmtDate(A[A.length-1].date,cadence(a))}</div></div>
+    <div class="sx-leg"><span><i style="background:var(--ink)"></i>${ma.l} (now ${ma.f(A[A.length-1].value)})</span><span><i style="background:var(--green-d)"></i>${mb.l} (now ${mb.f(B[B.length-1].value)})</span></div>
+    <div class="sx-wrap">${svg}</div>
+    <div class="sx-ctx">The channel: ${ma.tx}</div>
+    <div class="sx-caveat">Both series indexed to 100 at the start of their shared period so two different units can share one axis. This shows how they moved together. It is co-movement, not proof that one caused the other.</div>
+    <div class="sx-edges"><div class="el">Open one on its own</div><div class="chips"><button class="chip" data-m="${a}">${ma.l}</button><button class="chip" data-m="${b}">${mb.l}</button></div></div>`;
+  $('.sx-back',body).addEventListener('click',()=>go({}));
+  body.querySelectorAll('.chip[data-m]').forEach(c=>c.addEventListener('click',()=>go({m:c.dataset.m})));
+}
+
+/* ---------- boot ---------- */
+(async()=>{
+  await loadSeries(IDS);
+  window.addEventListener('popstate',()=>render({m:new URL(location).searchParams.get('m')||''}));
+  render({m:new URL(location).searchParams.get('m')||''});
+})().catch(e=>{$('#cxBody').innerHTML='<p style="font-family:var(--mono);color:var(--red);font-size:14px">Could not load the data: '+e.message+'</p>';});
+</script>
+
+
+<footer class="foot"><div class="wrap">
+  <nav class="fnav"><a href="/sources.html">Sources</a><a href="/about.html">About</a><a href="/weekly.html">Weekly</a><a href="/journal.html">Journal</a></nav>
+  <p class="fblurb">A free public briefing on Mexico: the official numbers, and the news that moves them. Built by Alan Lacroix.</p>
+</div></footer>
+
+<script>document.addEventListener('click',function(e){
+  var b=e.target.closest('.navtoggle');
+  if(b){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');return;}
+  // Topics dropdown: click to open/close (a reliable backstop to hover). Clicking outside closes it.
+  var inDrop=e.target.closest('.navdrop');
+  document.querySelectorAll('.navdrop.open').forEach(function(o){if(o!==inDrop)o.classList.remove('open');});
+  var t=e.target.closest('.navdrop-t');
+  if(t){var d=t.closest('.navdrop');var on=d.classList.toggle('open');t.setAttribute('aria-expanded',on?'true':'false');}
+});
+/* Our own subscribe form -> /api/subscribe (a Cloudflare function that calls beehiiv server-side).
+   Any form.subform on any page: inline result, no popup, no third-party UI. */
+document.addEventListener('submit',function(e){var f=e.target;if(!f.classList||!f.classList.contains('subform'))return;e.preventDefault();
+  var inp=f.querySelector('input[type=email]'),btn=f.querySelector('button'),msg=f.parentNode.querySelector('.submsg');
+  var email=(inp&&inp.value||'').trim();
+  var say=function(t,ok){if(msg){msg.textContent=t;msg.style.color=ok?'var(--green-d)':'var(--red)';}};
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){say('Enter a valid email address.',false);return;}
+  var old=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='Subscribing…';}
+  fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
+    .then(function(r){return r.json().catch(function(){return{ok:r.ok};});})
+    .then(function(d){if(btn){btn.disabled=false;btn.textContent=old;}
+      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm.',true);}
+      else{say((d&&d.error)||'Could not subscribe, please try again.',false);}})
+    .catch(function(){if(btn){btn.disabled=false;btn.textContent=old;}say('Network error, please try again.',false);});
+});</script>
+
+</body>
+</html>

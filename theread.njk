@@ -253,7 +253,10 @@ function renderMoved(){
     const zc=m.dir>0?'up':(m.dir<0?'dn':'');
     const zt=(m.z>=0?'+':'')+Number(m.z).toFixed(1)+'σ';
     const flag=m.flags&&m.flags.length?m.flags[0]:'';
-    const chg=m.changePct!=null?((m.changePct>=0?'+':'')+m.changePct+'% '+cadLbl(m.cadence)):'';
+    // rate/percent series change in percentage POINTS (not a % change of the rate, the "-14.47%" bug); levels in %
+    const isRate=/%/.test(m.units||'');
+    const chg=(isRate&&m.change!=null)?((m.change>=0?'+':'')+m.change+' pp '+cadLbl(m.cadence))
+      :(m.changePct!=null?((m.changePct>=0?'+':'')+m.changePct+'% '+cadLbl(m.cadence)):'');
     return `<div class="mv"><span class="mv-z ${zc}">${zt}</span><div class="mv-b"><div class="mv-l">${m.label}${flag?': <b>'+flag+'</b>':''}</div><div class="mv-m">${fmtMoved(m)}${chg?' · '+chg:''}</div></div></div>`;
   }).join('')+'</div>'+
   `<p class="readnote" style="margin-top:14px">The board scores each series' latest move against its own last two years. The σ chip counts standard deviations from that two-year norm: +2.0σ means the latest move ran twice the series' typical variation. Rows also appear for record highs and long streaks. Ordinary moves stay hidden, so an empty board means no series left its normal range.</p>`;
@@ -271,8 +274,7 @@ function renderReads(){
     const rr=FACTS&&FACTS.cross&&FACTS.cross.realRate;
     const svg=timeChart([{name:'Headline',color:'var(--ink)',pts:hd},{name:'Core',color:'green',pts:co}],{unit:'%',band:[2,4],bandLabel:'3% ±1pp target',xfmt:moFmt});
     let note='';
-    if(rr){ const stance=rr.value<rr.neutralLow?'below neutral, with room to keep easing':rr.value>rr.neutralHigh?'above neutral, still restricting demand':'around neutral';
-      note=`The <b>real policy rate</b>, the policy rate minus core inflation, now runs about <span class="em">${rr.value}%</span>. Banxico puts its neutral range at 2.6–3.3%, which leaves today's setting <b>${stance}</b>. Banxico tracks core, not headline, as its working gauge.`; }
+    if(rr){ note=`The policy rate now sits about <span class="em">${rr.value} pp</span> above core inflation, the simple ex-post gap. That is not the same as Banxico's neutral-rate benchmark, which is defined on expected inflation, a series this page does not track, so I do not put the two side by side. Banxico watches core, not headline, as its working gauge.`; }
     H+=exhibit('1','Headline and core inflation against the 3% target','Headline vs core inflation, %, last 3 years · shaded band = Banxico target of 3% ±1pp',svg,
       'Source: <a href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">Banco de México</a> · INPC + policy rate.','',true)+readnote(note);
   }

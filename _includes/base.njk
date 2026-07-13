@@ -45,7 +45,7 @@ document.addEventListener('submit',function(e){var f=e.target;if(!f.classList||!
   fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})})
     .then(function(r){return r.json().catch(function(){return{ok:r.ok};});})
     .then(function(d){if(btn){btn.disabled=false;btn.textContent=old;}
-      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm, and see you Monday.',true);}
+      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm.',true);}
       else{say((d&&d.error)||'Could not subscribe, please try again.',false);}})
     .catch(function(){if(btn){btn.disabled=false;btn.textContent=old;}say('Network error, please try again.',false);});
 });</script>
