@@ -1,0 +1,66 @@
+{
+  "siteUrl": "https://mexicobrief.com",
+  "outputDir": "_site",
+  "publicRoutes": [
+    { "route": "/", "file": "index.html", "canonical": "/" },
+    { "route": "/chart.html", "file": "chart.html", "canonical": "/chart" },
+    { "route": "/economy.html", "file": "economy.html", "canonical": "/economy" },
+    { "route": "/payments.html", "file": "payments.html", "canonical": "/payments" },
+    { "route": "/trade.html", "file": "trade.html", "canonical": "/trade" },
+    { "route": "/politics.html", "file": "politics.html", "canonical": "/politics" },
+    { "route": "/society.html", "file": "society.html", "canonical": "/society" },
+    { "route": "/us-mexico.html", "file": "us-mexico.html", "canonical": "/us-mexico" },
+    { "route": "/model.html", "file": "model.html", "canonical": "/model" },
+    { "route": "/atlas.html", "file": "atlas.html", "canonical": "/atlas" },
+    { "route": "/sources.html", "file": "sources.html", "canonical": "/sources" },
+    { "route": "/about.html", "file": "about.html", "canonical": "/about" },
+    { "route": "/weekly.html", "file": "weekly.html", "canonical": "/weekly" },
+    { "route": "/privacy.html", "file": "privacy.html", "canonical": "/privacy" }
+  ],
+  "compatibilityRoutes": [],
+  "redirectRoutes": [
+    { "route": "/the-read", "target": "/" },
+    { "route": "/the-read.html", "target": "/" },
+    { "route": "/journal", "target": "/" },
+    { "route": "/journal.html", "target": "/" },
+    { "route": "/data", "target": "/sources" },
+    { "route": "/data.html", "target": "/sources" },
+    { "route": "/money", "target": "/economy" },
+    { "route": "/money.html", "target": "/economy" },
+    { "route": "/security", "target": "/society" },
+    { "route": "/security.html", "target": "/society" },
+    { "route": "/topics-start-mockup", "target": "/economy" },
+    { "route": "/topics-start-mockup.html", "target": "/economy" }
+  ],
+  "previewRoutes": [
+    { "route": "/mockup.html", "file": "mockup.html", "metaNoindex": true },
+    { "route": "/daily-start-mockup.html", "file": "daily-start-mockup.html", "metaNoindex": true },
+    { "route": "/charts-start-mockup.html", "file": "charts-start-mockup.html", "metaNoindex": true },
+    { "route": "/weekly-sample.html", "file": "weekly-sample.html", "metaNoindex": false }
+  ],
+  "requiredFiles": [
+    "_headers",
+    "_redirects",
+    "robots.txt",
+    "sitemap.xml",
+    "design/mckinsey-mx.css",
+    "assets/mb.js"
+  ],
+  "functionRoutes": [
+    {
+      "route": "/api/subscribe",
+      "source": "functions/api/subscribe.js",
+      "methods": ["GET", "POST"]
+    }
+  ],
+  "sourceExclusions": [
+    "_site/",
+    "node_modules/",
+    "tmp/",
+    "private/",
+    "data/email/",
+    "data/source-snapshots/",
+    "pipeline/.env",
+    ".env"
+  ]
+}

@@ -1,0 +1,192 @@
+---
+layout: base.njk
+permalink: /daily-start-mockup.html
+title: "Daily starting point · The Mexico Brief"
+description: "A local design mockup for the Mexico Brief daily starting point."
+bodyClass: daily-start-mockup
+footerBlurb: "The important numbers, the developments behind them, and the original sources when you want to go deeper. Built by Alan Lacroix."
+noindex: true
+---
+{% raw %}
+<style>
+  body.daily-start-mockup{font-size:var(--fs-body)}
+  body.daily-start-mockup header.mast .mnav>a[href="/"]{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--green);text-decoration-thickness:2px;text-underline-offset:7px}
+  .daily{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+  .daily-hero{padding:34px 0 25px;max-width:780px}
+  .daily-hero h1{font-size:var(--fs-display);line-height:1.03;letter-spacing:-.025em;margin:7px 0 8px}
+  .daily-hero .dek{font-size:var(--fs-body);line-height:1.5;color:var(--ink-2);max-width:64ch}
+  .daily-hero .dek b{color:var(--ink)}
+  .daily-date{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.07em;text-transform:uppercase;color:var(--mut);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .daily-date .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+
+  .daily-grid{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(255px,.72fr);gap:42px}
+  .mod{border-top:2px solid var(--green);padding-top:12px}
+  .mod-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:600;margin-bottom:12px}
+  .lead{padding:2px 0 22px;border-bottom:1px solid var(--line)}
+  .lead h2{font-size:var(--fs-h2);line-height:1.18;margin:0 0 9px;max-width:31ch}
+  .lead p{font-size:var(--fs-small);line-height:1.58;color:var(--ink-2);max-width:70ch}
+  .lead p b,.story p b{color:var(--ink);font-weight:600}
+  .src{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;color:var(--mut);display:flex;align-items:center;gap:7px 11px;flex-wrap:wrap;margin-top:10px}
+  .src a{color:var(--green-d)}
+  .story{display:grid;grid-template-columns:84px minmax(0,1fr);gap:18px;margin:0;max-width:none;padding:17px 0;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0}
+  .story-tag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);padding-top:3px}
+  .story h3{font-size:var(--fs-body);line-height:1.3;margin:0 0 5px}
+  .story p{font-size:var(--fs-small);line-height:1.5;color:var(--ink-2)}
+
+  .event{display:grid;grid-template-columns:48px minmax(0,1fr);gap:11px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .event-date{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.3}
+  .event-date small{display:block;color:var(--mut);font-size:var(--fs-label)}
+  .event-title{font-size:var(--fs-small);line-height:1.35;color:var(--ink)}
+  .event-meta{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);line-height:1.45;margin-top:3px}
+
+  .stood{margin-top:38px;border-top:2px solid var(--green);padding-top:12px}
+  .stood-h,.board-h,.topics-h{display:flex;align-items:baseline;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:11px}
+  .stood-h .mod-k,.board-h .mod-k,.topics-h .mod-k{margin:0}
+  .stood-asof,.board-asof,.topics-asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .stood-list{border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+  .stood-row{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:15px;align-items:baseline;padding:13px 0;color:var(--ink);text-decoration:none}
+  .stood-row+.stood-row{border-top:1px solid var(--line)}
+  .stood-row:hover .stood-text{color:var(--green-d)}
+  .stood-tag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .stood-text{font-size:var(--fs-small);line-height:1.45}
+  .stood-go{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
+
+  .board{margin-top:38px;border-top:2px solid var(--green);padding-top:12px}
+  .board-title,.topics-title{font-size:var(--fs-h2);margin:3px 0 13px}
+  .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden}
+  .metric{background:var(--paper);padding:18px;min-width:0;min-height:218px;display:flex;flex-direction:column;color:var(--ink);text-decoration:none}
+  .metric:hover{background:var(--paper-2);text-decoration:none}
+  .metric-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);min-height:2.6em}
+  .metric-v{font-family:var(--sans);font-size:clamp(28px,3vw,37px);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--ink);margin-top:5px}
+  .metric-v small{font-size:var(--fs-meta);font-weight:400;color:var(--mut)}
+  .metric-d{font-family:var(--mono);font-size:var(--fs-meta);color:var(--ink-2);font-variant-numeric:tabular-nums;margin-top:7px;min-height:1.5em}
+  .metric-x{font-size:14px;line-height:1.45;color:var(--ink-2);padding-top:11px;margin-top:11px;border-top:1px solid var(--line);min-height:4.7em}
+  .metric-m{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:auto;padding-top:11px;line-height:1.35}
+
+  .topics{margin-top:46px;border-top:2px solid var(--green);padding-top:12px}
+  .topics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden}
+  .topic{background:var(--paper);padding:20px}
+  .topic-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;text-decoration:none;margin-bottom:8px}
+  .topic-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .topic-go{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
+  .topic-summary{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);margin-bottom:11px}
+  .topic-link{display:block;padding:9px 0;border-top:1px solid var(--line);color:var(--ink);text-decoration:none}
+  .topic-link:hover .topic-story{color:var(--green-d)}
+  .topic-story{display:block;font-size:var(--fs-small);line-height:1.35;font-weight:500}
+  .topic-meta{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:4px}
+
+  .signup{margin-top:46px;border-top:2px solid var(--green);padding:20px 0 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.8fr);gap:32px;align-items:end}
+  .signup .mod-k{margin-bottom:6px}
+  .signup h2{font-size:var(--fs-h3);margin-bottom:7px}
+  .signup p{font-size:var(--fs-small);line-height:1.5;color:var(--ink-2);max-width:64ch}
+  .signup p a{font-weight:600}
+  .signup form{display:flex;gap:8px}
+  .signup input{flex:1;min-width:0;font-family:var(--sans);font-size:var(--fs-small);padding:11px 12px;border:1px solid var(--line-2);border-radius:8px;background:var(--paper);color:var(--ink)}
+  .signup button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:600;color:#fff;background:var(--green);border:0;border-radius:8px;padding:11px 18px;cursor:pointer}
+  .signup button:hover{background:var(--green-d)}
+  .signup .submsg{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px}
+  .daily-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.6;color:var(--mut);margin-top:30px;padding-top:13px;border-top:1px solid var(--line)}
+
+  @media(max-width:900px){
+    .daily-grid{grid-template-columns:1fr;gap:31px}
+    .signup{grid-template-columns:1fr;align-items:start}
+  }
+  @media(max-width:560px){
+    .daily-hero{padding:26px 0 20px}
+    .daily-hero .dek{font-size:var(--fs-small)}
+    .story{grid-template-columns:1fr;gap:4px}
+    .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .metric{padding:15px;min-height:226px}
+    .metric-v{font-size:var(--fs-h3)}
+    .metric-x{font-size:var(--fs-meta);min-height:5.8em}
+    .stood-row{grid-template-columns:1fr auto;gap:5px 10px}
+    .stood-tag{grid-column:1 / -1}
+    .topics-grid{grid-template-columns:1fr}
+    .topic{padding:17px 15px}
+    .signup form{flex-direction:column}
+    .signup button{min-height:44px}
+  }
+</style>
+
+<div class="daily">
+  <section class="daily-hero">
+    <div class="daily-date"><span class="dot"></span>Monday, July 13 · Updated 8:17 AM</div>
+    <h1>Mexico, this morning.</h1>
+    <p class="dek"><b>The important numbers, the developments behind them, and what comes next.</b> The things worth knowing today.</p>
+  </section>
+
+  <div class="daily-grid">
+    <section class="mod" aria-labelledby="matters">
+      <div class="mod-k" id="matters">What matters now</div>
+      <article class="lead">
+        <h2>The US declined to renew USMCA in its current form</h2>
+        <p>The agreement remains in force, but it now enters annual reviews through 2036. That leaves the rules behind roughly <b>$1.8 trillion in North American trade</b> open to negotiation every year.</p>
+        <div class="src"><span>Trade</span><span>Jul 1</span><a href="https://ustr.gov/about/policy-offices/press-office/press-releases/2026/july/ambassador-greer-issues-statement-usmca-joint-review">USTR · Original statement ↗</a></div>
+      </article>
+      <article class="story">
+        <div class="story-tag">Economy &amp; money</div>
+        <div><h3>Inflation fell to 3.37%, back inside Banxico’s target band</h3><p>It is the third consecutive monthly decline. Core inflation remains higher, so the underlying pressure has not disappeared.</p><div class="src"><span>Jun 2026</span><a href="https://www.banxico.org.mx/AplBusquedasBM2/bsiewww.jsp?_page=1&amp;_action=search&amp;_lang=es&amp;_userquery=SP1">INEGI / Banxico · Open series ↗</a></div></div>
+      </article>
+      <article class="story">
+        <div class="story-tag">Politics</div>
+        <div><h3>The second judicial reform is now official</h3><p>Pending judicial elections move to 2028 and the Supreme Court’s structure changes again. Secondary laws are still moving through Congress.</p><div class="src"><span>Jun 2</span><a href="https://www.dof.gob.mx/">Diario Oficial · Read decree ↗</a></div></div>
+      </article>
+      <article class="story">
+        <div class="story-tag">Economy &amp; money</div>
+        <div><h3>Moody’s cuts Mexico to Baa3, the last investment-grade rung</h3><p>The main concerns are the cost of supporting Pemex and persistent fiscal deficits. S&amp;P’s outlook is also negative.</p><div class="src"><span>May 20</span><a href="https://www.gob.mx/hacienda">Hacienda / Moody’s · Open source ↗</a></div></div>
+      </article>
+    </section>
+
+    <aside class="mod" aria-labelledby="coming-up">
+      <div class="mod-k" id="coming-up">Coming up</div>
+      <div class="event"><div class="event-date">Jul 20<small>~</small></div><div><div class="event-title">USMCA talks, third round</div><div class="event-meta">Trade · USTR</div></div></div>
+      <div class="event"><div class="event-date">Jul 23</div><div><div class="event-title">Inflation, first half of July</div><div class="event-meta">INEGI</div></div></div>
+      <div class="event"><div class="event-date">Jul 23</div><div><div class="event-title">Monthly activity, May</div><div class="event-meta">INEGI · IGAE</div></div></div>
+      <div class="event"><div class="event-date">Jul 29</div><div><div class="event-title">US interest-rate decision</div><div class="event-meta">Federal Reserve</div></div></div>
+      <div class="event"><div class="event-date">Jul 30</div><div><div class="event-title">Mexico GDP, first Q2 estimate</div><div class="event-meta">INEGI</div></div></div>
+    </aside>
+  </div>
+
+  <section class="stood" aria-labelledby="stood-title">
+    <div class="stood-h"><div class="mod-k" id="stood-title">What stood out</div><div class="stood-asof">From the latest numbers</div></div>
+    <div class="stood-list">
+      <a class="stood-row" href="/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente"><span class="stood-tag">Prices</span><span class="stood-text">Headline inflation fell 0.57 points to 3.37%, its third decline in a row. Core inflation is still higher at 4.03%.</span><span class="stood-go">Open →</span></a>
+      <a class="stood-row" href="/chart.html?v=banxico-tasa-objetivo,banxico-inflacion-subyacente"><span class="stood-tag">Rates</span><span class="stood-text">Banxico’s policy rate is 2.47 points above core inflation. That is the real policy-rate gap.</span><span class="stood-go">Open →</span></a>
+      <a class="stood-row" href="/chart.html?v=banxico-usdmxn-fix,d-rate-gap&amp;r=1Y"><span class="stood-tag">Peso</span><span class="stood-text">The peso is 6.3% stronger than a year ago even though Mexico’s rate advantage over the US narrowed.</span><span class="stood-go">Open →</span></a>
+    </div>
+  </section>
+
+  <section class="board" aria-labelledby="mexico-now">
+    <div class="board-h"><div class="mod-k">Where things stand</div><div class="board-asof">Latest official reading · dates vary</div></div>
+    <h2 class="board-title" id="mexico-now">The numbers</h2>
+    <div class="metrics">
+      <a class="metric" href="/chart.html?v=banxico-usdmxn-fix"><div class="metric-k">Peso · per US dollar</div><div class="metric-v">17.48 <small>MXN/USD</small></div><div class="metric-d">▼ 6.3% vs a year ago</div><div class="metric-x">Lower means stronger. It changes import costs and the peso value of dollar income.</div><div class="metric-m">Banxico · Jul 10</div></a>
+      <a class="metric" href="/chart.html?v=banxico-inflacion"><div class="metric-k">Inflation · annual</div><div class="metric-v">3.37%</div><div class="metric-d">▼ 0.57 pp from May</div><div class="metric-x">Back inside Banxico’s 2–4% target band. Core inflation is 4.03%.</div><div class="metric-m">INEGI · Jun 2026</div></a>
+      <a class="metric" href="/chart.html?v=banxico-tasa-objetivo"><div class="metric-k">Policy rate · Banxico</div><div class="metric-v">6.50%</div><div class="metric-d">▼ 1.50 pp vs a year ago</div><div class="metric-x">Still 2.47 points above core inflation, keeping monetary policy restrictive.</div><div class="metric-m">Banxico · Jul 11</div></a>
+      <a class="metric" href="/chart.html?v=banxico-pib-crecimiento"><div class="metric-k">Growth · real GDP</div><div class="metric-v">+0.4%</div><div class="metric-d">▼ 1.24 pp from Q4</div><div class="metric-x">The economy was nearly flat in Q1. Monthly activity has since improved.</div><div class="metric-m">INEGI · Q1 2026</div></a>
+      <a class="metric" href="/chart.html?v=banxico-remesas"><div class="metric-k">Remittances · monthly</div><div class="metric-v">$5.6bn</div><div class="metric-d">▲ $633mn from April</div><div class="metric-x">The highest monthly total so far this year. The stronger peso reduces its local value.</div><div class="metric-m">Banxico · May 2026</div></a>
+      <a class="metric" href="/chart.html?v=banxico-reservas"><div class="metric-k">International reserves</div><div class="metric-v">$255bn</div><div class="metric-d">▲ 5.6% vs a year ago</div><div class="metric-x">Mexico’s foreign-currency buffer against an external or peso shock.</div><div class="metric-m">Banxico · Jul 3</div></a>
+    </div>
+  </section>
+
+  <section class="topics" aria-labelledby="topics-title">
+    <div class="topics-h"><div class="mod-k">This week</div><div class="topics-asof">Updated Jul 13</div></div>
+    <h2 class="topics-title" id="topics-title">Mexico by topic</h2>
+    <div class="topics-grid">
+      <article class="topic"><a class="topic-head" href="/topics-start-mockup.html?t=economy"><span class="topic-k">Economy &amp; money</span><span class="topic-go">More →</span></a><p class="topic-summary">Inflation is back inside Banxico’s band and activity is growing again, but core inflation and interest rates remain higher.</p><a class="topic-link" href="/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente"><span class="topic-story">June inflation fell to 3.37%; core is 4.03%</span><span class="topic-meta">INEGI / Banxico · Jun 2026</span></a><a class="topic-link" href="/chart.html?v=banxico-igae"><span class="topic-story">April activity was 2.17% above a year earlier</span><span class="topic-meta">INEGI / Banxico · Apr 2026</span></a></article>
+      <article class="topic"><a class="topic-head" href="/topics-start-mockup.html?t=payments"><span class="topic-k">Payments</span><span class="topic-go">More →</span></a><p class="topic-summary">Digital rails and card payments are growing. Cash still handles most small purchases, and account access remains the limit.</p><a class="topic-link" href="/chart.html?v=banxico-spei-operaciones"><span class="topic-story">SPEI processed 811 million transfers in June</span><span class="topic-meta">Banxico · Jun 2026</span></a><a class="topic-link" href="https://www.inegi.org.mx/programas/enif/2024/"><span class="topic-story">85.2% still use cash most often for small purchases</span><span class="topic-meta">INEGI · ENIF 2024</span></a></article>
+      <article class="topic"><a class="topic-head" href="/topics-start-mockup.html?t=trade"><span class="topic-k">Trade</span><span class="topic-go">More →</span></a><p class="topic-summary">Exports and imports are both near record highs. Four-fifths of Mexican goods exports go to the United States.</p><a class="topic-link" href="/chart.html?v=banxico-exports-total,banxico-imports-total"><span class="topic-story">Exports reached $723bn over the latest 12 months</span><span class="topic-meta">Banxico · 12m to May 2026</span></a><a class="topic-link" href="/topics-start-mockup.html?t=trade#topicModules"><span class="topic-story">The US bought 81.24% of Mexico’s 2024 exports</span><span class="topic-meta">UN COMTRADE · 2024</span></a></article>
+      <article class="topic"><a class="topic-head" href="/topics-start-mockup.html?t=politics"><span class="topic-k">Politics</span><span class="topic-go">More →</span></a><p class="topic-summary">The governing coalition has a lower-house supermajority. Coalition leaders reported 86 of 128 senators in Nov 2025; the Senate margin is tighter.</p><a class="topic-link" href="https://sitl.diputados.gob.mx/LXVI_leg/info_diputados.php"><span class="topic-story">The governing bloc holds 364 of 500 deputies</span><span class="topic-meta">Cámara de Diputados · Mar 2026 roster</span></a><a class="topic-link" href="https://www.as-coa.org/articles/approval-tracker-mexicos-president-claudia-sheinbaum"><span class="topic-story">Approval ranges from 49% to 68% by pollster</span><span class="topic-meta">AS/COA tracker · Jun 2026</span></a></article>
+      <article class="topic"><a class="topic-head" href="/topics-start-mockup.html?t=society"><span class="topic-k">Society &amp; security</span><span class="topic-go">More →</span></a><p class="topic-summary">Poverty and real minimum wages improved. Informality still covers more than half of workers; the homicide rate rose in 2024 but remains below 2018.</p><a class="topic-link" href="https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2025/pm/pm2025_08.pdf"><span class="topic-story">Poverty fell to 29.6% in 2024</span><span class="topic-meta">INEGI · 2024</span></a><a class="topic-link" href="https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2025/edr/EDR2024-def_RR.pdf"><span class="topic-story">The homicide rate was 25.8 per 100,000</span><span class="topic-meta">INEGI · 2024 definitive</span></a></article>
+      <article class="topic"><a class="topic-head" href="/topics-start-mockup.html?t=usmexico"><span class="topic-k">U.S.–Mexico</span><span class="topic-go">More →</span></a><p class="topic-summary">USMCA remains in force, but the unresolved review brings the trade rules back to the table every year.</p><a class="topic-link" href="https://ustr.gov/about/policy-offices/press-office/press-releases/2026/july/ambassador-greer-issues-statement-usmca-joint-review"><span class="topic-story">The US declined to renew USMCA in its current form</span><span class="topic-meta">USTR · Jul 1</span></a><a class="topic-link" href="https://www.census.gov/foreign-trade/balance/c2010.html"><span class="topic-story">Two-way goods trade reached $87.2bn in May</span><span class="topic-meta">U.S. Census · May 2026</span></a></article>
+    </div>
+  </section>
+
+  <section class="signup" aria-labelledby="signup-title">
+    <div><div class="mod-k">The email</div><h2 id="signup-title">The Brief, in your inbox</h2><p>A few times a month, I send what changed in Mexico’s economy, politics and relationship with the US. The original sources are included if you want to go deeper. <a href="/weekly.html">See an example →</a></p></div>
+    <div><form class="subform" novalidate><input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required><button type="submit">Subscribe</button></form><div class="submsg">No spam. Just the brief when there is something worth sending.</div></div>
+  </section>
+
+  <p class="daily-note">Official data first. Every figure carries its observation date. Commentary is labeled when it appears.</p>
+</div>
+{% endraw %}

@@ -40,10 +40,21 @@ async function fetchText(url) {
 // ---- minimal RSS/Atom parsing (zero-dep) ----
 const stripCdata = (s) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1');
 const stripTags = (s) => s.replace(/<[^>]+>/g, ' ');
-const decode = (s) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+const decodeOnce = (s) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
   .replace(/&quot;/g, '"').replace(/&#0?39;|&apos;/g, "'").replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
   .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/&nbsp;/g, ' ');
-const clean = (s) => decode(stripTags(stripCdata(s || ''))).replace(/\s+/g, ' ').trim();
+// Decode before stripping tags. Otherwise an encoded `<img onerror=...>` survives
+// the tag pass and becomes markup later when a page renders the headline.
+const decodeAll = (s) => {
+  let value = String(s || '');
+  for (let i = 0; i < 3; i += 1) {
+    const next = decodeOnce(value);
+    if (next === value) break;
+    value = next;
+  }
+  return value;
+};
+const clean = (s) => stripTags(decodeAll(stripCdata(s || ''))).replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim();
 function pick(block, tag) {
   const m = block.match(new RegExp('<' + tag + '\\b[^>]*>([\\s\\S]*?)<\\/' + tag + '>', 'i'));
   return m ? m[1] : '';
@@ -66,12 +77,13 @@ function parseFeed(xml) {
 function canonical(u) {
   try {
     const url = new URL(u.trim());
+    if (!['http:', 'https:'].includes(url.protocol)) return '';
     url.hash = '';
     url.protocol = 'https:';
     url.hostname = url.hostname.toLowerCase().replace(/^www\./, '');
     for (const k of [...url.searchParams.keys()]) if (/^utm_|^fbclid$|^gclid$|^ref$/i.test(k)) url.searchParams.delete(k);
     return url.toString();
-  } catch { return u.trim(); }
+  } catch { return ''; }
 }
 const idOf = (u) => crypto.createHash('sha1').update(u).digest('hex').slice(0, 12);
 const domainOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
@@ -107,6 +119,7 @@ async function main() {
       ok = items.length > 0;
       for (const it of items) {
         const url = canonical(it.link);
+        if (!url) continue;
         const id = idOf(url);
         if (seen.has(id)) continue;
         if (s.mx && !MX.test(it.title + ' ' + it.dek)) continue;   // Mexico filter on pan-LatAm feeds

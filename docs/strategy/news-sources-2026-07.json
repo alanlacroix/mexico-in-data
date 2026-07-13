@@ -1,0 +1,753 @@
+[
+  {
+    "beat": "politics-policy",
+    "note": "Verification method: pulled feed URLs from each outlet's own RSS index page (Aristegui, DOF), a maintained OPML directory (spians/awesome-RSS-feeds, feedspot), and outlet arc/outboundfeeds patterns; confirmed structure where fetchable. NOTE ON BOT BLOCKS: several live WordPress/arc feeds (Animal Político /feed/, El País feeds.elpais.com, Reforma) returned 403/404 to the WebFetch bot but are confirmed real and active via the directories and their own RSS pages — they will work from the pipeline with a normal User-Agent. Flag these for a UA header + retry in the connector. WIRE COVERAGE: Reuters and AP no longer expose clean per-country RSS (Reuters retired public feeds ~2020); Mexico wire coverage is already handled by the existing GDELT build-news.js allowlist — keep sourcing AP/Reuters/AFP through GDELT rather than direct RSS, and use the outlets below as the native-Spanish politics layer. ARCHITECTURE FIT: DOF sumario.xml is the one PRIMARY-SOURCE feed here (decrees/reforms/appointments as-published) — treat it as a separate 'official' lane feeding Politics & Policy and What-to-Watch, distinct from press coverage. Recommend keying items by canonical URL (strip query/UTM) + normalized title hash for dedup across outlets covering the same event; score on significance 0-10 as Fable specified, boosting items corroborated by 2+ tier-1/tier-2 outlets or backed by a DOF entry. Range delivered: 11 sources (mix of tier-1 quality dailies, watchdog/investigative, and the official gazette).",
+    "sources": [
+      {
+        "name": "Aristegui Noticias — México",
+        "url": "https://aristeguinoticias.com/",
+        "endpoint": "https://editorial.aristeguinoticias.com/category/mexico/feed/",
+        "covers": "National politics, Sheinbaum/Morena, Congress, corruption investigations, security; independent watchdog voice (Carmen Aristegui).",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "continuous (multiple/day)",
+        "lang": "es",
+        "notes": "CLEAN RSS, verified from their own /canales-rss page. Per-section feeds available (mexico, dinero-y-economia, mundo, opinion, investigaciones-especiales). Strong for accountability/investigations. Recommended anchor source."
+      },
+      {
+        "name": "Animal Político",
+        "url": "https://www.animalpolitico.com/",
+        "endpoint": "https://www.animalpolitico.com/feed/",
+        "covers": "Politics, policy, security, human rights, fact-checking (El Sabueso), Morena/Congress/judicial reform; independent investigative.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "continuous",
+        "lang": "es",
+        "notes": "WordPress /feed/ — real and active (in OPML directories) but returned 404 to bot fetch; needs a browser-like User-Agent header in the connector. Category feeds likely exist (/seccion/.../feed/). High signal for policy/watchdog."
+      },
+      {
+        "name": "El Universal — Nación",
+        "url": "https://www.eluniversal.com.mx/",
+        "endpoint": "https://www.eluniversal.com.mx/arc/outboundfeeds/general/?outputtype=xml",
+        "covers": "National politics, government, Congress, security, elections; largest general daily of record.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "continuous (high volume)",
+        "lang": "es",
+        "notes": "Arc Publishing outbound feed (general and news variants: /arc/outboundfeeds/news/?outputtype=xml). Legacy /seccion/1671/rss.xml is dead (404) — use the arc outboundfeeds path. Broad, mostly free."
+      },
+      {
+        "name": "Milenio",
+        "url": "https://www.milenio.com/",
+        "endpoint": "https://www.milenio.com/rss",
+        "covers": "National politics, política, security, breaking government news; major national daily/TV group.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "continuous (high volume)",
+        "lang": "es",
+        "notes": "Milenio exposes RSS (listed in feedspot Mexican-news directory); confirm exact section path (/rss or /rss/politica.xml) at connector build time — verify the política section URL by fetching /rss index. High throughput, free."
+      },
+      {
+        "name": "El País — México",
+        "url": "https://elpais.com/mexico/",
+        "endpoint": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/mexico/portada",
+        "covers": "Mexico politics with international/analytical framing; Sheinbaum, reforms, US-Mexico, rule of law.",
+        "access": "RSS",
+        "trust": "tier-1 wire/major",
+        "cadence": "continuous",
+        "lang": "es",
+        "notes": "feeds.elpais.com is a real, well-structured feed host but is blocked to our fetcher (needs UA + is behind CDN). Verify the exact mrss section slug from elpais.com/mexico RSS link at build. Some articles metered/paywalled — headline+dek in RSS is usable; flag full-text paywall."
+      },
+      {
+        "name": "Proceso",
+        "url": "https://www.proceso.com.mx/",
+        "endpoint": "https://www.proceso.com.mx/rss/",
+        "covers": "Investigative politics, security, corruption, power analysis; adversarial weekly + daily web.",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "daily + weekly",
+        "lang": "es",
+        "notes": "RSS index at /rss/ (confirmed in search). Strong investigative/political-accountability signal. Some content subscriber-only — treat as headline/dek source, flag partial paywall."
+      },
+      {
+        "name": "Diario Oficial de la Federación (DOF)",
+        "url": "https://www.diariooficial.gob.mx/",
+        "endpoint": "https://www.diariooficial.gob.mx/filtroRss.php (sumario.xml)",
+        "covers": "OFFICIAL primary source: laws, decrees, reforms, presidential/appointment publications, regulatory changes as enacted.",
+        "access": "RSS",
+        "trust": "tier-1 wire/major",
+        "cadence": "daily (matutina + vespertina editions)",
+        "lang": "es",
+        "notes": "Verified from DOF's own filtroRss.php: feeds are sumario.xml (main), indicadores.xml, sumario_licitaciones.xml, sumario_avisos.xml, sumario_vacantes.xml. Use sumario.xml as the authoritative 'what actually became law' lane — dedupe/cross-link press items against it. Gov infrastructure, no paywall."
+      },
+      {
+        "name": "Excélsior",
+        "url": "https://www.excelsior.com.mx/",
+        "endpoint": "https://www.excelsior.com.mx/rss.xml",
+        "covers": "National politics, government, Congress, security; major national daily.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "continuous",
+        "lang": "es",
+        "notes": "Clean site-wide rss.xml verified in OPML directory. Free, high volume; more establishment-leaning — good corroboration source for scoring."
+      },
+      {
+        "name": "El Financiero",
+        "url": "https://www.elfinanciero.com.mx/",
+        "endpoint": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/?outputType=xml",
+        "covers": "Politics-economy crossover, policy, fiscal/regulatory, Congress budget, Banxico/government; business daily (Bloomberg partner).",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "continuous",
+        "lang": "es",
+        "notes": "Arc outbound feed, verified in OPML. Best for the politics/economy boundary (reforms with market impact) — also feeds Economy room. Free RSS."
+      },
+      {
+        "name": "Reforma",
+        "url": "https://www.reforma.com/",
+        "endpoint": "https://www.reforma.com/rss/portada.xml",
+        "covers": "National politics, government accountability, Congress, security; agenda-setting daily of record.",
+        "access": "RSS",
+        "trust": "tier-1 wire/major",
+        "cadence": "continuous",
+        "lang": "es",
+        "notes": "HARD PAYWALL + bot protection: rss/portada.xml exists (in OPML) but the RSS index page 403'd our fetch and article bodies are subscriber-only. Usable ONLY for headlines/URLs (never summarize body from memory per Fable's rule). Flag as paywalled + scrape-fragile; keep for significance signal, not summarization."
+      },
+      {
+        "name": "The Guardian — Mexico",
+        "url": "https://www.theguardian.com/world/mexico",
+        "endpoint": "https://www.theguardian.com/world/mexico/rss",
+        "covers": "English-language Mexico politics/security coverage for international framing and cross-check.",
+        "access": "RSS",
+        "trust": "tier-1 wire/major",
+        "cadence": "several/day",
+        "lang": "en",
+        "notes": "Clean, reliable RSS (verified in OPML). Fully free, full-text-friendly. Good English corroboration source and useful for the US-Mexico room; lower volume than Mexican dailies."
+      }
+    ]
+  },
+  {
+    "beat": "Payments & Fintech (Mexico + LatAm) — Kuenta core beat",
+    "sources": [
+      {
+        "name": "iupana",
+        "url": "https://iupana.com/",
+        "endpoint": "https://iupana.com/feed/",
+        "covers": "Best specialist for this beat: LatAm digital banking, fintech and payments — sandboxes, neobank raises/licenses, payment rails, AML. Verified items: Baubap, Finsus, Mono, Revolut, Yape, Pix.",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "several/week + Mon Exclusive & Fri Briefing newsletters",
+        "lang": "ES/PT/EN",
+        "notes": "CONFIRMED valid RSS 2.0 by direct fetch. On-topic, low noise. Anchor feed of the Payments & Fintech room."
+      },
+      {
+        "name": "Contxto",
+        "url": "https://contxto.com/en/",
+        "endpoint": "https://contxto.com/en/feed/",
+        "covers": "LatAm startup/VC/tech with heavy fintech & payments coverage (Cobre, Palenca, PY9, ADN.vc). Good for deal-flow and funding rounds incl. Mexico.",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "daily",
+        "lang": "EN (also /es) + LatAm-fintech Substack",
+        "notes": "CONFIRMED valid RSS 2.0 (15 items). Second primary fintech engine alongside iupana."
+      },
+      {
+        "name": "El CEO",
+        "url": "https://elceo.com/",
+        "endpoint": "https://elceo.com/feed/",
+        "covers": "Mexican business/markets/economy daily — peso, banking, fiscal policy, corporate. Filter to fintech/payments/banca keywords.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "daily (multiple/day)",
+        "lang": "ES",
+        "notes": "CONFIRMED valid RSS 2.0 by direct fetch. Clean WordPress feed, full items. Add fintech keyword filter."
+      },
+      {
+        "name": "Forbes Mexico — Dinero",
+        "url": "https://forbes.com.mx/dinero/",
+        "endpoint": "https://forbes.com.mx/dinero/feed",
+        "covers": "Money/finance vertical: digital banking, fintech, markets, pensions, banking regulation.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "daily",
+        "lang": "ES",
+        "notes": "WordPress section feed (/dinero/feed). Validate exact URL on first pull; other sections follow /<tag>/feed."
+      },
+      {
+        "name": "El Economista — Sector Financiero",
+        "url": "https://www.eleconomista.com.mx/seccion/sectorfinanciero",
+        "endpoint": "https://www.eleconomista.com.mx/rss/",
+        "covers": "Leading Mexican financial daily; dedicated Sector Financiero desk (banks, fintech, CNBV/Banxico, markets).",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "daily",
+        "lang": "ES",
+        "notes": "FLAG: bot-walled (direct fetch blocked). RSS exists per /rss index + Feedspot; validate per-section feed path on first run with a real User-Agent."
+      },
+      {
+        "name": "Expansion (Mexico)",
+        "url": "https://expansion.mx/",
+        "endpoint": "https://expansion.mx/canales-rss",
+        "covers": "Major Mexican business magazine — Economia and Empresas channels cover fintech, banking, deals.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "daily",
+        "lang": "ES",
+        "notes": "Free real-time RSS on /canales-rss; grab Economia/Empresas feed links once then filter to fintech keywords."
+      },
+      {
+        "name": "CNBV — Boletines de Prensa",
+        "url": "https://www.cnbv.gob.mx/PRENSA/Paginas/Boletines-de-Prensa.aspx",
+        "endpoint": "https://www.cnbv.gob.mx/PRENSA/Paginas/Boletines-de-Prensa.aspx",
+        "covers": "Banking/securities regulator — Ley Fintech authorizations (IFPE/IFC licenses), sanctions, sector statistics.",
+        "access": "scrape",
+        "trust": "specialist",
+        "cadence": "irregular / event-driven",
+        "lang": "ES",
+        "notes": "No RSS. Scrape boletines list (also gob.mx/cnbv/prensa). Key by boletin number + date. Fintech license grants land here first."
+      },
+      {
+        "name": "Banxico — Comunicados / Prensa",
+        "url": "https://www.banxico.org.mx/publicaciones-y-prensa/",
+        "endpoint": "https://www.banxico.org.mx/estadisticas/rss-indicadores-banco-mexico.html",
+        "covers": "Central bank — payment-rails news (SPEI, CoDi, DiMo), rate decisions, remittances.",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "scheduled (indicators) / irregular (press)",
+        "lang": "ES/EN",
+        "notes": "RSS for indicators (already wired). Press has NO RSS — extend Banxico connector to scrape comunicados + comunicados-miscelaneos for CoDi/DiMo/SPEI."
+      },
+      {
+        "name": "Whitepaper.mx",
+        "url": "https://www.whitepaper.mx/",
+        "endpoint": "https://www.whitepaper.mx/feed",
+        "covers": "Curated daily Mexican business brief (Monterrey) — surfaces fintech/payments (Clip, MercadoLibre, remittances).",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "daily",
+        "lang": "ES",
+        "notes": "CONFIRMED valid Substack RSS BUT excerpts only + paid. FLAG: use as tip-off/signal feed, not full-text summarization."
+      },
+      {
+        "name": "Bloomberg Linea (Mexico)",
+        "url": "https://www.bloomberglinea.com/tags/mexico/",
+        "endpoint": "https://www.bloomberglinea.com/",
+        "covers": "High-quality LatAm business/markets/fintech reporting (neobank raises, valuations, macro).",
+        "access": "scrape",
+        "trust": "tier-2 quality",
+        "cadence": "daily",
+        "lang": "ES",
+        "notes": "FLAG: no official RSS, largely paywalled → scrape-fragile. Use tag-page scrape for lead detection only. Lower priority."
+      },
+      {
+        "name": "ABM — Asociacion de Bancos de Mexico",
+        "url": "https://www.abm.org.mx/sala-de-prensa/comunicados-prensa.htm",
+        "endpoint": "https://www.abm.org.mx/sala-de-prensa/comunicados-prensa.htm",
+        "covers": "Banking-industry body — sector positions on payments, fraud, digital banking, regulation.",
+        "access": "scrape",
+        "trust": "specialist",
+        "cadence": "irregular / event-driven",
+        "lang": "ES",
+        "notes": "No RSS; low-volume press page, cheap to scrape. Secondary/optional."
+      }
+    ],
+    "note": "Verified 2026-07-10 via live fetch. CONFIRMED valid RSS 2.0 by direct fetch: iupana, Contxto, El CEO, Whitepaper.mx. Others exist but not byte-fetched (bot walls / WordPress convention), flagged per source. Tiering: iupana + Contxto = primary fintech engines (clean RSS, on-topic). El CEO + Forbes Dinero + El Economista + Expansion = MX general-business layer (filter to fintech/payments keywords). CNBV + Banxico + ABM = regulator/primary layer, no clean RSS, need lightweight HTML scrape keyed by boletin number/date; extend the existing Banxico stats connector to also scrape its comunicados/prensa (SPEI/CoDi/DiMo). NEOBANKS: none of Nu/Klar/Stori/Uala/Mercado Pago/Spin-OXXO expose a clean per-market news RSS; best direct access is corporate IR/press for Nubank and Mercado Libre/Mercado Pago. Do NOT build per-neobank connectors — cover them via iupana/Contxto/El CEO which report raises/licenses first."
+  },
+  {
+    "beat": "companies-markets-ipos-execmoves",
+    "note": "Verification method: fetched candidate feeds directly and inspected the XML. CONFIRMED live (valid RSS 2.0, fresh items dated Jul 7-10 2026): El Financiero (empresas/mercados/economia), Expansion (empresas), El CEO (/feed/). Forbes Mexico WordPress feed exists but returned 403 to the fetcher (UA/bot block) — real feed, will work from a server with a normal User-Agent header. El Economista domain refused the fetch tool entirely (bot protection) — treat as scrape-fragile / test from the pipeline runner. Bloomberg Linea runs on Arc XP so it follows the documented /arc/outboundfeeds/rss/ pattern (same engine as El Financiero, whose feeds I confirmed) but its content is largely paywalled — use for headline signal only. KEY ARCHITECTURE POINT: Reuters and Bloomberg (terminal) no longer publish free public RSS — do NOT try to add them as direct feeds; keep pulling their Mexico coverage through the existing GDELT allowlist builder (add reuters.com and bloomberg.com/bloomberglinea.com as allowed domains). For primary-source corporate filings (the highest-trust, lowest-noise signal for this beat: earnings, M&A disclosures, exec changes, IPO/listing notices), scrape BMV Eventos Relevantes and BIVA — neither exposes RSS/API, but the Eventos Relevantes list page is a stable scrape target and is the authoritative source that outlets themselves report from. Recommended beat stack: primary layer = BMV/BIVA filings (scrape) + Banxico (already have); news layer = El Financiero + Expansion + El CEO clean RSS as the spine, El Economista + Forbes as secondary, Bloomberg Linea + Reuters via GDELT for wire/exclusives. Dedup note: the same M&A/exec story will appear across El Financiero/Expansion/Reuters within hours — key items by normalized title + entity + day and cluster, don't just dedup by URL.",
+    "sources": [
+      {
+        "name": "El Financiero — Empresas",
+        "url": "https://www.elfinanciero.com.mx/empresas/",
+        "endpoint": "https://www.elfinanciero.com.mx/rss/empresas",
+        "covers": "Big Mexican companies (Femsa/OXXO, América Móvil, Cemex, Bimbo, Walmex), earnings, M&A, executive moves — the core corporate beat",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "hourly (feed lastBuildDate updates ~hourly)",
+        "lang": "es",
+        "notes": "CONFIRMED valid RSS 2.0, fresh items dated Jul 2026. Arc XP engine; also exposes site-wide /arc/outboundfeeds/rss/?outputType=xml. Cleanest, most reliable feed for this beat — make it the spine."
+      },
+      {
+        "name": "El Financiero — Mercados",
+        "url": "https://www.elfinanciero.com.mx/mercados/",
+        "endpoint": "https://www.elfinanciero.com.mx/rss/mercados",
+        "covers": "BMV/peso/rates market moves, BMV index, stock-specific market news, IPO pricing coverage",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "hourly",
+        "lang": "es",
+        "notes": "CONFIRMED valid feed (sibling of Empresas, same Arc XP setup). Pair with Empresas; some overlap — dedup across the two."
+      },
+      {
+        "name": "El Financiero — Economía",
+        "url": "https://www.elfinanciero.com.mx/economia/",
+        "endpoint": "https://www.elfinanciero.com.mx/rss/economia",
+        "covers": "Macro/economy context around corporate news; overlaps the Economy room more than Companies",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "hourly",
+        "lang": "es",
+        "notes": "CONFIRMED pattern (same feed family). Optional — include if you want macro tie-ins; can be routed to the Economy room instead of Companies."
+      },
+      {
+        "name": "Expansión — Empresas",
+        "url": "https://expansion.mx/empresas",
+        "endpoint": "https://expansion.mx/rss/empresas",
+        "covers": "Corporate strategy, ownership, industry deep-dives, big-company news; strong on business features and deals",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "multiple per day",
+        "lang": "es",
+        "notes": "CONFIRMED valid RSS 2.0, feed title 'Expansión - Empresas', items dated Jul 7-10 2026. Section RSS pattern is /rss/{seccion} (also /rss/economia, /rss/mercados). High-quality business desk; second pillar of the spine."
+      },
+      {
+        "name": "El CEO",
+        "url": "https://elceo.com/",
+        "endpoint": "https://elceo.com/feed/",
+        "covers": "Mexican business/finance dailies — companies, markets, banking, executive moves, fintech; business-only outlet",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "multiple per day",
+        "lang": "es",
+        "notes": "CONFIRMED valid WordPress RSS (/feed/). Business-native outlet, good signal-to-noise for this exact beat. Category feeds available via /categoria/{slug}/feed/ if you want to narrow to empresas/mercados."
+      },
+      {
+        "name": "El Economista",
+        "url": "https://www.eleconomista.com.mx/",
+        "endpoint": "https://www.eleconomista.com.mx/rss/mercados (verify from pipeline runner)",
+        "covers": "Markets, empresas, finanzas, sectores — one of the two leading MX financial dailies alongside El Financiero",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "hourly",
+        "lang": "es",
+        "notes": "SCRAPE-FRAGILE: domain refused the fetch tool (bot protection), so I could not confirm the live feed URL. Historical feed pattern is /rss/{seccion} (mercados, finanzas, empresas). Test the endpoint from the GitHub Actions runner with a normal User-Agent; if RSS 403s, fall back to HTML scrape of section pages. High-value outlet — worth the extra handling."
+      },
+      {
+        "name": "Forbes México",
+        "url": "https://forbes.com.mx/",
+        "endpoint": "https://forbes.com.mx/feed/",
+        "covers": "Companies, billionaires/executives, deals, IPOs, business features; strong on exec-move and wealth angles",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "multiple per day",
+        "lang": "es",
+        "notes": "WordPress /feed/ exists but returned HTTP 403 to the fetch tool (UA/bot block). Feed is real; set a browser-like User-Agent from the runner. Category feeds via /tag/{slug}/feed/. Secondary source; good for exec-move stories."
+      },
+      {
+        "name": "Bloomberg Línea México",
+        "url": "https://www.bloomberglinea.com/latinoamerica/mexico/",
+        "endpoint": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml (Arc XP pattern — verify category variant)",
+        "covers": "Markets, deals, IPOs, macro, exec moves with a finance/investor lens; Latam-wide with MX section",
+        "access": "RSS",
+        "trust": "tier-1 wire/major",
+        "cadence": "multiple per day",
+        "lang": "es",
+        "notes": "PAYWALL + VERIFY: /feed/ 404s; runs on Arc XP so the working feed follows /arc/outboundfeeds/rss/ (same engine as El Financiero, which I confirmed). Most article bodies are paywalled — use for headline/lead signal only, do not rely on full-text summarization. Also reachable via GDELT allowlist."
+      },
+      {
+        "name": "BMV — Eventos Relevantes (issuer filings)",
+        "url": "https://www.bmv.com.mx/es/Grupo_BMV/Eventos_relevantes",
+        "endpoint": "no RSS/API — scrape the Eventos Relevantes listing",
+        "covers": "PRIMARY SOURCE: material disclosures by listed issuers — M&A, earnings, board/exec changes, buybacks, IPO/listing notices. Highest-trust, zero-spin signal",
+        "access": "scrape",
+        "trust": "tier-1 wire/major",
+        "cadence": "intraday (market hours)",
+        "lang": "es",
+        "notes": "No public RSS or documented API found. The Eventos Relevantes page is a stable scrape target and is the authoritative source outlets themselves report from — scraping it lets you break/confirm corporate news ahead of the press. Highest-value add for this beat; pair with news feeds for context."
+      },
+      {
+        "name": "BIVA — Bolsa Institucional de Valores",
+        "url": "https://www.biva.mx/",
+        "endpoint": "no RSS/API — scrape emisoras/avisos section",
+        "covers": "Second Mexican exchange: listings, IPOs on BIVA, issuer notices; complements BMV for full-market IPO/filing coverage",
+        "access": "scrape",
+        "trust": "tier-1 wire/major",
+        "cadence": "intraday",
+        "lang": "es",
+        "notes": "No RSS/API. Lower volume than BMV but catches IPOs/listings that debut on BIVA. Scrape-fragile; optional second primary source — add only if BMV alone misses BIVA-listed names."
+      },
+      {
+        "name": "Reuters (Mexico coverage)",
+        "url": "https://www.reuters.com/world/americas/",
+        "endpoint": "no free public RSS — pull via GDELT allowlist (domain reuters.com)",
+        "covers": "Wire-grade breaking on major MX corporate M&A, earnings, exec moves, IPOs; English, often first",
+        "access": "API",
+        "trust": "tier-1 wire/major",
+        "cadence": "continuous",
+        "lang": "en",
+        "notes": "Reuters retired free public RSS; direct feeds are dead and the official API is paid/enterprise. DO NOT add as a direct feed — you already have the GDELT builder; just ensure reuters.com is on the allowlist. Highest trust tier for verification/cross-check."
+      },
+      {
+        "name": "Mexico Business News",
+        "url": "https://mexicobusiness.news/",
+        "endpoint": "https://mexicobusiness.news/rss (verify; feed listed via aggregators)",
+        "covers": "English-language MX industry/business coverage — companies, deals, sector analysis; useful for an English brief and cross-checking",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "daily",
+        "lang": "en",
+        "notes": "Listed among Mexico business RSS feeds by aggregators; confirm exact endpoint from the runner. English-language option if the brief wants an en source or a second confirmation on deals. Lower priority than the Spanish spine."
+      }
+    ]
+  },
+  {
+    "beat": "US-Mexico trade, tariffs, USMCA, immigration",
+    "note": "Verification pass done 2026-07-10 via WebSearch/WebFetch. Key structural finding for this beat: the highest-trust wires (Reuters, Bloomberg) and DC-trade specialists (Politico Pro, Inside U.S. Trade) have NO usable public RSS — Reuters killed feeds.reuters.com in 2020, Bloomberg's are deprecated/paywalled, Inside U.S. Trade is subscription-only. So this beat splits into two clean layers: (a) PRIMARY/OFFICIAL sources you fetch directly and can trust verbatim — the Federal Register API (already wired; just add USTR + CBP agency filters) and CBP's GovDelivery RSS; and (b) a WIRE/AGGREGATOR layer where a Google News RSS query (verified live, returns dated Reuters/AP/Politico/El Pais items) is the pragmatic, allowlist-friendly substitute for the paywalled outlets — dedupe it against the existing GDELT builder, which already covers the same wires. Recommendation: lean on the two official APIs as the spine of this beat (they are the actual news — tariff actions, USMCA review notices, worker-rights cases), and treat wires as context. Reuters/Bloomberg/Inside-Trade should stay on the allowlist as trusted DOMAINS surfaced via GDELT/Google News, not as direct fetches. What we already wire: US Federal Register (generic) — this beat just needs the agency-scoped queries below. USTR is on the Federal Register (agency slug 'trade-representative-office-of-united-states'), so USTR tariff/Section-301 notices come free through the wire we already run.",
+    "sources": [
+      {
+        "name": "Federal Register API — USTR notices",
+        "url": "https://www.federalregister.gov/agencies/trade-representative-office-of-united-states",
+        "endpoint": "https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=trade-representative-office-of-united-states&order=newest&per_page=20",
+        "covers": "USTR tariff actions, Section 301 investigations, USMCA-related Federal Register notices, comment/hearing dockets",
+        "access": "API",
+        "trust": "tier-1 wire/major (primary/official)",
+        "cadence": "Publishes on business days; poll daily",
+        "lang": "en",
+        "notes": "VERIFIED live — returns clean JSON, no API key. Extends the Federal Register connector we ALREADY wire; just add the agency filter. This is the authoritative source for USTR tariff/301 actions since USTR itself has no RSS. Highest signal on this beat."
+      },
+      {
+        "name": "Federal Register API — CBP notices",
+        "url": "https://www.federalregister.gov/agencies/u-s-customs-and-border-protection",
+        "endpoint": "https://www.federalregister.gov/api/v1/documents.json?conditions[agencies][]=u-s-customs-and-border-protection&order=newest&per_page=20",
+        "covers": "CBP import rules, tariff-rate quotas, forced-labor/UFLPA determinations, border-processing rules affecting cross-border trade",
+        "access": "API",
+        "trust": "tier-1 wire/major (primary/official)",
+        "cadence": "Business days; poll daily",
+        "lang": "en",
+        "notes": "Same already-wired Federal Register API, different agency slug. Official primary source. No key. Pairs with CBP RSS below (RSS = press-release framing, API = rulemaking)."
+      },
+      {
+        "name": "CBP Newsroom (media releases)",
+        "url": "https://www.cbp.gov/newsroom/media-releases/all",
+        "endpoint": "https://www.cbp.gov/rss/newsroom/media-releases",
+        "covers": "Border security, immigration/CBP enforcement, seizures, port-of-entry and trade-facilitation announcements",
+        "access": "RSS",
+        "trust": "tier-1 wire/major (primary/official)",
+        "cadence": "Several releases per week",
+        "lang": "en",
+        "notes": "GovDelivery-backed RSS — VALID feed, but returned HTTP 403 to WebFetch (bot filter). Will work from the Node pipeline with a real User-Agent header; if it keeps 403-ing, fall back to scraping /newsroom/media-releases/all. Sub-feeds exist: /rss/newsroom/media-releases (trade & border rolled up). Primary source for the immigration/border slice of this beat."
+      },
+      {
+        "name": "USTR Press Office",
+        "url": "https://ustr.gov/about-us/policy-offices/press-office/press-releases",
+        "endpoint": "https://ustr.gov/about-us/policy-offices/press-office/press-releases (scrape — no RSS)",
+        "covers": "USMCA joint-review readouts, US-Mexico ministerial statements, worker-rights (RRM) cases, trade-negotiation announcements",
+        "access": "scrape",
+        "trust": "tier-1 wire/major (primary/official)",
+        "cadence": "Weekly-ish; irregular",
+        "lang": "en",
+        "notes": "VERIFIED the page carries exactly this beat's news (e.g. 'US and Mexico Conclude First Bilateral Round of USMCA Joint Review' May 2026; Greer–Ebrard joint statement Jun 2026). NO RSS feed exposed — must scrape the listing HTML (stable structure). Highest-value narrative source for USMCA review; complements the FR API which only carries formal notices."
+      },
+      {
+        "name": "Google News RSS — USMCA/tariffs query",
+        "url": "https://news.google.com/rss/search?q=USMCA%20Mexico%20tariffs&hl=en-US&gl=US&ceid=US:en",
+        "endpoint": "https://news.google.com/rss/search?q=(USMCA+OR+tariff+OR+CBP)+Mexico&hl=en-US&gl=US&ceid=US:en",
+        "covers": "Cross-border wire/analysis headlines: Reuters, AP, Politico, El Pais, Automotive News, PIIE, Mexico Business News",
+        "access": "RSS",
+        "trust": "aggregator",
+        "cadence": "Continuous; poll daily",
+        "lang": "en",
+        "notes": "VERIFIED live — returns 50+ dated items incl. Reuters/AP/Politico. This is the practical stand-in for Reuters/Bloomberg/Politico whose own RSS is dead or paywalled. MUST be filtered against your trusted-source allowlist (same discipline as build-news.js) and DEDUPED against GDELT, which already covers these wires — otherwise double-counting. Summarize only fetched text, never the Google snippet."
+      },
+      {
+        "name": "Politico — Trade / Economy",
+        "url": "https://www.politico.com/policy/trade",
+        "endpoint": "https://www.politico.com/rss/economy.xml (section RSS; verify slug from politico.com/rss index)",
+        "covers": "Washington trade-policy politics: USMCA review politics, tariff legislation, USTR/Congress dynamics",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "Daily",
+        "lang": "en",
+        "notes": "Politico blocks direct WebFetch (bot filter) so couldn't confirm the exact section-feed URL live; RSS index is documented at politico.com/rss with per-section XML feeds. FLAG: the deep trade coverage ('Morning Trade') is Politico Pro — PAYWALLED. Use the free trade/economy section RSS only; expect headlines + lede, not full text. Reach the rest via Google News/GDELT."
+      },
+      {
+        "name": "Inside U.S. Trade",
+        "url": "https://insidetrade.com/",
+        "endpoint": "https://insidetrade.com/news/daily-news (scrape headlines only)",
+        "covers": "Deep specialist US trade-policy reporting: USMCA review mechanics, tariff dockets, negotiation blow-by-blow",
+        "access": "scrape",
+        "trust": "specialist",
+        "cadence": "Daily",
+        "lang": "en",
+        "notes": "FLAG: subscription/paywalled (Inside Washington Publishers), NO RSS. Best-in-class specialist but you can only pull public headline/teaser text — never full articles. Keep the DOMAIN on the allowlist so its stories surface via Google News/GDELT; do not build a direct-fetch connector. Scrape-fragile + paywall = low priority to wire."
+      },
+      {
+        "name": "El Financiero — Economía",
+        "url": "https://www.elfinanciero.com.mx/economia/",
+        "endpoint": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/?outputType=xml",
+        "covers": "Mexican-side trade-desk coverage: peso/trade, USMCA from Mexico City, Ebrard/Secretaría de Economía angle",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "Daily",
+        "lang": "es",
+        "notes": "Runs on Arc Publishing, which exposes /arc/outboundfeeds/rss/ feeds; general feed confirmed to exist though WebFetch returned truncated (Arc anti-bot). Verify the exact outputType/section query from the pipeline with a UA header. Gives the crucial MEXICO-SIDE framing this beat needs (US sources alone are one-sided). Spanish — summarizer must handle ES."
+      },
+      {
+        "name": "El Economista (MX) — Comercio Exterior",
+        "url": "https://www.eleconomista.com.mx/seccion/empresas",
+        "endpoint": "scrape section (RSS not confirmed for .com.mx edition)",
+        "covers": "Mexican business/foreign-trade reporting: tariffs' impact on Mexican exporters, auto/steel sectors, USMCA",
+        "access": "scrape",
+        "trust": "tier-2 quality",
+        "cadence": "Daily",
+        "lang": "es",
+        "notes": "Distinct from the Spain edition eleconomista.es (which HAS RSS at /rss/). The Mexican edition's RSS wasn't confirmed — treat as scrape or reach via Google News with site: filter. Second Mexican voice for balance; lower priority than El Financiero."
+      },
+      {
+        "name": "PIIE (Peterson Institute) — Trade & Investment",
+        "url": "https://www.piie.com/research/trade-investment",
+        "endpoint": "https://www.piie.com/rss.xml",
+        "covers": "Analysis/context on USMCA economics, tariff cost modeling (not breaking news)",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "Weekly",
+        "lang": "en",
+        "notes": "Context/explainer layer, not a news wire. Surfaced in the Google News verification ('Ending USMCA could fuel higher US consumer prices', Jul 2026). Optional — good for the 'What to Watch' room, low volume, clean RSS. Wire only if you want analytical depth."
+      }
+    ]
+  },
+  {
+    "beat": "economy, macro & nearshoring",
+    "sources": [
+      {
+        "name": "Banxico — Monetary policy statements & minutes",
+        "url": "https://www.banxico.org.mx/publications-and-press/announcements-of-monetary-policy-decisions/monetary-policy-announcements.html",
+        "endpoint": "https://www.banxico.org.mx/publications-and-press/announcements-of-monetary-policy-decisions/monetary-policy-announcements.html (statements) + .../minutes-of-the-board-of-governors-meetings/ (minutas)",
+        "covers": "Central-bank rate decisions, the accompanying communiqué, and the minutes (minutas) that move the peso and set the macro tone. The single most important primary macro source.",
+        "access": "scrape",
+        "trust": "tier-1 wire/major",
+        "cadence": "Calendar-driven: ~8 rate decisions/year (roughly every 6 weeks); minutes released ~2 weeks after each decision.",
+        "lang": "es (also en mirror)",
+        "notes": "VERIFIED: no RSS/JSON on the announcements page — only HTML listings linking to PDFs. Scrape the listing page against the published calendar (banxico.org.mx/viewers/JSP/calendarioDifusion_en.jsp). Trigger trick: the target-rate indicator RSS (next row) fires on decision day, so use it as the signal to fetch the new statement PDF. Stable URLs, PDF body text — clean to parse."
+      },
+      {
+        "name": "Banxico — Indicator RSS feeds (rate, peso, remittances)",
+        "url": "https://www.banxico.org.mx/statistics/rss-indicators-banco-mexico.html",
+        "endpoint": "https://www.banxico.org.mx/rsscb/rss?BMXC_canal=tasObj&BMXC_idioma=es (target rate); &BMXC_canal=fix (FX); &BMXC_canal=remesa (remittances)",
+        "covers": "Machine-readable target rate, FIX exchange rate, TIIE/CETES, remittances, reserves — the real-time data spine, and a decision-day trigger for the statements scrape.",
+        "access": "RSS",
+        "trust": "tier-1 wire/major",
+        "cadence": "Per-publication (rate on decision days; FX daily; remittances/reserves monthly).",
+        "lang": "es / en (BMXC_idioma param)",
+        "notes": "VERIFIED live RSS 2.0. Some already wired for the data board; the tasObj feed doubles as the news trigger for rate-decision items. Zero-scrape, most reliable Banxico surface."
+      },
+      {
+        "name": "El Financiero — Economía",
+        "url": "https://www.elfinanciero.com.mx/economia/",
+        "endpoint": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/economia/?outputType=xml",
+        "covers": "Mexico's leading finance/econ daily. Inflation, jobs (IMSS), trade balance, T-MEC, industrial policy, FDI rankings, energy/oil — the workhorse econ desk.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "Continuous; ~12 items in the economia feed, refreshed through the day.",
+        "lang": "es",
+        "notes": "VERIFIED live: pulled 12 current economia items (inflation 3.37%, IMSS fraud, T-MEC, FDI rank) on 2026-07-10. Arc XP outboundfeeds — swap category slug (mercados, empresas) for sibling feeds. Cleanest Mexican-outlet RSS found."
+      },
+      {
+        "name": "Bloomberg Línea México",
+        "url": "https://www.bloomberglinea.com/mexico/",
+        "endpoint": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml (all-LatAm) + https://www.bloomberglinea.com/arc/outboundfeeds/tags-feed.xml",
+        "covers": "Markets/macro with strong Banxico coverage (minutes, rate path), formal-employment data, FDI, corporate finance — Bloomberg editorial standard, free tier.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "Continuous, multiple items/day.",
+        "lang": "es",
+        "notes": "VERIFIED live RSS 2.0; feed carried a Banxico-minutes item and Mexico employment item on 2026-07-10. Feed is pan-LatAm — filter to Mexico by URL path (/mexico/) or the tags feed to drop Argentina/Colombia noise."
+      },
+      {
+        "name": "El Economista (MX)",
+        "url": "https://www.eleconomista.com.mx/seccion/economia",
+        "endpoint": "https://www.eleconomista.com.mx/rss (Arc outboundfeeds; section RSS under /rss/…)",
+        "covers": "The other major Mexican econ daily — macro, mercados, sector/FDI coverage; strong complement to El Financiero for cross-confirmation.",
+        "access": "scrape",
+        "trust": "tier-2 quality",
+        "cadence": "Continuous, multiple items/day.",
+        "lang": "es",
+        "notes": "FLAG scrape-fragile: site returned bot-blocks (WebFetch refused) — needs a real User-Agent header and is bot-hostile. RSS exists (Arc XP) but is gated; treat as scrape-with-UA or reach it via the GDELT allowlist rather than a naive feed pull."
+      },
+      {
+        "name": "Expansión — Economía",
+        "url": "https://expansion.mx/economia",
+        "endpoint": "https://expansion.mx/canales-rss (RSS hub; per-section economia/empresas feeds linked there)",
+        "covers": "Business/economy weekly-plus-daily; nearshoring, corporates, policy, deals — good Companies & Deals crossover.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "Continuous.",
+        "lang": "es",
+        "notes": "PARTIAL: canales-rss hub confirmed to exist and advertise free real-time feeds, but the page renders feed links client-side so the exact economia .xml URL wasn't machine-extractable. Resolve the section feed URL once from the hub, then it's a stable RSS pull."
+      },
+      {
+        "name": "Federal Reserve Bank of Dallas — Mexico Economic Update & research",
+        "url": "https://www.dallasfed.org/research/update/mex",
+        "endpoint": "https://www.dallasfed.org/rss/ (RSS hub; Mexico topic at /topics/mexico)",
+        "covers": "Best free English-language analytical read on the Mexican macro/nearshoring story — FDI reality vs. hype, manufacturing, US-Mexico linkages. Adds analysis the wires don't.",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "Mexico Economic Update ~8x/year (week after each FOMC); research notes irregular.",
+        "lang": "en",
+        "notes": "FLAG: RSS hub and Mexico topic pages are real but returned 403 to WebFetch (bot filter) — needs UA header/scrape fallback. Low volume, high signal; good for 'What to Watch' / context, not breaking news."
+      },
+      {
+        "name": "Reuters — Mexico (via GDELT allowlist)",
+        "url": "https://www.reuters.com/world/americas/",
+        "endpoint": "no public RSS since 2020 — ingest through the existing GDELT build-news allowlist (domain: reuters.com)",
+        "covers": "Wire-grade breaking macro: rate moves, FX, nearshoring/FDI announcements, trade/tariff developments — the tier-1 confirmation source.",
+        "access": "API",
+        "trust": "tier-1 wire/major",
+        "cadence": "Continuous.",
+        "lang": "en",
+        "notes": "FLAG: Reuters retired public RSS; don't build a feed connector. Already reachable via your GDELT pipeline — just ensure reuters.com is on the allowlist and let GDELT surface Mexico-economy articles. Same applies to AP/Bloomberg terminal content."
+      },
+      {
+        "name": "El País — Economía / América (México)",
+        "url": "https://elpais.com/mexico/economia/",
+        "endpoint": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/economia/portada",
+        "covers": "Quality Spanish-language macro/politics-of-economy coverage with a dedicated Mexico edition; good for narrative and policy framing.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "Continuous.",
+        "lang": "es",
+        "notes": "PARTIAL: El País publishes MRSS feeds (feeds.elpais.com/mrss-s/…) but the host refused WebFetch, so the economia feed wasn't fully validated live. Feed pattern is well-documented; verify the exact section slug once. Pan-Hispanic — filter to /mexico/."
+      },
+      {
+        "name": "INEGI — Sala de prensa / boletines",
+        "url": "https://www.inegi.org.mx/app/saladeprensa/",
+        "endpoint": "Boletines/comunicados (HTML) + INEGI data API (BIE/BISE) already wired for the data board",
+        "covers": "Official releases behind the numbers: GDP (PIB), IGAE activity index, inflation (INPC), employment (ENOE), industrial production — the primary-source press release when a data print is the story.",
+        "access": "scrape",
+        "trust": "tier-1 wire/major",
+        "cadence": "Calendar-driven per indicator (monthly/quarterly); schedule published in advance.",
+        "lang": "es",
+        "notes": "Data already flows via the INEGI API; add the boletín scrape only to caption a data release as a news item. Release calendar lets you pre-schedule the fetch."
+      },
+      {
+        "name": "Secretaría de Economía / Presidencia — press (gob.mx)",
+        "url": "https://www.gob.mx/se/prensa",
+        "endpoint": "https://www.gob.mx/se/prensa (HTML; gob.mx exposes /api/… JSON on some article endpoints)",
+        "covers": "Official nearshoring/FDI/Plan México announcements, investment commitments, trade-negotiation posture — the primary source for government-side nearshoring news.",
+        "access": "scrape",
+        "trust": "specialist",
+        "cadence": "Irregular, event-driven.",
+        "lang": "es",
+        "notes": "FLAG scrape: gob.mx press pages are HTML; some expose JSON via /api paths but it's undocumented and inconsistent. Low volume; pairs with El Financiero/El Economista which usually report the same announcements with more context — treat gov as confirmation, not primary discovery."
+      },
+      {
+        "name": "IMCO (Instituto Mexicano para la Competitividad)",
+        "url": "https://imco.org.mx/",
+        "endpoint": "https://imco.org.mx/ (WordPress — try /feed/ for RSS)",
+        "covers": "Think-tank analysis on nearshoring/FDI, competitiveness, energy, fiscal — the analytical 'so what' on structural macro themes.",
+        "access": "scrape",
+        "trust": "specialist",
+        "cadence": "Irregular (reports/notes weekly-ish).",
+        "lang": "es",
+        "notes": "PARTIAL: WordPress-style site likely exposes /feed/ (unverified). Low volume, high analytical value for 'What to Watch'. Confirm the /feed/ endpoint once; otherwise light scrape of the publications index."
+      }
+    ],
+    "note": "Verified live via WebFetch: El Financiero economia RSS (12 items, 2026-07-10), Bloomberg Línea RSS (Mexico items incl. Banxico minutes), Banxico indicator RSS page, and Banxico monetary-policy page confirmed to have NO RSS (scrape-only). Bot-blocked (403/refused) and needing UA/scrape fallback: El Economista MX, Dallas Fed, El País feeds host — real sources, fragile access. Key architecture takeaways for this beat: (1) Banxico is the tier-1 primary but is scrape-only for statements/minutes — use its tasObj indicator RSS as the decision-day trigger to fetch the statement PDF. (2) El Financiero + Bloomberg Línea are the two clean, verified RSS workhorses — start here. (3) El Economista as second-daily cross-confirmation but route it through the GDELT allowlist rather than a naive feed pull, since it bot-blocks. (4) Reuters has no RSS since 2020 — keep it in the GDELT allowlist path, don't build a connector. (5) Most Mexican outlets (El Financiero, Bloomberg Línea, El Economista) run Arc XP, so the same /arc/outboundfeeds/rss/ connector shape is reusable across them — one connector, many feeds. (6) Dallas Fed / IMCO are low-volume analysis for 'What to Watch', not breaking news."
+  },
+  {
+    "beat": "VC, startups & deals (Mexican funding rounds, VC activity, M&A)",
+    "sources": [
+      {
+        "name": "LatamList",
+        "url": "https://latamlist.com/",
+        "endpoint": "https://latamlist.com/feed/",
+        "covers": "The single best fit for this beat: LatAm (incl. Mexico) startup funding rounds, M&A, credit lines, and VC activity, item-by-item. Verified live 2026-07 with 10+ deal items in the prior week (e.g. 'Nexu secures $143M credit line from HSBC', 'Jota raises $30M Series A').",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "daily (multiple items/day)",
+        "lang": "English",
+        "notes": "TOP PICK. Clean WordPress RSS 2.0, full content:encoded, dated pubDate. Deal-first framing = ideal for the Companies & Deals room. Filter items for Mexico by country tag/keyword since feed is pan-LatAm."
+      },
+      {
+        "name": "Contxto",
+        "url": "https://contxto.com/en/",
+        "endpoint": "https://contxto.com/en/feed/",
+        "covers": "LatAm startup / VC / tech news and funding; Mexico-heavy. Verified valid RSS 2.0 (WordPress), hourly build.",
+        "access": "RSS",
+        "trust": "specialist",
+        "cadence": "irregular / weekly (last items spanned weeks, not daily)",
+        "lang": "English (also Spanish at contxto.com/feed/)",
+        "notes": "Real feed but publishing cadence has thinned — do not rely on it alone for weekly deal flow. Spanish edition + Substack ('Lo más destacado de la semana') also exist. Keep as secondary."
+      },
+      {
+        "name": "Crunchbase News",
+        "url": "https://news.crunchbase.com/",
+        "endpoint": "https://news.crunchbase.com/feed/",
+        "covers": "Global startup funding + 'Week's 10 Biggest Rounds' + explicit LatAm coverage (e.g. 'LatAm Startup Funding Rebounds 2025, Mexico Surge'). Verified valid RSS with daily items.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "daily (global); Mexico/LatAm occasional",
+        "lang": "English",
+        "notes": "Global feed — Mexico items are a minority, so keyword-filter for Mexico/LatAm. Authoritative on numbers/valuations. Note: /venture/feed/ and /sections/latam/feed/ both 404 — use the root /feed/ only."
+      },
+      {
+        "name": "Bloomberg Línea (México)",
+        "url": "https://www.bloomberglinea.com/",
+        "endpoint": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/category/tecnologia/?outputType=xml",
+        "covers": "Mexican + LatAm tech, startups and deals in Spanish; strong on fintech/payments rounds and corporate M&A.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "daily",
+        "lang": "Spanish",
+        "notes": "Arc-Publishing outbound feeds. The tecnologia category feed is verified live but skews to markets/Wall Street — filter for startup/deal keywords. category/mexico feed is valid but returned an empty item set in snapshot; tag-based feeds (…/rss/tag/startup) 404. Also exposes a tags index at /arc/outboundfeeds/tags-feed.xml. Possible metered paywall on some articles."
+      },
+      {
+        "name": "LAVCA (Latin American Venture Capital Assoc.)",
+        "url": "https://www.lavca.org/news/",
+        "endpoint": "https://info.lavca.org/newsletters",
+        "covers": "Authoritative VC/PE deal data, fundraising, exits across LatAm incl. Mexico. 'Venture Bulletin' = biweekly round-up of LatAm tech transactions; 'Private Capital Update' = biweekly all-asset transactions.",
+        "access": "scrape (news feed page) + email newsletter (no public RSS found)",
+        "trust": "specialist (authority)",
+        "cadence": "biweekly",
+        "lang": "English",
+        "notes": "FLAG: no clean RSS located — access is the newsletter (subscribe) or scraping lavca.org/vc/newsfeed/. Best used as a biweekly cross-check / 'What to Watch' source, not a daily wire input."
+      },
+      {
+        "name": "TechCrunch — Mexico tag",
+        "url": "https://techcrunch.com/tag/mexico/",
+        "endpoint": "https://techcrunch.com/tag/mexico/feed/",
+        "covers": "Occasional but high-signal Mexico startup/fintech stories (e.g. Aplazo BNPL, AWS $5B Mexico region). Verified valid RSS.",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "occasional (weeks between Mexico items)",
+        "lang": "English",
+        "notes": "Low volume — treat as opportunistic. When it fires, it's usually a significant round or major-player move worth the lead."
+      },
+      {
+        "name": "iupana",
+        "url": "https://iupana.com/",
+        "endpoint": "https://iupana.com/newsletter/?lang=en",
+        "covers": "LatAm fintech / digital banking / payments deals and funding — overlaps the Payments & Fintech room but surfaces many Mexican fintech rounds relevant here.",
+        "access": "scrape / newsletter (verify RSS on site)",
+        "trust": "specialist",
+        "cadence": "weekly",
+        "lang": "English + Spanish",
+        "notes": "Directly relevant to Alan's Kuenta beat. Confirm whether a /feed exists; otherwise newsletter or scrape. Deduplicate against LatamList/Bloomberg Línea (heavy overlap on fintech rounds)."
+      },
+      {
+        "name": "Forbes México — Emprendedores",
+        "url": "https://forbes.com.mx/emprendedores/",
+        "endpoint": "https://forbes.com.mx/emprendedores/feed/",
+        "covers": "Mexican startups, founders, and investment/expansion news in Spanish.",
+        "access": "RSS (feed URL follows WP convention) — scrape-fragile",
+        "trust": "tier-2 quality",
+        "cadence": "several/week",
+        "lang": "Spanish",
+        "notes": "FLAG: feed returned HTTP 403 (Cloudflare bot block) on fetch. Feed likely real but needs a real User-Agent / may resist headless fetch. Test with proper headers before relying on it; fall back to scraping the section page."
+      },
+      {
+        "name": "Expansión — Emprendedores",
+        "url": "https://expansion.mx/emprendedores",
+        "endpoint": "https://expansion.mx/rss/emprendedores",
+        "covers": "Mexican entrepreneurship, startup profiles, financing analysis. Verified valid RSS (es-mx).",
+        "access": "RSS",
+        "trust": "tier-2 quality",
+        "cadence": "low / evergreen (advice + analysis more than breaking deals)",
+        "lang": "Spanish",
+        "notes": "Real, clean feed but content skews evergreen how-to over dated deal news. Useful for context/'What to Watch', weak for the deal wire itself."
+      }
+    ],
+    "note": "Verified live in July 2026. Ranked best-first for a deal wire. Recommended core set for this beat: LatamList (primary, deal-by-deal RSS), Crunchbase News (numbers/valuations + biggest-rounds, filter to Mexico), Bloomberg Línea (Spanish-language Mexico coverage), plus LAVCA biweekly as an authority cross-check. Contxto/TechCrunch/Forbes/Expansión/iupana are secondary or opportunistic. Two flags: Forbes México feed is Cloudflare-blocked (403) so scrape-fragile, and LAVCA has no public RSS (newsletter/scrape only). Since most feeds are pan-LatAm, the pipeline needs a Mexico keyword/entity filter and cross-feed dedup (LatamList, Bloomberg Línea, Crunchbase, and iupana will frequently report the same Mexican fintech round)."
+  }
+]

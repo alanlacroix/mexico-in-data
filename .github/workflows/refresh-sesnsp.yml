@@ -1,0 +1,49 @@
+name: refresh-sesnsp
+# SESNSP's municipal file is large and monthly. Keep it off the six-hour job,
+# run after the agency's stated day-20 publication deadline, and commit only
+# after the scoped connector and the assembled public-data contract both pass.
+
+on:
+  schedule:
+    - cron: '35 15 21 * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-sesnsp
+  cancel-in-progress: false
+
+jobs:
+  sesnsp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run SESNSP municipal connector
+        working-directory: pipeline
+        env:
+          ENABLE_SESNSP: '1'
+        run: node run.js --only sesnsp-delitos
+
+      - name: Validate the scoped result and the public data set
+        run: |
+          node pipeline/assert-connector.mjs sesnsp-delitos --max-age-days 45
+          node pipeline/assert-data.js
+
+      - name: Commit SESNSP layer
+        run: |
+          git config user.name  "mexico-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/layers/sesnsp-delitos.json data/health.json
+          if git diff --cached --quiet; then
+            echo "no SESNSP data changes"
+          else
+            git commit -m "data: SESNSP monthly refresh $(date -u +%Y-%m)"
+            git push
+          fi

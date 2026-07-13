@@ -1,10 +1,10 @@
 ---
 layout: base.njk
 permalink: /
-title: "The Mexico Brief: Mexico's economy in official numbers."
-description: "Mexico's economy in official numbers: growth, the peso, inflation, jobs, investment, politics and security."
+title: "The Mexico Brief: Mexico in official numbers"
+description: "A daily starting point for Mexico's economy, politics, trade, society, and relationship with the US, with dates and links to the original sources."
 ogTitle: "The Mexico Brief"
-ogDescription: "Mexico's economy in official numbers."
+ogDescription: "Mexico's important numbers, what changed, and the original sources."
 ---
 {% raw %}
 <style>
@@ -224,6 +224,8 @@ ogDescription: "Mexico's economy in official numbers."
   .masthead .today{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);font-weight:600;letter-spacing:-.01em}
   .masthead .fresh{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
   .masthead .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
+  .masthead .fresh.has-expected .dot{background:var(--amber2)}
+  .masthead .fresh.has-issue .dot{background:var(--red)}
   .hero h1#lead{margin-top:16px}
   .hero + .homegrid .hg-brief .section-head--tight{margin-top:26px}   /* the Brief follows the hero closely; other grid sections keep the full gap */
   .hero h1#lead a{color:inherit;text-decoration:none;border-bottom:3px solid transparent;transition:border-color .12s}
@@ -357,25 +359,28 @@ ogDescription: "Mexico's economy in official numbers."
   <!-- NEWSLETTER — moved to the bottom, the last thing before the footer -->
   <section>
     <div class="sub">
-      <div class="lab">The email · free</div>
-      <p class="line">A few times a month, I send a brief on what changed in Mexico's economy, politics, business, crime, and relationship with the United States. The original sources are included if you want to go deeper. <a href="/weekly.html" style="color:var(--green-d);font-weight:600">More &rarr;</a></p>
+      <div class="lab">The email</div>
+      <p class="line">Once a week, I send the few things that changed in Mexico's economy, politics, and relationship with the United States that I think are worth knowing. The original sources are included if you want to go deeper. <a href="/weekly.html" style="color:var(--green-d);font-weight:600">More &rarr;</a></p>
       <!-- Our own form -> /api/subscribe (Cloudflare function -> beehiiv, key server-side). No third-party UI. -->
-      <form class="subform" novalidate>
-        <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
+      <form class="subform" method="post" action="/api/subscribe" novalidate>
+        <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required />
+        <label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
         <button type="submit">Subscribe</button>
       </form>
-      <div class="fine submsg">Free. A few emails a month, when there's something worth sending.</div>
+      <div class="fine submsg" aria-live="polite">One email a week. Unsubscribe whenever you want.</div>
+      <div class="privacy-note">Your email is handled by Beehiiv for this newsletter. <a href="/privacy.html">Privacy</a>.</div>
     </div>
   </section>
 
 </div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, tile, fmt, srcBadge, relTime, evDate, enNum } from '/assets/mb.js?v=15';
+import { loadSeries, S, EVENTS, tile, fmt, relTime, evDate, enNum } from '/assets/mb.js?v=17';
+import { summarizeHealth } from '/assets/health-status.mjs?v=3';
 
 /* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
    Every topic now owns a page, so a bookmarked #q link should land on it. */
-const RD={'#q3':'/money.html','#q4':'/economy.html','#q5':'/economy.html','#q6':'/society.html','#q7':'/politics.html','#q8':'/us-mexico.html','#q9':'/security.html','#q10':'/economy.html','#q11':'/model.html'};
+const RD={'#q3':'/economy.html','#q4':'/economy.html','#q5':'/economy.html','#q6':'/society.html','#q7':'/politics.html','#q8':'/us-mexico.html','#q9':'/society.html','#q10':'/economy.html','#q11':'/model.html'};
 if(RD[location.hash]){ location.replace(RD[location.hash]); }
 
 let TRADE=null;
@@ -392,35 +397,27 @@ const MONEY_RX=/peso|inflaci|inflation|banxico|\brate\b|\btasa\b|remittance|reme
 /* ============ THE BOARD (block 3) — same tile() render + same JSON as the sections ============ */
 const CORE=new Set(['banxico-usdmxn-fix','banxico-inflacion','banxico-tasa-objetivo','banxico-pib-crecimiento']); // shown by default on mobile
 const TILES=[
-  {id:'banxico-usdmxn-fix',   l:'Peso · per US dollar',      href:'/money.html'},
-  {id:'banxico-inflacion',    l:'Inflation · annual',  href:'/money.html'},
-  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',href:'/money.html'},
+  {id:'banxico-usdmxn-fix',   l:'Peso · per US dollar',      href:'/economy.html'},
+  {id:'banxico-inflacion',    l:'Inflation · annual',  href:'/economy.html'},
+  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',href:'/economy.html'},
   {id:'banxico-pib-crecimiento',l:'Growth · real GDP', href:'/economy.html'},
-  {id:'banxico-remesas',      l:'Remittances · monthly total', href:'/money.html'},
-  {id:'banxico-reservas',     l:"Int'l reserves",      href:'/money.html'},
+  {id:'banxico-remesas',      l:'Remittances · monthly total', href:'/economy.html'},
+  {id:'banxico-reservas',     l:"Int'l reserves",      href:'/economy.html'},
 ];
-// Context floor (Fable 2026-07-12): every number carries its neutral transmission line, so it is never bare.
-// MECHANISM only — moved by / feeds — no valence (good/bad), no politics, no claim that a number CAUSED a move.
-// Human-authored + static (never model-generated), so it cannot fabricate a driver.
-const TRANSMISSION={
-  'banxico-usdmxn-fix':   {line:'Moved by the Mexico–US rate gap and global risk. Feeds import prices and the peso value of remittances.'},
-  'banxico-inflacion':    {line:'Moved by food, energy and the peso. Shapes how much room Banxico has to move the rate.'},
-  'banxico-tasa-objetivo':{line:'Set against inflation and the US Fed. Moves the peso through the rate gap, and the cost of credit.'},
-  'banxico-pib-crecimiento':{line:'Driven mainly by US demand and investment. Feeds jobs, wages and public revenue.'},
-  'banxico-remesas':      {line:'Driven by the US job market. Household income for millions; a weaker peso raises its peso value.'},
-  'banxico-reservas':     {line:'Built from external flows. A buffer against a currency shock.'},
+// A short definition sits beside every value. These lines explain what the
+// number is; they do not guess at what moved it. Deeper comparisons live on the
+// chart and topic pages, where their inputs and caveats are visible.
+const NUMBER_CONTEXT={
+  'banxico-usdmxn-fix':   {line:"Lower means a stronger peso. Banxico's official FIX rate."},
+  'banxico-inflacion':    {line:"Annual change in consumer prices. Banxico's target is 3%, plus or minus one point."},
+  'banxico-tasa-objetivo':{line:"Banxico's overnight target rate, set at scheduled policy meetings."},
+  'banxico-pib-crecimiento':{line:'Annual change in real GDP. Published quarterly.'},
+  'banxico-remesas':      {line:'Dollars sent to Mexico from abroad. Published monthly.'},
+  'banxico-reservas':     {line:"Banxico's international reserve assets. Published weekly."},
 };
 function renderBoard(){
   // the four core tiles always show; the rest carry .extra and collapse behind "Show all" on mobile
-  let h=TILES.map(t=>`<a class="tilelink${CORE.has(t.id)?'':' extra'}" href="/chart.html?m=${t.id}">${tile(t)}</a>`).join('');   // tiles shortcut into the explorer, pre-selected (Fable 2026-07-12)
-  // two dated static tiles (no live series exists yet) — links to their owning sections
-  h+=`<a class="tilelink extra" href="/security.html"><div class="tile"><div class="tl">Homicide rate · national</div>`+
-     `<div class="tv">~26 <small>per 100k</small></div><div class="tb">vs US ~6 per 100k</div>`+
-     `<span class="stamp">ANNUAL · 2024</span><span class="tsrc">SESNSP (federal crime data) / INEGI</span><div class="tbadge">${srcBadge('SESNSP / INEGI')}</div><div class="tx">Weighs on investment and tourism decisions. Reported crime tracks who files a report, not danger.</div></div></a>`;
-  h+=`<a class="tilelink extra" href="/politics.html"><div class="tile"><div class="tl">Presidential approval</div>`+
-     `<div class="tv">49–68 <small>%</small></div><div class="tb">Mitofsky ~68 · AtlasIntel ~49 · methods differ</div>`+
-     `<span class="stamp">POLL · JUN 2026<span class="chip-ph">not live</span></span><span class="tsrc">AS/COA tracker</span><div class="tbadge">${srcBadge('AS/COA tracker')}</div><div class="tx">A poll, not a measurement; pollsters differ by about 20 points. Read the range, not a point.</div></div></a>`;
-  return h;
+  return TILES.map(t=>`<a class="tilelink${CORE.has(t.id)?'':' extra'}" href="/chart.html?m=${t.id}">${tile(t)}</a>`).join('');   // tiles shortcut into the explorer, pre-selected (Fable 2026-07-12)
 }
 
 function writeVisit(){ try{ localStorage.setItem('mb_lastvisit',new Date().toISOString()); }catch(e){} }
@@ -469,12 +466,11 @@ function renderStood(F){
     const dir=m.dir<0?'fell to':(m.dir>0?'rose to':'held at');
     const val=pct(m.units)?`${m.value}%`:`${enNum(m.value)} ${m.units}`;
     const flag=(m.flags&&m.flags[0])?`, ${m.flags[0]}`:'';
-    rows.push({tag:'moved',t:`${m.label} ${dir} ${val}${flag}.`,href:'/money.html'});
+    rows.push({tag:'moved',t:`${m.label} ${dir} ${val}${flag}.`,href:'/economy.html'});
   });
   const c=F.cross||{};
-  if(c.realRate&&c.realRate.value!=null) rows.push({tag:'connection',t:`The real policy rate is ${c.realRate.value}%, the Banxico rate minus core inflation.`,href:'/chart.html?v=banxico-tasa-objetivo,banxico-inflacion-subyacente'});
-  if(c.rateSpread&&c.rateSpread.value!=null) rows.push({tag:'connection',t:`Mexico's policy rate runs ${c.rateSpread.value} points above the US Fed's.`,href:'/chart.html?v=d-rate-gap'});
-  if(c.pesoVol&&c.pesoVol.value!=null) rows.push({tag:'connection',t:`The peso's realized volatility is ${c.pesoVol.value}% a year.`,href:'/money.html'});
+  if(c.realRate&&c.realRate.value!=null) rows.push({tag:'Real rate',t:`The real policy rate is ${c.realRate.value}%, the Banxico rate minus core inflation.`,href:'/chart.html?v=banxico-tasa-objetivo,banxico-inflacion-subyacente'});
+  if(c.rateSpread&&c.rateSpread.value!=null) rows.push({tag:'Rate gap',t:`Mexico's policy rate runs ${c.rateSpread.value} points above the US Fed's.`,href:'/chart.html?v=d-rate-gap'});
   if(!rows.length) return '<div class="area-empty">Nothing stood out in the numbers this week.</div>';
   return rows.map(r=>`<a class="stoodrow" href="${r.href}"><span class="stag">${r.tag}</span><span class="stxt">${esc(r.t)}</span></a>`).join('');
 }
@@ -573,16 +569,27 @@ function renderWatch(brief){
         if(!isNaN(d)) sao.textContent='updated '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
     } else { const sec=document.getElementById('stood-sec'); if(sec) sec.remove(); } }
 
-  // dateline: N sources · updated Xh ago (from data health + freshest series fetch)
+  // Dateline reports the whole pipeline, not whichever single series happened to refresh last.
   const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
   const newest=times.length?Math.max(...times):0;
-  const sm=health&&health.summary; const total=sm?((sm.ok||0)+(sm.flagged||0)+(sm.failed||0)+(sm.skipped||0)):0;
-  const st=document.getElementById('status'); if(st) st.textContent=(total?`● ${total} feeds · `:'● ')+(newest?'updated '+relTime(newest):'update time unknown');
-  const ba=document.getElementById('board-asof'); if(ba&&newest) ba.textContent='as of '+new Date(newest).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const sm=health&&summarizeHealth(health), checked=health&&Date.parse(health.generatedAt);
+  const st=document.getElementById('status'), freshLink=st&&st.closest('.fresh');
+  if(st&&sm){
+    const loaded=(sm.current||0)+(sm.reviews||0)+(sm.expected||0);
+    const parts=[`${loaded} feeds checked`];
+    if(sm.expected)parts.push(`${sm.expected} expected`);
+    if(sm.overdue)parts.push(`${sm.overdue} refresh overdue`);
+    if(sm.issues)parts.push(`${sm.issues} issue${sm.issues===1?'':'s'}`);
+    else parts.push('0 failed');
+    st.textContent=parts.join(' · ')+(checked?` · checked ${relTime(checked)}`:'');
+    if(freshLink)freshLink.classList.add(sm.issues?'has-issue':(sm.expected||sm.overdue)?'has-expected':'all-current');
+  }else if(st){st.textContent='Feed status unavailable';window.reportMexicoDataError?.('./data/health.json');}
+  const pageChecked=Number.isFinite(checked)?checked:newest;
+  const ba=document.getElementById('board-asof'); if(ba&&pageChecked) ba.textContent='checked '+new Date(pageChecked).toLocaleDateString('en-US',{month:'short',day:'numeric'});
 
   document.getElementById('tablero').innerHTML=renderBoard();
-  // context floor: attach each tile's neutral transmission line so no number is ever bare (Fable 2026-07-12)
-  document.querySelectorAll('#tablero .tile[data-go]').forEach(el=>{const t=TRANSMISSION[el.getAttribute('data-go')];
+  // Attach the neutral definition so no number is ever bare.
+  document.querySelectorAll('#tablero .tile[data-go]').forEach(el=>{const t=NUMBER_CONTEXT[el.getAttribute('data-go')];
     if(t&&t.line){const d=document.createElement('div');d.className='tx';d.textContent=t.line;el.appendChild(d);}});
 
   // the topic browse: the areas (a synthesis + top headlines per topic), projected from the event store

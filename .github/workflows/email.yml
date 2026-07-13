@@ -1,8 +1,8 @@
 name: build-weekly-email
 # Saturday: refresh the news, then build the weekly issue as a DRAFT. It never
 # sends — it writes data/email/<week>.json + .html and email-preview.html, commits
-# them, and stops. Review the preview over the weekend; send with the separate
-# send-weekly-email action when you're happy. Needs ANTHROPIC_API_KEY (Haiku 4.5,
+# them, and stops. Review the preview over the weekend; the separate
+# prepare-beehiiv-review action packages it for manual entry in Beehiiv. Needs ANTHROPIC_API_KEY (Haiku 4.5,
 # cents per issue) for the scoring + lead summaries; without it, it still builds a
 # real issue from the deterministic fallback.
 

@@ -10,8 +10,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, '..', 'data', 'trade');
-const YEAR = 2024;
-const AG4 = `https://comtradeapi.un.org/public/v1/preview/C/A/HS?reporterCode=484&period=${YEAR}&partnerCode=0&flowCode=X&cmdCode=AG4&motCode=0`;
 const H6 = 'https://comtradeapi.un.org/files/v1/app/reference/H6.json';
 
 // short display names for the lines big enough to earn a label; the rest derive from the H6 text
@@ -51,8 +49,34 @@ async function getJson(url, tries = 4) {
   let parents;
   try { parents = JSON.parse(fs.readFileSync(path.join(OUT, 'exports-by-product.json'), 'utf8')); }
   catch (e) { console.error('hs4: need exports-by-product.json first; abort'); process.exit(0); }
+  const YEAR = Number(parents.referenceYear || parents.year);
+  if (!Number.isInteger(YEAR) || YEAR < 2000 || YEAR >= new Date().getUTCFullYear()) {
+    console.error('hs4: parent composition has no valid complete reference year; keeping last-good');
+    process.exit(0);
+  }
+  const AG4 = `https://comtradeapi.un.org/public/v1/preview/C/A/HS?reporterCode=484&period=${YEAR}&partnerCode=0&flowCode=X&cmdCode=AG4&motCode=0`;
   const hs2val = {}; for (const p of parents.items) hs2val[String(p.code).padStart(2, '0')] = p.value;
   const grandTotal = parents.total;
+
+  // This script may run on the six-hour refresh safely: annual detail is reused for 30 days unless the
+  // parent year or total changes. That keeps the drill-down aligned without hammering COMTRADE.
+  const existingFile = path.join(OUT, 'exports-hs4.json');
+  if (!process.argv.includes('--force') && fs.existsSync(existingFile)) {
+    try {
+      const old = JSON.parse(fs.readFileSync(existingFile, 'utf8'));
+      const checked = +new Date(old.fetchedAt || old.asOf || 0);
+      const totalGap = grandTotal ? Math.abs(Number(old.total) - grandTotal) / grandTotal : 1;
+      const impossible = Object.entries(old.byChapter || {}).some(([chap, kids]) => {
+        const parent = hs2val[chap];
+        return !parent || !Array.isArray(kids) || kids.some((k) => !Number.isFinite(Number(k.value)) || Number(k.value) < 0) ||
+          kids.reduce((s, k) => s + Number(k.value || 0), 0) > parent * 1.02;
+      });
+      if (!impossible && Number(old.referenceYear || old.year) === YEAR && totalGap <= 0.0005 && Date.now() - checked < 30 * 864e5) {
+        console.log(`hs4: ${YEAR} detail is current; no fetch needed`);
+        process.exit(0);
+      }
+    } catch { /* malformed cache: fetch and replace only after validation */ }
+  }
 
   let rows, names = {};
   try {
@@ -96,9 +120,24 @@ async function getJson(url, tries = 4) {
       shareTotal: +((resid / grandTotal) * 100).toFixed(2), shareParent: +((resid / parentVal) * 100).toFixed(1) });
     out[chap] = children;
   }
-  const payload = { asOf: new Date().toISOString(), year: YEAR, source: 'UN COMTRADE (HS 4-digit), names from the H6 reference',
+  const invalid = Object.entries(out).filter(([chap, kids]) => {
+    const childTotal = kids.reduce((s, k) => s + Number(k.value || 0), 0);
+    return !kids.length || kids.some((k) => !Number.isFinite(k.value) || k.value < 0) || childTotal > hs2val[chap] * 1.02;
+  });
+  // A malformed chapter must never poison the valid ones. Omit it, record why, and leave the top-level
+  // HS2 rectangle usable. Abort only if the source is broadly broken rather than locally inconsistent.
+  if (invalid.length > 8) {
+    console.error('hs4: validation failed for too many chapters', invalid.map(([c]) => c).join(', '), '; keeping last-good');
+    process.exit(0);
+  }
+  const excludedChapters = invalid.map(([chap]) => chap);
+  for (const chap of excludedChapters) delete out[chap];
+  const fetchedAt = new Date().toISOString();
+  const payload = { schemaVersion: 1, asOf: fetchedAt, fetchedAt, referenceYear: YEAR, year: YEAR,
+    unit: 'current US$', dataKind: 'annual goods export composition, HS 4-digit detail',
+    source: 'UN COMTRADE (HS 4-digit), names from the H6 reference',
     reconciliation: 'shares tied to the HS2 totals reconciled to Banxico CE125; COMTRADE preview caps at 500 lines, residual per chapter shown as "Other in chapter"',
-    total: grandTotal, byChapter: out };
+    excludedChapters, total: grandTotal, byChapter: out };
   fs.mkdirSync(OUT, { recursive: true });
   fs.writeFileSync(path.join(OUT, 'exports-hs4.json'), JSON.stringify(payload));
   console.log('hs4:', Object.keys(out).length, 'chapters ·', rows.length, 'HS4 lines · e.g. 87 ->', (out['87'] || []).slice(0, 3).map((k) => k.name + ' ' + k.shareParent + '%').join(', '));

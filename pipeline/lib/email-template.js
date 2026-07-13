@@ -1,6 +1,7 @@
 // email-template.js — the one renderer. Pure function: a draft object in, a full
-// standalone HTML email out. build-email.js renders the draft; send-email.js sends
-// the exact bytes this produced, so what Alan approves is what subscribers get.
+// standalone HTML email out. build-email.js renders the draft; the Beehiiv review
+// package includes these exact bytes as a visual reference beside the editor-ready
+// body. Beehiiv itself owns the delivered test and final send.
 //
 // Email-client reality: Gmail strips `var()` and `:root`; classic Outlook ignores
 // `max-width` on divs. So the palette is literal hex, the brand band and board
@@ -231,7 +232,7 @@ export function renderPreview(d) {
   const banner = `<div style="font-family:${MONO};background:${C.ink};color:#f2f1ea;padding:12px 18px;font-size:12.5px;line-height:1.6;text-align:center">
     DRAFT PREVIEW · issue ${esc(d.issue || '?')} · ${esc(d.week || '')} · ${(d.topOfWeek || []).length} lead${(d.topOfWeek || []).length === 1 ? '' : 's'} · ${esc(d.readMin || 3)}-min read · ${esc(usd)}<br>
     ${voice}<br>
-    <span style="color:#8fd3ae">To send: run the “send-email” GitHub Action for this week. Default-hold. Nothing sends on its own.</span>
+    <span style="color:#8fd3ae">Next: run “prepare-beehiiv-review” for this week. It only exports a handoff; nothing sends on its own.</span>
   </div>`;
   return html.replace('<body>', `<body>\n${banner}`);
 }

@@ -48,7 +48,7 @@ export const connectors = [
       title: 'Pobreza municipal',
       metric: 'poverty_rate',
       canonicalSource: true,
-      source: 'CONEVAL (via INEGI)',
+      source: 'CONEVAL',
       sourceUrl: URL,
       license: 'Términos de Libre Uso MX',
       cadence: '~5-yearly',

@@ -31,6 +31,7 @@ export function stampProvenance(m, norm, ctx) {
     license: m.license,
     units: m.units,
     cadence: m.cadence,
+    freshnessGraceDays: Number.isFinite(m.thresholds?.freshnessGraceDays) ? m.thresholds.freshnessGraceDays : null,
     track: m.track,
     kind: m.kind,
     granularity: m.granularity,

@@ -76,10 +76,15 @@ a{color:var(--green);text-decoration:none}
 a:hover{text-decoration:underline;text-underline-offset:2px}
 a:focus-visible,button:focus-visible{outline:2.5px solid var(--green);outline-offset:2px}
 ::selection{background:#cbe8d9}
+.skip-link{position:fixed;left:12px;top:8px;z-index:1000;transform:translateY(-160%);background:var(--ink);color:#fff;padding:9px 12px;border-radius:5px;font-size:var(--fs-small)}
+.skip-link:focus{transform:translateY(0);outline:3px solid var(--green);outline-offset:2px}
 /* controls inherit the type system — kills the Arial/UA-size leak on any unstyled button/input */
 button,input,select,textarea,optgroup{font:inherit;letter-spacing:inherit;color:inherit}
 /* <small> never drops below the 11px floor (Fable 2026-07-12); explicit .x small sizes still win */
 small{font-size:var(--fs-label)}
+.hp-field{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+.privacy-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.5;color:var(--mut);margin-top:7px}
+.privacy-note a{color:var(--green-d)}
 
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
 .col{max-width:var(--measure)}
@@ -358,6 +363,10 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .tools-grid .td{font-size:13px;color:var(--ink-2);line-height:1.45}
 .srcnote{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.7}
 .srcnote a{color:var(--green)}
+.data-alert{max-width:var(--maxw);margin:12px auto 0;padding:10px 16px;border:1px solid #d9b35d;border-left:3px solid var(--amber2,#8f6a15);background:var(--amber-bg2,#f6efdc);border-radius:5px;font-size:var(--fs-small);line-height:1.45;color:var(--ink)}
+.data-alert[hidden]{display:none}
+.data-alert a{color:var(--green-d);font-weight:600}
+@media(max-width:calc(1120px + 32px)){.data-alert{margin-left:16px;margin-right:16px}}
 
 /* exhibit + chart + table + tooltip styles (consolidated 2026-07-12, Phase 1b: was drifted-duplicated across the section pages; one canonical copy now) */
 section.blk{margin:34px 0 0}

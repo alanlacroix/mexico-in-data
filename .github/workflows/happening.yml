@@ -9,7 +9,7 @@ name: happening
 
 on:
   schedule:
-    - cron: '40 5,11,17,23 * * *'   # 40 min after each refresh-data run (:17 every 6h)
+    - cron: '57 0,6,12,18 * * *'   # 40 min after each refresh-data run (:17 every 6h)
   workflow_dispatch: {}
 
 permissions:
@@ -46,6 +46,9 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-areas.js
+
+      - name: Validate public claims and source references
+        run: node pipeline/assert-data.js
 
       - name: Commit the event log + brief + areas
         run: |

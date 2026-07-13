@@ -2,7 +2,7 @@
 layout: base.njk
 permalink: /chart.html
 title: "Charts · The Mexico Brief"
-description: "The numbers Alan watches on Mexico: the peso, rates, prices, activity, trade and remittances. Pick a number, add another to compare, and open the source. A personal research view, not a full analysis."
+description: "Mexico’s peso, rates, prices, activity, trade, remittances and payments in one chart. Compare up to three series, inspect the data, and open each source."
 ---
 {% raw %}
 <style>
@@ -14,11 +14,28 @@ description: "The numbers Alan watches on Mexico: the peso, rates, prices, activ
   .cx-hd h1{font-family:var(--sans);font-size:var(--fs-h2);line-height:1.08;letter-spacing:-.02em;margin:7px 0 0;color:var(--ink)}
   .cx-hd p{font-size:var(--fs-small);color:var(--ink-2);margin:7px 0 0;max-width:60ch;line-height:1.5}
 
-  /* saved-view pills */
-  .cx-views{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
-  .cx-views button{font-family:var(--sans);font-size:14px;color:var(--ink-2);background:var(--paper);border:1px solid var(--line-2);border-radius:20px;padding:8px 15px;cursor:pointer;min-height:38px}
-  .cx-views button:hover{border-color:var(--green);color:var(--green-d)}
-  .cx-views button.on{background:var(--green-bg);border-color:var(--green);color:var(--green-d);font-weight:600}
+  /* plain-language questions */
+  .cx-views{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;margin-top:18px;background:var(--line-2);border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
+  .cx-views button{font-family:var(--sans);font-size:13.5px;line-height:1.3;text-align:left;color:var(--ink-2);background:var(--paper);border:0;padding:10px 12px;cursor:pointer;min-height:52px}
+  .cx-views button:hover{background:var(--paper-2);color:var(--green-d)}
+  .cx-views button.on{background:var(--green-bg);color:var(--green-d);font-weight:600;box-shadow:inset 0 -2px var(--green)}
+
+  /* calculated answer for a saved question */
+  .cx-qa{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:16px 24px;margin-top:14px;padding:13px 15px;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:7px;background:var(--paper-2)}
+  .cx-qa.unavailable{border-left-color:var(--amber2,#9a6a00)}
+  .cx-qa-k{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700;margin-bottom:5px}
+  .cx-qa.unavailable .cx-qa-k{color:var(--amber2,#9a6a00)}
+  .cx-qa-answer{font-family:var(--sans);font-size:17px;line-height:1.45;color:var(--ink);margin:0;max-width:68ch}
+  .cx-qa-side{font-family:var(--sans);font-size:13.5px;line-height:1.45;color:var(--ink-2)}
+  .cx-qa-side p{margin:0 0 6px}
+  .cx-qa-side b{color:var(--ink)}
+  .cx-qa-method{grid-column:1/-1;border-top:1px solid var(--line);padding-top:8px}
+  .cx-qa-method summary{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);cursor:pointer;list-style:none}
+  .cx-qa-method summary::-webkit-details-marker{display:none}
+  .cx-qa-method summary::after{content:' +';color:var(--mut)}
+  .cx-qa-method[open] summary::after{content:' –'}
+  .cx-qa-method div{font-family:var(--mono);font-size:11px;line-height:1.55;color:var(--mut);margin-top:7px}
+  .cx-qa-method a{color:var(--green-d)}
 
   /* selected chips + add */
   .cx-chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;border-top:2px solid var(--green);padding-top:14px}
@@ -38,6 +55,7 @@ description: "The numbers Alan watches on Mexico: the peso, rates, prices, activ
   .cx-seg button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
   .cx-seg button[disabled]{opacity:.35;cursor:not-allowed}
   .cx-modelab{font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin-right:2px;align-self:center}
+  .cx-mode-note{font-family:var(--sans);font-size:13px;line-height:1.45;color:var(--ink-2);margin:8px 0 0;max-width:76ch}
 
   /* chart */
   .cx-chart{margin-top:14px}
@@ -131,8 +149,12 @@ description: "The numbers Alan watches on Mexico: the peso, rates, prices, activ
   .cx-sheet.open{display:block}
   .cx-sheet .ov{position:absolute;inset:0;background:rgba(20,20,20,.34)}
   .cx-sheet .pan{position:absolute;left:50%;top:8vh;transform:translateX(-50%);width:min(560px,94vw);max-height:84vh;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 24px 60px rgba(0,0,0,.28);display:flex;flex-direction:column;overflow:hidden}
+  body.cx-modal-open{overflow:hidden}
   .cx-sheet .ph{padding:14px 16px 10px;border-bottom:1px solid var(--line)}
-  .cx-sheet .ph h3{font-family:var(--sans);font-size:17px;color:var(--ink);margin:0 0 9px}
+  .cx-sheet .pht{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+  .cx-sheet .ph h3{font-family:var(--sans);font-size:17px;color:var(--ink);margin:0}
+  .cx-sheet .pc{width:40px;height:40px;border:1px solid var(--line-2);border-radius:8px;background:var(--paper);color:var(--ink-2);font-size:22px;line-height:1;cursor:pointer}
+  .cx-sheet .pc:hover{border-color:var(--green);color:var(--green-d)}
   .cx-sheet .ph input{width:100%;font-family:var(--sans);font-size:15px;padding:11px 12px;border:1px solid var(--line-2);border-radius:8px;background:var(--paper-2);color:var(--ink);min-height:44px}
   .cx-sheet .pl{overflow-y:auto;padding:6px 8px 12px}
   .cx-sheet .sg{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);padding:12px 8px 5px;position:sticky;top:0;background:var(--paper)}
@@ -153,6 +175,14 @@ description: "The numbers Alan watches on Mexico: the peso, rates, prices, activ
   .cx-err{font-family:var(--mono);font-size:14px;color:var(--red);margin-top:20px}
   @media (prefers-reduced-motion: reduce){.cx-skel{animation:none}}
   @media(max-width:560px){
+    .cx-views{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;background:none;border:0;border-radius:0;padding-bottom:3px}
+    .cx-views button{flex:0 0 205px;border:1px solid var(--line-2);border-radius:8px;scroll-snap-align:start;min-height:50px}
+    .cx-chip{min-height:44px;padding-top:4px;padding-bottom:4px}
+    .cx-chip .x{min-width:40px;min-height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center}
+    .cx-add,.cx-actions button,.cx-actions a{min-height:44px}
+    .cx-qa{grid-template-columns:1fr;gap:9px;padding:12px}
+    .cx-qa-answer{font-size:16px}
+    .cx-qa-method{grid-column:1}
     .cx-strip{gap:12px}
     .cx-hd h1{font-size:26px}
   }
@@ -161,7 +191,7 @@ description: "The numbers Alan watches on Mexico: the peso, rates, prices, activ
 <div class="cx">
   <section class="cx-hd">
     <span class="eyebrow">Charts</span>
-    <h1 id="cxTitle">The numbers I watch</h1>
+    <h1 id="cxTitle">Mexico in charts</h1>
     <p id="cxIntro">Choose a number. Add another to compare. Everything links back to the source.</p>
   </section>
   <div id="cxBody"><div class="cx-skel" aria-hidden="true"></div></div>
@@ -169,14 +199,14 @@ description: "The numbers Alan watches on Mexico: the peso, rates, prices, activ
 
 <div class="cx-sheet" id="cxSheet" aria-hidden="true">
   <div class="ov" data-close="1"></div>
-  <div class="pan" role="dialog" aria-modal="true" aria-label="Add a variable">
-    <div class="ph"><h3>Add a variable</h3><input id="cxSearch" type="search" placeholder="Search the peso, inflation, exports…" autocomplete="off"></div>
+  <div class="pan" role="dialog" aria-modal="true" aria-labelledby="cxSheetTitle">
+    <div class="ph"><div class="pht"><h3 id="cxSheetTitle">Add a variable</h3><button class="pc" id="cxSheetClose" type="button" aria-label="Close variable picker">×</button></div><input id="cxSearch" type="search" placeholder="Search the peso, inflation, exports…" autocomplete="off"></div>
     <div class="pl" id="cxPickList"></div>
   </div>
 </div>
 
 <script type="module">
-import { fmt, valueAgo, humanSrc, seriesId, enNum } from '/assets/mb.js?v=15';
+import { fmt, valueAgo, humanSrc, seriesId, enNum } from '/assets/mb.js?v=17';
 const $=(s,r)=>(r||document).querySelector(s);
 const dms=864e5;
 
@@ -308,7 +338,7 @@ const DERIVED={
     def:'Remittances converted to pesos at that month’s average exchange rate.',
     watch:'What the dollars are actually worth to families in Mexico.',
     e:['banxico-remesas','banxico-usdmxn-fix'],
-    fmt:v=>({v:'$'+enNum(Math.round(v/1e3)),s:'bn MXN/mo'}),
+    fmt:v=>({v:'MX$'+enNum(Math.round(v/1e3)),s:'bn/mo'}),
     build(){ const r=agg('banxico-remesas','monthly'),fx=agg('banxico-usdmxn-fix','monthly');
       const fm=map(fx); const out=r.filter(p=>fm[p.k]!=null).map(p=>({date:p.date,value:p.value*fm[p.k]}));
       return series(out,'Remittances in pesos','million MXN'); }},
@@ -342,8 +372,8 @@ const DERIVED={
 
 /* ---------- pair context (keyed by SORTED pair, never copied from one side) ---------- */
 const PAIRS={
-  'banxico-tasa-objetivo|banxico-usdmxn-fix':{mech:'A wider gap over the US rate pays investors more to hold pesos, which can support the currency.',dir:'A higher Mexican rate tends to go with a stronger peso.',lag:'Days to weeks.',conf:'Global risk appetite, oil, and US policy move both at once.',cannot:'Show that the rate moved the peso rather than a common shock.'},
-  'banxico-usdmxn-fix|d-rate-gap':{mech:'The rate gap is the carry: a wider gap pays more to hold pesos.',dir:'A wider gap tends to go with a stronger peso.',lag:'Days to weeks.',conf:'Global risk, oil, US policy.',cannot:'Isolate carry from everything else moving the peso.'},
+  'banxico-tasa-objetivo|banxico-usdmxn-fix':{mech:'Mexico’s policy rate is one input into the relative return on peso assets. Expected currency moves and hedging costs can easily outweigh it.',dir:'All else equal, a higher Mexican rate makes peso assets more attractive. All else is rarely equal.',lag:'Markets can reprice immediately; the exchange rate may still move the other way.',conf:'The broad dollar, risk appetite, trade flows and politics can move the peso at the same time.',cannot:'Tell us that a rate decision caused a peso move.'},
+  'banxico-usdmxn-fix|d-rate-gap':{mech:'The rate gap is one input into the relative return on peso assets, not a complete measure of the trade.',dir:'All else equal, a wider gap makes peso assets more attractive. Expected depreciation and hedging costs may erase that advantage.',lag:'Markets can reprice immediately; the exchange rate may still move the other way.',conf:'The broad dollar, risk appetite, trade flows and politics also move the peso.',cannot:'Tell us how much, if any, of a peso move came from the rate gap.'},
   'banxico-inflacion|banxico-tasa-objetivo':{mech:'Banxico moves the rate to steer inflation toward its 3% target.',dir:'Higher inflation tends to bring a higher rate, with a delay.',lag:'Months; policy reacts, then works with a lag.',conf:'Supply shocks and the currency hit prices and policy together.',cannot:'Separate the policy response from the shocks hitting both.'},
   'banxico-inflacion|banxico-inflacion-subyacente':{mech:'Core is headline with the volatile food and energy stripped out.',dir:'They move together; core is smoother.',lag:'Coincident.',conf:'Energy and farm prices sit in headline, not core.',cannot:'Prove anything: these are two measures of the same thing.'},
   'd-exports-yoy|d-indpro-yoy':{mech:'US factories buy Mexican intermediate goods, so US output pulls Mexican exports.',dir:'US output up tends to bring Mexican exports up.',lag:'One to three months.',conf:'Inventories, tariffs and the auto cycle move both.',cannot:'Prove US demand rather than other buyers drove exports.'},
@@ -355,16 +385,17 @@ function pairKey(a,b){return [a,b].sort().join('|');}
 
 /* ---------- saved views ---------- */
 const VIEWS={
-  'peso-rates':{label:'Peso & rates',q:'What is supporting the peso?',v:['banxico-usdmxn-fix','d-rate-gap']},
-  'inflation':{label:'Inflation',q:'Is inflation actually cooling?',v:['banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo']},
-  'us-demand':{label:'US demand',q:'Is US demand reaching Mexico?',v:['d-exports-yoy','d-indpro-yoy']},
-  'remittances':{label:'Remittances',q:'What are remittances worth in Mexico?',v:['banxico-remesas','d-remesas-mxn']},
+  'peso-rates':{label:'Peso & rates',q:'Is the rate gap still helping the peso?',r:'1Y',v:['banxico-usdmxn-fix','d-rate-gap'],answer:answerPesoRates},
+  'inflation':{label:'Inflation',q:'Is inflation actually cooling?',r:'3Y',v:['banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo'],answer:answerInflation},
+  'us-demand':{label:'US demand',q:'Are Mexican exports moving with US factories?',r:'3Y',v:['d-exports-yoy','d-indpro-yoy'],answer:answerUsDemand},
+  'remittances':{label:'Remittances',q:'What are remittances worth in Mexico?',r:'1Y',v:['banxico-remesas','d-remesas-mxn'],answer:answerRemittances},
+  'wages':{label:'Minimum wage',q:'How much of the minimum-wage increase is real?',r:'MAX',v:['banxico-salario-minimo','d-real-minimo'],answer:answerWages},
 };
 const DEFAULT_VIEW='peso-rates';
 
 /* ---------- data store + loader (chart-local: no news/events/happening) ---------- */
 const store={};
-async function fetchOne(id){ if(store[id]||DERIVED[id])return; try{const r=await fetch('./data/series/'+id+'.json'); if(r.ok)store[id]=await r.json();}catch(e){} }
+async function fetchOne(id){ if(store[id]||DERIVED[id])return; const resource='./data/series/'+id+'.json'; try{const r=await fetch(resource);if(!r.ok)throw new Error(String(r.status));const payload=await r.json();if(!Array.isArray(payload.data)||!payload.data.length||payload.data.some(p=>!p||!p.date||!Number.isFinite(Number(p.value))))throw new Error('invalid series payload');store[id]=payload;}catch(e){window.reportMexicoDataError?.(resource);} }
 function series(data,title,units){ return {data,meta:{source:'The Mexico Brief (derived)',units,derived:true,title}}; }
 async function ensure(ids){
   // expand derived to their raw inputs, fetch all raw, then build derived
@@ -380,6 +411,7 @@ function meta(id){ const s=store[id]; return (s&&s.meta)||{}; }
 function label(id){ return (M[id]&&M[id].l)||(DERIVED[id]&&DERIVED[id].l)||id; }
 function reg(id){ return M[id]||DERIVED[id]||{}; }
 function unit(id){ return reg(id).u||meta(id).units||''; }
+function dataUnit(id){ return meta(id).units||unit(id); }
 function kindOf(id){ return reg(id).kind||'level'; }
 function aggRule(id){ return reg(id).agg||'last'; }
 function cadOf(id){ if(DERIVED[id])return 'monthly'; return reg(id).cad||meta(id).cadence||'monthly'; }
@@ -398,7 +430,11 @@ const PREC={
   'fred-usd-broad':v=>({v:v.toFixed(1),s:'index'}),                        // 120.7
 };
 function disp(id,v){ if(DERIVED[id])return DERIVED[id].fmt(v); if(PREC[id])return PREC[id](v); return fmt(id,v,meta(id).units||unit(id)); }
-function dtext(id,v){ const o=disp(id,v); return o.v+(o.s?' '+o.s:''); }
+function dtext(id,v){
+  const o=disp(id,v);
+  if(!o.s)return o.v;
+  return o.v+(o.s==='%'?'%':' '+o.s);
+}
 
 /* ---------- period bucketing + aggregation ---------- */
 function bucketKey(dateStr,freq){ const d=new Date(dateStr.length<=7?dateStr+'-01':dateStr);
@@ -449,17 +485,58 @@ function alignAll(ids){
     series:ids.map(id=>{ const mi=map(agg(id,targetCad)); return {id,pts:keys.map(k=>({date:rep[k]||k,value:mi[k]}))}; }),
     n:keys.length};
 }
+function leafInputs(id,seen){
+  seen=seen||new Set(); if(seen.has(id))return []; seen.add(id);
+  if(!DERIVED[id])return [id];
+  return DERIVED[id].inputs.flatMap(input=>leafInputs(input,seen));
+}
+function periodEndMs(key,freq){
+  if(freq==='annual')return Date.UTC(+key,11,31,23,59,59,999);
+  if(freq==='quarterly'){ const m=/^(\d{4})-Q([1-4])$/.exec(key); return m?Date.UTC(+m[1],+m[2]*3,0,23,59,59,999):NaN; }
+  const m=/^(\d{4})-(\d{2})$/.exec(key); return m?Date.UTC(+m[1],+m[2],0,23,59,59,999):NaN;
+}
+function completeLeafBucket(id,key,targetCad){
+  const targetRank=freqRank(targetCad),sourceRank=freqRank(cadOf(id));
+  const points=raw(id).filter(p=>bucketKey(p.date,targetRank)===key);
+  if(!points.length)return false;
+  // A monthly/quarterly/annual observation is already a completed reference period.
+  if(sourceRank>=targetRank)return true;
+  // A daily or weekly series must reach the end of the bucket, and the bucket itself must be over.
+  const end=periodEndMs(key,targetCad); if(!Number.isFinite(end)||Date.now()<=end)return false;
+  const last=Math.max(...points.map(p=>asDate(p.date)));
+  const tolerance=sourceRank<=1?4:10;
+  return end-last<=tolerance*dms;
+}
+function completeAlignedIndexes(ids,aligned){
+  const leaves=[...new Set(ids.flatMap(id=>leafInputs(id)))];
+  return aligned.keys.map((key,i)=>({key,i})).filter(({key})=>leaves.every(id=>completeLeafBucket(id,key,aligned.freq))).map(x=>x.i);
+}
+function latestCompleteCommon(ids){
+  const aligned=alignAll(ids),complete=completeAlignedIndexes(ids,aligned);
+  if(!complete.length)return null;
+  const index=complete[complete.length-1],key=aligned.keys[index],date=aligned.rep[key]||key;
+  const points={}; ids.forEach((id,si)=>{ points[id]=aligned.series[si].pts[index]; });
+  return {aligned,complete,index,key,date,asOf:fmtDate(date,aligned.freq),points};
+}
 function freqWord(c){ return {'4-hourly':'4-hourly','business-daily':'daily','daily':'daily','weekly':'weekly','monthly':'monthly','quarterly':'quarterly','annual':'annual'}[c]||c; }
 function aggWord(id,targetCad){ if(!targetCad||freqRank(cadOf(id))>=freqRank(targetCad))return 'as published'; const r=aggRule(id);
   const per=freqRank(targetCad)>=4?'quarter':'month'; return r==='avg'?('averaged by '+per):r==='end'?(per+'-end'):r==='sum'?('summed by '+per):'as published'; }
 
 /* ---------- range slicing (applies to single view + comparison keys) ---------- */
 const RANGES=[['1Y',12],['3Y',36],['5Y',60],['MAX',1e4]];
-function monthsBack(n){ const d=new Date(); return +new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()-n,d.getUTCDate())); }
-function sliceRange(pts,r){ if(r==='MAX'||!pts.length)return pts; const n=RANGES.find(x=>x[0]===r)[1]; const cut=monthsBack(n);
+const RANGE_NAMES=new Set(RANGES.map(x=>x[0]));
+function validRange(r,fallback){ return RANGE_NAMES.has(r)?r:fallback; }
+function monthsBefore(date,n){ const d=new Date(date.length<=7?date+'-01':date); return Date.UTC(d.getUTCFullYear(),d.getUTCMonth()-n,d.getUTCDate()); }
+function sliceRange(pts,r){ if(r==='MAX'||!pts.length)return pts; const row=RANGES.find(x=>x[0]===r); if(!row)return pts; const cut=monthsBefore(pts[pts.length-1].date,row[1]);
   const s=pts.filter(p=>asDate(p.date)>=cut); return s.length>=2?s:pts.slice(-Math.min(pts.length,6)); }
-function availRanges(pts){ if(pts.length<2)return ['MAX']; const span=(asDate(pts[pts.length-1].date)-asDate(pts[0].date))/dms/30.4;
-  const out=RANGES.filter(([lbl,n])=>lbl==='MAX'||span>=n*0.6).map(x=>x[0]); return out.length?out:['MAX']; }
+function monthSpan(pts){ if(!pts.length)return 0; const a=new Date(pts[0].date),b=new Date(pts[pts.length-1].date); return (b.getUTCFullYear()-a.getUTCFullYear())*12+b.getUTCMonth()-a.getUTCMonth()+1; }
+function availableRanges(ids){
+  let points=[];
+  if(ids.length===1)points=raw(ids[0]);
+  else if(ids.length){ const aligned=alignAll(ids),complete=completeAlignedIndexes(ids,aligned); points=complete.map(i=>({date:aligned.rep[aligned.keys[i]]||aligned.keys[i]})); }
+  const span=monthSpan(points);
+  return new Set(RANGES.filter(([name,months])=>name==='MAX'||span>=months).map(x=>x[0]));
+}
 
 /* ---------- freshness (release-calendar aware) ----------
    Data are dated at the START of their period but published weeks-to-months later, so a generous lag
@@ -473,6 +550,142 @@ function freshNote(id){ const c=cadOf(id),last=lastPt(id); if(!last)return '';
 function fmtDate(d,cad){ const x=new Date(d.length<=7?d+'-01':d); const mo=x.toLocaleDateString('en-US',{month:'short',timeZone:'UTC'}),y=x.getUTCFullYear();
   return (cad==='daily'||cad==='business-daily'||cad==='weekly'||cad==='4-hourly')?`${mo} ${x.getUTCDate()}, ${y}`:cad==='quarterly'?`Q${Math.floor(x.getUTCMonth()/3)+1} ${y}`:cad==='annual'?`${y}`:`${mo} ${y}`; }
 
+/* ---------- deterministic answers for the saved questions ----------
+   These are calculations and fixed editorial definitions, not generated copy. */
+function latestPoint(pts){ return pts&&pts.length?pts[pts.length-1]:null; }
+function yearPriorPoint(pts,point){
+  if(!point)return null;
+  const d=new Date(point.date.length<=7?point.date+'-01':point.date);
+  const key=(d.getUTCFullYear()-1)+'-'+String(d.getUTCMonth()+1).padStart(2,'0');
+  return pts.find(p=>bucketKey(p.date,3)===key)||null;
+}
+function qaUnavailable(reason,ids){
+  return {unavailable:true,answer:'I can’t answer this from the data that loaded.',explain:reason,
+    caveat:'I leave the answer blank instead of filling the gap with an estimate.',
+    method:'This needs every listed input and enough complete, overlapping observations.',sources:ids||[]};
+}
+function qaCheck(ids,min=1){
+  const missing=ids.filter(id=>!store[id]||raw(id).length<min);
+  return missing.length?qaUnavailable('There is not enough data for '+missing.map(label).join(', ')+'.',ids):null;
+}
+function ppYearPhrase(now,then){ const d=now-then; return Math.abs(d)<0.005?'unchanged from a year earlier':`${Math.abs(d).toFixed(2)} percentage points ${d<0?'lower':'higher'} than a year earlier`; }
+function pctYearPhrase(now,then){ const d=then?((now-then)/Math.abs(then))*100:0; return Math.abs(d)<0.05?'unchanged from a year earlier':`${Math.abs(d).toFixed(1)}% ${d<0?'lower':'higher'} than a year earlier`; }
+
+function answerPesoRates(){
+  const ids=['banxico-usdmxn-fix','d-rate-gap']; const bad=qaCheck(ids,2); if(bad)return bad;
+  const common=latestCompleteCommon(ids); if(!common)return qaUnavailable('The peso and rate-gap feeds do not yet share a complete month.',ids);
+  const p=common.points[ids[0]],g=common.points[ids[1]];
+  let py=yearPriorPoint(common.aligned.series[0].pts.slice(0,common.index+1),p),gy=yearPriorPoint(common.aligned.series[1].pts.slice(0,common.index+1),g);
+  let comparison='than a year earlier';
+  if(!py||!gy){
+    const first=common.complete.find(i=>i<common.index);
+    if(first!=null){
+      py=common.aligned.series[0].pts[first]; gy=common.aligned.series[1].pts[first];
+      comparison=`since ${fmtDate(py.date,'monthly')}`;
+    }
+  }
+  let answer=`In ${common.asOf}, the peso averaged ${dtext(ids[0],p.value)}`;
+  let pesoStrength=null,gapMove=null;
+  if(py){ pesoStrength=(py.value-p.value)/Math.abs(py.value)*100; answer+=`, ${Math.abs(pesoStrength).toFixed(1)}% ${pesoStrength>=0?'stronger':'weaker'} ${comparison}`; }
+  answer+=`. The Banxico–Fed gap was ${dtext(ids[1],g.value)}`;
+  if(gy){ gapMove=g.value-gy.value; answer+=`, ${Math.abs(gapMove).toFixed(2)} points ${gapMove<0?'narrower':'wider'} ${comparison}`; }
+  answer+='.';
+  let explain='This puts the monthly exchange-rate average next to the monthly interest-rate difference. A lower MXN/USD reading means a stronger peso.';
+  if(pesoStrength!=null&&gapMove!=null){
+    if(Math.abs(gapMove)<0.05) explain='The rate gap barely changed over the comparison year, so it does not give a useful directional test for the peso move.';
+    else explain=`Those moves over the available period ${pesoStrength*gapMove>0?'fit':'do not fit'} the simple idea that a wider rate gap supports the peso.`;
+  }
+  return {answer,explain,
+    caveat:'This does not measure how much the rate gap caused the peso to move. The broad dollar, risk, trade flows and politics also matter.',
+    method:'Peso: monthly average of Banxico FIX observations. Rate gap: Banxico month-end target minus the monthly effective fed funds rate.',
+    sources:['banxico-usdmxn-fix','banxico-tasa-objetivo','fred-fedfunds'],asOf:common.asOf};
+}
+
+function answerInflation(){
+  const ids=['banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo']; const bad=qaCheck(ids,2); if(bad)return bad;
+  const common=latestCompleteCommon(ids); if(!common)return qaUnavailable('Headline inflation, core inflation and the policy rate do not yet share a complete month.',ids);
+  const hp=common.points[ids[0]],cp=common.points[ids[1]],rp=common.points[ids[2]];
+  // Use each inflation series' own history for the year comparison. Requiring
+  // the policy-rate feed to reach back just as far used to hide a valid answer.
+  const hy=yearPriorPoint(agg(ids[0],'monthly'),hp),cy=yearPriorPoint(agg(ids[1],'monthly'),cp);
+  let answer=`In ${common.asOf}, headline inflation was ${dtext(ids[0],hp.value)}`;
+  if(hy)answer+=`, ${ppYearPhrase(hp.value,hy.value)}`;
+  answer+=`. Core was ${dtext(ids[1],cp.value)}`;
+  if(cy)answer+=`, ${ppYearPhrase(cp.value,cy.value)}`;
+  answer+=`. The policy rate was ${dtext(ids[2],rp.value)}.`;
+  let explain='Headline includes the prices households see; core removes the most volatile components and usually moves more slowly.';
+  if(hy&&cy){ const hd=hp.value-hy.value,cd=cp.value-cy.value;
+    if(hd<0&&cd<0)explain='Yes, on both annual measures. Headline fell more; core remains the slower-moving check on the underlying trend.';
+    else if(hd>0&&cd>0)explain='No, not against a year ago. Both annual measures are higher; core shows that the rise extends beyond volatile prices.';
+    else explain='Not cleanly. Headline and core moved in different directions over the year, so the latest headline alone is not a complete read.';
+  }
+  return {answer,explain,
+    caveat:'A year-over-year rate can move because of base effects. This comparison does not identify which prices changed or what caused the move.',
+    method:'Published annual INPC changes for headline and core inflation, alongside Banxico’s target rate in the same complete month.',sources:ids,asOf:common.asOf};
+}
+
+function answerUsDemand(){
+  const ids=['d-exports-yoy','d-indpro-yoy']; const bad=qaCheck(ids,7); if(bad)return bad;
+  const common=latestCompleteCommon(ids); if(!common)return qaUnavailable('The export and US production feeds do not yet share a complete month.',ids);
+  const usable=common.complete.filter(i=>i<=common.index),a=usable.map(i=>common.aligned.series[0].pts[i]),b=usable.map(i=>common.aligned.series[1].pts[i]);
+  if(a.length<7)return qaUnavailable(`Only ${a.length} complete matched months are available; at least 7 are needed for this check.`,ids);
+  const steps=[]; for(let i=Math.max(1,a.length-12);i<a.length;i++){ const x=a[i].value-a[i-1].value,y=b[i].value-b[i-1].value; steps.push(Math.sign(x)===Math.sign(y)); }
+  if(steps.length<6)return qaUnavailable(`Only ${steps.length} comparable monthly moves are available.`,ids);
+  const same=steps.filter(Boolean).length,la=common.points[ids[0]],lb=common.points[ids[1]];
+  const answer=`In ${common.asOf}, Mexican export growth was ${dtext(ids[0],la.value)} and US industrial-output growth was ${dtext(ids[1],lb.value)}. Their annual growth rates moved in the same direction from one month to the next in ${same} of the latest ${steps.length} matched steps.`;
+  return {answer,
+    explain:'I count whether the two annual growth rates rose or fell together each month. I am not comparing the size of the two economies.',
+    caveat:'Exports are nominal US-dollar values; US industrial output is a real production index. Prices, inventories, autos and demand outside the US can move the series differently.',
+    method:'Convert each monthly source series to year-over-year growth, align shared months, then compare the sign of consecutive monthly changes over the latest 12 steps.',
+    sources:['banxico-exports-total','fred-us-indpro'],asOf:common.asOf};
+}
+
+function answerRemittances(){
+  const ids=['banxico-remesas','d-remesas-mxn']; const bad=qaCheck(ids,1); if(bad)return bad;
+  const common=latestCompleteCommon(ids); if(!common)return qaUnavailable('The remittance and exchange-rate feeds do not yet share a complete month.',ids);
+  const r=common.points[ids[0]],mxn=common.points[ids[1]];
+  const usdText='$'+(r.value/1000).toFixed(2)+'bn USD';
+  let answer=`In ${common.asOf}, remittances were ${usdText}. At that month’s average exchange rate, that was about ${dtext(ids[1],mxn.value)}.`;
+  const ry=yearPriorPoint(common.aligned.series[0].pts.slice(0,common.index+1),r),my=yearPriorPoint(common.aligned.series[1].pts.slice(0,common.index+1),mxn);
+  if(ry&&my)answer+=` The dollar amount was ${pctYearPhrase(r.value,ry.value)}; the converted peso amount was ${pctYearPhrase(mxn.value,my.value)}.`;
+  return {answer,
+    explain:'The peso total is simply the dollar total converted at that month’s average exchange rate. Any difference between the two growth rates comes from the exchange rate.',
+    caveat:'The peso amount is not adjusted for Mexican inflation and is not a measure of household purchasing power or income per recipient.',
+    method:'Official monthly remittances in US dollars multiplied by the monthly average Banxico FIX exchange rate.',
+    sources:['banxico-remesas','banxico-usdmxn-fix'],asOf:common.asOf};
+}
+
+function answerWages(){
+  const ids=['banxico-salario-minimo','d-real-minimo']; const bad=qaCheck(ids,2); if(bad)return bad;
+  const common=latestCompleteCommon(ids); if(!common||common.complete.length<2)return qaUnavailable('The nominal wage and price-adjusted wage do not have two complete shared months.',ids);
+  const first=common.complete[0],c0=common.aligned.series[0].pts[first],r0=common.aligned.series[1].pts[first],c1=common.points[ids[0]],r1=common.points[ids[1]];
+  if(!c0.value||!r0.value)return qaUnavailable('The starting observation cannot be used as an index base.',ids);
+  const cashPct=(c1.value/c0.value-1)*100,realPct=(r1.value/r0.value-1)*100;
+  const answer=`In ${common.asOf}, the general minimum wage was ${dtext(ids[0],c1.value)}. Since ${fmtDate(c0.date,'monthly')}, it ${cashPct>=0?'rose':'fell'} ${Math.abs(cashPct).toFixed(1)}% in cash terms and ${realPct>=0?'rose':'fell'} ${Math.abs(realPct).toFixed(1)}% after inflation.`;
+  return {answer,
+    explain:'The real series divides the statutory wage by the official consumer-price index. Comparing the two shows how inflation changed the buying power of the statutory increase.',
+    caveat:'This is the statutory general minimum wage, not typical worker pay. It does not show employment effects, informality or regional differences.',
+    method:'Align the published general minimum wage with the INPC, express the wage in constant July-2018 pesos, and compare the first and latest shared months.',
+    sources:['banxico-salario-minimo','banxico-inpc'],asOf:common.asOf};
+}
+
+function qaSourceLinks(ids){
+  const rawIds=[]; (ids||[]).forEach(id=>{ if(DERIVED[id])DERIVED[id].inputs.forEach(x=>rawIds.push(x)); else rawIds.push(id); });
+  const unique=[...new Set(rawIds)];
+  if(!unique.length)return '<a href="/sources.html">All sources →</a>';
+  return unique.map(id=>{ const m=meta(id),href=m.sourceUrl?humanSrc(m.sourceUrl):'/sources.html'; return `<a href="${esc(href)}"${href.startsWith('http')?' target="_blank" rel="noopener"':''}>${esc(label(id))} ${href.startsWith('http')?'↗':'→'}</a>`; }).join(' · ');
+}
+function questionAnswerHTML(){
+  const view=state.view&&VIEWS[state.view]; if(!view||typeof view.answer!=='function')return '';
+  let result; try{ result=view.answer(); }catch(e){ result=qaUnavailable('The calculation could not be completed from the loaded observations.',view.v); }
+  const stamp=result.unavailable?'Can’t answer this yet':`From the data${result.asOf?' · complete through '+result.asOf:''}`;
+  return `<section class="cx-qa${result.unavailable?' unavailable':''}" aria-label="Answer from the data" aria-live="polite">
+    <div><div class="cx-qa-k">${esc(stamp)}</div><p class="cx-qa-answer">${esc(result.answer)}</p></div>
+    <div class="cx-qa-side"><p>${esc(result.explain)}</p><p><b>Keep in mind:</b> ${esc(result.caveat)}</p></div>
+    <details class="cx-qa-method"><summary>How I calculated it</summary><div>${esc(result.method)}<br>${qaSourceLinks(result.sources)}</div></details>
+  </section>`;
+}
+
 /* ---------- colors for up to 3 lines ---------- */
 const COLORS=['#141414','#0a7d4d','#a8541b'];
 const AF=['#141414','#0a7d4d','#a8541b'];
@@ -484,7 +697,7 @@ function drawChart(container,ser,opts){
   opts=opts||{};
   const cw=Math.max(280,Math.round(container.clientWidth||680));
   const mobile=cw<560;
-  const H=opts.height||(mobile?290:Math.max(340,Math.min(440,Math.round(cw*0.5))));
+  const H=opts.height||(mobile?250:Math.max(280,Math.min(330,Math.round(cw*0.38))));
   const W=cw;
   const fs=mobile?12:12.5;
   const pr=(opts.single||mobile)?14:Math.min(210,Math.max(70, longestEndLabel(ser)*6.4+16)), pt=12, pb=mobile?24:28;
@@ -513,7 +726,7 @@ function drawChart(container,ser,opts){
   // x labels (<=3): first, mid, last
   const ref=plot[0].pts, xi=mobile?[0,ref.length-1]:[0,Math.floor(ref.length/2),ref.length-1];
   xi.forEach((i,k)=>{ if(i<0||i>=ref.length)return; const x=X(asDate(ref[i].date)); const anch=k===0?'start':(k===xi.length-1?'end':'middle');
-    g+=`<text class="axl" x="${x.toFixed(1)}" y="${H-8}" text-anchor="${anch}" font-size="${fs}">${fmtDate(ref[i].date, cadOf(ser[0].id))}</text>`; });
+    g+=`<text class="axl" x="${x.toFixed(1)}" y="${H-8}" text-anchor="${anch}" font-size="${fs}">${fmtDate(ref[i].date, opts.axisCad||cadOf(ser[0].id))}</text>`; });
   // lines / bars
   plot.forEach((s,si)=>{ const col=s.color||COLORS[si%3]; const XY=s.pts.filter(p=>p.value!=null).map(p=>[X(asDate(p.date)),Y(p.value)]);
     if(s.render==='bars'){ const y0=Y(0),bw=Math.min(20,iw/s.pts.length*0.7);
@@ -562,19 +775,22 @@ function wireCross(container){
 }
 
 /* ============================ STATE ============================ */
-let state={v:[DEFAULT_VIEW && VIEWS[DEFAULT_VIEW].v].flat(), r:'3Y', mode:null, view:DEFAULT_VIEW};
+let state={v:[DEFAULT_VIEW && VIEWS[DEFAULT_VIEW].v].flat(), r:VIEWS[DEFAULT_VIEW].r, mode:null, view:DEFAULT_VIEW};
 const LS='mb-chart-v1';
+const MODE_NAMES=new Set(['actual','relative','separate']);
+function validMode(mode){ return MODE_NAMES.has(mode)?mode:null; }
 function readState(){
   const q=new URLSearchParams(location.search);
+  if(q.get('q')&&VIEWS[q.get('q')]){ applyView(q.get('q')); state.r=validRange(q.get('r'),VIEWS[state.view].r); state.mode=validMode(q.get('mode')); return; }
   if(q.get('m')||q.get('v')){ const v=(q.get('m')||q.get('v')).split(',').filter(id=>M[id]||DERIVED[id]).slice(0,3);
-    if(v.length){ state.v=v; state.view=viewMatch(v); state.r=q.get('r')||'3Y'; state.mode=q.get('mode')||null; return; } }
-  try{ const s=JSON.parse(localStorage.getItem(LS)||'null'); if(s&&s.v&&s.v.length){ state.v=s.v.filter(id=>M[id]||DERIVED[id]).slice(0,3); state.r=s.r||'3Y'; state.mode=s.mode||null; state.view=viewMatch(state.v); return; } }catch(e){}
+    if(v.length){ state.v=v; state.view=viewMatch(v); state.r=validRange(q.get('r'),'3Y'); state.mode=validMode(q.get('mode')); return; } }
+  try{ const s=JSON.parse(localStorage.getItem(LS)||'null'); if(s&&s.v&&s.v.length){ state.v=s.v.filter(id=>M[id]||DERIVED[id]).slice(0,3); state.r=validRange(s.r,'3Y'); state.mode=validMode(s.mode); state.view=viewMatch(state.v); return; } }catch(e){}
   applyView(DEFAULT_VIEW);
 }
 function viewMatch(v){ for(const k in VIEWS){ if(VIEWS[k].v.length===v.length&&VIEWS[k].v.every((x,i)=>x===v[i]))return k; } return null; }
-function applyView(k){ state.view=k; state.v=VIEWS[k].v.slice(); state.mode=null; }
+function applyView(k){ state.view=k; state.v=VIEWS[k].v.slice(); state.r=VIEWS[k].r; state.mode=null; }
 function persist(){ try{localStorage.setItem(LS,JSON.stringify({v:state.v,r:state.r,mode:state.mode}));}catch(e){} }
-function pushURL(){ const u=new URL(location); u.search=state.v.length?('?v='+state.v.join(',')+'&r='+state.r+(state.mode?'&mode='+state.mode:'')):''; history.replaceState(null,'',u); }
+function pushURL(){ const u=new URL(location); u.search=state.view?('?q='+state.view+'&r='+state.r+(state.mode?'&mode='+state.mode:'')):(state.v.length?('?v='+state.v.join(',')+'&r='+state.r+(state.mode?'&mode='+state.mode:'')):''); history.replaceState(null,'',u); }
 
 /* ============================ COMPARISON MODE LOGIC ============================ */
 function compatClass(id){ const k=kindOf(id); if(k==='rate'||k==='pct')return 'ratelike'; if(k==='balance')return 'balance'; return unit(id); }
@@ -595,10 +811,12 @@ function modeAvail(ids){ // which modes are selectable
 let RESIZE_BOUND=false;
 function render(){
   const body=$('#cxBody');
-  const ids=state.v.filter(id=>store[id]);
-  if(!ids.length){ body.innerHTML='<div class="cx-err">Could not load these series.</div>'; renderControls(); return; }
-  $('#cxTitle').textContent = ids.length===1 ? label(ids[0]) : 'The numbers I watch';
-  let html=controlsHTML(ids);
+  const ids=state.v.filter(id=>store[id]&&raw(id).length);
+  const rangeAvail=availableRanges(ids); if(!rangeAvail.has(state.r))state.r='MAX';
+  if(ids.length<2)state.mode=null; else if(state.mode&&!modeAvail(ids)[state.mode])state.mode=null;
+  if(!ids.length){ body.innerHTML=controlsHTML([],rangeAvail)+questionAnswerHTML()+'<div class="cx-err">The selected series could not be loaded. Use another question or add a variable.</div>'+allSeriesHTML(); bindControls(); bindAll(); pushURL(); persist(); return; }
+  $('#cxTitle').textContent = ids.length===1 ? label(ids[0]) : 'Mexico in charts';
+  let html=controlsHTML(ids,rangeAvail)+questionAnswerHTML();
   if(ids.length===1) html+=singleHTML(ids[0]);
   else html+=compareHTML(ids);
   html+=allSeriesHTML();
@@ -606,29 +824,31 @@ function render(){
   bindControls();
   if(ids.length===1) drawSingle(ids[0]); else drawCompare(ids);
   bindAll();
-  if(!RESIZE_BOUND){ RESIZE_BOUND=true; let t; window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{ const cur=state.v.filter(id=>store[id]); if(cur.length===1)drawSingle(cur[0]); else if(cur.length)drawCompare(cur); },160);}); }
+  if(!RESIZE_BOUND){ RESIZE_BOUND=true; let t; window.addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>{ const cur=state.v.filter(id=>store[id]&&raw(id).length); if(cur.length===1)drawSingle(cur[0]); else if(cur.length)drawCompare(cur); },160);}); }
   pushURL(); persist();
 }
 
 /* ---- controls (views, chips, ranges, modes) ---- */
-function controlsHTML(ids){
-  const views=Object.keys(VIEWS).map(k=>`<button data-view="${k}"${state.view===k?' class="on"':''}>${VIEWS[k].label}</button>`).join('');
+function controlsHTML(ids,rangeAvail){
+  rangeAvail=rangeAvail||availableRanges(ids);
+  const views=Object.keys(VIEWS).map(k=>`<button data-view="${k}" aria-pressed="${state.view===k}"${state.view===k?' class="on"':''} title="${esc(VIEWS[k].label)}">${esc(VIEWS[k].q)}</button>`).join('');
   const chips=ids.map((id,i)=>{const d=DERIVED[id];return `<span class="cx-chip${d?' derived':''}"><i class="sw" style="background:${COLORS[i%3]}"></i>${label(id)}${d?' <span class="cx-db">derived</span>':''}<button class="x" data-rm="${id}" aria-label="Remove ${label(id)}">×</button></span>`;}).join('');
   const add=`<button class="cx-add" id="cxAdd"${ids.length>=3?' disabled title="Up to three"':''}>+ Add variable</button>`;
-  const ranges=`<div class="cx-seg" role="group" aria-label="Time range">${RANGES.map(([r])=>`<button data-r="${r}" aria-pressed="${state.r===r}"${state.r===r?' class="on"':''}>${r}</button>`).join('')}</div>`;
-  let modes='';
+  const ranges=`<div class="cx-seg" role="group" aria-label="Time range">${RANGES.map(([r])=>{const ok=rangeAvail.has(r);return `<button data-r="${r}" aria-pressed="${state.r===r}"${state.r===r?' class="on"':''}${ok?'':' disabled title="The selected data do not cover this range"'}>${r}</button>`;}).join('')}</div>`;
+  let modes='',modeNote='';
   if(ids.length>=2){ const av=modeAvail(ids), cur=state.mode||autoMode(ids);
     const b=(m,lab)=>`<button data-mode="${m}" aria-pressed="${cur===m}"${cur===m?' class="on"':''}${av[m]?'':' disabled title="Not safe for these series"'}>${lab}</button>`;
-    modes=`<div class="cx-seg" role="group" aria-label="Comparison mode"><span class="cx-modelab">Compare</span>${b('actual','Actual')}${b('relative','Relative')}${b('separate','Separate')}</div>`; }
-  return `<div class="cx-views" role="group" aria-label="Saved views">${views}</div>
+    modes=`<div class="cx-seg" role="group" aria-label="Comparison mode"><span class="cx-modelab">Compare</span>${b('actual','Actual')}${b('relative','Relative')}${b('separate','Separate scales')}</div>`;
+    if(!av.actual)modeNote='<p class="cx-mode-note">These numbers use different units. Relative compares their movement from a common starting point. Separate scales keeps the dates aligned and gives each number its own axis.</p>'; }
+  return `<div class="cx-views" role="group" aria-label="Questions">${views}</div>
     <div class="cx-chips">${chips}${add}</div>
-    <div class="cx-ctrls">${ranges}${modes}</div>`;
+    <div class="cx-ctrls">${ranges}${modes}</div>${modeNote}`;
 }
 function renderControls(){ /* used on error path */ }
 
 /* ---- single-variable view ---- */
 function singleHTML(id){
-  const m=reg(id), last=lastPt(id), av=availRanges(raw(id)); if(!av.includes(state.r))state.r=av[av.length-1];
+  const m=reg(id), last=lastPt(id);
   const fv=disp(id,last.value);
   const chg=changeText(id,state.r);
   const rel=(m.e||[]).filter(x=>(M[x]||DERIVED[x])).map(x=>`<button class="chip" data-add="${x}"><span class="ar">＋</span>${label(x)}</button>`).join('');
@@ -669,14 +889,13 @@ function discLine(ids,AL,mode){
   return `${base}${freqWord(AL.freq)} · ${parts.join(' · ')} · ${AL.n} matched period${AL.n===1?'':'s'}.${short}`;
 }
 function pairContextHTML(ids){
-  if(ids.length!==2){ return `<details class="cx-ctx"><summary>Why compare these</summary><div class="cxc-body"><p>Reading three series together. Look for timing, not proof. <b>This cannot establish that one causes another.</b></p></div></details>`; }
+  if(ids.length!==2){ return `<details class="cx-ctx"><summary>Why put these together?</summary><div class="cxc-body"><p>The dates line up, so this is useful for spotting timing. It cannot tell me that one of these numbers caused another.</p></div></details>`; }
   const pc=PAIRS[pairKey(ids[0],ids[1])];
-  if(!pc){ return `<details class="cx-ctx"><summary>Why compare these</summary><div class="cxc-body"><p>No curated mechanism links these two directly. Read this as timing only. <b>Co-movement is not cause.</b></p></div></details>`; }
-  return `<details class="cx-ctx" open><summary>Why compare these</summary><div class="cxc-body">
-    <p><b>Mechanism.</b> ${pc.mech}</p>
-    <p><b>Direction.</b> ${pc.dir} <b>Lag.</b> ${pc.lag}</p>
-    <p><b>Also moving them.</b> ${pc.conf}</p>
-    <div class="cxc-cav"><b>What this cannot show:</b> ${pc.cannot}</div></div></details>`;
+  if(!pc){ return `<details class="cx-ctx"><summary>Why put these together?</summary><div class="cxc-body"><p>I haven’t defined a direct relationship between these two. The shared dates can still show timing, but not why they moved.</p></div></details>`; }
+  return `<details class="cx-ctx" open><summary>Why put these together?</summary><div class="cxc-body">
+    <p>${pc.mech}</p>
+    <p>${pc.dir} ${pc.lag}</p>
+    <div class="cxc-cav"><b>Keep in mind:</b> ${pc.conf} ${pc.cannot}</div></div></details>`;
 }
 
 /* ---- actions (view data / CSV / source) ---- */
@@ -713,16 +932,17 @@ function drawSingle(id){ const cw=$('#cw0'); if(!cw)return; const pts=sliceRange
 }
 function drawCompare(ids){ const mode=state.mode||autoMode(ids); const AL=alignAll(ids);
   // apply range to shared keys
-  const cut = state.r==='MAX'?-1:monthsBack(RANGES.find(x=>x[0]===state.r)[1]);
+  const latest=AL.keys.length?AL.rep[AL.keys[AL.keys.length-1]]||AL.keys[AL.keys.length-1]:'';
+  const cut = state.r==='MAX'||!latest?-1:monthsBefore(latest,RANGES.find(x=>x[0]===state.r)[1]);
   const idx = AL.keys.map((k,i)=>i).filter(i=>state.r==='MAX'||asDate(AL.rep[AL.keys[i]])>=cut);
   const useIdx = idx.length>=2?idx:AL.keys.map((k,i)=>i);
   const dates=useIdx.map(i=>AL.rep[AL.keys[i]]);
   const ser=ids.map((id,si)=>({id,label:label(id),color:COLORS[si%3],render:reg(id).r==='bars'?'bars':(reg(id).r==='step'?'step':'line'),
     pts:useIdx.map((i,j)=>({date:dates[j],value:AL.series[si].pts[i].value}))}));
   if(mode==='separate'){
-    ser.forEach((s,i)=>{ const cw=document.querySelector(`.cw[data-cw="${i}"]`); if(cw){ drawChart(cw,[s],{single:true,height:document.querySelector('.cw[data-cw]')&&window.innerWidth<560?190:220,mode:'actual'}); } });
+    ser.forEach((s,i)=>{ const cw=document.querySelector(`.cw[data-cw="${i}"]`); if(cw){ drawChart(cw,[s],{single:true,height:document.querySelector('.cw[data-cw]')&&window.innerWidth<560?160:175,mode:'actual',axisCad:AL.freq}); } });
   } else {
-    const cw=$('#cw0'); if(cw) drawChart(cw,ser,{mode:mode==='relative'?'relative':'actual'});
+    const cw=$('#cw0'); if(cw) drawChart(cw,ser,{mode:mode==='relative'?'relative':'actual',axisCad:AL.freq});
   }
   // strip
   const strip=$('#cxStrip'); const setStrip=(bi)=>{ if(!strip)return;
@@ -736,15 +956,15 @@ function drawCompare(ids){ const mode=state.mode||autoMode(ids); const AL=alignA
 /* ============================ TABLE + CSV ============================ */
 function buildRows(ids){
   if(ids.length===1){ const id=ids[0]; const pts=sliceRange(raw(id),state.r);
-    return {cols:['Period',label(id)+' ('+unit(id)+')'], rows:pts.map(p=>[fmtDate(p.date,cadOf(id)),disp(id,p.value).v+' '+disp(id,p.value).s]),
+    return {cols:['Period',label(id)], rows:pts.map(p=>{const o=disp(id,p.value);return [fmtDate(p.date,cadOf(id)),o.v+(o.s?' '+o.s:'')];}),
       csv:{cols:['period','observation_date','value','unit','series_id','source','retrieved'],
-           rows:pts.map(p=>[fmtDate(p.date,cadOf(id)),p.date,p.value,unit(id),seriesId(meta(id).sourceUrl)||id,(meta(id).source||''),meta(id).fetchedAt||''])}}; }
-  const AL=alignAll(ids); const cut=state.r==='MAX'?-1:monthsBack(RANGES.find(x=>x[0]===state.r)[1]);
+           rows:pts.map(p=>[fmtDate(p.date,cadOf(id)),p.date,p.value,dataUnit(id),seriesId(meta(id).sourceUrl)||id,(meta(id).source||''),meta(id).fetchedAt||''])}}; }
+  const AL=alignAll(ids),latest=AL.keys.length?AL.rep[AL.keys[AL.keys.length-1]]||AL.keys[AL.keys.length-1]:''; const cut=state.r==='MAX'||!latest?-1:monthsBefore(latest,RANGES.find(x=>x[0]===state.r)[1]);
   const rowsIdx=AL.keys.map((k,i)=>i).filter(i=>state.r==='MAX'||asDate(AL.rep[AL.keys[i]])>=cut);
-  const cols=['Period',...ids.map(id=>label(id)+' ('+unit(id)+')')];
-  const rows=rowsIdx.map(i=>[fmtDate(AL.rep[AL.keys[i]],AL.freq),...ids.map((id,si)=>{const v=AL.series[si].pts[i].value;return disp(id,v).v+' '+disp(id,v).s;})]);
-  const csv={cols:['aligned_period',...ids.flatMap(id=>[label(id)+'_value',label(id)+'_unit',label(id)+'_series_id'])],
-    rows:rowsIdx.map(i=>[AL.keys[i],...ids.flatMap((id,si)=>{const v=AL.series[si].pts[i].value;return [v,unit(id),seriesId(meta(id).sourceUrl)||id];})])};
+  const cols=['Period',...ids.map(label)];
+  const rows=rowsIdx.map(i=>[fmtDate(AL.rep[AL.keys[i]],AL.freq),...ids.map((id,si)=>{const v=AL.series[si].pts[i].value,o=disp(id,v);return o.v+(o.s?' '+o.s:'');})]);
+  const csv={cols:['aligned_period',...ids.flatMap(id=>[id+'_value',id+'_unit',id+'_series_id',id+'_source'])],
+    rows:rowsIdx.map(i=>[AL.keys[i],...ids.flatMap((id,si)=>{const v=AL.series[si].pts[i].value;return [v,dataUnit(id),seriesId(meta(id).sourceUrl)||id,meta(id).source||''];})])};
   return {cols,rows,csv};
 }
 function toggleTable(ids,btn){ const box=$('#cxTable'); if(!box)return; const on=box.hidden;
@@ -759,7 +979,7 @@ function downloadCSV(ids){ const {csv}=buildRows(ids); const esc=v=>{const s=Str
 /* ============================ BINDINGS ============================ */
 function bindControls(){
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',async()=>{ applyView(b.dataset.view); await ensure(state.v); render(); }));
-  document.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>{ state.r=b.dataset.r; render(); }));
+  document.querySelectorAll('[data-r]').forEach(b=>{ if(b.disabled)return; b.addEventListener('click',()=>{ state.r=b.dataset.r; render(); }); });
   document.querySelectorAll('[data-mode]').forEach(b=>{ if(b.disabled)return; b.addEventListener('click',()=>{ state.mode=b.dataset.mode; render(); }); });
   document.querySelectorAll('[data-rm]').forEach(b=>b.addEventListener('click',()=>{ state.v=state.v.filter(x=>x!==b.dataset.rm); state.view=viewMatch(state.v); state.mode=null; if(state.v.length)render(); }));
   const add=$('#cxAdd'); if(add)add.addEventListener('click',openSheet);
@@ -770,34 +990,43 @@ function bindAll(){
   document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',async()=>{ await addVar(b.dataset.add); }));
   bindCatalog();
   const all=$('#cxAll'); if(all&&!all.__b){ all.__b=1; all.addEventListener('toggle',()=>{ if(all.open){ const inner=$('#cxAllInner'); if(inner){ inner.innerHTML=catalogInner(); bindCatalog(inner); } } }); }
-  const ids=state.v.filter(id=>store[id]);
+  const ids=state.v.filter(id=>store[id]&&raw(id).length);
   document.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.act==='table')toggleTable(ids,b); else downloadCSV(ids); }));
 }
 async function addVar(id){ if(state.v.includes(id)){ return; } if(state.v.length>=3)return; state.v=[...state.v,id]; state.view=viewMatch(state.v); state.mode=null; await ensure(state.v); render(); }
 
 /* ---- add-variable sheet ---- */
-function openSheet(){ const sh=$('#cxSheet'); sh.classList.add('open'); sh.setAttribute('aria-hidden','false'); fillSheet(''); const s=$('#cxSearch'); s.value=''; setTimeout(()=>s.focus(),30); }
-function closeSheet(){ const sh=$('#cxSheet'); sh.classList.remove('open'); sh.setAttribute('aria-hidden','true'); }
+let SHEET_RETURN=null;
+function openSheet(){ const sh=$('#cxSheet'); if(sh.classList.contains('open'))return; SHEET_RETURN=document.activeElement; sh.classList.add('open'); sh.setAttribute('aria-hidden','false'); document.body.classList.add('cx-modal-open'); fillSheet(''); const s=$('#cxSearch'); s.value=''; setTimeout(()=>s.focus(),30); }
+function closeSheet(restore=true){ const sh=$('#cxSheet'); if(!sh.classList.contains('open'))return; sh.classList.remove('open'); sh.setAttribute('aria-hidden','true'); document.body.classList.remove('cx-modal-open'); if(restore&&SHEET_RETURN&&SHEET_RETURN.isConnected)SHEET_RETURN.focus(); SHEET_RETURN=null; }
+function sheetFocusable(){ return [...$('#cxSheet').querySelectorAll('button:not([disabled]),input:not([disabled]),[href],[tabindex]:not([tabindex="-1"])')].filter(el=>el.offsetParent!==null); }
 function fillSheet(q){ q=(q||'').toLowerCase(); const list=$('#cxPickList');
   const groups=[['Derived',Object.keys(DERIVED)],...G.map((g,gi)=>[g,Object.keys(M).filter(id=>M[id].g===gi)])];
   let h='';
   for(const [gname,ids] of groups){ const show=ids.filter(id=>!state.v.includes(id) && (label(id).toLowerCase().includes(q)|| (reg(id).def||'').toLowerCase().includes(q))).sort((a,b)=>(reg(b).core?1:0)-(reg(a).core?1:0));
     if(!show.length)continue; h+=`<div class="sg">${gname}</div>`;
     for(const id of show){ const s=store[id]; const last=s?lastPt(id):null; const d=DERIVED[id];
-      const detail=s?`${freqWord(cadOf(id))} · latest ${fmtDate(last.date,cadOf(id))} · ${unit(id)}`:`${freqWord(cadOf(id))} · loads on add · ${unit(id)}`;
-      const stale=s&&isStale(id);
+      const detail=last?`${freqWord(cadOf(id))} · latest ${fmtDate(last.date,cadOf(id))} · ${unit(id)}`:s?`${freqWord(cadOf(id))} · unavailable · ${unit(id)}`:`${freqWord(cadOf(id))} · loads on add · ${unit(id)}`;
+      const stale=last&&isStale(id);
       const full=state.v.length>=3;
       h+=`<div class="pr"><div class="prm"><div class="prn">${label(id)}${d?' <span class="db">derived</span>':''}</div><div class="prd${stale?' stale':''}">${detail}</div></div>
         <div class="pa"><button data-sheet-add="${id}"${full?' disabled title="Up to three"':''}>Add</button><button data-sheet-open="${id}">Alone</button></div></div>`; }
   }
   list.innerHTML=h||'<div class="pr"><div class="prm"><div class="prd">No match.</div></div></div>';
-  list.querySelectorAll('[data-sheet-add]').forEach(b=>{ if(b.disabled)return; b.addEventListener('click',async()=>{ closeSheet(); await addVar(b.dataset.sheetAdd); }); });
-  list.querySelectorAll('[data-sheet-open]').forEach(b=>b.addEventListener('click',async()=>{ closeSheet(); state.v=[b.dataset.sheetOpen]; state.view=viewMatch(state.v); state.mode=null; await ensure(state.v); render(); }));
+  list.querySelectorAll('[data-sheet-add]').forEach(b=>{ if(b.disabled)return; b.addEventListener('click',async()=>{ closeSheet(false); await addVar(b.dataset.sheetAdd); $('#cxAdd')?.focus(); }); });
+  list.querySelectorAll('[data-sheet-open]').forEach(b=>b.addEventListener('click',async()=>{ closeSheet(false); state.v=[b.dataset.sheetOpen]; state.view=viewMatch(state.v); state.mode=null; await ensure(state.v); render(); $('#cxAdd')?.focus(); }));
 }
 
 /* ============================ BOOT ============================ */
 document.addEventListener('click',e=>{ if(e.target.closest('[data-close]'))closeSheet(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeSheet(); });
+$('#cxSheetClose').addEventListener('click',()=>closeSheet());
+document.addEventListener('keydown',e=>{ const sh=$('#cxSheet'); if(!sh.classList.contains('open'))return;
+  if(e.key==='Escape'){ e.preventDefault(); closeSheet(); return; }
+  if(e.key==='Tab'){ const f=sheetFocusable(); if(!f.length){e.preventDefault();return;} const first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  }
+});
 $('#cxSearch').addEventListener('input',e=>fillSheet(e.target.value));
 
 (async()=>{

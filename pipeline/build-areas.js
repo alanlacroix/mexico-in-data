@@ -4,9 +4,10 @@
 // headline dated + linked; the synthesis is the model's READ of items shown right below it,
 // never new facts.
 //
-// Fail-soft: with no ANTHROPIC_API_KEY the synthesis falls back to the top item's own
-// one-liner (an event's "why", a headline's dek) — honest, just not synthesized. Headlines
-// always render. Empty topic → "Nothing major this week", never padded.
+// Fail-soft: only events with an explicitly promoted `context` that passes the report gate
+// may render. A synthesis uses that reviewed context, or generated copy when
+// ALLOW_GENERATED_PUBLIC_COPY=1 and the same strict gate accepts it. Raw `why` fields and
+// feed deks never become public fallback prose. Empty topics stay empty, never padded.
 //
 //   node build-areas.js            # write data/areas.json
 
@@ -14,6 +15,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
+import { lintReportText } from './lib/lint.js';
+import { PUBLIC_TOPIC_AREAS } from './lib/publication-contract.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -22,18 +25,23 @@ const OUT = process.env.AREAS_OUT || D('areas.json');
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
 const arr = (v) => (Array.isArray(v) ? v : []);
 const WINDOW_DAYS = 30, PER_AREA = 3;
+const ALLOW_GENERATED_PUBLIC_COPY = process.env.ALLOW_GENERATED_PUBLIC_COPY === '1';
 
-// The seven areas, fixed order, in Al's language. Each pulls from the event store (happening.json,
-// tagged by section) and the news wire (tagged by beat), plus an optional keyword lens.
-const AREAS = [
-  { key: 'economy',  label: 'The Economy',             href: '/economy.html',   sections: ['economy'],   beats: ['economy'] },
-  { key: 'money',    label: 'Money & fintech',         href: '/money.html',     sections: ['money'],     beats: ['companies', 'deals', 'fintech', 'markets'] },
-  { key: 'politics', label: 'Politics & elections',    href: '/politics.html',  sections: ['politics'],  beats: ['politics'] },
-  { key: 'security', label: 'Security',                href: '/security.html',  sections: ['security'],  beats: ['security'] },
-  { key: 'usmexico', label: 'US–Mexico',          href: '/us-mexico.html', sections: ['us-mexico'], beats: ['us-mexico', 'trade'] },
-  { key: 'world',    label: 'The wider world → Mexico', href: '/us-mexico.html', sections: [], beats: [], match: /\bchina\b|chino|global|\bfed\b|reserva federal|opec|oil price|precio del petr|world bank|banco mundial|\bimf\b|\bfmi\b|europe|europa|eurozone|arancel.*(china|ee\.?uu|europ)|tariff.*(china|eu\b|europ)/i },
-  { key: 'society',  label: 'Society',                 href: '/society.html',   sections: ['society'],   beats: [] },
-];
+// The six public topics, in the same order and language as the site navigation. Payments and Trade
+// are narrower lenses over the event store; Economy & money excludes those specific events so a
+// payment release does not disappear into the broader economy bucket. This file is the canonical
+// taxonomy for the homepage. Do not create a second set of topic names in a template.
+const PAYMENTS_RX = /\bpayments?\b|\bpagos?\b|\bspei\b|\bcodi\b|\bdimo\b|fintech|tarjet|card payments?|cashless|transferencias?/i;
+const TRADE_RX = /\bexports?\b|\bimports?\b|\btrade\b|comercio|exportaci|importaci|aduan|customs|manufactur|automotive|autos?\b|nearshor/i;
+const AREA_ROUTING = {
+  economy: { sections: ['economy', 'money'], beats: ['economy', 'money'], exclude: new RegExp(`${PAYMENTS_RX.source}|${TRADE_RX.source}`, 'i') },
+  payments: { sections: [], beats: [], match: PAYMENTS_RX },
+  trade: { sections: [], beats: [], match: TRADE_RX },
+  politics: { sections: ['politics'], beats: ['politics'] },
+  society: { sections: ['society', 'security'], beats: ['society', 'security'] },
+  usmexico: { sections: ['us-mexico'], beats: ['us-mexico'] },
+};
+const AREAS = PUBLIC_TOPIC_AREAS.map((topic) => ({ ...topic, ...AREA_ROUTING[topic.key] }));
 
 const norm = (t) => (t || '').toLowerCase().replace(/[^a-z0-9áéíóúñü ]/g, ' ').replace(/\s+/g, ' ').trim();
 function jaccard(a, b) { const A = new Set(a.split(' ').filter((w) => w.length > 3)), B = new Set(b.split(' ').filter((w) => w.length > 3)); if (!A.size || !B.size) return 0; let i = 0; for (const w of A) if (B.has(w)) i++; return i / (A.size + B.size - i); }
@@ -44,16 +52,26 @@ function weekKey(dt) { const d = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUT
 // items beat eighty raw ones, and "Chocolate Abuelita under Security" is what auto-filing looks
 // like without a human. The wire still runs internally as the inbox curation draws from.
 function allItems(now) {
-  const events = arr(readJson(D('happening.json'), { events: [] }).events).map((e) => ({
-    kind: 'event', section: e.section, beat: e.section, title: e.title, why: e.why || '',
-    source: e.source, url: e.url, date: (e.date || '').slice(0, 10), importance: e.importance || 3,
-    _t: Date.parse(e.date) || 0,
-  }));
+  const events = arr(readJson(D('happening.json'), { events: [] }).events).map((e) => {
+    const context = String(e.context || '').replace(/\s+/g, ' ').trim();
+    const gate = lintReportText({ text: context, inputs: [e.date, e.title, context], maxWords: 45, maxSentences: 2 });
+    if (context && !gate.ok) console.warn(`  exclude ${e.id || e.title}: reviewed context failed report gate (${gate.flags.join('; ')})`);
+    return {
+      kind: 'event', section: e.section, beat: e.section, title: e.title, why: e.why || '',
+      context: gate.ok ? context : '', source: e.source, url: e.url,
+      date: (e.date || '').slice(0, 10), importance: e.importance || 3,
+      _t: Date.parse(e.date) || 0,
+    };
+  }).filter((e) => e.context);
   return { events, news: [] };
 }
 
 function forArea(area, items, used) {
-  const inArea = (x) => (area.sections.includes(x.section)) || (area.beats.includes(x.beat)) || (area.match && area.match.test((x.title || '') + ' ' + (x.why || '')));
+  const inArea = (x) => {
+    const text = (x.title || '') + ' ' + (x.why || '');
+    if (area.exclude && area.exclude.test(text)) return false;
+    return (area.sections.includes(x.section)) || (area.beats.includes(x.beat)) || (area.match && area.match.test(text));
+  };
   const pool = [...items.events.filter(inArea), ...items.news.filter(inArea)];
   pool.sort((a, b) => (b.importance - a.importance) || (b._t - a._t));
   const kept = [];
@@ -67,26 +85,45 @@ function forArea(area, items, used) {
 }
 
 async function synthesize(areasWithItems) {
-  // fail-soft default: the top item's own one-liner, trimmed
-  const fallback = (items) => { const top = items[0]; if (!top) return ''; let s = (top.why || top.title || '').replace(/\s+/g, ' ').trim(); if (s.length > 180) s = s.slice(0, 177).replace(/\s+\S*$/, '') + '…'; return s; };
-  if (!hasLLM()) return areasWithItems.map((a) => ({ ...a, synthesis: fallback(a.items) }));
+  // A reviewed context is the deterministic last-good summary. If none exists, leave the
+  // summary out and keep the dated, sourced headlines. An empty line is better than filler.
+  const fallback = (items) => {
+    for (const item of items) {
+      const text = String(item.context || '').replace(/\s+/g, ' ').trim();
+      const gate = lintReportText({ text, inputs: [item.date, item.title, text], maxWords: 45, maxSentences: 2 });
+      if (gate.ok) return text;
+    }
+    return '';
+  };
+  if (!hasLLM() || !ALLOW_GENERATED_PUBLIC_COPY) return areasWithItems.map((a) => {
+    const synthesis = fallback(a.items);
+    return { ...a, synthesis, synthesisStatus: synthesis ? 'reviewed' : 'unavailable' };
+  });
   const schema = { type: 'object', additionalProperties: false, required: ['syntheses'], properties: { syntheses: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['key', 'text'], properties: { key: { type: 'string' }, text: { type: 'string' } } } } } };
-  const payload = areasWithItems.filter((a) => a.items.length).map((a) => ({ key: a.key, area: a.label, items: a.items.map((i) => `${i.title}${i.why ? ' — ' + i.why.slice(0, 140) : ''}`) }));
+  const payload = areasWithItems.filter((a) => a.items.length).map((a) => ({ key: a.key, area: a.label, items: a.items.map((i) => `${i.title}${i.context ? ': ' + i.context : ''}`) }));
   const system = `You write the one- to two-sentence synthesis that opens each topic area of a personal Mexico brief. For each area, read its items and write the READ: what's the through-line and why it matters — built ONLY from the items given, no new facts, no forecasts, no adjectives standing in for an argument. Plain and calm. Max 40 words per area. Return JSON: syntheses = [{key, text}].`;
   const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 1200 });
   const byKey = new Map((out && arr(out.syntheses) || []).map((s) => [s.key, s.text]));
-  return areasWithItems.map((a) => ({ ...a, synthesis: (byKey.get(a.key) || fallback(a.items)) }));
+  return areasWithItems.map((a) => {
+    const generated = String(byKey.get(a.key) || '').trim();
+    const inputs = a.items.flatMap((i) => [i.date, i.title, i.context]);
+    const gate = lintReportText({ text: generated, inputs, maxWords: 40, maxSentences: 2 });
+    if (generated && !gate.ok) console.warn(`  reject ${a.key} synthesis: ${gate.flags.join('; ')}`);
+    if (generated && gate.ok) return { ...a, synthesis: generated, synthesisStatus: 'generated-gated' };
+    const synthesis = fallback(a.items);
+    return { ...a, synthesis, synthesisStatus: synthesis ? 'reviewed' : 'unavailable' };
+  });
 }
 
 async function main() {
   const now = new Date();
-  console.log(`\nbuild-areas · model ${hasLLM() ? model : 'none (fallback synthesis)'}`);
+  console.log(`\nbuild-areas · ${hasLLM() && ALLOW_GENERATED_PUBLIC_COPY ? model : 'reviewed context only'}`);
   const items = allItems(now);
   const used = new Set();   // an item lands in exactly one area — the first that claims it, in the fixed order
   const withItems = AREAS.map((a) => ({ key: a.key, label: a.label, href: a.href, items: forArea(a, items, used) }));
   const synthd = await synthesize(withItems);
   const areas = synthd.map((a) => ({
-    key: a.key, label: a.label, href: a.href, synthesis: a.synthesis,
+    key: a.key, label: a.label, href: a.href, synthesis: a.synthesis, synthesisStatus: a.synthesisStatus,
     headlines: a.items.map((i) => ({ title: i.title, source: i.source, url: i.url, date: i.date })),
   }));
   const out = { meta: { title: 'The areas', updated: now.toISOString().slice(0, 10), generatedAt: now.toISOString(), llm: hasLLM() }, areas };

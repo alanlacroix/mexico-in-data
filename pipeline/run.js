@@ -16,6 +16,7 @@ import { collectedAlerts } from './lib/alert.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CONNECTOR_DIR = path.join(__dirname, 'connectors');
 const HEALTH = path.join(__dirname, '..', 'data', 'health.json');
+const ALERTS = path.join(__dirname, 'alerts.json');
 
 async function loadConnectors() {
   const files = fs.readdirSync(CONNECTOR_DIR).filter((f) => f.endsWith('.js'));
@@ -46,6 +47,15 @@ async function main() {
   const now = new Date().toISOString();
   const ctx = { now, runId: now.replace(/[^0-9]/g, '').slice(0, 14) };
 
+  // Heavy connectors run on their own monthly workflows. Keep their last real
+  // result when the six-hour job skips them; otherwise every normal refresh
+  // would replace a successful monthly status with "skipped".
+  let previousSources = new Map();
+  try {
+    const previous = JSON.parse(fs.readFileSync(HEALTH, 'utf8'));
+    previousSources = new Map((previous.sources || []).map((source) => [source.id, source]));
+  } catch { /* first run has no prior health file */ }
+
   let connectors = await loadConnectors();
   if (only) connectors = connectors.filter((c) => c.manifest.id.includes(only));
   if (!connectors.length) { console.error(`no connectors match "${only}"`); process.exit(1); }
@@ -58,9 +68,20 @@ async function main() {
     // A gated connector (heavy/infrequent) is SKIPPED — not failed — unless its
     // env gate is set or it was explicitly asked for. Skipping never alerts.
     if (g && process.env[g] !== '1' && !only) {
-      console.log(`  · ${c.manifest.id.padEnd(26)} skipped     (gated by ${g})`);
       const sm = c.manifest;
-      records.push({ id: sm.id, title: sm.title, metric: sm.metric, source: sm.source, seriesId: seriesIdFromUrl(sm.sourceUrl), sourceUrl: sm.sourceUrl, track: sm.track, kind: sm.kind, cadence: sm.cadence, status: 'skipped', gatedBy: g });
+      const prior = previousSources.get(sm.id);
+      if (prior && prior.status !== 'skipped') {
+        console.log(`  · ${sm.id.padEnd(26)} monthly     (last ${prior.status})`);
+        records.push({ ...prior, title: sm.title, metric: sm.metric, source: sm.source,
+          seriesId: seriesIdFromUrl(sm.sourceUrl), sourceUrl: sm.sourceUrl, track: sm.track,
+          kind: sm.kind, cadence: sm.cadence, gatedBy: g, scheduledSeparately: true });
+      } else {
+        console.log(`  · ${sm.id.padEnd(26)} skipped     (gated by ${g})`);
+        records.push({ id: sm.id, title: sm.title, metric: sm.metric, source: sm.source,
+          seriesId: seriesIdFromUrl(sm.sourceUrl), sourceUrl: sm.sourceUrl, track: sm.track,
+          kind: sm.kind, cadence: sm.cadence, status: 'skipped', gatedBy: g,
+          scheduledSeparately: true });
+      }
       continue;
     }
     const rec = await runConnector(c, ctx);
@@ -106,18 +127,21 @@ async function main() {
       summary.flagged = sources.filter((s) => s.status === 'ok_flagged').length;
       summary.failed = sources.filter((s) => s.status === 'failed').length;
       summary.skipped = sources.filter((s) => s.status === 'skipped').length;
+      summary.darkSources = sources.filter((s) => s.status === 'failed' && s.stale).map((s) => s.id);
     } catch { /* fall back to records-only */ }
   }
   const health = { generatedAt: now, runId: ctx.runId, geoEpoch: geo, summary, alerts, reconciliation: contested, sources };
   fs.mkdirSync(path.dirname(HEALTH), { recursive: true });
   fs.writeFileSync(HEALTH, JSON.stringify(health, null, 2));
 
+  // This file is consumed by the GitHub issue step. Always replace it, even
+  // after a clean run, so an old connector failure can never be reported again.
+  fs.writeFileSync(ALERTS, JSON.stringify(alerts, null, 2));
+
   console.log(`\n  ${summary.ok} ok · ${summary.flagged} flagged · ${summary.failed} failed`);
   if (alerts.length) {
     console.log(`  ${alerts.length} alert(s):`);
     for (const a of alerts) console.log(`    - [${a.id}] ${a.message}`);
-    // Emit a CI-consumable file so a GitHub Action can open/refresh an issue.
-    fs.writeFileSync(path.join(__dirname, 'alerts.json'), JSON.stringify(alerts, null, 2));
   }
   console.log(`\n  health -> data/health.json\n`);
   // Exit 0 even with data failures: the site deploys with last-good; CI reads alerts.json.

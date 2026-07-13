@@ -9,13 +9,27 @@
 // root are ignored here (not templates, not passthrough) so there is no collision.
 const fs = require('node:fs');
 const crypto = require('node:crypto');
+const path = require('node:path');
 
 module.exports = function (ec) {
   ec.addPassthroughCopy('design');
   ec.addPassthroughCopy('assets');   // shared JS toolkit (mb.js) the section pages import
-  ec.addPassthroughCopy('data');
+  // Only runtime data belongs in the public artifact. Email drafts and raw
+  // source snapshots are review/audit material, not website assets.
+  for (const entry of fs.readdirSync('data', { withFileTypes: true })) {
+    if (['email', 'source-snapshots'].includes(entry.name)) continue;
+    ec.addPassthroughCopy(path.join('data', entry.name));
+  }
   ec.addPassthroughCopy('weekly-sample.html');
   ec.addPassthroughCopy('_headers');   // Cloudflare Pages cache policy
+  ec.addPassthroughCopy('_redirects'); // retired URLs must follow the same rules in the built site
+
+  // Cloudflare Pages serves root-level .html files at clean URLs. Keep canonical and
+  // Open Graph URLs on that public form so /trade and /trade.html do not compete.
+  ec.addFilter('canonicalPath', (url) => {
+    const value = String(url || '/');
+    return value === '/' ? '/' : value.replace(/\.html$/, '');
+  });
 
   // Cache-busting: a short content hash of the stylesheet. base.njk appends it to
   // the CSS URL (?v=hash), so the URL changes whenever the CSS changes and a browser

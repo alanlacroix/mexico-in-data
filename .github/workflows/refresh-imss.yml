@@ -25,6 +25,11 @@ jobs:
         env:
           ENABLE_IMSS: '1'
         run: node run.js --only imss
+      - name: Reconcile freshness labels and validate public data
+        working-directory: pipeline
+        run: |
+          node sync-freshness.js
+          node assert-data.js
       - name: Commit IMSS layer
         run: |
           git config user.name  "mexico-data-bot"

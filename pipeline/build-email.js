@@ -1,8 +1,9 @@
 // build-email.js — the weekly issue generator. Runs Saturday. Reads the news
 // ledger + the wired data series, ranks the week, summarizes only the two-or-three
 // lead stories from their actual article text, assembles the data board by code,
-// and writes a draft + a rendered email + a preview page. It NEVER sends. Sending
-// is a separate, manual step (send-email.js), so nothing goes out without a look.
+// and writes a draft + a rendered email + a preview page. It NEVER sends. A
+// separate export step prepares a review package for manual entry in Beehiiv, so
+// nothing goes out without a delivered-test review in Beehiiv.
 //
 // The model (Haiku 4.5) does exactly two things: score/route candidates, and
 // summarize the lead stories from fetched text. With no ANTHROPIC_API_KEY it falls
@@ -21,6 +22,7 @@ import { renderEmail, renderPreview, domainOf } from './lib/email-template.js';
 import { fetchArticle } from './lib/fetch-article.js';
 import { hasStore, upsertItems, upsertIssue, recentIssues } from './lib/store.js';
 import { lintSummary } from './lib/lint.js';
+import { LAW, EMAIL } from './lib/voice.js';   // shared voice law (Fable 2026-07-12): report plain, read distinctive
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -239,7 +241,7 @@ async function summarizeLead(item, continuityCtx) {
   const { ok, text } = await fetchArticle(item.url);
   if (!ok) return { summary: dek || 'See the linked report.', why: '', real, source: 'dek', flags: [] };
   const schema = { type: 'object', additionalProperties: false, required: ['summary', 'why'], properties: { summary: { type: 'string' }, why: { type: 'string' } } };
-  const system = STYLE + (continuityCtx ? `\n\n## Prior issues (continuity only — you may reference these, but only if you cite the issue's date)\n${continuityCtx}` : '');
+  const system = [LAW, EMAIL, STYLE].join('\n\n') + (continuityCtx ? `\n\n## Prior issues (continuity only — you may reference these, but only if you cite the issue's date)\n${continuityCtx}` : '');
   const baseUser = `TITLE: ${item.title}\nSOURCE: ${item.sourceName || domainOf(item.url)}\nURL: ${item.url}\n\nARTICLE TEXT:\n${text.slice(0, 6000)}`;
   let out = await askJSON({ system, user: baseUser, schema, maxTokens: 500 });
   if (!out?.summary) return { summary: dek || 'See the linked report.', why: '', real, source: 'dek', flags: [] };
@@ -367,7 +369,7 @@ async function main() {
   console.log(`\n  issue ${issue} · ${topOfWeek.length} leads · ${rooms.length} rooms (${roomCount} items) · ${readMin}-min`);
   console.log(`  llm: ${u.calls} calls · ${u.input}+${u.output} tok · ~$${u.costUSD.toFixed(4)}`);
   console.log(`  wrote data/email/${isoWk}.json + .html · email-preview.html · latest.json (status: draft)`);
-  console.log(`  to send: node send-email.js --week ${isoWk} --confirm  (or run the send-email Action)\n`);
+  console.log(`  next: node pipeline/prepare-beehiiv.js --week ${isoWk}  (or run prepare-beehiiv-review)\n`);
 }
 
 main().catch((e) => { console.error('build-email failed:', e.stack || e.message); process.exit(1); });

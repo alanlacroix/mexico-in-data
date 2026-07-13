@@ -53,6 +53,7 @@ export async function runConnector(mod, ctx) {
     track: m.track,
     kind: m.kind,
     cadence: m.cadence,
+    freshnessGraceDays: Number.isFinite(m.thresholds?.freshnessGraceDays) ? m.thresholds.freshnessGraceDays : null,
     canonicalSource: !!m.canonicalSource,
     status: 'ok',
     flags: [],

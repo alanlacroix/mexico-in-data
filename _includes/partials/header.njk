@@ -1,12 +1,12 @@
-{#- The masthead: brand + the one nav (see _data/nav.js). Fable's six-slot nav — the six topic rooms
-   and the Model/Journal "Lab" collapse under a single "Topics" dropdown (a hover-popup on desktop,
+{#- The masthead: brand + the one nav (see _data/nav.js). The topic rooms and the Model
+   collapse under a single "Topics" dropdown (a hover-popup on desktop,
    inline inside the collapsed menu on mobile); Sources stays top-level. Current page derived from
    page.url. On narrow screens the whole nav collapses behind the menu button (toggled by the small
    script in base.njk). -#}
 <header class="mast"><div class="wrap">
   <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
   <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
-  <nav class="mnav" id="sitenav">
+  <nav class="mnav" id="sitenav" aria-label="Primary navigation">
     {%- for item in nav %}
     {%- if item.menu %}
     <div class="navdrop{% if page.url in item.match %} here-sec{% endif %}">
@@ -14,15 +14,15 @@
       <div class="navdrop-menu">
         {%- for grp in item.menu %}
         <div class="navdrop-grp"><span class="navdrop-gl">{{ grp.group }}</span>
-        {%- for link in grp.links %}<a href="{{ link.href }}"{% if page.url == link.href %} class="here"{% endif %}>{{ link.label }}</a>{%- endfor %}
+        {%- for link in grp.links %}<a href="{{ link.href }}"{% if page.url == link.href %} class="here" aria-current="page"{% endif %}>{{ link.label }}</a>{%- endfor %}
         </div>
         {%- endfor %}
       </div>
     </div>
     {%- elif item.cta %}
-    <a href="{{ item.href }}" class="cta{% if page.url == item.href %} here{% endif %}">{{ item.label }}</a>
+    <a href="{{ item.href }}" class="cta{% if page.url == item.href %} here{% endif %}"{% if page.url == item.href %} aria-current="page"{% endif %}>{{ item.label }}</a>
     {%- else %}
-    <a href="{{ item.href }}"{% if page.url == item.href %} class="here"{% endif %}>{{ item.label }}</a>
+    <a href="{{ item.href }}"{% if page.url == item.href %} class="here" aria-current="page"{% endif %}>{{ item.label }}</a>
     {%- endif %}
     {%- endfor %}
   </nav>

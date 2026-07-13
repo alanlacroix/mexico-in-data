@@ -35,10 +35,19 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: node run.js
 
+      - name: Reconcile freshness labels against observation periods
+        working-directory: pipeline
+        run: node sync-freshness.js
+
       - name: Build the Trade section (COMTRADE + World Bank, reconciled to Banxico)
         working-directory: pipeline
         continue-on-error: true   # external APIs; reconcile-or-drop keeps last-good, never fails the run
         run: node fetch-trade.js
+
+      - name: Keep export drill-down aligned with the validated annual basket
+        working-directory: pipeline
+        continue-on-error: true   # cached for 30 days; a failed refresh keeps the last-good detail file
+        run: node fetch-hs4.js
 
       - name: Build the analysis facts pack (The Read)
         working-directory: pipeline
@@ -88,6 +97,9 @@ jobs:
         working-directory: pipeline
         continue-on-error: true   # never fails the run
         run: node snapshot.js
+
+      - name: Validate the assembled public data before committing it
+        run: node pipeline/assert-data.js
 
       - name: Commit refreshed data
         run: |

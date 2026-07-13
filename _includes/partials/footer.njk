@@ -2,6 +2,6 @@
    (the old hand-copied footers dropped Economy + About on some pages). Each page
    may override the blurb via `footerBlurb`. -#}
 <footer class="foot"><div class="wrap">
-  <nav class="fnav">{% for item in footernav %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}</nav>
-  <p class="fblurb">{{ footerBlurb or "A free public briefing on Mexico: the official numbers, and the news that moves them. Built by Alan Lacroix." }}</p>
+  <nav class="fnav" aria-label="Footer navigation">{% for item in footernav %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}</nav>
+  <p class="fblurb">{{ footerBlurb or "The official numbers, the context behind them, and the original sources when you want to go deeper. Built by Alan Lacroix." }}</p>
 </div></footer>

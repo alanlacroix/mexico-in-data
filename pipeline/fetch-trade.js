@@ -84,7 +84,30 @@ function safeWrite(name, payload, ok, reason) {
 }
 
 const COMTRADE = 'https://comtradeapi.un.org/public/v1/preview/C/A/HS';
-const YEAR = 2024; // latest complete annual in COMTRADE; reconciled to the same-year CE125 sum
+
+// The annual composition must advance without someone remembering to edit a constant. Use the latest
+// complete calendar year present in BOTH Banxico export and import ledgers (and never the current,
+// incomplete year). COMTRADE is then accepted only if it reconciles to that same official-year control.
+function completeYears(seriesId) {
+  const f = path.join(SERIES, `${seriesId}.json`);
+  if (!fs.existsSync(f)) return [];
+  const d = JSON.parse(fs.readFileSync(f, 'utf8'));
+  const months = new Map();
+  for (const p of d.data || []) {
+    const y = Number(String(p.date).slice(0, 4));
+    const m = String(p.date).slice(0, 7);
+    if (!Number.isInteger(y) || y >= new Date().getUTCFullYear()) continue;
+    if (!months.has(y)) months.set(y, new Set());
+    months.get(y).add(m);
+  }
+  return [...months].filter(([, ms]) => ms.size === 12).map(([y]) => y).sort((a, b) => b - a);
+}
+function latestCommonCompleteYear(ids) {
+  const lists = ids.map(completeYears);
+  return lists[0]?.find((y) => lists.every((ys) => ys.includes(y))) || null;
+}
+
+const YEAR = latestCommonCompleteYear(['banxico-exports-total', 'banxico-imports-total']) || (new Date().getUTCFullYear() - 1);
 const nowIso = new Date().toISOString();
 
 // ---- 1. Exports by product (HS2 treemap) ----
@@ -108,7 +131,8 @@ async function exportsByProduct() {
     .sort((a, b) => b.value - a.value);
 
   const payload = {
-    asOf: nowIso, year: YEAR, flow: 'exports', unit: 'US$',
+    schemaVersion: 1, asOf: nowIso, fetchedAt: nowIso, referenceYear: YEAR, year: YEAR,
+    flow: 'exports', unit: 'current US$', dataKind: 'annual goods export composition',
     source: 'UN COMTRADE', sourceNote: 'HS 2-digit chapters, all modes of transport (motCode 0)',
     total,
     reconciliation: { against: 'Banxico CE125 exports (SE36593) ' + YEAR + ' sum', official, deltaPct, pass, tolerancePct: RECONCILE_TOL * 100 },
@@ -158,7 +182,9 @@ async function tradeByPartner() {
   const m = await partnerFlow('M', 'banxico-imports-total', 'imports', names);
   const both = x.ok && m.ok;
   const payload = {
-    asOf: nowIso, year: YEAR, source: 'UN COMTRADE', sourceNote: 'Bilateral totals, all modes (motCode 0)',
+    schemaVersion: 1, asOf: nowIso, fetchedAt: nowIso, referenceYear: YEAR, year: YEAR,
+    unit: 'current US$', dataKind: 'annual bilateral goods trade',
+    source: 'UN COMTRADE', sourceNote: 'Bilateral totals, all modes (motCode 0)',
     exports: x.ok ? { total: x.total, reconciliation: { official: x.official, deltaPct: x.deltaPct, pass: x.pass, tolerancePct: RECONCILE_TOL * 100 }, items: x.items.slice(0, 15) } : null,
     imports: m.ok ? { total: m.total, reconciliation: { official: m.official, deltaPct: m.deltaPct, pass: m.pass, tolerancePct: RECONCILE_TOL * 100 }, items: m.items.slice(0, 15) } : null,
   };
@@ -172,7 +198,7 @@ async function regional() {
     { key: 'exportsPctGdp', code: 'NE.EXP.GNFS.ZS', label: 'Exports, % of GDP', unit: '%' },
     { key: 'highTechPct',   code: 'TX.VAL.TECH.MF.ZS', label: 'High-tech, % of manufactured exports', unit: '%' },
   ];
-  const out = { asOf: nowIso, source: 'World Bank (World Development Indicators)', countries: COUNTRIES.split(';'), metrics: {} };
+  const out = { schemaVersion: 1, asOf: nowIso, fetchedAt: nowIso, throughYear: YEAR, source: 'World Bank (World Development Indicators)', countries: COUNTRIES.split(';'), metrics: {} };
   try {
     for (const ind of IND) {
       // full history (1995→) so the section can chart the post-NAFTA divergence, plus the latest value per country.

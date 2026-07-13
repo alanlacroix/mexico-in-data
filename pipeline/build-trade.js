@@ -51,10 +51,19 @@ const nameOf = (hs) => HS2[hs] || `HS ${hs}`;
 async function fetchFlow(flow, valvar, commvar) {
   const u = url(flow, valvar, commvar);
   let raw;
-  try { raw = await getJson(u); }
+  try { raw = await getJson(u, { retries: 1, timeoutMs: 30_000 }); }
   catch (e) {
     const { execFileSync } = await import('node:child_process');
-    raw = JSON.parse(execFileSync('curl', ['-s', '--compressed', '--max-time', '60', u], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }));
+    try {
+      raw = JSON.parse(execFileSync('curl', ['-s', '--compressed', '--max-time', '45', u], {
+        encoding: 'utf8',
+        maxBuffer: 64 * 1024 * 1024,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      }));
+    } catch {
+      // Never let child_process include the credential-bearing URL in an error.
+      throw new Error(`${flow}: Census API unavailable after retries`);
+    }
   }
   if (!Array.isArray(raw) || raw.length < 2) throw new Error(`${flow}: unexpected response`);
   const hdr = raw[0], vi = hdr.indexOf(valvar), ci = hdr.indexOf(commvar), ti = hdr.indexOf('time');

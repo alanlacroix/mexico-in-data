@@ -1,1 +1,368 @@
-{"meta": {"gdp": {"source": "INEGI, Producto Interno Bruto por Entidad Federativa (PIBE), base 2018, valores corrientes (PIB a precios de mercado). Per-state figures from INEGI's per-entity PIBE 2023 boletines (Comunicado 752/24 etc., 6-Dec-2024).", "year": "2023 (preliminar)", "unit": "MXN billions (nominal); 1 billion = 1,000 million pesos. Sum of 32 states = 31,855.566 bn = the INEGI national PIB total."}, "gdp_per_capita": {"source": "Computed = INEGI PIBE 2023 nominal GDP / CONAPO mid-2023 population.", "year": "2023", "unit": "MXN", "fx_note": "USD = MXN / 17.5 (fixed rate per instructions, NOT a market rate). National reference: 242,921 MXN ~= $13,881 USD."}, "population": {"source": "CONAPO, Proyecciones de la Poblacion de Mexico y de las Entidades Federativas 2020-2070 (conciliacion demografica, base Censo 2020), poblacion a mitad de ano. File: 00_Pob_Mitad_1950_2070.csv.", "year": "2023 (mid-year projection)"}, "poverty": {"source": "CONEVAL, Medicion multidimensional de la pobreza 2022 (ENIGH 2022), % de poblacion en situacion de pobreza. File: Anexo estadistico entidades 2022.xlsx.", "year": "2022"}, "informality": {"source": "INEGI, ENOE, Tasa de Informalidad Laboral (TIL1) por entidad federativa (Boletin de Indicador 301/26, 26-May-2026, Cuadro 5).", "year": "1T 2026 (Q1 2026)"}, "unemployment": {"source": "INEGI, ENOE, Tasa de Desocupacion (% de la PEA) por entidad federativa (Boletin de Indicador 301/26, Cuadro 5).", "year": "1T 2026 (Q1 2026)"}, "datamexico_gdp_cube": null, "notes": "HONESTY: every value is from the official primary source cited; no value is estimated except gdp_per_capita (a transparent division of two sourced numbers) and gdp_per_capita_usd (fixed 17.5 FX). YEARS ARE MIXED BY DESIGN (latest available per metric): GDP 2023, population 2023, poverty 2022, labor Q1-2026. GDP is NOMINAL (valores corrientes); note the INEGI PIBE press-release Cuadro 1 is instead in constant-2018 prices, which is a different (smaller) series - not used here. Each state's nominal GDP was read from INEGI's per-entity PIBE-2023 boletin ('PIB nominal de X millones de pesos'); the 32 values sum to exactly 31,855,566 million pesos, the published national total (internal check passed). Population uses CONAPO reconciled mid-2023 projections, which run ~1.7% above the raw Censo 2020 count (national CONAPO 2020 = 128,209,170 vs Censo 2020 = 126,014,024) because CONAPO corrects for census undercount; CONAPO is the standard denominator for per-capita. Per-capita ordering sanity check PASSED: Campeche highest (629,318 MXN / $35,961, oil), then CDMX, Nuevo Leon, Coahuila, Sonora; Chiapas lowest (83,697 MXN / $4,783), with Guerrero, Oaxaca, Tlaxcala near the bottom. DATA MEXICO CUBE: could not be verified - the live Data Mexico host (www.economia.gob.mx/apidatamexico and its datamexico.org redirect) was unreachable from this environment (connection timeout/block); the api.datamexico.org and dev.datamexico.org hosts no longer resolve (DNS). Confirmed from Data Mexico docs: base endpoint https://www.economia.gob.mx/apidatamexico/tesseract/data.jsonrecords, drilldown 'State', and one working cube 'coneval_poverty' (measures Population, Poverty, Extreme Poverty, Moderate Poverty). The GDP/PIB cube name+measure could NOT be confirmed and must be read from the live Tesseract UI (economia.gob.mx/datamexico -> 'Ver datos') before wiring; not guessed here."}, "states": {"01": {"name": "Aguascalientes", "gdp_bn": 423.5, "gdppc_mxn": 280297, "gdppc_usd": 16017, "pop": 1510839, "pov": 23.7, "inf": 44.4, "unemp": 2.2}, "02": {"name": "Baja California", "gdp_bn": 1249.6, "gdppc_mxn": 311587, "gdppc_usd": 17805, "pop": 4010510, "pov": 13.4, "inf": 37.6, "unemp": 2.4}, "03": {"name": "Baja California Sur", "gdp_bn": 235.8, "gdppc_mxn": 271707, "gdppc_usd": 15526, "pop": 867766, "pov": 13.3, "inf": 38.9, "unemp": 2.1}, "04": {"name": "Campeche", "gdp_bn": 598.0, "gdppc_mxn": 629318, "gdppc_usd": 35961, "pop": 950291, "pov": 45.1, "inf": 60.3, "unemp": 2.8}, "05": {"name": "Coahuila de Zaragoza", "gdp_bn": 1179.6, "gdppc_mxn": 355645, "gdppc_usd": 20323, "pop": 3316738, "pov": 18.2, "inf": 34.2, "unemp": 3.4}, "06": {"name": "Colima", "gdp_bn": 205.5, "gdppc_mxn": 271336, "gdppc_usd": 15505, "pop": 757405, "pov": 20.5, "inf": 47.4, "unemp": 1.7}, "07": {"name": "Chiapas", "gdp_bn": 497.7, "gdppc_mxn": 83697, "gdppc_usd": 4783, "pop": 5946352, "pov": 67.4, "inf": 75.3, "unemp": 2.4}, "08": {"name": "Chihuahua", "gdp_bn": 1234.0, "gdppc_mxn": 312558, "gdppc_usd": 17860, "pop": 3947936, "pov": 17.6, "inf": 34.9, "unemp": 2.2}, "09": {"name": "Ciudad de México", "gdp_bn": 4717.5, "gdppc_mxn": 511565, "gdppc_usd": 29232, "pop": 9221637, "pov": 24.0, "inf": 44.2, "unemp": 4.0}, "10": {"name": "Durango", "gdp_bn": 411.8, "gdppc_mxn": 216806, "gdppc_usd": 12389, "pop": 1899457, "pov": 34.3, "inf": 55.2, "unemp": 3.2}, "11": {"name": "Guanajuato", "gdp_bn": 1406.9, "gdppc_mxn": 219056, "gdppc_usd": 12518, "pop": 6422483, "pov": 33.0, "inf": 54.8, "unemp": 3.1}, "12": {"name": "Guerrero", "gdp_bn": 410.1, "gdppc_mxn": 113772, "gdppc_usd": 6501, "pop": 3604215, "pov": 60.4, "inf": 76.4, "unemp": 1.4}, "13": {"name": "Hidalgo", "gdp_bn": 544.7, "gdppc_mxn": 168742, "gdppc_usd": 9642, "pop": 3227801, "pov": 41.0, "inf": 71.2, "unemp": 1.5}, "14": {"name": "Jalisco", "gdp_bn": 2385.0, "gdppc_mxn": 273025, "gdppc_usd": 15601, "pop": 8735511, "pov": 21.8, "inf": 48.6, "unemp": 1.6}, "15": {"name": "México", "gdp_bn": 2886.7, "gdppc_mxn": 164944, "gdppc_usd": 9425, "pop": 17501220, "pov": 42.9, "inf": 55.4, "unemp": 3.1}, "16": {"name": "Michoacán de Ocampo", "gdp_bn": 880.2, "gdppc_mxn": 177793, "gdppc_usd": 10160, "pop": 4950601, "pov": 41.7, "inf": 68.0, "unemp": 1.8}, "17": {"name": "Morelos", "gdp_bn": 337.6, "gdppc_mxn": 166246, "gdppc_usd": 9500, "pop": 2030857, "pov": 41.1, "inf": 63.6, "unemp": 1.9}, "18": {"name": "Nayarit", "gdp_bn": 218.9, "gdppc_mxn": 169134, "gdppc_usd": 9665, "pop": 1294124, "pov": 29.3, "inf": 57.8, "unemp": 2.0}, "19": {"name": "Nuevo León", "gdp_bn": 2502.8, "gdppc_mxn": 403541, "gdppc_usd": 23059, "pop": 6202153, "pov": 16.0, "inf": 34.9, "unemp": 2.8}, "20": {"name": "Oaxaca", "gdp_bn": 579.9, "gdppc_mxn": 135595, "gdppc_usd": 7748, "pop": 4276769, "pov": 58.4, "inf": 79.9, "unemp": 1.2}, "21": {"name": "Puebla", "gdp_bn": 1099.1, "gdppc_mxn": 159124, "gdppc_usd": 9093, "pop": 6907421, "pov": 54.0, "inf": 70.9, "unemp": 1.8}, "22": {"name": "Querétaro", "gdp_bn": 765.4, "gdppc_mxn": 299223, "gdppc_usd": 17098, "pop": 2557915, "pov": 21.7, "inf": 39.0, "unemp": 2.2}, "23": {"name": "Quintana Roo", "gdp_bn": 511.4, "gdppc_mxn": 253209, "gdppc_usd": 14469, "pop": 2019606, "pov": 27.0, "inf": 42.4, "unemp": 2.6}, "24": {"name": "San Luis Potosí", "gdp_bn": 748.7, "gdppc_mxn": 255433, "gdppc_usd": 14596, "pop": 2931052, "pov": 35.5, "inf": 55.7, "unemp": 3.0}, "25": {"name": "Sinaloa", "gdp_bn": 691.6, "gdppc_mxn": 220072, "gdppc_usd": 12576, "pop": 3142699, "pov": 21.6, "inf": 48.7, "unemp": 2.6}, "26": {"name": "Sonora", "gdp_bn": 1067.8, "gdppc_mxn": 346484, "gdppc_usd": 19799, "pop": 3081734, "pov": 21.7, "inf": 42.7, "unemp": 3.0}, "27": {"name": "Tabasco", "gdp_bn": 767.0, "gdppc_mxn": 312455, "gdppc_usd": 17855, "pop": 2454787, "pov": 46.5, "inf": 66.2, "unemp": 3.5}, "28": {"name": "Tamaulipas", "gdp_bn": 942.7, "gdppc_mxn": 255784, "gdppc_usd": 14616, "pop": 3685588, "pov": 26.8, "inf": 44.3, "unemp": 2.7}, "29": {"name": "Tlaxcala", "gdp_bn": 188.7, "gdppc_mxn": 133590, "gdppc_usd": 7634, "pop": 1412895, "pov": 52.5, "inf": 71.2, "unemp": 2.5}, "30": {"name": "Veracruz de Ignacio de la Llave", "gdp_bn": 1355.9, "gdppc_mxn": 166748, "gdppc_usd": 9528, "pop": 8131584, "pov": 51.7, "inf": 68.9, "unemp": 2.3}, "31": {"name": "Yucatán", "gdp_bn": 506.6, "gdppc_mxn": 206561, "gdppc_usd": 11803, "pop": 2452378, "pov": 38.8, "inf": 59.3, "unemp": 1.5}, "32": {"name": "Zacatecas", "gdp_bn": 304.9, "gdppc_mxn": 181175, "gdppc_usd": 10353, "pop": 1683013, "pov": 44.2, "inf": 60.8, "unemp": 3.0}}}
+{
+  "meta": {
+    "updated": "2026-07-13",
+    "snapshot": "data/source-snapshots/atlas-state-2026-07-13.tsv",
+    "snapshot_manifest": "data/source-snapshots/atlas-state-2026-07-13.manifest.json",
+    "methodology": "GDP per person is derived from nominal 2024 PIBE divided by CONAPO 2024 mid-year population. No exchange-rate conversion is used.",
+    "sources": {
+      "gdp": {
+        "label": "INEGI · PIBE 2024",
+        "period": "2024 revised",
+        "unit": "millions of current Mexican pesos",
+        "url": "https://www.inegi.org.mx/contenidos/programas/pibent/2018/datosabiertos/conjunto_de_datos_pibe_csv.zip",
+        "program_url": "https://www.inegi.org.mx/programas/pibent/2018/"
+      },
+      "population": {
+        "label": "CONAPO · mid-year population projection",
+        "period": "2024",
+        "unit": "people",
+        "url": "https://repodatos.atdt.gob.mx/CONAPO/proyecciones/00_Pob_Mitad_1950_2070.csv",
+        "landing_url": "https://www.gob.mx/conapo/acciones-y-programas/conciliacion-demografica-de-1950-a-2019-y-proyecciones-de-la-poblacion-de-mexico-y-de-las-entidades-federativas-2020-a-2070"
+      },
+      "poverty": {
+        "label": "INEGI · multidimensional poverty",
+        "period": "2024",
+        "unit": "% of people",
+        "url": "https://www.inegi.org.mx/contenidos/desarrollosocial/pm/tabulados/pm_ef_2024.xlsx",
+        "landing_url": "https://www.inegi.org.mx/desarrollosocial/pm/",
+        "note": "INEGI calculations from ENIGH 2024 using CONEVAL methodology."
+      },
+      "informality": {
+        "label": "INEGI · ENOE labor informality rate (TIL1)",
+        "period": "Q1 2026",
+        "unit": "% of employed people",
+        "url": "https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/enoe/enoe2026_05.pdf"
+      }
+    },
+    "national": {
+      "gdp_mxn_m": 33582899.273,
+      "state_gdp_sum_mxn_m": 33582899.273,
+      "gdppc_mxn": 253888,
+      "population": 132274416,
+      "poverty": 29.5585,
+      "informality": 54.8
+    }
+  },
+  "states": {
+    "10": {
+      "name": "Durango",
+      "official_name": "Durango",
+      "gdp_mxn_m": 454692.285,
+      "gdppc_mxn": 237589,
+      "pop": 1913774,
+      "poverty": 27.8836,
+      "informality": 55.2,
+      "unemployment": 3.2
+    },
+    "11": {
+      "name": "Guanajuato",
+      "official_name": "Guanajuato",
+      "gdp_mxn_m": 1520603.357,
+      "gdppc_mxn": 234605,
+      "pop": 6481538,
+      "poverty": 25.9901,
+      "informality": 54.8,
+      "unemployment": 3.1
+    },
+    "12": {
+      "name": "Guerrero",
+      "official_name": "Guerrero",
+      "gdp_mxn_m": 432049.345,
+      "gdppc_mxn": 119790,
+      "pop": 3606733,
+      "poverty": 58.0611,
+      "informality": 76.4,
+      "unemployment": 1.4
+    },
+    "13": {
+      "name": "Hidalgo",
+      "official_name": "Hidalgo",
+      "gdp_mxn_m": 587732.486,
+      "gdppc_mxn": 180043,
+      "pop": 3264395,
+      "poverty": 35.309,
+      "informality": 71.2,
+      "unemployment": 1.5
+    },
+    "14": {
+      "name": "Jalisco",
+      "official_name": "Jalisco",
+      "gdp_mxn_m": 2534263.696,
+      "gdppc_mxn": 287302,
+      "pop": 8820915,
+      "poverty": 18.6316,
+      "informality": 48.6,
+      "unemployment": 1.6
+    },
+    "15": {
+      "name": "State of Mexico",
+      "official_name": "México",
+      "gdp_mxn_m": 3059207.706,
+      "gdppc_mxn": 173661,
+      "pop": 17616018,
+      "poverty": 31.196,
+      "informality": 55.4,
+      "unemployment": 3.1
+    },
+    "16": {
+      "name": "Michoacán",
+      "official_name": "Michoacán de Ocampo",
+      "gdp_mxn_m": 924007.246,
+      "gdppc_mxn": 184851,
+      "pop": 4998654,
+      "poverty": 34.2986,
+      "informality": 68,
+      "unemployment": 1.8
+    },
+    "17": {
+      "name": "Morelos",
+      "official_name": "Morelos",
+      "gdp_mxn_m": 353709.556,
+      "gdppc_mxn": 173058,
+      "pop": 2043884,
+      "poverty": 35.3565,
+      "informality": 63.6,
+      "unemployment": 1.9
+    },
+    "18": {
+      "name": "Nayarit",
+      "official_name": "Nayarit",
+      "gdp_mxn_m": 224668.851,
+      "gdppc_mxn": 171577,
+      "pop": 1309432,
+      "poverty": 23.5022,
+      "informality": 57.8,
+      "unemployment": 2
+    },
+    "19": {
+      "name": "Nuevo León",
+      "official_name": "Nuevo León",
+      "gdp_mxn_m": 2704699.152,
+      "gdppc_mxn": 428759,
+      "pop": 6308199,
+      "poverty": 10.5795,
+      "informality": 34.9,
+      "unemployment": 2.8
+    },
+    "20": {
+      "name": "Oaxaca",
+      "official_name": "Oaxaca",
+      "gdp_mxn_m": 632287.912,
+      "gdppc_mxn": 146752,
+      "pop": 4308543,
+      "poverty": 51.6138,
+      "informality": 79.9,
+      "unemployment": 1.2
+    },
+    "21": {
+      "name": "Puebla",
+      "official_name": "Puebla",
+      "gdp_mxn_m": 1191656.203,
+      "gdppc_mxn": 170495,
+      "pop": 6989402,
+      "poverty": 43.4428,
+      "informality": 70.9,
+      "unemployment": 1.8
+    },
+    "22": {
+      "name": "Querétaro",
+      "official_name": "Querétaro",
+      "gdp_mxn_m": 803693.959,
+      "gdppc_mxn": 308319,
+      "pop": 2606698,
+      "poverty": 16.326,
+      "informality": 39,
+      "unemployment": 2.2
+    },
+    "23": {
+      "name": "Quintana Roo",
+      "official_name": "Quintana Roo",
+      "gdp_mxn_m": 515654.002,
+      "gdppc_mxn": 250180,
+      "pop": 2061131,
+      "poverty": 17.7469,
+      "informality": 42.4,
+      "unemployment": 2.6
+    },
+    "24": {
+      "name": "San Luis Potosí",
+      "official_name": "San Luis Potosí",
+      "gdp_mxn_m": 780605.507,
+      "gdppc_mxn": 264089,
+      "pop": 2955841,
+      "poverty": 30.4052,
+      "informality": 55.7,
+      "unemployment": 3
+    },
+    "25": {
+      "name": "Sinaloa",
+      "official_name": "Sinaloa",
+      "gdp_mxn_m": 711064.348,
+      "gdppc_mxn": 224616,
+      "pop": 3165686,
+      "poverty": 16.9986,
+      "informality": 48.7,
+      "unemployment": 2.6
+    },
+    "26": {
+      "name": "Sonora",
+      "official_name": "Sonora",
+      "gdp_mxn_m": 1106799.464,
+      "gdppc_mxn": 355689,
+      "pop": 3111704,
+      "poverty": 14.1143,
+      "informality": 42.7,
+      "unemployment": 3
+    },
+    "27": {
+      "name": "Tabasco",
+      "official_name": "Tabasco",
+      "gdp_mxn_m": 695544.144,
+      "gdppc_mxn": 282563,
+      "pop": 2461555,
+      "poverty": 34.8039,
+      "informality": 66.2,
+      "unemployment": 3.5
+    },
+    "28": {
+      "name": "Tamaulipas",
+      "official_name": "Tamaulipas",
+      "gdp_mxn_m": 1007948.89,
+      "gdppc_mxn": 271128,
+      "pop": 3717618,
+      "poverty": 20.1532,
+      "informality": 44.3,
+      "unemployment": 2.7
+    },
+    "29": {
+      "name": "Tlaxcala",
+      "official_name": "Tlaxcala",
+      "gdp_mxn_m": 200248.308,
+      "gdppc_mxn": 139985,
+      "pop": 1430497,
+      "poverty": 40.8052,
+      "informality": 71.2,
+      "unemployment": 2.5
+    },
+    "30": {
+      "name": "Veracruz",
+      "official_name": "Veracruz de Ignacio de la Llave",
+      "gdp_mxn_m": 1447774.025,
+      "gdppc_mxn": 178128,
+      "pop": 8127727,
+      "poverty": 44.5018,
+      "informality": 68.9,
+      "unemployment": 2.3
+    },
+    "31": {
+      "name": "Yucatán",
+      "official_name": "Yucatán",
+      "gdp_mxn_m": 548664.528,
+      "gdppc_mxn": 220933,
+      "pop": 2483400,
+      "poverty": 26.6402,
+      "informality": 59.3,
+      "unemployment": 1.5
+    },
+    "32": {
+      "name": "Zacatecas",
+      "official_name": "Zacatecas",
+      "gdp_mxn_m": 347383.977,
+      "gdppc_mxn": 204554,
+      "pop": 1698252,
+      "poverty": 36.4276,
+      "informality": 60.8,
+      "unemployment": 3
+    },
+    "01": {
+      "name": "Aguascalientes",
+      "official_name": "Aguascalientes",
+      "gdp_mxn_m": 435924.518,
+      "gdppc_mxn": 284884,
+      "pop": 1530185,
+      "poverty": 17.0685,
+      "informality": 44.4,
+      "unemployment": 2.2
+    },
+    "02": {
+      "name": "Baja California",
+      "official_name": "Baja California",
+      "gdp_mxn_m": 1294477.582,
+      "gdppc_mxn": 317907,
+      "pop": 4071872,
+      "poverty": 9.8717,
+      "informality": 37.6,
+      "unemployment": 2.4
+    },
+    "03": {
+      "name": "Baja California Sur",
+      "official_name": "Baja California Sur",
+      "gdp_mxn_m": 252768.859,
+      "gdppc_mxn": 285276,
+      "pop": 886050,
+      "poverty": 10.1682,
+      "informality": 38.9,
+      "unemployment": 2.1
+    },
+    "04": {
+      "name": "Campeche",
+      "official_name": "Campeche",
+      "gdp_mxn_m": 522953.325,
+      "gdppc_mxn": 547791,
+      "pop": 954659,
+      "poverty": 36.749,
+      "informality": 60.3,
+      "unemployment": 2.8
+    },
+    "05": {
+      "name": "Coahuila",
+      "official_name": "Coahuila de Zaragoza",
+      "gdp_mxn_m": 1238076.976,
+      "gdppc_mxn": 368586,
+      "pop": 3358991,
+      "poverty": 12.3807,
+      "informality": 34.2,
+      "unemployment": 3.4
+    },
+    "06": {
+      "name": "Colima",
+      "official_name": "Colima",
+      "gdp_mxn_m": 214770.793,
+      "gdppc_mxn": 281708,
+      "pop": 762387,
+      "poverty": 14.9769,
+      "informality": 47.4,
+      "unemployment": 1.7
+    },
+    "07": {
+      "name": "Chiapas",
+      "official_name": "Chiapas",
+      "gdp_mxn_m": 530926.151,
+      "gdppc_mxn": 88074,
+      "pop": 6028154,
+      "poverty": 65.9682,
+      "informality": 75.3,
+      "unemployment": 2.4
+    },
+    "08": {
+      "name": "Chihuahua",
+      "official_name": "Chihuahua",
+      "gdp_mxn_m": 1286224.656,
+      "gdppc_mxn": 321837,
+      "pop": 3996504,
+      "poverty": 15.1128,
+      "informality": 34.9,
+      "unemployment": 2.2
+    },
+    "09": {
+      "name": "Ciudad de México",
+      "official_name": "Ciudad de México",
+      "gdp_mxn_m": 5021817.466,
+      "gdppc_mxn": 545611,
+      "pop": 9204018,
+      "poverty": 19.7261,
+      "informality": 44.2,
+      "unemployment": 4
+    }
+  }
+}

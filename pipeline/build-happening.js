@@ -26,6 +26,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
+import { REPORT, BAN } from './lib/voice.js';   // shared voice (Fable 2026-07-12): headlines + context REPORT plain
+import { lintReportText } from './lib/lint.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -154,7 +156,11 @@ For each item you select, return:
 - importance: 0-10, scored by the Brief rubric — add 0, 1, or 2 on EACH of five criteria: (1) national consequence, (2) US-Mexico stakes, (3) model impact (does it move or explain the peso, inflation, the policy rate, or growth?), (4) durability (still matters in 30 days — a first report of a real change scores; commentary and re-reports score 0), (5) officialness (a primary source like Banxico, INEGI, DOF, SHCP, or USTR is available). A defining national event (USMCA, a constitutional reform) scores 9-10; a solid worth-a-line item lands 5-6; anything below 5 will not make the Brief.
 - title: a clean, factual headline in the present tense — rewrite the source headline for clarity, no hype, no em-dash, no clickbait
 - why: ONE or two sentences of CONTEXT on why it matters — enough to actually explain the story, not just restate the headline. Write ONLY from the provided title and dek. State the stakes plainly; no invented facts, no numbers not present in the source, no adjectives doing the work of an argument.
-Aim for BREADTH across sections — a reader should see politics, security, and U.S.–Mexico, not only economics. Prefer the most consequential item when several cover the same story. Select at most ${MAX_NEW}. Return JSON.`;
+Aim for BREADTH across sections — a reader should see politics, security, and U.S.–Mexico, not only economics. Prefer the most consequential item when several cover the same story. Select at most ${MAX_NEW}. Return JSON.
+
+${REPORT}
+
+${BAN}`;
   const payload = cands.map((x, i) => ({ i, beat: x.beat, date: (x.published_at || '').slice(0, 10), title: x.title, dek: (x.dek || '').slice(0, 200) }));
   const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 3800 });
   if (!out || !Array.isArray(out.events)) { console.warn('  curate: no model result — deterministic fallback'); return curateFallback(cands, now); }
@@ -162,6 +168,17 @@ Aim for BREADTH across sections — a reader should see politics, security, and 
   for (const r of out.events) {
     const x = cands[r.i]; if (!x) continue;
     const sec = SECTIONS.includes(r.section) ? r.section : beatSection(x);
+    const report = `${String(r.title || '').trim()}. ${String(r.why || '').trim()}`;
+    const gate = lintReportText({
+      text: report,
+      inputs: [x.published_at, x.title, x.dek],
+      maxWords: 70,
+      maxSentences: 3,
+    });
+    if (!gate.ok) {
+      console.warn(`  reject generated event ${r.i}: ${gate.flags.join('; ')}`);
+      continue;
+    }
     events.push(mkEvent(x, sec, r.importance, r.title, r.why));
   }
   return events.slice(0, MAX_NEW);

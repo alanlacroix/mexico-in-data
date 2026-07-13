@@ -1,9 +1,9 @@
 // The header navigation — rendered identically on every page (see partials/header.njk). The current
-// page ("here") is DERIVED from the URL, never hand-set. Fable's nav ruling (2026-07-11): six top-level
-// slots, one spine. The six topic rooms + the two analyst tools (Model, Journal) live under a single
+// page ("here") is DERIVED from the URL, never hand-set. The topic rooms and the Model live under a single
 // "Topics" dropdown — one identity with rooms off it, not ten competing links. Sources NEVER leaves the
-// top level (a trust product shows its receipts in the masthead). Subscribe is the one call-to-action;
-// About lives in the footer. `match` lists the pages that light "Topics" as the active section.
+// top level (a trust product shows its receipts in the masthead). About is also top-level: the site is
+// personal, and Alan wants the method and authorship visible rather than buried in the footer.
+// Subscribe remains the one call-to-action. `match` lists the pages that light "Topics" as active.
 module.exports = [
   { label: 'Brief', href: '/' },
   // The Read removed (Alan 2026-07-13): the Brief already carries the analysis, numbers and data. Keep only
@@ -11,16 +11,14 @@ module.exports = [
   { label: 'Charts', href: '/chart.html' },         // the metric explorer: every variable, one place (Alan 2026-07-12)
   {
     label: 'Topics',
-    match: ['/economy.html', '/money.html', '/payments.html', '/trade.html', '/politics.html', '/security.html', '/society.html', '/us-mexico.html', '/trade.html', '/model.html'],
+    match: ['/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html', '/model.html'],
     menu: [
       { group: 'Sections', links: [
-        { label: 'Economy', href: '/economy.html' },
-        { label: 'Money', href: '/money.html' },
+        { label: 'Economy & money', href: '/economy.html' },
         { label: 'Payments', href: '/payments.html' },
         { label: 'Trade', href: '/trade.html' },
         { label: 'Politics', href: '/politics.html' },
-        { label: 'Security', href: '/security.html' },
-        { label: 'Society', href: '/society.html' },
+        { label: 'Society & security', href: '/society.html' },
         { label: 'U.S.–Mexico', href: '/us-mexico.html' },
       ] },
       { group: 'Lab', links: [
@@ -33,5 +31,6 @@ module.exports = [
   },
   { label: 'Atlas', href: '/atlas.html' },
   { label: 'Sources', href: '/sources.html' },
-  { label: 'Subscribe', href: '/weekly.html', cta: true },   // About moved to the footer (Fable nav ruling); it's already in footernav.js
+  { label: 'About', href: '/about.html' },
+  { label: 'Subscribe', href: '/weekly.html', cta: true },
 ];

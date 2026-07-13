@@ -29,6 +29,9 @@ jobs:
         continue-on-error: true   # 45MB CONAPO CSV; a miss keeps last-good
         run: node build-demographics.js
 
+      - name: Validate the facts pack against the served series
+        run: node pipeline/assert-data.js
+
       - name: Commit the refreshed facts for review
         run: |
           git config user.name  "mexico-data-bot"

@@ -1,0 +1,577 @@
+---
+pagination:
+  data: topicRoutes
+  size: 1
+  alias: topicRoute
+  addAllPagesToCollections: true
+permalink: "{{ topicRoute.permalink }}"
+layout: base.njk
+eleventyComputed:
+  title: "{{ topicRoute.title }}"
+  description: "{{ topicRoute.description }}"
+  ogTitle: "{{ topicRoute.title }}"
+  ogDescription: "{{ topicRoute.description }}"
+bodyClass: topic-page
+footerBlurb: "The important numbers, the developments behind them, and the original sources when you want to go deeper. Built by Alan Lacroix."
+---
+{% raw %}
+<style>
+  body.topic-page{font-size:var(--fs-body)}
+  body.topic-page header.mast .navdrop-t{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--green);text-decoration-thickness:2px;text-underline-offset:7px}
+  .tp{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+  .tp button,.tp select{font:inherit}
+  .mono-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+
+  .topic-switch-wrap{border-bottom:1px solid var(--line);padding:17px 0 0}
+  .topic-switch-label{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+  .topic-switch{display:grid;grid-template-columns:1.22fr .8fr .72fr .78fr 1.24fr .95fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-bottom:0;border-radius:4px 4px 0 0;overflow:hidden}
+  .topic-switch a{display:flex;align-items:center;justify-content:center;border:0;background:var(--paper);color:var(--ink-2);min-height:47px;padding:10px 12px;cursor:pointer;font-size:var(--fs-meta);line-height:1.2;text-align:center;text-decoration:none}
+  .topic-switch a:hover{background:var(--paper-2)}
+  .topic-switch a.active{background:var(--green-bg);color:var(--green-d);font-weight:600;box-shadow:inset 0 -2px var(--green)}
+  .topic-select{display:none;width:100%;min-height:44px;border:1px solid var(--line-2);border-radius:7px;background:var(--paper);padding:9px 12px;color:var(--ink)}
+
+  .topic-hero{padding:30px 0 22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:start}
+  .topic-hero h1{font-size:var(--fs-display);line-height:1.02;letter-spacing:-.025em;margin:6px 0 7px}
+  .topic-scope{font-size:var(--fs-small);line-height:1.5;color:var(--ink-2);max-width:66ch}
+  .topic-asof{font-family:var(--mono);font-size:var(--fs-label);line-height:1.5;color:var(--mut);text-align:right;padding-top:7px;white-space:nowrap}
+  .now{border-top:2px solid var(--green);padding:13px 0 20px;display:grid;grid-template-columns:1fr;gap:7px}
+  .now h2{font-size:var(--fs-h2);line-height:1.2;letter-spacing:-.015em;margin:0 0 7px;max-width:38ch}
+  .now p{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:76ch}
+  .now p b{color:var(--ink);font-weight:600}
+
+  .section{margin-top:35px;border-top:2px solid var(--green);padding-top:12px}
+  .section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:12px;border-top:0;padding-top:0}
+  .section-head h2{font-size:var(--fs-h2);line-height:1.2;margin:4px 0 0}
+  .section-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.45;color:var(--mut);text-align:right;max-width:46ch}
+
+  .snapshot{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden}
+  .reading-card{display:grid;grid-template-rows:auto auto auto 1fr auto;background:var(--paper);padding:16px 17px;min-height:205px;color:var(--ink);min-width:0}
+  .reading-label{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);min-height:2.5em}
+  .reading-value{font-size:clamp(27px,3vw,38px);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:4px;white-space:nowrap}
+  .reading-value small{font-size:var(--fs-meta);color:var(--mut);letter-spacing:0}
+  .reading-change{font-family:var(--mono);font-size:var(--fs-meta);line-height:1.35;color:var(--ink-2);font-variant-numeric:tabular-nums;margin-top:8px;min-height:2.6em}
+  .reading-context{font-size:var(--fs-meta);line-height:1.46;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px;margin-top:9px}
+  .reading-source{display:flex;align-items:baseline;gap:4px 9px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);padding-top:11px}
+  .reading-source a{color:var(--green-d)}
+  .reading-open{margin-left:auto;white-space:nowrap}
+
+  .evidence-shell{border:1px solid var(--line-2);border-radius:4px;background:var(--paper);overflow:hidden}
+  .evidence-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;padding:17px 18px 12px;border-bottom:1px solid var(--line)}
+  .evidence-head h3{font-size:var(--fs-h3);line-height:1.25;margin:4px 0 4px;max-width:46ch}
+  .evidence-sub{font-family:var(--mono);font-size:var(--fs-label);line-height:1.45;color:var(--mut)}
+  .view-toggle{display:flex;gap:5px;align-self:start}
+  .view-toggle button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);background:var(--paper);border:1px solid var(--line-2);border-radius:7px;padding:8px 10px;cursor:pointer;min-width:62px;min-height:44px}
+  .view-toggle button.active{background:var(--ink);border-color:var(--ink);color:#fff}
+  .evidence-body{padding:15px 18px 0}
+  .chart-legend{display:flex;gap:9px 22px;flex-wrap:wrap;min-height:25px;margin-bottom:6px}
+  .legend-item{display:inline-flex;gap:7px;align-items:baseline;font-size:var(--fs-meta);color:var(--ink-2)}
+  .legend-item i{width:16px;height:2px;display:inline-block;position:relative;top:-3px}
+  .legend-item b{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink);font-weight:500}
+  .chart-wrap{min-height:286px}
+  .chart-wrap svg{display:block;width:100%;height:auto;max-height:310px}
+  .chart-mobile{display:none!important}
+  .grid-line{stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke}
+  .chart-line{fill:none;stroke-width:2;vector-effect:non-scaling-stroke}
+  .chart-dot{stroke:var(--paper);stroke-width:2;vector-effect:non-scaling-stroke}
+  .axis-text{font-family:var(--mono);font-size:12px;fill:var(--mut)}
+  .target-band{fill:var(--green-bg)}
+  .chart-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.55;color:var(--mut);border-top:1px solid var(--line);padding:10px 0 12px;margin-top:3px}
+  .evidence-source{margin-top:7px;color:var(--ink-2)}
+  .evidence-source a{color:var(--green-d)}
+  .table-wrap{display:none;overflow-x:auto;padding:0 18px 15px}
+  .table-wrap.open{display:block}
+  .evidence-body.hidden{display:none}
+  .table-wrap table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:var(--fs-label)}
+  .table-wrap th,.table-wrap td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  .table-wrap th:first-child,.table-wrap td:first-child{text-align:left}
+  .table-wrap th{color:var(--mut);text-transform:uppercase;letter-spacing:.03em;font-weight:500}
+  .table-wrap caption{caption-side:top;text-align:left;padding:4px 10px 11px;color:var(--mut);line-height:1.45}
+  .evidence-read{border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+  .evidence-read>div{background:var(--paper);padding:13px 18px 15px}
+  .evidence-read h4{font-size:var(--fs-meta);margin:0 0 4px}
+  .evidence-read p{font-size:var(--fs-meta);line-height:1.48;color:var(--ink-2)}
+  .composition-evidence .chart-wrap{min-height:0}
+  .composition-evidence .chart-wrap svg{max-height:430px;border:1px solid var(--line);border-radius:3px}
+  .composition-legend{display:flex;gap:6px 15px;flex-wrap:wrap}
+  .composition-legend span{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2)}
+  .composition-legend i{width:10px;height:10px;border-radius:2px;display:block}
+
+  .timeline{list-style:none;margin:5px 0 16px;padding:6px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+  .timeline li{position:relative;border-top:2px solid var(--line-2);padding:18px 15px 0 0;min-height:135px}
+  .timeline li::before{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:var(--paper);border:2px solid var(--green);left:0;top:-6px}
+  .timeline-date{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);text-transform:uppercase;letter-spacing:.04em}
+  .timeline-title{font-size:var(--fs-small);line-height:1.35;font-weight:600;margin-top:5px}
+  .timeline-text{font-size:var(--fs-meta);line-height:1.4;color:var(--ink-2);margin-top:5px}
+
+  .topic-modules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden}
+  .topic-modules.count-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .topic-module{background:var(--paper);padding:17px 18px;min-height:190px;display:flex;flex-direction:column}
+  .topic-module h3{font-size:var(--fs-body);line-height:1.3;margin:6px 0 7px}
+  .module-value{font-family:var(--mono);font-size:var(--fs-meta);line-height:1.45;color:var(--green-d);margin-bottom:7px;font-variant-numeric:tabular-nums}
+  .topic-module p{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2)}
+  .module-link{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--green-d);margin-top:auto;padding-top:13px}
+
+  .changes-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(270px,.75fr);gap:32px}
+  .update-list,.upcoming-list{border-top:1px solid var(--line-2)}
+  .update{display:grid;grid-template-columns:88px minmax(0,1fr);gap:17px;padding:13px 0;border-bottom:1px solid var(--line)}
+  .update-type{font-family:var(--mono);font-size:var(--fs-label);line-height:1.35;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d)}
+  .update h3{font-size:var(--fs-small);line-height:1.35;margin:0 0 4px}
+  .update p{font-size:var(--fs-meta);line-height:1.45;color:var(--ink-2)}
+  .update-meta{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px}
+  .upcoming{display:grid;grid-template-columns:53px minmax(0,1fr);gap:11px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .upcoming-date{font-family:var(--mono);font-size:var(--fs-label);line-height:1.3;color:var(--ink);font-variant-numeric:tabular-nums}
+  .upcoming-date small{display:block;color:var(--mut)}
+  .upcoming-title{font-size:var(--fs-meta);line-height:1.4;color:var(--ink)}
+  .upcoming-meta{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:3px}
+
+  details.sources{margin:37px 0 4px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  details.sources summary{list-style:none;cursor:pointer;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);padding:13px 0}
+  details.sources summary::-webkit-details-marker{display:none}
+  details.sources summary::before{content:"▸ ";color:var(--mut)}
+  details.sources[open] summary::before{content:"▾ "}
+  .sources-body{display:grid;grid-template-columns:1fr 1fr;gap:20px 34px;padding:0 0 14px}
+  .sources-body p,.source-list{font-family:var(--mono);font-size:var(--fs-label);line-height:1.65;color:var(--mut)}
+  .source-list a{color:var(--green-d)}
+  .source-list div+div{margin-top:4px}
+  .topic-foot{font-family:var(--mono);font-size:var(--fs-label);line-height:1.55;color:var(--mut);margin:23px 0 4px}
+  .loading{padding:45px 0;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+
+  @media(max-width:900px){
+    .topic-switch{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .snapshot{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .topic-modules{grid-template-columns:1fr}
+    .topic-modules.count-4{grid-template-columns:1fr}
+    .topic-module{min-height:0}
+    .changes-grid{grid-template-columns:1fr;gap:30px}
+  }
+  @media(max-width:620px){
+    .topic-switch{display:none}.topic-select{display:block;margin-bottom:12px}
+    .topic-switch-wrap{padding-top:13px}
+    .topic-hero{padding:23px 0 17px;grid-template-columns:1fr;gap:6px}
+    .topic-asof{text-align:left;padding:0;white-space:normal}
+    .now{gap:5px;padding-bottom:17px}
+    .section{margin-top:31px}
+    .section-head{align-items:start;flex-direction:column;gap:5px}
+    .section-note{text-align:left}
+    .snapshot{grid-template-columns:1fr;background:transparent;border-left:0;border-right:0;border-radius:0}
+    .reading-card{min-height:0;padding:13px 0;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;gap:3px 14px}
+    .reading-label{min-height:0;grid-column:1}
+    .reading-value{font-size:var(--fs-h3);grid-column:2;grid-row:1 / span 2;text-align:right;align-self:center}
+    .reading-change{min-height:0;grid-column:1;margin-top:2px}
+    .reading-context{grid-column:1 / -1;margin-top:7px;padding-top:8px}
+    .reading-source{grid-column:1 / -1;padding-top:3px}
+    .evidence-head{grid-template-columns:1fr;gap:10px;padding:14px 13px 11px}
+    .evidence-body{padding:12px 9px 0}
+    .chart-wrap{min-height:225px}
+    .chart-wrap svg{max-height:245px}
+    .composition-evidence .chart-wrap svg{max-height:none}
+    .chart-desktop{display:none!important}
+    .chart-mobile{display:block!important;max-height:none!important}
+    .table-wrap{padding:0 9px 12px}
+    .evidence-read{grid-template-columns:1fr}
+    .evidence-read>div{padding:12px 13px}
+    .timeline{grid-template-columns:1fr;padding-left:5px}
+    .timeline li{border-top:0;border-left:2px solid var(--line-2);padding:0 0 18px 19px;min-height:0}
+    .timeline li::before{left:-6px;top:2px}
+    .topic-module{padding:15px 13px}
+    .update{grid-template-columns:1fr;gap:4px}
+    .sources-body{grid-template-columns:1fr;gap:12px}
+  }
+</style>
+
+<div class="tp">
+  <div class="topic-switch-wrap">
+    <div class="topic-switch-label">Topics</div>
+    <nav class="topic-switch" aria-label="Topics"></nav>
+    <select class="topic-select" aria-label="Choose a topic"></select>
+  </div>
+
+  <div id="topicApp" class="loading">Loading the latest data…</div>
+</div>
+
+<script type="module">
+import {treemapSVG} from '/assets/mb.js?v=17';
+{% endraw %}
+const ROUTE_TOPIC={{ topicRoute.key | dump | safe }};
+{% raw %}
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const GREEN='#0a7d4d', INK='#171717', AMBER='#b45a12', GRAY='#8b8b84';
+const SOURCE_FALLBACK='/sources.html';
+const SERIES_IDS=[
+  'banxico-igae','banxico-pib-crecimiento','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-usdmxn-fix','banxico-inpc',
+  'banxico-spei-operaciones','banxico-spei-monto','banxico-tpv-debito-monto','banxico-tpv-credito-monto','banxico-ecommerce-monto','banxico-circulante',
+  'banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-salario-minimo','banxico-remesas','wb-population','wb-unemployment'
+];
+const DB={series:{},events:[],areas:[],happening:[],partners:null,products:null,tradeUS:null,demographics:null,vitals:null,crime:null,poverty:null};
+function validProducts(p){
+  if(!p||!Array.isArray(p.items)||p.items.length<50||!p.reconciliation||p.reconciliation.pass!==true||!Number.isFinite(Number(p.total))||Number(p.total)<=0)return false;
+  const codes=new Set(),bad=p.items.some(i=>{const c=String(i.code||'').padStart(2,'0');if(codes.has(c))return true;codes.add(c);return !/^\d{2}$/.test(c)||!Number.isFinite(Number(i.value))||Number(i.value)<0||!Number.isFinite(Number(i.share))||Number(i.share)<0;});
+  const sum=p.items.reduce((t,i)=>t+Number(i.value),0),shares=p.items.reduce((t,i)=>t+Number(i.share),0);
+  return !bad&&Math.abs(sum-Number(p.total))/Number(p.total)<=.005&&Math.abs(shares-100)<=.5;
+}
+
+async function json(url){const r=await fetch(url);if(!r.ok)throw new Error(`${url}: ${r.status}`);return r.json();}
+await Promise.all([
+  ...SERIES_IDS.map(async id=>{try{DB.series[id]=await json(`/data/series/${id}.json`)}catch(e){console.warn(e)}}),
+  json('/data/events.json').then(x=>DB.events=x.events||[]).catch(console.warn),
+  json('/data/areas.json').then(x=>DB.areas=x.areas||[]).catch(console.warn),
+  json('/data/happening.json').then(x=>DB.happening=x.events||[]).catch(console.warn),
+  json('/data/trade/exports-by-partner.json').then(x=>DB.partners=x).catch(console.warn),
+  json('/data/trade/exports-by-product.json').then(x=>{if(validProducts(x))DB.products=x;else console.warn('Export composition failed validation')}).catch(console.warn),
+  json('/data/trade-us.json').then(x=>DB.tradeUS=x).catch(console.warn),
+  json('/data/demographics.json').then(x=>DB.demographics=x).catch(console.warn),
+  json('/data/vitals.json').then(x=>DB.vitals=x).catch(console.warn),
+  json('/data/layers/sesnsp-delitos.json').then(x=>DB.crime=x).catch(console.warn),
+  json('/data/layers/coneval-pobreza.json').then(x=>DB.poverty=x).catch(console.warn)
+]);
+
+const s=id=>(DB.series[id]?.data||[]).filter(p=>Number.isFinite(+p.value)).map(p=>({date:String(p.date),value:+p.value}));
+const meta=id=>DB.series[id]?.meta||{};
+const last=a=>a?.[a.length-1];
+const prior=a=>a?.[Math.max(0,a.length-2)];
+const fmt=(v,n=1)=>Number(v).toLocaleString('en-US',{minimumFractionDigits:n,maximumFractionDigits:n});
+const compact=v=>new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:1}).format(v);
+const signed=(v,n=1,suffix='')=>`${v>0?'+':''}${fmt(v,n)}${suffix}`;
+const pct=(a,b)=>b?((a-b)/Math.abs(b))*100:null;
+const dateObj=d=>new Date(/^\d{4}$/.test(d)?`${d}-01-01T00:00:00Z`:/^\d{4}-\d{2}$/.test(d)?`${d}-01T00:00:00Z`:`${d}T00:00:00Z`);
+const dateLabel=d=>dateObj(d).toLocaleDateString('en-US',{month:'short',year:'numeric',timeZone:'UTC'});
+const quarterLabel=d=>{const x=dateObj(d);return `Q${Math.floor(x.getUTCMonth()/3)+1} ${x.getUTCFullYear()}`;};
+const shortDate=d=>dateObj(d).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});
+const seriesId=id=>/\/series\/([A-Za-z0-9._-]+)/.exec(meta(id).sourceUrl||'')?.[1]||'';
+const sourceUrl=id=>{const raw=meta(id).sourceUrl||SOURCE_FALLBACK,sid=seriesId(id);return sid&&raw.includes('banxico.org.mx')?`https://www.banxico.org.mx/AplBusquedasBM2/bsiewww.jsp?_page=1&_action=search&_lang=es&_userquery=${encodeURIComponent(sid)}`:raw;};
+const sourceName=id=>(meta(id).source||'Original source').replace(/ \(SIE.*?\)/,'');
+const obs=id=>meta(id).vintage||last(s(id))?.date||'';
+function atOrBefore(a,target){const t=dateObj(target);return [...a].reverse().find(p=>dateObj(p.date)<=t);}
+function yearAgo(a,p=last(a)){
+  if(!p||!a.length)return null;const d=dateObj(p.date);d.setUTCFullYear(d.getUTCFullYear()-1);const target=d.getTime();
+  const nearest=a.reduce((best,x)=>Math.abs(dateObj(x.date).getTime()-target)<Math.abs(dateObj(best.date).getTime()-target)?x:best,a[0]);
+  return Math.abs(dateObj(nearest.date).getTime()-target)<=1000*60*60*24*50?nearest:null;
+}
+function monthMap(a){return Object.fromEntries(a.map(p=>[p.date.slice(0,7),p.value]));}
+function monthlyLast(a){const m={};a.forEach(p=>m[p.date.slice(0,7)]={date:p.date.slice(0,7)+'-01',value:p.value});return Object.values(m).sort((a,b)=>a.date.localeCompare(b.date));}
+function rolling12(a,scale=1){return a.map((p,i)=>i<11?null:{date:p.date,value:a.slice(i-11,i+1).reduce((t,x)=>t+x.value,0)/scale}).filter(Boolean);}
+function indexed(a){const b=a[0]?.value;return b?a.map(p=>({date:p.date,value:p.value/b*100})):[];}
+function realWage(){
+  const wage=monthlyLast(s('banxico-salario-minimo')), cpi=monthMap(monthlyLast(s('banxico-inpc'))), shared=wage.filter(p=>cpi[p.date.slice(0,7)]!=null);
+  const base=shared[0], baseCpi=cpi[base?.date.slice(0,7)];
+  return shared.map(p=>({date:p.date,value:(p.value/cpi[p.date.slice(0,7)])/(base.value/baseCpi)*100}));
+}
+function latest12Total(id){const a=s(id);return a.slice(-12).reduce((t,p)=>t+p.value,0)/1e6;}
+function deltaText(v,unit='%',n=1){if(v==null||!Number.isFinite(v))return 'Comparison unavailable';return `${v>0?'↑':v<0?'↓':'→'} ${fmt(Math.abs(v),n)}${unit}`;}
+function card({label,value,unit='',change,context,source,date,sourceHref=SOURCE_FALLBACK,href=''}){return `<article class="reading-card"><div class="reading-label">${label}</div><div class="reading-value">${value}${unit?` <small>${unit}</small>`:''}</div><div class="reading-change">${change||''}</div><div class="reading-context">${context||''}</div><div class="reading-source"><a href="${sourceHref}" target="_blank" rel="noopener">${source||'Source'} ↗</a>${date?`<span>· ${date}</span>`:''}${href&&href!==sourceHref?`<a class="reading-open" href="${href}">Open →</a>`:''}</div></article>`;}
+function evidenceSources(items=[]){return items.length?`<div class="evidence-source">Source: ${items.map(x=>`<a href="${x.href}" target="_blank" rel="noopener">${x.label} ↗</a>`).join(' · ')}</div>`:'';}
+function moduleCard(x){return `<article class="topic-module"><div class="mono-k">${x.k}</div><h3>${x.title}</h3>${x.value?`<div class="module-value">${x.value}</div>`:''}<p>${x.text}</p>${x.href?`<a class="module-link" href="${x.href}">${x.link||'Open →'}</a>`:''}</article>`;}
+
+function chartSVG({series,yFormat=v=>fmt(v,1),label,band=null}){
+  const all=series.flatMap(x=>x.points||[]);if(!all.length)return '<p class="chart-note">No chart data is available.</p>';
+  const sorted=[...all].sort((a,b)=>a.date.localeCompare(b.date)),x0=Math.min(...all.map(p=>dateObj(p.date).getTime())),x1=Math.max(...all.map(p=>dateObj(p.date).getTime()));
+  let y0=Math.min(...all.map(p=>p.value),...(band||[])),y1=Math.max(...all.map(p=>p.value),...(band||[]));const pad=(y1-y0||1)*.12;y0-=pad;y1+=pad;
+  function one(W,H,L,R,T,B,mobile){
+    const X=d=>L+(dateObj(d).getTime()-x0)/(x1-x0||1)*(W-L-R),Y=v=>T+(y1-v)/(y1-y0)*(H-T-B),tickCount=mobile?3:4;
+    const ticks=Array.from({length:tickCount},(_,i)=>y0+(y1-y0)*i/(tickCount-1)),dates=mobile?[x0,x1]:[x0,x0+(x1-x0)/2,x1];
+    const bandSvg=band?`<rect class="target-band" x="${L}" y="${Y(band[1])}" width="${W-L-R}" height="${Math.max(0,Y(band[0])-Y(band[1]))}"/>`:'';
+    const grids=ticks.map(v=>`<line class="grid-line" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}"/><text class="axis-text" x="${L-7}" y="${Y(v)+4}" text-anchor="end">${esc(yFormat(v))}</text>`).join('');
+    const paths=series.map(x=>{const d=x.points.map((p,i)=>`${i?'L':'M'} ${X(p.date).toFixed(1)} ${Y(p.value).toFixed(1)}`).join(' '),e=last(x.points);return `<path class="chart-line" d="${d}" stroke="${x.color}"/><circle class="chart-dot" cx="${X(e.date)}" cy="${Y(e.value)}" r="4" fill="${x.color}"/>`;}).join('');
+    const axes=dates.map(t=>`<text class="axis-text" x="${L+(t-x0)/(x1-x0||1)*(W-L-R)}" y="${H-8}" text-anchor="${t===x0?'start':t===x1?'end':'middle'}">${new Date(t).toLocaleDateString('en-US',{year:'numeric',month:x1-x0<86400000*800?'short':undefined,timeZone:'UTC'})}</text>`).join('');
+    return `<svg class="chart-${mobile?'mobile':'desktop'}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}"><title>${esc(label)}</title><desc>Line chart from ${dateLabel(sorted[0].date)} to ${dateLabel(last(sorted).date)}.</desc>${bandSvg}${grids}${paths}${axes}</svg>`;
+  }
+  return one(900,250,65,25,14,32,false)+one(360,235,44,8,12,27,true);
+}
+function legend(series){return series.map(x=>{const e=last(x.points);return `<span class="legend-item"><i style="background:${x.color}"></i><span>${x.name}</span><b>${x.format(e?.value)}</b></span>`}).join('');}
+function dataTable(series,rows=null){
+  let keys=[...new Set(series.flatMap(x=>x.points.map(p=>p.date.slice(0,10))))].sort();
+  if(Number.isFinite(rows)&&rows>0)keys=keys.slice(-rows);
+  keys.reverse();
+  const maps=series.map(x=>Object.fromEntries(x.points.map(p=>[p.date.slice(0,10),p.value])));
+  return `<table><thead><tr><th>Observation</th>${series.map(x=>`<th>${x.name}</th>`).join('')}</tr></thead><tbody>${keys.map(k=>`<tr><td>${dateLabel(k)}</td>${series.map((x,i)=>`<td>${maps[i][k]==null?'—':x.format(maps[i][k])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+const PRODUCT_SECTORS=[
+  {max:24,name:'Food & agriculture',color:'#d9b13a'},{max:27,name:'Minerals & fuels',color:'#b07a52'},
+  {max:40,name:'Chemicals & plastics',color:'#b184cf'},{max:67,name:'Textiles & leather',color:'#5fb885'},
+  {max:83,name:'Metals, stone & gems',color:'#e0776d'},{max:85,name:'Machinery & electronics',color:'#4f9ed0'},
+  {max:89,name:'Transport equipment',color:'#8a8ae0'},{max:92,name:'Precision instruments',color:'#63c6cf'},
+  {max:99,name:'Other manufactures',color:'#4a6f92'}
+];
+const productSector=code=>PRODUCT_SECTORS.find(x=>Number(code)<=x.max)||PRODUCT_SECTORS.at(-1);
+function compositionItems(p){
+  const shown=[],small=[];
+  for(const d of p.items){if(Number(d.share)>=.5){const s=productSector(d.code);shown.push({name:d.name,value:Number(d.value),share:Number(d.share),key:s.name,color:s.color});}else small.push(d);}
+  if(small.length)shown.push({name:`Everything else (${small.length} groups)`,value:small.reduce((t,d)=>t+Number(d.value),0),share:small.reduce((t,d)=>t+Number(d.share),0),key:'Other',color:'#9aa6b0'});
+  return shown.sort((a,b)=>b.value-a.value);
+}
+function compositionTable(p){
+  const rows=compositionItems(p);
+  return `<table><caption>Mexico goods export composition, ${Number(p.referenceYear||p.year)}. Current US$; rows match the chart.</caption><thead><tr><th>Product group</th><th>Sector</th><th>Value · US$ bn</th><th>Share</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.name)}</td><td style="text-align:left;white-space:normal">${esc(x.key)}</td><td>${fmt(x.value/1e9,1)}</td><td>${fmt(x.share,2)}%</td></tr>`).join('')}</tbody></table>`;
+}
+function compositionEvidence(p){
+  if(!validProducts(p))return null;
+  const items=compositionItems(p),year=Number(p.referenceYear||p.year),lead=p.items.filter(x=>['84','85','87'].includes(String(x.code).padStart(2,'0'))).reduce((t,x)=>t+Number(x.share),0),r=p.reconciliation||{};
+  const source='https://comtradeplus.un.org/TradeFlow/';
+  const sectors=[...new Map(items.filter(x=>x.key!=='Other').map(x=>[x.key,x])).values()];
+  return {k:'What Mexico sells',title:`Vehicles, electronics and machinery make up ${fmt(lead,0)}% of goods exports`,sub:`Every rectangle is a product group, sized by export value · ${year} · current US$`,
+    visual:treemapSVG(items,{W:900,H:470,label:`Mexico goods exports by product group, ${year}`,desc:'Rectangle area is proportional to export value. Use the table view for exact values.'}),
+    legend:`<div class="composition-legend">${sectors.map(x=>`<span><i style="background:${x.color}"></i>${x.key}</span>`).join('')}</div>`,table:compositionTable(p),
+    note:`Goods only. UN COMTRADE's total differs from Banxico CE125 by ${fmt(Number(r.deltaPct),1)}%, inside the ${fmt(Number(r.tolerancePct||2),0)}% publication limit.`,sources:[{label:'UN COMTRADE · HS 2-digit exports',href:source,date:String(year)}],
+    read:['A larger rectangle means a larger share of export dollars.','It does not measure services, profit, jobs, or the share of value created in Mexico.'],css:'composition-evidence'};
+}
+function timeline(items){return `<ol class="timeline">${items.map(x=>`<li><div class="timeline-date">${x.date}</div><div class="timeline-title">${x.title}</div><div class="timeline-text">${x.text}</div></li>`).join('')}</ol>`;}
+function timelineTable(items){return `<table><thead><tr><th>Date</th><th>Event</th><th>Why it matters</th></tr></thead><tbody>${items.map(x=>`<tr><td>${x.date}</td><td>${x.title}</td><td style="text-align:left;white-space:normal">${x.text}</td></tr>`).join('')}</tbody></table>`;}
+function updateList(items){return items.length?`<div class="update-list">${items.map(x=>`<article class="update"><div class="update-type">${x.type}</div><div><h3>${x.title}</h3>${x.text?`<p>${x.text}</p>`:''}<div class="update-meta"><a href="${x.href}" target="_blank" rel="noopener">${x.source} ↗</a> · ${x.date}</div></div></article>`).join('')}</div>`:`<p class="chart-note">No dated changes have passed the source checks yet.</p>`;}
+function upcomingList(items){return items.length?`<div class="upcoming-list">${items.map(x=>{const d=/^\d{4}-/.test(x.date)?dateObj(x.date):null;return `<div class="upcoming"><div class="upcoming-date">${d?d.toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'}):x.date}${d?`<small>${d.getUTCFullYear()}</small>`:''}</div><div><div class="upcoming-title">${x.label}</div><div class="upcoming-meta">${x.source||''}${x.approx?' · approximate':''}</div></div></div>`}).join('')}</div>`:`<p class="chart-note">No source-backed date is in the calendar yet.</p>`;}
+
+function eventMatches(rx,n=4,exclude=null){const today=new Date();today.setUTCHours(0,0,0,0);return DB.events.filter(e=>dateObj(e.date)>=today&&rx.test(`${e.kind} ${e.label} ${e.mechanism||''}`)&&!(exclude&&exclude.test(`${e.label} ${e.sourceUrl||''}`))).slice(0,n);}
+function changedMatches(section,n=3){
+  const aliases={economy:/^(economy|money)$/,payments:/^(payments|money)$/,trade:/^(trade|economy)$/,politics:/^politics$/,society:/^(society|security|economy)$/,usmexico:/^us-mexico$/};
+  const rx=aliases[section]||new RegExp(`^${section}$`);
+  return DB.happening.filter(e=>rx.test(e.section||'')&&e.date&&e.title&&e.source&&e.url).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,n).map(e=>({type:e.kind==='release'?'Official data':'Dated development',title:e.title,text:e.context||'',source:e.source,href:e.url,date:shortDate(e.date)}));
+}
+function area(key){return DB.areas.find(a=>a.key===key)||{headlines:[]};}
+function topicSource(id,label){const sid=seriesId(id);return {label:(label||sourceName(id))+(sid?` · ${sid}`:''),href:sourceUrl(id),date:obs(id)};}
+
+const TOPIC_ORDER=['economy','payments','trade','politics','society','usmexico'];
+const LABELS={economy:'Economy & money',payments:'Payments',trade:'Trade',politics:'Politics',society:'Society & security',usmexico:'U.S.–Mexico'};
+const ROUTES={economy:'/economy.html',payments:'/payments.html',trade:'/trade.html',politics:'/politics.html',society:'/society.html',usmexico:'/us-mexico.html'};
+
+function economyTopic(){
+  const inf=s('banxico-inflacion'),core=s('banxico-inflacion-subyacente'),rateRaw=s('banxico-tasa-objetivo'),rate=monthlyLast(rateRaw),igae=s('banxico-igae'),peso=s('banxico-usdmxn-fix');
+  const I=last(inf),Ip=prior(inf),C=last(core),R=last(rateRaw),Ry=yearAgo(rateRaw),G=last(igae),P=last(peso),Py=yearAgo(peso);
+  const lines=[{name:'Headline inflation',points:inf,color:INK,format:v=>fmt(v,2)+'%'},{name:'Core inflation',points:core.slice(-inf.length),color:GREEN,format:v=>fmt(v,2)+'%'},{name:'Policy rate',points:rate.filter(p=>dateObj(p.date)>=dateObj(inf[0].date)),color:AMBER,format:v=>fmt(v,2)+'%'}];
+  return {
+    title:'Economy & money',scope:'Growth, prices, rates, and the peso.',asof:`Latest observations range from ${dateLabel(G.date)} to ${dateLabel(R.date)}.`,
+    nowTitle:'Headline inflation is below core inflation. The policy rate remains higher than both.',
+    nowText:`Headline inflation is <b>${fmt(I.value,2)}%</b>. Core inflation is <b>${fmt(C.value,2)}%</b>, and Banxico's rate is <b>${fmt(R.value,2)}%</b>. Activity was <b>${signed(G.value,2,'%')}</b> from a year earlier in ${dateLabel(G.date)}.`,
+    cards:[
+      {label:'Economic activity · annual',value:signed(G.value,2),unit:'%',change:'IGAE · year over year',context:'A monthly check on output between quarterly GDP releases.',source:'INEGI / Banxico',sourceHref:sourceUrl('banxico-igae'),date:dateLabel(G.date),href:'/chart.html?v=banxico-igae'},
+      {label:'Headline inflation',value:fmt(I.value,2),unit:'%',change:deltaText(I.value-Ip.value,' pp',2)+` from ${dateLabel(Ip.date)}`,context:`Core inflation is ${fmt(C.value,2)}%.`,source:'INEGI / Banxico',sourceHref:sourceUrl('banxico-inflacion'),date:dateLabel(I.date),href:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente'},
+      {label:'Policy rate',value:fmt(R.value,2),unit:'%',change:Ry?deltaText(R.value-Ry.value,' pp',2)+' vs a year ago':'',context:`${fmt(R.value-C.value,2)} points above core inflation.`,source:'Banxico',sourceHref:sourceUrl('banxico-tasa-objetivo'),date:shortDate(R.date),href:'/chart.html?v=banxico-tasa-objetivo'},
+      {label:'Peso · per US dollar',value:fmt(P.value,2),unit:'MXN/USD',change:Py?deltaText(pct(P.value,Py.value),'%',1)+' vs a year ago':'',context:'Lower means a stronger peso. This is the official FIX rate.',source:'Banxico',sourceHref:sourceUrl('banxico-usdmxn-fix'),date:shortDate(P.date),href:'/chart.html?v=banxico-usdmxn-fix'}
+    ],
+    evidence:{k:'Prices and rates',title:'Headline inflation fell faster than core inflation',sub:'Annual inflation and Banxico policy rate · %',visual:chartSVG({series:lines,yFormat:v=>fmt(v,1)+'%',label:'Headline inflation, core inflation and the Banxico policy rate'}),legend:legend(lines),table:dataTable(lines),note:'Observation dates, not fetch dates. Rate differences are shown in percentage points.',sources:[topicSource('banxico-inflacion','Headline · INPC'),topicSource('banxico-inflacion-subyacente','Core inflation'),topicSource('banxico-tasa-objetivo','Policy rate')],read:['Headline inflation moves with food and energy. Core inflation is the slower-moving check on underlying pressure.',`This comparison does not show causality. The peso, supply shocks and earlier policy decisions also affect prices.`]},
+    modulesTitle:'Activity, prices, and financial conditions',
+    modules:[
+      {k:'Activity',title:'Monthly activity and GDP are separate checks',value:`IGAE ${signed(G.value,2,'%')} YoY · GDP ${signed(last(s('banxico-pib-crecimiento')).value,2,'%')} YoY`,text:'IGAE moves monthly; GDP is the slower quarterly confirmation. Their observation dates stay separate.',href:'/chart.html?v=banxico-igae,banxico-pib-crecimiento',link:'Open growth charts →'},
+      {k:'Prices and rates',title:'Core inflation is above headline inflation',value:`Core ${fmt(C.value,2)}% · headline ${fmt(I.value,2)}% · rate ${fmt(R.value,2)}%`,text:'The three lines answer different questions. The chart keeps their exact observations together without claiming one caused another.',href:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente,banxico-tasa-objetivo',link:'See the underlying series →'},
+      {k:'Financial conditions',title:`The peso is ${fmt(Math.abs(pct(P.value,Py.value)),1)}% ${P.value<Py.value?'stronger':'weaker'} than a year ago`,value:`${fmt(P.value,2)} MXN/USD`,text:'The rate gap is one thing to compare with the currency. US rates, trade and risk also matter.',href:'/chart.html?v=banxico-usdmxn-fix,banxico-tasa-objetivo,fred-fedfunds',link:'Compare the peso and rates →'}
+    ],
+    updates:[
+      {type:'Official data',title:`${dateLabel(I.date)} inflation fell to ${fmt(I.value,2)}%`,text:`The annual rate moved ${I.value<Ip.value?'down':'up'} ${fmt(Math.abs(I.value-Ip.value),2)} percentage points from ${dateLabel(Ip.date)}. Core inflation is ${fmt(C.value,2)}%.`,source:'INEGI / Banxico',href:sourceUrl('banxico-inflacion'),date:dateLabel(I.date)},
+      {type:'Official data',title:`${dateLabel(G.date)} activity was ${signed(G.value,2,'%')} from a year earlier`,text:'This is the latest IGAE observation in the local feed.',source:'INEGI / Banxico',href:sourceUrl('banxico-igae'),date:dateLabel(G.date)},
+      {type:'Policy',title:`Banxico's target rate is ${fmt(R.value,2)}%`,text:'The latest setting remains above both headline and core inflation.',source:'Banxico',href:sourceUrl('banxico-tasa-objetivo'),date:shortDate(R.date)}
+    ],
+    upcoming:eventMatches(/CPI|INPC|IGAE|GDP|Banxico monetary|expectations/i,5),
+    sources:[topicSource('banxico-igae'),topicSource('banxico-inflacion'),topicSource('banxico-inflacion-subyacente'),topicSource('banxico-tasa-objetivo'),topicSource('banxico-usdmxn-fix')],
+    method:'Each card carries its own observation date. A fresh fetch never makes an old observation look new. Trade and remittances are referenced here only when needed; their full views live in Trade and Society.'
+  };
+}
+
+function paymentsTopic(){
+  const spei=s('banxico-spei-operaciones'),debit=s('banxico-tpv-debito-monto'),credit=s('banxico-tpv-credito-monto'),ecom=s('banxico-ecommerce-monto'),cash=s('banxico-circulante');
+  const S=last(spei),Sp=prior(spei),D=last(debit),Dp=prior(debit),Dy=yearAgo(debit),C=last(credit),Cp=prior(credit),Cy=yearAgo(credit),E=last(ecom),Ey=yearAgo(ecom),Cash=last(cash),CashY=yearAgo(cash);
+  const debitReview=(meta('banxico-tpv-debito-monto').flags||[]).some(flag=>String(flag).startsWith('series_jump_'));
+  const debitReviewText=debitReview?` Banxico reports an ${fmt(Math.abs(pct(D.value,Dp.value)),0)}% jump from the previous quarter; that point is flagged for review.`:'';
+  const commonDates=new Set(credit.map(p=>p.date)),debitComparable=debit.filter(p=>commonDates.has(p.date)),creditComparable=credit.filter(p=>debit.some(x=>x.date===p.date));
+  const lines=[{name:'Debit-card spending',points:debitComparable.map(p=>({...p,value:p.value/1000})),color:INK,format:v=>fmt(v,0)+'bn MXN'},{name:'Credit-card spending',points:creditComparable.map(p=>({...p,value:p.value/1000})),color:GREEN,format:v=>fmt(v,0)+'bn MXN'}];
+  return {
+    title:'Payments',scope:'Transfers, cards, cash, and financial access.',asof:`Latest observations range from ${quarterLabel(E.date)} to ${dateLabel(S.date)}.`,
+    nowTitle:`SPEI processed ${fmt(S.value/1e6,0)} million transfers in ${dateLabel(S.date)}.`,
+    nowText:`In ${quarterLabel(D.date)}, Banxico reports <b>${fmt(D.value/1000,0)}bn MXN</b> in debit-card point-of-sale spending and <b>${fmt(C.value/1000,0)}bn MXN</b> on credit cards.${debitReviewText}`,
+    cards:[
+      {label:'SPEI transfers · monthly',value:fmt(S.value/1e6,0),unit:'million',change:deltaText(pct(S.value,Sp.value),'%',1)+` from ${dateLabel(Sp.date)}`,context:'Third-party transfers. The local feed is not yet long enough for annual growth.',source:'Banxico',sourceHref:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date),href:'/chart.html?v=banxico-spei-operaciones'},
+      {label:'Debit-card spending · quarter',value:fmt(D.value/1000,0),unit:'bn MXN',change:Dy?deltaText(pct(D.value,Dy.value),'%',1)+' vs a year ago':deltaText(pct(D.value,Dp.value),'%',1)+' from previous quarter',context:debitReview?'Banxico reports this point, but the jump from the previous quarter is flagged for review.':'Nominal point-of-sale value.',source:'Banxico',sourceHref:sourceUrl('banxico-tpv-debito-monto'),date:quarterLabel(D.date),href:'/chart.html?v=banxico-tpv-debito-monto'},
+      {label:'Credit-card spending · quarter',value:fmt(C.value/1000,0),unit:'bn MXN',change:Cy?deltaText(pct(C.value,Cy.value),'%',1)+' vs a year ago':deltaText(pct(C.value,Cp.value),'%',1)+' from previous quarter',context:'Nominal point-of-sale value on credit cards.',source:'Banxico',sourceHref:sourceUrl('banxico-tpv-credito-monto'),date:quarterLabel(C.date),href:'/chart.html?v=banxico-tpv-credito-monto'},
+      {label:'Card e-commerce · quarter',value:fmt(E.value/1000,0),unit:'bn MXN',change:Ey?deltaText(pct(E.value,Ey.value),'%',1)+' vs a year ago':'',context:'Online card spending. The series currently ends one quarter earlier.',source:'Banxico',sourceHref:sourceUrl('banxico-ecommerce-monto'),date:quarterLabel(E.date),href:'/chart.html?v=banxico-ecommerce-monto'},
+    ],
+    evidence:{k:'Cards',title:'Debit-card spending is larger than credit-card spending',sub:'Quarterly point-of-sale spending · MXN billions',visual:chartSVG({series:lines,yFormat:v=>fmt(v,0),label:'Quarterly debit and credit card point-of-sale spending'}),legend:legend(lines),table:dataTable(lines),note:`Nominal transaction value. Both series are shown only on dates they share; exact observations remain available in the table.${debitReviewText}`,sources:[topicSource('banxico-tpv-debito-monto','Debit cards'),topicSource('banxico-tpv-credito-monto','Credit cards')],read:['The lines compare the value handled at point-of-sale terminals on debit and credit cards.',`A rising nominal value can reflect more transactions, higher prices, larger purchases, or all three.`]},
+    modulesTitle:'Rails, cards, online spending, and cash',
+    modules:[
+      {k:'The rails',title:'SPEI is the useful operating pulse',value:`${fmt(S.value/1e6,0)}m operations · ${dateLabel(S.date)}`,text:'Volume says more about everyday use than the enormous nominal amount transferred through the system.',href:'/chart.html?v=banxico-spei-operaciones,banxico-spei-monto',link:'Open SPEI data →'},
+      {k:'Cards',title:'Debit and credit do not move together every quarter',value:`Debit ${deltaText(pct(D.value,Dp.value),'%',1)} · credit ${deltaText(pct(C.value,Cp.value),'%',1)}`,text:'The separate series help distinguish a broad card shift from a move concentrated in one rail.',href:'/chart.html?v=banxico-tpv-debito-monto,banxico-tpv-credito-monto',link:'Compare the card series →'},
+      {k:'Online',title:'E-commerce has its own, slower clock',value:`${fmt(E.value/1000,0)}bn MXN · ${quarterLabel(E.date)}`,text:'The observation date stays visible so an older quarterly print never looks current.',href:'/chart.html?v=banxico-ecommerce-monto,banxico-ecommerce-ops',link:'Open e-commerce →'},
+      {k:'Cash',title:'Currency in circulation is still rising in nominal pesos',value:`${fmt(Cash.value/1e6,2)}tn MXN · ${dateLabel(Cash.date)}`,text:CashY?`${deltaText(pct(Cash.value,CashY.value),'%',1)} from a year earlier. Inflation and economic growth both affect this total.`:'Inflation and economic growth both affect this total.',href:'/chart.html?v=banxico-circulante',link:'Open cash in circulation →'}
+    ],
+    updates:[
+      {type:'System data',title:`SPEI processed ${fmt(S.value/1e6,0)} million transfers in ${dateLabel(S.date)}`,text:`That was ${fmt(Math.abs(pct(S.value,Sp.value)),1)}% ${S.value>=Sp.value?'above':'below'} ${dateLabel(Sp.date)}. The local series begins in ${dateLabel(spei[0].date)}, so no annual comparison is shown yet.`,source:'Banxico',href:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date)},
+      {type:'Cards',title:`Debit-card point-of-sale value was ${fmt(D.value/1000,0)}bn MXN`,text:`The latest point was ${fmt(Math.abs(pct(D.value,Dp.value)),1)}% ${D.value>=Dp.value?'above':'below'} the previous quarter.${debitReview?' That jump is flagged for review.':''}`,source:'Banxico',href:sourceUrl('banxico-tpv-debito-monto'),date:quarterLabel(D.date)},
+      {type:'Cards',title:`Credit-card point-of-sale value was ${fmt(C.value/1000,0)}bn MXN`,text:`The latest point was ${fmt(Math.abs(pct(C.value,Cp.value)),1)}% ${C.value>=Cp.value?'above':'below'} the previous quarter.`,source:'Banxico',href:sourceUrl('banxico-tpv-credito-monto'),date:quarterLabel(C.date)}
+    ],
+    upcoming:[
+      {date:'Monthly',label:'SPEI and CoDi system totals',source:'Banxico · release date varies'},
+      {date:'Quarterly',label:'Card, point-of-sale and ATM activity',source:'Banxico · release date varies'},
+      {date:'Monthly',label:'Currency in circulation',source:'Banxico · release date varies'}
+    ],
+    upcomingTitle:'Data schedule',
+    sources:[topicSource('banxico-spei-operaciones'),topicSource('banxico-tpv-debito-monto'),topicSource('banxico-tpv-credito-monto'),topicSource('banxico-ecommerce-monto'),topicSource('banxico-circulante')],
+    method:'These are system totals, not a household survey. Nominal transaction value and transaction count answer different questions, so they stay separate. “Up” is not automatically colored as good.'
+  };
+}
+
+function tradeTopic(){
+  const ex=s('banxico-exports-total'),im=s('banxico-imports-total'),bal=s('banxico-trade-balance'),inter=s('banxico-imports-intermediate'),ex12=rolling12(ex,1e6),im12=rolling12(im,1e6),inter12=rolling12(inter,1e6),E=last(ex12),Ey=yearAgo(ex12),I=last(im12),Iy=yearAgo(im12),B=last(bal),M=last(inter12),partners=DB.partners?.exports?.items||[],us=partners.find(x=>x.name==='USA'),canada=partners.find(x=>x.name==='Canada'),china=partners.find(x=>x.name==='China'),products=DB.products,pYear=Number(products?.referenceYear||products?.year||DB.partners?.referenceYear||DB.partners?.year),leadShare=products?.items?.filter(x=>['84','85','87'].includes(String(x.code).padStart(2,'0'))).reduce((t,x)=>t+Number(x.share),0);
+  if(!E||!I||!B||!M||!us||!canada||!china||!Number.isFinite(pYear))throw new Error('Trade inputs are incomplete');
+  const usmca=DB.happening.find(e=>e.id==='usmca-not-renewed-2026-07-01');
+  const intermediateShare=M.value/I.value*100;
+  const comtradePartnerUrl='https://comtradeplus.un.org/TradeFlow/';
+  const comtradeProductUrl='https://comtradeplus.un.org/TradeFlow/';
+  const lines=[{name:'Exports',points:ex12.slice(-132),color:GREEN,format:v=>'$'+fmt(v,0)+'bn'},{name:'Imports',points:im12.slice(-132),color:INK,format:v=>'$'+fmt(v,0)+'bn'}];
+  return {
+    title:'Trade',scope:'What Mexico sells and buys, where it goes, and what it depends on.',asof:`Trade flows through ${dateLabel(last(ex).date)} · annual composition and partner shares ${pYear}.`,
+    nowTitle:usmca?esc(usmca.title):'Exports and imports moved together over the latest 12 months. The US remains the dominant buyer.',
+    nowText:usmca?`${esc(usmca.context||'')} Mexico exported <b>$${fmt(E.value,0)}bn</b> of goods over the latest 12 months; <b>${fmt(us.share,1)}%</b> of ${DB.partners.year} exports went to the United States.`:`Mexico exported <b>$${fmt(E.value,0)}bn</b> of goods over the latest 12 months and imported <b>$${fmt(I.value,0)}bn</b>. In ${DB.partners.year}, <b>${fmt(us.share,1)}%</b> of exports went to the United States.`,
+    cards:[
+      {label:'Exports · last 12 months',value:'$'+fmt(E.value,0),unit:'bn',change:Ey?deltaText(pct(E.value,Ey.value),'%',1)+' vs prior 12m':'',context:'Goods only. Services are not included.',source:'Banxico',sourceHref:sourceUrl('banxico-exports-total'),date:`12m to ${dateLabel(E.date)}`,href:'/chart.html?v=banxico-exports-total'},
+      {label:'Imports · last 12 months',value:'$'+fmt(I.value,0),unit:'bn',change:Iy?deltaText(pct(I.value,Iy.value),'%',1)+' vs prior 12m':'',context:`Intermediate goods were ${fmt(intermediateShare,1)}% of the same 12-month total.`,source:'Banxico',sourceHref:sourceUrl('banxico-imports-total'),date:`12m to ${dateLabel(I.date)}`,href:'/chart.html?v=banxico-imports-total,banxico-imports-intermediate'},
+      {label:'Trade balance · monthly',value:(B.value>=0?'+':'−')+'$'+fmt(Math.abs(B.value)/1e6,1),unit:'bn',change:'Exports minus imports',context:'A monthly balance is noisy; the long-run relationship matters more.',source:'Banxico',sourceHref:sourceUrl('banxico-trade-balance'),date:dateLabel(B.date),href:'/chart.html?v=banxico-trade-balance'},
+      {label:'Exports to the US',value:fmt(us.share,1),unit:'%',change:'Share of goods exports',context:`Canada is second at ${fmt(canada.share,1)}%.`,source:'UN COMTRADE',sourceHref:comtradePartnerUrl,date:String(DB.partners.year),href:'#topicModules'}
+    ],
+    evidence:{k:'Scale and balance',title:'Exports and imports have risen together',sub:'Trailing 12-month goods trade · US$ billions',visual:chartSVG({series:lines,yFormat:v=>'$'+fmt(v,0),label:'Mexico goods exports and imports, trailing twelve months'}),legend:legend(lines),table:dataTable(lines),note:'Trailing 12-month sums reduce seasonal noise. Goods only. The chart uses Banxico’s Mexico-side ledger.',sources:[topicSource('banxico-exports-total','Exports'),topicSource('banxico-imports-total','Imports')],read:['Mexico imports parts and materials, assembles them, and exports finished goods. That is why both lines usually rise together.',`A surplus is not automatically good and a deficit is not automatically bad. The composition of trade matters.`]},
+    composition:compositionEvidence(products),
+    modulesTitle:'Products, partners, and inputs',
+    modules:[
+      {k:'What Mexico sells',title:'Vehicles, electronics and machinery dominate',value:products?`${fmt(leadShare,1)}% of goods exports · ${pYear}`:'Composition temporarily unavailable',text:products?`${products.items[0].name} is the largest product group at ${fmt(products.items[0].share,1)}%. The full basket is shown above.`:'The site will restore this module after the annual basket passes its source checks.',href:'#trade-composition',link:'Open the export basket →'},
+      {k:'Where it goes',title:'The US is in a category of its own',value:`US ${fmt(us.share,2)}% · Canada ${fmt(canada.share,2)}%`,text:`Canada is second at ${fmt(canada.share,2)}%; China is ${fmt(china.share,2)}%. No other destination is close.`,href:'#trade-composition',link:'Open the evidence →'},
+      {k:'What Mexico buys',title:'Intermediate goods dominate the import bill',value:`${fmt(intermediateShare,1)}% of latest 12-month imports`,text:'This is the share of Banxico’s import total classified as intermediate goods over the same 12-month window.',href:'/chart.html?v=banxico-imports-intermediate,banxico-imports-total',link:'Open imports by use →'}
+    ],
+    updates:[
+      ...(usmca?[{type:'Trade policy',title:usmca.title,text:usmca.context||'',source:usmca.source,href:usmca.url,date:shortDate(usmca.date)}]:[]),
+      {type:'Official data',title:`${dateLabel(last(ex).date)} exports were $${fmt(last(ex).value/1e6,1)}bn`,text:`Imports were $${fmt(last(im).value/1e6,1)}bn, leaving a ${B.value>=0?'surplus':'deficit'} of $${fmt(Math.abs(B.value)/1e6,1)}bn.`,source:'Banxico',href:sourceUrl('banxico-exports-total'),date:dateLabel(last(ex).date)},
+      {type:'Reconciled data',title:`The US bought ${fmt(us.share,2)}% of Mexican goods exports`,text:`The UN COMTRADE total differs from Banxico’s official annual total by ${fmt(DB.partners.exports.reconciliation.deltaPct,1)}%.`,source:'UN COMTRADE',href:comtradePartnerUrl,date:String(DB.partners.year)}
+    ],
+    upcoming:eventMatches(/trade data|foreign.direct.investment|export|import|balance of payments/i,5),
+    sources:[...(usmca?[{label:'USTR · USMCA first review',href:usmca.url,date:shortDate(usmca.date)}]:[]),topicSource('banxico-exports-total'),topicSource('banxico-imports-total'),topicSource('banxico-imports-intermediate'),topicSource('banxico-trade-balance'),{label:'UN COMTRADE · Mexico export partners',href:comtradePartnerUrl,date:String(DB.partners.year)},...(products?[{label:'UN COMTRADE · export composition',href:comtradeProductUrl,date:String(pYear)}]:[])],
+    method:'Banxico owns the national trade ledger. UN COMTRADE supplies the product and partner detail and is shown only after reconciling its annual total to Banxico within the stated tolerance.'
+  };
+}
+
+function politicsTopic(){
+  const today=new Date();today.setUTCHours(0,0,0,0);
+  const official=DB.events.filter(e=>e.date&&dateObj(e.date)>=today&&e.sourceUrl&&(e.kind==='political'||e.kind==='fiscal'||/Congress|election|electoral|budget|informe|presidential/i.test(`${e.label} ${e.mechanism||''}`))).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  if(!official.length)throw new Error('Political calendar is unavailable');
+  const cards=official.slice(0,4).map(e=>{const d=dateObj(e.date);return {label:e.kind==='fiscal'?'Fiscal calendar':'Political calendar',value:d.toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'}),unit:String(d.getUTCFullYear()),change:e.label,context:e.mechanism||'Official dated event.',source:e.source,sourceHref:e.sourceUrl,date:e.approx?'Approximate date':'Official calendar'};});
+  const timelineItems=official.slice(0,6).map(e=>({date:shortDate(e.date)+' '+dateObj(e.date).getUTCFullYear(),title:e.label,text:e.mechanism||'Official dated event.'}));
+  const sourceItems=official.slice(0,8).map(e=>({label:e.source,href:e.sourceUrl,date:e.date}));
+  const updates=changedMatches('politics',3);
+  return {
+    title:'Politics',scope:'Official political and fiscal dates, and the decisions attached to them.',asof:`Calendar through ${dateLabel(last(official).date)}.`,
+    nowTitle:`The next dated item is ${official[0].label}.`,
+    nowText:`It is scheduled for <b>${shortDate(official[0].date)}, ${dateObj(official[0].date).getUTCFullYear()}</b>. The calendar below keeps political events, fiscal deadlines and election dates tied to their original source.`,
+    cards,
+    evidence:{k:'Political calendar',title:'The next official dates, in order',sub:'Political events and fiscal deadlines in the local source registry',visual:timeline(timelineItems),legend:'',table:timelineTable(timelineItems),visualLabel:'Timeline',tableLabel:'Details',note:'Dates come from the event registry. Approximate dates remain labeled approximate in the snapshot and calendar.',sources:sourceItems,read:['This is the order of the official dates currently in the registry and what each one controls.',`It does not measure political support, predict outcomes, or turn a scheduled event into a result.`]},
+    modulesTitle:'What the calendar controls',
+    modules:official.slice(0,3).map(e=>({k:e.kind==='fiscal'?'Fiscal process':'Political process',title:e.label,value:`${shortDate(e.date)}, ${dateObj(e.date).getUTCFullYear()}`,text:e.mechanism||'Open the official record for details.',href:e.sourceUrl,link:`Open ${e.source} ↗`})),
+    updates:updates.length?updates:[{type:'Calendar',title:official[0].label,text:official[0].mechanism||'Open the original source for the full record.',source:official[0].source,href:official[0].sourceUrl,date:shortDate(official[0].date)}],
+    upcoming:official.slice(0,5),
+    sources:sourceItems,
+    method:'The page publishes only dated items already present in the source registry. It does not infer seat counts, polling averages or outcomes. When the registry is empty, the page fails closed instead of filling the gaps with prose.'
+  };
+}
+
+function societyTopic(){
+  const wage=monthlyLast(s('banxico-salario-minimo')),nom=indexed(wage),real=realWage(),W=last(wage),rem=last(s('banxico-remesas'));
+  const RW=last(real),RWy=yearAgo(real,RW),remY=yearAgo(s('banxico-remesas'),rem),wageYear=dateObj(W.date).getUTCFullYear(),demo=DB.demographics,vitals=DB.vitals,crime=DB.crime;
+  const pop=demo?.population?.latest,popYear=demo?.latestYear,births=vitals?.births?.latest,deaths=vitals?.deaths?.latest,crimeTotal=crime?.values?Object.values(crime.values).reduce((t,v)=>t+Number(v||0),0):null,crimeYear=crime?.meta?.vintage;
+  if(!W||!RW||!rem||!Number.isFinite(pop)||!births||!deaths||!Number.isFinite(crimeTotal))throw new Error('Society inputs are incomplete');
+  const lines=[{name:'Cash minimum wage',points:nom,color:INK,format:v=>fmt(v,0)},{name:'After inflation',points:real,color:GREEN,format:v=>fmt(v,0)}];
+  return {
+    title:'Society & security',scope:'Living standards, population, household flows, and reported crime.',asof:'Observation dates vary by measure · annual figures stay visibly annual.',
+    nowTitle:RWy?`The general minimum wage is $${fmt(W.value,2)} a day. After inflation, it is ${fmt(Math.abs(pct(RW.value,RWy.value)),1)}% ${RW.value>=RWy.value?'higher':'lower'} than a year earlier.`:`The general minimum wage is $${fmt(W.value,2)} a day.`,
+    nowText:`The CONAPO population projection is <b>${fmt(pop/1e6,1)} million</b> for ${popYear}. The municipal SESNSP file contains <b>${compact(crimeTotal)}</b> reported common-jurisdiction offenses for ${crimeYear}.`,
+    cards:[
+      {label:'General minimum wage',value:'$'+fmt(W.value,2),unit:'per day',change:RWy?deltaText(pct(RW.value,RWy.value),'%',1)+` real vs ${wageYear-1}`:'',context:'The statutory general wage. The change shown is after inflation.',source:'CONASAMI / Banxico',sourceHref:sourceUrl('banxico-salario-minimo'),date:`Effective ${wageYear}`,href:'/chart.html?v=banxico-salario-minimo'},
+      {label:'Population · projection',value:fmt(pop/1e6,1),unit:'million',change:`Median age ${demo.medianAge}`,context:'CONAPO projection. The last census anchor remains in the source data.',source:'CONAPO',sourceHref:demo.sourceUrl,date:String(popYear)},
+      {label:'Registered births',value:compact(births.value),change:'Annual registration count',context:'Year of registration, which is not always the year of birth.',source:'INEGI · ENR',sourceHref:vitals.births.sourceUrl,date:String(births.year)},
+      {label:'Reported offenses · municipal total',value:compact(crimeTotal),change:`Across ${compact(crime.meta.rowCount)} municipalities`,context:'Raw reported common-jurisdiction offenses. This is not a population-adjusted risk rate.',source:'SESNSP',sourceHref:crime.meta.sourceUrl,date:String(crimeYear)}
+    ],
+    evidence:{k:'Living standards',title:'The real-wage line separates pesos from purchasing power',sub:`Index · ${dateLabel(nom[0].date)} = 100`,visual:chartSVG({series:lines,yFormat:v=>fmt(v,0),label:'Nominal and inflation-adjusted general minimum wage index'}),legend:legend(lines),table:dataTable(lines),note:'The real line adjusts the statutory general minimum wage with the official consumer-price index. It is not the wage of the typical worker.',sources:[topicSource('banxico-salario-minimo','General minimum wage'),topicSource('banxico-inpc','Consumer-price index')],read:['The announced wage tells you how many pesos someone receives. The real line asks how much more those pesos can buy.',`Minimum-wage gains do not describe everyone. Informal work, hours, regional wages and enforcement all matter.`]},
+    modulesTitle:'Wages, household flows, population, and security',
+    modules:[
+      {k:'Living standards',title:'The real-wage line is the better comparison',value:`Index ${fmt(RW.value,0)} · ${dateLabel(RW.date)}`,text:'The general minimum wage is deflated with the official consumer-price index. It is not the wage of the typical worker.',href:'#topic-evidence',link:'Open the evidence →'},
+      {k:'Household income',title:'Remittances remain a major household flow',value:`$${fmt(rem.value/1000,1)}bn · ${dateLabel(rem.date)}`,text:remY?`${deltaText(pct(rem.value,remY.value),'%',1)} from a year earlier. The dollar amount and the peso exchange rate both matter to recipients.`:'The dollar amount and the peso exchange rate both matter to recipients.',href:'/chart.html?v=banxico-remesas',link:'Open remittances →'},
+      {k:'Population',title:'Births and deaths are annual registered events',value:`${compact(births.value)} births · ${compact(deaths.value)} deaths · ${births.year}`,text:'Registration year and occurrence year can differ. The source file keeps that caveat with the series.',href:vitals.births.sourceUrl,link:'Open the births release ↗'},
+      {k:'Security',title:'The municipal file shows where reports are concentrated',value:`${compact(crimeTotal)} reported offenses · ${crimeYear}`,text:'Municipal totals are not risk rates. Reporting behavior, population and offense mix all matter.',href:crime.meta.sourceUrl,link:'Open the SESNSP source ↗'}
+    ],
+    updates:[
+      {type:'Wages',title:`The general minimum wage is $${fmt(W.value,2)} a day`,text:'The real comparison above adjusts the full history for consumer prices.',source:'CONASAMI / Banxico',href:sourceUrl('banxico-salario-minimo'),date:dateLabel(W.date)},
+      {type:'Population',title:`The ${popYear} population projection is ${fmt(pop/1e6,1)} million`,text:`The same source file reports a median age of ${demo.medianAge}.`,source:'CONAPO',href:demo.sourceUrl,date:String(popYear)},
+      {type:'Security data',title:`The municipal layer totals ${compact(crimeTotal)} reported offenses`,text:'This is a raw annual count and stays separate from homicide records and survey measures.',source:'SESNSP',href:crime.meta.sourceUrl,date:String(crimeYear)}
+    ],
+    upcoming:eventMatches(/unemployment|remittance|wage|poverty|population|migration|employment/i,5),
+    sources:[topicSource('banxico-salario-minimo','CONASAMI / Banxico · minimum wage'),topicSource('banxico-inpc','INEGI / Banxico · consumer prices'),topicSource('banxico-remesas','Banxico · remittances'),{label:'CONAPO · population projections',href:demo.sourceUrl,date:String(popYear)},{label:'INEGI · registered births',href:vitals.births.sourceUrl,date:String(births.year)},{label:'INEGI · registered deaths',href:vitals.deaths.sourceUrl,date:String(deaths.year)},{label:'SESNSP · municipal reported offenses',href:crime.meta.sourceUrl,date:String(crimeYear)}],
+    method:'Every measure keeps its own observation period. Population is a projection; births and deaths are registrations; the security layer is a raw count of reported offenses. Those measures are not blended into one score.'
+  };
+}
+
+function usMexicoTopic(){
+  const tu=DB.tradeUS||{},imports=(tu.series?.imports||[]).map(p=>({date:p.month+'-01',value:p.value})),exports=(tu.series?.exports||[]).map(p=>({date:p.month+'-01',value:p.value})),L=tu.latest||{},partners=DB.partners?.exports?.items||[],us=partners.find(x=>x.name==='USA'),partnerYear=Number(DB.partners?.referenceYear||DB.partners?.year),lines=[{name:'US buys from Mexico',points:imports,color:GREEN,format:v=>'$'+fmt(v,1)+'bn'},{name:'US sells to Mexico',points:exports,color:INK,format:v=>'$'+fmt(v,1)+'bn'}];
+  if(!L.month||!Number.isFinite(Number(L.twoway_bn))||!imports.length||!exports.length||!us||!Number.isFinite(partnerYear))throw new Error('U.S.–Mexico inputs are incomplete');
+  const tradeMonth=L.month+'-01',mexicoBalance=-(Number(L.balance_bn)||0),balanceSide=mexicoBalance>=0?'surplus':'deficit',balanceAction=mexicoBalance>=0?'buys more goods from Mexico than it sells there':'sells more goods to Mexico than it buys there',censusMexicoUrl='https://www.census.gov/foreign-trade/balance/c2010.html',comtradePartnerUrl='https://comtradeplus.un.org/TradeFlow/',rem=last(s('banxico-remesas')),remY=yearAgo(s('banxico-remesas'),rem),peso=last(s('banxico-usdmxn-fix'));
+  const usmca=DB.happening.find(e=>e.id==='usmca-not-renewed-2026-07-01');
+  const next=eventMatches(/USMCA|U.S.–Mexico|US–Mexico|tariff|trade talks|border|foreign direct investment/i,5);
+  return {
+    title:'U.S.–Mexico',scope:'Bilateral goods trade, Mexico’s export exposure, household flows, and the next official dates.',asof:`Trade data through ${dateLabel(tradeMonth)} · export exposure ${partnerYear}.`,
+    nowTitle:usmca?esc(usmca.title):'Four out of every five Mexican export dollars go to the US.',
+    nowText:usmca?`${esc(usmca.context||'')} The US bought <b>${fmt(us.share,1)}%</b> of Mexico’s goods exports in ${partnerYear}; two-way goods trade was <b>$${fmt(L.twoway_bn,1)}bn</b> in ${dateLabel(tradeMonth)}.`:`The US bought <b>${fmt(us.share,1)}%</b> of Mexico’s goods exports in ${partnerYear}. In ${dateLabel(tradeMonth)}, two-way goods trade was <b>$${fmt(L.twoway_bn,1)}bn</b> in the U.S. Census ledger.`,
+    cards:[
+      {label:'Two-way goods trade · month',value:'$'+fmt(L.twoway_bn,1),unit:'bn',change:'US-side ledger',context:'US imports from Mexico plus US exports to Mexico.',source:'U.S. Census',sourceHref:censusMexicoUrl,date:dateLabel(tradeMonth)},
+      {label:`Mexico's goods ${balanceSide}`,value:'$'+fmt(Math.abs(mexicoBalance),1),unit:'bn',change:'For the month',context:`The US ${balanceAction}.`,source:'U.S. Census',sourceHref:censusMexicoUrl,date:dateLabel(tradeMonth)},
+      {label:'Mexican exports to the US',value:fmt(us.share,1),unit:'%',change:`Share of ${partnerYear} goods exports`,context:'Annual export exposure from the reconciled partner file.',source:'UN COMTRADE',sourceHref:comtradePartnerUrl,date:String(partnerYear),href:'/trade.html'},
+      {label:'Remittances · month',value:'$'+fmt(rem.value/1000,1),unit:'bn',change:remY?deltaText(pct(rem.value,remY.value),'%',1)+' vs a year ago':'',context:'A household flow from abroad. The peso changes what recipients receive locally.',source:'Banxico',sourceHref:sourceUrl('banxico-remesas'),date:dateLabel(rem.date),href:'/chart.html?v=banxico-remesas,banxico-usdmxn-fix'}
+    ],
+    evidence:{k:'Bilateral ledger',title:'The US consistently buys more goods from Mexico than it sells there',sub:'Monthly US goods trade with Mexico · US$ billions',visual:chartSVG({series:lines,yFormat:v=>'$'+fmt(v,0),label:'Monthly U.S. imports from and exports to Mexico'}),legend:legend(lines),table:dataTable(lines),note:'U.S. Census ledger. Banxico and Census totals differ because of valuation, timing and re-exports; the two ledgers are not mixed.',sources:[{label:'U.S. Census · trade with Mexico',href:censusMexicoUrl}],read:[`The gap between the lines is Mexico's monthly goods ${balanceSide} in the U.S. Census ledger.`,`It does not capture services, investment, migration, or the full economic effect of a trade dispute.`]},
+    modulesTitle:'Exposure, the ledger, and household flows',
+    modules:[
+      {k:'Exposure',title:'The US takes most Mexican goods exports',value:`${fmt(us.share,2)}% · ${partnerYear}`,text:'The annual partner share is reconciled to Banxico before it appears here.',href:'/trade.html#trade-composition',link:'See the trade structure →'},
+      {k:'The ledger',title:`Mexico's monthly goods ${balanceSide} was $${fmt(Math.abs(mexicoBalance),1)}bn`,value:`Two-way trade $${fmt(L.twoway_bn,1)}bn · ${dateLabel(tradeMonth)}`,text:'This is the U.S.-side measure and should not be mixed with Banxico’s national trade totals.',href:censusMexicoUrl,link:'Open Census trade data ↗'},
+      {k:'Household flow',title:'Remittances and the peso belong together',value:`$${fmt(rem.value/1000,1)}bn · ${fmt(peso.value,2)} MXN/USD`,text:'The dollar inflow and the exchange rate answer different parts of what reaches Mexican households.',href:'/chart.html?v=banxico-remesas,banxico-usdmxn-fix',link:'Compare the two series →'}
+    ],
+    updates:[
+      ...(usmca?[{type:'Trade policy',title:usmca.title,text:usmca.context||'',source:usmca.source,href:usmca.url,date:shortDate(usmca.date)}]:[]),
+      {type:'Official data',title:`Two-way goods trade reached $${fmt(L.twoway_bn,1)}bn in ${dateLabel(tradeMonth)}`,text:`The US imported $${fmt(L.imports_bn,1)}bn from Mexico and exported $${fmt(L.exports_bn,1)}bn to it.`,source:'U.S. Census',href:censusMexicoUrl,date:dateLabel(tradeMonth)},
+      {type:'Household flow',title:`Remittances were $${fmt(rem.value/1000,1)}bn in ${dateLabel(rem.date)}`,text:remY?`That was ${fmt(Math.abs(pct(rem.value,remY.value)),1)}% ${rem.value>=remY.value?'above':'below'} a year earlier.`:'The source series does not yet support a year-earlier comparison.',source:'Banxico',href:sourceUrl('banxico-remesas'),date:dateLabel(rem.date)}
+    ],
+    upcoming:next,
+    sources:[...(usmca?[{label:'USTR · USMCA first review',href:usmca.url,date:shortDate(usmca.date)}]:[]),{label:'U.S. Census · trade with Mexico',href:censusMexicoUrl,date:tu.meta.latestMonth},{label:'UN COMTRADE · export exposure',href:comtradePartnerUrl,date:String(partnerYear)},topicSource('banxico-remesas'),topicSource('banxico-usdmxn-fix')],
+    method:'The bilateral ledger uses U.S. Census throughout. Banxico remains the owner of Mexico’s national trade accounts. The two series are not spliced together because valuation, timing and re-exports differ.'
+  };
+}
+
+const BUILDERS={economy:economyTopic,payments:paymentsTopic,trade:tradeTopic,politics:politicsTopic,society:societyTopic,usmexico:usMexicoTopic};
+let current=ROUTE_TOPIC;
+function validTopic(){return TOPIC_ORDER.includes(ROUTE_TOPIC)?ROUTE_TOPIC:'economy';}
+function renderSources(t){return `<div class="source-list">${t.sources.map(x=>`<div><a href="${x.href}" target="_blank" rel="noopener">${x.label} ↗</a>${x.date?` · observation ${x.date}`:''}</div>`).join('')}</div><p>${t.method}</p>`;}
+function evidenceBlock(e,id,label='In the data'){
+  if(!e)return '';
+  const titleId=id+'-title',visualId=id+'-visual',tableId=id+'-table';
+  return `<section class="section ${e.css||''}" id="${id}" aria-labelledby="${titleId}"><div class="section-head"><div><div class="mono-k">${label}</div><h2 id="${titleId}">${e.k}</h2></div></div><article class="evidence-shell"><header class="evidence-head"><div><h3>${e.title}</h3><div class="evidence-sub">${e.sub}</div></div><div class="view-toggle" role="group" aria-label="Choose ${e.k} view"><button type="button" class="active" aria-pressed="true" data-evidence-for="${id}" data-evidence="visual">${e.visualLabel||'Chart'}</button><button type="button" aria-pressed="false" data-evidence-for="${id}" data-evidence="table">${e.tableLabel||'Table'}</button></div></header><div class="evidence-body" id="${visualId}">${e.legend?`<div class="chart-legend">${e.legend}</div>`:''}<div class="chart-wrap">${e.visual}</div><div class="chart-note">${e.note}${evidenceSources(e.sources)}</div></div><div class="table-wrap" id="${tableId}">${e.table}</div><div class="evidence-read"><div><h4>What it shows</h4><p>${e.read[0]}</p></div><div><h4>What it does not show</h4><p>${e.read[1]}</p></div></div></article></section>`;
+}
+function render(topic){
+  current=topic;let t;
+  try{t=BUILDERS[topic]();}
+  catch(error){
+    console.error(error);window.reportMexicoDataError?.(`topic:${topic}`);
+    $('#topicApp').className='';
+    $('#topicApp').innerHTML=`<section class="topic-hero"><div><div class="mono-k">Topic</div><h1>${LABELS[topic]}</h1><p class="topic-scope">This page is waiting for its required source data.</p></div></section><section class="now"><div class="mono-k">Data check</div><div><h2>This page couldn’t load its source data. Try again, or check feed status.</h2><p><a href="/sources.html#livenow">Open feed status →</a></p></div></section>`;
+    return;
+  }
+  $$('.topic-switch a').forEach(b=>b.classList.toggle('active',b.dataset.topic===topic));$('.topic-select').value=topic;
+  $('#topicApp').className='';
+  $('#topicApp').innerHTML=`
+    <section class="topic-hero"><div><div class="mono-k">Topic</div><h1>${t.title}</h1><p class="topic-scope">${t.scope}</p></div><div class="topic-asof">${t.asof}</div></section>
+    <section class="now"><div class="mono-k">Now</div><div><h2>${t.nowTitle}</h2>${t.nowText?`<p>${t.nowText}</p>`:''}</div></section>
+    <section class="section" aria-labelledby="snapshotTitle"><div class="section-head"><div><div class="mono-k">Snapshot</div><h2 id="snapshotTitle">Key readings</h2></div><div class="section-note">Different observation dates are shown on each reading.</div></div><div class="snapshot">${t.cards.map(card).join('')}</div></section>
+    ${evidenceBlock(t.evidence,'topic-evidence')}
+    ${evidenceBlock(t.composition,'trade-composition','Composition')}
+    <section class="section" id="topicModules"><div class="section-head"><div><h2>${t.modulesTitle}</h2></div></div><div class="topic-modules count-${t.modules.length}">${t.modules.map(moduleCard).join('')}</div></section>
+    <section class="section"><div class="changes-grid"><div><div class="section-head"><div><div class="mono-k">Latest</div><h2>What changed</h2></div></div>${updateList(t.updates)}</div><aside><div class="section-head"><div><div class="mono-k">Next</div><h2>${t.upcomingTitle||'Coming up'}</h2></div></div>${upcomingList(t.upcoming)}</aside></div></section>
+    <details class="sources"><summary>Sources and method</summary><div class="sources-body">${renderSources(t)}</div></details>`;
+  $$('[data-evidence-for]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.evidenceFor,table=b.dataset.evidence==='table',group=$$(`[data-evidence-for="${id}"]`);group.forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',x===b?'true':'false')});$('#'+id+'-visual').classList.toggle('hidden',table);$('#'+id+'-table').classList.toggle('open',table)}));
+  if(topic==='trade'&&innerWidth<620){const b=$('[data-evidence-for="trade-composition"][data-evidence="table"]');if(b)b.click();}
+}
+
+$('.topic-switch').innerHTML=TOPIC_ORDER.map(t=>`<a href="${ROUTES[t]}" data-topic="${t}"${t===validTopic()?' aria-current="page"':''}>${LABELS[t]}</a>`).join('');
+$('.topic-select').innerHTML=TOPIC_ORDER.map(t=>`<option value="${t}">${LABELS[t]}</option>`).join('');
+$('.topic-select').addEventListener('change',e=>{location.href=ROUTES[e.target.value]});
+render(validTopic());
+</script>
+{% endraw %}

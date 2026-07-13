@@ -12,6 +12,8 @@
 // Cross-source reconciliation is deliberately NOT here — it's a report, not a
 // gate (divergence is usually methodology, not error).
 
+import { stalenessFlag } from './freshness.js';
+
 class HardFail extends Error {}
 export const isHardFail = (e) => e instanceof HardFail;
 
@@ -62,6 +64,15 @@ export function validate(m, out, prior) {
     if (moved) flags.push(moved);
   }
 
+  // A bad new observation can be present in both the fetched payload and the previous
+  // saved file, so comparing only one run with the next can miss it. Also inspect the
+  // sequence itself. This stays soft: a real break is published with a visible flag,
+  // while consumers can withhold it until the source or methodology is reconciled.
+  if (!isLayer && typeof t.maxPctChange === 'number') {
+    const jump = biggestAdjacentMove(out.data, t.maxPctChange);
+    if (jump) flags.push(jump);
+  }
+
   // ---- vintage sanity ----
   if (!out.meta.vintage || out.meta.vintage === 'null')
     throw new HardFail(`${m.id}: missing data vintage`);
@@ -74,23 +85,6 @@ export function validate(m, out, prior) {
   if (stale) flags.push(stale);
 
   return flags;
-}
-
-// How old the latest observation may be, per cadence, before we call it stale.
-// Calibrated to "a full period has been missed, plus normal publication lag" — NOT the raw period
-// length. Banxico dates each observation at the period START (Q1 = Jan 1) and publishes with a lag,
-// so a perfectly current quarterly feed can read ~190 days old; flagging that would cry wolf. These
-// windows flag a feed that has genuinely skipped a release, not one that's merely lagged-but-current.
-const GRACE_DAYS = { '4-hour': 2, 'business-daily': 6, daily: 8, weekly: 21, monthly: 90, quarter: 340, annual: 460, yearly: 460 };
-function stalenessFlag(m, vintage) {
-  const cad = String(m.cadence || '');
-  const key = Object.keys(GRACE_DAYS).find((k) => cad.includes(k));
-  if (!key) return null;
-  const iso = String(vintage).length === 7 ? `${vintage}-01` : String(vintage);
-  const v = Date.parse(`${iso}T00:00:00Z`);
-  if (Number.isNaN(v)) return null;
-  const ageDays = (Date.now() - v) / 864e5;
-  return ageDays > GRACE_DAYS[key] ? `stale_${key}_${Math.round(ageDays)}d` : null;
 }
 
 // Compare a handful of overlapping keys/dates; flag if any jumped more than the
@@ -114,4 +108,16 @@ function biggestMove(m, out, prior, maxPct) {
 function seriesLatest(data) {
   if (!Array.isArray(data) || !data.length) return null;
   return data[data.length - 1].value;
+}
+
+function biggestAdjacentMove(data, maxPct) {
+  if (!Array.isArray(data) || data.length < 2) return null;
+  let worst = null;
+  for (let i = 1; i < data.length; i++) {
+    const a = data[i - 1]?.value, b = data[i]?.value;
+    if (!Number.isFinite(a) || !Number.isFinite(b) || a === 0) continue;
+    const pct = Math.abs((b - a) / a) * 100;
+    if (pct > maxPct && (!worst || pct > worst.pct)) worst = { date: data[i].date, pct };
+  }
+  return worst ? `series_jump_${worst.date}_${worst.pct.toFixed(0)}pct` : null;
 }

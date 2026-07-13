@@ -6,7 +6,22 @@
 /* ---- tiny helpers ---- */
 const $ = (s) => document.querySelector(s);
 export const enNum = (n) => Number(n).toLocaleString('en-US');
-async function J(p){ const r=await fetch(p); if(!r.ok) throw new Error(p+' '+r.status); return r.json(); }
+const htmlEsc = (value) => String(value == null ? '' : value)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const publicHttpUrl = (value) => {
+  try {
+    const url = new URL(String(value || ''));
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : '';
+  } catch { return ''; }
+};
+export function reportDataError(resource,error){
+  window.dispatchEvent(new CustomEvent('mb:data-error',{detail:{resource,error:String(error?.message||error||'load failed')}}));
+}
+async function J(p,opts){
+  try{const r=await fetch(p);if(!r.ok)throw new Error(p+' '+r.status);return await r.json();}
+  catch(error){if(!opts?.quiet)reportDataError(p,error);throw error;}
+}
 
 /* ---- the series map + composites (module state; loadSeries() populates these) ---- */
 export const S = {};
@@ -61,8 +76,18 @@ export function stampFor(m, id){
   return {cls:'',t:String(v)};
 }
 export function valueAgo(data,days){ const last=new Date(data[data.length-1].date), tgt=last-days*864e5; let best=data[0],bd=1e18; for(const p of data){const d=Math.abs(new Date(p.date)-tgt);if(d<bd){bd=d;best=p;}} return best.value; }
-// Send source links to a human-readable page, not the raw API endpoint.
-export function humanSrc(u){ if(!u)return u; if(/SieAPIRest/i.test(u))return 'https://www.banxico.org.mx/SieInternet/'; if(/apidatamexico|tesseract|economia\.gob\.mx\/api/i.test(u))return 'https://www.economia.gob.mx/datamexico/'; return u; }
+// Send source links to a human-readable page, not the token-gated raw API endpoint.
+// Banxico's public search accepts the exact series id, so readers land one step from
+// the observation instead of at a generic database home or an HTTP 400.
+export function humanSrc(u){
+  if(!u)return u;
+  if(/SieAPIRest/i.test(u)){
+    const m=/\/series\/([A-Za-z0-9._-]+)/.exec(u),sid=m&&m[1];
+    return sid?`https://www.banxico.org.mx/AplBusquedasBM2/bsiewww.jsp?_page=1&_action=search&_lang=es&_userquery=${encodeURIComponent(sid)}`:'https://www.banxico.org.mx/SieInternet/';
+  }
+  if(/apidatamexico|tesseract|economia\.gob\.mx\/api/i.test(u))return 'https://www.economia.gob.mx/datamexico/';
+  return u;
+}
 // Pull the exact series id out of the API endpoint (e.g. .../series/SF43718/datos → SF43718) so the
 // disclosure names the precise series, not just the agency (the review's #1 trust ask).
 export const seriesId = (u)=>{ const m=/\/series\/([A-Za-z]{2,4}\d+)/.exec(u||''); return m?m[1]:''; };
@@ -183,11 +208,13 @@ export function treemapSVG(items, opts){
   const total=data.reduce((s,d)=>s+d.value,0)||1;
   const scaled=data.map(d=>({d, area:d.value/total*(W*H)}));
   const rects=tmSquarify(scaled,0,0,W,H);
-  let svg=`<svg class="treemap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block" role="img">`;
+  const aid='tm-a11y-'+(CID++), label=opts.label||'Treemap', desc=opts.desc||'Rectangle area represents value.';
+  let svg=`<svg class="treemap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block" role="img" aria-labelledby="${aid}-t ${aid}-d"><title id="${aid}-t">${tmEsc(label)}</title><desc id="${aid}-d">${tmEsc(desc)}</desc>`;
   for(const r of rects){
     const d=r.d, x=r.x+pad, y=r.y+pad, w=Math.max(0,r.w-2*pad), h=Math.max(0,r.h-2*pad);
     const tc=tmLuma(d.color)>0.62?'#1a1a1a':'#fff';
-    svg+=`<g class="tmc${(d.code||d.isElse)?' tmdrill':''}" data-nm="${tmEsc(d.name)}" data-share="${d.share}" data-val="${d.value}" data-sec="${tmEsc(d.key||'')}"${d.more?` data-more="${tmEsc(d.more)}"`:''}${d.code?` data-code="${d.code}"`:''}${d.shareParent!=null?` data-sp="${d.shareParent}"`:''}${d.isElse?' data-else="1"':''}${d.full?` data-full="${tmEsc(d.full)}"`:''}>`;
+    const drill=!!(d.code||d.isElse), aria=`${d.name}, ${Number(d.share).toFixed(1)} percent of exports${drill?', open product detail':''}`;
+    svg+=`<g class="tmc${drill?' tmdrill':''}" data-nm="${tmEsc(d.name)}" data-share="${d.share}" data-val="${d.value}" data-sec="${tmEsc(d.key||'')}" aria-label="${tmEsc(aria)}"${drill?' role="button" tabindex="0"':''}${d.more?` data-more="${tmEsc(d.more)}"`:''}${d.code?` data-code="${d.code}"`:''}${d.shareParent!=null?` data-sp="${d.shareParent}"`:''}${d.isElse?' data-else="1"':''}${d.full?` data-full="${tmEsc(d.full)}"`:''}>`;
     svg+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${d.color}" stroke="#fff" stroke-width="0.6"/>`;
     // Label: show the WRAPPED name on any cell big enough to hold it (top cells get named, not just %),
     // then % (and $value on the big ones). Names wrap up to 3 lines and never ellipsize (Fable). Small
@@ -256,7 +283,7 @@ export function dirWord(delta,opts){ opts=opts||{}; const e=opts.eps!=null?opts.
 // exhibit frame; optional table alt for chart<->table toggle
 export function exhibit(no,finding,sub,svg,src,tableHtml,wide){
   const tid='ex'+(CID++);
-  const toggle=tableHtml?`<div class="ex-toggle"><button class="on" data-t="chart" data-for="${tid}">Chart</button><button data-t="table" data-for="${tid}">Table</button></div>`:'';
+  const toggle=tableHtml?`<div class="ex-toggle" role="group" aria-label="Choose exhibit view"><button type="button" class="on" aria-pressed="true" aria-controls="${tid}-chart" data-t="chart" data-for="${tid}">Chart</button><button type="button" aria-pressed="false" aria-controls="${tid}-table" data-t="table" data-for="${tid}">Table</button></div>`:'';
   const tbl=tableHtml?`<div id="${tid}-table" style="display:none">${tableHtml}</div>`:'';
   return `<div class="exwrap${wide?' wide':''}"><div class="ex-tag"></div>`+
     `<div class="ex-head"><div><div class="ex-no">Exhibit ${no}</div><div class="ex-title">${finding}</div><div class="ex-sub">${sub}</div></div>${toggle}</div>`+
@@ -288,7 +315,7 @@ export function wireCharts(){
     el.addEventListener('pointerleave',()=>{ tip.style.opacity=0; const cr=document.getElementById(id+'-cr'); if(cr)cr.style.opacity=0; C.series.forEach((s,si)=>{const hd=document.getElementById(id+'-hd'+si);if(hd)hd.style.opacity=0;}); });
   }
   document.querySelectorAll('.ex-toggle button').forEach(b=>{ if(b.__w)return; b.__w=1; b.addEventListener('click',()=>{
-    const t=b.dataset.t,f=b.dataset.for; b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+    const t=b.dataset.t,f=b.dataset.for; b.parentNode.querySelectorAll('button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',x===b?'true':'false');});
     const c=document.getElementById(f+'-chart'),tb=document.getElementById(f+'-table'); if(c)c.style.display=t==='chart'?'':'none'; if(tb)tb.style.display=t==='table'?'':'none';
   }); });
 }
@@ -406,16 +433,18 @@ export function renderDevelopments(section, opts){
     .sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))).slice(0, opts.max||6);
   if(!ev.length) return `<div style="font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0">No major developments logged yet.</div>`;
   return `<div class="wire">`+ev.map(e=>{
-    const ext=/^https?:/.test(e.url||''); const d=e.date?new Date(e.date+'T00:00:00'):null;
+    const url=publicHttpUrl(e.url); const d=e.date?new Date(e.date+'T00:00:00'):null;
     const dd=d&&!isNaN(d)?d.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
-    return `<div class="wi"><div class="wbody"><a class="wt" href="${e.url||'#'}"${ext?' target="_blank" rel="noopener"':''}>${e.title||''}</a><div class="wm">${e.source||''}${dd?' · '+dd:''}</div></div></div>`;
+    const title=htmlEsc(e.title||'');
+    const source=htmlEsc(e.source||'');
+    return `<div class="wi"><div class="wbody">${url?`<a class="wt" href="${htmlEsc(url)}" target="_blank" rel="noopener">${title}</a>`:`<span class="wt">${title}</span>`}<div class="wm">${source}${dd?' · '+htmlEsc(dd):''}</div></div></div>`;
   }).join('')+`</div>`;
 }
 
 export async function loadSeries(ids){
   const SER=ids||MONEY_SERIES;
   const [news,events,happening,...ser]=await Promise.all([
-    J('./data/news/wire.json').catch(()=>J('./data/news.json').catch(()=>null)),
+    J('./data/news/wire.json',{quiet:true}).catch(()=>J('./data/news.json',{quiet:true}).catch(error=>{reportDataError('./data/news',error);return null;})),
     J('./data/events.json').catch(()=>null),
     J('./data/happening.json').catch(()=>null),
     ...SER.map(id=>J('./data/series/'+id+'.json').then(s=>({id,s})).catch(()=>({id,s:null})))

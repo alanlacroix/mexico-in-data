@@ -3,6 +3,12 @@
 # forever — any CSS change ships a brand-new URL. HTML must revalidate so browsers
 # pick up the new hash. Data JSON is short-cached (the cron refreshes every ~6h).
 
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
 /design/*
   Cache-Control: public, max-age=31536000, immutable
 
@@ -21,3 +27,20 @@
 
 /
   Cache-Control: public, max-age=0, must-revalidate
+
+# Local design and generated-email previews remain reachable for review but must
+# never become search results.
+/mockup.html
+  X-Robots-Tag: noindex, nofollow
+
+/daily-start-mockup.html
+  X-Robots-Tag: noindex, nofollow
+
+/charts-start-mockup.html
+  X-Robots-Tag: noindex, nofollow
+
+/topics-start-mockup.html
+  X-Robots-Tag: noindex, nofollow
+
+/weekly-sample.html
+  X-Robots-Tag: noindex, nofollow

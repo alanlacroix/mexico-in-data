@@ -1,33 +1,25 @@
-name: send-weekly-email
-# The approve-and-send tap. Manual only — this is the one action that puts an issue
-# in front of readers. Click "Run workflow", pick the week (blank = latest built),
-# choose send or draft, and go. Needs BUTTONDOWN_API_KEY; without it the run is a
-# safe dry-run that prints what it would send. Default-hold lives here: nothing goes
-# out on a schedule, only when you press this.
+name: prepare-beehiiv-review
+# Manual, export-only handoff. This workflow cannot send an email: it has no
+# provider secret and makes no provider API call. It packages one built issue for
+# review and manual entry in Beehiiv's Post Builder.
 
 on:
   workflow_dispatch:
     inputs:
       week:
-        description: 'Issue week (e.g. 2026-W28). Leave blank for the latest built draft.'
-        required: false
-        default: ''
-      mode:
-        description: 'send = deliver to the list · draft = stage in Buttondown only'
+        description: 'Exact issue week (for example 2026-W28)'
         required: true
-        default: 'send'
-        type: choice
-        options: [send, draft]
+        type: string
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: send-weekly-email
+  group: prepare-beehiiv-review
   cancel-in-progress: false
 
 jobs:
-  send:
+  prepare:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,37 +27,24 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Send (or stage) the issue
-        working-directory: pipeline
-        # Inputs go through env, never interpolated into the shell — otherwise a
-        # crafted `week` value could run commands with the send key in scope.
+      - name: Validate the selected issue
         env:
-          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_API_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           WEEK_INPUT: ${{ inputs.week }}
-          MODE_INPUT: ${{ inputs.mode }}
         run: |
-          WEEK_ARG=""
-          if [ -n "$WEEK_INPUT" ]; then
-            case "$WEEK_INPUT" in
-              [0-9][0-9][0-9][0-9]-W[0-9][0-9]) WEEK_ARG="--week $WEEK_INPUT" ;;
-              *) echo "invalid week '$WEEK_INPUT' (expected YYYY-Www)"; exit 1 ;;
-            esac
-          fi
-          DRAFT_ARG=""
-          [ "$MODE_INPUT" = "draft" ] && DRAFT_ARG="--draft"
-          node send-email.js $WEEK_ARG --confirm $DRAFT_ARG
+          case "$WEEK_INPUT" in
+            [0-9][0-9][0-9][0-9]-W[0-9][0-9]) ;;
+            *) echo "invalid week '$WEEK_INPUT' (expected YYYY-Www)"; exit 1 ;;
+          esac
 
-      - name: Record the send
-        if: inputs.mode == 'send'
-        run: |
-          git config user.name  "mexico-data-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/email/
-          if git diff --cached --quiet; then
-            echo "no status change"
-          else
-            git commit -m "email: sent issue $(date -u +%Y-%m-%d)"
-            git push
-          fi
+      - name: Prepare the Beehiiv review package
+        env:
+          WEEK_INPUT: ${{ inputs.week }}
+        run: node pipeline/prepare-beehiiv.js --week "$WEEK_INPUT"
+
+      - name: Upload the review package
+        uses: actions/upload-artifact@v4
+        with:
+          name: beehiiv-review-${{ inputs.week }}
+          path: tmp/beehiiv-review/${{ inputs.week }}/
+          if-no-files-found: error
+          retention-days: 14

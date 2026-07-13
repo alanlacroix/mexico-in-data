@@ -2,17 +2,17 @@
 layout: base.njk
 permalink: /weekly.html
 title: "Subscribe · The Mexico Brief"
-description: "A free email on Mexico, a few times a month: what changed in the economy, politics, business, crime, and the US relationship, from original sources, every figure linked so you can check the work."
+description: "A weekly email on Mexico's economy, politics, and relationship with the US, with official numbers and links to the original sources."
 ---
 {% raw %}
 <style>
   :root{--ink-3:#4d4d4d}
   body{font-size:var(--fs-body)}
 
-  .lp{max-width:640px;padding:40px 0 8px}
-  @media(min-width:760px){.lp{padding:64px 0 12px}}
+  .lp{max-width:680px;padding:40px 0 8px}
+  @media(min-width:760px){.lp{padding:58px 0 12px}}
   .lp .eyebrow{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
-  .lp h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.04;letter-spacing:-.025em;margin:14px 0 0;color:var(--ink);max-width:18ch}
+  .lp h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.04;letter-spacing:-.025em;margin:14px 0 0;color:var(--ink);max-width:20ch}
   .lp .thesis{font-size:var(--fs-body);color:var(--ink-2);margin:18px 0 0;line-height:1.5;max-width:52ch}
 
   .signup{margin:28px 0 0;max-width:480px}
@@ -23,26 +23,51 @@ description: "A free email on Mexico, a few times a month: what changed in the e
   .signup button:hover{background:var(--green-d)}
   .signup .fine{font-size:var(--fs-small);color:var(--ink-2);margin-top:13px;line-height:1.55}
 
-  .who{display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);margin-top:38px;padding-top:20px;max-width:60ch}
-  .who .avatar{width:40px;height:40px;border-radius:50%;background:#e7f3ec;color:var(--green-d);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:var(--fs-small);flex:0 0 auto}
-  .who p{font-size:var(--fs-small);color:var(--ink-2);margin:0;line-height:1.5}
-  .who a{color:var(--green);font-weight:500}
+  .inside{max-width:680px;border-top:1px solid var(--line);margin:42px 0 0;padding:24px 0 4px}
+  .inside h2{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);margin:0 0 6px}
+  .inside .intro{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:62ch}
+  .issueparts{margin-top:18px;border-top:1px solid var(--line)}
+  .issuepart{display:grid;grid-template-columns:112px 1fr;gap:20px;padding:15px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  .issuepart .k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .issuepart p{font-size:var(--fs-small);line-height:1.5;color:var(--ink-2)}
+  .madefor{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);margin-top:20px;max-width:60ch}
+  .madefor a{color:var(--green);font-weight:500}
+  @media(max-width:520px){
+    .signup form{display:grid;grid-template-columns:1fr}
+    .signup input[type=email]{min-width:0;width:100%}
+    .signup button{width:100%;min-height:48px}
+    .issuepart{grid-template-columns:1fr;gap:4px}
+  }
 </style>
 
 <div class="wrap">
   <section class="lp">
-    <span class="eyebrow">The email · free</span>
-    <h1>What's changing in Mexico.</h1>
-    <p class="thesis">A few times a month, I look at what changed in Mexico's economy, politics, business, crime, and relationship with the United States. The numbers come from original sources. The links are there too, in case you want to check my work.</p>
+    <span class="eyebrow">The weekly email</span>
+    <h1>Mexico, once a week.</h1>
+    <p class="thesis">Once a week, I send the few things that changed in Mexico's economy, politics, and relationship with the US that I think are worth knowing. The numbers come from original sources. The links are included if you want to go deeper.</p>
 
     <!-- Our own form -> /api/subscribe (Cloudflare function -> beehiiv, key server-side). No third-party UI. -->
     <div class="signup">
-      <form class="subform" novalidate>
-        <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
+      <form class="subform" method="post" action="/api/subscribe" novalidate>
+        <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required />
+        <label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
         <button type="submit">Subscribe</button>
       </form>
-      <div class="fine submsg">Free. A few emails a month, when there's something worth sending.</div>
+      <div class="fine submsg" aria-live="polite">One email a week. Unsubscribe whenever you want.</div>
+      <div class="privacy-note">Your email is handled by Beehiiv for this newsletter. <a href="/privacy.html">Privacy</a>.</div>
     </div>
+  </section>
+
+  <section class="inside" aria-labelledby="inside-title">
+    <h2 id="inside-title">What's in it</h2>
+    <p class="intro">Each issue starts with the biggest development of the week, then the numbers that moved and the context that helped me understand them.</p>
+    <div class="issueparts">
+      <div class="issuepart"><span class="k">The week</span><p>The developments I would want someone to tell me about.</p></div>
+      <div class="issuepart"><span class="k">The numbers</span><p>The current value, what changed, the period it covers, and the original source.</p></div>
+      <div class="issuepart"><span class="k">My read</span><p>What I think it means, clearly labeled. You are welcome to ignore that part.</p></div>
+      <div class="issuepart"><span class="k">Next</span><p>The releases, votes, and decisions coming up.</p></div>
+    </div>
+    <p class="madefor">I made the email for the same reason I made the site. I was tired of opening ten tabs and still not knowing what had actually changed. This is the recap I wanted once a week. Written by <a href="/about.html">Alan Lacroix</a>.</p>
   </section>
 </div>
 {% endraw %}

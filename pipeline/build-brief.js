@@ -24,6 +24,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
+import { lintReportText } from './lib/lint.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -46,9 +47,9 @@ function board() {
   // Each board item carries its series id + a {v} template, so the PAGE re-renders the number live
   // from the same series the board reads, formatted the same way — the prose can never drift from
   // the board (the 17.60-vs-17.48 bug). The baked text stays as the no-JS/fetch-fail fallback.
-  const peso = series('banxico-usdmxn-fix'); if (peso.length) items.push({ id: 'board-peso', label: 'the peso', text: `the peso trades at ${peso.at(-1).v.toFixed(2)} to the dollar`, source: 'Banco de México', url: '/money.html', series: 'banxico-usdmxn-fix', tmpl: 'the peso trades at {v} to the dollar' });
-  const inf = series('banxico-inflacion'); if (inf.length) items.push({ id: 'board-inflation', label: 'inflation', text: `inflation is ${inf.at(-1).v.toFixed(2)}%`, source: 'INEGI', url: '/money.html', series: 'banxico-inflacion', tmpl: 'inflation is {v}%' });
-  const rate = series('banxico-tasa-objetivo'); if (rate.length) items.push({ id: 'board-rate', label: 'the policy rate', text: `the policy rate is ${rate.at(-1).v.toFixed(2)}%`, source: 'Banco de México', url: '/money.html', series: 'banxico-tasa-objetivo', tmpl: 'the policy rate is {v}%' });
+  const peso = series('banxico-usdmxn-fix'); if (peso.length) items.push({ id: 'board-peso', label: 'the peso', text: `the peso trades at ${peso.at(-1).v.toFixed(2)} to the dollar`, source: 'Banco de México', url: '/economy.html', series: 'banxico-usdmxn-fix', tmpl: 'the peso trades at {v} to the dollar' });
+  const inf = series('banxico-inflacion'); if (inf.length) items.push({ id: 'board-inflation', label: 'inflation', text: `inflation is ${inf.at(-1).v.toFixed(2)}%`, source: 'INEGI', url: '/economy.html', series: 'banxico-inflacion', tmpl: 'inflation is {v}%' });
+  const rate = series('banxico-tasa-objetivo'); if (rate.length) items.push({ id: 'board-rate', label: 'the policy rate', text: `the policy rate is ${rate.at(-1).v.toFixed(2)}%`, source: 'Banco de México', url: '/economy.html', series: 'banxico-tasa-objetivo', tmpl: 'the policy rate is {v}%' });
   const gdp = series('banxico-pib-crecimiento'); if (gdp.length) { const v = gdp.at(-1).v; items.push({ id: 'board-growth', label: 'growth', text: `growth is running near ${(v >= 0 ? '+' : '') + v.toFixed(1)}%`, source: 'INEGI', url: '/economy.html' }); }
   return items;
 }
@@ -127,13 +128,25 @@ IRON RULES:
 // ---- the new Brief (Fable 2026-07-12): 3-5 rubric-ranked items, each headline + explained context ----
 const stripDash = (t) => String(t || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();  // voice law: no em-dash
 const WORDS = (t) => stripDash(t).split(/\s+/).filter(Boolean).length;
-// the SHIPPED context of an event: human `context`, else the curator's `why`. NEVER `context_draft`
-// (the LLM pre-draft) — the build physically refuses to render an unpromoted draft (Fable's gate).
-const ctxOf = (e) => stripDash(e.context || e.why || '');
+// Only the explicitly promoted `context` field may reach the Brief. `why` is useful as an
+// internal drafting aid, but it may be generated or copied from a truncated feed dek. A new
+// event can therefore update the dated headline ledger automatically without replacing clear
+// public copy with a weak explanation. Numbers and charts keep updating; prose fails closed.
+const contextGate = (e) => lintReportText({
+  text: e.context || '',
+  inputs: [e.date, e.title, e.context],
+  maxWords: 55,
+  maxSentences: 2,
+});
+const ctxOf = (e) => stripDash(contextGate(e).ok ? e.context : '');
 // select the lead items by the rubric (importance >= 5, cap 5, soft floor 3). See BRIEF-RUBRIC.md.
 function select(events) {
   const THRESH = 5, CAP = 5, FLOOR = 3;
-  const ranked = events.slice().sort((a, b) => (b.importance - a.importance) || (b._t - a._t));
+  const ranked = events.filter((e) => {
+    const gate = contextGate(e);
+    if (!gate.ok && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: ${gate.flags.join('; ')}`);
+    return gate.ok && e.url && e.source;
+  }).sort((a, b) => (b.importance - a.importance) || (b._t - a._t));
   let picked = ranked.filter((e) => (e.importance || 0) >= THRESH).slice(0, CAP);
   if (picked.length < FLOOR) picked = ranked.slice(0, FLOOR);
   return picked;
@@ -142,7 +155,7 @@ function buildStanding(nums) {
   const pick = nums.filter((n) => ['board-peso', 'board-inflation', 'board-rate'].includes(n.id));
   if (!pick.length) return null;
   return { text: capitalize(pick.map((n) => n.text).join(', ')) + '.', live: pick.map((n) => ({ series: n.series, tmpl: n.tmpl })),
-    refs: pick.map((n) => n.id), href: '/money.html', source: 'Banco de México / INEGI' };
+    refs: pick.map((n) => n.id), href: '/economy.html', source: 'Banco de México / INEGI' };
 }
 
 async function main() {
@@ -152,6 +165,7 @@ async function main() {
   if (!P.events.length) { console.warn('  no events — nothing to write'); return; }
 
   const picked = select(P.events);
+  if (!picked.length) throw new Error('no reviewed event context is ready for the Brief; keeping the last-good brief');
   const lead0 = picked[0];
   const lead = { h1: stripDash(lead0.title).replace(/\.\s*$/, ''), context: ctxOf(lead0), refs: [lead0.id],
     href: lead0.url || '', source: lead0.source || '', section: lead0.section || '' };

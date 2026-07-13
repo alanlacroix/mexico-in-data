@@ -1,0 +1,318 @@
+---
+layout: base.njk
+permalink: /charts-start-mockup.html
+title: "Charts mockup · The Mexico Brief"
+description: "A local design mockup for the Mexico Brief chart explorer."
+bodyClass: charts-start-mockup
+footerBlurb: "A free public briefing on Mexico: the official numbers, the developments behind them, and the original sources. Built by Alan Lacroix."
+noindex: true
+---
+{% raw %}
+<style>
+  body.charts-start-mockup{font-size:var(--fs-body)}
+  body.charts-start-mockup header.mast .mnav>a[href="/chart.html"]{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--green);text-decoration-thickness:2px;text-underline-offset:7px}
+  .charts-page{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+  .charts-hero{padding:31px 0 20px;max-width:760px}
+  .charts-hero h1{font-size:var(--fs-display);line-height:1.03;letter-spacing:-.025em;margin:7px 0 8px}
+  .charts-hero p{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:66ch}
+  .kicker,.section-k,.compare-note{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+
+  .question-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin-bottom:26px}
+  .question-nav button{border:0;background:var(--paper);color:var(--ink-2);font-family:var(--sans);font-size:var(--fs-small);text-align:left;padding:13px 15px;cursor:pointer;min-height:52px}
+  .question-nav button:hover{background:var(--paper-2)}
+  .question-nav button.active{background:var(--green-bg);color:var(--green-d);font-weight:600}
+
+  .view-head{border-top:2px solid var(--green);padding-top:13px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start}
+  .view-question{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .view-head h2{font-size:var(--fs-h2);line-height:1.2;margin:5px 0 7px;max-width:35ch}
+  .view-answer{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:72ch}
+  .view-answer b{color:var(--ink);font-weight:600}
+  .edit-link{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);border:1px solid var(--line-2);border-radius:8px;padding:9px 12px;white-space:nowrap;text-decoration:none}
+  .edit-link:hover{border-color:var(--green);text-decoration:none}
+
+  .controls{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin:17px 0 11px}
+  .ranges{display:flex;gap:6px}
+  .ranges button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--ink-2);background:var(--paper);border:1px solid var(--line-2);border-radius:7px;padding:8px 12px;min-width:44px;cursor:pointer}
+  .ranges button.active{background:var(--ink);border-color:var(--ink);color:#fff}
+  .compare-note{color:var(--mut);font-weight:400;letter-spacing:.03em;text-transform:none}
+
+  .workspace{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:start}
+  .plot-shell{border:1px solid var(--line-2);border-radius:4px;background:var(--paper);padding:14px 14px 10px;min-width:0}
+  .legend{display:flex;gap:9px 18px;flex-wrap:wrap;min-height:23px;margin:0 4px 7px}
+  .legend-item{display:inline-flex;align-items:center;gap:7px;font-size:var(--fs-meta);color:var(--ink-2);text-decoration:none}
+  a.legend-item:hover{color:var(--green-d);text-decoration:underline}
+  .legend-item i{width:17px;height:2px;display:inline-block}
+  .plot{min-height:338px}
+  .plot,.chart-wrap{position:relative}
+  .plot svg{display:block;width:100%;height:auto}
+  .plot .grid{stroke:var(--line);stroke-width:1}
+  .plot .target{fill:var(--green-bg)}
+  .plot .axis{font-family:var(--mono);fill:var(--mut)}
+  .plot .line{fill:none;stroke-width:1.9;vector-effect:non-scaling-stroke}
+  .plot .step{fill:none;stroke-width:1.9;vector-effect:non-scaling-stroke}
+  .plot .direct{font-family:var(--sans);font-weight:600}
+  .plot .crosshair{stroke:var(--mut);stroke-width:1;vector-effect:non-scaling-stroke}
+  .chart-tip{position:absolute;z-index:2;display:none;max-width:245px;background:var(--ink);color:#fff;border-radius:3px;padding:7px 9px;font-family:var(--mono);font-size:var(--fs-label);line-height:1.5;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+  .chart-tip.open{display:block}
+  .chart-tip b{font-weight:600;color:#fff}
+  .small-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:var(--fs-meta);color:var(--ink);font-weight:600;margin:5px 4px 0}
+  .small-title span:last-child{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);font-weight:400}
+  .plot-foot{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);line-height:1.55;border-top:1px solid var(--line);padding:9px 4px 0;margin-top:4px}
+
+  .reading{border-top:1px solid var(--line-2)}
+  .reading-title{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:600;padding:12px 0 8px}
+  .reading-row{padding:12px 0;border-top:1px solid var(--line)}
+  .reading-row:first-of-type{border-top:0}
+  .reading-k{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+  .reading-v{font-size:var(--fs-h3);line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:4px}
+  .reading-m{font-size:var(--fs-meta);line-height:1.4;color:var(--ink-2);margin-top:5px}
+  .reading-actions{display:grid;gap:7px;margin-top:12px}
+  .reading-actions button,.reading-actions a{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);background:var(--paper);border:1px solid var(--line-2);border-radius:7px;padding:9px 10px;text-align:left;cursor:pointer;text-decoration:none}
+  .reading-actions button:hover,.reading-actions a:hover{border-color:var(--green);text-decoration:none}
+
+  .explain{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:25px 0 0;border-top:1px solid var(--line);padding-top:16px}
+  .explain h3{font-size:var(--fs-body);margin:0 0 6px}
+  .explain p{font-size:var(--fs-small);line-height:1.5;color:var(--ink-2)}
+  details.method{margin-top:17px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  details.method summary{list-style:none;cursor:pointer;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);padding:12px 0}
+  details.method summary::-webkit-details-marker{display:none}
+  details.method summary::before{content:"▸ ";color:var(--mut)}
+  details.method[open] summary::before{content:"▾ "}
+  .method-body{font-family:var(--mono);font-size:var(--fs-label);line-height:1.7;color:var(--mut);padding:0 0 12px;max-width:90ch}
+  .method-body b{color:var(--ink)}
+  .method-body a{color:var(--green-d)}
+
+  .data-table{display:none;margin-top:14px;overflow-x:auto}
+  .data-table.open{display:block}
+  .data-table table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:var(--fs-label)}
+  .data-table th,.data-table td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  .data-table th:first-child,.data-table td:first-child{text-align:left}
+  .data-table th{color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
+
+  .catalog{margin-top:44px;border-top:2px solid var(--green);padding-top:13px}
+  .catalog-head{display:flex;align-items:baseline;justify-content:space-between;gap:15px;flex-wrap:wrap}
+  .catalog h2{font-size:var(--fs-h3);margin-top:4px}
+  .catalog p{font-size:var(--fs-small);color:var(--ink-2);margin-top:5px}
+  .catalog-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin-top:14px}
+  .catalog-group{background:var(--paper);padding:15px}
+  .catalog-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .catalog-list{font-size:var(--fs-meta);line-height:1.65;color:var(--ink-2);margin-top:6px}
+  .catalog-link{display:inline-block;font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);margin-top:8px}
+  .status{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin:16px 0 0;padding-top:12px;border-top:1px solid var(--line)}
+
+  @media(max-width:840px){
+    .question-nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .workspace{grid-template-columns:1fr}
+    .reading{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+    .reading-title{grid-column:1 / -1;background:var(--paper);padding:10px}
+    #readingRows{display:contents}
+    .reading-row{background:var(--paper);padding:10px;border:0}
+    .reading-actions{grid-column:1 / -1;grid-template-columns:repeat(3,1fr);background:var(--paper);padding:10px;margin:0}
+    .catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(max-width:560px){
+    .charts-hero{padding:25px 0 17px}
+    .question-nav button{padding:11px 12px;min-height:48px;font-size:var(--fs-meta)}
+    .view-head{grid-template-columns:1fr}
+    .edit-link{justify-self:start}
+    .plot-shell{padding:10px 8px 8px}
+    .plot{min-height:248px}
+    .workspace>div:first-child{display:contents}
+    .plot-shell{order:1}
+    .data-table{order:2}
+    .reading{order:3}
+    .explain{order:4}
+    details.method{order:5}
+    .reading{grid-template-columns:1fr}
+    .reading-title,.reading-actions{grid-column:auto}
+    .reading-row{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:baseline;border-top:1px solid var(--line)}
+    .reading-v{text-align:right;font-size:var(--fs-body)}
+    .reading-m{grid-column:1 / -1;margin-top:0}
+    .reading-actions{display:flex;gap:14px;flex-wrap:wrap}
+    .reading-actions button,.reading-actions a{border:0;padding:2px 0}
+    .explain{grid-template-columns:1fr;gap:17px}
+    .catalog-grid{grid-template-columns:1fr}
+  }
+</style>
+
+<div class="charts-page">
+  <section class="charts-hero">
+    <div class="kicker">Charts</div>
+    <h1>Compare the numbers.</h1>
+    <p>Start with a saved comparison, change the period, or open the full explorer to add a variable. Every line links to the source.</p>
+  </section>
+
+  <nav class="question-nav" aria-label="Saved chart questions">
+    <button type="button" class="active" data-view="inflation">Is inflation cooling?</button>
+    <button type="button" data-view="peso">Is the rate gap still helping the peso?</button>
+    <button type="button" data-view="demand">Are exports moving with US factories?</button>
+    <button type="button" data-view="wages">How much of the minimum-wage increase is real?</button>
+  </nav>
+
+  <section aria-live="polite">
+    <header class="view-head">
+      <div><div class="view-question" id="viewQuestion">Is inflation actually cooling?</div><h2 id="viewTitle">Headline inflation fell. Core is taking longer.</h2><p class="view-answer" id="viewAnswer">Loading the latest official readings…</p></div>
+      <a class="edit-link" id="editLink" href="/chart.html">Edit variables →</a>
+    </header>
+
+    <div class="controls">
+      <div class="ranges" role="group" aria-label="Time range"><button type="button" data-range="1Y">1Y</button><button type="button" class="active" data-range="3Y">3Y</button><button type="button" data-range="5Y">5Y</button><button type="button" data-range="MAX">Max</button></div>
+      <div class="compare-note" id="compareNote">Actual values · monthly</div>
+    </div>
+
+    <div class="workspace">
+      <div>
+        <div class="plot-shell"><div class="legend" id="legend"></div><div class="plot" id="plot"></div><div class="plot-foot" id="plotFoot"></div></div>
+        <div class="data-table" id="dataTable"></div>
+        <div class="explain"><div><h3>Why these belong together</h3><p id="whyText"></p></div><div><h3>Be careful with this</h3><p id="cannotText"></p></div></div>
+        <details class="method" id="methodDetails"><summary>Sources and method</summary><div class="method-body" id="methodBody"></div></details>
+      </div>
+      <aside class="reading" id="reading"><div class="reading-title">Where things stand</div><div id="readingRows"></div><div class="reading-actions"><button type="button" id="tableButton">View data</button><button type="button" id="csvButton">Download CSV</button><a id="sourceButton" href="/sources.html">All sources</a></div></aside>
+    </div>
+  </section>
+
+  <section class="catalog">
+    <div class="catalog-head"><div><div class="section-k">Explore</div><h2>More indicators</h2><p>Browse by subject or open the full explorer.</p></div><a class="edit-link" href="/chart.html">Open the full explorer →</a></div>
+    <div class="catalog-grid">
+      <div class="catalog-group"><div class="catalog-k">Peso &amp; prices</div><div class="catalog-list">Peso · Banxico and Fed rates · headline and core inflation · reserves</div><a class="catalog-link" href="/chart.html">Explore →</a></div>
+      <div class="catalog-group"><div class="catalog-k">Growth &amp; trade</div><div class="catalog-list">GDP · monthly activity · exports and imports · trade balance · US industry</div><a class="catalog-link" href="/chart.html">Explore →</a></div>
+      <div class="catalog-group"><div class="catalog-k">Jobs &amp; households</div><div class="catalog-list">Employment · wages · minimum wage · remittances · consumption</div><a class="catalog-link" href="/chart.html">Explore →</a></div>
+      <div class="catalog-group"><div class="catalog-k">Government &amp; energy</div><div class="catalog-list">Debt · deficit · Pemex · oil · electricity · gasoline</div><a class="catalog-link" href="/chart.html">Explore →</a></div>
+    </div>
+    <p class="status">Official data first. Derived series show their formula and inputs. The date is the observation date, not the time the page fetched it.</p>
+  </section>
+</div>
+
+<script type="module">
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const COLORS=['var(--ink)','var(--green)','var(--amber)'];
+const store={};
+const sourceIds=['banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-usdmxn-fix','fred-fedfunds','banxico-exports-total','fred-us-indpro','banxico-salario-minimo','banxico-inpc'];
+const failed=[];
+await Promise.all(sourceIds.map(async id=>{try{const r=await fetch('/data/series/'+id+'.json');if(!r.ok)throw new Error(String(r.status));const body=await r.json();if(!Array.isArray(body.data)||!body.data.length)throw new Error('empty');store[id]=body;}catch(e){failed.push(id);}}));
+
+const monthKey=d=>String(d).slice(0,7);
+function monthly(id,rule='last'){
+  const groups={}; for(const p of (store[id]?.data||[])){const k=monthKey(p.date);(groups[k]||=[]).push(p.value);}
+  return Object.keys(groups).sort().map(k=>{const a=groups[k];let value=rule==='avg'?a.reduce((x,y)=>x+y,0)/a.length:a[a.length-1];return{date:k+'-01',value};});
+}
+function map(a){const o={};a.forEach(p=>o[monthKey(p.date)]=p.value);return o;}
+function yoy(a){const m=map(a);return a.filter(p=>m[String(+p.date.slice(0,4)-1)+p.date.slice(4,7)]!=null).map(p=>{const old=m[String(+p.date.slice(0,4)-1)+p.date.slice(4,7)];return{date:p.date,value:(p.value-old)/Math.abs(old)*100};});}
+function align(series){let keys=series.length?series[0].pts.map(p=>monthKey(p.date)):[];const maps=series.map(s=>map(s.pts));keys=keys.filter(k=>maps.every(m=>m[k]!=null));return series.map((s,i)=>({...s,pts:keys.map(k=>({date:k+'-01',value:maps[i][k]}))}));}
+function rateGap(){const mx=monthly('banxico-tasa-objetivo','avg'),us=map(monthly('fred-fedfunds'));return mx.filter(p=>us[monthKey(p.date)]!=null).map(p=>({date:p.date,value:p.value-us[monthKey(p.date)]}));}
+function realMinimumWage(){const wage=monthly('banxico-salario-minimo'),cpi=map(monthly('banxico-inpc')),latestCpi=last(monthly('banxico-inpc'))?.value;return wage.filter(p=>cpi[monthKey(p.date)]!=null&&latestCpi).map(p=>({date:p.date,value:p.value*latestCpi/cpi[monthKey(p.date)]}));}
+function index100(a){const base=a[0]?.value;return base?a.map(p=>({date:p.date,value:p.value/base*100})):[];}
+const last=a=>a[a.length-1];
+const num=(v,n=1)=>Number(v).toFixed(n);
+const money=(v,n=1)=>'$'+Number(v).toFixed(n);
+const fmtDate=d=>new Date(d).toLocaleDateString('en-US',{month:'short',year:'numeric',timeZone:'UTC'});
+const sourceHref=id=>{const raw=store[id]?.meta?.sourceUrl||'/sources.html';const sid=/\/series\/([A-Za-z0-9._-]+)/.exec(raw)?.[1]||'';return sid&&raw.includes('banxico.org.mx')?`https://www.banxico.org.mx/AplBusquedasBM2/bsiewww.jsp?_page=1&_action=search&_lang=es&_userquery=${encodeURIComponent(sid)}`:raw;};
+const sourceName=id=>store[id]?.meta?.source||'Original source';
+const yearPrior=(pts,date)=>{const k=monthKey(date),target=String(+k.slice(0,4)-1)+k.slice(4);return pts.find(p=>monthKey(p.date)===target);};
+const arrow=v=>Math.abs(v)<.005?'→':v>0?'↑':'↓';
+
+const VIEWS={
+  inflation:{
+    question:'Is inflation actually cooling?',type:'overlay',range:'3Y',band:[2,4],
+    series:()=>[{name:'Headline inflation',pts:monthly('banxico-inflacion'),fmt:v=>num(v,2)+'%',axisFmt:v=>num(v,1)+'%',color:COLORS[0],href:sourceHref('banxico-inflacion'),source:sourceName('banxico-inflacion'),delta:'ppYear'},{name:'Core inflation',pts:monthly('banxico-inflacion-subyacente'),fmt:v=>num(v,2)+'%',axisFmt:v=>num(v,1)+'%',color:COLORS[1],href:sourceHref('banxico-inflacion-subyacente'),source:sourceName('banxico-inflacion-subyacente'),delta:'ppYear'},{name:'Policy rate',pts:monthly('banxico-tasa-objetivo'),fmt:v=>num(v,2)+'%',axisFmt:v=>num(v,1)+'%',color:COLORS[2],href:sourceHref('banxico-tasa-objetivo'),source:sourceName('banxico-tasa-objetivo'),delta:'ppYear',step:true}],
+    title:s=>{const h=last(s[0].pts).value,c=last(s[1].pts).value;if(h>=2&&h<=4&&c>4)return 'Headline inflation is inside the band. Core is not.';if(h>=2&&h<=4)return 'Headline and core inflation are inside the band.';return h>4?'Inflation is still above Banxico’s variability interval.':'Inflation is below Banxico’s variability interval.';},
+    answer:s=>{const h=last(s[0].pts),c=last(s[1].pts),hp=yearPrior(s[0].pts,h.date);const move=hp?`${h.value<hp.value?'down':'up'} from <b>${s[0].fmt(hp.value)}</b> a year ago`:'the latest official reading';return `Headline inflation is <b>${s[0].fmt(h.value)}</b>, ${move}. Core is <b>${s[1].fmt(c.value)}</b>. Core is the slower-moving test of whether the pressure has actually cleared.`;},
+    note:'Actual values · monthly',foot:'The shaded area is Banxico’s 3% target with a ±1-point variability interval. Lines begin where the current feed history begins.',
+    why:'Headline shows the prices households experience. Core strips out the most volatile prices. The policy rate shows how restrictive Banxico remains while prices adjust.',
+    cannot:'It cannot prove that the current policy rate caused inflation to fall. Food, energy, the peso and earlier policy decisions all matter, usually with a delay.',
+    method:()=>`Headline and core inflation are annual INPC changes from <b>INEGI / Banxico</b>. The policy rate is Banxico’s month-end target setting. <a href="${sourceHref('banxico-inflacion')}">Headline ↗</a> · <a href="${sourceHref('banxico-inflacion-subyacente')}">Core ↗</a> · <a href="${sourceHref('banxico-tasa-objetivo')}">Rate ↗</a>`,
+    link:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente,banxico-tasa-objetivo&r=3Y'
+  },
+  peso:{
+    question:'Is the rate gap still helping the peso?',type:'small',range:'1Y',
+    series:()=>[{name:'Peso',pts:monthly('banxico-usdmxn-fix','avg'),fmt:v=>num(v,2)+' MXN/USD',axisFmt:v=>num(v,1),color:COLORS[0],href:sourceHref('banxico-usdmxn-fix'),source:sourceName('banxico-usdmxn-fix'),delta:'pesoYear'},{name:'Mexico–US rate gap',pts:rateGap(),fmt:v=>num(v,2)+' pp',axisFmt:v=>num(v,1)+'pp',color:COLORS[1],href:'#methodDetails',source:'Formula + both inputs',delta:'ppAvailable'}],
+    title:s=>{const p=last(s[0].pts),py=yearPrior(s[0].pts,p.date);if(!py)return `The peso is ${s[0].fmt(p.value)}.`;const change=(py.value-p.value)/py.value*100;return `The peso is ${num(Math.abs(change),1)}% ${change>=0?'stronger':'weaker'} than a year ago.`;},
+    answer:s=>{const p=last(s[0].pts),py=yearPrior(s[0].pts,p.date),g=last(s[1].pts),gp=yearPrior(s[1].pts,g.date)||s[1].pts[0];const pText=py?`The latest monthly average is <b>${s[0].fmt(p.value)}</b>, ${num(Math.abs((py.value-p.value)/py.value*100),1)}% ${p.value<=py.value?'stronger':'weaker'} than ${fmtDate(py.date)}`:`The latest monthly average is <b>${s[0].fmt(p.value)}</b>`;const gd=g.value-gp.value;return `${pText}. The rate gap is <b>${s[1].fmt(g.value)}</b>, ${Math.abs(gd)<.05?'about unchanged':`${gd<0?'narrower':'wider'} than ${fmtDate(gp.date)}`}. So rates are part of the answer, not the whole answer.`;},
+    note:'Same dates · separate scales',foot:'Monthly averages · lower MXN/USD means a stronger peso. The latest month may be partial.',
+    why:'Higher Mexican rates can make holding pesos more attractive. Putting the rate gap next to the exchange rate helps show when that explanation fits and when it does not.',
+    cannot:'It cannot isolate the effect of rates from the broad dollar, global risk, trade flows or political expectations.',
+    method:()=>`The peso is the monthly average of Banxico’s daily FIX rate. The gap uses monthly averages for both the Banxico target rate and effective Fed funds rate. <a href="${sourceHref('banxico-usdmxn-fix')}">Peso ↗</a> · <a href="${sourceHref('banxico-tasa-objetivo')}">Banxico rate ↗</a> · <a href="${sourceHref('fred-fedfunds')}">Fed funds ↗</a>`,
+    link:'/chart.html?v=banxico-usdmxn-fix,d-rate-gap&r=1Y'
+  },
+  demand:{
+    question:'Are Mexican exports moving with US factories?',type:'overlay',range:'3Y',
+    series:()=>[{name:'Mexico exports',pts:yoy(monthly('banxico-exports-total')),fmt:v=>(v>=0?'+':'')+num(v,1)+'% YoY',axisFmt:v=>num(v,0)+'%',color:COLORS[0],href:sourceHref('banxico-exports-total'),source:sourceName('banxico-exports-total'),delta:'ppPrior'},{name:'US industrial output',pts:yoy(monthly('fred-us-indpro')),fmt:v=>(v>=0?'+':'')+num(v,1)+'% YoY',axisFmt:v=>num(v,0)+'%',color:COLORS[1],href:sourceHref('fred-us-indpro'),source:sourceName('fred-us-indpro'),delta:'ppPrior'}],
+    title:s=>`Exports are ${s[0].fmt(last(s[0].pts).value)}. US industry is ${s[1].fmt(last(s[1].pts).value)}.`,
+    answer:s=>`Mexican merchandise exports are running at <b>${s[0].fmt(last(s[0].pts).value)}</b>; US industrial output is at <b>${s[1].fmt(last(s[1].pts).value)}</b>. This is a useful rough check on the relationship. It is not a measure of US demand by itself.`,
+    note:'Year-over-year change · monthly',foot:'Exports are nominal US-dollar values. Both lines show annual growth; dates may differ by one release month.',
+    why:'US factories buy Mexican intermediate goods. Comparing annual growth removes much of the seasonal swing and shows when the two series move together—and when they do not.',
+    cannot:'It cannot prove that US production caused an export move or account for prices, inventories, autos and demand outside the United States.',
+    method:()=>`Mexican merchandise exports are nominal values from <b>Banxico / INEGI</b>. US industrial production is from the <b>Federal Reserve via FRED</b>. Both are transformed into year-over-year growth. <a href="${sourceHref('banxico-exports-total')}">Exports ↗</a> · <a href="${sourceHref('fred-us-indpro')}">US industry ↗</a>`,
+    link:'/chart.html?v=d-exports-yoy,d-indpro-yoy&r=3Y'
+  },
+  wages:{
+    question:'How much of the minimum-wage increase is real?',type:'overlay',range:'MAX',
+    series:()=>[{name:'Cash minimum wage',pts:index100(monthly('banxico-salario-minimo')),fmt:v=>num(v,0),readingFmt:v=>'+'+num(v-100,1)+'%',axisFmt:v=>num(v,0),color:COLORS[0],href:sourceHref('banxico-salario-minimo'),source:sourceName('banxico-salario-minimo'),delta:'sinceStart'},{name:'After inflation',pts:index100(realMinimumWage()),fmt:v=>num(v,0),readingFmt:v=>'+'+num(v-100,1)+'%',axisFmt:v=>num(v,0),color:COLORS[1],href:'#methodDetails',source:'Formula + both inputs',delta:'sinceStart'}],
+    title:s=>`After inflation, the minimum wage is up ${num(last(s[1].pts).value-100,0)}% since ${fmtDate(s[1].pts[0].date)}.`,
+    answer:s=>{const cash=last(s[0].pts).value-100,real=last(s[1].pts).value-100,wage=last(monthly('banxico-salario-minimo')).value;return `The general minimum wage is <b>${money(wage,2)} a day</b>. In cash terms it is up <b>${num(cash,1)}%</b> since ${fmtDate(s[0].pts[0].date)}. After inflation, the increase is still <b>${num(real,1)}%</b>.`;},
+    note:'Index · first month = 100',foot:'Both lines start at 100. “After inflation” is expressed in the latest month’s pesos.',
+    why:'The announced wage tells you how many pesos someone receives. Deflating it by the official price index shows how much more those pesos can actually buy.',
+    cannot:'This is the statutory general minimum wage, not the wage earned by the typical worker. It also does not capture regional or informal-work differences.',
+    method:()=>`The general minimum wage is from <b>Banxico / Conasami</b>. The real line adjusts it with the official INPC and converts both series to an index where the first shared month equals 100. <a href="${sourceHref('banxico-salario-minimo')}">Minimum wage ↗</a> · <a href="${sourceHref('banxico-inpc')}">INPC ↗</a>`,
+    link:'/chart.html?v=banxico-salario-minimo,d-min-wage-real&r=MAX'
+  }
+};
+
+const initialParams=new URLSearchParams(location.search),initialView=VIEWS[initialParams.get('q')]?initialParams.get('q'):'inflation',initialRange=['1Y','3Y','5Y','MAX'].includes(initialParams.get('r'))?initialParams.get('r'):VIEWS[initialView].range;
+let state={view:initialView,range:initialRange,shown:[]};
+function displaySeries(){
+  const raw=VIEWS[state.view].series();if(state.range==='MAX')return raw;
+  const months={"1Y":12,"3Y":36,"5Y":60}[state.range];const latest=Math.max(...raw.flatMap(s=>s.pts.map(p=>+new Date(p.date))));const cutoff=new Date(latest);cutoff.setUTCMonth(cutoff.getUTCMonth()-months);
+  return raw.map(s=>({...s,pts:s.pts.filter(p=>+new Date(p.date)>=+cutoff)}));
+}
+function linePath(pts,X,Y,step){let d='';pts.forEach((p,i)=>{const x=X(new Date(p.date)),y=Y(p.value);if(!i)d=`M${x} ${y}`;else if(step){const px=X(new Date(pts[i-1].date));d+=` L${x} ${Y(pts[i-1].value)} L${x} ${y}`;}else d+=` L${x} ${y}`;});return d;}
+function drawOne(series,{height=330,mobileHeight=245,band=null,chartIndex='all'}={}){
+  const host=$('#plot'),mobile=host.clientWidth<560,W=Math.max(300,Math.round(host.clientWidth)),H=mobile?mobileHeight:height,pl=mobile?39:46,pr=mobile?12:18,pt=14,pb=30;
+  const vals=series.flatMap(s=>s.pts.map(p=>p.value));let lo=Math.min(...vals),hi=Math.max(...vals);if(band){lo=Math.min(lo,band[0]);hi=Math.max(hi,band[1]);}const pad=(hi-lo||1)*.1;lo-=pad;hi+=pad;
+  const times=series.flatMap(s=>s.pts.map(p=>+new Date(p.date))),t0=Math.min(...times),t1=Math.max(...times),iw=W-pl-pr,ih=H-pt-pb;
+  const X=d=>pl+((+d-t0)/(t1-t0||1))*iw,Y=v=>pt+ih-(v-lo)/(hi-lo||1)*ih;
+  let g=''; if(band){const y1=Y(band[1]),y0=Y(band[0]);g+=`<rect class="target" x="${pl}" y="${y1}" width="${iw}" height="${y0-y1}"></rect>`;}
+  for(let i=0;i<4;i++){const v=lo+(hi-lo)*i/3,y=Y(v);g+=`<line class="grid" x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}"></line><text class="axis" x="${pl-7}" y="${y+4}" text-anchor="end" font-size="11">${series[0].axisFmt?.(v)||num(v,1)}</text>`;}
+  const ref=series.reduce((a,s)=>s.pts.length>a.length?s.pts:a,[]),xi=mobile?[0,ref.length-1]:[0,Math.floor(ref.length/2),ref.length-1];[...new Set(xi)].forEach((j,i,a)=>{const x=X(new Date(ref[j].date));g+=`<text class="axis" x="${x}" y="${H-7}" text-anchor="${i===0?'start':i===a.length-1?'end':'middle'}" font-size="11">${fmtDate(ref[j].date)}</text>`;});
+  series.forEach(s=>{g+=`<path class="${s.step?'step':'line'}" stroke="${s.color}" d="${linePath(s.pts,X,Y,s.step)}"></path>`;});
+  g+=`<line class="crosshair" x1="0" x2="0" y1="${pt}" y2="${H-pb}" visibility="hidden"></line>`;
+  return `<svg class="chart-svg" data-chart-index="${chartIndex}" data-pl="${pl}" data-pr="${pr}" data-pt="${pt}" data-pb="${pb}" data-t0="${t0}" data-t1="${t1}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${series.map(s=>s.name).join(' and ')} over time"><title>${series.map(s=>s.name).join(' and ')}</title><desc>Move across the chart to inspect all series at the same month.</desc>${g}</svg>`;
+}
+function drawSmall(series){return series.map((s,i)=>`<div class="chart-wrap"><div class="small-title"><span>${s.name}</span><span>${s.fmt(last(s.pts).value)}</span></div>${drawOne([s],{height:155,mobileHeight:145,chartIndex:i})}<div class="chart-tip"></div></div>`).join('');}
+function linkAttrs(href){return href.startsWith('#')?'':' target="_blank" rel="noopener"';}
+function linkArrow(href){return href.startsWith('#')?'→':'↗';}
+function legend(series){return series.map(s=>`<a class="legend-item" href="${s.href}"${linkAttrs(s.href)}><i style="background:${s.color}"></i>${s.name} ${linkArrow(s.href)}</a>`).join('');}
+function deltaText(s){
+  const now=last(s.pts);if(s.delta==='sinceStart')return `Since ${fmtDate(s.pts[0].date)}`;
+  let prev=s.delta?.includes('Year')?yearPrior(s.pts,now.date):null;if(!prev&&s.delta==='ppAvailable')prev=s.pts[0];if(!prev)prev=s.pts[s.pts.length-2];if(!prev)return 'No earlier observation in this view';
+  if(s.delta==='pesoYear'){const pct=(prev.value-now.value)/prev.value*100;return `${pct>=0?'↑':'↓'} ${num(Math.abs(pct),1)}% ${pct>=0?'stronger':'weaker'} vs ${fmtDate(prev.date)}`;}
+  const d=now.value-prev.value;if(s.delta==='ppYear'||s.delta==='ppAvailable'||s.delta==='ppPrior')return `${arrow(d)} ${num(Math.abs(d),2)} pp vs ${fmtDate(prev.date)}`;
+  return `${arrow(d)} ${num(Math.abs(d),1)} vs ${fmtDate(prev.date)}`;
+}
+function readings(series){return series.map(s=>{const p=last(s.pts);return `<div class="reading-row"><div class="reading-k">${s.name}</div><div class="reading-v">${s.readingFmt?.(p.value)||s.fmt(p.value)}</div><div class="reading-m">${deltaText(s)}<br><a href="${s.href}"${linkAttrs(s.href)}>${s.source} ${linkArrow(s.href)}</a> · ${fmtDate(p.date)}</div></div>`;}).join('');}
+function unionKeys(series){return [...new Set(series.flatMap(s=>s.pts.map(p=>monthKey(p.date))))].sort();}
+function table(series){const maps=series.map(s=>map(s.pts)),keys=unionKeys(series);return `<table><thead><tr><th>Period</th>${series.map(s=>`<th>${s.name}</th>`).join('')}</tr></thead><tbody>${keys.slice().reverse().slice(0,18).map(k=>`<tr><td>${fmtDate(k+'-01')}</td>${series.map((s,i)=>`<td>${maps[i][k]==null?'—':s.fmt(maps[i][k])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;}
+function bindHovers(series,type){
+  $$('.chart-svg').forEach(svg=>{const idx=svg.dataset.chartIndex,shown=idx==='all'?series:[series[Number(idx)]],wrap=svg.closest('.chart-wrap')||$('#plot'),tip=wrap.querySelector('.chart-tip')||$('#plot').appendChild(Object.assign(document.createElement('div'),{className:'chart-tip'})),cross=svg.querySelector('.crosshair'),keys=unionKeys(shown),vb=svg.viewBox.baseVal,pl=+svg.dataset.pl,pr=+svg.dataset.pr,t0=+svg.dataset.t0,t1=+svg.dataset.t1;
+    const inspect=e=>{const rect=svg.getBoundingClientRect(),xSvg=(e.clientX-rect.left)/rect.width*vb.width,clamped=Math.max(pl,Math.min(vb.width-pr,xSvg)),target=t0+(clamped-pl)/(vb.width-pl-pr)*(t1-t0),key=keys.reduce((best,k)=>Math.abs(+new Date(k+'-01')-target)<Math.abs(+new Date(best+'-01')-target)?k:best,keys[0]),x=pl+(+new Date(key+'-01')-t0)/(t1-t0||1)*(vb.width-pl-pr),maps=shown.map(s=>map(s.pts));cross.setAttribute('x1',x);cross.setAttribute('x2',x);cross.setAttribute('visibility','visible');tip.innerHTML=`<b>${fmtDate(key+'-01')}</b><br>${shown.map((s,i)=>`${s.name}: ${maps[i][key]==null?'—':s.fmt(maps[i][key])}`).join('<br>')}`;tip.classList.add('open');const left=(x/vb.width)*rect.width;tip.style.left=Math.max(4,Math.min(rect.width-250,left+8))+'px';tip.style.top='8px';};
+    svg.addEventListener('pointermove',inspect);svg.addEventListener('click',inspect);svg.addEventListener('pointerleave',()=>{if(!matchMedia('(pointer:coarse)').matches){cross.setAttribute('visibility','hidden');tip.classList.remove('open');}});
+  });
+}
+function render(){
+  try{const v=VIEWS[state.view],series=displaySeries();if(series.some(s=>!s.pts.length))throw new Error('one or more feeds have no observations in this period');state.shown=series;
+  $('#viewQuestion').textContent=v.question;$('#viewTitle').textContent=typeof v.title==='function'?v.title(series):v.title;$('#viewAnswer').innerHTML=v.answer(series);$('#compareNote').textContent=v.note;$('#plotFoot').textContent=v.foot;$('#whyText').textContent=v.why;$('#cannotText').textContent=v.cannot;$('#methodBody').innerHTML=typeof v.method==='function'?v.method():v.method;$('#editLink').href=v.link.replace(/r=[^&]+/,'r='+state.range);
+  $('#legend').innerHTML=legend(series);$('#plot').innerHTML=v.type==='small'?drawSmall(series):`<div class="chart-wrap">${drawOne(series,{band:v.band})}<div class="chart-tip"></div></div>`;$('#readingRows').innerHTML=readings(series);$('#dataTable').innerHTML=table(series);bindHovers(series,v.type);
+  $$('[data-view]').forEach(b=>{const on=b.dataset.view===state.view;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});$$('[data-range]').forEach(b=>{const on=b.dataset.range===state.range;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
+  history.replaceState(null,'',`${location.pathname}?q=${state.view}&r=${state.range}`);
+  }catch(e){$('#viewTitle').textContent='This chart is unavailable.';$('#viewAnswer').textContent=`The data did not load cleanly (${e.message}). The chart stays blank rather than showing an incomplete comparison.`;$('#legend').innerHTML='';$('#plot').innerHTML='';$('#readingRows').innerHTML='';}
+}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;state.range=VIEWS[state.view].range;$('#dataTable').classList.remove('open');$('#tableButton').textContent='View data';render();}));
+document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',()=>{state.range=b.dataset.range;render();}));
+$('#tableButton').addEventListener('click',()=>{const on=$('#dataTable').classList.toggle('open');$('#tableButton').textContent=on?'Hide data':'View data';});
+$('#csvButton').addEventListener('click',()=>{const s=state.shown,maps=s.map(x=>map(x.pts)),keys=unionKeys(s),rows=[['period',...s.map(x=>x.name)].join(','),...keys.map(k=>[k,...maps.map(m=>m[k]??'')].join(','))].join('\n'),url=URL.createObjectURL(new Blob([rows],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download='mexico-brief-'+state.view+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),0);});
+document.addEventListener('click',e=>{if(e.target.closest('a[href="#methodDetails"]'))$('#methodDetails').open=true;});
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(render,160)});
+render();
+</script>
+{% endraw %}

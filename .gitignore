@@ -8,9 +8,15 @@ _site/
 # Secrets — free API tokens live here locally, never in the repo (CI uses secrets)
 pipeline/.env
 
-# Pipeline run artifacts (regenerated each run)
+# Pipeline run artifacts and local source downloads (regenerated each run)
 pipeline/alerts.json
 pipeline/.lastgood/
+tmp/
+
+# Local environment files. Keep examples, never real values.
+.env
+.env.*
+!.env.example
 
 # Geo-epoch RAW reference scratch (large, regenerable). The FROZEN, human-reviewed
 # artifacts that the runtime depends on ARE committed:
@@ -22,3 +28,10 @@ pipeline/reference/
 # OS
 .DS_Store
 private/
+
+# Local authoring tools, generated email previews, and dated data snapshots.
+# Keep these on this computer; publish only reviewed site and pipeline code.
+.claude/
+data/email/
+data/source-snapshots/
+email-preview.html
