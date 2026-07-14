@@ -1,5 +1,27 @@
 # The Mexico Brief — voice (the law)
 
+## We don't ship slop here
+
+AI output is cheap to create and expensive to read. The burden of reviewing,
+checking, simplifying, and humanizing it belongs to the writer, never the reader.
+No page ships because it is technically complete. It ships only when Alan can read
+it once, understand it, and believe a person chose every sentence.
+
+This rule wins every style dispute. Prefer an ordinary sentence that explains the
+point over a polished sentence that performs intelligence. Delete manufactured
+contrast, fake reveals, clipped drama, symmetrical slogans, and conclusions that
+arrive before the explanation. In particular, ban constructions such as:
+
+- “X improved. Y did not.”
+- “X is not just A. It is B.”
+- “The real story is...”
+- “One thing is easy to miss...”
+- “That looks good until...”
+- “The hard part is...”
+
+The standard is not “does this avoid a banned phrase?” The standard is “would Alan
+actually say this, and does it make the subject easier to understand?”
+
 The canonical writing standard for the site and the weekly email. Rewrite every line
 against this. Locked 2026-07-09 (data-layer register, from Atlas / CIA Factbook / OWID
 / Pew / Wikipedia samples). Re-formed 2026-07-12 (Fable ruling): Alan's "curious
