@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-13T21:29:08.851Z",
-  "runId": "20260713212908",
+  "generatedAt": "2026-07-14T03:30:45.802Z",
+  "runId": "20260714033045",
   "geoEpoch": {
     "epoch": "mg-2020",
     "source": "INEGI Marco Geoestadístico",
@@ -8,13 +8,22 @@
     "count": 2478
   },
   "summary": {
-    "ok": 44,
+    "ok": 43,
     "flagged": 8,
-    "failed": 0,
+    "failed": 1,
     "skipped": 1,
     "darkSources": []
   },
-  "alerts": [],
+  "alerts": [
+    {
+      "id": "se-ied",
+      "source": "Secretaría de Economía (RNIE)",
+      "metric": "fdi",
+      "severity": "error",
+      "message": "IED: official summary workbook link not found",
+      "at": "2026-07-14T03:30:45.802Z"
+    }
+  ],
   "reconciliation": [],
   "sources": [
     {
@@ -31,12 +40,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 18,
       "file": "data/series/banxico-pib-crecimiento.json",
-      "finishedAt": "2026-07-13T21:29:09.618Z"
+      "finishedAt": "2026-07-14T03:30:46.365Z"
     },
     {
       "id": "banxico-igae",
@@ -52,12 +61,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-04-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 57,
       "file": "data/series/banxico-igae.json",
-      "finishedAt": "2026-07-13T21:29:09.836Z"
+      "finishedAt": "2026-07-14T03:30:46.492Z"
     },
     {
       "id": "banxico-inflacion-subyacente",
@@ -73,12 +82,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 59,
       "file": "data/series/banxico-inflacion-subyacente.json",
-      "finishedAt": "2026-07-13T21:29:09.993Z"
+      "finishedAt": "2026-07-14T03:30:46.604Z"
     },
     {
       "id": "banxico-salario-minimo",
@@ -94,12 +103,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 70,
       "file": "data/series/banxico-salario-minimo.json",
-      "finishedAt": "2026-07-13T21:29:10.150Z"
+      "finishedAt": "2026-07-14T03:30:46.723Z"
     },
     {
       "id": "banxico-tasa-objetivo",
@@ -115,12 +124,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
-      "vintage": "2026-07-13",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
+      "vintage": "2026-07-14",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 365,
       "file": "data/series/banxico-tasa-objetivo.json",
-      "finishedAt": "2026-07-13T21:29:10.318Z"
+      "finishedAt": "2026-07-14T03:30:46.868Z"
     },
     {
       "id": "banxico-usdmxn-fix",
@@ -136,12 +145,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-07-13",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 251,
       "file": "data/series/banxico-usdmxn-fix.json",
-      "finishedAt": "2026-07-13T21:29:10.492Z"
+      "finishedAt": "2026-07-14T03:30:46.997Z"
     },
     {
       "id": "banxico-reservas",
@@ -157,12 +166,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-07-03",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 51,
       "file": "data/series/banxico-reservas.json",
-      "finishedAt": "2026-07-13T21:29:10.658Z"
+      "finishedAt": "2026-07-14T03:30:47.115Z"
     },
     {
       "id": "banxico-remesas",
@@ -178,12 +187,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 10,
       "file": "data/series/banxico-remesas.json",
-      "finishedAt": "2026-07-13T21:29:10.817Z"
+      "finishedAt": "2026-07-14T03:30:47.252Z"
     },
     {
       "id": "banxico-spei-operaciones",
@@ -199,12 +208,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 11,
       "file": "data/series/banxico-spei-operaciones.json",
-      "finishedAt": "2026-07-13T21:29:11.006Z"
+      "finishedAt": "2026-07-14T03:30:47.628Z"
     },
     {
       "id": "banxico-spei-monto",
@@ -220,12 +229,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 11,
       "file": "data/series/banxico-spei-monto.json",
-      "finishedAt": "2026-07-13T21:29:11.204Z"
+      "finishedAt": "2026-07-14T03:30:47.759Z"
     },
     {
       "id": "banxico-tpv-debito-ops",
@@ -241,12 +250,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 22,
       "file": "data/series/banxico-tpv-debito-ops.json",
-      "finishedAt": "2026-07-13T21:29:11.411Z"
+      "finishedAt": "2026-07-14T03:30:47.895Z"
     },
     {
       "id": "banxico-tpv-debito-monto",
@@ -264,12 +273,12 @@
       "flags": [
         "series_jump_2026-01-01_81pct"
       ],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 22,
       "file": "data/series/banxico-tpv-debito-monto.json",
-      "finishedAt": "2026-07-13T21:29:11.613Z"
+      "finishedAt": "2026-07-14T03:30:48.025Z"
     },
     {
       "id": "banxico-cajeros-ops",
@@ -285,12 +294,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 22,
       "file": "data/series/banxico-cajeros-ops.json",
-      "finishedAt": "2026-07-13T21:29:11.819Z"
+      "finishedAt": "2026-07-14T03:30:48.138Z"
     },
     {
       "id": "banxico-cajeros-monto",
@@ -306,12 +315,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 22,
       "file": "data/series/banxico-cajeros-monto.json",
-      "finishedAt": "2026-07-13T21:29:12.000Z"
+      "finishedAt": "2026-07-14T03:30:48.250Z"
     },
     {
       "id": "banxico-tpv-credito-ops",
@@ -327,12 +336,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 22,
       "file": "data/series/banxico-tpv-credito-ops.json",
-      "finishedAt": "2026-07-13T21:29:12.230Z"
+      "finishedAt": "2026-07-14T03:30:48.380Z"
     },
     {
       "id": "banxico-tpv-credito-monto",
@@ -348,12 +357,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 22,
       "file": "data/series/banxico-tpv-credito-monto.json",
-      "finishedAt": "2026-07-13T21:29:12.413Z"
+      "finishedAt": "2026-07-14T03:30:48.513Z"
     },
     {
       "id": "banxico-ecommerce-ops",
@@ -369,12 +378,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2025-10-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 21,
       "file": "data/series/banxico-ecommerce-ops.json",
-      "finishedAt": "2026-07-13T21:29:12.596Z"
+      "finishedAt": "2026-07-14T03:30:48.672Z"
     },
     {
       "id": "banxico-ecommerce-monto",
@@ -390,12 +399,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2025-10-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 21,
       "file": "data/series/banxico-ecommerce-monto.json",
-      "finishedAt": "2026-07-13T21:29:12.766Z"
+      "finishedAt": "2026-07-14T03:30:48.801Z"
     },
     {
       "id": "banxico-tarjetas-credito",
@@ -411,12 +420,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 22,
       "file": "data/series/banxico-tarjetas-credito.json",
-      "finishedAt": "2026-07-13T21:29:12.919Z"
+      "finishedAt": "2026-07-14T03:30:48.922Z"
     },
     {
       "id": "banxico-tarjetas-debito",
@@ -432,12 +441,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-01-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 22,
       "file": "data/series/banxico-tarjetas-debito.json",
-      "finishedAt": "2026-07-13T21:29:13.102Z"
+      "finishedAt": "2026-07-14T03:30:49.060Z"
     },
     {
       "id": "banxico-consumo-privado",
@@ -453,12 +462,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-04-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 69,
       "file": "data/series/banxico-consumo-privado.json",
-      "finishedAt": "2026-07-13T21:29:13.302Z"
+      "finishedAt": "2026-07-14T03:30:49.177Z"
     },
     {
       "id": "banxico-remesas-electronicas",
@@ -474,12 +483,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 10,
       "file": "data/series/banxico-remesas-electronicas.json",
-      "finishedAt": "2026-07-13T21:29:13.459Z"
+      "finishedAt": "2026-07-14T03:30:49.287Z"
     },
     {
       "id": "banxico-circulante",
@@ -495,12 +504,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 71,
       "file": "data/series/banxico-circulante.json",
-      "finishedAt": "2026-07-13T21:29:13.782Z"
+      "finishedAt": "2026-07-14T03:30:49.401Z"
     },
     {
       "id": "banxico-codi-operaciones",
@@ -516,12 +525,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 23,
       "file": "data/series/banxico-codi-operaciones.json",
-      "finishedAt": "2026-07-13T21:29:14.060Z"
+      "finishedAt": "2026-07-14T03:30:49.520Z"
     },
     {
       "id": "banxico-exports-total",
@@ -539,12 +548,12 @@
       "flags": [
         "series_jump_2020-06-01_82pct"
       ],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 322,
       "file": "data/series/banxico-exports-total.json",
-      "finishedAt": "2026-07-13T21:29:14.232Z"
+      "finishedAt": "2026-07-14T03:30:49.631Z"
     },
     {
       "id": "banxico-imports-total",
@@ -560,12 +569,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 322,
       "file": "data/series/banxico-imports-total.json",
-      "finishedAt": "2026-07-13T21:29:14.386Z"
+      "finishedAt": "2026-07-14T03:30:49.746Z"
     },
     {
       "id": "banxico-trade-balance",
@@ -583,12 +592,12 @@
       "flags": [
         "series_jump_2025-08-01_11544pct"
       ],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 34,
       "file": "data/series/banxico-trade-balance.json",
-      "finishedAt": "2026-07-13T21:29:14.544Z"
+      "finishedAt": "2026-07-14T03:30:49.857Z"
     },
     {
       "id": "banxico-exports-nonoil",
@@ -604,12 +613,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 34,
       "file": "data/series/banxico-exports-nonoil.json",
-      "finishedAt": "2026-07-13T21:29:14.709Z"
+      "finishedAt": "2026-07-14T03:30:49.970Z"
     },
     {
       "id": "banxico-exports-oil",
@@ -625,12 +634,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 34,
       "file": "data/series/banxico-exports-oil.json",
-      "finishedAt": "2026-07-13T21:29:14.871Z"
+      "finishedAt": "2026-07-14T03:30:50.083Z"
     },
     {
       "id": "banxico-exports-manufactures",
@@ -646,12 +655,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 34,
       "file": "data/series/banxico-exports-manufactures.json",
-      "finishedAt": "2026-07-13T21:29:15.076Z"
+      "finishedAt": "2026-07-14T03:30:50.193Z"
     },
     {
       "id": "banxico-imports-consumer",
@@ -667,12 +676,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 322,
       "file": "data/series/banxico-imports-consumer.json",
-      "finishedAt": "2026-07-13T21:29:15.235Z"
+      "finishedAt": "2026-07-14T03:30:50.303Z"
     },
     {
       "id": "banxico-imports-intermediate",
@@ -690,12 +699,12 @@
       "flags": [
         "series_jump_2021-03-01_40pct"
       ],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 322,
       "file": "data/series/banxico-imports-intermediate.json",
-      "finishedAt": "2026-07-13T21:29:15.410Z"
+      "finishedAt": "2026-07-14T03:30:50.427Z"
     },
     {
       "id": "banxico-imports-capital",
@@ -711,12 +720,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 322,
       "file": "data/series/banxico-imports-capital.json",
-      "finishedAt": "2026-07-13T21:29:15.572Z"
+      "finishedAt": "2026-07-14T03:30:50.540Z"
     },
     {
       "id": "banxico-inflacion",
@@ -732,12 +741,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 23,
       "file": "data/series/banxico-inflacion.json",
-      "finishedAt": "2026-07-13T21:29:15.756Z"
+      "finishedAt": "2026-07-14T03:30:50.652Z"
     },
     {
       "id": "banxico-inpc",
@@ -753,12 +762,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 143,
       "file": "data/series/banxico-inpc.json",
-      "finishedAt": "2026-07-13T21:29:15.952Z"
+      "finishedAt": "2026-07-14T03:30:50.763Z"
     },
     {
       "id": "coneval-pobreza",
@@ -774,16 +783,16 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2020",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 2466,
       "file": "data/layers/coneval-pobreza.json",
       "coverage": {
         "covered": 2466,
         "universe": 2478
       },
-      "finishedAt": "2026-07-13T21:29:16.963Z"
+      "finishedAt": "2026-07-14T03:30:51.443Z"
     },
     {
       "id": "cre-gasolina-regular",
@@ -799,12 +808,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
-      "vintage": "2026-07-13",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
-      "rowCount": 5,
+      "startedAt": "2026-07-14T03:30:45.802Z",
+      "vintage": "2026-07-14",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
+      "rowCount": 6,
       "file": "data/series/cre-gasolina-regular.json",
-      "finishedAt": "2026-07-13T21:29:17.633Z"
+      "finishedAt": "2026-07-14T03:30:51.821Z"
     },
     {
       "id": "cre-gasolina-premium",
@@ -820,12 +829,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
-      "vintage": "2026-07-13",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
-      "rowCount": 5,
+      "startedAt": "2026-07-14T03:30:45.802Z",
+      "vintage": "2026-07-14",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
+      "rowCount": 6,
       "file": "data/series/cre-gasolina-premium.json",
-      "finishedAt": "2026-07-13T21:29:18.255Z"
+      "finishedAt": "2026-07-14T03:30:51.995Z"
     },
     {
       "id": "cre-diesel",
@@ -841,12 +850,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
-      "vintage": "2026-07-13",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
-      "rowCount": 5,
+      "startedAt": "2026-07-14T03:30:45.802Z",
+      "vintage": "2026-07-14",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
+      "rowCount": 6,
       "file": "data/series/cre-diesel.json",
-      "finishedAt": "2026-07-13T21:29:18.484Z"
+      "finishedAt": "2026-07-14T03:30:52.154Z"
     },
     {
       "id": "se-ied",
@@ -860,14 +869,14 @@
       "cadence": "quarterly",
       "freshnessGraceDays": null,
       "canonicalSource": true,
-      "status": "ok",
+      "status": "failed",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
-      "vintage": "2026-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
-      "rowCount": 109,
-      "file": "data/series/se-ied.json",
-      "finishedAt": "2026-07-13T21:29:19.014Z"
+      "startedAt": "2026-07-14T03:30:45.802Z",
+      "hard": false,
+      "message": "IED: official summary workbook link not found",
+      "servingVintage": "2026-01",
+      "stale": false,
+      "finishedAt": "2026-07-14T03:30:52.339Z"
     },
     {
       "id": "fred-ust10",
@@ -883,12 +892,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-07-10",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 2881,
       "file": "data/series/fred-ust10.json",
-      "finishedAt": "2026-07-13T21:29:19.317Z"
+      "finishedAt": "2026-07-14T03:30:52.726Z"
     },
     {
       "id": "fred-ust2",
@@ -904,12 +913,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-07-10",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 2881,
       "file": "data/series/fred-ust2.json",
-      "finishedAt": "2026-07-13T21:29:19.510Z"
+      "finishedAt": "2026-07-14T03:30:52.910Z"
     },
     {
       "id": "fred-fedfunds",
@@ -925,12 +934,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 138,
       "file": "data/series/fred-fedfunds.json",
-      "finishedAt": "2026-07-13T21:29:19.719Z"
+      "finishedAt": "2026-07-14T03:30:53.072Z"
     },
     {
       "id": "fred-usd-broad",
@@ -946,12 +955,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-07-10",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 2872,
       "file": "data/series/fred-usd-broad.json",
-      "finishedAt": "2026-07-13T21:29:19.956Z"
+      "finishedAt": "2026-07-14T03:30:53.257Z"
     },
     {
       "id": "fred-us-autosales",
@@ -967,12 +976,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-06-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 138,
       "file": "data/series/fred-us-autosales.json",
-      "finishedAt": "2026-07-13T21:29:20.387Z"
+      "finishedAt": "2026-07-14T03:30:53.509Z"
     },
     {
       "id": "fred-us-indpro",
@@ -988,12 +997,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2026-05-01",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 137,
       "file": "data/series/fred-us-indpro.json",
-      "finishedAt": "2026-07-13T21:29:20.679Z"
+      "finishedAt": "2026-07-14T03:30:53.676Z"
     },
     {
       "id": "imss-empleo",
@@ -1052,12 +1061,12 @@
       "flags": [
         "series_jump_1980_53pct"
       ],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 66,
       "file": "data/series/wb-gdp-usd.json",
-      "finishedAt": "2026-07-13T21:29:20.898Z"
+      "finishedAt": "2026-07-14T03:30:53.882Z"
     },
     {
       "id": "wb-gdp-per-capita",
@@ -1075,12 +1084,12 @@
       "flags": [
         "series_jump_1980_49pct"
       ],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 66,
       "file": "data/series/wb-gdp-per-capita.json",
-      "finishedAt": "2026-07-13T21:29:20.968Z"
+      "finishedAt": "2026-07-14T03:30:53.925Z"
     },
     {
       "id": "wb-inflation",
@@ -1098,12 +1107,12 @@
       "flags": [
         "series_jump_1995_402pct"
       ],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 66,
       "file": "data/series/wb-inflation.json",
-      "finishedAt": "2026-07-13T21:29:21.025Z"
+      "finishedAt": "2026-07-14T03:30:53.967Z"
     },
     {
       "id": "wb-population",
@@ -1119,12 +1128,12 @@
       "canonicalSource": false,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 66,
       "file": "data/series/wb-population.json",
-      "finishedAt": "2026-07-13T21:29:21.086Z"
+      "finishedAt": "2026-07-14T03:30:54.012Z"
     },
     {
       "id": "wb-unemployment",
@@ -1142,12 +1151,12 @@
       "flags": [
         "series_jump_1995_60pct"
       ],
-      "startedAt": "2026-07-13T21:29:08.851Z",
+      "startedAt": "2026-07-14T03:30:45.802Z",
       "vintage": "2025",
-      "fetchedAt": "2026-07-13T21:29:08.851Z",
+      "fetchedAt": "2026-07-14T03:30:45.802Z",
       "rowCount": 35,
       "file": "data/series/wb-unemployment.json",
-      "finishedAt": "2026-07-13T21:29:21.145Z"
+      "finishedAt": "2026-07-14T03:30:54.055Z"
     }
   ]
 }
