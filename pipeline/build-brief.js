@@ -168,7 +168,7 @@ async function main() {
   if (!picked.length) throw new Error('no reviewed event context is ready for the Brief; keeping the last-good brief');
   const lead0 = picked[0];
   const lead = { h1: stripDash(lead0.title).replace(/\.\s*$/, ''), context: ctxOf(lead0), refs: [lead0.id],
-    href: lead0.url || '', source: lead0.source || '', section: lead0.section || '' };
+    href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '' };
   const items = picked.slice(1).map((e) => ({ headline: stripDash(e.title).replace(/\.\s*$/, ''), context: ctxOf(e),
     refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '' }));
   const standing = buildStanding(P.nums);
@@ -179,7 +179,9 @@ async function main() {
   items.forEach((it) => { if (WORDS(it.context) > 45) console.warn(`  WARN "${it.headline.slice(0, 30)}" ${WORDS(it.context)}w (cap 45)`); });
 
   const words = WORDS(lead.context) + items.reduce((n, it) => n + WORDS(it.context), 0) + (standing ? WORDS(standing.text) : 0);
+  const selectedDates = [lead, ...items].map((it) => it.date).filter(Boolean).sort();
   const out = { meta: { title: 'The brief', updated: now.toISOString().slice(0, 10), asOf: `${MO[now.getUTCMonth()]} ${now.getUTCDate()}`,
+    reviewedAt: now.toISOString(), latestItemDate: selectedDates.at(-1) || '',
     generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words }, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
   console.log(`  wrote ${path.relative(ROOT, OUT)} · ${1 + items.length} items · ${words} words · picked: ${picked.map((e) => e.importance).join('/')}`);

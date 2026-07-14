@@ -448,7 +448,7 @@ function renderBrief(brief){
   const src=(o)=>{ if(!o||!o.href) return ''; const ext=/^https?:/.test(o.href), d=o.date?(' · '+dt(o.date)):'';
     return ` <a class="bsrc" href="${esc(o.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(o.source||'source')}">${esc(o.source||'source')}${d}</a>`; };
   let html='';
-  if(brief.lead.context) html+=`<p class="bi">${ctx(brief.lead)}</p>`;
+  if(brief.lead.context) html+=`<p class="bi">${ctx(brief.lead)}${src(brief.lead)}</p>`;
   (brief.items||[]).forEach((it,i)=>{ html+=`<p class="bi" data-rank="${i+1}"><b class="bhl">${esc(it.headline)}.</b> <span class="bctx">${ctx(it)}</span>${src(it)}</p>`; });
   if(brief.standing) html+=`<p class="brief-nums">${esc(liveText(brief.standing))}</p>`;
   return html;
@@ -557,7 +557,11 @@ function renderWatch(brief){
   const briefEl=document.getElementById('brief');
   if(briefEl){
     const html=renderBrief(brief);
-    if(html){ briefEl.innerHTML=html; const bao=document.getElementById('brief-asof'); if(bao&&brief&&brief.meta) bao.textContent='as of '+(brief.meta.asOf||''); }
+    if(html){ briefEl.innerHTML=html; const bao=document.getElementById('brief-asof'); if(bao&&brief&&brief.meta){
+      const reviewed=brief.meta.reviewedAt||brief.meta.generatedAt||brief.meta.updated;
+      const d=reviewed?new Date(reviewed):null;
+      bao.textContent=d&&!isNaN(d)?'reviewed '+d.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+    } }
     else { const sec=briefEl.closest('section'); if(sec) sec.remove(); }
   }
 
