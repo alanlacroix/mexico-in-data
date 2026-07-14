@@ -6,6 +6,7 @@
 // Subscribe remains the one call-to-action. `match` lists the pages that light "Topics" as active.
 module.exports = [
   { label: 'Brief', href: '/' },
+  { label: 'Overview', href: '/overview.html' },
   // The Read removed (Alan 2026-07-13): the Brief already carries the analysis, numbers and data. Keep only
   // what stays incredibly accurate and name-worthy; the standalone opinion surface was neither.
   { label: 'Charts', href: '/chart.html' },         // the metric explorer: every variable, one place (Alan 2026-07-12)

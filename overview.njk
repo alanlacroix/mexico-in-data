@@ -1,0 +1,68 @@
+---
+layout: base.njk
+permalink: /overview.html
+title: "Mexico overview · The Mexico Brief"
+description: "A clear, sourced overview of Mexico's economy, politics, people, trade, and relationship with the United States."
+ogTitle: "Mexico: an overview"
+ogDescription: "The guide I wanted when I started looking. Nineteen pages, dated figures, and links to the original sources."
+---
+{% raw %}
+<style>
+  .ov{max-width:980px;margin:0 auto;padding:48px clamp(18px,4vw,42px) 80px}
+  .ov-hero{max-width:760px;padding:22px 0 42px}
+  .ov-k{font-family:var(--mono);font-size:var(--fs-label);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green-d)}
+  .ov h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.02;letter-spacing:-.03em;margin:13px 0 0;color:var(--ink);max-width:17ch}
+  .ov-lede{font-size:20px;line-height:1.55;color:var(--ink-2);max-width:62ch;margin:21px 0 0}
+  .ov-note{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);max-width:67ch;margin:15px 0 0}
+  .ov-actions{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 0}
+  .ov-btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 18px;border:1.5px solid var(--green);border-radius:8px;font-family:var(--mono);font-size:var(--fs-label);font-weight:700;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--green-d);background:#fff}
+  .ov-btn.primary{color:#fff;background:var(--green)}
+  .ov-btn:hover{background:var(--green-bg)}
+  .ov-btn.primary:hover{background:var(--green-d)}
+  .ov-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
+  .ov-grid{border-top:2px solid var(--green);display:grid;grid-template-columns:1fr 1fr;margin-top:18px}
+  .ov-item{padding:21px 22px;border-bottom:1px solid var(--line);min-height:130px}
+  .ov-item:nth-child(odd){border-right:1px solid var(--line)}
+  .ov-item b{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-bottom:7px}
+  .ov-item p{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);margin:0}
+  .ov-foot{border-top:1px solid var(--line);margin-top:36px;padding-top:24px;max-width:720px}
+  .ov-foot h2{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);margin:0 0 8px}
+  .ov-foot p{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);margin:0}
+  @media(max-width:650px){
+    .ov{padding-top:30px}.ov-lede{font-size:18px}.ov-actions{display:grid}.ov-btn{width:100%}
+    .ov-grid{grid-template-columns:1fr}.ov-item:nth-child(odd){border-right:0}.ov-item{min-height:0;padding:18px 0}
+  }
+</style>
+
+<div class="ov">
+  <section class="ov-hero">
+    <span class="ov-k">Mexico overview</span>
+    <h1>The guide I wanted when I started looking.</h1>
+    <p class="ov-lede">I kept finding the answer on a different website. GDP at INEGI. The peso at Banxico. Public finances at Hacienda. Trade somewhere else. This puts the important parts in one place.</p>
+    <p class="ov-note">It covers the economy, politics, people, trade, and the relationship with the United States. The figures are dated and the original sources are linked. It is an overview, not an encyclopedia.</p>
+    <div class="ov-actions">
+      <a class="ov-btn primary" href="/reports/mexico-overview-2026.html">Read it online</a>
+      <a class="ov-btn" href="/reports/mexico-overview-2026.pdf" download>Download the PDF</a>
+    </div>
+    <div class="ov-meta"><span>19 pages</span><span>Updated 13 July 2026</span><span>Original sources</span></div>
+  </section>
+
+  <section aria-labelledby="inside-report">
+    <span class="ov-k">Inside the report</span>
+    <h2 id="inside-report" style="font-family:var(--sans);font-size:var(--fs-h2);margin:8px 0 0;color:var(--ink)">The country, without the ten tabs.</h2>
+    <div class="ov-grid">
+      <div class="ov-item"><b>Start here</b><p>The few numbers and ideas worth knowing before anything else.</p></div>
+      <div class="ov-item"><b>How Mexico works</b><p>Where the economy is concentrated, what Mexico makes, and why growth per person has been slow.</p></div>
+      <div class="ov-item"><b>People and the state</b><p>Work, informality, poverty, migration, political power, the judiciary, and security.</p></div>
+      <div class="ov-item"><b>North America</b><p>Trade, foreign investment, USMCA, China, migration, security, water, and energy.</p></div>
+      <div class="ov-item"><b>What to watch</b><p>The small set of releases and decisions that would actually change the outlook.</p></div>
+      <div class="ov-item"><b>Sources</b><p>The definitions, original links, and best place to start if you want to go deeper.</p></div>
+    </div>
+  </section>
+
+  <section class="ov-foot">
+    <h2>A snapshot, not a live page</h2>
+    <p>The report is dated 13 July 2026. The <a href="/">Brief</a>, <a href="/chart.html">Charts</a>, and <a href="/sources.html">Sources</a> pages keep updating. The report keeps its date so a later number never quietly changes an earlier argument.</p>
+  </section>
+</div>
+{% endraw %}

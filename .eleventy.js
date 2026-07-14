@@ -21,6 +21,7 @@ module.exports = function (ec) {
     ec.addPassthroughCopy(path.join('data', entry.name));
   }
   ec.addPassthroughCopy('weekly-sample.html');
+  ec.addPassthroughCopy('reports'); // the Mexico overview in web and PDF editions
   ec.addPassthroughCopy('_headers');   // Cloudflare Pages cache policy
   ec.addPassthroughCopy('_redirects'); // retired URLs must follow the same rules in the built site
 

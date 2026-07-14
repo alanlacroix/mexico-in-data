@@ -3,6 +3,8 @@
   "outputDir": "_site",
   "publicRoutes": [
     { "route": "/", "file": "index.html", "canonical": "/" },
+    { "route": "/overview.html", "file": "overview.html", "canonical": "/overview" },
+    { "route": "/reports/mexico-overview-2026.html", "file": "reports/mexico-overview-2026.html", "canonical": "/reports/mexico-overview-2026" },
     { "route": "/chart.html", "file": "chart.html", "canonical": "/chart" },
     { "route": "/economy.html", "file": "economy.html", "canonical": "/economy" },
     { "route": "/payments.html", "file": "payments.html", "canonical": "/payments" },
@@ -46,7 +48,9 @@
     "robots.txt",
     "sitemap.xml",
     "design/mckinsey-mx.css",
-    "assets/mb.js"
+    "assets/mb.js",
+    "reports/mexico-overview-2026.html",
+    "reports/mexico-overview-2026.pdf"
   ],
   "functionRoutes": [
     {
