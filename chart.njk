@@ -228,7 +228,7 @@ const G=['Peso & rates','Prices','Activity & external','Payments & cash'];
 const M={
   'banxico-usdmxn-fix':   {g:0,l:'Peso',u:'MXN/USD',cad:'business-daily',agg:'avg',kind:'fx',r:'area',core:1,
     def:'Pesos per US dollar, the Banxico daily fix. A lower number means a stronger peso.',
-    watch:'The price that reprices imports, dollar debt and the peso value of remittances.',
+    watch:'A lower number means a stronger peso. That usually makes imports and dollar debt cheaper in pesos, but it also means fewer pesos for each dollar of exports or remittances. Rates in Mexico and the US, the dollar itself, trade and investment flows, risk and politics can all move it; this chart cannot isolate one cause.',
     e:['banxico-tasa-objetivo','d-rate-gap','banxico-remesas','fred-usd-broad']},
   'banxico-tasa-objetivo':{g:0,l:'Policy rate',u:'%',cad:'daily',agg:'end',kind:'rate',r:'step',core:1,
     def:"Banxico's overnight target rate, set at scheduled decisions.",
@@ -288,6 +288,14 @@ const M={
     def:'Total monthly merchandise exports, in US dollars.',
     watch:'Four-fifths go to the US. The external engine of activity.',
     e:['d-exports-yoy','fred-us-indpro','banxico-trade-balance']},
+  'banxico-imports-total':{g:2,l:'Imports, total',u:'US$bn/mo',cad:'monthly',agg:'sum',kind:'level',r:'line',core:1,
+    def:'Total monthly merchandise imports, in US dollars.',
+    watch:'Mexico imports consumer goods, machinery and many of the inputs its factories turn into exports.',
+    e:['banxico-exports-total','banxico-imports-intermediate','banxico-trade-balance']},
+  'banxico-imports-intermediate':{g:2,l:'Imports, intermediate goods',u:'US$bn/mo',cad:'monthly',agg:'sum',kind:'level',r:'line',core:0,
+    def:'Monthly imports of parts, materials and other inputs used to produce goods.',
+    watch:'A useful check on factory demand and Mexico’s role in North American supply chains.',
+    e:['banxico-imports-total','banxico-exports-total']},
   'banxico-trade-balance':{g:2,l:'Trade balance',u:'US$bn/mo',cad:'monthly',agg:'sum',kind:'balance',r:'line',core:1,
     def:'Merchandise exports minus imports, monthly. Can be positive or negative.',
     watch:'The external-accounts pulse behind the peso.',
@@ -297,10 +305,34 @@ const M={
     watch:'US factory demand that pulls Mexican manufacturing exports.',
     e:['d-indpro-yoy','banxico-exports-total']},
 
-  'banxico-spei-monto':   {g:3,l:'SPEI transfers',u:'MXN/mo',cad:'monthly',agg:'sum',kind:'level',r:'line',core:0,
+  'banxico-spei-operaciones':{g:3,l:'SPEI transfers',u:'operations/mo',cad:'monthly',agg:'sum',kind:'level',r:'line',core:1,
+    def:'Number of third-party transfers sent through Mexico’s real-time interbank system each month.',
+    watch:'The cleanest available usage count for the main bank-transfer rail. Month length still affects the total.',
+    e:['banxico-codi-operaciones','banxico-cajeros-ops']},
+  'banxico-spei-monto':   {g:3,l:'SPEI transfer value',u:'MXN/mo',cad:'monthly',agg:'sum',kind:'level',r:'line',core:0,
     def:'Value of real-time interbank (SPEI) transfers per month. Only ~1 year of history.',
-    watch:'The rails of digital payments.',
-    e:['banxico-circulante']},
+    watch:'Useful for system scale, but large transfers dominate the peso total. Count is better for everyday use.',
+    e:['banxico-spei-operaciones','banxico-circulante']},
+  'banxico-codi-operaciones':{g:3,l:'CoDi payments',u:'operations/mo',cad:'monthly',agg:'sum',kind:'level',r:'line',core:0,
+    def:'Monthly payments completed through Banxico’s CoDi QR and request-to-pay system.',
+    watch:'Actual transactions say more about adoption than registered accounts.',
+    e:['banxico-spei-operaciones']},
+  'banxico-tpv-debito-ops':{g:3,l:'Debit-card purchases',u:'operations/qtr',cad:'quarterly',agg:'sum',kind:'level',r:'line',core:1,
+    def:'Quarterly debit-card purchase transactions at point-of-sale terminals.',
+    watch:'Shows how often debit cards are used, without mixing usage with inflation or purchase size.',
+    e:['banxico-tpv-credito-ops','banxico-cajeros-ops','banxico-ecommerce-ops']},
+  'banxico-tpv-credito-ops':{g:3,l:'Credit-card purchases',u:'operations/qtr',cad:'quarterly',agg:'sum',kind:'level',r:'line',core:1,
+    def:'Quarterly credit-card purchase transactions at point-of-sale terminals.',
+    watch:'Shows credit-card use. It does not show balances, interest costs or delinquency.',
+    e:['banxico-tpv-debito-ops','banxico-ecommerce-ops']},
+  'banxico-cajeros-ops':{g:3,l:'ATM withdrawals',u:'operations/qtr',cad:'quarterly',agg:'sum',kind:'level',r:'line',core:1,
+    def:'Number of ATM cash withdrawals each quarter.',
+    watch:'An imperfect but timely check on cash use. It misses cash received outside ATMs.',
+    e:['banxico-tpv-debito-ops','banxico-spei-operaciones','banxico-circulante']},
+  'banxico-ecommerce-ops':{g:3,l:'Online card purchases',u:'operations/qtr',cad:'quarterly',agg:'sum',kind:'level',r:'line',core:1,
+    def:'Quarterly online card-purchase transactions.',
+    watch:'Tracks online payment activity without confusing more purchases with higher prices.',
+    e:['banxico-tpv-debito-ops','banxico-tpv-credito-ops','banxico-ecommerce-monto']},
   'banxico-tarjetas-debito':{g:3,l:'Debit cards, active',u:'cards',cad:'quarterly',agg:'end',kind:'level',r:'line',core:0,
     def:'Number of active debit cards. A card count, not spending or unique people.',
     watch:'A rough gauge of how banked the population is.',
@@ -865,13 +897,14 @@ function singleHTML(id){
     <div class="cx-big"><span class="bv">${fv.v} <small>${fv.s}</small></span><span class="bc" id="bigChg">${chg}</span></div>
     <div class="cx-def">${m.def||''}</div>
     <div class="cx-disc">${freshNote(id)} · ${raw(id).length} observations</div>
-    <details class="cx-ctx"><summary>Why I watch this</summary><div class="cxc-body"><p>${m.watch||''}</p></div></details>
+    <details class="cx-ctx"><summary>Explain this</summary><div class="cxc-body"><p>${m.watch||''}</p></div></details>
     <div class="cx-actions">${actionsHTML(id)}</div>
     <div class="cx-tbl" id="cxTable" hidden></div>
     <div class="cx-srcs">${srcBlock(id)}</div>
     <div class="cx-rel"><div class="rl">Add to the comparison</div><div class="chips">${rel||'<span style="color:var(--mut);font-family:var(--mono);font-size:12px">—</span>'}</div></div>`;
 }
 function changeText(id,r){ const p=sliceRange(raw(id),r); if(p.length<2)return ''; const a=p[0].value,b=p[p.length-1].value; const k=kindOf(id);
+  if(k==='fx'){ const pc=b?((a/b)-1)*100:0; return `${Math.abs(pc).toFixed(1)}% ${pc>=0?'stronger':'weaker'} <span class="rl">· ${r}</span>`; }
   if(k==='rate'||k==='pct'){ const d=b-a; return `${d>=0?'+':'−'}${Math.abs(d).toFixed(2)} pp <span class="rl">· ${r}</span>`; }
   if(k==='balance'){ const d=b-a; const o=disp(id,Math.abs(d)); return `${d>=0?'+':'−'}${o.v.replace(/^[+−-]?\$?/,'$')}${o.s?' '+o.s:''} <span class="rl">· change over ${r}</span>`; }
   const pc=a?((b-a)/Math.abs(a)*100):0; return `${pc>=0?'+':''}${pc.toFixed(1)}% <span class="rl">· ${r}</span>`; }

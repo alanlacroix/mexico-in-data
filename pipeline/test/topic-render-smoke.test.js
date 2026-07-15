@@ -12,6 +12,17 @@ const latestRemittanceBillions = Number(remittances.data.at(-1).value) / 1000;
 const expectedRemittance = `$${latestRemittanceBillions.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}bn`;
 const minimumWage = JSON.parse(fs.readFileSync(path.join(root, 'data', 'series', 'banxico-salario-minimo.json'), 'utf8'));
 const expectedMinimumWage = `MX$${Number(minimumWage.data.at(-1).value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const paymentSeries = (id) => JSON.parse(fs.readFileSync(path.join(root, 'data', 'series', `${id}.json`), 'utf8')).data;
+const debitOps = paymentSeries('banxico-tpv-debito-ops');
+const creditOps = paymentSeries('banxico-tpv-credito-ops');
+const sharedCardDates = debitOps.map((row) => row.date).filter((date) => creditOps.some((row) => row.date === date)).sort();
+const latestCardDate = sharedCardDates.at(-1);
+const latestDebitOps = debitOps.find((row) => row.date === latestCardDate);
+const latestCreditOps = creditOps.find((row) => row.date === latestCardDate);
+const expectedCardPurchases = ((Number(latestDebitOps.value) + Number(latestCreditOps.value)) / 1e9)
+  .toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const expectedDebitShare = (Number(latestDebitOps.value) / (Number(latestDebitOps.value) + Number(latestCreditOps.value)) * 100)
+  .toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const crime = JSON.parse(fs.readFileSync(path.join(root, 'data', 'layers', 'sesnsp-delitos.json'), 'utf8'));
 const crimeVintage = /^(\d{4})-(\d{2})/.exec(String(crime.meta?.vintage || ''));
 if (!crimeVintage || !/acumulado del año/i.test(`${crime.meta?.units || ''} ${crime.meta?.notes || ''}`)) {
@@ -75,6 +86,18 @@ for (const route of routes) {
       throw new Error('society: the SESNSP year-to-date total must not be described as annual');
     }
     if (!output.includes('year-to-date count')) throw new Error('society: SESNSP total must be labeled year to date');
+  }
+  if (route.key === 'payments') {
+    for (const label of ['Card purchases · quarter', 'SPEI transfers · month', 'ATM withdrawals · quarter', 'Online card purchases · quarter']) {
+      if (!output.includes(label)) throw new Error(`payments: missing ${label}`);
+    }
+    if (!output.includes(expectedCardPurchases)) throw new Error(`payments: combined card purchases do not match the source operations (${expectedCardPurchases}bn)`);
+    if (!output.includes(`Debit cards made up ${expectedDebitShare}%`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
+    if (!output.includes('85.2% of adults said cash was their usual method')) throw new Error('payments: ENIF cash figure must preserve the adult-response denominator');
+    if (output.includes('A live, imperfect check')) throw new Error('payments: quarterly ATM data must not be described as live');
+    if (!output.includes('Debit-card value series SF62279 is excluded')) throw new Error('payments: anomalous debit-card value is not visibly quarantined in the method');
+    if (output.includes('1,169bn MXN')) throw new Error('payments: quarantined debit-card value still appears editorially');
+    if (!output.includes('reading-guide') || !output.includes('Explain this')) throw new Error('payments: metric explainers are missing');
   }
   if (output.includes('waiting for its required source data')) throw new Error(`${route.key}: failed closed with complete fixture data`);
 }

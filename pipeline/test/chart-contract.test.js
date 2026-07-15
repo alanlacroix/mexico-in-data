@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const template = fs.readFileSync(path.join(root, 'chart.njk'), 'utf8');
+const topicTemplate = fs.readFileSync(path.join(root, 'topic-pages.njk'), 'utf8');
 const scriptMatch = template.match(/<script type="module">([\s\S]*?)<\/script>/);
 assert(scriptMatch, 'chart module script is missing');
 
@@ -23,7 +24,10 @@ const inputIds = [
   'banxico-usdmxn-fix', 'banxico-tasa-objetivo', 'fred-fedfunds',
   'banxico-inflacion', 'banxico-inflacion-subyacente',
   'banxico-exports-total', 'fred-us-indpro', 'banxico-remesas',
-  'banxico-salario-minimo', 'banxico-inpc'
+  'banxico-salario-minimo', 'banxico-inpc', 'banxico-imports-total',
+  'banxico-imports-intermediate', 'banxico-spei-operaciones',
+  'banxico-codi-operaciones', 'banxico-tpv-debito-ops',
+  'banxico-tpv-credito-ops', 'banxico-cajeros-ops', 'banxico-ecommerce-ops'
 ];
 const payloads = Object.fromEntries(inputIds.map(id => [
   id,
@@ -55,6 +59,11 @@ const checks = `
   const long=availableRanges(['test-range']);
   if(!long.has('1Y')||!long.has('3Y')||long.has('5Y'))throw new Error('range coverage calculation is wrong');
 
+  M['test-fx']={g:0,l:'Test FX',u:'MXN/USD',cad:'monthly',agg:'end',kind:'fx',r:'line'};
+  store['test-fx']={data:[{date:'2025-01-01',value:18.75},{date:'2026-01-01',value:17.50}],meta:{}};
+  state.r='MAX';
+  if(!changeText('test-fx','MAX').includes('7.1% stronger'))throw new Error('FX change is not calculated as peso appreciation');
+
   if(validMode('not-a-mode')!==null)throw new Error('invalid mode was accepted');
   if(modeAvail(pesoIds).actual)throw new Error('incompatible units were allowed on one actual scale');
   const dollarFlowIds=['banxico-exports-total','banxico-remesas'];
@@ -82,13 +91,20 @@ const checks = `
   if(compareLast[1]!==aligned.series[0].pts[alignedIndex].value||compareLast[2]!==meta(compareIds[0]).units)throw new Error('first comparison CSV value and unit do not match');
   if(compareLast[5]!==aligned.series[1].pts[alignedIndex].value||compareLast[6]!==meta(compareIds[1]).units)throw new Error('derived comparison CSV value and unit do not match');
 
-  globalThis.__chartContract={period:pesoCommon.key,answers:answers.map(a=>a.asOf)};
+  globalThis.__chartContract={period:pesoCommon.key,answers:answers.map(a=>a.asOf),registry:[...Object.keys(M),...Object.keys(DERIVED)]};
 `;
 
 const context = { console, URL, Date, Map, Set, Intl, Number, Math, JSON, globalThis: null };
 context.globalThis = context;
 vm.runInNewContext(core + checks, context, { filename: 'chart-contract.vm.js' });
 assert(context.__chartContract?.period, 'chart contract checks did not finish');
+
+const linkedChartIds = [...topicTemplate.matchAll(/\/chart\.html\?v=([^'"`&\s]+)/g)]
+  .flatMap((match) => match[1].split(','))
+  .filter((id) => /^[a-z0-9.-]+$/.test(id));
+const registry = new Set(context.__chartContract.registry);
+const missingLinkedIds = [...new Set(linkedChartIds.filter((id) => !registry.has(id)))];
+assert.deepEqual(missingLinkedIds, [], `topic pages link to unregistered chart series: ${missingLinkedIds.join(', ')}`);
 
 assert(template.includes('opts.axisCad||cadOf(ser[0].id)'), 'aligned chart axis does not use the aligned cadence');
 assert(template.includes('axisCad:AL.freq'), 'comparison chart does not pass its aligned cadence');

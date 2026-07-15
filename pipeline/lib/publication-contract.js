@@ -39,9 +39,12 @@ const CHARTS = [
   'banxico-reservas', 'fred-usd-broad', 'banxico-inflacion',
   'banxico-inflacion-subyacente', 'banxico-salario-minimo', 'banxico-inpc',
   'cre-gasolina-regular', 'banxico-pib-crecimiento', 'banxico-igae',
-  'banxico-remesas', 'banxico-exports-total', 'banxico-trade-balance',
-  'fred-us-indpro', 'banxico-spei-monto', 'banxico-tarjetas-debito',
-  'banxico-tarjetas-credito', 'banxico-circulante', 'banxico-ecommerce-monto',
+  'banxico-remesas', 'banxico-exports-total', 'banxico-imports-total',
+  'banxico-imports-intermediate', 'banxico-trade-balance', 'fred-us-indpro',
+  'banxico-spei-operaciones', 'banxico-spei-monto', 'banxico-codi-operaciones',
+  'banxico-tpv-debito-ops', 'banxico-tpv-credito-ops', 'banxico-cajeros-ops',
+  'banxico-ecommerce-ops', 'banxico-tarjetas-debito', 'banxico-tarjetas-credito',
+  'banxico-circulante', 'banxico-ecommerce-monto',
 ].map(SERIES);
 
 const CONTEXT = ['data/events.json', 'data/happening.json'];

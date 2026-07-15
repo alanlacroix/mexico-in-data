@@ -51,6 +51,17 @@ footerBlurb: "The important numbers, the developments behind them, and the origi
   .reading-value small{font-size:var(--fs-meta);color:var(--mut);letter-spacing:0}
   .reading-change{font-family:var(--mono);font-size:var(--fs-meta);line-height:1.35;color:var(--ink-2);font-variant-numeric:tabular-nums;margin-top:8px;min-height:2.6em}
   .reading-context{font-size:var(--fs-meta);line-height:1.46;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px;margin-top:9px}
+  .reading-guide{margin-top:5px}
+  .reading-guide summary{display:flex;align-items:center;min-height:32px;list-style:none;cursor:pointer;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;color:var(--green-d)}
+  .reading-guide summary::-webkit-details-marker{display:none}
+  .reading-guide summary::after{content:"+";margin-left:5px;color:var(--mut)}
+  .reading-guide[open] summary::after{content:"−"}
+  .reading-guide summary:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:2px}
+  .reading-guide-body{padding:3px 0 2px;color:var(--ink-2)}
+  .reading-guide-body p{font-size:var(--fs-meta);line-height:1.5}
+  .reading-guide-body p+p{margin-top:7px}
+  .reading-guide-body b{color:var(--ink);font-weight:600}
+  .reading-guide-body a{display:inline-block;margin-top:8px;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label)}
   .reading-source{display:flex;align-items:baseline;gap:4px 9px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);padding-top:11px}
   .reading-source a{color:var(--green-d)}
   .reading-open{margin-left:auto;white-space:nowrap}
@@ -159,6 +170,7 @@ footerBlurb: "The important numbers, the developments behind them, and the origi
     .reading-value{font-size:var(--fs-h3);grid-column:2;grid-row:1 / span 2;text-align:right;align-self:center}
     .reading-change{min-height:0;grid-column:1;margin-top:2px}
     .reading-context{grid-column:1 / -1;margin-top:7px;padding-top:8px}
+    .reading-guide summary{min-height:44px}
     .reading-source{grid-column:1 / -1;padding-top:3px}
     .evidence-head{grid-template-columns:1fr;gap:10px;padding:14px 13px 11px}
     .evidence-body{padding:12px 9px 0}
@@ -201,7 +213,9 @@ const GREEN='#0a7d4d', INK='#171717', AMBER='#b45a12', GRAY='#8b8b84';
 const SOURCE_FALLBACK='/sources.html';
 const SERIES_IDS=[
   'banxico-igae','banxico-pib-crecimiento','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-usdmxn-fix','banxico-inpc',
-  'banxico-spei-operaciones','banxico-spei-monto','banxico-tpv-debito-monto','banxico-tpv-credito-monto','banxico-ecommerce-monto','banxico-circulante',
+  'banxico-spei-operaciones','banxico-spei-monto','banxico-codi-operaciones','banxico-tpv-debito-monto','banxico-tpv-credito-monto',
+  'banxico-tpv-debito-ops','banxico-tpv-credito-ops','banxico-cajeros-ops','banxico-ecommerce-monto','banxico-ecommerce-ops',
+  'banxico-tarjetas-debito','banxico-tarjetas-credito','banxico-circulante',
   'banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-salario-minimo','banxico-remesas','wb-population','wb-unemployment'
 ];
 const DB={series:{},events:[],areas:[],happening:[],partners:null,products:null,tradeUS:null,demographics:null,vitals:null,crime:null,poverty:null};
@@ -260,6 +274,10 @@ function monthMap(a){return Object.fromEntries(a.map(p=>[p.date.slice(0,7),p.val
 function monthlyLast(a){const m={};a.forEach(p=>m[p.date.slice(0,7)]={date:p.date.slice(0,7)+'-01',value:p.value});return Object.values(m).sort((a,b)=>a.date.localeCompare(b.date));}
 function rolling12(a,scale=1){return a.map((p,i)=>i<11?null:{date:p.date,value:a.slice(i-11,i+1).reduce((t,x)=>t+x.value,0)/scale}).filter(Boolean);}
 function indexed(a){const b=a[0]?.value;return b?a.map(p=>({date:p.date,value:p.value/b*100})):[];}
+function sumShared(...series){
+  const maps=series.map(a=>Object.fromEntries(a.map(p=>[p.date,p.value]))),dates=series[0]?.map(p=>p.date).filter(d=>maps.every(m=>m[d]!=null))||[];
+  return dates.map(date=>({date,value:maps.reduce((total,m)=>total+m[date],0)}));
+}
 function realWage(){
   const wage=monthlyLast(s('banxico-salario-minimo')), cpi=monthMap(monthlyLast(s('banxico-inpc'))), shared=wage.filter(p=>cpi[p.date.slice(0,7)]!=null);
   const base=shared[0], baseCpi=cpi[base?.date.slice(0,7)];
@@ -267,7 +285,12 @@ function realWage(){
 }
 function latest12Total(id){const a=s(id);return a.slice(-12).reduce((t,p)=>t+p.value,0)/1e6;}
 function deltaText(v,unit='%',n=1){if(v==null||!Number.isFinite(v))return 'Comparison unavailable';return `${v>0?'↑':v<0?'↓':'→'} ${fmt(Math.abs(v),n)}${unit}`;}
-function card({label,value,unit='',change,context,source,date,sourceHref=SOURCE_FALLBACK,href=''}){return `<article class="reading-card"><div class="reading-label">${label}</div><div class="reading-value">${value}${unit?` <small>${unit}</small>`:''}</div><div class="reading-change">${change||''}</div><div class="reading-context">${context||''}</div><div class="reading-source"><a href="${sourceHref}" target="_blank" rel="noopener">${source||'Source'} ↗</a>${date?`<span>· ${date}</span>`:''}${href&&href!==sourceHref?`<a class="reading-open" href="${href}">Open →</a>`:''}</div></article>`;}
+function guideHTML(guide){
+  if(!guide)return '';
+  const items=(guide.items||[]).filter(x=>x?.label&&x?.text).map(x=>`<p><b>${esc(x.label)}:</b> ${esc(x.text)}</p>`).join('');
+  return `<details class="reading-guide"><summary>${esc(guide.summary||'Explain this')}</summary><div class="reading-guide-body">${items}${guide.href?`<a href="${guide.href}" target="_blank" rel="noopener">${esc(guide.link||'Read the definition')} ↗</a>`:''}</div></details>`;
+}
+function card({label,value,unit='',change,context,guide,source,date,sourceHref=SOURCE_FALLBACK,href=''}){return `<article class="reading-card"><div class="reading-label">${label}</div><div class="reading-value">${value}${unit?` <small>${unit}</small>`:''}</div><div class="reading-change">${change||''}</div><div class="reading-context">${context||''}${guideHTML(guide)}</div><div class="reading-source"><a href="${sourceHref}" target="_blank" rel="noopener">${source||'Source'} ↗</a>${date?`<span>· ${date}</span>`:''}${href&&href!==sourceHref?`<a class="reading-open" href="${href}">Open →</a>`:''}</div></article>`;}
 function evidenceSources(items=[]){return items.length?`<div class="evidence-source">Source: ${items.map(x=>`<a href="${x.href}" target="_blank" rel="noopener">${x.label} ↗</a>`).join(' · ')}</div>`:'';}
 function moduleCard(x){return `<article class="topic-module"><div class="mono-k">${x.k}</div><h3>${x.title}</h3>${x.value?`<div class="module-value">${x.value}</div>`:''}<p>${x.text}</p>${x.href?`<a class="module-link" href="${x.href}">${x.link||'Open →'}</a>`:''}</article>`;}
 
@@ -344,6 +367,7 @@ const ROUTES={economy:'/economy.html',payments:'/payments.html',trade:'/trade.ht
 function economyTopic(){
   const inf=s('banxico-inflacion'),core=s('banxico-inflacion-subyacente'),rateRaw=s('banxico-tasa-objetivo'),rate=monthlyLast(rateRaw),igae=s('banxico-igae'),peso=s('banxico-usdmxn-fix');
   const I=last(inf),Ip=prior(inf),C=last(core),R=last(rateRaw),Ry=yearAgo(rateRaw),G=last(igae),P=last(peso),Py=yearAgo(peso);
+  const pesoMove=Py?(Py.value/P.value-1)*100:null;
   const lines=[{name:'Headline inflation',points:inf,color:INK,format:v=>fmt(v,2)+'%'},{name:'Core inflation',points:core.slice(-inf.length),color:GREEN,format:v=>fmt(v,2)+'%'},{name:'Policy rate',points:rate.filter(p=>dateObj(p.date)>=dateObj(inf[0].date)),color:AMBER,format:v=>fmt(v,2)+'%'}];
   return {
     title:'Economy & money',scope:'Growth, prices, rates, and the peso.',asof:`Latest observations range from ${dateLabel(G.date)} to ${dateLabel(R.date)}.`,
@@ -351,16 +375,16 @@ function economyTopic(){
     nowText:`Headline inflation is <b>${fmt(I.value,2)}%</b>. Core inflation is <b>${fmt(C.value,2)}%</b>, and Banxico's rate is <b>${fmt(R.value,2)}%</b>. Activity was <b>${signed(G.value,2,'%')}</b> from a year earlier in ${dateLabel(G.date)}.`,
     cards:[
       {label:'Economic activity · annual',value:signed(G.value,2),unit:'%',change:'IGAE · year over year',context:'A monthly check on output between quarterly GDP releases.',source:'INEGI / Banxico',sourceHref:sourceUrl('banxico-igae'),date:dateLabel(G.date),href:'/chart.html?v=banxico-igae'},
-      {label:'Headline inflation',value:fmt(I.value,2),unit:'%',change:deltaText(I.value-Ip.value,' pp',2)+` from ${dateLabel(Ip.date)}`,context:`Core inflation is ${fmt(C.value,2)}%.`,source:'INEGI / Banxico',sourceHref:sourceUrl('banxico-inflacion'),date:dateLabel(I.date),href:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente'},
-      {label:'Policy rate',value:fmt(R.value,2),unit:'%',change:Ry?deltaText(R.value-Ry.value,' pp',2)+' vs a year ago':'',context:`${fmt(R.value-C.value,2)} points above core inflation.`,source:'Banxico',sourceHref:sourceUrl('banxico-tasa-objetivo'),date:shortDate(R.date),href:'/chart.html?v=banxico-tasa-objetivo'},
-      {label:'Peso · per US dollar',value:fmt(P.value,2),unit:'MXN/USD',change:Py?deltaText(pct(P.value,Py.value),'%',1)+' vs a year ago':'',context:'Lower means a stronger peso. This is the official FIX rate.',source:'Banxico',sourceHref:sourceUrl('banxico-usdmxn-fix'),date:shortDate(P.date),href:'/chart.html?v=banxico-usdmxn-fix'}
+      {label:'Headline inflation',value:fmt(I.value,2),unit:'%',change:deltaText(I.value-Ip.value,' pp',2)+` from ${dateLabel(Ip.date)}`,context:`Core inflation is ${fmt(C.value,2)}%.`,guide:{items:[{label:'How to read it',text:`${fmt(I.value,2)}% means the INPC was ${fmt(I.value,2)}% higher than a year earlier. It does not mean every price rose by that amount.`},{label:'Why core is different',text:'Core removes the most volatile food and energy prices. It usually changes more slowly and helps show whether price pressure is broad.'}]},source:'INEGI / Banxico',sourceHref:sourceUrl('banxico-inflacion'),date:dateLabel(I.date),href:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente'},
+      {label:'Policy rate',value:fmt(R.value,2),unit:'%',change:Ry?deltaText(R.value-Ry.value,' pp',2)+' vs a year ago':'',context:`${fmt(R.value-C.value,2)} points above core inflation.`,guide:{items:[{label:'What it is',text:'The overnight interest-rate target set by Banxico.'},{label:'The trade-off',text:'Higher rates can help slow inflation and support the peso, but they also make borrowing more expensive. Lower rates reverse that trade-off.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-tasa-objetivo'),date:shortDate(R.date),href:'/chart.html?v=banxico-tasa-objetivo'},
+      {label:'Peso · per US dollar',value:fmt(P.value,2),unit:'MXN per US$',change:pesoMove!=null?`${fmt(Math.abs(pesoMove),1)}% ${pesoMove>=0?'stronger':'weaker'} than a year ago`:'',context:'Banxico’s official daily FIX rate.',guide:{items:[{label:'What it is',text:`${fmt(P.value,2)} means US$1 buys MX$${fmt(P.value,2)}.`},{label:'How to read it',text:`${fmt(P.value-.5,2)} would be a stronger peso. ${fmt(P.value+.5,2)} would be a weaker peso.`},{label:'What moves it',text:'Rates in Mexico and the US, the dollar itself, trade and investment flows, risk and politics can all matter. The rate alone cannot tell us which mattered most.'},{label:'The trade-off',text:'A stronger peso usually lowers the peso cost of imports and dollar debt. It also means fewer pesos for each dollar of exports or remittances. A weaker peso reverses that trade-off.'},{label:'Keep in mind',text:'FIX is a wholesale-market reference. A bank, card or cash rate will differ.'}],href:'https://www.banxico.org.mx/tipcamb/tipCamMIAction.do?idioma=en',link:'How Banxico calculates FIX'},source:'Banxico',sourceHref:sourceUrl('banxico-usdmxn-fix'),date:shortDate(P.date),href:'/chart.html?v=banxico-usdmxn-fix'}
     ],
     evidence:{k:'Prices and rates',title:'Headline inflation fell faster than core inflation',sub:'Annual inflation and Banxico policy rate · %',visual:chartSVG({series:lines,yFormat:v=>fmt(v,1)+'%',label:'Headline inflation, core inflation and the Banxico policy rate'}),legend:legend(lines),table:dataTable(lines),note:'Observation dates, not fetch dates. Rate differences are shown in percentage points.',sources:[topicSource('banxico-inflacion','Headline · INPC'),topicSource('banxico-inflacion-subyacente','Core inflation'),topicSource('banxico-tasa-objetivo','Policy rate')],read:['Headline inflation moves with food and energy. Core inflation is the slower-moving check on underlying pressure.',`This comparison does not show causality. The peso, supply shocks and earlier policy decisions also affect prices.`]},
     modulesTitle:'Activity, prices, and financial conditions',
     modules:[
       {k:'Activity',title:'Monthly activity and GDP are separate checks',value:`IGAE ${signed(G.value,2,'%')} YoY · GDP ${signed(last(s('banxico-pib-crecimiento')).value,2,'%')} YoY`,text:'IGAE moves monthly; GDP is the slower quarterly confirmation. Their observation dates stay separate.',href:'/chart.html?v=banxico-igae,banxico-pib-crecimiento',link:'Open growth charts →'},
       {k:'Prices and rates',title:'Core inflation is above headline inflation',value:`Core ${fmt(C.value,2)}% · headline ${fmt(I.value,2)}% · rate ${fmt(R.value,2)}%`,text:'Headline and core inflation show different parts of price pressure. The policy rate shows where Banxico has set borrowing conditions.',href:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente,banxico-tasa-objetivo',link:'See the underlying series →'},
-      {k:'Financial conditions',title:`The peso is ${fmt(Math.abs(pct(P.value,Py.value)),1)}% ${P.value<Py.value?'stronger':'weaker'} than a year ago`,value:`${fmt(P.value,2)} MXN/USD`,text:'The rate gap is one thing to compare with the currency. US rates, trade and risk also matter.',href:'/chart.html?v=banxico-usdmxn-fix,banxico-tasa-objetivo,fred-fedfunds',link:'Compare the peso and rates →'}
+      {k:'Financial conditions',title:`The peso is ${fmt(Math.abs(pesoMove),1)}% ${pesoMove>=0?'stronger':'weaker'} than a year ago`,value:`${fmt(P.value,2)} MXN/USD`,text:'The rate gap is one thing to compare with the currency. US rates, trade and risk also matter.',href:'/chart.html?v=banxico-usdmxn-fix,banxico-tasa-objetivo,fred-fedfunds',link:'Compare the peso and rates →'}
     ],
     updates:[
       {type:'Official data',title:`${dateLabel(I.date)} inflation fell to ${fmt(I.value,2)}%`,text:`The annual rate moved ${I.value<Ip.value?'down':'up'} ${fmt(Math.abs(I.value-Ip.value),2)} percentage points from ${dateLabel(Ip.date)}. Core inflation is ${fmt(C.value,2)}%.`,source:'INEGI / Banxico',href:sourceUrl('banxico-inflacion'),date:dateLabel(I.date)},
@@ -374,34 +398,40 @@ function economyTopic(){
 }
 
 function paymentsTopic(){
-  const spei=s('banxico-spei-operaciones'),debit=s('banxico-tpv-debito-monto'),credit=s('banxico-tpv-credito-monto'),ecom=s('banxico-ecommerce-monto'),cash=s('banxico-circulante');
-  const S=last(spei),Sp=prior(spei),D=last(debit),Dp=prior(debit),Dy=yearAgo(debit),C=last(credit),Cp=prior(credit),Cy=yearAgo(credit),E=last(ecom),Ey=yearAgo(ecom),Cash=last(cash),CashY=yearAgo(cash);
+  const spei=s('banxico-spei-operaciones'),codi=s('banxico-codi-operaciones'),debitOps=s('banxico-tpv-debito-ops'),creditOps=s('banxico-tpv-credito-ops'),atmOps=s('banxico-cajeros-ops'),ecomOps=s('banxico-ecommerce-ops'),debitCards=s('banxico-tarjetas-debito'),creditCards=s('banxico-tarjetas-credito');
+  const cardOps=sumShared(debitOps,creditOps),S=last(spei),Sp=prior(spei),CoDi=last(codi),Card=last(cardOps),CardY=yearAgo(cardOps),Debit=debitOps.find(p=>p.date===Card?.date),Credit=creditOps.find(p=>p.date===Card?.date),ATM=last(atmOps),ATMY=yearAgo(atmOps),E=last(ecomOps),Ey=yearAgo(ecomOps),DC=last(debitCards),CC=last(creditCards);
+  if(!S||!CoDi||!Card||!CardY||!Debit||!Credit||!ATM||!ATMY||!E||!DC||!CC)throw new Error('Payments inputs are incomplete');
   const debitReview=(meta('banxico-tpv-debito-monto').flags||[]).some(flag=>String(flag).startsWith('series_jump_'));
-  const debitReviewText=debitReview?` Banxico reports an ${fmt(Math.abs(pct(D.value,Dp.value)),0)}% jump from the previous quarter; that point is flagged for review.`:'';
-  const commonDates=new Set(credit.map(p=>p.date)),debitComparable=debit.filter(p=>commonDates.has(p.date)),creditComparable=credit.filter(p=>debit.some(x=>x.date===p.date));
-  const lines=[{name:'Debit-card spending',points:debitComparable.map(p=>({...p,value:p.value/1000})),color:INK,format:v=>fmt(v,0)+'bn MXN'},{name:'Credit-card spending',points:creditComparable.map(p=>({...p,value:p.value/1000})),color:GREEN,format:v=>fmt(v,0)+'bn MXN'}];
+  const compareDates=new Set(cardOps.map(p=>p.date).filter(d=>atmOps.some(x=>x.date===d)&&ecomOps.some(x=>x.date===d))),through=[...compareDates].sort().at(-1),base=[...compareDates].sort()[0];
+  const comparable=a=>a.filter(p=>compareDates.has(p.date)),lines=[
+    {name:'Card purchases',points:indexed(comparable(cardOps)),color:GREEN,format:v=>fmt(v,0)},
+    {name:'Online card purchases',points:indexed(comparable(ecomOps)),color:AMBER,format:v=>fmt(v,0)},
+    {name:'ATM withdrawals',points:indexed(comparable(atmOps)),color:INK,format:v=>fmt(v,0)}
+  ];
+  const daysInSpeiMonth=new Date(Date.UTC(dateObj(S.date).getUTCFullYear(),dateObj(S.date).getUTCMonth()+1,0)).getUTCDate(),debitShare=Debit.value/Card.value*100;
+  const enif='https://inegi.org.mx/contenidos/programas/enif/2024/doc/enif_2024_resultados.pdf',cnbv='https://www.cnbv.gob.mx/Inclusi%C3%B3n/Paginas/Bases-de-Datos.aspx',mobileRules='https://www.banxico.org.mx/publicaciones-y-prensa/miscelaneos/%7BEA247344-5771-6144-71DC-5688A28E78A1%7D.pdf',cardConsult='https://www.banxico.org.mx/ConsultaRegulacionWeb/index.jsp';
   return {
     title:'Payments',scope:'Transfers, cards, cash, and financial access.',asof:`Latest observations range from ${quarterLabel(E.date)} to ${dateLabel(S.date)}.`,
-    nowTitle:`SPEI processed ${fmt(S.value/1e6,0)} million transfers in ${dateLabel(S.date)}.`,
-    nowText:`In ${quarterLabel(D.date)}, Banxico reports <b>${fmt(D.value/1000,0)}bn MXN</b> in debit-card point-of-sale spending and <b>${fmt(C.value/1000,0)}bn MXN</b> on credit cards.${debitReviewText}`,
+    nowTitle:`Card purchases rose while ATM withdrawals fell.`,
+    nowText:`Banxico counted <b>${fmt(Card.value/1e9,2)}bn card purchases</b> in ${quarterLabel(Card.date)}, ${fmt(Math.abs(pct(Card.value,CardY.value)),1)}% above a year earlier. ATM withdrawals fell ${fmt(Math.abs(pct(ATM.value,ATMY.value)),1)}% to <b>${fmt(ATM.value/1e6,0)}m</b>. SPEI processed <b>${fmt(S.value/1e6,0)}m transfers</b> in ${dateLabel(S.date)}.`,
     cards:[
-      {label:'SPEI transfers · monthly',value:fmt(S.value/1e6,0),unit:'million',change:deltaText(pct(S.value,Sp.value),'%',1)+` from ${dateLabel(Sp.date)}`,context:'Third-party transfers. The series shown here does not yet include a year-earlier comparison.',source:'Banxico',sourceHref:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date),href:'/chart.html?v=banxico-spei-operaciones'},
-      {label:'Debit-card spending · quarter',value:fmt(D.value/1000,0),unit:'bn MXN',change:Dy?deltaText(pct(D.value,Dy.value),'%',1)+' vs a year ago':deltaText(pct(D.value,Dp.value),'%',1)+' from previous quarter',context:debitReview?'Banxico reports this point, but the jump from the previous quarter is flagged for review.':'Nominal point-of-sale value.',source:'Banxico',sourceHref:sourceUrl('banxico-tpv-debito-monto'),date:quarterLabel(D.date),href:'/chart.html?v=banxico-tpv-debito-monto'},
-      {label:'Credit-card spending · quarter',value:fmt(C.value/1000,0),unit:'bn MXN',change:Cy?deltaText(pct(C.value,Cy.value),'%',1)+' vs a year ago':deltaText(pct(C.value,Cp.value),'%',1)+' from previous quarter',context:'Nominal point-of-sale value on credit cards.',source:'Banxico',sourceHref:sourceUrl('banxico-tpv-credito-monto'),date:quarterLabel(C.date),href:'/chart.html?v=banxico-tpv-credito-monto'},
-      {label:'Card e-commerce · quarter',value:fmt(E.value/1000,0),unit:'bn MXN',change:Ey?deltaText(pct(E.value,Ey.value),'%',1)+' vs a year ago':'',context:'Online card spending. The series currently ends one quarter earlier.',source:'Banxico',sourceHref:sourceUrl('banxico-ecommerce-monto'),date:quarterLabel(E.date),href:'/chart.html?v=banxico-ecommerce-monto'},
+      {label:'Card purchases · quarter',value:fmt(Card.value/1e9,2),unit:'bn',change:deltaText(pct(Card.value,CardY.value),'%',1)+' vs a year ago',context:`Debit cards made up ${fmt(debitShare,1)}% of these transactions.`,guide:{items:[{label:'What it counts',text:'Purchases made at terminals with debit or credit cards. This is the number of transactions, not the pesos spent.'},{label:'How to read it',text:'More purchases can mean more people paying by card, the same people using cards more often, or both. It does not tell us which by itself.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-tpv-debito-ops'),date:quarterLabel(Card.date),href:'/chart.html?v=banxico-tpv-debito-ops,banxico-tpv-credito-ops'},
+      {label:'SPEI transfers · month',value:fmt(S.value/1e6,0),unit:'million',change:deltaText(pct(S.value,Sp.value),'%',1)+` from ${dateLabel(Sp.date)}`,context:`About ${fmt(S.value/daysInSpeiMonth/1e6,1)}m transfers per calendar day.`,guide:{items:[{label:'What it is',text:'Mexico’s real-time bank-transfer system. This count covers third-party transfers of every size.'},{label:'Keep in mind',text:'A longer month can produce more transfers. The total peso value is also dominated by large transfers, so transaction count is the cleaner usage measure here.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date),href:'/chart.html?v=banxico-spei-operaciones'},
+      {label:'ATM withdrawals · quarter',value:fmt(ATM.value/1e6,0),unit:'million',change:deltaText(pct(ATM.value,ATMY.value),'%',1)+' vs a year ago',context:'An imperfect quarterly check on cash use.',guide:{items:[{label:'What it counts',text:'Cash withdrawals at ATMs, not the pesos withdrawn and not every cash payment.'},{label:'How to read it',text:'Fewer withdrawals may mean less dependence on cash. It can also mean people are withdrawing larger amounts less often.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-cajeros-ops'),date:quarterLabel(ATM.date),href:'/chart.html?v=banxico-cajeros-ops'},
+      {label:'Online card purchases · quarter',value:fmt(E.value/1e6,0),unit:'million',change:Ey?deltaText(pct(E.value,Ey.value),'%',1)+' vs a year ago':'',context:'The latest online reading is one quarter older than the card and ATM data.',guide:{items:[{label:'What it counts',text:'Card purchase transactions made online. It measures activity, not the number of buyers or merchants.'},{label:'Why the date matters',text:'This series arrives later than the other payment data. The site keeps its actual observation date rather than making it look current.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-ecommerce-ops'),date:quarterLabel(E.date),href:'/chart.html?v=banxico-ecommerce-ops'},
     ],
-    evidence:{k:'Cards',title:'Debit-card spending is larger than credit-card spending',sub:'Quarterly point-of-sale spending · MXN billions',visual:chartSVG({series:lines,yFormat:v=>fmt(v,0),label:'Quarterly debit and credit card point-of-sale spending'}),legend:legend(lines),table:dataTable(lines),note:`Nominal transaction value. Both series are shown only on dates they share; exact observations remain available in the table.${debitReviewText}`,sources:[topicSource('banxico-tpv-debito-monto','Debit cards'),topicSource('banxico-tpv-credito-monto','Credit cards')],read:['The lines compare the value handled at point-of-sale terminals on debit and credit cards.',`A rising nominal value can reflect more transactions, higher prices, larger purchases, or all three.`]},
-    modulesTitle:'Rails, cards, online spending, and cash',
+    evidence:{k:'How people are paying',title:'Card purchases rose while ATM withdrawals fell',sub:`Quarterly transaction counts · ${quarterLabel(base)} = 100 · through ${quarterLabel(through)}`,visual:chartSVG({series:lines,yFormat:v=>fmt(v,0),label:'Indexed card purchases, online card purchases and ATM withdrawals'}),legend:legend(lines),table:dataTable(lines),note:'Each line starts at 100, so this compares change rather than the size of the systems.',sources:[topicSource('banxico-tpv-debito-ops','Debit-card purchases'),topicSource('banxico-tpv-credito-ops','Credit-card purchases'),topicSource('banxico-ecommerce-ops','Online card purchases'),topicSource('banxico-cajeros-ops','ATM withdrawals')],read:['A move from 100 to 150 means 50% more transactions than in the starting quarter.','ATM withdrawals are only a proxy for cash use. Cash received outside an ATM and cash purchases do not appear here.']},
+    modulesTitle:'Cards, cash, access, and transfer rails',
     modules:[
-      {k:'The rails',title:'SPEI is the useful operating pulse',value:`${fmt(S.value/1e6,0)}m operations · ${dateLabel(S.date)}`,text:'Volume says more about everyday use than the enormous nominal amount transferred through the system.',href:'/chart.html?v=banxico-spei-operaciones,banxico-spei-monto',link:'Open SPEI data →'},
-      {k:'Cards',title:'Debit and credit do not move together every quarter',value:`Debit ${deltaText(pct(D.value,Dp.value),'%',1)} · credit ${deltaText(pct(C.value,Cp.value),'%',1)}`,text:'The separate series help distinguish a broad card shift from a move concentrated in one rail.',href:'/chart.html?v=banxico-tpv-debito-monto,banxico-tpv-credito-monto',link:'Compare the card series →'},
-      {k:'Online',title:'E-commerce has its own, slower clock',value:`${fmt(E.value/1000,0)}bn MXN · ${quarterLabel(E.date)}`,text:'The latest e-commerce reading is older than the other payment series, so its date matters.',href:'/chart.html?v=banxico-ecommerce-monto,banxico-ecommerce-ops',link:'Open e-commerce →'},
-      {k:'Cash',title:'Currency in circulation is still rising in nominal pesos',value:`${fmt(Cash.value/1e6,2)}tn MXN · ${dateLabel(Cash.date)}`,text:CashY?`${deltaText(pct(Cash.value,CashY.value),'%',1)} from a year earlier. Inflation and economic growth both affect this total.`:'Inflation and economic growth both affect this total.',href:'/chart.html?v=banxico-circulante',link:'Open cash in circulation →'}
+      {k:'Cards',title:'Three of every four terminal purchases use debit',value:`Debit ${fmt(debitShare,1)}% · credit ${fmt(100-debitShare,1)}%`,text:'This is the share of transaction count, not pesos spent or unique cardholders.',href:'/chart.html?v=banxico-tpv-debito-ops,banxico-tpv-credito-ops',link:'Compare debit and credit →'},
+      {k:'Cash',title:'Cash is still the usual payment method for most adults',value:'85.2% at MX$500 or less · ENIF 2024',text:'For purchases of MX$500 or less, 85.2% of adults said cash was their usual method; 73.5% said the same for purchases above MX$500. The survey is the slower check on what ATM data can only suggest.',href:enif,link:'Open the ENIF survey ↗'},
+      {k:'Access',title:'Active cards are not the same as people with an account',value:`${fmt(DC.value/1e6,0)}m debit · ${fmt(CC.value/1e6,1)}m credit`,text:'One person can hold several cards. CNBV separately tracks accounts, terminals, ATMs and banking correspondents.',href:cnbv,link:'Open CNBV inclusion data ↗'},
+      {k:'Transfer rails',title:'SPEI and CoDi operate at very different scales',value:`SPEI ${fmt(S.value/1e6,0)}m (${shortDate(S.date)}) · CoDi ${fmt(CoDi.value/1e3,0)}k (${shortDate(CoDi.date)})`,text:'These are monthly transactions, not registrations. CoDi remains small next to ordinary bank transfers.',href:'/chart.html?v=banxico-spei-operaciones,banxico-codi-operaciones',link:'Compare the transfer rails →'}
     ],
     updates:[
-      {type:'System data',title:`SPEI processed ${fmt(S.value/1e6,0)} million transfers in ${dateLabel(S.date)}`,text:`That was ${fmt(Math.abs(pct(S.value,Sp.value)),1)}% ${S.value>=Sp.value?'above':'below'} ${dateLabel(Sp.date)}. The history shown here begins in ${dateLabel(spei[0].date)}, so there is no year-earlier comparison yet.`,source:'Banxico',href:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date)},
-      {type:'Cards',title:`Debit-card point-of-sale value was ${fmt(D.value/1000,0)}bn MXN`,text:`The latest point was ${fmt(Math.abs(pct(D.value,Dp.value)),1)}% ${D.value>=Dp.value?'above':'below'} the previous quarter.${debitReview?' That jump is flagged for review.':''}`,source:'Banxico',href:sourceUrl('banxico-tpv-debito-monto'),date:quarterLabel(D.date)},
-      {type:'Cards',title:`Credit-card point-of-sale value was ${fmt(C.value/1000,0)}bn MXN`,text:`The latest point was ${fmt(Math.abs(pct(C.value,Cp.value)),1)}% ${C.value>=Cp.value?'above':'below'} the previous quarter.`,source:'Banxico',href:sourceUrl('banxico-tpv-credito-monto'),date:quarterLabel(C.date)}
+      {type:'Official data',title:`Card purchases rose ${fmt(Math.abs(pct(Card.value,CardY.value)),1)}%; ATM withdrawals fell ${fmt(Math.abs(pct(ATM.value,ATMY.value)),1)}%`,text:`Both comparisons use ${quarterLabel(Card.date)} against the same quarter a year earlier.`,source:'Banxico',href:sourceUrl('banxico-tpv-debito-ops'),date:quarterLabel(Card.date)},
+      {type:'Payment rules',title:'Banxico published a common mobile-transfer flow',text:'Banks will have to make mobile transfers follow a more consistent set of steps. The rules also add a simplified account for small merchants receiving digital payments.',source:'Banxico',href:mobileRules,date:'Jun 17'},
+      {type:'Card rules',title:'Banxico opened consultations on card-clearing changes',text:'The proposals cover clearing-house rules and a common message standard. They are proposals, not final rules.',source:'Banxico',href:cardConsult,date:'2026'}
     ],
     upcoming:[
       {date:'Monthly',label:'SPEI and CoDi system totals',source:'Banxico · release date varies'},
@@ -409,8 +439,8 @@ function paymentsTopic(){
       {date:'Monthly',label:'Currency in circulation',source:'Banxico · release date varies'}
     ],
     upcomingTitle:'Data schedule',
-    sources:[topicSource('banxico-spei-operaciones'),topicSource('banxico-tpv-debito-monto'),topicSource('banxico-tpv-credito-monto'),topicSource('banxico-ecommerce-monto'),topicSource('banxico-circulante')],
-    method:'These are system totals, not a household survey. Nominal transaction value and transaction count answer different questions, so they are shown separately.'
+    sources:[topicSource('banxico-spei-operaciones'),topicSource('banxico-codi-operaciones'),topicSource('banxico-tpv-debito-ops'),topicSource('banxico-tpv-credito-ops'),topicSource('banxico-cajeros-ops'),topicSource('banxico-ecommerce-ops'),topicSource('banxico-tarjetas-debito'),topicSource('banxico-tarjetas-credito'),{label:'INEGI · ENIF 2024',href:enif,date:'2024'},{label:'CNBV · financial inclusion databases',href:cnbv,date:''},{label:'Banxico · mobile-transfer rules',href:mobileRules,date:'2026-06-17'}],
+    method:`Transaction count and nominal value answer different questions. This page leads with count. The indexed chart compares change, not system size. ${debitReview?'Debit-card value series SF62279 is excluded while its Q1 2026 jump remains under review.':''}`
   };
 }
 
