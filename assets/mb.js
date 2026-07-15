@@ -87,6 +87,13 @@ export function humanSrc(u){
     return sid?`https://www.banxico.org.mx/AplBusquedasBM2/bsiewww.jsp?_page=1&_action=search&_lang=es&_userquery=${encodeURIComponent(sid)}`:'https://www.banxico.org.mx/SieInternet/';
   }
   if(/apidatamexico|tesseract|economia\.gob\.mx\/api/i.test(u))return 'https://www.economia.gob.mx/datamexico/';
+  // The World Bank API returns JSON. Useful to the pipeline; unpleasant for a
+  // reader. Keep the exact indicator, but open its normal country chart.
+  const wb=/api\.worldbank\.org\/v2\/country\/MEX\/indicator\/([^?/#]+)/i.exec(u);
+  if(wb)return `https://data.worldbank.org/indicator/${encodeURIComponent(wb[1])}?locations=MX`;
+  // CNE's machine feed forces a multi-megabyte XML download. Send readers to
+  // the official station-price lookup instead.
+  if(/publicacionexterna\.azurewebsites\.net\/publicaciones\/prices/i.test(u))return 'https://www.cne.gob.mx/ConsultaPrecios/GasolinasyDiesel/GasolinasyDiesel.html';
   return u;
 }
 // Pull the exact series id out of the API endpoint (e.g. .../series/SF43718/datos → SF43718) so the

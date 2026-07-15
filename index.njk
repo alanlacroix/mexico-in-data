@@ -90,8 +90,10 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   /* benchmark leaves the glance except where it IS the interpretive anchor (inflation vs target, rate vs neutral) */
   .tile .tb{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:6px;line-height:1.4}
   .tile .tb .arw{font-weight:700}
-  #tablero .tile .tb{display:none}
-  #tablero .tile[data-go="banxico-inflacion"] .tb,#tablero .tile[data-go="banxico-tasa-objetivo"] .tb{display:block}
+  /* Keep one benchmark row in every card. Some metrics use it and some do not,
+     but the reading divider must stay on the same baseline across the grid. */
+  #tablero .tile .tb{min-height:1.4em;visibility:hidden}
+  #tablero .tile[data-go="banxico-inflacion"] .tb,#tablero .tile[data-go="banxico-tasa-objetivo"] .tb{visibility:visible}
   /* CLUSTER 3 — trust rail recedes hard and sits after the context */
   .tile .stamp{margin-top:13px;display:block;order:3}
   .tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:3px;display:block;line-height:1.35;order:3}
@@ -262,15 +264,6 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .nextup-toggle{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;color:var(--green-d);background:none;border:none;padding:11px 0 0;cursor:pointer}
   .nextup-toggle:hover{text-decoration:underline}
 
-  /* 7 · PRIMER — evergreen orientation, moved out of the top and collapsed */
-  .primer{margin-top:30px}
-  .primerbox{border:1px solid var(--line);border-radius:4px;background:var(--paper)}
-  .primerbox summary{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600;cursor:pointer;padding:14px 16px;list-style:none;display:flex;justify-content:space-between;gap:10px}
-  .primerbox summary::-webkit-details-marker{display:none}
-  .primerbox summary::after{content:"+";color:var(--mut)}
-  .primerbox[open] summary::after{content:"–"}
-  .primerbox .country{margin:0;padding:0 16px 16px}
-
   /* board "show all indicators" toggle — appears on mobile only */
   .board-more{display:none}
 
@@ -344,18 +337,6 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
 
   <!-- (WHAT TO WATCH moved into the Brief's right rail above — Fable 2026-07-12) -->
 
-  <!-- 7 · PRIMER — new to Mexico? the evergreen basics, moved out of the top -->
-  <section class="primer">
-    <details class="primerbox">
-      <summary>New to Mexico: the basics</summary>
-      <p class="country">
-        Mexico has <b>131 million people</b> and a <b>~US$1.9 trillion economy</b>, the world's 13th-largest in 2024.<a class="ref" href="/economy.html" title="World Bank, 2024">1</a>
-        It is the <b>largest US trading partner</b>. Mexico mostly sells manufactured goods abroad, and about <b>80% of its exports go to the United States</b>.<a class="ref" href="/us-mexico.html" title="US Census Bureau; INEGI / Banxico balance of trade">2</a>
-        It elects a president every six years. <b>Claudia Sheinbaum</b> of Morena holds the office through 2030.<a class="ref" href="/politics.html" title="INE; Presidencia">3</a>
-      </p>
-    </details>
-  </section>
-
   <!-- NEWSLETTER — moved to the bottom, the last thing before the footer -->
   <section>
     <div class="sub">
@@ -375,7 +356,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
 </div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, tile, fmt, relTime, evDate, enNum } from '/assets/mb.js?v=17';
+import { loadSeries, S, EVENTS, tile, fmt, relTime, evDate, enNum } from '/assets/mb.js?v=18';
 import { summarizeHealth } from '/assets/health-status.mjs?v=3';
 
 /* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----

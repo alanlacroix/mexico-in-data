@@ -202,7 +202,7 @@ footerBlurb: "The important numbers, the developments behind them, and the origi
 </div>
 
 <script type="module">
-import {treemapSVG} from '/assets/mb.js?v=17';
+import {treemapSVG,humanSrc} from '/assets/mb.js?v=18';
 {% endraw %}
 const ROUTE_TOPIC={{ topicRoute.key | dump | safe }};
 {% raw %}
@@ -261,7 +261,7 @@ const observationPeriod=meta=>{
 const quarterLabel=d=>{const x=dateObj(d);return `Q${Math.floor(x.getUTCMonth()/3)+1} ${x.getUTCFullYear()}`;};
 const shortDate=d=>dateObj(d).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});
 const seriesId=id=>/\/series\/([A-Za-z0-9._-]+)/.exec(meta(id).sourceUrl||'')?.[1]||'';
-const sourceUrl=id=>{const raw=meta(id).sourceUrl||SOURCE_FALLBACK,sid=seriesId(id);return sid&&raw.includes('banxico.org.mx')?`https://www.banxico.org.mx/AplBusquedasBM2/bsiewww.jsp?_page=1&_action=search&_lang=es&_userquery=${encodeURIComponent(sid)}`:raw;};
+const sourceUrl=id=>humanSrc(meta(id).sourceUrl||SOURCE_FALLBACK);
 const sourceName=id=>(meta(id).source||'Original source').replace(/ \(SIE.*?\)/,'');
 const obs=id=>meta(id).vintage||last(s(id))?.date||'';
 function atOrBefore(a,target){const t=dateObj(target);return [...a].reverse().find(p=>dateObj(p.date)<=t);}
@@ -409,7 +409,7 @@ function paymentsTopic(){
     {name:'ATM withdrawals',points:indexed(comparable(atmOps)),color:INK,format:v=>fmt(v,0)}
   ];
   const daysInSpeiMonth=new Date(Date.UTC(dateObj(S.date).getUTCFullYear(),dateObj(S.date).getUTCMonth()+1,0)).getUTCDate(),debitShare=Debit.value/Card.value*100;
-  const enif='https://inegi.org.mx/contenidos/programas/enif/2024/doc/enif_2024_resultados.pdf',cnbv='https://www.cnbv.gob.mx/Inclusi%C3%B3n/Paginas/Bases-de-Datos.aspx',mobileRules='https://www.banxico.org.mx/publicaciones-y-prensa/miscelaneos/%7BEA247344-5771-6144-71DC-5688A28E78A1%7D.pdf',cardConsult='https://www.banxico.org.mx/ConsultaRegulacionWeb/index.jsp';
+  const enif='https://inegi.org.mx/contenidos/programas/enif/2024/doc/enif_2024_resultados.pdf',cnbv='https://pnif.cnbv.gob.mx/dnoticia/basededatosinclusionfinanciera2024',mobileRules='https://www.banxico.org.mx/publicaciones-y-prensa/miscelaneos/%7BEA247344-5771-6144-71DC-5688A28E78A1%7D.pdf',cardConsult='https://www.banxico.org.mx/ConsultaRegulacionWeb/index.jsp';
   return {
     title:'Payments',scope:'Transfers, cards, cash, and financial access.',asof:`Latest observations range from ${quarterLabel(E.date)} to ${dateLabel(S.date)}.`,
     nowTitle:`Card purchases rose while ATM withdrawals fell.`,

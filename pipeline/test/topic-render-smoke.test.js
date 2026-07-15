@@ -44,7 +44,8 @@ for (const route of routes) {
   const html = fs.readFileSync(path.join(root, '_site', route.permalink.slice(1)), 'utf8');
   const match = html.match(/<script type="module">([\s\S]*?)<\/script>/);
   if (!match) throw new Error(`${route.key}: module script missing`);
-  const code = match[1].replace(/import \{treemapSVG\} from '[^']+';/, "const treemapSVG=()=>'<svg role=\"img\"></svg>'; ");
+  const code = match[1].replace(/import \{treemapSVG,humanSrc\} from '[^']+';/,
+    "const treemapSVG=()=>'<svg role=\"img\"></svg>'; const humanSrc=(u)=>u; ");
 
   const nodes = new Map();
   const node = (selector) => {

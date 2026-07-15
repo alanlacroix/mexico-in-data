@@ -15,8 +15,10 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
   .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
   .at(-1).value;
 
-assert.doesNotMatch(home, /~14th-largest/i, 'homepage must not publish the old economy rank');
-assert.match(home, /13th-largest in 2024/i, 'homepage economy rank must carry its reference year');
+assert.doesNotMatch(home, /New to Mexico: the basics/i,
+  'homepage should not restore the removed introductory primer');
+assert.match(home, /#tablero \.tile \.tb\{min-height:1\.4em;visibility:hidden\}/,
+  'number cards should reserve the benchmark row so their dividers align');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
 assert.match(home, /policy rate is .* percentage points above current core inflation/i,
   'homepage should name the rate-minus-core comparison directly');
