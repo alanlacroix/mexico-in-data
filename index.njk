@@ -34,7 +34,6 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .brief .bhl{font-weight:700;color:var(--ink)}
   .brief .bsrc{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-decoration:none;letter-spacing:.02em;white-space:nowrap}
   .brief .bsrc:hover{color:var(--green-d)}
-  .brief .brief-nums{font-size:var(--fs-small);color:var(--ink-2);border-top:1px solid var(--line);padding-top:12px;margin-top:16px;font-variant-numeric:tabular-nums}
   @media(max-width:560px){ .brief p{font-size:var(--fs-small)} }
   /* Mobile Brief compression (Fable 2026-07-12): keep all 5 stories visible, shrink the tails, never
      truncate. Sublines tighten; ranks 4-5 go headline-only so the whole week fits ~2 phone screens. */
@@ -408,20 +407,10 @@ function writeVisit(){ try{ localStorage.setItem('mb_lastvisit',new Date().toISO
    law). Each sentence is a link to the source item it cites; the page never invents — it only
    renders what the generator (or its deterministic fallback) already validated. */
 const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-/* A board-number sentence carries s.live = [{series,tmpl}], so we re-render its numbers from the
-   SAME live series the board reads (S), formatted the SAME way (fmt) — the brief can never drift
-   from the board. If a series is missing (fetch/JS failure), fall back to the baked text. */
-function liveText(s){
-  if(!s.live||!s.live.length) return s.text;
-  try{
-    const parts=s.live.map(L=>{ const ser=S[L.series]; if(!ser||!ser.data||!ser.data.length) throw 0;
-      const f=fmt(L.series, ser.data.at(-1).value, ser.meta&&ser.meta.units); return L.tmpl.replace('{v}', f.v); });
-    let t=parts.join('; '); t=t.charAt(0).toUpperCase()+t.slice(1); if(!/[.!?]$/.test(t)) t+='.'; return t;
-  }catch(e){ return s.text; }
-}
 // The Brief (Fable 2026-07-12): 3-5 rubric-ranked items, one paragraph each. Item 1 = the lead story
 // EXPLAINED (the H1 above is its headline, so no repeat); items 2..N = bold headline + context + source;
-// a live standing-numbers line last. Context is em-dash-stripped; every item links to its source.
+// context is em-dash-stripped; every item links to its source. The standing numbers are shown once,
+// in the cards below, rather than repeated here.
 function renderBrief(brief){
   if(!brief||!brief.lead) return '';
   const dt=(d)=>{ if(!d)return''; const x=new Date(d+'T00:00:00'); return isNaN(x)?'':x.toLocaleDateString('en-US',{month:'short',day:'numeric'}); };
@@ -431,7 +420,6 @@ function renderBrief(brief){
   let html='';
   if(brief.lead.context) html+=`<p class="bi">${ctx(brief.lead)}${src(brief.lead)}</p>`;
   (brief.items||[]).forEach((it,i)=>{ html+=`<p class="bi" data-rank="${i+1}"><b class="bhl">${esc(it.headline)}.</b> <span class="bctx">${ctx(it)}</span>${src(it)}</p>`; });
-  if(brief.standing) html+=`<p class="brief-nums">${esc(liveText(brief.standing))}</p>`;
   return html;
 }
 
@@ -534,7 +522,7 @@ function renderWatch(brief){
       le.innerHTML=h?`<a href="${esc(h)}"${/^https?:/.test(h)?' target="_blank" rel="noopener"':''} title="Source: ${esc(brief.lead.source||'source')}">${esc(t)}</a>`:esc(t);
     }
   }
-  // the lead: 3-5 explained, linked items + a live standing-numbers line (built by the pipeline).
+  // the lead: 3-5 explained, linked items. The number cards below own the standing readings.
   const briefEl=document.getElementById('brief');
   if(briefEl){
     const html=renderBrief(brief);

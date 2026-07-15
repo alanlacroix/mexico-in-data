@@ -19,6 +19,8 @@ assert.doesNotMatch(home, /New to Mexico: the basics/i,
   'homepage should not restore the removed introductory primer');
 assert.match(home, /#tablero \.tile \.tb\{min-height:1\.4em;visibility:hidden\}/,
   'number cards should reserve the benchmark row so their dividers align');
+assert.doesNotMatch(home, /brief-nums/,
+  'the Brief should not repeat the standing readings shown in the number cards');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
 assert.match(home, /policy rate is .* percentage points above current core inflation/i,
   'homepage should name the rate-minus-core comparison directly');
