@@ -37,23 +37,35 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .story-foot{display:flex;align-items:center;gap:2px 14px;flex-wrap:wrap;margin-top:10px;min-height:44px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .story-foot a{color:var(--green-d)}
 
-  .now-group{border-top:1px solid var(--line)}
-  .now-intro{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2);margin:-1px 0 13px;max-width:48ch}
-  .now-group-title{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:600;padding:13px 0 3px}
-  .now-row{padding:13px 0 12px;border-bottom:1px solid var(--line);color:var(--ink)}
-  .now-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;color:var(--ink);text-decoration:none}
-  .now-main:hover{text-decoration:none}
-  .now-name{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.035em;text-transform:uppercase;color:var(--mut)}
-  .now-value{font-size:var(--fs-h3);line-height:1.05;font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
-  .now-change{grid-column:1 / -1;font-size:var(--fs-small);line-height:1.42;color:var(--ink)}
-  .now-stamp{grid-column:1 / -1;font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);text-transform:uppercase;letter-spacing:.025em}
-  .now-main:hover .now-name{color:var(--green-d)}
-  .now-more{margin-top:7px}
-  .now-more summary{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--green-d);cursor:pointer;list-style:none}
+  .now-group{margin-top:15px}
+  .now-group+.now-group{margin-top:22px}
+  .now-group-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:7px}
+  .now-group-title{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .now-group-note{font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.025em}
+  .metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .metric-card{display:flex;flex-direction:column;min-width:0;background:var(--paper);padding:12px 13px 10px;color:var(--ink)}
+  .metric-card:last-child:nth-child(odd){grid-column:1 / -1}
+  .metric-main{display:block;color:var(--ink);text-decoration:none;min-width:0}
+  .metric-main:hover{text-decoration:none}
+  .metric-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .metric-name,.metric-cadence{font-family:var(--mono);font-size:10px;line-height:1.25;letter-spacing:.035em;text-transform:uppercase}
+  .metric-name{color:var(--mut);font-weight:600}
+  .metric-cadence{color:var(--green-d);white-space:nowrap}
+  .metric-main:hover .metric-name{color:var(--green-d)}
+  .metric-value{font-size:clamp(25px,2.1vw,31px);line-height:1;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:9px;white-space:nowrap}
+  .metric-value small{font-family:var(--mono);font-size:10px;letter-spacing:0;color:var(--mut);font-weight:400;margin-left:3px}
+  .metric-move{font-size:13px;line-height:1.3;font-weight:650;margin-top:8px;font-variant-numeric:tabular-nums}
+  .metric-move.good{color:var(--green-d)}
+  .metric-move.bad{color:var(--red)}
+  .metric-move.neutral{color:var(--ink-2)}
+  .metric-compare{font-size:11px;line-height:1.35;color:var(--ink-2);margin-top:3px;min-height:29px}
+  .metric-stamp{font-family:var(--mono);font-size:10px;line-height:1.35;color:var(--mut);text-transform:uppercase;letter-spacing:.02em;margin-top:7px}
+  .now-more{margin-top:auto;padding-top:8px}
+  .now-more summary{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px;font-family:var(--mono);font-size:10px;line-height:1.3;color:var(--green-d);cursor:pointer;list-style:none}
   .now-more summary::-webkit-details-marker{display:none}
-  .now-more summary::after{content:"+"}
+  .now-more summary::after{content:"+";font-size:14px}
   .now-more[open] summary::after{content:"–"}
-  .now-more p{font-size:var(--fs-meta);line-height:1.45;color:var(--ink-2);margin-top:6px}
+  .now-more p{font-size:12px;line-height:1.45;color:var(--ink-2);margin-top:6px}
   .section-link{display:inline-block;margin-top:11px;font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
   .now-loading{border-top:1px solid var(--line);padding:16px 0;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
 
@@ -117,6 +129,11 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
     .brief-row h3{font-size:21px;line-height:1.25}
     .brief-row>p{font-size:16px;line-height:1.48}
     .story-foot{gap:0 13px}
+    .metric-grid{grid-template-columns:1fr}
+    .metric-card:last-child:nth-child(odd){grid-column:auto}
+    .metric-card{padding:12px 13px 10px}
+    .metric-value{font-size:28px}
+    .metric-compare{min-height:0}
     .company-row{grid-template-columns:1fr;gap:5px;padding:15px 0}
     .company-signal{grid-column:auto}
     .company-source{padding-top:5px}
@@ -164,7 +181,6 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
       <section class="section-rule" aria-labelledby="now-title">
         <div class="section-k">Current readings</div>
         <h2 class="section-title" id="now-title">Mexico now</h2>
-        <p class="now-intro">These do not all update together. The peso is daily; reserves are weekly; inflation, activity, and remittances are monthly; Banxico changes its rate at policy meetings.</p>
         <div id="mexico-now"><div class="now-loading">Loading the latest readings…</div></div>
         <a class="section-link" href="/chart.html">Open all charts →</a>
       </section>
@@ -248,24 +264,36 @@ function monthLabel(iso){
   const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);
   return isNaN(d)?'':d.toLocaleDateString('en-US',{month:'long'});
 }
-function nowRow({id,name,value,change,stamp,why}){
-  return `<div class="now-row"><a class="now-main" href="/chart.html?v=${esc(id)}"><span class="now-name">${esc(name)}</span><span class="now-value">${esc(value)}</span><span class="now-change">${esc(change)}</span><span class="now-stamp">${esc(stamp)}</span></a><details class="now-more"><summary>Why it matters</summary><p>${esc(why)}</p></details></div>`;
+function currentStreak(id){
+  const a=S[id]?.data||[]; if(!a.length) return null;
+  const value=a.at(-1).value; let i=a.length-1;
+  while(i>0&&a[i-1].value===value)i--;
+  return {date:a[i].date,value,previous:i>0?a[i-1]:null};
+}
+function metricCard({id,name,cadence,value,unit='',arrow='→',move,compare='',stamp,tone='neutral',why}){
+  return `<article class="metric-card"><a class="metric-main" href="/chart.html?v=${esc(id)}"><div class="metric-top"><span class="metric-name">${esc(name)}</span><span class="metric-cadence">${esc(cadence)}</span></div><div class="metric-value">${esc(value)}${unit?` <small>${esc(unit)}</small>`:''}</div><div class="metric-move ${esc(tone)}"><span aria-hidden="true">${esc(arrow)}</span> ${esc(move)}</div>${compare?`<div class="metric-compare">${esc(compare)}</div>`:'<div class="metric-compare"></div>'}<div class="metric-stamp">${esc(stamp)}</div></a><details class="now-more"><summary>Why it matters</summary><p>${esc(why)}</p></details></article>`;
 }
 function renderNow(){
   const peso=point('banxico-usdmxn-fix'),pesoP=prior('banxico-usdmxn-fix'),pesoY=nearAgo('banxico-usdmxn-fix',365,10);
   const inf=point('banxico-inflacion'),infP=prior('banxico-inflacion'),core=point('banxico-inflacion-subyacente');
-  const rate=point('banxico-tasa-objetivo'),rateY=nearAgo('banxico-tasa-objetivo',365,60),igae=point('banxico-igae'),igaeP=prior('banxico-igae');
+  const rate=point('banxico-tasa-objetivo'),rateStreak=currentStreak('banxico-tasa-objetivo'),igae=point('banxico-igae'),igaeP=prior('banxico-igae');
   const rem=point('banxico-remesas'),remP=prior('banxico-remesas'),remY=nearAgo('banxico-remesas',365,45);
-  const res=point('banxico-reservas'),resY=nearAgo('banxico-reservas',365,60);
-  const price=[]; const growth=[];
-  if(peso){const moves=[];if(pesoP)moves.push(`${n(Math.abs((peso.value/pesoP.value-1)*100),2)}% ${peso.value<pesoP.value?'stronger':'weaker'} than the previous trading day`);if(pesoY)moves.push(`${n(Math.abs((peso.value/pesoY.value-1)*100),1)}% ${peso.value<pesoY.value?'stronger':'weaker'} than a year ago`);price.push(nowRow({id:'banxico-usdmxn-fix',name:'Peso · per US dollar',value:n(peso.value,2),change:moves.length?`${moves.join('; ')}.`:'Comparison unavailable.',stamp:`Published daily · ${periodLabel('banxico-usdmxn-fix',peso.date)} · Banxico`,why:'A lower number means a stronger peso. That makes imports cheaper, but each export or remittance dollar converts into fewer pesos.'}));}
-  if(inf){const move=infP?`${n(Math.abs(inf.value-infP.value),2)} percentage points ${inf.value<infP.value?'lower':'higher'} than ${monthLabel(infP.date)}.`:'';const band=inf.value>=2&&inf.value<=4?` Inside Banxico's 2–4% target range.`:` Outside Banxico's 2–4% target range.`;price.push(nowRow({id:'banxico-inflacion,banxico-inflacion-subyacente',name:'Inflation',value:`${n(inf.value,2)}%`,change:move+band,stamp:`Published monthly · ${periodLabel('banxico-inflacion',inf.date)} · INEGI`,why:`Prices are still rising, just more slowly. Core inflation is ${core?n(core.value,2)+'%':'not available'}.`}));}
-  if(rate){const gap=core?n(rate.value-core.value,2):null;const moves=[];if(rateY)moves.push(`${n(Math.abs(rate.value-rateY.value),2)} percentage points ${rate.value<rateY.value?'lower':'higher'} than a year ago`);if(gap)moves.push(`${gap} points above core inflation`);price.push(nowRow({id:'banxico-tasa-objetivo,banxico-inflacion-subyacente',name:'Banxico rate',value:`${n(rate.value,2)}%`,change:moves.length?`${moves.join('; ')}.`:'Comparison unavailable.',stamp:`Set at policy meetings · ${periodLabel('banxico-tasa-objetivo',rate.date)} · Banxico`,why:'Higher rates help contain inflation and support the peso, but make borrowing more expensive.'}));}
-  if(igae){growth.push(nowRow({id:'banxico-igae',name:'Economic activity · IGAE',value:signed(igae.value,2),change:igaeP?`${igae.value>=0?'Growing':'Contracting'} from a year earlier; the prior monthly reading was ${signed(igaeP.value,2)}.`:`${igae.value>=0?'Growing':'Contracting'} from a year earlier.`,stamp:`Published monthly · ${periodLabel('banxico-igae',igae.date)} · INEGI`,why:"The closest monthly reading of whether Mexico's economy is growing before quarterly GDP arrives."}));}
-  if(rem){let change='';if(remY)change=`${n(Math.abs((rem.value/remY.value-1)*100),1)}% ${rem.value>=remY.value?'above':'below'} the same month a year earlier.`;else if(remP)change=`US$${n(Math.abs(rem.value-remP.value),0)}mn ${rem.value>=remP.value?'more':'less'} than in ${monthLabel(remP.date)}.`;growth.push(nowRow({id:'banxico-remesas',name:'Remittances',value:`US$${n(rem.value/1000,2)}bn`,change,stamp:`Published monthly · ${periodLabel('banxico-remesas',rem.date)} · Banxico`,why:'Money sent home from abroad, mostly the US. It supports household spending and brings dollars into Mexico. Monthly totals are seasonal, so the same month a year earlier is the better comparison.'}));}
-  if(res){const change=resY?`${n(Math.abs((res.value/resY.value-1)*100),1)}% ${res.value>=resY.value?'higher':'lower'} than a year ago.`:'Year-earlier comparison unavailable.';growth.push(nowRow({id:'banxico-reservas',name:'International reserves',value:`US$${n(res.value/1000,0)}bn`,change,stamp:`Published weekly · ${periodLabel('banxico-reservas',res.date)} · Banxico`,why:"Banxico's foreign-currency buffer against external shocks."}));}
+  const res=point('banxico-reservas'),resP=prior('banxico-reservas'),resY=nearAgo('banxico-reservas',365,60);
+  const ipc=point('banxico-bmv-ipc'),ipcP=prior('banxico-bmv-ipc'),ipcY=nearAgo('banxico-bmv-ipc',365,10);
+  const cetes=point('banxico-cetes-28d'),cetesP=prior('banxico-cetes-28d'),cetesY=nearAgo('banxico-cetes-28d',365,10);
+  const ust=point('fred-ust10'),ustP=prior('fred-ust10'),ustY=nearAgo('fred-ust10',365,10);
+  const daily=[]; const releases=[];
+  if(peso){const stronger=pesoP&&peso.value<pesoP.value;const weaker=pesoP&&peso.value>pesoP.value;const dayMove=pesoP?Math.abs((peso.value/pesoP.value-1)*100):null;const yearMove=pesoY?Math.abs((peso.value/pesoY.value-1)*100):null;daily.push(metricCard({id:'banxico-usdmxn-fix',name:'Peso',cadence:'Daily',value:n(peso.value,2),unit:'MXN / US$',arrow:stronger?'▲':weaker?'▼':'→',move:pesoP?`${n(dayMove,2)}% ${stronger?'stronger':weaker?'weaker':'unchanged'}`:'Comparison unavailable',compare:pesoY?`${n(yearMove,1)}% ${peso.value<pesoY.value?'stronger':'weaker'} over 1Y`:'',stamp:`${periodLabel('banxico-usdmxn-fix',peso.date)} · Banxico`,tone:stronger?'good':weaker?'bad':'neutral',why:'A lower exchange-rate quote means a stronger peso. That makes imports cheaper, but each export or remittance dollar converts into fewer pesos.'}));}
+  if(ipc){const move=ipcP?(ipc.value/ipcP.value-1)*100:null;const year=ipcY?(ipc.value/ipcY.value-1)*100:null;daily.push(metricCard({id:'banxico-bmv-ipc',name:'S&P/BMV IPC',cadence:'Daily',value:n(ipc.value,0),arrow:move>0?'▲':move<0?'▼':'→',move:move==null?'Comparison unavailable':`${n(Math.abs(move),2)}% ${move>0?'higher':move<0?'lower':'unchanged'}`,compare:year==null?'':`${n(Math.abs(year),1)}% ${year>0?'higher':year<0?'lower':'unchanged'} over 1Y`,stamp:`${periodLabel('banxico-bmv-ipc',ipc.date)} · Banxico / BMV`,tone:move>0?'good':move<0?'bad':'neutral',why:'The main index of large companies listed in Mexico. It is a useful market signal, but it is not the whole economy.'}));}
+  if(cetes){const move=cetesP?cetes.value-cetesP.value:null;const year=cetesY?cetes.value-cetesY.value:null;daily.push(metricCard({id:'banxico-cetes-28d',name:'Cetes · 28 days',cadence:'Daily',value:`${n(cetes.value,2)}%`,arrow:move>0?'▲':move<0?'▼':'→',move:move==null?'Comparison unavailable':`${n(Math.abs(move),2)} pp ${move>0?'higher':move<0?'lower':'unchanged'}`,compare:year==null?'':`${n(Math.abs(year),2)} pp ${year>0?'higher':year<0?'lower':'unchanged'} over 1Y`,stamp:`${periodLabel('banxico-cetes-28d',cetes.date)} · Banxico`,tone:'neutral',why:'The market yield on very short-term Mexican government debt. Unlike the policy rate, it can move between Banxico meetings.'}));}
+  if(ust){const move=ustP?ust.value-ustP.value:0;const year=ustY?ust.value-ustY.value:null;daily.push(metricCard({id:'fred-ust10',name:'U.S. 10-year yield',cadence:'Daily',value:`${n(ust.value,2)}%`,arrow:move>0?'▲':move<0?'▼':'→',move:ustP?`${n(Math.abs(move),2)} pp ${move>0?'higher':move<0?'lower':'unchanged'}`:'Comparison unavailable',compare:year==null?'':`${n(Math.abs(year),2)} pp ${year>0?'higher':year<0?'lower':'unchanged'} over 1Y`,stamp:`${periodLabel('fred-ust10',ust.date)} · U.S. Fed`,tone:'neutral',why:'A benchmark for dollar borrowing costs. Higher U.S. yields can reduce the relative appeal of peso assets, but they are only one input into the exchange rate.'}));}
+  if(inf){const delta=infP?inf.value-infP.value:0;const inside=inf.value>=2&&inf.value<=4;releases.push(metricCard({id:'banxico-inflacion,banxico-inflacion-subyacente',name:'Inflation',cadence:'Monthly',value:`${n(inf.value,2)}%`,arrow:delta>0?'▲':delta<0?'▼':'→',move:infP?`${n(Math.abs(delta),2)} pp ${delta>0?'higher':delta<0?'lower':'unchanged'}`:'Comparison unavailable',compare:`${inside?'Inside':'Outside'} the 2–4% target · vs ${infP?monthLabel(infP.date):'prior month'}`,stamp:`${periodLabel('banxico-inflacion',inf.date)} · INEGI`,tone:inside?'good':'bad',why:`Prices are still rising, just more slowly. Core inflation is ${core?n(core.value,2)+'%':'not available'}.`}));}
+  if(rate){const prev=rateStreak?.previous,delta=prev?rate.value-prev.value:0;const gap=core?n(rate.value-core.value,2):null;releases.push(metricCard({id:'banxico-tasa-objetivo,banxico-inflacion-subyacente',name:'Banxico rate',cadence:'Policy meetings',value:`${n(rate.value,2)}%`,arrow:delta>0?'▲':delta<0?'▼':'→',move:prev?`${n(Math.abs(delta),2)} pp ${delta>0?'higher':delta<0?'lower':'unchanged'} at latest change`:'No earlier change available',compare:gap?`${gap} pp above core inflation`:'',stamp:`Current since ${dateLabel(rateStreak?.date)} · Banxico`,tone:'neutral',why:'Higher rates help contain inflation and support the peso, but make borrowing more expensive.'}));}
+  if(igae){const delta=igaeP?igae.value-igaeP.value:0;releases.push(metricCard({id:'banxico-igae',name:'Economic activity',cadence:'Monthly',value:signed(igae.value,2),unit:'YoY',arrow:delta>0?'▲':delta<0?'▼':'→',move:igaeP?`from ${signed(igaeP.value,2)} prior month`:`${igae.value>=0?'Growing':'Contracting'} from a year earlier`,compare:'Year-over-year growth · IGAE',stamp:`${periodLabel('banxico-igae',igae.date)} · INEGI`,tone:igae.value>=0?'good':'bad',why:"The closest monthly reading of whether Mexico's economy is growing before quarterly GDP arrives."}));}
+  if(rem){let arrow='→',move='Comparison unavailable',compare='';let tone='neutral';if(remY){const delta=(rem.value/remY.value-1)*100;arrow=delta>0?'▲':delta<0?'▼':'→';move=`${n(Math.abs(delta),1)}% ${delta>=0?'higher':'lower'}`;compare='Versus the same month last year';tone=delta>=0?'good':'bad';}else if(remP){const delta=rem.value-remP.value;arrow=delta>0?'▲':delta<0?'▼':'→';move=`US$${n(Math.abs(delta),0)}m ${delta>=0?'more':'less'}`;compare=`Versus ${monthLabel(remP.date)} · monthly totals are seasonal`;}releases.push(metricCard({id:'banxico-remesas',name:'Remittances',cadence:'Monthly',value:`US$${n(rem.value/1000,2)}bn`,arrow,move,compare,stamp:`${periodLabel('banxico-remesas',rem.date)} · Banxico`,tone,why:'Money sent home from abroad, mostly the US. It supports household spending and brings dollars into Mexico. The same month a year earlier is the better comparison.'}));}
+  if(res){const delta=resP?res.value-resP.value:0;const year=resY?(res.value/resY.value-1)*100:null;releases.push(metricCard({id:'banxico-reservas',name:'International reserves',cadence:'Weekly',value:`US$${n(res.value/1000,0)}bn`,arrow:delta>0?'▲':delta<0?'▼':'→',move:resP?`US$${n(Math.abs(delta),0)}m ${delta>0?'higher':delta<0?'lower':'unchanged'}`:'Comparison unavailable',compare:year==null?'':`${n(Math.abs(year),1)}% ${year>=0?'higher':'lower'} over 1Y`,stamp:`${periodLabel('banxico-reservas',res.date)} · Banxico`,tone:'neutral',why:"Banxico's foreign-currency buffer against external shocks."}));}
   const el=document.getElementById('mexico-now');
-  if(el) el.innerHTML=`<div class="now-group"><div class="now-group-title">Prices and rates</div>${price.join('')}</div><div class="now-group"><div class="now-group-title">Growth and money flows</div>${growth.join('')}</div>`;
+  if(el) el.innerHTML=`<div class="now-group"><div class="now-group-head"><div class="now-group-title">Daily movers</div><div class="now-group-note">Previous close</div></div><div class="metric-grid">${daily.join('')}</div></div><div class="now-group"><div class="now-group-head"><div class="now-group-title">Latest official readings</div><div class="now-group-note">Latest available</div></div><div class="metric-grid">${releases.join('')}</div></div>`;
 }
 
 function renderAreas(data){
@@ -295,7 +323,7 @@ function renderTimeline(){
   document.querySelectorAll('.js-date').forEach(el=>{el.textContent=dateLabel(el.dataset.date);});
   const newsAsof=document.getElementById('news-asof'); if(newsAsof){const d=new Date(newsAsof.dataset.date);newsAsof.textContent=`News through ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
   const [loaded,health,areasData]=await Promise.all([
-    loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-igae','banxico-remesas','banxico-reservas']),
+    loadSeries(['banxico-usdmxn-fix','banxico-bmv-ipc','banxico-cetes-28d','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-igae','banxico-remesas','banxico-reservas','fred-ust10']),
     fetch('/data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
     fetch('/data/areas.json').then(r=>r.ok?r.json():null).catch(()=>null)
   ]);

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-15T14:07:18.606Z",
-  "runId": "20260715140718",
+  "generatedAt": "2026-07-15T17:59:36.024Z",
+  "runId": "20260715175936",
   "geoEpoch": {
     "epoch": "mg-2020",
     "source": "INEGI Marco Geoestadístico",
@@ -8,22 +8,13 @@
     "count": 2478
   },
   "summary": {
-    "ok": 43,
+    "ok": 45,
     "flagged": 8,
     "failed": 1,
     "skipped": 1,
     "darkSources": []
   },
-  "alerts": [
-    {
-      "id": "se-ied",
-      "source": "Secretaría de Economía (RNIE)",
-      "metric": "fdi",
-      "severity": "error",
-      "message": "IED: official summary workbook link not found",
-      "at": "2026-07-15T14:07:18.606Z"
-    }
-  ],
+  "alerts": [],
   "reconciliation": [],
   "sources": [
     {
@@ -1157,6 +1148,48 @@
       "rowCount": 35,
       "file": "data/series/wb-unemployment.json",
       "finishedAt": "2026-07-15T14:07:47.881Z"
+    },
+    {
+      "id": "banxico-bmv-ipc",
+      "title": "S&P/BMV IPC — índice de cierre",
+      "metric": "bmv_ipc",
+      "source": "Banco de México (SIE)",
+      "seriesId": "SF43716",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43716/datos",
+      "track": "pulse",
+      "kind": "series",
+      "cadence": "business-daily",
+      "freshnessGraceDays": null,
+      "canonicalSource": true,
+      "status": "ok",
+      "flags": [],
+      "startedAt": "2026-07-15T17:59:35.194Z",
+      "vintage": "2026-07-14",
+      "fetchedAt": "2026-07-15T17:59:35.194Z",
+      "rowCount": 251,
+      "file": "data/series/banxico-bmv-ipc.json",
+      "finishedAt": "2026-07-15T17:59:35.992Z"
+    },
+    {
+      "id": "banxico-cetes-28d",
+      "title": "Cetes a 28 días — tasa de rendimiento",
+      "metric": "cetes_28d",
+      "source": "Banco de México (SIE)",
+      "seriesId": "SF45470",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF45470/datos",
+      "track": "pulse",
+      "kind": "series",
+      "cadence": "business-daily",
+      "freshnessGraceDays": null,
+      "canonicalSource": true,
+      "status": "ok",
+      "flags": [],
+      "startedAt": "2026-07-15T17:59:36.024Z",
+      "vintage": "2026-07-14",
+      "fetchedAt": "2026-07-15T17:59:36.024Z",
+      "rowCount": 251,
+      "file": "data/series/banxico-cetes-28d.json",
+      "finishedAt": "2026-07-15T17:59:36.500Z"
     }
   ]
 }

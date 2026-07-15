@@ -35,7 +35,8 @@ const PAYMENTS = [
 ].map(SERIES);
 
 const CHARTS = [
-  'banxico-usdmxn-fix', 'banxico-tasa-objetivo', 'fred-fedfunds', 'fred-ust10',
+  'banxico-usdmxn-fix', 'banxico-bmv-ipc', 'banxico-cetes-28d',
+  'banxico-tasa-objetivo', 'fred-fedfunds', 'fred-ust10',
   'banxico-reservas', 'fred-usd-broad', 'banxico-inflacion',
   'banxico-inflacion-subyacente', 'banxico-salario-minimo', 'banxico-inpc',
   'cre-gasolina-regular', 'banxico-pib-crecimiento', 'banxico-igae',
@@ -56,6 +57,7 @@ export const PAGE_DATA_CONTRACTS = {
   'Brief': [
     'data/health.json', 'data/brief.json', 'data/areas.json',
     'data/analysis/facts.json', ...CONTEXT, ...MONEY,
+    SERIES('banxico-bmv-ipc'), SERIES('banxico-cetes-28d'),
     SERIES('banxico-pib-crecimiento'), SERIES('banxico-igae'),
     SERIES('wb-gdp-usd'), SERIES('wb-population'), SERIES('wb-gdp-per-capita'),
   ],

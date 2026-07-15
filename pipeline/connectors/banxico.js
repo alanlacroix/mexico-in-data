@@ -68,6 +68,8 @@ function makeConnector({ id, title, metric, serie, units, cadence, maxPct, years
 export const connectors = [
   makeConnector({ id: 'banxico-tasa-objetivo', title: 'Tasa objetivo (política monetaria)', metric: 'policy_rate', serie: 'SF61745', units: '%', cadence: 'daily', maxPct: 30 }),
   makeConnector({ id: 'banxico-usdmxn-fix', title: 'Tipo de cambio USD/MXN (FIX)', metric: 'usdmxn', serie: 'SF43718', units: 'MXN per USD', cadence: 'business-daily', maxPct: 15 }),
+  makeConnector({ id: 'banxico-bmv-ipc', title: 'S&P/BMV IPC — índice de cierre', metric: 'bmv_ipc', serie: 'SF43716', units: 'index points', cadence: 'business-daily', maxPct: 20 }),
+  makeConnector({ id: 'banxico-cetes-28d', title: 'Cetes a 28 días — tasa de rendimiento', metric: 'cetes_28d', serie: 'SF45470', units: '% annual', cadence: 'business-daily', maxPct: 50 }),
   makeConnector({ id: 'banxico-reservas', title: 'Reservas internacionales', metric: 'reserves', serie: 'SF43707', units: 'million US$', cadence: 'weekly', maxPct: 20 }),
   // Remittances — ~4% of GDP, the most-felt first-party number. Verified SE27803.
   makeConnector({ id: 'banxico-remesas', title: 'Remesas familiares (total)', metric: 'remittances', serie: 'SE27803', units: 'million US$', cadence: 'monthly', maxPct: 25, years: 2 }),

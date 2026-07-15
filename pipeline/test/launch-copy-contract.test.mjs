@@ -17,15 +17,21 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
 
 assert.match(home, /Mexico this morning/i, 'homepage must remain a daily starting point');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
-assert.match(home, /Published daily/i, 'homepage must identify daily readings');
-assert.match(home, /Published weekly/i, 'homepage must identify weekly readings');
-assert.match(home, /Published monthly/i, 'homepage must identify monthly readings');
-assert.match(home, /Set at policy meetings/i, 'homepage must explain the policy-rate schedule');
+assert.match(home, /Daily movers/i, 'homepage must separate fast-moving readings');
+assert.match(home, /Latest official readings/i, 'homepage must separate scheduled official readings');
+assert.match(home, /cadence:'Daily'/i, 'homepage must identify daily readings');
+assert.match(home, /cadence:'Weekly'/i, 'homepage must identify weekly readings');
+assert.match(home, /cadence:'Monthly'/i, 'homepage must identify monthly readings');
+assert.match(home, /cadence:'Policy meetings'/i, 'homepage must explain the policy-rate schedule');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
-assert.match(home, /points above core inflation/i,
+assert.match(home, /pp above core inflation/i,
   'homepage should name the rate-minus-core comparison directly');
-assert.match(home, /previous trading day/i,
+assert.match(home, /Previous close/i,
   'homepage peso reading should include a short-term comparison');
+assert.match(home, /banxico-bmv-ipc/i,
+  'homepage daily movers should include the Mexican equity market');
+assert.match(home, /banxico-cetes-28d/i,
+  'homepage daily movers should include the short-term Mexican government yield');
 
 assert.match(topics, /general minimum wage is MX\$\$\{fmt\(W\.value,2\)\} a day/i,
   'minimum-wage copy must identify Mexican pesos');
