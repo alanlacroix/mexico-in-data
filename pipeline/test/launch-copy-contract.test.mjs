@@ -10,6 +10,10 @@ const home = text('index.njk');
 const topics = text('topic-pages.njk');
 const model = text('model.njk');
 const brief = json('data/brief.json');
+const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
+  .filter((row) => row?.value != null && Number.isFinite(Number(row.value)))
+  .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
+  .at(-1).value;
 
 assert.doesNotMatch(home, /~14th-largest/i, 'homepage must not publish the old economy rank');
 assert.match(home, /13th-largest in 2024/i, 'homepage economy rank must carry its reference year');
@@ -29,8 +33,9 @@ assert.doesNotMatch(model, /causal map/i, 'directional rules must not be present
 assert.match(model, /directional scenario map, not a forecast/i,
   'model must state what the tool actually does');
 
-assert.match(brief.standing.text, /17\.50 pesos to the dollar; inflation is 3\.37%; the policy rate is 6\.50%\./,
-  'standing line must state the peso unit and separate the three readings clearly');
+const expectedStanding = `The peso trades at ${Number(latestSeriesValue('banxico-usdmxn-fix')).toFixed(2)} pesos to the dollar; inflation is ${Number(latestSeriesValue('banxico-inflacion')).toFixed(2)}%; the policy rate is ${Number(latestSeriesValue('banxico-tasa-objetivo')).toFixed(2)}%.`;
+assert.equal(brief.standing.text, expectedStanding,
+  'standing line must match the latest feeds, state the peso unit, and separate the three readings clearly');
 assert.equal(brief.standing.live[0].tmpl, 'the peso trades at {v} pesos to the dollar',
   'live standing copy must preserve the peso unit when the number updates');
 
