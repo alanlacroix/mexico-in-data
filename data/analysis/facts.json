@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T14:07:55.407Z",
+  "generatedAt": "2026-07-15T19:35:09.436Z",
   "whatMoved": {
     "quiet": false,
     "items": [
@@ -36,6 +36,26 @@
     ]
   },
   "metrics": {
+    "banxico-bmv-ipc": {
+      "id": "banxico-bmv-ipc",
+      "source": "Banco de México (SIE)",
+      "sid": "SF43716",
+      "cadence": "business-daily",
+      "units": "index points",
+      "vintage": "2026-07-14",
+      "date": "2026-07-14",
+      "value": 66514.3,
+      "prev": 65973.08,
+      "change": 541.22,
+      "changePct": 0.82,
+      "dir": 1,
+      "z": 0.71,
+      "streak": 1,
+      "isRecordHigh": false,
+      "isRecordLow": false,
+      "trend3": 0.6,
+      "trend12": -1.1
+    },
     "banxico-cajeros-monto": {
       "id": "banxico-cajeros-monto",
       "source": "Banco de México (SIE)",
@@ -75,6 +95,26 @@
       "isRecordLow": true,
       "trend3": -8.9,
       "trend12": -21.8
+    },
+    "banxico-cetes-28d": {
+      "id": "banxico-cetes-28d",
+      "source": "Banco de México (SIE)",
+      "sid": "SF45470",
+      "cadence": "business-daily",
+      "units": "% annual",
+      "vintage": "2026-07-14",
+      "date": "2026-07-14",
+      "value": 6.2701,
+      "prev": 6.4568,
+      "change": -0.1867,
+      "changePct": -2.89,
+      "dir": -1,
+      "z": -2.04,
+      "streak": 4,
+      "isRecordHigh": false,
+      "isRecordLow": true,
+      "trend3": -3.1,
+      "trend12": -1
     },
     "banxico-circulante": {
       "id": "banxico-circulante",
@@ -449,12 +489,12 @@
       "change": 635.7337,
       "changePct": 12.86,
       "dir": 1,
-      "z": 1.18,
+      "z": 1.37,
       "streak": 1,
       "isRecordHigh": false,
       "isRecordLow": false,
       "trend3": 23.8,
-      "trend12": null
+      "trend12": 3.9
     },
     "banxico-remesas": {
       "id": "banxico-remesas",
@@ -469,12 +509,12 @@
       "change": 632.951,
       "changePct": 12.71,
       "dir": 1,
-      "z": 1.15,
+      "z": 1.34,
       "streak": 1,
       "isRecordHigh": false,
       "isRecordLow": false,
       "trend3": 23.5,
-      "trend12": null
+      "trend12": 3.8
     },
     "banxico-reservas": {
       "id": "banxico-reservas",
@@ -722,19 +762,19 @@
       "sid": "SF43718",
       "cadence": "business-daily",
       "units": "MXN per USD",
-      "vintage": "2026-07-14",
-      "date": "2026-07-14",
-      "value": 17.4278,
-      "prev": 17.5023,
-      "change": -0.0745,
-      "changePct": -0.43,
+      "vintage": "2026-07-15",
+      "date": "2026-07-15",
+      "value": 17.391,
+      "prev": 17.4278,
+      "change": -0.0368,
+      "changePct": -0.21,
       "dir": -1,
-      "z": -0.92,
-      "streak": 1,
+      "z": -0.45,
+      "streak": 2,
       "isRecordHigh": false,
       "isRecordLow": false,
-      "trend3": -0.6,
-      "trend12": -0.2
+      "trend3": -0.5,
+      "trend12": -0.7
     },
     "cre-diesel": {
       "id": "cre-diesel",
@@ -2471,6 +2511,10 @@
       ],
       "series": [
         {
+          "date": "2025-07-01",
+          "value": 101.655
+        },
+        {
           "date": "2025-08-01",
           "value": 105.408
         },
@@ -2518,7 +2562,7 @@
     },
     "pesoVol": {
       "label": "Peso 90-day realized volatility (annualized)",
-      "value": 8.8,
+      "value": 8.7,
       "unit": "%",
       "from": [
         "banxico-usdmxn-fix"
