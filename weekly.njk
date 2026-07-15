@@ -16,6 +16,8 @@ description: "A weekly email on Mexico's economy, politics, and relationship wit
   .lp .thesis{font-size:var(--fs-body);color:var(--ink-2);margin:18px 0 0;line-height:1.5;max-width:52ch}
 
   .signup{margin:28px 0 0;max-width:480px}
+  .example-link{font-size:var(--fs-small);line-height:1.5;color:var(--ink-2);margin:20px 0 -10px}
+  .example-link a{color:var(--green);font-weight:600}
   .signup form{display:flex;gap:10px;flex-wrap:wrap}
   .signup input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:var(--fs-small);padding:14px 15px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
   .signup input[type=email]:focus{outline:none;border-color:var(--green)}
@@ -42,9 +44,10 @@ description: "A weekly email on Mexico's economy, politics, and relationship wit
 
 <div class="wrap">
   <section class="lp">
-    <span class="eyebrow">The weekly email</span>
+    <span class="eyebrow">Every Monday</span>
     <h1>Mexico, once a week.</h1>
-    <p class="thesis">Once a week, I send the few things that changed in Mexico's economy, politics, and relationship with the US that I think are worth knowing. The numbers come from original sources. The links are included if you want to go deeper.</p>
+    <p class="thesis">If you read nothing else about Mexico that week, you should still know what mattered, especially in the economy, politics, and the relationship with the US. Every number and claim links to the original source, so you can go deeper and come to your own conclusion. I'll tell you what I think too, but I'll label it.</p>
+    <p class="example-link">Curious to see an example? <a href="/latest-edition.html">Read the latest edition →</a></p>
 
     <!-- Our own form -> /api/subscribe (Cloudflare function -> beehiiv, key server-side). No third-party UI. -->
     <div class="signup">
@@ -60,14 +63,13 @@ description: "A weekly email on Mexico's economy, politics, and relationship wit
 
   <section class="inside" aria-labelledby="inside-title">
     <h2 id="inside-title">What's in it</h2>
-    <p class="intro">Each issue starts with the biggest development of the week, then the numbers that moved and the context that helped me understand them.</p>
+    <p class="intro">The biggest developments of the week, the numbers behind them, and what to watch next.</p>
     <div class="issueparts">
       <div class="issuepart"><span class="k">The week</span><p>The developments I would want someone to tell me about.</p></div>
       <div class="issuepart"><span class="k">The numbers</span><p>The current value, what changed, the period it covers, and the original source.</p></div>
       <div class="issuepart"><span class="k">My read</span><p>What I think it means, clearly labeled. You are welcome to ignore that part.</p></div>
       <div class="issuepart"><span class="k">Next</span><p>The releases, votes, and decisions coming up.</p></div>
     </div>
-    <p class="madefor">I made the email for the same reason I made the site. I was tired of opening ten tabs and still not knowing what had actually changed. This is the recap I wanted once a week. Written by <a href="/about.html">Alan Lacroix</a>.</p>
   </section>
 </div>
 {% endraw %}

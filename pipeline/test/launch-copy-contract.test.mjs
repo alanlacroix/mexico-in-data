@@ -15,15 +15,17 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
   .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
   .at(-1).value;
 
-assert.doesNotMatch(home, /New to Mexico: the basics/i,
-  'homepage should not restore the removed introductory primer');
-assert.match(home, /#tablero \.tile \.tb\{min-height:1\.4em;visibility:hidden\}/,
-  'number cards should reserve the benchmark row so their dividers align');
-assert.doesNotMatch(home, /brief-nums/,
-  'the Brief should not repeat the standing readings shown in the number cards');
+assert.match(home, /Mexico this morning/i, 'homepage must remain a daily starting point');
+assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
+assert.match(home, /Published daily/i, 'homepage must identify daily readings');
+assert.match(home, /Published weekly/i, 'homepage must identify weekly readings');
+assert.match(home, /Published monthly/i, 'homepage must identify monthly readings');
+assert.match(home, /Set at policy meetings/i, 'homepage must explain the policy-rate schedule');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
-assert.match(home, /policy rate is .* percentage points above current core inflation/i,
+assert.match(home, /points above core inflation/i,
   'homepage should name the rate-minus-core comparison directly');
+assert.match(home, /previous trading day/i,
+  'homepage peso reading should include a short-term comparison');
 
 assert.match(topics, /general minimum wage is MX\$\$\{fmt\(W\.value,2\)\} a day/i,
   'minimum-wage copy must identify Mexican pesos');

@@ -70,7 +70,7 @@ export const connectors = [
   makeConnector({ id: 'banxico-usdmxn-fix', title: 'Tipo de cambio USD/MXN (FIX)', metric: 'usdmxn', serie: 'SF43718', units: 'MXN per USD', cadence: 'business-daily', maxPct: 15 }),
   makeConnector({ id: 'banxico-reservas', title: 'Reservas internacionales', metric: 'reserves', serie: 'SF43707', units: 'million US$', cadence: 'weekly', maxPct: 20 }),
   // Remittances — ~4% of GDP, the most-felt first-party number. Verified SE27803.
-  makeConnector({ id: 'banxico-remesas', title: 'Remesas familiares (total)', metric: 'remittances', serie: 'SE27803', units: 'million US$', cadence: 'monthly', maxPct: 25 }),
+  makeConnector({ id: 'banxico-remesas', title: 'Remesas familiares (total)', metric: 'remittances', serie: 'SE27803', units: 'million US$', cadence: 'monthly', maxPct: 25, years: 2 }),
 
   // ---- PAYMENTS PILLAR (Fable 2026-07-11): the country's payment rails + system aggregates only,
   // never a private company. Series ids found + cross-verified against the SIE catalog. All fail-closed:
@@ -94,7 +94,7 @@ export const connectors = [
   makeConnector({ id: 'banxico-tarjetas-credito',  title: 'Tarjetas de crédito vigentes (todas las marcas)', metric: 'cards_credit', serie: 'SF61870', units: 'tarjetas', cadence: 'quarterly', maxPct: 25, years: 6 }),
   makeConnector({ id: 'banxico-tarjetas-debito',   title: 'Tarjetas de débito vigentes (todas las marcas)',  metric: 'cards_debit',  serie: 'SF61871', units: 'tarjetas', cadence: 'quarterly', maxPct: 25, years: 6 }),
   makeConnector({ id: 'banxico-consumo-privado',   title: 'Consumo privado — índice mensual (desest.)', metric: 'private_consumption', serie: 'SR17449', units: 'index 2018=100', cadence: 'monthly', maxPct: 20, years: 6 }), // base-2018 IMCPMI (SR16563 was base-2013, discontinued May 2023)
-  makeConnector({ id: 'banxico-remesas-electronicas', title: 'Remesas — transferencias electrónicas', metric: 'remittances_electronic', serie: 'SE27806', units: 'million US$', cadence: 'monthly', maxPct: 25 }),
+  makeConnector({ id: 'banxico-remesas-electronicas', title: 'Remesas — transferencias electrónicas', metric: 'remittances_electronic', serie: 'SE27806', units: 'million US$', cadence: 'monthly', maxPct: 25, years: 2 }),
   // Currency in circulation (SF1, monthly). Native unit is MILES de pesos → convert to millones (÷1000)
   // so it matches every other importe series on the page. The cash half of the paradox.
   {

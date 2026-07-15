@@ -61,90 +61,120 @@ function text(value) {
 const mdLabel = (value) => text(value).replace(/([\[\]\\])/g, '\\$1');
 const sourceLink = (label, url) => {
   const cleanLabel = mdLabel(label || 'Original source');
-  return url ? `[${cleanLabel}](<${url}>)` : cleanLabel;
+  if (!url) return cleanLabel;
+  return /^#|^\//.test(url) ? `[${cleanLabel}](${url})` : `[${cleanLabel}](<${url}>)`;
 };
 const metaLine = (...parts) => parts.map(text).filter(Boolean).join(' · ');
 
 function makePreview(draft) {
   const explicit = text(draft.previewText || draft.preheader || '');
   if (explicit) return shorten(explicit, 150);
-  const lead = (draft.topOfWeek || [])[0];
+  const lead = draft.lead || (draft.topOfWeek || [])[0];
   const fromLead = text(lead?.summary || lead?.headline || '');
   return fromLead
     ? shorten(fromLead, 150)
-    : 'Mexico this week: the numbers, the news, and what comes next.';
+    : '[PREVIEW TEXT NEEDED]';
 }
 
 function makeBody(draft) {
   const lines = [];
   const add = (...values) => lines.push(...values, '');
 
-  add('# THE MEXICO BRIEF', metaLine(draft.dateLabel, draft.issue ? `Issue ${draft.issue}` : ''));
-  if (draft.intro) add(text(draft.intro));
+  add('# THE MEXICO BRIEF', metaLine(draft.dateLabel, draft.readMin ? `${draft.readMin} min` : ''));
 
-  const leads = draft.topOfWeek || [];
-  if (leads.length) {
-    add('## Top of the week');
-    leads.forEach((item) => {
+  const glance = draft.atAGlance || [];
+  if (glance.length) {
+    add('## In this brief');
+    glance.forEach((item) => {
+      const label = text(item.headline || item.label || item.text || item);
+      const url = item.url || item.href || '';
+      lines.push(`- ${url ? sourceLink(label, url) : label}`);
+    });
+    lines.push('');
+  }
+
+  if (draft.intro) add('## A note from me', text(draft.intro));
+
+  const lead = draft.lead || (draft.topOfWeek || [])[0] || null;
+  if (lead) {
+    const heading = lead.url
+      ? `## [${mdLabel(lead.headline)}](<${lead.url}>)`
+      : `## ${text(lead.headline)}`;
+    add(
+      heading,
+      text(lead.summary),
+      lead.editorNote ? `**My read:** ${text(lead.editorNote)}` : '',
+      metaLine(lead.sourceName, lead.date),
+      lead.url ? sourceLink('Source ↗', lead.url) : '',
+    );
+  }
+
+  const supporting = draft.supporting || [];
+  if (supporting.length) {
+    add('## Also this week');
+    supporting.forEach((item) => {
       const heading = item.url
         ? `### [${mdLabel(item.headline)}](<${item.url}>)`
         : `### ${text(item.headline)}`;
       add(
         heading,
-        metaLine(item.room, item.sourceName, item.date),
         text(item.summary),
-        item.why ? `**Why it matters:** ${text(item.why)}` : '',
-        item.url ? sourceLink('Original source ↗', item.url) : '',
+        item.editorNote ? `**My read:** ${text(item.editorNote)}` : '',
+        metaLine(item.sourceName, item.date),
+        item.url ? sourceLink('Source ↗', item.url) : '',
       );
     });
   }
 
-  const board = draft.board || [];
-  if (board.length) {
-    add('## The numbers');
-    board.forEach((row) => {
-      const change = [text(row.pillTxt), text(row.note)].filter(Boolean).join(', ');
-      add(
-        `**${text(row.name)} — ${text(row.val)}**${change ? ` (${change})` : ''}`,
-        text(row.sub),
-      );
+  const numbers = draft.numbers || draft.changed || [];
+  if (numbers.length) {
+    add('## Numbers that changed');
+    numbers.forEach((item) => {
+      const name = text(item.name || item.label);
+      const current = text(item.current || item.move || item.val);
+      const change = text(item.change || item.pillTxt);
+      const source = item.sourceUrl ? sourceLink(item.source || 'Original source ↗', item.sourceUrl) : text(item.source || '');
+      add(`**${[name, current].filter(Boolean).join(' — ')}**`, metaLine(change, item.period, item.status), source);
     });
   }
 
-  const changed = draft.changed || [];
-  if (changed.length) {
-    add('## What changed this week');
-    changed.forEach((item) => {
-      const heading = `**${text(item.label)}${item.move ? ` — ${text(item.move)}` : ''}**`;
-      add(heading, metaLine(item.period, item.source), item.sourceUrl ? sourceLink('Original source ↗', item.sourceUrl) : '');
+  const quick = draft.quickUpdates || [];
+  if (quick.length) {
+    add('## Other updates');
+    quick.forEach((item) => {
+      const label = text(item.headline || item.label || item.text || item);
+      const linked = item.url ? sourceLink(label, item.url) : label;
+      lines.push(`- ${linked}${item.date ? ` · ${text(item.date)}` : ''}`);
     });
-  }
-
-  (draft.rooms || []).forEach((room) => {
-    if (!room.items?.length) return;
-    add(`## ${text(room.eyebrow)}`);
-    room.items.forEach((item) => {
-      const heading = item.url
-        ? `### [${mdLabel(item.t)}](<${item.url}>)`
-        : `### ${text(item.t)}`;
-      add(
-        heading,
-        text(item.d),
-        metaLine(item.source, item.date),
-        item.url ? sourceLink('Original source ↗', item.url) : '',
-      );
-    });
-  });
-
-  const watch = draft.watch || [];
-  if (watch.length) {
-    add('## What to watch');
-    watch.forEach((item) => lines.push(`- **${text(item.dt)}** — ${text(item.w)}`));
     lines.push('');
   }
 
-  add('---', 'Built for Alan, open to anyone. Every number and story should link back to its source.');
+  const watch = draft.watch || [];
+  if (watch.length) {
+    add('## Next week');
+    watch.forEach((item) => {
+      const source = item.sourceUrl ? ` ${sourceLink(item.source || 'source ↗', item.sourceUrl)}` : '';
+      const why = item.why ? ` ${text(item.why)}` : '';
+      lines.push(`- **${text(item.dt)}** — ${text(item.w)}${why}${source}`);
+    });
+    lines.push('');
+  }
+
+  add('Alan', '---', 'Every number is dated and linked to its source. When I give you my own read, I label it. If something looks wrong, reply and tell me.');
   return `${lines.filter((line, index) => line !== '' || lines[index - 1] !== '').join('\n').trim()}\n`;
+}
+
+function makeQuestions(draft) {
+  if (draft.editorApproved === true && draft.status === 'approved') {
+    return 'Approved by Alan. No open editorial questions.\n';
+  }
+  const questions = (draft.reviewQuestions || []).map((item) => text(item.question || item)).filter(Boolean);
+  const fallback = [
+    'Is this the right lead? If not, which candidate should replace it?',
+    'Do you have a read on the lead? One or two rough sentences are enough. "None this week" is fine.',
+    'What is missing, or what should be cut?',
+  ];
+  return `${(questions.length ? questions : fallback).map((question, index) => `${index + 1}. ${question}`).join('\n\n')}\n`;
 }
 
 function main() {
@@ -164,6 +194,20 @@ function main() {
   const draft = readJson(draftPath);
   if (draft.week !== week) throw new Error(`Draft week is ${draft.week || 'missing'}, expected ${week}.`);
 
+  const selectedStories = [draft.lead, ...(draft.supporting || [])].filter(Boolean);
+  const blockers = [];
+  const editorApproved = draft.editorApproved === true && draft.status === 'approved';
+  if (!draft._llm && !editorApproved) blockers.push('The summary model did not run. Source descriptions are review material, not finished copy.');
+  if (!selectedStories.length) blockers.push('No lead or supporting story was produced.');
+  if ((draft.lintFlags || []).length) blockers.push(`The draft has ${draft.lintFlags.length} unresolved copy flag(s).`);
+  if (text(draft.previewText) === '[PREVIEW TEXT NEEDED]') blockers.push('Preview text is missing.');
+  for (const story of selectedStories) {
+    if (!text(story.summary) || /\[SUMMARY UNAVAILABLE\]/i.test(text(story.summary))) {
+      blockers.push(`${text(story.headline) || 'A selected story'} has no usable summary.`);
+    }
+  }
+  const blocked = blockers.length > 0;
+
   const reviewRoot = path.join(ROOT, 'tmp', 'beehiiv-review');
   const outRoot = valueAfter('--out')
     ? path.resolve(valueAfter('--out'))
@@ -176,6 +220,7 @@ function main() {
 
   const previewText = makePreview(draft);
   const body = makeBody(draft);
+  const questions = makeQuestions(draft);
   const fields = [
     'BEEHIIV POST FIELDS',
     '',
@@ -185,34 +230,54 @@ function main() {
     'Both lines require Alan’s review before they are entered in Beehiiv.',
     '',
   ].join('\n');
-  const instructions = [
+  const instructions = blocked ? [
+    `THE MEXICO BRIEF · BLOCKED REVIEW · ${week}`,
+    '',
+    'This draft is not ready to enter in Beehiiv.',
+    '',
+    ...blockers.map((reason) => `- ${reason}`),
+    '',
+    'Review draft.json and rendered-reference.html, then rerun the build after fixing the blockers.',
+    'Nothing in this folder can send an email.',
+    '',
+  ].join('\n') : [
     `THE MEXICO BRIEF · BEEHIIV REVIEW PACKAGE · ${week}`,
     '',
     'This folder cannot send an email. It contains the handoff for Beehiiv’s Post Builder.',
     '',
-    '1. Read fields.txt and body.md beside rendered-reference.html.',
-    '2. Fix the draft first; do not repair unsupported claims while pasting.',
-    '3. Create a new Beehiiv post and enter the subject and preview text.',
-    '4. Copy body.md into the Post Builder section by section. Recheck every link.',
-    '5. Use Beehiiv’s own footer/unsubscribe block. Do not paste a static unsubscribe link.',
-    '6. Send a Beehiiv test. Check desktop, mobile, links, numbers, sender, and reply-to.',
-    '7. Schedule or send in Beehiiv only after Alan approves the delivered test.',
+    '1. Alan answers the three questions in questions.txt.',
+    '2. Apply those answers to the draft. Do not repair unsupported claims while pasting.',
+    '3. Read fields.txt and body.md beside rendered-reference.html.',
+    '4. Create a new Beehiiv post and enter the subject and preview text.',
+    '5. Copy body.md into the Post Builder section by section. Recheck every link.',
+    '6. Use Beehiiv’s own footer/unsubscribe block. Do not paste a static unsubscribe link.',
+    '7. Send a Beehiiv test. Check desktop, mobile, links, numbers, sender, and reply-to.',
+    '8. Schedule or send in Beehiiv only after Alan approves the delivered test.',
     '',
     'The GitHub workflow stops after producing this folder.',
     '',
   ].join('\n');
 
-  fs.writeFileSync(path.join(outRoot, 'fields.txt'), fields);
-  fs.writeFileSync(path.join(outRoot, 'body.md'), body);
+  if (!blocked) {
+    fs.writeFileSync(path.join(outRoot, 'fields.txt'), fields);
+    fs.writeFileSync(path.join(outRoot, 'body.md'), body);
+  } else {
+    fs.writeFileSync(path.join(outRoot, 'BLOCKED.txt'), `${blockers.join('\n')}\n`);
+  }
+  fs.writeFileSync(path.join(outRoot, 'questions.txt'), questions);
   fs.writeFileSync(path.join(outRoot, 'README.txt'), instructions);
   fs.copyFileSync(draftPath, path.join(outRoot, 'draft.json'));
   fs.copyFileSync(htmlPath, path.join(outRoot, 'rendered-reference.html'));
 
-  const files = ['README.txt', 'fields.txt', 'body.md', 'draft.json', 'rendered-reference.html'];
+  const files = blocked
+    ? ['README.txt', 'BLOCKED.txt', 'questions.txt', 'draft.json', 'rendered-reference.html']
+    : ['README.txt', 'fields.txt', 'body.md', 'questions.txt', 'draft.json', 'rendered-reference.html'];
   const manifest = {
     provider: 'beehiiv',
-    action: 'manual-post-builder-handoff',
+    action: blocked ? 'blocked-review' : 'manual-post-builder-handoff',
     canSend: false,
+    blocked,
+    blockers,
     week,
     issue: draft.issue || null,
     subject: text(draft.subject || `The Mexico Brief — ${week}`),
@@ -231,6 +296,7 @@ function main() {
 
   console.log(`\nBeehiiv review package · ${week}`);
   console.log(`  ${path.relative(ROOT, outRoot)}/`);
+  console.log(`  status: ${blocked ? 'BLOCKED' : 'ready for Alan review'}`);
   console.log(`  subject: ${manifest.subject}`);
   console.log(`  preview: ${previewText}`);
   console.log('  no provider API was called; nothing was sent\n');

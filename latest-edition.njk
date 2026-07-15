@@ -1,0 +1,27 @@
+---
+layout: base.njk
+permalink: /latest-edition.html
+title: "Latest edition · The Mexico Brief"
+description: "Open the latest published edition of The Mexico Brief."
+noindex: true
+bodyClass: reading
+pageStyle: |
+  .latest-edition{padding:48px 0 16px;max-width:660px}
+  .latest-edition h1{margin:10px 0 12px}
+  .latest-edition p{font-size:var(--fs-body);line-height:1.55;color:var(--ink-2);max-width:52ch}
+  .latest-edition a{color:var(--green);font-weight:650}
+---
+<div class="wrap">
+  <section class="latest-edition">
+    {% if latestEdition.status == "published" and latestEdition.url %}
+      <span class="eyebrow">The Mexico Brief</span>
+      <h1>Opening the latest edition.</h1>
+      <p>If it does not open, <a id="latest-edition-link" href="{{ latestEdition.url }}">read it here</a>.</p>
+      <script>(function(){var a=document.getElementById('latest-edition-link');if(a&&a.href)window.location.replace(a.href);}());</script>
+    {% else %}
+      <span class="eyebrow">The Mexico Brief</span>
+      <h1>No edition has been sent yet.</h1>
+      <p>The first one is coming on Monday. <a href="/weekly.html">See what is in the email</a>.</p>
+    {% endif %}
+  </section>
+</div>

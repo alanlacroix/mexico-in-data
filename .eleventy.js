@@ -2,11 +2,9 @@
 // _includes/base.njk (one <head>, one masthead component, one footer component,
 // one nav in _data/nav.js). Output is pure static HTML to _site.
 //
-// weekly-sample.html is the pipeline-generated email sample (linked from the
-// Weekly page), passed through as-is. design/ and data/ are copied verbatim (the
-// site fetches the JSON in data/ at runtime). We do NOT pass through the page
-// *.html: they are built from the .njk, and any committed built copies at the
-// root are ignored here (not templates, not passthrough) so there is no collision.
+// design/ and runtime data are copied verbatim. Email drafts are private review
+// artifacts and never enter the public build. We do NOT pass through root-level
+// page *.html files: production pages are built from .njk templates.
 const fs = require('node:fs');
 const crypto = require('node:crypto');
 const path = require('node:path');
@@ -20,7 +18,6 @@ module.exports = function (ec) {
     if (['email', 'source-snapshots'].includes(entry.name)) continue;
     ec.addPassthroughCopy(path.join('data', entry.name));
   }
-  ec.addPassthroughCopy('weekly-sample.html');
   ec.addPassthroughCopy('reports'); // the Mexico overview in web and PDF editions
   ec.addPassthroughCopy('_headers');   // Cloudflare Pages cache policy
   ec.addPassthroughCopy('_redirects'); // retired URLs must follow the same rules in the built site

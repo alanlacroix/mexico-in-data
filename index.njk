@@ -6,48 +6,69 @@ description: "A daily starting point for Mexico's economy, politics, trade, soci
 ogTitle: "The Mexico Brief"
 ogDescription: "Mexico's important numbers, what changed, and the original sources."
 ---
-{% raw %}
 <style>
-  :root{--ink-3:#4d4d4d;--amber2:#8f6a15;--amber-bg2:#f6efdc}
   body{font-size:var(--fs-body)}
-  .home{max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,44px)}
+  .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+  .home a{text-underline-offset:2px}
+  .home-hero{padding:28px 0 18px}
+  .home-topline{display:flex;align-items:center;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.035em;text-transform:uppercase;color:var(--mut)}
+  .home-topline .fresh{display:inline-flex;align-items:center;gap:7px;color:var(--mut);text-decoration:none}
+  .home-topline .fresh:hover{color:var(--green-d)}
+  .home-topline .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .home-topline .fresh.has-expected .dot{background:#a87813}
+  .home-topline .fresh.has-issue .dot{background:var(--red)}
+  .home-hero h1{font-size:clamp(34px,4.5vw,52px);line-height:1.04;letter-spacing:-.025em;margin:10px 0 6px}
+  .section-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.055em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .morning-summary{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:13px 0 15px}
+  .morning-summary p{font-size:var(--fs-body);line-height:1.52;color:var(--ink-2);max-width:82ch}
 
-  /* 1 · HERO */
-  .hero{padding:36px 0 8px}
-  .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.0;letter-spacing:-.025em;margin:9px 0 0;color:var(--ink)}
-  .country{font-size:var(--fs-small);line-height:1.62;color:var(--ink-2);margin:18px 0 4px;max-width:66ch}
-  .country b{color:var(--ink);font-weight:600}
-  .country .ref{font-family:var(--mono);font-size:var(--fs-label);color:var(--green);vertical-align:super;text-decoration:none;padding:0 1px}
-  .bottomline{font-size:15px;line-height:1.5;color:var(--ink-2);margin:16px 0 2px;max-width:70ch;padding:12px 15px;background:var(--paper-2);border-left:3px solid var(--green);border-radius:0 8px 8px 0}
-  .bottomline b{color:var(--ink)}
-  .bottomline .bl-k{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);font-weight:600}
+  .top-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(330px,.85fr);gap:36px;margin-top:30px}
+  .section-rule{border-top:2px solid var(--green);padding-top:12px}
+  .section-headline{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+  .section-headline .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .section-title{font-size:clamp(27px,3vw,var(--fs-h2));line-height:1.12;margin:4px 0 8px}
 
-  /* THE BRIEF — the 2-paragraph synthesis lead. Every sentence is a link to the source it
-     cites (dotted = sourced, solid green on hover) — the "no sentence without a link" law made visible. */
-  .brief{margin:6px 0 2px;max-width:74ch}
-  .brief p{font-size:18px;line-height:1.66;color:var(--ink);margin:0 0 13px;font-weight:400}
-  .brief p:last-child{margin-bottom:0}
-  .brief .s{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--line-2);cursor:pointer}
-  .brief .s:hover{border-bottom:1px solid var(--green)}
-  /* 3-5 explained items: one paragraph each, bold headline lede, a mono source·date link at the end */
-  .brief .bi{margin:0 0 15px}
-  .brief .bhl{font-weight:700;color:var(--ink)}
-  .brief .bsrc{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-decoration:none;letter-spacing:.02em;white-space:nowrap}
-  .brief .bsrc:hover{color:var(--green-d)}
-  @media(max-width:560px){ .brief p{font-size:var(--fs-small)} }
-  /* Mobile Brief compression (Fable 2026-07-12): keep all 5 stories visible, shrink the tails, never
-     truncate. Sublines tighten; ranks 4-5 go headline-only so the whole week fits ~2 phone screens. */
-  @media(max-width:640px){
-    .brief .bi{margin-bottom:11px;line-height:1.5}
-    .brief .bi[data-rank="4"] .bctx, .brief .bi[data-rank="5"] .bctx{display:none}
-    .brief .bi[data-rank="4"], .brief .bi[data-rank="5"]{margin-bottom:8px}
-  }
+  .brief-list{border-top:1px solid var(--line)}
+  .brief-row{padding:19px 0 18px;border-bottom:1px solid var(--line)}
+  .story-meta{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+  .story-meta .beat{color:var(--green-d);font-weight:600}
+  .brief-row h3{font-size:clamp(20px,2vw,22px);line-height:1.25;letter-spacing:-.006em;margin:0 0 6px;max-width:42ch}
+  .brief-row>p{font-size:16px;line-height:1.5;color:var(--ink-2);max-width:67ch}
+  .story-foot{display:flex;align-items:center;gap:2px 14px;flex-wrap:wrap;margin-top:10px;min-height:44px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .story-foot a{color:var(--green-d)}
 
-  /* THE AREAS — the topic browse. Each area: a header (→ its section page), a 1–2 sentence read,
-     then up to 3 standardized headline line-items (claim + muted source · date). 2-col on desktop.
-     One visual grammar, hard caps, fixed order — the anti-'articles all over the place' rules. */
-  .areas{display:grid;grid-template-columns:1fr;gap:8px;margin:2px 0 4px}
-  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden}}
+  .now-group{border-top:1px solid var(--line)}
+  .now-intro{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2);margin:-1px 0 13px;max-width:48ch}
+  .now-group-title{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:600;padding:13px 0 3px}
+  .now-row{padding:13px 0 12px;border-bottom:1px solid var(--line);color:var(--ink)}
+  .now-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;color:var(--ink);text-decoration:none}
+  .now-main:hover{text-decoration:none}
+  .now-name{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.035em;text-transform:uppercase;color:var(--mut)}
+  .now-value{font-size:var(--fs-h3);line-height:1.05;font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+  .now-change{grid-column:1 / -1;font-size:var(--fs-small);line-height:1.42;color:var(--ink)}
+  .now-stamp{grid-column:1 / -1;font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);text-transform:uppercase;letter-spacing:.025em}
+  .now-main:hover .now-name{color:var(--green-d)}
+  .now-more{margin-top:7px}
+  .now-more summary{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--green-d);cursor:pointer;list-style:none}
+  .now-more summary::-webkit-details-marker{display:none}
+  .now-more summary::after{content:"+"}
+  .now-more[open] summary::after{content:"–"}
+  .now-more p{font-size:var(--fs-meta);line-height:1.45;color:var(--ink-2);margin-top:6px}
+  .section-link{display:inline-block;margin-top:11px;font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
+  .now-loading{border-top:1px solid var(--line);padding:16px 0;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+
+  .companies,.topics,.coming,.subscribe-section{margin-top:42px}
+  .company-list{border-top:1px solid var(--line)}
+  .company-row{display:grid;grid-template-columns:130px minmax(0,1.1fr) minmax(250px,.9fr) auto;gap:14px 20px;align-items:start;padding:17px 0;border-bottom:1px solid var(--line)}
+  .company-name{font-family:var(--mono);font-size:var(--fs-label);line-height:1.45;text-transform:uppercase;letter-spacing:.035em;color:var(--green-d);font-weight:600}
+  .company-name span{display:block;color:var(--mut);font-weight:400;text-transform:none;letter-spacing:0}
+  .company-thesis h3{font-size:var(--fs-body);line-height:1.3;margin:0 0 3px}
+  .company-thesis p,.company-signal{font-size:var(--fs-meta);line-height:1.48;color:var(--ink-2)}
+  .company-signal b{color:var(--ink);font-weight:600}
+  .company-source{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);white-space:nowrap}
+
+  .areas{display:grid;grid-template-columns:1fr;gap:8px;border-top:1px solid var(--line);padding-top:1px}
+  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;padding-top:0}}
   .area{background:var(--paper);padding:21px 21px 19px}
   @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:4px}}
   .area-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none;margin-bottom:8px}
@@ -60,288 +81,128 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .hl-t{display:block;font-size:var(--fs-small);color:var(--ink);font-weight:500;line-height:1.36}
   .area-hl .hl:hover .hl-t{color:var(--green-d)}
   .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
-  .area-empty{font-size:var(--fs-meta);color:var(--mut);padding:2px 0 4px}
 
-  /* block headers use the shared .section-head / .section-head--tight primitive (master stylesheet);
-     the old inline-kicker .bh/.board-lbl patterns were deleted 2026-07-12 (they wrapped mid-phrase on
-     mobile). THE RULE: a headline never shares a line with meta type. No inline H2s. */
+  .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .timeline-item{padding:16px 18px 17px 0}
+  .timeline-item+.timeline-item{border-left:1px solid var(--line);padding-left:18px}
+  .timeline-date{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.035em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .timeline-title{font-size:var(--fs-small);line-height:1.35;color:var(--ink);font-weight:600;margin-top:6px}
+  .timeline-why{font-size:var(--fs-meta);line-height:1.45;color:var(--ink-2);margin-top:5px}
+  .timeline-source{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px}
 
-  /* 2 · THE BOARD */
-  .tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
-  @media(min-width:560px){.tablero{grid-template-columns:repeat(4,1fr)}}
-  .tilelink{display:contents}
-  /* TILE HIERARCHY (Fable 2026-07-12): 3 contrast-separated clusters — value dominates, context in the
-     reading face, trust recedes. The fix for "tight" is contrast + grouping, not just padding. */
-  .tile{background:var(--paper);padding:19px 18px 17px;cursor:pointer;height:100%;display:flex;flex-direction:column}
-  .tilelink:hover .tile{background:var(--paper-2)}
-  .tile .tl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
-  /* CLUSTER 1 — the value is THE anchor: it wins the eye by a lot */
-  .tile .tv{font-family:var(--sans);font-size:clamp(28px,3vw,37px);color:var(--ink);margin-top:4px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.02em}
-  .tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
-  .tile .dl{font-family:var(--mono);font-size:13px;color:var(--ink-2);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
-  .tile .dl.up::before{content:"▲ ";font-size:var(--fs-label)} .tile .dl.dn::before{content:"▼ ";font-size:var(--fs-label)}
-  .tile .dl.up,.tile .dl.dn{color:var(--ink-2)}   /* neutral: direction is the arrow + sign, not a good/bad color */
-  .tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
-  .tile svg.spark{margin-top:7px}
-  .tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
-  /* CLUSTER 2 — context in the READING FACE (sans, not mono): the mono/prose split IS the hierarchy signal */
-  .tile .tx{font-family:var(--sans);font-size:14px;color:var(--ink-2);line-height:1.5;margin-top:13px;padding-top:12px;border-top:1px solid var(--line);order:2}
-  /* benchmark leaves the glance except where it IS the interpretive anchor (inflation vs target, rate vs neutral) */
-  .tile .tb{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:6px;line-height:1.4}
-  .tile .tb .arw{font-weight:700}
-  /* Keep one benchmark row in every card. Some metrics use it and some do not,
-     but the reading divider must stay on the same baseline across the grid. */
-  #tablero .tile .tb{min-height:1.4em;visibility:hidden}
-  #tablero .tile[data-go="banxico-inflacion"] .tb,#tablero .tile[data-go="banxico-tasa-objetivo"] .tb{visibility:visible}
-  /* CLUSTER 3 — trust rail recedes hard and sits after the context */
-  .tile .stamp{margin-top:13px;display:block;order:3}
-  .tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:3px;display:block;line-height:1.35;order:3}
-  .tile .tbadge{order:3}
-  .stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
-  .stamp.live{color:var(--green-d);font-weight:600}
-  .chip-ph{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:4px;margin-left:6px}
-
-  /* 2b · WHAT CHANGED — the lead queue (event log + series-delta fallback, one treatment) */
-  .chg{border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
-  .chg-item{border-bottom:1px solid var(--line);background:var(--paper)}
-  .chg-item:last-child{border-bottom:none}
-  .chgrow{display:flex;align-items:center;gap:12px;padding:12px 15px}
-  .chgrow:hover{background:var(--paper-2)}
-  .chgrow.cross{background:var(--green-bg)}
-  .chgrow.cross:hover{background:#dcefe3}
-  .cg-body{flex:1;min-width:0;display:block;text-decoration:none}
-  .cg-line{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-  .cg-flag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border-radius:3px;padding:1px 6px;white-space:nowrap}
-  .cg-lbl{font-size:15px;color:var(--ink);font-weight:600}
-  .cg-move{font-family:var(--sans);font-size:var(--fs-body);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-  .cg-meta{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
-  .cg-src{font-family:var(--mono);font-size:11px;color:var(--green-d);white-space:nowrap;text-decoration:none;flex:none}
-  .cg-src:hover{text-decoration:underline}
-  .cg-go{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);flex:none}
-  .chg-quiet{border:1px solid var(--line-2);border-radius:4px;background:var(--paper);padding:15px 16px;font-size:15px;color:var(--ink-2);margin:2px 0 4px}
-
-  /* 2c · IMPACT SCORE — expand a row (caret) to see its components + weights */
-  .cg-caret{flex:none;font-family:var(--mono);font-size:var(--fs-label);line-height:1;color:var(--mut);background:none;border:none;cursor:pointer;padding:4px 3px;transition:transform .15s ease}
-  .cg-caret:hover{color:var(--green-d)}
-  .cg-caret.open{transform:rotate(90deg)}
-  .cg-breakdown{background:var(--paper-2);border-top:1px solid var(--line);padding:11px 15px 12px;font-family:var(--mono)}
-  .bd-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px}
-  .bd-k{font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700}
-  .bd-score{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-  .bd-grid{display:flex;flex-direction:column;gap:6px}
-  .bd-hd,.bd-f{display:grid;grid-template-columns:1fr 46px 32px 52px;gap:2px 8px;align-items:baseline}
-  .bd-hd{font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);padding-bottom:4px;border-bottom:1px solid var(--line)}
-  .bd-hd span:nth-child(n+2){text-align:right}
-  .bd-fn{font-size:11px;color:var(--ink)}
-  .bd-fv,.bd-fw,.bd-fc{font-size:11px;text-align:right;font-variant-numeric:tabular-nums}
-  .bd-fv{color:var(--ink-2)} .bd-fw{color:var(--mut)} .bd-fc{color:var(--ink);font-weight:600}
-  .bd-note{grid-column:1 / -1;font-size:var(--fs-label);color:var(--mut);letter-spacing:.02em;line-height:1.35}
-  .bd-f.ph .bd-fv,.bd-f.ph .bd-fc,.bd-f.ph .bd-note{color:var(--amber2)}
-  .bd-eq{font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.55}
-  .bd-eq code{font-family:var(--mono);color:var(--ink-2)}
-
-  /* what's happening — the cross-domain lead; reuses the .chg row shell, adds a why line */
-  .hap-row{align-items:flex-start;gap:13px}
-  .hap-tag{flex:none;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:3px 7px;white-space:nowrap;margin-top:2px;text-decoration:none}
-  .hap-tag:hover{color:var(--green-d);border-color:var(--green-bg)}
-  .hap-b{padding:0}
-  .hap-line{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
-  .hap-date{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);flex:none}
-  .hap-title{font-size:15px;color:var(--ink);font-weight:600;line-height:1.32}
-  .hap-why{font-size:var(--fs-meta);color:var(--ink-2);line-height:1.5;margin-top:5px;max-width:82ch}
-  .hap .cg-src{align-self:flex-start;margin-top:3px}
-  /* mobile: the 3-column row (tag / body / source) can't fit — stack it cleanly */
-  @media(max-width:640px){
-    .hap-row{flex-direction:column;align-items:stretch;gap:7px}
-    .hap-tag{align-self:flex-start;margin-top:0}
-    .hap-b{width:100%}
-    .hap .cg-src{align-self:flex-start;margin-top:2px}
-  }
-
-  /* 4 · NEWSLETTER (from weekly.njk .sub) */
-  .sub{margin:8px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
+  .sub{border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
   .sub .lab{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
-  .sub .line{font-size:var(--fs-small);color:var(--ink-2);margin-top:8px;line-height:1.5}
-  .sub .line b{color:var(--ink)}
+  .sub .line{font-size:var(--fs-small);color:var(--ink-2);margin-top:8px;line-height:1.5;max-width:76ch}
   .sub form{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
   .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:var(--fs-small);padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
   .sub input[type=email]:focus{outline:none;border-color:var(--green)}
   .sub button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:9px;padding:12px 24px;cursor:pointer}
   .sub button:hover{background:var(--green-d)}
   .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:11px;line-height:1.6}
-  .sub .samplelink{display:inline-block;margin-top:13px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);text-decoration:none;border-bottom:2px solid #daf0e2;padding-bottom:1px}
 
-  /* 5 · SECTION CARDS */
-  .seccards{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;margin:2px 0 4px}
-  @media(min-width:560px){.seccards{grid-template-columns:repeat(2,1fr)}}
-  @media(min-width:900px){.seccards{grid-template-columns:repeat(3,1fr)}}
-  .seccard{background:var(--paper);padding:17px 18px 15px;text-decoration:none;display:flex;flex-direction:column;gap:0}
-  .seccard:hover{background:var(--paper-2)}
-  .seccard .sc-k{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .seccard .sc-stat{font-family:var(--sans);font-size:28px;color:var(--ink);margin-top:8px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
-  .seccard .sc-stat small{font-size:var(--fs-meta);color:var(--mut);font-weight:400}
-  .seccard .sc-wire{font-size:13px;color:var(--ink-2);line-height:1.4;margin-top:11px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .seccard .sc-wire .sc-none{color:var(--mut);font-family:var(--mono);font-size:11px}
-  .seccard .sc-go{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);margin-top:12px}
-
-  /* 6 · WHAT TO WATCH + THE WIRE */
-  .coverband{display:grid;grid-template-columns:1fr;gap:22px;margin:2px 0 4px}
-  @media(min-width:760px){.coverband{grid-template-columns:minmax(240px,320px) 1fr;gap:34px}}
-  .cb-h{display:flex;align-items:baseline;justify-content:space-between;border-top:2px solid var(--green);padding-top:9px;margin-bottom:6px}
-  .cb-h .k{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--green);font-weight:600}
-  .cb-h .a{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
-  .watchtbl .wtr{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);align-items:baseline}
-  .watchtbl .wtr:last-child{border-bottom:none}
-  .watchtbl .wtr .wd{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:50px;font-variant-numeric:tabular-nums;line-height:1.3}
-  .watchtbl .wtr .wd small{color:var(--mut);display:block;font-size:var(--fs-label)}
-  .watchtbl .wtr .wk{width:3px;align-self:stretch;border-radius:2px;background:var(--line-2)}
-  .watchtbl .wtr .wk.banxico,.watchtbl .wtr .wk.fomc,.watchtbl .wtr .wk.inegi{background:var(--green)}
-  .watchtbl .wtr .wk.political,.watchtbl .wtr .wk.election{background:var(--red)}
-  .watchtbl .wtr .wk.trade,.watchtbl .wtr .wk.fiscal{background:var(--amber2)}
-  .watchtbl .wtr .wt{font-size:var(--fs-small);color:var(--ink);flex:1;line-height:1.35}
-  .watchtbl .wtr .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:2px}
-  .watchtbl .wtr .wsrc{font-family:var(--mono);font-size:var(--fs-label)}
-  .cb-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0}
-  .wire .wi{padding:11px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:98px 1fr;gap:11px;align-items:baseline}
-  .wire .wtag{justify-self:start}
-  .wire .wi:last-child{border-bottom:none}
-  .wire .wtag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:3px;padding:1px 5px;white-space:nowrap;margin-top:2px;text-decoration:none}
-  .wire .wtag:hover{color:var(--green-d);border-color:var(--green-bg)}
-  .wire .wbody{flex:1}
-  .wire .wt{font-size:var(--fs-small);color:var(--ink);line-height:1.35;text-decoration:none}
-  .wire .wt:hover{color:var(--green-d);text-decoration:underline}
-  .wire .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:3px}
-  .wire-note{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.6}
-  /* what stood out — the analysis surfaced */
-  #stood{display:grid;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:8px;overflow:hidden;margin:2px 0 4px}
-  .stoodrow{display:flex;gap:14px;align-items:baseline;background:var(--paper);padding:13px 16px;text-decoration:none}
-  .stoodrow:hover{background:var(--paper-2)}
-  .stoodrow .stag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700;flex:0 0 74px;padding-top:2px}
-  .stoodrow .stxt{font-size:15px;color:var(--ink);line-height:1.45}
-  a.stood-link{color:var(--green-d)}
-  .wflag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle}
-  /* masthead — a clear, dated top like a morning paper */
-  .masthead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:9px;flex-wrap:wrap}
-  .masthead .today{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);font-weight:600;letter-spacing:-.01em}
-  .masthead .fresh{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-  .masthead .fresh .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
-  .masthead .fresh.has-expected .dot{background:var(--amber2)}
-  .masthead .fresh.has-issue .dot{background:var(--red)}
-  .hero h1#lead{margin-top:16px}
-  .hero + .homegrid .hg-brief .section-head--tight{margin-top:26px}   /* the Brief follows the hero closely; other grid sections keep the full gap */
-  .hero h1#lead a{color:inherit;text-decoration:none;border-bottom:3px solid transparent;transition:border-color .12s}
-  .hero h1#lead a:hover{border-bottom-color:var(--green)}
-  .wire-note a{color:var(--green)}
-
-  /* Homepage grid (Fable 2026-07-12 hierarchy). DOM order Brief → What stood out → Numbers → Next up =
-     the mobile reading order. On desktop grid-template-areas lift the quiet "Next up" rail top-right
-     beside the Brief; What stood out and the board span full width below. No `order` (a11y = visual). */
-  .homegrid{display:block}
-  @media(min-width:1080px){
-    .homegrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;
-      column-gap:clamp(36px,4.5vw,64px);
-      grid-template-areas:"brief nextup" "stood stood" "numbers numbers";align-items:start}
-    .hg-brief{grid-area:brief;min-width:0}
-    .hg-stood{grid-area:stood;min-width:0}
-    .hg-numbers{grid-area:numbers;min-width:0}
-    .hg-nextup{grid-area:nextup}   /* NOT sticky: a sticky rail floats over the full-width board/areas below it */
-    .hg-nextup .nextup-lbl{margin-top:29px}   /* align the kicker with the Brief heading */
+  @media(max-width:900px){
+    .top-grid{grid-template-columns:1fr;gap:34px}
+    .company-row{grid-template-columns:110px minmax(0,1fr) auto}
+    .company-signal{grid-column:2 / -1}
+    .timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .timeline-item:nth-child(3){border-left:0;border-top:1px solid var(--line);padding-left:0}
+    .timeline-item:nth-child(4){border-top:1px solid var(--line)}
   }
-
-  /* NEXT UP — a margin note, not a second column: hairline rule, muted kicker, date/title/source only */
-  .nextup-lbl{border-top:1px solid var(--line);padding-top:12px;margin-bottom:6px}
-  .nextup-lbl .k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600}
-  .hg-nextup .nur{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
-  .hg-nextup .nur:last-child{border-bottom:none}
-  .hg-nextup .nud{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:44px;font-variant-numeric:tabular-nums;line-height:1.3;flex:0 0 auto}
-  .hg-nextup .nud small{color:var(--mut);display:block;font-size:var(--fs-label)}
-  .hg-nextup .nut{font-size:var(--fs-small);color:var(--ink);line-height:1.35}
-  .hg-nextup .num{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:3px;line-height:1.42}
-  .hg-nextup .nusrc{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);display:inline-block;margin-top:3px;text-decoration:none}
-  .hg-nextup a.nusrc{color:var(--green-d)}
-  .hg-nextup a.nusrc:hover{text-decoration:underline}
-  .nextup-toggle{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;color:var(--green-d);background:none;border:none;padding:11px 0 0;cursor:pointer}
-  .nextup-toggle:hover{text-decoration:underline}
-
-  /* board "show all indicators" toggle — appears on mobile only */
-  .board-more{display:none}
-
-  /* MOBILE — real usability fix at ≤480px (390px target) */
-  @media(max-width:480px){
-    .tablero{grid-template-columns:1fr}                       /* was 2-up: clipped labels/sources */
-    .tile{padding:14px 15px 13px}
-    .tile .tl{min-height:0}
-    .tile .tb,.tile .tsrc,.tile svg.spark{display:none}       /* benchmark + source + sparkline behind the tile tap */
-    .tilelink.extra{display:none}                             /* only the four core tiles by default */
-    .tablero.show-all .tilelink.extra{display:contents}
-    .board-more{display:block;width:100%;font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:600;color:var(--green-d);background:var(--paper);border:1px solid var(--line-2);border-radius:9px;padding:11px;margin:8px 0 4px;cursor:pointer}
+  @media(max-width:650px){
+    .home-hero{padding:23px 0 16px}
+    .home-hero h1{font-size:34px}
+    .top-grid{margin-top:29px}
+    .section-title{font-size:28px}
+    .brief-row{padding:18px 0}
+    .brief-row h3{font-size:21px;line-height:1.25}
+    .brief-row>p{font-size:16px;line-height:1.48}
+    .story-foot{gap:0 13px}
+    .company-row{grid-template-columns:1fr;gap:5px;padding:15px 0}
+    .company-signal{grid-column:auto}
+    .company-source{padding-top:5px}
+    .timeline{grid-template-columns:1fr}
+    .timeline-item{padding:14px 0 15px}
+    .timeline-item+.timeline-item,.timeline-item:nth-child(3),.timeline-item:nth-child(4){border-left:0;border-top:1px solid var(--line);padding-left:0}
   }
 </style>
 
 <div class="home">
-
-  <!-- 1 · HERO -->
-  <section class="hero">
-    <div class="masthead">
-      <span class="today" id="today">&nbsp;</span>
-      <a class="fresh" href="/sources.html"><span class="dot"></span><span id="status">Official data</span></a>
+  <section class="home-hero">
+    <div class="home-topline">
+      <span id="today">Today</span>
+      <a class="fresh" id="fresh" href="/sources.html"><span class="dot"></span><span id="status">Checking the data</span></a>
     </div>
-    <h1 id="lead">The week's major changes in Mexico.</h1>
+    <h1>Mexico this morning.</h1>
   </section>
 
-  <!-- 2 · THE HOMEGRID — Fable 2026-07-12 hierarchy. DOM order is Lead(hero) → Brief → What stood out →
-       Numbers → Next up, which IS the mobile reading order (understand the present before the schedule).
-       On desktop, grid-template-areas lift the quiet "Next up" rail into the top-right beside the Brief
-       while What stood out and the board run full width below. No CSS `order`: screen-reader/tab order
-       must equal the visual order. -->
-  <div class="homegrid">
-    <section class="hg-brief">
-      <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">The Brief</span><span class="asof" id="brief-asof"></span></div></div>
-      <div id="brief" class="brief"></div>
-    </section>
+  <section class="morning-summary" aria-label="Morning summary">
+    <div class="section-k">The brief</div>
+    <p id="morning-summary">{{ dailyBrief.summaryLead }}</p>
+    <span id="summary-next" hidden>{{ dailyBrief.summaryNext }}</span>
+  </section>
 
-    <!-- 2b · WHAT STOOD OUT — first data interpretation, right after the Brief -->
-    <section id="stood-sec" class="hg-stood">
-      <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">What stood out</span><span class="asof" id="stood-asof"></span></div></div>
-      <div id="stood"></div>
-    </section>
-
-    <!-- 3 · THE BOARD -->
-    <section class="hg-numbers">
-      <div class="section-head section-head--tight">
-        <div class="eyebrow-row"><span class="no">Where things stand</span><span class="asof" id="board-asof"></span></div>
-        <h2>The numbers</h2>
+  <div class="top-grid">
+    <section class="section-rule" aria-labelledby="news-title">
+      <div class="section-headline"><div class="section-k">Latest</div><div class="asof" id="news-asof" data-date="{{ dailyBrief.newsThrough }}">News through {{ dailyBrief.newsThrough }}</div></div>
+      <h2 class="section-title" id="news-title">Today's news</h2>
+      <div class="brief-list">
+        {% for story in dailyBrief.stories %}
+        <article class="brief-row">
+          <div class="story-meta"><span class="beat">{{ story.beat }}</span><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
+          <h3>{{ story.title }}</h3>
+          <p>{{ story.context }}</p>
+          <div class="story-foot">
+            <a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a>
+            <a href="{{ story.topicUrl }}">{{ story.topic }} →</a>
+          </div>
+        </article>
+        {% endfor %}
       </div>
-      <div class="tablero" id="tablero"></div>
-      <button class="board-more" id="board-more" type="button" aria-expanded="false">Show all indicators</button>
-      <p class="wire-note">Open a tile for its full history and source. <a href="/sources.html">See all sources &rarr;</a></p>
     </section>
 
-    <!-- 4 · NEXT UP — quiet dated-catalyst rail (Fable: date/title/source only; the event that echoes the
-         lead story is suppressed; "All N dates" inline-expands with the why). Last in DOM = last on
-         mobile; the grid lifts it top-right on desktop. -->
-    <aside id="wire" class="hg-nextup">
-      <div class="nextup-lbl"><span class="k">Next up</span></div>
-      <div id="watch-list"></div>
+    <aside class="rail">
+      <section class="section-rule" aria-labelledby="now-title">
+        <div class="section-k">Current readings</div>
+        <h2 class="section-title" id="now-title">Mexico now</h2>
+        <p class="now-intro">These do not all update together. The peso is daily; reserves are weekly; inflation, activity, and remittances are monthly; Banxico changes its rate at policy meetings.</p>
+        <div id="mexico-now"><div class="now-loading">Loading the latest readings…</div></div>
+        <a class="section-link" href="/chart.html">Open all charts →</a>
+      </section>
     </aside>
   </div>
 
-  <!-- 3b · THE AREAS — the topic browse: each area = a 1–2 sentence read + its top headlines -->
-  <section>
-    <div class="section-head section-head--tight"><div class="eyebrow-row"><span class="no">This week</span><span class="asof" id="areas-asof"></span></div><h2>Mexico by topic</h2></div>
+  <section class="companies section-rule" aria-labelledby="companies-title">
+    <div class="section-headline"><div class="section-k">Companies</div><div class="asof">Latest signal and why I am watching</div></div>
+    <h2 class="section-title" id="companies-title">Companies worth following</h2>
+    <div class="company-list">
+      {% for company in dailyBrief.companies %}
+      <article class="company-row">
+        <div class="company-name">{{ company.name }}<span>{{ company.sector }}</span></div>
+        <div class="company-thesis"><h3>{{ company.title }}</h3><p>{{ company.thesis }}</p></div>
+        <p class="company-signal"><b>Latest:</b> {{ company.signal }}</p>
+        <a class="company-source" href="{{ company.url }}" target="_blank" rel="noopener"><span class="js-date" data-date="{{ company.date }}">{{ company.date }}</span> ↗</a>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="topics section-rule" aria-labelledby="topics-title">
+    <div class="section-headline"><div class="section-k">By topic</div><div class="asof" id="areas-asof"></div></div>
+    <h2 class="section-title" id="topics-title">Mexico by topic</h2>
     <div class="areas" id="areas"></div>
   </section>
 
+  <section class="coming section-rule" aria-labelledby="next-title">
+    <div class="section-headline"><div class="section-k">Next</div><div class="asof">Four dates to watch</div></div>
+    <h2 class="section-title" id="next-title">Coming up</h2>
+    <div class="timeline" id="timeline"><div class="now-loading">Loading the calendar…</div></div>
+    <a class="section-link" href="/sources.html#calendar">Open the full calendar →</a>
+  </section>
 
-
-  <!-- (WHAT TO WATCH moved into the Brief's right rail above — Fable 2026-07-12) -->
-
-  <!-- NEWSLETTER — moved to the bottom, the last thing before the footer -->
-  <section>
+  <section class="subscribe-section">
     <div class="sub">
       <div class="lab">The email</div>
-      <p class="line">Once a week, I send the few things that changed in Mexico's economy, politics, and relationship with the United States that I think are worth knowing. The original sources are included if you want to go deeper. <a href="/weekly.html" style="color:var(--green-d);font-weight:600">More &rarr;</a></p>
-      <!-- Our own form -> /api/subscribe (Cloudflare function -> beehiiv, key server-side). No third-party UI. -->
+      <p class="line">Once a week, I send the few things that changed in Mexico's economy, politics, and relationship with the United States that I think are worth knowing. The original sources are included if you want to go deeper. <a href="/weekly.html" style="color:var(--green-d);font-weight:600">See an example →</a></p>
       <form class="subform" method="post" action="/api/subscribe" novalidate>
         <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required />
         <label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
@@ -351,246 +212,105 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
       <div class="privacy-note">Your email is handled by Beehiiv for this newsletter. <a href="/privacy.html">Privacy</a>.</div>
     </div>
   </section>
-
 </div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, tile, fmt, relTime, evDate, enNum } from '/assets/mb.js?v=18';
-import { summarizeHealth } from '/assets/health-status.mjs?v=3';
+import { loadSeries, S, EVENTS, relTime } from '/assets/mb.js?v=18';
 
-/* ---- anchor redirect: old one-page briefing #q anchors → their new section pages ----
-   Every topic now owns a page, so a bookmarked #q link should land on it. */
 const RD={'#q3':'/economy.html','#q4':'/economy.html','#q5':'/economy.html','#q6':'/society.html','#q7':'/politics.html','#q8':'/us-mexico.html','#q9':'/society.html','#q10':'/economy.html','#q11':'/model.html'};
-if(RD[location.hash]){ location.replace(RD[location.hash]); }
+if(RD[location.hash]) location.replace(RD[location.hash]);
 
-let TRADE=null;
-
-/* section keyword filters — reused verbatim from the section pages so a homepage
-   headline matches what the section page itself would surface first. */
-const POL_RX=/sheinbaum|morena|gobierno|pol[ií]tic|\belecc|\belect|comicios|congreso|senado|diputad|judicial|oposici|\bpan\b|\bpri\b|gobernador|gubernatur|informe|constituc|government|\bcongress|senate|\belection|midterm|opposition|\bpresident|\bminister|cabinet/i;
-const SEC_RX=/seguridad|homicid|violenc|cartel|crimen|delito|desaparec|narco|secuestr|extorsi|drone attack/i;
-const USMX_RX=/usmca|t-?mec|arancel|tariff|ee\.?uu|estados unidos|frontera|\bborder\b|comercio|exportaci|trump|remesa|remittance|\bice\b|migra|deportaci|\bustr\b|washington/i;
-const SOC_RX=/pobreza|salario|salarial|empleo|desempleo|desigualdad|migraci|migrante|remesas|remittance|poblaci|imss|trabajador|informal|welfare|bienestar|coneval|conasami|pension|jornada|desarrollo humano|social|wage|poverty|inequality|\bjobs\b|\blabor\b/i;
-const ECON_RX=/econom|\bgdp\b|\bpib\b|growth|crecimiento|manufactur|industri|inversi|invest|nearshor|export|import|sector|f[aá]brica|factory/i;
-const MONEY_RX=/peso|inflaci|inflation|banxico|\brate\b|\btasa\b|remittance|remesas|market|mercado|tariff|arancel|usmca|nearshor|invest|inversi|bolsa|divisa/i;
-
-/* ============ THE BOARD (block 3) — same tile() render + same JSON as the sections ============ */
-const CORE=new Set(['banxico-usdmxn-fix','banxico-inflacion','banxico-tasa-objetivo','banxico-pib-crecimiento']); // shown by default on mobile
-const TILES=[
-  {id:'banxico-usdmxn-fix',   l:'Peso · per US dollar',      href:'/economy.html'},
-  {id:'banxico-inflacion',    l:'Inflation · annual',  href:'/economy.html'},
-  {id:'banxico-tasa-objetivo',l:'Policy rate · Banxico',href:'/economy.html'},
-  {id:'banxico-pib-crecimiento',l:'Growth · real GDP', href:'/economy.html'},
-  {id:'banxico-remesas',      l:'Remittances · monthly total', href:'/economy.html'},
-  {id:'banxico-reservas',     l:"Int'l reserves",      href:'/economy.html'},
-];
-// A short definition sits beside every value. These lines explain what the
-// number is; they do not guess at what moved it. Deeper comparisons live on the
-// chart and topic pages, where their inputs and caveats are visible.
-const NUMBER_CONTEXT={
-  'banxico-usdmxn-fix':   {line:"Lower means a stronger peso. Banxico's official FIX rate."},
-  'banxico-inflacion':    {line:"Annual change in consumer prices. Banxico's target is 3%, plus or minus one point."},
-  'banxico-tasa-objetivo':{line:"Banxico's overnight target rate, set at scheduled policy meetings."},
-  'banxico-pib-crecimiento':{line:'Annual change in real GDP. Published quarterly.'},
-  'banxico-remesas':      {line:'Dollars sent to Mexico from abroad. Published monthly.'},
-  'banxico-reservas':     {line:"Banxico's international reserve assets. Published weekly."},
-};
-function renderBoard(){
-  // the four core tiles always show; the rest carry .extra and collapse behind "Show all" on mobile
-  return TILES.map(t=>`<a class="tilelink${CORE.has(t.id)?'':' extra'}" href="/chart.html?m=${t.id}">${tile(t)}</a>`).join('');   // tiles shortcut into the explorer, pre-selected (Fable 2026-07-12)
+const esc=(s)=>String(s==null?'':s).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+const point=(id)=>S[id]?.data?.at(-1)||null;
+const prior=(id)=>S[id]?.data?.at(-2)||null;
+function nearAgo(id,days,tolerance=60){
+  const a=S[id]?.data||[]; if(!a.length) return null;
+  const end=Date.parse(a.at(-1).date),target=end-days*864e5; let best=null,dist=Infinity;
+  for(const p of a){const d=Math.abs(Date.parse(p.date)-target);if(d<dist){dist=d;best=p;}}
+  return dist<=tolerance*864e5?best:null;
+}
+const n=(v,d=2)=>Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const signed=(v,d=2)=>`${Number(v)>=0?'+':''}${n(v,d)}%`;
+function dateLabel(iso,withYear=false){
+  if(!iso) return '';
+  const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);
+  return isNaN(d)?'':d.toLocaleDateString('en-US',{month:'short',day:'numeric',...(withYear?{year:'numeric'}:{})});
+}
+function periodLabel(id,iso){
+  if(!iso) return '';
+  const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);
+  if(isNaN(d)) return '';
+  if(S[id]?.meta?.cadence==='monthly') return d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+function monthLabel(iso){
+  if(!iso) return '';
+  const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);
+  return isNaN(d)?'':d.toLocaleDateString('en-US',{month:'long'});
+}
+function nowRow({id,name,value,change,stamp,why}){
+  return `<div class="now-row"><a class="now-main" href="/chart.html?v=${esc(id)}"><span class="now-name">${esc(name)}</span><span class="now-value">${esc(value)}</span><span class="now-change">${esc(change)}</span><span class="now-stamp">${esc(stamp)}</span></a><details class="now-more"><summary>Why it matters</summary><p>${esc(why)}</p></details></div>`;
+}
+function renderNow(){
+  const peso=point('banxico-usdmxn-fix'),pesoP=prior('banxico-usdmxn-fix'),pesoY=nearAgo('banxico-usdmxn-fix',365,10);
+  const inf=point('banxico-inflacion'),infP=prior('banxico-inflacion'),core=point('banxico-inflacion-subyacente');
+  const rate=point('banxico-tasa-objetivo'),rateY=nearAgo('banxico-tasa-objetivo',365,60),igae=point('banxico-igae'),igaeP=prior('banxico-igae');
+  const rem=point('banxico-remesas'),remP=prior('banxico-remesas'),remY=nearAgo('banxico-remesas',365,45);
+  const res=point('banxico-reservas'),resY=nearAgo('banxico-reservas',365,60);
+  const price=[]; const growth=[];
+  if(peso){const moves=[];if(pesoP)moves.push(`${n(Math.abs((peso.value/pesoP.value-1)*100),2)}% ${peso.value<pesoP.value?'stronger':'weaker'} than the previous trading day`);if(pesoY)moves.push(`${n(Math.abs((peso.value/pesoY.value-1)*100),1)}% ${peso.value<pesoY.value?'stronger':'weaker'} than a year ago`);price.push(nowRow({id:'banxico-usdmxn-fix',name:'Peso · per US dollar',value:n(peso.value,2),change:moves.length?`${moves.join('; ')}.`:'Comparison unavailable.',stamp:`Published daily · ${periodLabel('banxico-usdmxn-fix',peso.date)} · Banxico`,why:'A lower number means a stronger peso. That makes imports cheaper, but each export or remittance dollar converts into fewer pesos.'}));}
+  if(inf){const move=infP?`${n(Math.abs(inf.value-infP.value),2)} percentage points ${inf.value<infP.value?'lower':'higher'} than ${monthLabel(infP.date)}.`:'';const band=inf.value>=2&&inf.value<=4?` Inside Banxico's 2–4% target range.`:` Outside Banxico's 2–4% target range.`;price.push(nowRow({id:'banxico-inflacion,banxico-inflacion-subyacente',name:'Inflation',value:`${n(inf.value,2)}%`,change:move+band,stamp:`Published monthly · ${periodLabel('banxico-inflacion',inf.date)} · INEGI`,why:`Prices are still rising, just more slowly. Core inflation is ${core?n(core.value,2)+'%':'not available'}.`}));}
+  if(rate){const gap=core?n(rate.value-core.value,2):null;const moves=[];if(rateY)moves.push(`${n(Math.abs(rate.value-rateY.value),2)} percentage points ${rate.value<rateY.value?'lower':'higher'} than a year ago`);if(gap)moves.push(`${gap} points above core inflation`);price.push(nowRow({id:'banxico-tasa-objetivo,banxico-inflacion-subyacente',name:'Banxico rate',value:`${n(rate.value,2)}%`,change:moves.length?`${moves.join('; ')}.`:'Comparison unavailable.',stamp:`Set at policy meetings · ${periodLabel('banxico-tasa-objetivo',rate.date)} · Banxico`,why:'Higher rates help contain inflation and support the peso, but make borrowing more expensive.'}));}
+  if(igae){growth.push(nowRow({id:'banxico-igae',name:'Economic activity · IGAE',value:signed(igae.value,2),change:igaeP?`${igae.value>=0?'Growing':'Contracting'} from a year earlier; the prior monthly reading was ${signed(igaeP.value,2)}.`:`${igae.value>=0?'Growing':'Contracting'} from a year earlier.`,stamp:`Published monthly · ${periodLabel('banxico-igae',igae.date)} · INEGI`,why:"The closest monthly reading of whether Mexico's economy is growing before quarterly GDP arrives."}));}
+  if(rem){let change='';if(remY)change=`${n(Math.abs((rem.value/remY.value-1)*100),1)}% ${rem.value>=remY.value?'above':'below'} the same month a year earlier.`;else if(remP)change=`US$${n(Math.abs(rem.value-remP.value),0)}mn ${rem.value>=remP.value?'more':'less'} than in ${monthLabel(remP.date)}.`;growth.push(nowRow({id:'banxico-remesas',name:'Remittances',value:`US$${n(rem.value/1000,2)}bn`,change,stamp:`Published monthly · ${periodLabel('banxico-remesas',rem.date)} · Banxico`,why:'Money sent home from abroad, mostly the US. It supports household spending and brings dollars into Mexico. Monthly totals are seasonal, so the same month a year earlier is the better comparison.'}));}
+  if(res){const change=resY?`${n(Math.abs((res.value/resY.value-1)*100),1)}% ${res.value>=resY.value?'higher':'lower'} than a year ago.`:'Year-earlier comparison unavailable.';growth.push(nowRow({id:'banxico-reservas',name:'International reserves',value:`US$${n(res.value/1000,0)}bn`,change,stamp:`Published weekly · ${periodLabel('banxico-reservas',res.date)} · Banxico`,why:"Banxico's foreign-currency buffer against external shocks."}));}
+  const el=document.getElementById('mexico-now');
+  if(el) el.innerHTML=`<div class="now-group"><div class="now-group-title">Prices and rates</div>${price.join('')}</div><div class="now-group"><div class="now-group-title">Growth and money flows</div>${growth.join('')}</div>`;
 }
 
-function writeVisit(){ try{ localStorage.setItem('mb_lastvisit',new Date().toISOString()); }catch(e){} }
-
-/* ============ THE BRIEF (the lead) — the 2-paragraph synthesis ============
-   Rendered from data/brief.json (built by the pipeline under the "no sentence without a link"
-   law). Each sentence is a link to the source item it cites; the page never invents — it only
-   renders what the generator (or its deterministic fallback) already validated. */
-const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-// The Brief (Fable 2026-07-12): 3-5 rubric-ranked items, one paragraph each. Item 1 = the lead story
-// EXPLAINED (the H1 above is its headline, so no repeat); items 2..N = bold headline + context + source;
-// context is em-dash-stripped; every item links to its source. The standing numbers are shown once,
-// in the cards below, rather than repeated here.
-function renderBrief(brief){
-  if(!brief||!brief.lead) return '';
-  const dt=(d)=>{ if(!d)return''; const x=new Date(d+'T00:00:00'); return isNaN(x)?'':x.toLocaleDateString('en-US',{month:'short',day:'numeric'}); };
-  const ctx=(o)=>esc(String(o.context||'').replace(/\s*—\s*/g,', '));
-  const src=(o)=>{ if(!o||!o.href) return ''; const ext=/^https?:/.test(o.href), d=o.date?(' · '+dt(o.date)):'';
-    return ` <a class="bsrc" href="${esc(o.href)}"${ext?' target="_blank" rel="noopener"':''} title="Source: ${esc(o.source||'source')}">${esc(o.source||'source')}${d}</a>`; };
-  let html='';
-  if(brief.lead.context) html+=`<p class="bi">${ctx(brief.lead)}${src(brief.lead)}</p>`;
-  (brief.items||[]).forEach((it,i)=>{ html+=`<p class="bi" data-rank="${i+1}"><b class="bhl">${esc(it.headline)}.</b> <span class="bctx">${ctx(it)}</span>${src(it)}</p>`; });
-  return html;
-}
-
-/* ============ WHAT STOOD OUT — the analysis surfaced from the deterministic facts pack ============
-   Renders the week's biggest movers plus the computed cross-series connections (real rate, the
-   Mexico-US spread, peso volatility). No prose is invented: each number is computed by build-analysis.js
-   from the canonical series, and each line links into the section or The Read where it's shown in full. */
-function renderStood(F){
-  if(!F) return '';
-  const rows=[]; const pct=(u)=>/%/.test(u||'');
-  const mv=(F.whatMoved&&F.whatMoved.items)||[];
-  mv.slice(0,2).forEach(m=>{
-    const dir=m.dir<0?'fell to':(m.dir>0?'rose to':'held at');
-    const val=pct(m.units)?`${m.value}%`:`${enNum(m.value)} ${m.units}`;
-    const flag=(m.flags&&m.flags[0])?`, ${m.flags[0]}`:'';
-    rows.push({tag:'moved',t:`${m.label} ${dir} ${val}${flag}.`,href:'/economy.html'});
-  });
-  const c=F.cross||{};
-  if(c.realRate&&c.realRate.value!=null) rows.push({tag:'Rate–core gap',t:`Banxico's policy rate is ${c.realRate.value} percentage points above current core inflation.`,href:'/chart.html?v=banxico-tasa-objetivo,banxico-inflacion-subyacente'});
-  if(c.rateSpread&&c.rateSpread.value!=null) rows.push({tag:'Rate gap',t:`Mexico's policy rate runs ${c.rateSpread.value} points above the US Fed's.`,href:'/chart.html?v=d-rate-gap'});
-  if(!rows.length) return '<div class="area-empty">Nothing stood out in the numbers this week.</div>';
-  return rows.map(r=>`<a class="stoodrow" href="${r.href}"><span class="stag">${r.tag}</span><span class="stxt">${esc(r.t)}</span></a>`).join('');
-}
-
-/* ============ THE AREAS — the topic browse, projected from the tagged event store ============
-   Rendered from data/areas.json. Each area = a synthesis + up to 3 headline line-items, one grammar,
-   capped. Empty areas say so. Links go to the source (headlines) and the section page (header). */
 function renderAreas(data){
   const areas=(data&&data.areas)||[];
-  if(!areas.length) return '';
-  return areas.map(a=>{
-    const hls=(a.headlines||[]).slice(0,3);
-    const hl=hls.map(h=>{
-      const ext=/^https?:/.test(h.url||'');
-      const meta=[h.source,h.date?hapDate(h.date):''].filter(Boolean).join(' · ');
-      return `<a class="hl" href="${esc(h.url||'#')}"${ext?' target="_blank" rel="noopener"':''}><span class="hl-t">${esc(h.title)}</span><span class="hl-m">${esc(meta)}</span></a>`;
-    }).join('');
-    const body=hls.length ? `${a.synthesis?`<p class="area-syn">${esc(a.synthesis)}</p>`:''}<div class="area-hl">${hl}</div>` : `<div class="area-empty">Nothing major this week.</div>`;
-    return `<div class="area"><a class="area-h" href="${esc(a.href||'#')}"><span class="area-k">${esc(a.label)}</span><span class="area-go">${hls.length?'more &rarr;':'&rarr;'}</span></a>${body}</div>`;
-  }).join('');
+  return areas.map(a=>{const hls=(a.headlines||[]).slice(0,3);const links=hls.map(h=>`<a class="hl" href="${esc(h.url||'#')}"${/^https?:/.test(h.url||'')?' target="_blank" rel="noopener"':''}><span class="hl-t">${esc(h.title)}</span><span class="hl-m">${esc([h.source,dateLabel(h.date)].filter(Boolean).join(' · '))}</span></a>`).join('');return `<div class="area"><a class="area-h" href="${esc(a.href||'#')}"><span class="area-k">${esc(a.label)}</span><span class="area-go">more →</span></a>${a.synthesis?`<p class="area-syn">${esc(a.synthesis)}</p>`:''}<div class="area-hl">${links}</div></div>`;}).join('');
+}
+function eventCopy(e){
+  const t=String(e.label||'');
+  if(/USMCA talks/i.test(t)) return {title:'Mexico–U.S. trade talks',why:'The next round after the first USMCA review.'};
+  if(/first-fortnight July/i.test(t)) return {title:'First-half July inflation',why:'Shows whether the June decline continued.'};
+  if(/IGAE/i.test(t)) return {title:'May economic activity',why:'The best monthly check on growth before GDP.'};
+  if(/GDP flash/i.test(t)) return {title:'First estimate of Q2 GDP',why:'Shows whether the economy left the Q1 slowdown behind.'};
+  return {title:t.split(/\s+[—–]\s+/)[0],why:e.mechanism||''};
+}
+function renderTimeline(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const future=((EVENTS&&EVENTS.events)||[]).filter(e=>Date.parse(e.date)>=today.getTime()-864e5).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const wanted=[/USMCA talks/i,/first-fortnight July/i,/IGAE/i,/GDP flash/i];
+  const ev=wanted.map(pattern=>future.find(e=>pattern.test(String(e.label||'')))).filter(Boolean);
+  for(const e of future){if(ev.length>=4)break;if(!ev.includes(e))ev.push(e);}
+  const html=ev.map(e=>{const c=eventCopy(e),d=new Date(e.date+'T00:00:00'),label=e.approx?`Week of ${dateLabel(e.date)}`:dateLabel(e.date);return `<article class="timeline-item"><div class="timeline-date">${esc(label)}</div><div class="timeline-title">${esc(c.title)}</div><div class="timeline-why">${esc(c.why)}</div><div class="timeline-source">${esc(e.source||'')}</div></article>`;}).join('');
+  const el=document.getElementById('timeline'); if(el)el.innerHTML=html||'<div class="now-loading">No dated releases are on the calendar yet.</div>';
 }
 
-function hapDate(iso){ if(!iso) return ''; const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso); const d=m?new Date(+m[1],+m[2]-1,+m[3]):new Date(iso); if(isNaN(d)) return ''; return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
-/* ============ WHAT TO WATCH (block 6, left) — next 3 dated catalysts ============ */
-// classify an event or the lead headline into a topic bucket, so the compact rail can suppress the
-// event that merely echoes the lead story (Fable 2026-07-12: don't shrink the echo, drop it).
-function evClass(s){s=String(s||'').toLowerCase();
-  if(/usmca|t-?mec|tratado|us[\s.–-]*mexico\s*(trade|talks|review)|trade\s*(review|talks|deal|agreement|war)|tariff|arancel|census|\bexport/.test(s)) return 'trade';
-  if(/banxico|inflaci|inflation|\brate\b|\btasa\b|monetary|fomc|\bfed\b|\bcpi\b|igae|activity/.test(s)) return 'rates';
-  if(/presupuesto|budget|fiscal|hacienda|paquete/.test(s)) return 'fiscal';
-  if(/remesa|remittance/.test(s)) return 'remit';
-  if(/elecci|election|\bvote\b|midterm|governor|ballot/.test(s)) return 'political';
-  return null;
-}
-function renderWatch(brief){
-  const ev=(EVENTS&&EVENTS.events)||[]; const now=Date.now();
-  const up=ev.filter(e=>new Date(e.date)>=now-864e5).sort((a,b)=>a.date.localeCompare(b.date));
-  if(!up.length) return `<div class="cb-empty">Nothing dated on the calendar yet.</div>`;
-  const nd=(s)=>String(s||'').replace(/\s*—\s*/g,', ');   // strip em-dashes (keeps en-dash ranges like US–Mexico)
-  const leadClass=(brief&&brief.lead)?evClass((brief.lead.h1||'')+' '+(brief.lead.source||'')):null;
-  // compact rail: suppress any event in the lead story's topic (the third echo of the headline); show 3
-  let compact=up.filter(e=>!(leadClass&&evClass((e.label||'')+' '+(e.mechanism||''))===leadClass)).slice(0,3);
-  if(!compact.length) compact=up.slice(0,3);   // never render an empty rail
-  const row=(e,full)=>{const d=evDate(e);
-    const src=e.sourceUrl?`<a class="nusrc" href="${esc(e.sourceUrl)}" target="_blank" rel="noopener">${esc(e.source||'source')}</a>`
-      :(e.source?`<span class="nusrc">${esc(e.source)}</span>`:'');
-    return `<div class="nur"><div class="nud">${d.mo} ${d.day}<small>${d.y}${e.approx?' ~':''}</small></div>`+
-      `<div class="nut">${nd(e.label)}`+(full&&e.mechanism?`<div class="num">${nd(e.mechanism)}</div>`:'')+
-      (src?`<div>${src}</div>`:'')+`</div></div>`;};
-  const more=up.length>compact.length;
-  return `<div class="nextup-compact">${compact.map(e=>row(e,false)).join('')}</div>`+
-    `<div class="nextup-full" hidden>${up.map(e=>row(e,true)).join('')}</div>`+
-    (more?`<button type="button" class="nextup-toggle" aria-expanded="false" data-label="All ${up.length} dates &rarr;">All ${up.length} dates &rarr;</button>`:'');
-}
-
-/* THE WIRE (raw automated headlines) was retired from the homepage on 2026-07-11 (Fable): the public
-   page carries curated developments only — in The Brief and the areas. The wire still runs internally
-   (data/news/*.json) as the inbox curation draws from; it just never renders unreviewed to a reader. */
-
-/* ============ boot ============ */
 (async()=>{
-  await loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-reservas','banxico-remesas','banxico-pib-crecimiento','banxico-igae','wb-gdp-usd','wb-population','wb-gdp-per-capita']);
-  const [health,trade,releases,brief,areasData,facts]=await Promise.all([
-    fetch('./data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch('./data/trade-us.json').then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch('./data/releases.json').then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch('./data/brief.json').then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch('./data/areas.json').then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch('./data/analysis/facts.json').then(r=>r.ok?r.json():null).catch(()=>null),
+  document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.querySelectorAll('.js-date').forEach(el=>{el.textContent=dateLabel(el.dataset.date);});
+  const newsAsof=document.getElementById('news-asof'); if(newsAsof){const d=new Date(newsAsof.dataset.date);newsAsof.textContent=`News through ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
+  const [loaded,health,areasData]=await Promise.all([
+    loadSeries(['banxico-usdmxn-fix','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-igae','banxico-remesas','banxico-reservas']),
+    fetch('/data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch('/data/areas.json').then(r=>r.ok?r.json():null).catch(()=>null)
   ]);
-  TRADE=trade;
-
-  // masthead date: the day you're reading it, spelled out clearly like a morning paper
-  const td=document.getElementById('today'); if(td) td.textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-
-  // The H1 = the #1 story as a label (linked to its source); the Brief's first paragraph explains it,
-  // so the story is never printed twice. If there's no brief, the static fallback H1 stays.
-  if(brief&&brief.lead){ const le=document.getElementById('lead');
-    if(le){ const t=String(brief.lead.h1||'').replace(/\s*—\s*/g,', ').replace(/\.\s*$/,''); const h=brief.lead.href;
-      le.innerHTML=h?`<a href="${esc(h)}"${/^https?:/.test(h)?' target="_blank" rel="noopener"':''} title="Source: ${esc(brief.lead.source||'source')}">${esc(t)}</a>`:esc(t);
-    }
-  }
-  // the lead: 3-5 explained, linked items. The number cards below own the standing readings.
-  const briefEl=document.getElementById('brief');
-  if(briefEl){
-    const html=renderBrief(brief);
-    if(html){ briefEl.innerHTML=html; const bao=document.getElementById('brief-asof'); if(bao&&brief&&brief.meta){
-      const reviewed=brief.meta.reviewedAt||brief.meta.generatedAt||brief.meta.updated;
-      const d=reviewed?new Date(reviewed):null;
-      bao.textContent=d&&!isNaN(d)?'reviewed '+d.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
-    } }
-    else { const sec=briefEl.closest('section'); if(sec) sec.remove(); }
-  }
-
-  // what stood out: the analysis surfaced from the facts pack (movers + computed connections)
-  const stoodEl=document.getElementById('stood');
-  if(stoodEl){ const html=renderStood(facts); if(html){ stoodEl.innerHTML=html;
-      const sao=document.getElementById('stood-asof');
-      if(sao && facts && facts.generatedAt){ const d=new Date(facts.generatedAt);
-        if(!isNaN(d)) sao.textContent='updated '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
-    } else { const sec=document.getElementById('stood-sec'); if(sec) sec.remove(); } }
-
-  // Dateline reports the whole pipeline, not whichever single series happened to refresh last.
-  const times=Object.values(S).map(s=>new Date(s.meta.fetchedAt).getTime()).filter(t=>t&&!isNaN(t));
-  const newest=times.length?Math.max(...times):0;
-  const sm=health&&summarizeHealth(health), checked=health&&Date.parse(health.generatedAt);
-  const st=document.getElementById('status'), freshLink=st&&st.closest('.fresh');
-  if(st&&sm){
-    const loaded=(sm.current||0)+(sm.reviews||0)+(sm.expected||0);
-    const parts=[`${loaded} feeds checked`];
-    if(sm.expected)parts.push(`${sm.expected} expected`);
-    if(sm.overdue)parts.push(`${sm.overdue} refresh overdue`);
-    if(sm.issues)parts.push(`${sm.issues} issue${sm.issues===1?'':'s'}`);
-    else parts.push('0 failed');
-    st.textContent=parts.join(' · ')+(checked?` · checked ${relTime(checked)}`:'');
-    if(freshLink)freshLink.classList.add(sm.issues?'has-issue':(sm.expected||sm.overdue)?'has-expected':'all-current');
-  }else if(st){st.textContent='Feed status unavailable';window.reportMexicoDataError?.('./data/health.json');}
-  const pageChecked=Number.isFinite(checked)?checked:newest;
-  const ba=document.getElementById('board-asof'); if(ba&&pageChecked) ba.textContent='checked '+new Date(pageChecked).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-
-  document.getElementById('tablero').innerHTML=renderBoard();
-  // Attach the neutral definition so no number is ever bare.
-  document.querySelectorAll('#tablero .tile[data-go]').forEach(el=>{const t=NUMBER_CONTEXT[el.getAttribute('data-go')];
-    if(t&&t.line){const d=document.createElement('div');d.className='tx';d.textContent=t.line;el.appendChild(d);}});
-
-  // the topic browse: the areas (a synthesis + top headlines per topic), projected from the event store
-  const areasEl=document.getElementById('areas');
-  if(areasEl){
-    const html=renderAreas(areasData);
-    if(html){ areasEl.innerHTML=html; const aao=document.getElementById('areas-asof'); if(aao&&areasData&&areasData.meta) aao.textContent='updated '+hapDate(areasData.meta.updated); }
-    else { const sec=areasEl.closest('section'); if(sec) sec.remove(); }
-  }
-  writeVisit();                     // stamp this visit so the next one has a "since" point
-
-  document.getElementById('watch-list').innerHTML=renderWatch(brief);
-  // "All N dates" — inline-expand the quiet rail to the full calendar (with the why on each)
-  (function(){ const nu=document.getElementById('watch-list'); if(!nu) return;
-    const tg=nu.querySelector('.nextup-toggle'); if(!tg) return;
-    tg.addEventListener('click',()=>{ const c=nu.querySelector('.nextup-compact'), f=nu.querySelector('.nextup-full');
-      const open=f.hidden; c.hidden=open; f.hidden=!open;
-      tg.setAttribute('aria-expanded',String(open)); tg.innerHTML=open?'Show less &uarr;':tg.dataset.label; });
-  })();
-
-  // "Show all indicators" — reveals the .extra tiles on mobile
-  const bm=document.getElementById('board-more'), tbl=document.getElementById('tablero');
-  if(bm&&tbl) bm.addEventListener('click',()=>{ const on=tbl.classList.toggle('show-all'); bm.setAttribute('aria-expanded',on?'true':'false'); bm.textContent=on?'Show fewer':'Show all indicators'; });
-
-  // #q12 / #wire from an old link → scroll to the Wire block on this page
-  if(location.hash==='#q12'||location.hash==='#wire'){const w=document.getElementById('wire'); if(w)w.scrollIntoView();}
-})().catch(e=>{
-  const h=document.getElementById('areas'); if(h)h.innerHTML='<p style="font-family:var(--mono);font-size:var(--fs-label);color:var(--red)">Error loading data: '+e.message+'</p>';
+  renderNow(); renderTimeline();
+  const areas=document.getElementById('areas'); if(areas){areas.innerHTML=renderAreas(areasData);if(!areas.innerHTML)areas.closest('section')?.remove();}
+  const aa=document.getElementById('areas-asof'); if(aa&&areasData?.meta?.updated)aa.textContent='updated '+dateLabel(areasData.meta.updated);
+  const sources=health?.sources||[],sm=health?{current:0,reviews:0,expected:0,issues:0}:null;
+  if(sm)for(const source of sources){if(source.status==='failed')sm.issues++;else if(source.status==='ok_flagged'){const flags=source.flags||[];if(flags.some(flag=>String(flag).startsWith('stale_')))sm.expected++;else sm.reviews++;}else if(source.status==='ok')sm.current++;else if(source.status!=='skipped')sm.expected++;}
+  const status=document.getElementById('status'),fresh=document.getElementById('fresh');
+  if(sm&&status){const checked=health.generatedAt?Date.parse(health.generatedAt):null;const parts=[`${(sm.current||0)+(sm.reviews||0)+(sm.expected||0)} feeds checked`];if(sm.issues)parts.push(`${sm.issues} issue${sm.issues===1?'':'s'}`);if(sm.expected)parts.push(`${sm.expected} expected`);if(checked)parts.push(`checked ${relTime(checked)}`);status.textContent=parts.join(' · ');fresh.classList.add(sm.issues?'has-issue':sm.expected?'has-expected':'all-current');}
+  else if(status)status.textContent='Feed status unavailable';
+  const summary=document.getElementById('morning-summary'),tail=document.getElementById('summary-next')?.textContent?.trim();
+  if(summary){const parts=[summary.textContent.trim()];const p=point('banxico-usdmxn-fix'),py=nearAgo('banxico-usdmxn-fix',365,10),i=point('banxico-inflacion'),c=point('banxico-inflacion-subyacente');if(p&&py)parts.push(`The exchange rate is ${n(Math.abs((p.value/py.value-1)*100),1)}% ${p.value<py.value?'lower':'higher'} than a year ago, which means a ${p.value<py.value?'stronger':'weaker'} peso.`);if(i)parts.push(`${monthLabel(i.date)} inflation was ${n(i.value,2)}% and ${i.value>=2&&i.value<=4?'inside':'outside'} Banxico's target. Core inflation is ${c?n(c.value,2)+'%':'not available'}.`);if(tail)parts.push(tail);summary.textContent=parts.join(' ');}
+})().catch(err=>{
+  const now=document.getElementById('mexico-now');if(now)now.innerHTML='<div class="now-loading">The current readings could not be loaded. The source links remain available.</div>';
+  window.reportMexicoDataError?.('homepage',err);
 });
 </script>
-{% endraw %}

@@ -1,18 +1,17 @@
-name: build-weekly-email
-# Saturday: refresh the news, then build the weekly issue as a DRAFT. It never
-# sends — it writes data/email/<week>.json + .html and email-preview.html, commits
-# them, and stops. Review the preview over the weekend; the separate
-# prepare-beehiiv-review action packages it for manual entry in Beehiiv. Needs ANTHROPIC_API_KEY (Haiku 4.5,
-# cents per issue) for the scoring + lead summaries; without it, it still builds a
-# real issue from the deterministic fallback.
+name: build-weekly-email-review
+# Sunday: refresh the news, build a DRAFT, and upload a private review artifact.
+# It never commits a draft to the public site and it cannot send an email. The
+# artifact contains the preview, evidence, Beehiiv handoff, and Alan's questions.
+# A missing model key or failed source must remain visible in the review; fallback
+# copy is never treated as a finished issue.
 
 on:
   schedule:
-    - cron: '0 15 * * 6'   # Saturday 15:00 UTC (~9am Mexico City) — draft ready for the weekend
+    - cron: '0 20 * * 0'   # Sunday 20:00 UTC (4pm ET / 2pm Mexico City in summer)
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: build-weekly-email
@@ -29,7 +28,6 @@ jobs:
 
       - name: Refresh the news ledger + wire
         working-directory: pipeline
-        continue-on-error: true   # a dead feed never blocks the build
         run: node collect-news.js
 
       - name: Build the weekly draft
@@ -40,14 +38,16 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: node build-email.js
 
-      - name: Commit the draft + preview
-        run: |
-          git config user.name  "mexico-data-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/email/ email-preview.html
-          if git diff --cached --quiet; then
-            echo "no email changes"
-          else
-            git commit -m "email: weekly draft $(date -u +%Y-%m-%d)"
-            git push
-          fi
+      - name: Prepare the private review package
+        run: node pipeline/prepare-beehiiv.js
+
+      - name: Upload the Sunday review
+        uses: actions/upload-artifact@v4
+        with:
+          name: mexico-brief-sunday-review
+          path: |
+            data/email/
+            email-preview.html
+            tmp/beehiiv-review/
+          if-no-files-found: error
+          retention-days: 14

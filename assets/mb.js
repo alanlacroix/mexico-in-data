@@ -76,7 +76,16 @@ export function stampFor(m, id){
   if(/annual|yearly/.test(cad)) return {cls:'',t:'ANNUAL · '+String(v).slice(0,4)};
   return {cls:'',t:String(v)};
 }
-export function valueAgo(data,days){ const last=new Date(data[data.length-1].date), tgt=last-days*864e5; let best=data[0],bd=1e18; for(const p of data){const d=Math.abs(new Date(p.date)-tgt);if(d<bd){bd=d;best=p;}} return best.value; }
+export function valueAgo(data,days){
+  if(!Array.isArray(data)||!data.length) return null;
+  const last=new Date(data[data.length-1].date), tgt=last-days*864e5;
+  let best=null,bd=1e18;
+  for(const p of data){const d=Math.abs(new Date(p.date)-tgt);if(d<bd){bd=d;best=p;}}
+  // Do not label a nearby-looking observation as “a year ago” when the source
+  // history does not actually reach the requested comparison period.
+  const tolerance=Math.max(21,Math.min(60,days*.15))*864e5;
+  return best&&bd<=tolerance?best.value:null;
+}
 // Send source links to a human-readable page, not the token-gated raw API endpoint.
 // Banxico's public search accepts the exact series id, so readers land one step from
 // the observation instead of at a generic database home or an HTTP 400.
@@ -330,11 +339,11 @@ export function wireCharts(){
 
 /* ---- verdicts + benchmarks (McKinsey voice: quantified, declarative) ---- */
 export const VERDICT={
-  'banxico-usdmxn-fix':(s)=>{const ago=valueAgo(s.data,365),c=(s.data.at(-1).value-ago)/ago*100;return `The peso is <b>${Math.abs(c).toFixed(1)}% ${c<0?'stronger':'weaker'}</b> than a year ago.`;},
+  'banxico-usdmxn-fix':(s)=>{const ago=valueAgo(s.data,365);if(ago==null)return 'The source history does not yet support a year-earlier comparison.';const c=(s.data.at(-1).value-ago)/ago*100;return `The exchange rate is <b>${Math.abs(c).toFixed(1)}% ${c<0?'lower':'higher'}</b> than a year ago, which means a ${c<0?'stronger':'weaker'} peso.`;},
   'banxico-inflacion':(s)=>{const v=s.data.at(-1).value;return `${v<4&&v>2?'Inside':'Above'} Banxico's 3% ± 1 target band.`;},
-  'banxico-tasa-objetivo':(s)=>{const v=s.data.at(-1).value,ago=valueAgo(s.data,365),pp=(v-ago).toFixed(2).replace('-','−');return `${v===ago?'Held':(v<ago?'Cut':'Raised')} ${pp} pp over the year — one of the G20's highest real rates.`;},
-  'banxico-reservas':(s)=>{const v=s.data.at(-1).value,ago=valueAgo(s.data,365),c=(v-ago)/ago*100;return `${c>=0?'+':''}${c.toFixed(1)}% over the year, near a record high.`;},
-  'banxico-remesas':(s)=>{const v=s.data.at(-1).value,ago=valueAgo(s.data,365),c=(v-ago)/ago*100;return `${c>=0?'+':''}${c.toFixed(1)}% year on year — larger than oil exports or FDI.`;},
+  'banxico-tasa-objetivo':(s)=>{const v=s.data.at(-1).value,ago=valueAgo(s.data,365);if(ago==null)return 'The source history does not yet support a year-earlier comparison.';const pp=(v-ago).toFixed(2).replace('-','−');return `${v===ago?'Held':(v<ago?'Cut':'Raised')} ${pp} pp over the year — one of the G20's highest real rates.`;},
+  'banxico-reservas':(s)=>{const v=s.data.at(-1).value,ago=valueAgo(s.data,365);if(ago==null)return 'The source history does not yet support a year-earlier comparison.';const c=(v-ago)/ago*100;return `${c>=0?'+':''}${c.toFixed(1)}% over the year, near a record high.`;},
+  'banxico-remesas':(s)=>{const v=s.data.at(-1).value,ago=valueAgo(s.data,365);if(ago==null)return 'The source history does not yet support a year-earlier comparison.';const c=(v-ago)/ago*100;return `${c>=0?'+':''}${c.toFixed(1)}% year on year — larger than oil exports or FDI.`;},
   'wb-unemployment':(s)=>`${s.data.at(-1).value.toFixed(1)}% — among the world's lowest. Informality (~55% of workers) is the counterpart, tracked separately.`,
   'banxico-pib-crecimiento':(s)=>{const v=s.data.at(-1).value;return `Real GDP is growing <b>${v>=0?'+':''}${v.toFixed(1)}% a year</b> — barely above zero.`;},
   'banxico-igae':(s)=>{const v=s.data.at(-1).value;return `Activity is <b>${v>=0?'+':''}${v.toFixed(1)}%</b> versus a year ago.`;},
@@ -363,7 +372,7 @@ export const PP_METRICS=['banxico-tasa-objetivo','banxico-inflacion','banxico-in
 function dirArrow(s){const d=s.data;if(d.length<2)return '';const a=d.at(-1).value,b=d.at(-2).value;return a>b?'▲':a<b?'▼':'—';}
 function tileDelta(id,s){
   const d=s.data; if(d.length<3)return '';
-  const cur=d.at(-1).value, ago=valueAgo(d,365); const diff=cur-ago;
+  const cur=d.at(-1).value, ago=valueAgo(d,365); if(ago==null)return ''; const diff=cur-ago;
   const pp=PP_METRICS.includes(id);
   if(!pp && Math.abs(diff)<Math.abs(ago)*0.005) return '';
   if(pp && Math.abs(diff)<0.05) return `<span class="dl fl">held <small>vs a year ago</small></span>`;

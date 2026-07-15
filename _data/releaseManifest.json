@@ -20,7 +20,8 @@
     { "route": "/privacy.html", "file": "privacy.html", "canonical": "/privacy" }
   ],
   "compatibilityRoutes": [
-    { "route": "/404.html", "file": "404.html", "canonical": "/404" }
+    { "route": "/404.html", "file": "404.html", "canonical": "/404" },
+    { "route": "/latest-edition.html", "file": "latest-edition.html", "canonical": "/latest-edition" }
   ],
   "redirectRoutes": [
     { "route": "/the-read", "target": "/" },
@@ -39,8 +40,7 @@
   "previewRoutes": [
     { "route": "/mockup.html", "file": "mockup.html", "metaNoindex": true },
     { "route": "/daily-start-mockup.html", "file": "daily-start-mockup.html", "metaNoindex": true },
-    { "route": "/charts-start-mockup.html", "file": "charts-start-mockup.html", "metaNoindex": true },
-    { "route": "/weekly-sample.html", "file": "weekly-sample.html", "metaNoindex": false }
+    { "route": "/charts-start-mockup.html", "file": "charts-start-mockup.html", "metaNoindex": true }
   ],
   "requiredFiles": [
     "_headers",
