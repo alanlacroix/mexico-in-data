@@ -23,20 +23,22 @@ description: "The latest Mexico stories in the economy, business, politics, soci
   .story-link:hover{color:var(--green-d)}
   .latest-story h2{font-size:clamp(20px,2vw,27px);line-height:1.24;letter-spacing:-.012em;margin:0;max-width:50ch}
   .context{position:relative;z-index:2}
-  .context summary{list-style:none;width:22px;height:22px;border:1px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-d);font-family:var(--mono);font-size:12px;font-weight:650;cursor:pointer;background:var(--paper)}
+  .context summary{list-style:none;display:inline-flex;align-items:center;gap:5px;color:var(--green-d);font-family:var(--mono);font-size:10px;line-height:1.35;letter-spacing:.025em;text-transform:uppercase;font-weight:650;cursor:pointer;background:transparent;white-space:nowrap}
   .context summary::-webkit-details-marker{display:none}
-  .context summary:hover{color:#fff;background:var(--green)}
+  .context summary::after{content:'+';font-size:13px;line-height:1}
+  .context[open] summary::after{content:'–'}
+  .context summary:hover{text-decoration:underline;text-underline-offset:3px}
   .context-pop{display:none;position:absolute;right:0;top:29px;width:min(440px,calc(100vw - 48px));padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 28px rgba(0,0,0,.09);font-size:13px;line-height:1.55;color:var(--ink-2);font-weight:400;text-align:left;z-index:20}
   .context-pop p+p{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
   .context[open] .context-pop,.context:hover .context-pop,.context:focus-within .context-pop{display:block}
   .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
   .empty{font-size:var(--fs-small);color:var(--mut);padding:30px 0}
-  @media(max-width:650px){.latest{padding-top:28px}.latest h1{font-size:42px}.latest-story{padding:17px 0}.latest-story h2{font-size:21px}}
+  @media(max-width:650px){.latest{padding-top:28px}.latest h1{font-size:42px}.latest-story{padding:17px 0}.latest-story h2{font-size:21px}.story-title-row{grid-template-columns:1fr}.story-title-row>.context{justify-self:start}.story-title-row .context-pop{left:0;right:auto}}
 </style>
 <div class="latest">
   <div class="kicker">Latest</div>
   <h1>News about Mexico</h1>
-  <p class="dek">The stories I am following, organized by topic and linked to the source. Tap the <b>?</b> when you want the context.</p>
+  <p class="dek">The stories I am following, organized by topic and linked to the source. Open “Why it matters” when you want the context.</p>
   <nav class="filters" aria-label="Filter stories">
     <button class="filter active" type="button" data-topic="all">All</button>
     <button class="filter" type="button" data-topic="economy">Economy &amp; business</button>
@@ -48,7 +50,7 @@ description: "The latest Mexico stories in the economy, business, politics, soci
     {% for story in latestStories %}
     <article class="latest-story" data-topic="{{ story.topic }}">
       <div class="story-meta"><b>{{ story.topicLabel }}</b><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span><span>{{ story.source }}</span></div>
-      <div class="story-title-row"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h2>{{ story.title }}</h2></a>{% if story.context %}<details class="context"><summary><span aria-hidden="true">?</span><span class="sr-only">Context</span></summary><div class="context-pop"><p>{{ story.context }}</p>{% if story.background %}<p>{{ story.background }}</p>{% endif %}</div></details>{% endif %}</div>
+      <div class="story-title-row"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h2>{{ story.title }}</h2></a>{% if story.context %}<details class="context"><summary>Why it matters</summary><div class="context-pop"><p>{{ story.context }}</p>{% if story.background %}<p>{{ story.background }}</p>{% endif %}</div></details>{% endif %}</div>
     </article>
     {% endfor %}
   </div>

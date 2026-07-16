@@ -37,9 +37,11 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .brief-story h3{font-size:clamp(20px,2vw,27px);line-height:1.24;letter-spacing:-.012em;margin:0;max-width:50ch}
 
   .context{position:relative;z-index:2}
-  .context summary{list-style:none;width:22px;height:22px;border:1px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-d);font-family:var(--mono);font-size:12px;font-weight:650;cursor:pointer;background:var(--paper)}
+  .context summary{list-style:none;display:inline-flex;align-items:center;gap:5px;color:var(--green-d);font-family:var(--mono);font-size:10px;line-height:1.35;letter-spacing:.025em;text-transform:uppercase;font-weight:650;cursor:pointer;background:transparent;white-space:nowrap}
   .context summary::-webkit-details-marker{display:none}
-  .context summary:hover{color:#fff;background:var(--green)}
+  .context summary::after{content:'+';font-size:13px;line-height:1}
+  .context[open] summary::after{content:'–'}
+  .context summary:hover{text-decoration:underline;text-underline-offset:3px}
   .context-pop{display:none;position:absolute;right:0;top:29px;width:min(440px,calc(100vw - 48px));padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 28px rgba(0,0,0,.09);font-size:13px;line-height:1.55;color:var(--ink-2);font-weight:400;text-align:left;z-index:20}
   .context-pop p+p{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
   .context-pop .context-source{font-family:var(--mono);font-size:10px;color:var(--mut)}
@@ -52,7 +54,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .market-card{position:relative;min-width:0;padding:15px 16px 14px;background:var(--paper)}
   .market-card+.market-card{border-left:1px solid var(--line)}
   .market-link{display:block;color:inherit;text-decoration:none}
-  .market-name{font-family:var(--mono);font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut);padding-right:28px}
+  .market-name{font-family:var(--mono);font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut);padding-right:94px}
   .market-value{font-size:clamp(28px,3vw,39px);font-weight:650;line-height:1.04;letter-spacing:-.025em;margin-top:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
   .market-unit{font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:0;margin-left:3px}
   .market-move{font-size:13px;line-height:1.35;font-weight:650;margin-top:8px;font-variant-numeric:tabular-nums}
@@ -95,6 +97,9 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
     .news{margin-top:38px}
     .brief-story{padding:17px 0}
     .brief-story h3{font-size:21px;line-height:1.28}
+    .story-title-row{grid-template-columns:1fr}
+    .story-title-row>.context{justify-self:start}
+    .story-title-row .context-pop{left:0;right:auto}
     .market-grid{grid-template-columns:1fr}
     .market-card+.market-card,.market-card:nth-child(3){border-left:0;border-top:1px solid var(--line)}
     .market-value{font-size:32px}
@@ -126,7 +131,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
         <div class="story-meta"><a class="story-topic" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
         <div class="story-title-row">
           <a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>
-          {% if story.context %}<details class="context"><summary><span aria-hidden="true">?</span><span class="sr-only">Context</span></summary><div class="context-pop"><p>{{ story.context }}</p>{% if story.background %}<p>{{ story.background }}</p>{% endif %}</div></details>{% endif %}
+          {% if story.context %}<details class="context"><summary>Why it matters</summary><div class="context-pop"><p>{{ story.context }}</p>{% if story.background %}<p>{{ story.background }}</p>{% endif %}</div></details>{% endif %}
         </div>
       </article>
       {% endfor %}
@@ -163,7 +168,7 @@ const num=(value,digits=2)=>Number(value).toLocaleString('en-US',{minimumFractio
 const date=(iso,year=false)=>{if(!iso)return'';const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{month:'short',day:'numeric',...(year?{year:'numeric'}:{})});};
 
 function card({id,name,value,unit='',move='',direction='flat',compare='',stamp,context,source}){
-  return `<article class="market-card"><a class="market-link" href="/chart.html?v=${esc(id)}"><div class="market-name">${esc(name)}</div><div class="market-value">${esc(value)}${unit?`<span class="market-unit">${esc(unit)}</span>`:''}</div><div class="market-move ${esc(direction)}">${esc(move)}</div>${compare?`<div class="market-compare">${esc(compare)}</div>`:'<div class="market-compare"></div>'}<div class="market-date">${esc(stamp)}</div></a><details class="context"><summary><span aria-hidden="true">?</span><span class="sr-only">Context and source</span></summary><div class="context-pop"><p>${esc(context)}</p><p class="context-source">Source: ${esc(source)}</p></div></details></article>`;
+  return `<article class="market-card"><a class="market-link" href="/chart.html?v=${esc(id)}"><div class="market-name">${esc(name)}</div><div class="market-value">${esc(value)}${unit?`<span class="market-unit">${esc(unit)}</span>`:''}</div><div class="market-move ${esc(direction)}">${esc(move)}</div>${compare?`<div class="market-compare">${esc(compare)}</div>`:'<div class="market-compare"></div>'}<div class="market-date">${esc(stamp)}</div></a><details class="context"><summary>What it means</summary><div class="context-pop"><p>${esc(context)}</p><p class="context-source">Source: ${esc(source)}</p></div></details></article>`;
 }
 
 function renderMarkets(){
