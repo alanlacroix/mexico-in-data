@@ -13,7 +13,8 @@
 
 /* Webfonts — hosted site only (Artifacts fall back to system stacks).
    One clean sans (Inter) for body and headlines, McKinsey-style. */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+/* Fonts are loaded via a <link> in the head (base.njk), not @import, so they fetch in
+   parallel with this stylesheet instead of waterfalling behind it — a Core Web Vitals win. */
 
 :root{
   /* ground + ink — McKinsey-exact */
