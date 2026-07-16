@@ -387,6 +387,18 @@ const M={
     def:'Public-sector balance, accumulated within the year (SHCP via Banxico SIE). Resets each January.',
     watch:'The fiscal deficit as it builds through the year.',
     e:['shcp-deuda-neta']},
+  'banxico-mbono-10y':{g:0,l:'Mbono 10-year yield',u:'%',cad:'monthly',agg:'last',kind:'rate',r:'line',core:0,
+    def:'Mexican 10-year government bond (Bono M) yield, monthly auction average. Gappy in months with no 10-year auction.',
+    watch:"The spread over the US 10-year is Mexico's risk premium.",
+    e:['fred-ust10']},
+  'banxico-credito-privado':{g:0,l:'Bank credit to private sector',u:'tn MXN',cad:'monthly',agg:'last',kind:'level',r:'line',core:0,
+    def:'Commercial-bank credit stock to the non-financial private sector (Banxico).',
+    watch:'Mexican bank credit is a low share of GDP — the gap that private-credit funds like Apollo are moving to fill.',
+    e:['banxico-tpv-debito-ops']},
+  'banxico-cuenta-corriente':{g:2,l:'Current account',u:'bn USD',cad:'quarterly',agg:'last',kind:'balance',r:'line',core:0,
+    def:'Current-account balance of the balance of payments (Banxico, MBP6).',
+    watch:"Mexico's external balance; deficits must be financed by foreign capital.",
+    e:['banxico-remesas','se-ied']},
 };
 
 /* ---------- derived series (built after load from real inputs) ----------
@@ -500,6 +512,8 @@ const PREC={
   'fred-usd-broad':v=>({v:v.toFixed(1),s:'index'}),                        // 120.7
   'shcp-deuda-neta':v=>({v:(v/1000).toFixed(1),s:'tn MXN'}),               // 17,779 bn → 17.8 tn
   'shcp-balance-publico':v=>({v:enNum(Math.round(v/1e3)),s:'bn MXN'}),     // -391,303 mn → -391 bn
+  'banxico-credito-privado':v=>({v:(v/1e6).toFixed(1),s:'tn MXN'}),        // 7,186,921 mn → 7.2 tn
+  'banxico-cuenta-corriente':v=>({v:(v/1e3).toFixed(1),s:'bn USD'}),       // -15,878 mn → -15.9 bn
 };
 function disp(id,v){ if(DERIVED[id])return DERIVED[id].fmt(v); if(PREC[id])return PREC[id](v); return fmt(id,v,meta(id).units||unit(id)); }
 function dtext(id,v){

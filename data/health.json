@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-16T14:19:32.356Z",
-  "runId": "20260716141932",
+  "generatedAt": "2026-07-16T18:48:08.232Z",
+  "runId": "20260716184808",
   "geoEpoch": {
     "epoch": "mg-2020",
     "source": "INEGI Marco Geoestadístico",
@@ -8,22 +8,13 @@
     "count": 2478
   },
   "summary": {
-    "ok": 51,
+    "ok": 54,
     "flagged": 9,
     "failed": 1,
     "skipped": 1,
     "darkSources": []
   },
-  "alerts": [
-    {
-      "id": "se-ied",
-      "source": "Secretaría de Economía (RNIE)",
-      "metric": "fdi",
-      "severity": "error",
-      "message": "IED: official summary workbook link not found",
-      "at": "2026-07-16T14:19:32.356Z"
-    }
-  ],
+  "alerts": [],
   "reconciliation": [],
   "sources": [
     {
@@ -1348,6 +1339,69 @@
       "rowCount": 35,
       "file": "data/series/wb-unemployment.json",
       "finishedAt": "2026-07-16T14:19:42.649Z"
+    },
+    {
+      "id": "banxico-credito-privado",
+      "title": "Crédito de la banca comercial al sector privado no financiero",
+      "metric": "bank_credit_private",
+      "source": "Banco de México (SIE)",
+      "seriesId": "SF289598",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF289598/datos",
+      "track": "context",
+      "kind": "series",
+      "cadence": "monthly",
+      "freshnessGraceDays": null,
+      "canonicalSource": true,
+      "status": "ok",
+      "flags": [],
+      "startedAt": "2026-07-16T18:48:06.976Z",
+      "vintage": "2026-05-01",
+      "fetchedAt": "2026-07-16T18:48:06.976Z",
+      "rowCount": 46,
+      "file": "data/series/banxico-credito-privado.json",
+      "finishedAt": "2026-07-16T18:48:07.673Z"
+    },
+    {
+      "id": "banxico-cuenta-corriente",
+      "title": "Cuenta corriente de la balanza de pagos",
+      "metric": "current_account",
+      "source": "Banco de México (SIE)",
+      "seriesId": "SE44352",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SE44352/datos",
+      "track": "context",
+      "kind": "series",
+      "cadence": "quarterly",
+      "freshnessGraceDays": null,
+      "canonicalSource": true,
+      "status": "ok",
+      "flags": [],
+      "startedAt": "2026-07-16T18:48:07.711Z",
+      "vintage": "2026-01-01",
+      "fetchedAt": "2026-07-16T18:48:07.711Z",
+      "rowCount": 14,
+      "file": "data/series/banxico-cuenta-corriente.json",
+      "finishedAt": "2026-07-16T18:48:08.193Z"
+    },
+    {
+      "id": "banxico-mbono-10y",
+      "title": "Bono M a 10 años — rendimiento (promedio mensual)",
+      "metric": "mbono_10y",
+      "source": "Banco de México (SIE)",
+      "seriesId": "SF30057",
+      "sourceUrl": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF30057/datos",
+      "track": "context",
+      "kind": "series",
+      "cadence": "monthly",
+      "freshnessGraceDays": null,
+      "canonicalSource": true,
+      "status": "ok",
+      "flags": [],
+      "startedAt": "2026-07-16T18:48:08.232Z",
+      "vintage": "2026-05-01",
+      "fetchedAt": "2026-07-16T18:48:08.232Z",
+      "rowCount": 57,
+      "file": "data/series/banxico-mbono-10y.json",
+      "finishedAt": "2026-07-16T18:48:08.689Z"
     }
   ]
 }

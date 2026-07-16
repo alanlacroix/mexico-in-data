@@ -218,4 +218,13 @@ export const connectors = [
   // so month-over-month swings are structural — a wide maxPct guard). SG18 = net public debt level (clean).
   makeConnector({ id: 'shcp-balance-publico', title: 'Balance público (acumulado en el año)', metric: 'fiscal_balance', serie: 'SG14', units: 'million MXN', cadence: 'monthly', maxPct: 100000, years: 3, track: 'context', source: 'SHCP (Estadísticas Oportunas) vía Banco de México (SIE)', license: 'SHCP Libre Uso MX (attribution)', canonical: false }),
   makeConnector({ id: 'shcp-deuda-neta',      title: 'Deuda neta del sector público (saldo)',   metric: 'public_debt_net', serie: 'SG18', units: 'thousand million MXN', cadence: 'monthly', maxPct: 20, years: 4, track: 'context', source: 'SHCP (Estadísticas Oportunas) vía Banco de México (SIE)', license: 'SHCP Libre Uso MX (attribution)', canonical: false }),
+
+  // ---- CREDIT + EXTERNAL ACCOUNTS + RATES (Fable source audit 2026-07-16; SIE ids verified live).
+  // Bank credit is the Apollo story's DATA TWIN — the private-credit gap Apollo is moving to fill.
+  makeConnector({ id: 'banxico-credito-privado', title: 'Crédito de la banca comercial al sector privado no financiero', metric: 'bank_credit_private', serie: 'SF289598', units: 'million MXN', cadence: 'monthly', maxPct: 20, years: 4, track: 'context' }),
+  makeConnector({ id: 'banxico-cuenta-corriente', title: 'Cuenta corriente de la balanza de pagos', metric: 'current_account', serie: 'SE44352', units: 'million US$', cadence: 'quarterly', maxPct: 100000, years: 4, track: 'context' }),
+  // Mbono 10y is an auction-derived MONTHLY average, gappy in months with no 10-year auction (Banxico
+  // SIE has no free daily secondary quote). Paired with the UST 10y already on the site, the spread is
+  // Mexico's risk premium in one line.
+  makeConnector({ id: 'banxico-mbono-10y', title: 'Bono M a 10 años — rendimiento (promedio mensual)', metric: 'mbono_10y', serie: 'SF30057', units: '%', cadence: 'monthly', maxPct: 40, years: 6, track: 'context' }),
 ];
