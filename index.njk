@@ -117,12 +117,14 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
   /* Hover preview (Fable 2026-07-16): reveal the pre-generated, gated context. No fetch, no
      model, no mascot — the record explaining itself. Desktop = hover/focus; touch = tap the ¿. */
-  .hl-info{position:absolute;top:7px;right:0;width:21px;height:21px;padding:0;border:1px solid var(--line-2);border-radius:50%;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:12px;line-height:1;cursor:pointer;display:none}
+  .hl-info{position:absolute;top:7px;right:0;width:22px;height:22px;padding:0;border:1px solid var(--line-2);border-radius:50%;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:12px;font-weight:600;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+  .hl-info:hover{border-color:var(--green);background:var(--green-bg)}
   .hl-pop{position:absolute;left:0;right:0;top:100%;z-index:20;margin-top:5px;background:var(--paper);border:1px solid var(--line-2);border-radius:4px;padding:11px 13px;opacity:0;visibility:hidden;transition:opacity .12s ease;pointer-events:none}
   .hl-pop p{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2);margin:0}
   .hl-pop-src{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.02em;color:var(--mut);margin-top:8px}
   .hl:hover .hl-pop,.hl:focus-within .hl-pop,.hl.is-open .hl-pop{opacity:1;visibility:visible}
-  @media(hover:none){.hl-info{display:block}.hl:hover .hl-pop,.hl:focus-within .hl-pop{opacity:0;visibility:hidden}.hl.is-open .hl-pop{opacity:1;visibility:visible}}
+  @media(hover:none){.hl:hover .hl-pop,.hl:focus-within .hl-pop{opacity:0;visibility:hidden}.hl.is-open .hl-pop{opacity:1;visibility:visible}}
+  .brief-compact{padding-right:36px}
 
   .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .timeline-item{padding:16px 18px 17px 0}
@@ -218,7 +220,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
         <article class="brief-row brief-compact hl" data-url="{{ story.url }}">
           <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
           <a class="hl-a" href="{{ story.url }}" target="_blank" rel="noopener"><h3 class="{% if story.context %}hl-t-ctx{% endif %}">{{ story.title }}</h3></a>
-          {% if story.context %}<button class="hl-info" type="button" aria-label="What this means" aria-expanded="false">¿</button>
+          {% if story.context %}<button class="hl-info" type="button" title="Background: what this means" aria-label="Background: what this means" aria-expanded="false">¿</button>
           <div class="hl-pop" role="tooltip"><p>{{ story.context }}</p><div class="hl-pop-src">{{ story.source }} · <span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div></div>{% endif %}
         </article>
         {% endif %}
@@ -434,7 +436,7 @@ function renderTimeline(){
     const urls=rows.map(r=>r.dataset.url).filter(Boolean);
     localStorage.setItem(KEY,JSON.stringify([...new Set([...urls,...seen])].slice(0,300)));
     const chip=document.getElementById('delta-chip');
-    if(chip&&fresh>0){chip.textContent=`${fresh} new`;chip.hidden=false;}
+    if(chip&&fresh>0){chip.textContent=`${fresh} new ${fresh===1?'story':'stories'}`;chip.hidden=false;}
   }catch(e){}
   const newsAsof=document.getElementById('news-asof'); if(newsAsof){const d=new Date(newsAsof.dataset.date);newsAsof.textContent=`Updated ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
   const [loaded,health,areasData]=await Promise.all([
@@ -448,7 +450,7 @@ function renderTimeline(){
   const sources=health?.sources||[],sm=health?{current:0,reviews:0,expected:0,issues:0}:null;
   if(sm)for(const source of sources){if(source.status==='failed')sm.issues++;else if(source.status==='ok_flagged'){const flags=source.flags||[];if(flags.some(flag=>String(flag).startsWith('stale_')))sm.expected++;else sm.reviews++;}else if(source.status==='ok')sm.current++;else if(source.status!=='skipped')sm.expected++;}
   const status=document.getElementById('status'),fresh=document.getElementById('fresh');
-  if(sm&&status){const checked=health.generatedAt?Date.parse(health.generatedAt):null;const stale=checked&&(Date.now()-checked)>18*3600*1000;const parts=[`${(sm.current||0)+(sm.reviews||0)+(sm.expected||0)} feeds`];if(sm.issues)parts.push(`${sm.issues} issue${sm.issues===1?'':'s'}`);if(sm.expected)parts.push(`${sm.expected} expected`);if(checked)parts.push(`updated ${relTime(checked)}`);if(stale)parts.push('may be behind');status.textContent=parts.join(' · ');fresh.classList.add((stale||sm.issues)?'has-issue':sm.expected?'has-expected':'all-current');}
+  if(sm&&status){const checked=health.generatedAt?Date.parse(health.generatedAt):null;const stale=checked&&(Date.now()-checked)>18*3600*1000;const parts=[`${(sm.current||0)+(sm.reviews||0)+(sm.expected||0)} data feeds`];if(sm.issues)parts.push(`${sm.issues} down`);if(sm.expected)parts.push(`${sm.expected} awaiting release`);if(checked)parts.push(`updated ${relTime(checked)}`);if(stale)parts.push('may be behind');status.textContent=parts.join(' · ');fresh.title='The official data feeds behind every number on this site, and when each was last checked. Click for the full list.';fresh.classList.add((stale||sm.issues)?'has-issue':sm.expected?'has-expected':'all-current');}
   else if(status)status.textContent='Feed status unavailable';
   const summary=document.getElementById('morning-summary'),tail=document.getElementById('summary-next')?.textContent?.trim();
   if(summary){const parts=[summary.textContent.trim()];const p=point('banxico-usdmxn-fix'),py=nearAgo('banxico-usdmxn-fix',365,10),i=point('banxico-inflacion'),c=point('banxico-inflacion-subyacente');if(p&&py)parts.push(`The exchange rate is ${n(Math.abs((p.value/py.value-1)*100),1)}% ${p.value<py.value?'lower':'higher'} than a year ago, which means a ${p.value<py.value?'stronger':'weaker'} peso.`);if(i)parts.push(`${monthLabel(i.date)} inflation was ${n(i.value,2)}% and ${i.value>=2&&i.value<=4?'inside':'outside'} Banxico's target. Core inflation is ${c?n(c.value,2)+'%':'not available'}.`);if(tail)parts.push(tail);summary.textContent=parts.join(' ');}
