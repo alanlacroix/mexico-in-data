@@ -53,4 +53,14 @@ for (const renderedData of [briefData, areasData, happeningData]) {
     'Brief links should use the readable DOF issue page, not a PDF download endpoint');
 }
 
+// The catalog-count header is a JS-computed number with a static SSR fallback. The
+// fallback must match the real number of source rows so no-JS readers and crawlers see
+// the truth (the investor persona is exactly who counts). Guard against silent drift.
+{
+  const claimed = Number((source.match(/id="catalogcount">(\d+)</) || [])[1]);
+  const rows = (source.match(/<td class="nm"/g) || []).length;
+  assert.equal(claimed, rows,
+    `Sources catalog-count header (${claimed}) must match the actual source-row count (${rows}); update the id="catalogcount" fallback`);
+}
+
 console.log('sources-copy-contract: ok');
