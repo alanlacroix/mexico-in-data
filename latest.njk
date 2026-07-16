@@ -21,8 +21,9 @@ description: "The latest Mexico stories in the economy, business, politics, soci
   .story-title-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
   .story-link{color:var(--ink);text-decoration:none}
   .story-link:hover{color:var(--green-d)}
-  .latest-story h2{font-size:clamp(20px,2vw,27px);line-height:1.24;letter-spacing:-.012em;margin:0;max-width:50ch}
+  .latest-story h2{font-size:clamp(19px,1.55vw,23px);line-height:1.32;letter-spacing:-.008em;font-weight:600;margin:0;max-width:60ch}
   .context{position:relative;z-index:2}
+  .context[open]{z-index:30}
   .context summary{list-style:none;display:inline-flex;align-items:center;gap:5px;color:var(--green-d);font-family:var(--mono);font-size:10px;line-height:1.35;letter-spacing:.025em;text-transform:uppercase;font-weight:650;cursor:pointer;background:transparent;white-space:nowrap}
   .context summary::-webkit-details-marker{display:none}
   .context summary::after{content:'+';font-size:13px;line-height:1}
@@ -30,10 +31,13 @@ description: "The latest Mexico stories in the economy, business, politics, soci
   .context summary:hover{text-decoration:underline;text-underline-offset:3px}
   .context-pop{display:none;position:absolute;right:0;top:29px;width:min(440px,calc(100vw - 48px));padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 28px rgba(0,0,0,.09);font-size:13px;line-height:1.55;color:var(--ink-2);font-weight:400;text-align:left;z-index:20}
   .context-pop p+p{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
-  .context[open] .context-pop,.context:hover .context-pop,.context:focus-within .context-pop{display:block}
+  .context[open] .context-pop{display:block}
+  .story-title-row>.context[open]{grid-column:1/-1}
+  .story-title-row>.context[open] summary{margin-left:auto}
+  .story-title-row .context-pop{position:static;width:auto;margin-top:10px;padding:12px 14px;background:#f8f7f2;border:0;border-left:2px solid var(--green);border-radius:0;box-shadow:none;font-size:14px;line-height:1.55}
   .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
   .empty{font-size:var(--fs-small);color:var(--mut);padding:30px 0}
-  @media(max-width:650px){.latest{padding-top:28px}.latest h1{font-size:42px}.latest-story{padding:17px 0}.latest-story h2{font-size:21px}.story-title-row{grid-template-columns:1fr}.story-title-row>.context{justify-self:start}.story-title-row .context-pop{left:0;right:auto}}
+  @media(max-width:650px){.latest{padding-top:28px}.latest h1{font-size:42px}.latest-story{padding:17px 0}.latest-story h2{font-size:20px;line-height:1.32;font-weight:600}.story-title-row{grid-template-columns:1fr}.story-title-row>.context{justify-self:start}}
 </style>
 <div class="latest">
   <div class="kicker">Latest</div>
@@ -61,6 +65,7 @@ description: "The latest Mexico stories in the economy, business, politics, soci
   var buttons=[].slice.call(document.querySelectorAll('.filter')),stories=[].slice.call(document.querySelectorAll('.latest-story')),empty=document.getElementById('empty');
   var format=function(iso){var d=new Date(iso+'T00:00:00');return isNaN(d)?iso:d.toLocaleDateString('en-US',{month:'short',day:'numeric'});};
   document.querySelectorAll('.js-date').forEach(function(el){el.textContent=format(el.dataset.date);});
+  document.querySelectorAll('details.context').forEach(function(detail){detail.addEventListener('toggle',function(){if(detail.open)document.querySelectorAll('details.context[open]').forEach(function(other){if(other!==detail)other.open=false;});});});
   function show(topic,push){var count=0;buttons.forEach(function(b){b.classList.toggle('active',b.dataset.topic===topic);});stories.forEach(function(s){var on=topic==='all'||s.dataset.topic===topic;s.hidden=!on;if(on)count++;});empty.hidden=count>0;if(push){var u=new URL(location.href);if(topic==='all')u.searchParams.delete('topic');else u.searchParams.set('topic',topic);history.replaceState({},'',u);}}
   buttons.forEach(function(b){b.addEventListener('click',function(){show(b.dataset.topic,true);});});
   var initial=new URLSearchParams(location.search).get('topic')||'all';if(!buttons.some(function(b){return b.dataset.topic===initial;}))initial='all';show(initial,false);
