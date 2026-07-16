@@ -33,13 +33,17 @@
     { "route": "/security", "target": "/society" },
     { "route": "/security.html", "target": "/society" },
     { "route": "/topics-start-mockup", "target": "/economy" },
-    { "route": "/topics-start-mockup.html", "target": "/economy" }
+    { "route": "/topics-start-mockup.html", "target": "/economy" },
+    { "route": "/overview", "target": "/" },
+    { "route": "/overview.html", "target": "/" },
+    { "route": "/model", "target": "/chart" },
+    { "route": "/model.html", "target": "/chart" },
+    { "route": "/mockup", "target": "/" },
+    { "route": "/mockup.html", "target": "/" },
+    { "route": "/daily-start-mockup.html", "target": "/" },
+    { "route": "/charts-start-mockup.html", "target": "/" }
   ],
-  "previewRoutes": [
-    { "route": "/mockup.html", "file": "mockup.html", "metaNoindex": true },
-    { "route": "/daily-start-mockup.html", "file": "daily-start-mockup.html", "metaNoindex": true },
-    { "route": "/charts-start-mockup.html", "file": "charts-start-mockup.html", "metaNoindex": true }
-  ],
+  "previewRoutes": [],
   "requiredFiles": [
     "_headers",
     "_redirects",
