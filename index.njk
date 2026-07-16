@@ -35,9 +35,18 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .brief-list{border-top:1px solid var(--line)}
   .brief-row{padding:24px 0;border-bottom:1px solid var(--line)}
   .story-meta{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
-  .story-meta .beat{color:var(--green-d);font-weight:600}
+  .story-meta .beat{color:var(--green-d);font-weight:600;text-decoration:none}
+  a.beat:hover{text-decoration:underline;text-underline-offset:3px}
   .brief-row h3{font-size:var(--fs-h3);line-height:1.25;letter-spacing:-.006em;margin:0 0 6px;max-width:42ch}
   .brief-row>p{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);max-width:66ch}
+  /* The LEAD: the ranking, expressed. h2 scale, full context, the top of the column. */
+  .brief-lead h3{font-size:var(--fs-h2);line-height:1.16;letter-spacing:-.012em;max-width:34ch}
+  .brief-lead>p{font-size:var(--fs-body);line-height:1.55;max-width:62ch}
+  /* Compact rows (stories 4+): headline + tag + date; context via the hover preview. */
+  .brief-compact{padding:13px 0;position:relative}
+  .brief-compact h3{font-size:var(--fs-small);font-weight:600;line-height:1.4;margin:0;max-width:60ch;display:inline}
+  .brief-compact .story-meta{margin-bottom:3px}
+  .brief-compact .hl-info{top:11px}
   .story-foot{display:flex;align-items:center;gap:2px 14px;flex-wrap:wrap;margin-top:10px;min-height:44px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .story-foot a{color:var(--green-d)}
 
@@ -65,6 +74,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .metric-compare{font-size:11px;line-height:1.35;color:var(--ink-2);margin-top:3px;min-height:29px}
   .metric-stamp{font-family:var(--mono);font-size:10px;line-height:1.35;color:var(--mut);text-transform:uppercase;letter-spacing:.02em;margin-top:7px}
   .metric-consensus{font-family:var(--mono);font-size:10px;line-height:1.35;color:var(--green-d);text-transform:uppercase;letter-spacing:.02em;margin-top:5px}
+  .spark{display:block;margin-top:8px;color:var(--mut);opacity:.55;max-width:100%}
   .now-more{margin-top:auto;padding-top:8px}
   .now-more summary{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px;font-family:var(--mono);font-size:10px;line-height:1.3;color:var(--green-d);cursor:pointer;list-style:none}
   .now-more summary::-webkit-details-marker{display:none}
@@ -91,21 +101,19 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .company-signal b{color:var(--ink);font-weight:600}
   .company-source{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);white-space:nowrap}
 
-  .areas{display:grid;grid-template-columns:1fr;gap:8px;border-top:1px solid var(--line);padding-top:1px}
-  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;padding-top:0}}
-  .area{background:var(--paper);padding:21px 21px 19px}
-  @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:4px}}
-  .area-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none;margin-bottom:8px}
-  .area-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600}
-  .area-go{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
-  .area-h:hover .area-go{color:var(--green-d)}
-  .area-syn{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);margin:0 0 13px}
-  .area-hl .hl{display:block;padding:9px 0;border-top:1px solid var(--line);position:relative}
-  .area-hl .hl:first-child{border-top:none;padding-top:1px}
+  /* "Where things stand" — six one-line syntheses, each a door to its room (Fable 2026-07-16:
+     the repeated headlines are gone; the synthesis is the unique value). */
+  .areas{border-top:1px solid var(--line)}
+  .stand{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 20px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--line);text-decoration:none}
+  .stand:hover .stand-k{text-decoration:underline;text-underline-offset:3px}
+  .stand-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600;white-space:nowrap}
+  .stand-s{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:76ch}
+  @media(max-width:650px){.stand{grid-template-columns:1fr;gap:3px}}
+  .hl{position:relative}
   .hl-a{display:block;text-decoration:none}
   .hl-t{display:block;font-size:var(--fs-small);color:var(--ink);font-weight:500;line-height:1.36}
   .hl-t-ctx{text-decoration:underline dotted var(--line-2);text-underline-offset:3px}
-  .hl-a:hover .hl-t{color:var(--green-d)}
+  .hl-a:hover .hl-t,.hl-a:hover h3{color:var(--green-d)}
   .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
   /* Hover preview (Fable 2026-07-16): reveal the pre-generated, gated context. No fetch, no
      model, no mascot — the record explaining itself. Desktop = hover/focus; touch = tap the ¿. */
@@ -187,16 +195,33 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
       <div class="section-headline"><div class="section-k">Latest</div><div class="asof" id="news-asof" data-date="{{ dailyBrief.newsThrough }}">Updated {{ dailyBrief.newsThrough }}</div></div>
       <h2 class="section-title" id="news-title">Today's news</h2>
       <div class="brief-list">
+        {# Lead hierarchy (Fable 2026-07-16): the front page expresses the ranking the pipeline
+           computes. Story 1 = the LEAD (h2 scale, full context); 2-3 = secondaries; 4+ = a
+           compact list (headline + tag + date; context lives in the hover preview). The topic
+           TAG is the link to its room — one story, one home, one tag. #}
         {% for story in dailyBrief.stories %}
-        <article class="brief-row" data-url="{{ story.url }}">
-          <div class="story-meta"><span class="beat">{{ story.beat }}</span><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
+        {% if loop.index == 1 %}
+        <article class="brief-row brief-lead" data-url="{{ story.url }}">
+          <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
           <h3>{{ story.title }}</h3>
           <p>{{ story.context }}</p>
-          <div class="story-foot">
-            <a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a>
-            <a href="{{ story.topicUrl }}">{{ story.topic }} →</a>
-          </div>
+          <div class="story-foot"><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
         </article>
+        {% elif loop.index <= 3 %}
+        <article class="brief-row" data-url="{{ story.url }}">
+          <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
+          <h3>{{ story.title }}</h3>
+          <p>{{ story.context }}</p>
+          <div class="story-foot"><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
+        </article>
+        {% else %}
+        <article class="brief-row brief-compact hl" data-url="{{ story.url }}">
+          <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
+          <a class="hl-a" href="{{ story.url }}" target="_blank" rel="noopener"><h3 class="{% if story.context %}hl-t-ctx{% endif %}">{{ story.title }}</h3></a>
+          {% if story.context %}<button class="hl-info" type="button" aria-label="What this means" aria-expanded="false">¿</button>
+          <div class="hl-pop" role="tooltip"><p>{{ story.context }}</p><div class="hl-pop-src">{{ story.source }} · <span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div></div>{% endif %}
+        </article>
+        {% endif %}
         {% endfor %}
       </div>
     </section>
@@ -235,7 +260,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
 
   <section class="topics section-rule" aria-labelledby="topics-title">
     <div class="section-headline"><div class="section-k">By topic</div><div class="asof" id="areas-asof"></div></div>
-    <h2 class="section-title" id="topics-title">Mexico by topic</h2>
+    <h2 class="section-title" id="topics-title">Where things stand</h2>
     <div class="areas" id="areas"></div>
   </section>
 
@@ -305,8 +330,27 @@ function currentStreak(id){
   while(i>0&&a[i-1].value===value)i--;
   return {date:a[i].date,value,previous:i>0?a[i-1]:null};
 }
+// Sparkline (Fable 2026-07-16, narrowly un-banning them for board tiles only): the recent
+// shape of the series, one ink color, no fill, no axes. Cadence-aware window — last 30 days
+// for daily series, last 12 observations for weekly/monthly, 8 for quarterly — so the line
+// always shows a real shape, never one or two points.
+function sparkOf(id){
+  const s=S[id]; const a=s?.data||[]; if(a.length<3) return '';
+  const cad=String(s?.meta?.cadence||'');
+  let pts;
+  if(/daily/i.test(cad)){const cut=Date.parse(a.at(-1).date)-30*864e5;pts=a.filter(p=>Date.parse(p.date)>=cut);}
+  else if(/quarter/i.test(cad)) pts=a.slice(-8);
+  else pts=a.slice(-12);
+  if(pts.length<3) return '';
+  const vs=pts.map(p=>+p.value).filter(Number.isFinite); if(vs.length<3) return '';
+  const min=Math.min(...vs),max=Math.max(...vs),range=(max-min)||1;
+  const W=96,H=24,P=2;
+  const d=vs.map((v,i)=>((i?'L':'M')+(P+i*(W-2*P)/(vs.length-1)).toFixed(1)+' '+(H-P-((v-min)/range)*(H-2*P)).toFixed(1))).join('');
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true" focusable="false"><path d="${d}" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
 function metricCard({id,name,cadence,value,unit='',arrow='→',move,compare='',stamp,tone='neutral',why,consensus=''}){
-  return `<article class="metric-card"><a class="metric-main" href="/chart.html?v=${esc(id)}"><div class="metric-top"><span class="metric-name">${esc(name)}</span><span class="metric-cadence">${esc(cadence)}</span></div><div class="metric-value">${esc(value)}${unit?` <small>${esc(unit)}</small>`:''}</div><div class="metric-move ${esc(tone)}"><span aria-hidden="true">${esc(arrow)}</span> ${esc(move)}</div>${compare?`<div class="metric-compare">${esc(compare)}</div>`:'<div class="metric-compare"></div>'}${consensus?`<div class="metric-consensus">${esc(consensus)}</div>`:''}<div class="metric-stamp">${esc(stamp)}</div></a><details class="now-more"><summary>Why it matters</summary><p>${esc(why)}</p></details></article>`;
+  const spark=sparkOf(String(id).split(',')[0]);
+  return `<article class="metric-card"><a class="metric-main" href="/chart.html?v=${esc(id)}"><div class="metric-top"><span class="metric-name">${esc(name)}</span><span class="metric-cadence">${esc(cadence)}</span></div><div class="metric-value">${esc(value)}${unit?` <small>${esc(unit)}</small>`:''}</div><div class="metric-move ${esc(tone)}"><span aria-hidden="true">${esc(arrow)}</span> ${esc(move)}</div>${compare?`<div class="metric-compare">${esc(compare)}</div>`:'<div class="metric-compare"></div>'}${spark}${consensus?`<div class="metric-consensus">${esc(consensus)}</div>`:''}<div class="metric-stamp">${esc(stamp)}</div></a><details class="now-more"><summary>Why it matters</summary><p>${esc(why)}</p></details></article>`;
 }
 function renderNow(){
   const peso=point('banxico-usdmxn-fix'),pesoP=prior('banxico-usdmxn-fix'),pesoY=nearAgo('banxico-usdmxn-fix',365,10);
@@ -337,16 +381,10 @@ function renderNow(){
 }
 
 function renderAreas(data){
+  // "Where things stand": one synthesis line per topic, the label linking to its room.
+  // The repeated headlines are gone (they already live in Today's news + the rooms).
   const areas=(data&&data.areas)||[];
-  const hl=(h)=>{
-    const meta=esc([h.source,dateLabel(h.date)].filter(Boolean).join(' · '));
-    const ext=/^https?:/.test(h.url||'')?' target="_blank" rel="noopener"':'';
-    const link=`<a class="hl-a" href="${esc(h.url||'#')}"${ext}><span class="hl-t${h.context?' hl-t-ctx':''}">${esc(h.title)}</span><span class="hl-m">${meta}</span></a>`;
-    if(!h.context) return `<div class="hl">${link}</div>`;
-    // Inlined pre-generated context — reveals on hover (desktop) or a ¿ tap (touch). No fetch, no model.
-    return `<div class="hl">${link}<button class="hl-info" type="button" aria-label="What this means" aria-expanded="false">¿</button><div class="hl-pop" role="tooltip"><p>${esc(h.context)}</p><div class="hl-pop-src">${meta}</div></div></div>`;
-  };
-  return areas.map(a=>{const links=(a.headlines||[]).slice(0,3).map(hl).join('');return `<div class="area"><a class="area-h" href="${esc(a.href||'#')}"><span class="area-k">${esc(a.label)}</span><span class="area-go">more →</span></a>${a.synthesis?`<p class="area-syn">${esc(a.synthesis)}</p>`:''}<div class="area-hl">${links}</div></div>`;}).join('');
+  return areas.filter(a=>a.synthesis).map(a=>`<a class="stand" href="${esc(a.href||'#')}"><span class="stand-k">${esc(a.label)} →</span><span class="stand-s">${esc(a.synthesis)}</span></a>`).join('');
 }
 function eventCopy(e){
   const t=String(e.label||'');
