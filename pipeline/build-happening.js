@@ -29,6 +29,7 @@ import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
 import { REPORT, BAN } from './lib/voice.js';   // shared voice (Fable 2026-07-12): headlines + context REPORT plain
 import { lintReportText, slopFlags, isSlop } from './lib/lint.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
+import { fetchArticle } from './lib/fetch-article.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -215,6 +216,47 @@ ${BAN}`;
   return events.slice(0, MAX_NEW);
 }
 
+// ---- background: fuller factual detail, grounded in the ARTICLE BODY (Alan 2026-07-16:
+// "why it matters is key but we want more detail, not just the headline"). The why field's
+// honest ceiling is the feed dek; real depth needs the article itself. For the top events we
+// fetch the piece (fetch-article.js, fail-soft) and have the model write 2-4 sentences of
+// ADDITIONAL factual background from that text only — same gates as everything else (style
+// lint + every numeral must appear in the provided text + the slop contract). No body, no
+// clean pass, no key → no background; the event simply keeps its 1-2 sentence why. ----
+const BG_MAX = 10;            // per run; merged events keep their background, so coverage accumulates
+const BG_DAYS = 10;           // only recent, brief-eligible events earn the fetch
+async function addBackgrounds(events, now) {
+  if (!hasLLM()) return 0;
+  const cutoff = now.getTime() - BG_DAYS * 864e5;
+  const want = events.filter((e) => (e.importance || 0) >= 5 && !e.background && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
+  if (!want.length) return 0;
+  const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '' })) })));
+  const items = fetched.filter((x) => x.r.ok).map((x, i) => ({ i, e: x.e, body: x.r.text.slice(0, 1600) }));
+  console.log(`  background: ${want.length} wanted · ${items.length} article bodies fetched`);
+  if (!items.length) return 0;
+  const schema = { type: 'object', additionalProperties: false, required: ['backgrounds'], properties: { backgrounds: { type: 'array', items: {
+    type: 'object', additionalProperties: false, required: ['i', 'background'], properties: { i: { type: 'integer' }, background: { type: 'string' } } } } } };
+  const system = `For each item you are given a headline, a one-line summary, and the ARTICLE TEXT. Write "background": two to four plain sentences of ADDITIONAL factual detail drawn ONLY from the article text — what happened, the key figures, who is involved, and what happens next if the text says so. Do not repeat the given summary line; add what it leaves out. Calm, concrete, whole sentences. No opinion, no forecasts, no em-dash, and no number that does not appear in the provided text. If the text is too thin to add anything real, return an empty string for that item. Return JSON.
+
+${REPORT}
+
+${BAN}`;
+  const payload = items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', text: x.body }));
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 8000 });
+  if (!out || !Array.isArray(out.backgrounds)) { console.warn('  background: no model result — skipped'); return 0; }
+  let added = 0;
+  for (const r of out.backgrounds) {
+    const item = items.find((x) => x.i === r.i); if (!item) continue;
+    const bg = String(r.background || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
+    if (!bg) continue;
+    const gate = lintReportText({ text: bg, inputs: [item.e.title, item.e.context || item.e.why, item.body], maxWords: 120, maxSentences: 5 });
+    const slop = slopFlags({ title: item.e.title, context: bg, url: item.e.url, date: item.e.date });
+    if (!gate.ok || slop.length) { console.warn(`  background reject ${item.e.id}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
+    item.e.background = bg; added++;
+  }
+  return added;
+}
+
 // ---- merge append-only into the existing log ----
 function mergeLog(existing, fresh, now) {
   let events = arr(existing.events).slice();
@@ -254,6 +296,8 @@ async function main() {
   // Curated framing stays human; referenced values are re-derived from the stored
   // first-party dataset on every run so corrected source data cannot leave stale copy.
   const events = reconcileHappeningFactCopy(merged, { tradeUS: readJson(D('trade-us.json'), null) });
+  const bgAdded = await addBackgrounds(events, now);
+  if (bgAdded) console.log(`  background: ${bgAdded} written (article-grounded)`);
 
   const out = {
     meta: {

@@ -38,10 +38,9 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .story-meta .beat{color:var(--green-d);font-weight:600;text-decoration:none}
   a.beat:hover{text-decoration:underline;text-underline-offset:3px}
   .brief-row h3{font-size:var(--fs-h3);line-height:1.25;letter-spacing:-.006em;margin:0 0 6px;max-width:42ch}
-  .brief-row>p{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);max-width:66ch}
-  /* The LEAD: the ranking, expressed. h2 scale, full context, the top of the column. */
+  /* The LEAD: the ranking, expressed. Hierarchy lives in the HEADLINE sizes;
+     the why-layer is ONE size everywhere (.story-ctx p, 15px). */
   .brief-lead h3{font-size:var(--fs-h2);line-height:1.16;letter-spacing:-.012em;max-width:34ch}
-  .brief-lead>p{font-size:var(--fs-body);line-height:1.55;max-width:62ch}
   /* Compact rows (stories 4+): headline + tag + date; context via the hover preview. */
   .brief-compact{padding:13px 0;position:relative}
   .brief-compact h3{font-size:var(--fs-small);font-weight:600;line-height:1.4;margin:0;max-width:60ch;display:inline}
@@ -121,7 +120,17 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
      no hover), deepens on hover. Existing tokens only: --green-bg, --green, 4px radius. */
   .why-k{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;margin:0 0 4px}
   .story-ctx{background:var(--green-bg);border-left:3px solid var(--green);border-radius:0 4px 4px 0;padding:10px 14px 11px;transition:border-color .12s ease}
+  .story-ctx p{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);max-width:66ch;margin:0}
   .brief-row:hover .story-ctx{border-left-color:var(--green-d)}
+  /* "More background" — article-grounded extra detail, expandable inside the box. */
+  .ctx-more{margin-top:7px}
+  .ctx-more summary{display:inline-flex;align-items:center;min-height:24px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;cursor:pointer;list-style:none}
+  .ctx-more summary::-webkit-details-marker{display:none}
+  .ctx-more summary::after{content:" +"}
+  .ctx-more[open] summary::after{content:" –"}
+  .ctx-more summary:hover{text-decoration:underline;text-underline-offset:3px}
+  .ctx-more p{margin-top:5px}
+  .pop-bg{margin-top:7px !important}
   .hl-info{display:block;margin-top:5px;padding:2px 0;border:none;background:none;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;cursor:pointer;min-height:24px}
   .hl-info::after{content:" +"}
   .hl.is-open .hl-info::after{content:" –"}
@@ -212,14 +221,18 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
         <article class="brief-row brief-lead" data-url="{{ story.url }}">
           <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
           <h3>{{ story.title }}</h3>
-          <p class="story-ctx"><span class="why-k">Why it matters</span>{{ story.context }}</p>
+          <div class="story-ctx"><p><span class="why-k">Why it matters</span>{{ story.context }}</p>
+            {% if story.background %}<details class="ctx-more"><summary>More background</summary><p>{{ story.background }}</p></details>{% endif %}
+          </div>
           <div class="story-foot"><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
         </article>
         {% elif loop.index <= 3 %}
         <article class="brief-row" data-url="{{ story.url }}">
           <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
           <h3>{{ story.title }}</h3>
-          <p class="story-ctx"><span class="why-k">Why it matters</span>{{ story.context }}</p>
+          <div class="story-ctx"><p><span class="why-k">Why it matters</span>{{ story.context }}</p>
+            {% if story.background %}<details class="ctx-more"><summary>More background</summary><p>{{ story.background }}</p></details>{% endif %}
+          </div>
           <div class="story-foot"><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
         </article>
         {% else %}
@@ -227,7 +240,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
           <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
           <a class="hl-a" href="{{ story.url }}" target="_blank" rel="noopener"><h3 class="{% if story.context %}hl-t-ctx{% endif %}">{{ story.title }}</h3></a>
           {% if story.context %}<button class="hl-info" type="button" aria-expanded="false">Why it matters</button>
-          <div class="hl-pop" role="tooltip"><p><span class="why-k">Why it matters</span>{{ story.context }}</p><div class="hl-pop-src">{{ story.source }} · <span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div></div>{% endif %}
+          <div class="hl-pop" role="tooltip"><p><span class="why-k">Why it matters</span>{{ story.context }}</p>{% if story.background %}<p class="pop-bg">{{ story.background }}</p>{% endif %}<div class="hl-pop-src">{{ story.source }} · <span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div></div>{% endif %}
         </article>
         {% endif %}
         {% endfor %}

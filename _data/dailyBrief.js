@@ -40,6 +40,7 @@ const toStory = (e) => {
     date: clean(e.date),
     title: clean(e.h1 || e.headline || e.title).replace(/\.\s*$/, ''),
     context: clean(e.context),
+    background: clean(e.background),   // article-grounded extra detail (may be empty)
     source: clean(e.source),
     url: clean(e.href || e.url),
     topic: s.room,
@@ -65,9 +66,12 @@ module.exports = function () {
     // an honest quiet stretch (nothing recent leads). Drives the "what changed" signal.
     newCount: Number(meta.newCount) || 0,
     quiet: !!meta.quiet,
-    // The one big thing, explained — the pipeline's lead context. The homepage script
-    // then appends the live macro readings (peso vs a year ago, inflation) after it.
-    summaryLead: clean(lead && lead.context) || (stories[0] && stories[0].context) || '',
+    // The one big thing, stated — the lead HEADLINE as a sentence. Never the lead's
+    // why-context: that text is written against its headline, so alone it dangles
+    // ("The order comes as…" with no order introduced) and then repeats verbatim in
+    // the lead story's box below. The headline anchors; the client script appends the
+    // live macro readings (peso vs a year ago, inflation) after it.
+    summaryLead: (() => { const h = clean(lead && lead.h1); return h ? h.replace(/\.?\s*$/, '.') : clean(stories[0] && stories[0].title) + '.'; })(),
     summaryNext: '',
     stories,
     // Companies watchlist: auto-tracked, machine-written from gated facts (see COMPANIES_LIVE).
