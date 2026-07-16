@@ -156,10 +156,21 @@ function recencyWeight(ageDays) {
   if (ageDays <= 16) return 0.15;
   return 0.08;                     // still on the page if important, never the headline
 }
-const ledeScore = (e, nowMs) => (e.importance || 0) * recencyWeight(Math.max(0, (nowMs - (e._t || 0)) / DAY));
+// Priority signal (Alan, 2026-07-16): a major foreign investment or capital commitment to
+// Mexico — a multi-billion fund target, a large private-credit / nearshoring commitment, a
+// big acquisition or stake — is a top-of-page story (national consequence + US-Mexico stakes).
+// Floor its EFFECTIVE importance so it leads even when the curator scored it conservatively
+// (the Apollo $20bn miss). Requires both a large-money signal AND an investment term, so a
+// political "20 billion pesos" subsidy story is not swept in. Config as taste, applied
+// deterministically at ranking time (re-ranks stored events too, not just future ones).
+const BIG_MONEY = /\$?\s?\d{1,4}\s?(?:billion|bn)\b|\d{1,4}\s?mil\s?millones\s?de\s?d[oó]lares/i;
+const INVEST_TERM = /\b(invest|inversi[oó]n|private credit|cr[eé]dito privado|nearshoring|fund|fondo|acquisi|adquisici|stake|\bIPO\b)\b/i;
+const bigCapital = (e) => { const t = `${e.title || ''} ${e.why || ''} ${e.context || ''}`; return BIG_MONEY.test(t) && INVEST_TERM.test(t); };
+const effImp = (e) => (bigCapital(e) ? Math.max(e.importance || 0, 8) : (e.importance || 0));
+const ledeScore = (e, nowMs) => effImp(e) * recencyWeight(Math.max(0, (nowMs - (e._t || 0)) / DAY));
 
-// Select the story set by the rubric (importance >= 5 = the selectivity, cap 8, soft
-// floor 3), then ORDER by importance x recency so the freshest consequential story leads.
+// Select the story set by the rubric (effective importance >= 5 = the selectivity, cap 8,
+// soft floor 3), then ORDER by importance x recency so the freshest consequential story leads.
 function select(events, nowMs) {
   const THRESH = 5, CAP = 8, FLOOR = 3;
   const eligible = events.filter((e) => {
@@ -168,7 +179,7 @@ function select(events, nowMs) {
     return gate.ok && e.url && e.source;
   });
   const ranked = eligible.slice().sort((a, b) => (ledeScore(b, nowMs) - ledeScore(a, nowMs)) || (b._t - a._t));
-  let picked = ranked.filter((e) => (e.importance || 0) >= THRESH).slice(0, CAP);
+  let picked = ranked.filter((e) => effImp(e) >= THRESH).slice(0, CAP);
   if (picked.length < FLOOR) picked = ranked.slice(0, FLOOR);
   return picked;
 }
