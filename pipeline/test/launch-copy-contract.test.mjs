@@ -7,6 +7,7 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
 const text = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const json = (file) => JSON.parse(text(file));
 const home = text('index.njk');
+const latest = text('latest.njk');
 const topics = text('topic-pages.njk');
 const model = text('model.njk');
 const brief = json('data/brief.json');
@@ -19,6 +20,9 @@ assert.match(home, /Mexico this morning/i, 'homepage must remain a daily startin
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
 assert.match(home, /Markets today/i, 'homepage must separate fast-moving readings');
 assert.match(home, /What happened/i, 'homepage must lead readers through the major stories');
+assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
+assert.match(latest, /class="story-summary"/, 'latest stories must show a short summary without requiring a click');
+assert.match(home, /Briefly explained/i, 'homepage may offer additional context behind a clear label');
 assert.match(home, /What to watch/i, 'homepage must show the next official releases and meetings');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
 assert.match(home, /today ·.*stronger|today.*stronger/i,

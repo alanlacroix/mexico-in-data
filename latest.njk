@@ -19,9 +19,11 @@ description: "The latest Mexico stories in the economy, business, politics, soci
   .story-meta{display:flex;gap:5px 11px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
   .story-meta b{color:var(--green-d)}
   .story-title-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
+  .story-copy{min-width:0}
   .story-link{color:var(--ink);text-decoration:none}
   .story-link:hover{color:var(--green-d)}
   .latest-story h2{font-size:clamp(19px,1.55vw,23px);line-height:1.32;letter-spacing:-.008em;font-weight:600;margin:0;max-width:60ch}
+  .story-summary{font-size:15.5px;line-height:1.5;color:var(--ink-2);max-width:72ch;margin:7px 0 0}
   .context{position:relative;z-index:2}
   .context[open]{z-index:30}
   .context summary{list-style:none;display:inline-flex;align-items:center;gap:5px;color:var(--green-d);font-family:var(--mono);font-size:10px;line-height:1.35;letter-spacing:.025em;text-transform:uppercase;font-weight:650;cursor:pointer;background:transparent;white-space:nowrap}
@@ -54,7 +56,7 @@ description: "The latest Mexico stories in the economy, business, politics, soci
     {% for story in latestStories %}
     <article class="latest-story" data-topic="{{ story.topic }}">
       <div class="story-meta"><b>{{ story.topicLabel }}</b><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span><span>{{ story.source }}</span></div>
-      <div class="story-title-row"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h2>{{ story.title }}</h2></a>{% if story.context %}<details class="context"><summary>Briefly explained</summary><div class="context-pop"><p>{{ story.context }}</p>{% if story.background %}<p>{{ story.background }}</p>{% endif %}</div></details>{% endif %}</div>
+      <div class="story-title-row"><div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h2>{{ story.title }}</h2></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>{% if story.explanation %}<details class="context"><summary>Briefly explained</summary><div class="context-pop"><p>{{ story.explanation }}</p></div></details>{% endif %}</div>
     </article>
     {% endfor %}
   </div>

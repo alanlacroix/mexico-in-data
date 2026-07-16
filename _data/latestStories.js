@@ -42,8 +42,8 @@ module.exports = function () {
         topic: section.key,
         topicLabel: section.label,
         title: clean(event.title).replace(/\.\s*$/, ''),
-        context: clean(event.why),
-        background: clean(event.background),
+        summary: clean(event.summary || event.dek || event.why),
+        explanation: clean(event.explanation || event.background),
         source: clean(event.source),
         url: clean(event.url),
       };

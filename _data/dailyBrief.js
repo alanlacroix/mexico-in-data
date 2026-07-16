@@ -54,8 +54,10 @@ const toStory = (e) => {
     beat: s.beat,
     date: clean(e.date),
     title: clean(e.h1 || e.headline || e.title).replace(/\.\s*$/, ''),
-    context: clean(e.context),
-    background: clean(e.background),   // article-grounded extra detail (may be empty)
+    // Keep the card readable without asking for a click. The first sentence says what
+    // happened; the optional drawer carries the extra background.
+    summary: clean(e.summary || e.dek || e.context),
+    explanation: clean(e.explanation || e.background),
     source: clean(e.source),
     url: clean(e.href || e.url),
     topic: s.room,
