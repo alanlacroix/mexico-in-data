@@ -46,7 +46,6 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .brief-compact{padding:13px 0;position:relative}
   .brief-compact h3{font-size:var(--fs-small);font-weight:600;line-height:1.4;margin:0;max-width:60ch;display:inline}
   .brief-compact .story-meta{margin-bottom:3px}
-  .brief-compact .hl-info{top:11px}
   .story-foot{display:flex;align-items:center;gap:2px 14px;flex-wrap:wrap;margin-top:10px;min-height:44px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .story-foot a{color:var(--green-d)}
 
@@ -117,14 +116,17 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
   /* Hover preview (Fable 2026-07-16): reveal the pre-generated, gated context. No fetch, no
      model, no mascot — the record explaining itself. Desktop = hover/focus; touch = tap the ¿. */
-  .hl-info{position:absolute;top:7px;right:0;width:22px;height:22px;padding:0;border:1px solid var(--line-2);border-radius:50%;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:12px;font-weight:600;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-  .hl-info:hover{border-color:var(--green);background:var(--green-bg)}
+  /* "Why it matters" — the site's signature layer (same phrase as the board tiles). */
+  .why-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;margin-right:8px}
+  .hl-info{display:block;margin-top:5px;padding:2px 0;border:none;background:none;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;cursor:pointer;min-height:24px}
+  .hl-info::after{content:" +"}
+  .hl.is-open .hl-info::after{content:" –"}
+  .hl-info:hover{text-decoration:underline;text-underline-offset:3px}
   .hl-pop{position:absolute;left:0;right:0;top:100%;z-index:20;margin-top:5px;background:var(--paper);border:1px solid var(--line-2);border-radius:4px;padding:11px 13px;opacity:0;visibility:hidden;transition:opacity .12s ease;pointer-events:none}
   .hl-pop p{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2);margin:0}
   .hl-pop-src{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.02em;color:var(--mut);margin-top:8px}
   .hl:hover .hl-pop,.hl:focus-within .hl-pop,.hl.is-open .hl-pop{opacity:1;visibility:visible}
   @media(hover:none){.hl:hover .hl-pop,.hl:focus-within .hl-pop{opacity:0;visibility:hidden}.hl.is-open .hl-pop{opacity:1;visibility:visible}}
-  .brief-compact{padding-right:36px}
 
   .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .timeline-item{padding:16px 18px 17px 0}
@@ -206,22 +208,22 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
         <article class="brief-row brief-lead" data-url="{{ story.url }}">
           <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
           <h3>{{ story.title }}</h3>
-          <p>{{ story.context }}</p>
+          <p class="story-ctx"><span class="why-k">Why it matters</span>{{ story.context }}</p>
           <div class="story-foot"><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
         </article>
         {% elif loop.index <= 3 %}
         <article class="brief-row" data-url="{{ story.url }}">
           <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
           <h3>{{ story.title }}</h3>
-          <p>{{ story.context }}</p>
+          <p class="story-ctx"><span class="why-k">Why it matters</span>{{ story.context }}</p>
           <div class="story-foot"><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
         </article>
         {% else %}
         <article class="brief-row brief-compact hl" data-url="{{ story.url }}">
           <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
           <a class="hl-a" href="{{ story.url }}" target="_blank" rel="noopener"><h3 class="{% if story.context %}hl-t-ctx{% endif %}">{{ story.title }}</h3></a>
-          {% if story.context %}<button class="hl-info" type="button" title="Background: what this means" aria-label="Background: what this means" aria-expanded="false">¿</button>
-          <div class="hl-pop" role="tooltip"><p>{{ story.context }}</p><div class="hl-pop-src">{{ story.source }} · <span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div></div>{% endif %}
+          {% if story.context %}<button class="hl-info" type="button" aria-expanded="false">Why it matters</button>
+          <div class="hl-pop" role="tooltip"><p><span class="why-k">Why it matters</span>{{ story.context }}</p><div class="hl-pop-src">{{ story.source }} · <span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div></div>{% endif %}
         </article>
         {% endif %}
         {% endfor %}
