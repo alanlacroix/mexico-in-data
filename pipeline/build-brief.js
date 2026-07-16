@@ -184,11 +184,26 @@ async function main() {
 
   const words = WORDS(lead.context) + items.reduce((n, it) => n + WORDS(it.context), 0) + (standing ? WORDS(standing.text) : 0);
   const selectedDates = [lead, ...items].map((it) => it.date).filter(Boolean).sort();
-  const out = { meta: { title: 'The brief', updated: now.toISOString().slice(0, 10), asOf: `${MO[now.getUTCMonth()]} ${now.getUTCDate()}`,
-    reviewedAt: now.toISOString(), latestItemDate: selectedDates.at(-1) || '',
-    generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words }, lead, items, standing };
+
+  // Change-gate the editorial clock. The brief rebuilds on every 4x/day refresh, but
+  // the prose only CHANGES when the selected story set changes (append-only merge keeps
+  // each story's wording stable). So bump the "updated" stamp only when the content
+  // signature moves; on an unchanged run, preserve the prior timestamp. This kills
+  // machine-churn and makes "Updated <when>" an honest claim, never the run time. The
+  // live standing numbers still refresh underneath (they are re-rendered from the series).
+  const contentSig = JSON.stringify({
+    lead: [lead.h1, lead.context, lead.date, lead.href],
+    items: items.map((it) => [it.headline, it.context, it.date, it.href]),
+  });
+  const prev = readJson(OUT, null);
+  const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig;
+  const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
+  const stampDate = new Date(reviewedAt);
+  const out = { meta: { title: 'The brief', updated: reviewedAt.slice(0, 10), asOf: `${MO[stampDate.getUTCMonth()]} ${stampDate.getUTCDate()}`,
+    reviewedAt, latestItemDate: selectedDates.at(-1) || '',
+    generatedAt: reviewedAt, mode: 'curated', count: 1 + items.length, words, contentSig }, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
-  console.log(`  wrote ${path.relative(ROOT, OUT)} · ${1 + items.length} items · ${words} words · picked: ${picked.map((e) => e.importance).join('/')}`);
+  console.log(`  wrote ${path.relative(ROOT, OUT)} · ${1 + items.length} items · ${words} words · picked: ${picked.map((e) => e.importance).join('/')} · ${unchanged ? 'content unchanged (clock held)' : 'content changed (clock bumped)'}`);
 }
 
 main().catch((e) => { console.error('build-brief failed:', e.stack || e.message); process.exit(1); });

@@ -160,7 +160,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
 
   <div class="top-grid">
     <section class="section-rule" aria-labelledby="news-title">
-      <div class="section-headline"><div class="section-k">Latest</div><div class="asof" id="news-asof" data-date="{{ dailyBrief.newsThrough }}">News through {{ dailyBrief.newsThrough }}</div></div>
+      <div class="section-headline"><div class="section-k">Latest</div><div class="asof" id="news-asof" data-date="{{ dailyBrief.newsThrough }}">Updated {{ dailyBrief.newsThrough }}</div></div>
       <h2 class="section-title" id="news-title">Today's news</h2>
       <div class="brief-list">
         {% for story in dailyBrief.stories %}
@@ -323,7 +323,7 @@ function renderTimeline(){
 (async()=>{
   document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   document.querySelectorAll('.js-date').forEach(el=>{el.textContent=dateLabel(el.dataset.date);});
-  const newsAsof=document.getElementById('news-asof'); if(newsAsof){const d=new Date(newsAsof.dataset.date);newsAsof.textContent=`News through ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
+  const newsAsof=document.getElementById('news-asof'); if(newsAsof){const d=new Date(newsAsof.dataset.date);newsAsof.textContent=`Updated ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
   const [loaded,health,areasData]=await Promise.all([
     loadSeries(['banxico-usdmxn-fix','banxico-bmv-ipc','banxico-cetes-28d','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-igae','banxico-remesas','banxico-reservas','fred-ust10']),
     fetch('/data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
