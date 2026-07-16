@@ -38,7 +38,7 @@ description: "The latest Mexico stories in the economy, business, politics, soci
 <div class="latest">
   <div class="kicker">Latest</div>
   <h1>News about Mexico</h1>
-  <p class="dek">The stories I am following, organized by topic and linked to the source. Open “Quick context” when you want a little more.</p>
+  <p class="dek">The stories I am following, organized by topic and linked to the source. Open “Briefly explained” when you want a little more.</p>
   <nav class="filters" aria-label="Filter stories">
     <button class="filter active" type="button" data-topic="all">All</button>
     <button class="filter" type="button" data-topic="economy">Economy &amp; business</button>
@@ -50,7 +50,7 @@ description: "The latest Mexico stories in the economy, business, politics, soci
     {% for story in latestStories %}
     <article class="latest-story" data-topic="{{ story.topic }}">
       <div class="story-meta"><b>{{ story.topicLabel }}</b><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span><span>{{ story.source }}</span></div>
-      <div class="story-title-row"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h2>{{ story.title }}</h2></a>{% if story.context %}<details class="context"><summary>Quick context</summary><div class="context-pop"><p>{{ story.context }}</p>{% if story.background %}<p>{{ story.background }}</p>{% endif %}</div></details>{% endif %}</div>
+      <div class="story-title-row"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h2>{{ story.title }}</h2></a>{% if story.context %}<details class="context"><summary>Briefly explained</summary><div class="context-pop"><p>{{ story.context }}</p>{% if story.background %}<p>{{ story.background }}</p>{% endif %}</div></details>{% endif %}</div>
     </article>
     {% endfor %}
   </div>
