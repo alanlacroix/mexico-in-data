@@ -47,6 +47,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-areas.js
 
+      - name: Build the companies tracker (deterministic; dark until verified)
+        working-directory: pipeline
+        continue-on-error: true   # reads the committed log; a miss never fails the run
+        run: node build-companies.js
+
       - name: Validate public claims and source references
         run: node pipeline/assert-data.js
 
@@ -54,7 +59,7 @@ jobs:
         run: |
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/happening.json data/brief.json data/areas.json
+          git add data/happening.json data/brief.json data/areas.json data/companies.json
           if git diff --cached --quiet; then
             echo "no change to the event log or brief"
           else

@@ -27,6 +27,11 @@ const SECTIONS = {
   'us-mexico': { beat: 'U.S.–Mexico',     room: 'U.S.–Mexico',         url: '/us-mexico.html' },
 };
 
+// The auto companies tracker (pipeline/build-companies.js → data/companies.json) runs DARK
+// per Fable: it is the highest slop-regression risk, so verify a clean week of output, then
+// flip this to true to show it on the homepage. While false, the section stays hidden.
+const COMPANIES_LIVE = false;
+
 const clean = (s) => String(s || '').trim();
 const toStory = (e) => {
   const s = SECTIONS[e && e.section] || SECTIONS.economy;
@@ -50,6 +55,8 @@ module.exports = function () {
   const stories = [lead, ...items].filter(Boolean).map(toStory).filter((x) => x.title);
 
   const meta = brief.meta || {};
+  const co = COMPANIES_LIVE ? (read('companies.json') || {}) : {};
+  const companies = Array.isArray(co.companies) ? co.companies : [];
   return {
     // Editorial clock: when the pipeline last rebuilt the brief (real, not hand-typed).
     // Distinct from the data clock (the "N feeds checked" line, from health.json).
@@ -63,9 +70,7 @@ module.exports = function () {
     summaryLead: clean(lead && lead.context) || (stories[0] && stories[0].context) || '',
     summaryNext: '',
     stories,
-    // Companies watchlist: no automated source yet (the old thesis copy was hand-written).
-    // Fable ruled it is not core to the glance; the section is hidden until the automated
-    // company tracker exists, rather than faking it. Kept as [] so index.njk hides it.
-    companies: [],
+    // Companies watchlist: auto-tracked, machine-written from gated facts (see COMPANIES_LIVE).
+    companies,
   };
 };
