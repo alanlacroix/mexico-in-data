@@ -78,7 +78,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .now-more summary::-webkit-details-marker{display:none}
   .now-more summary::after{content:"+";font-size:14px}
   .now-more[open] summary::after{content:"–"}
-  .now-more p{font-size:12px;line-height:1.45;color:var(--ink-2);margin-top:6px;background:var(--green-bg);border-left:3px solid var(--green);border-radius:0 4px 4px 0;padding:7px 10px 8px}
+  .now-more p{font-size:12px;line-height:1.45;color:var(--ink-2);margin-top:6px}
   .section-link{display:inline-block;margin-top:11px;font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
   .now-loading{border-top:1px solid var(--line);padding:16px 0;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .now-floor{list-style:none;border-top:1px solid var(--line)}
@@ -116,12 +116,11 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   /* Hover preview (Fable 2026-07-16): reveal the pre-generated, gated context. No fetch, no
      model, no mascot — the record explaining itself. Desktop = hover/focus; touch = tap the ¿. */
   /* "Why it matters" — the site's signature layer (same phrase as the board tiles).
-     Boxed callout: light green tint + a green left rule, visible by default (mobile has
-     no hover), deepens on hover. Existing tokens only: --green-bg, --green, 4px radius. */
-  .why-k{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;margin:0 0 4px}
-  .story-ctx{background:var(--green-bg);border-left:3px solid var(--green);border-radius:0 4px 4px 0;padding:10px 14px 11px;transition:border-color .12s ease}
+     QUIET treatment (Alan 2026-07-16, reverting the boxed callout: "what we had at the
+     beginning was much better"): the inline mono kicker marks the layer; type and
+     whitespace do the rest. No tint, no rules, no apparatus. */
+  .why-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;margin-right:8px}
   .story-ctx p{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);max-width:66ch;margin:0}
-  .brief-row:hover .story-ctx{border-left-color:var(--green-d)}
   /* "More background" — article-grounded extra detail, expandable inside the box. */
   .ctx-more{margin-top:7px}
   .ctx-more summary{display:inline-flex;align-items:center;min-height:24px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;cursor:pointer;list-style:none}
@@ -135,7 +134,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .hl-info::after{content:" +"}
   .hl.is-open .hl-info::after{content:" –"}
   .hl-info:hover{text-decoration:underline;text-underline-offset:3px}
-  .hl-pop{position:absolute;left:0;right:0;top:100%;z-index:20;margin-top:5px;background:var(--green-bg);border:1px solid var(--line-2);border-left:3px solid var(--green);border-radius:0 4px 4px 0;padding:11px 14px;opacity:0;visibility:hidden;transition:opacity .12s ease;pointer-events:none}
+  .hl-pop{position:absolute;left:0;right:0;top:100%;z-index:20;margin-top:5px;background:var(--paper);border:1px solid var(--line-2);border-radius:4px;padding:11px 14px;opacity:0;visibility:hidden;transition:opacity .12s ease;pointer-events:none}
   .hl-pop p{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2);margin:0}
   .hl-pop-src{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.02em;color:var(--mut);margin-top:8px}
   .hl:hover .hl-pop,.hl:focus-within .hl-pop,.hl.is-open .hl-pop{opacity:1;visibility:visible}
