@@ -10,34 +10,34 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   body{font-size:var(--fs-body)}
   .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
   .home a{text-underline-offset:2px}
-  .home-hero{padding:28px 0 18px}
+  .home-hero{padding:44px 0 18px}
   .home-topline{display:flex;align-items:center;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.035em;text-transform:uppercase;color:var(--mut)}
   .home-topline .fresh{display:inline-flex;align-items:center;gap:7px;color:var(--mut);text-decoration:none}
   .home-topline .fresh:hover{color:var(--green-d)}
   .home-topline .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
   .home-topline .fresh.has-expected .dot{background:#a87813}
   .home-topline .fresh.has-issue .dot{background:var(--red)}
-  .home-hero h1{font-size:clamp(34px,4.5vw,52px);line-height:1.04;letter-spacing:-.025em;margin:10px 0 6px}
+  .home-hero h1{font-size:var(--fs-display);line-height:1.04;letter-spacing:-.025em;margin:10px 0 6px}
   .section-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.055em;text-transform:uppercase;color:var(--green-d);font-weight:600}
   .morning-summary{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:13px 0 15px}
-  .morning-summary p{font-size:var(--fs-body);line-height:1.52;color:var(--ink-2);max-width:82ch}
+  .morning-summary p{font-size:var(--fs-body);line-height:1.6;color:var(--ink-2);max-width:66ch}
   .brief-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .delta-chip{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border-radius:999px;padding:3px 11px;white-space:nowrap}
-  .delta-chip.quiet{background:transparent;color:var(--mut);border:1px solid var(--line);font-weight:600}
+  .delta-chip{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;font-weight:700;color:var(--green-d);white-space:nowrap}
+  .delta-chip.quiet{color:var(--mut);font-weight:600}
   .tag-new{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:var(--green-d);border:1px solid var(--green);border-radius:3px;padding:0 5px;line-height:1.5}
 
-  .top-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(330px,.85fr);gap:36px;margin-top:30px}
-  .section-rule{border-top:2px solid var(--green);padding-top:12px}
+  .top-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(330px,.85fr);gap:36px;margin-top:56px}
+  .section-rule{border-top:1px solid var(--line);padding-top:12px}
   .section-headline{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px}
   .section-headline .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
-  .section-title{font-size:clamp(27px,3vw,var(--fs-h2));line-height:1.12;margin:4px 0 8px}
+  .section-title{font-size:var(--fs-h2);line-height:1.12;margin:4px 0 8px}
 
   .brief-list{border-top:1px solid var(--line)}
-  .brief-row{padding:19px 0 18px;border-bottom:1px solid var(--line)}
+  .brief-row{padding:24px 0;border-bottom:1px solid var(--line)}
   .story-meta{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
   .story-meta .beat{color:var(--green-d);font-weight:600}
-  .brief-row h3{font-size:clamp(20px,2vw,22px);line-height:1.25;letter-spacing:-.006em;margin:0 0 6px;max-width:42ch}
-  .brief-row>p{font-size:16px;line-height:1.5;color:var(--ink-2);max-width:67ch}
+  .brief-row h3{font-size:var(--fs-h3);line-height:1.25;letter-spacing:-.006em;margin:0 0 6px;max-width:42ch}
+  .brief-row>p{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);max-width:66ch}
   .story-foot{display:flex;align-items:center;gap:2px 14px;flex-wrap:wrap;margin-top:10px;min-height:44px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .story-foot a{color:var(--green-d)}
 
@@ -80,7 +80,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .nf-val{font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
   .nf-meta{font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.02em}
 
-  .companies,.topics,.coming,.subscribe-section{margin-top:42px}
+  .companies,.topics,.coming,.subscribe-section{margin-top:56px}
   .company-list{border-top:1px solid var(--line)}
   .company-row{display:grid;grid-template-columns:130px minmax(0,1.1fr) minmax(250px,.9fr) auto;gap:14px 20px;align-items:start;padding:17px 0;border-bottom:1px solid var(--line)}
   .company-name{font-family:var(--mono);font-size:var(--fs-label);line-height:1.45;text-transform:uppercase;letter-spacing:.035em;color:var(--green-d);font-weight:600}
@@ -113,13 +113,13 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .timeline-why{font-size:var(--fs-meta);line-height:1.45;color:var(--ink-2);margin-top:5px}
   .timeline-source{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px}
 
-  .sub{border:1.5px solid var(--line);border-radius:12px;padding:20px 22px 16px;background:#fbfaf6}
+  .sub{border:1px solid var(--line);border-radius:8px;padding:20px 22px 16px;background:#fbfaf6}
   .sub .lab{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
   .sub .line{font-size:var(--fs-small);color:var(--ink-2);margin-top:8px;line-height:1.5;max-width:76ch}
   .sub form{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:var(--fs-small);padding:12px 14px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:var(--fs-small);padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
   .sub input[type=email]:focus{outline:none;border-color:var(--green)}
-  .sub button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:9px;padding:12px 24px;cursor:pointer}
+  .sub button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:8px;padding:12px 24px;cursor:pointer}
   .sub button:hover{background:var(--green-d)}
   .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:11px;line-height:1.6}
 
@@ -132,13 +132,12 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
     .timeline-item:nth-child(4){border-top:1px solid var(--line)}
   }
   @media(max-width:650px){
-    .home-hero{padding:23px 0 16px}
-    .home-hero h1{font-size:34px}
-    .top-grid{margin-top:29px}
+    .home-hero{padding:32px 0 16px}
+    .top-grid{margin-top:40px}
     .section-title{font-size:28px}
     .brief-row{padding:18px 0}
-    .brief-row h3{font-size:21px;line-height:1.25}
-    .brief-row>p{font-size:16px;line-height:1.48}
+    .brief-row h3{line-height:1.25}
+    .brief-row>p{line-height:1.48}
     .story-foot{gap:0 13px}
     .metric-grid{grid-template-columns:1fr}
     .metric-card:last-child:nth-child(odd){grid-column:auto}
@@ -384,7 +383,7 @@ function renderTimeline(){
   const sources=health?.sources||[],sm=health?{current:0,reviews:0,expected:0,issues:0}:null;
   if(sm)for(const source of sources){if(source.status==='failed')sm.issues++;else if(source.status==='ok_flagged'){const flags=source.flags||[];if(flags.some(flag=>String(flag).startsWith('stale_')))sm.expected++;else sm.reviews++;}else if(source.status==='ok')sm.current++;else if(source.status!=='skipped')sm.expected++;}
   const status=document.getElementById('status'),fresh=document.getElementById('fresh');
-  if(sm&&status){const checked=health.generatedAt?Date.parse(health.generatedAt):null;const stale=checked&&(Date.now()-checked)>18*3600*1000;const parts=[`${(sm.current||0)+(sm.reviews||0)+(sm.expected||0)} feeds checked`];if(sm.issues)parts.push(`${sm.issues} issue${sm.issues===1?'':'s'}`);if(sm.expected)parts.push(`${sm.expected} expected`);if(checked)parts.push(`checked ${relTime(checked)}`);if(stale)parts.push('may be behind');status.textContent=parts.join(' · ');fresh.classList.add((stale||sm.issues)?'has-issue':sm.expected?'has-expected':'all-current');}
+  if(sm&&status){const checked=health.generatedAt?Date.parse(health.generatedAt):null;const stale=checked&&(Date.now()-checked)>18*3600*1000;const parts=[`${(sm.current||0)+(sm.reviews||0)+(sm.expected||0)} feeds`];if(sm.issues)parts.push(`${sm.issues} issue${sm.issues===1?'':'s'}`);if(sm.expected)parts.push(`${sm.expected} expected`);if(checked)parts.push(`updated ${relTime(checked)}`);if(stale)parts.push('may be behind');status.textContent=parts.join(' · ');fresh.classList.add((stale||sm.issues)?'has-issue':sm.expected?'has-expected':'all-current');}
   else if(status)status.textContent='Feed status unavailable';
   const summary=document.getElementById('morning-summary'),tail=document.getElementById('summary-next')?.textContent?.trim();
   if(summary){const parts=[summary.textContent.trim()];const p=point('banxico-usdmxn-fix'),py=nearAgo('banxico-usdmxn-fix',365,10),i=point('banxico-inflacion'),c=point('banxico-inflacion-subyacente');if(p&&py)parts.push(`The exchange rate is ${n(Math.abs((p.value/py.value-1)*100),1)}% ${p.value<py.value?'lower':'higher'} than a year ago, which means a ${p.value<py.value?'stronger':'weaker'} peso.`);if(i)parts.push(`${monthLabel(i.date)} inflation was ${n(i.value,2)}% and ${i.value>=2&&i.value<=4?'inside':'outside'} Banxico's target. Core inflation is ${c?n(c.value,2)+'%':'not available'}.`);if(tail)parts.push(tail);summary.textContent=parts.join(' ');}
