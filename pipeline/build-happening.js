@@ -181,12 +181,13 @@ ${REPORT}
 
 ${BAN}`;
   const payload = cands.map((x, i) => ({ i, beat: x.beat, date: (x.published_at || '').slice(0, 10), title: x.title, dek: (x.dek || '').slice(0, 200) }));
-  // Headroom matters: up to MAX_NEW events with a rewritten title + 1-2 sentence why
-  // each can exceed a few thousand output tokens, and a truncated JSON body silently
-  // fails to parse and drops the ENTIRE clean batch to the raw-source fallback. That
-  // was the real "slop" engine. Budget well above the worst case; the gate still caps
-  // event count and why length, so actual output stays small.
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 8000 });
+  // Headroom matters: this model reasons over the full candidate list before it
+  // emits JSON, and that reasoning is billed as output tokens. Measured: an 8000-token
+  // ceiling was spent almost entirely on reasoning and the JSON still truncated, which
+  // silently drops the ENTIRE clean batch to the raw-source fallback (the real "slop"
+  // engine). Budget generously so reasoning + a full MAX_NEW batch both fit; the gate
+  // still caps event count and why length, so the committed output stays small.
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 16000 });
   if (!out || !Array.isArray(out.events)) { console.warn('  curate: no model result — deterministic fallback'); return curateFallback(cands, now); }
   const events = [];
   for (const r of out.events) {
