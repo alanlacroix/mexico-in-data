@@ -128,20 +128,24 @@ IRON RULES:
 // ---- the new Brief (Fable 2026-07-12): 3-5 rubric-ranked items, each headline + explained context ----
 const stripDash = (t) => String(t || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();  // voice law: no em-dash
 const WORDS = (t) => stripDash(t).split(/\s+/).filter(Boolean).length;
-// Only the explicitly promoted `context` field may reach the Brief. `why` is useful as an
-// internal drafting aid, but it may be generated or copied from a truncated feed dek. A new
-// event can therefore update the dated headline ledger automatically without replacing clear
-// public copy with a weak explanation. Numbers and charts keep updating; prose fails closed.
+// The event's shipped context is its `context` field, or the curator's `why` when no
+// hand-promoted context exists. `why` used to be distrusted (it could be a raw truncated
+// feed dek), so the Brief only accepted `context`, which is what kept fresh curated events
+// out of the Brief and left it stale. Now build-happening's slop gate guarantees every
+// stored `why` is clean rewritten English (link + date + whole sentences), so it may feed
+// the Brief. lintReportText still enforces style + the no-invented-numbers rule below.
+const shippedContext = (e) => (e && (e.context || e.why)) || '';
 const contextGate = (e) => lintReportText({
-  text: e.context || '',
-  inputs: [e.date, e.title, e.context],
+  text: shippedContext(e),
+  inputs: [e.date, e.title, e.context, e.why],
   maxWords: 55,
   maxSentences: 2,
 });
-const ctxOf = (e) => stripDash(contextGate(e).ok ? e.context : '');
-// select the lead items by the rubric (importance >= 5, cap 5, soft floor 3). See BRIEF-RUBRIC.md.
+const ctxOf = (e) => stripDash(contextGate(e).ok ? shippedContext(e) : '');
+// select the lead items by the rubric (importance >= 5, cap 8 per the 2026-07-16 audit,
+// soft floor 3). The threshold is the selectivity; the count flexes 3-8. See BRIEF-RUBRIC.md.
 function select(events) {
-  const THRESH = 5, CAP = 5, FLOOR = 3;
+  const THRESH = 5, CAP = 8, FLOOR = 3;
   const ranked = events.filter((e) => {
     const gate = contextGate(e);
     if (!gate.ok && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: ${gate.flags.join('; ')}`);

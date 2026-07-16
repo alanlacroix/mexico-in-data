@@ -187,6 +187,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
     </aside>
   </div>
 
+{% if dailyBrief.companies.length %}
   <section class="companies section-rule" aria-labelledby="companies-title">
     <div class="section-headline"><div class="section-k">Companies</div><div class="asof">Latest signal and why I am watching</div></div>
     <h2 class="section-title" id="companies-title">Companies worth following</h2>
@@ -201,6 +202,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
       {% endfor %}
     </div>
   </section>
+{% endif %}
 
   <section class="topics section-rule" aria-labelledby="topics-title">
     <div class="section-headline"><div class="section-k">By topic</div><div class="asof" id="areas-asof"></div></div>
