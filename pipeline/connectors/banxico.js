@@ -23,19 +23,21 @@ function yearAgo(nowIso) {
   return d.toISOString().slice(0, 10);
 }
 
-function makeConnector({ id, title, metric, serie, units, cadence, maxPct, years = 1 }) {
+function makeConnector({ id, title, metric, serie, units, cadence, maxPct, years = 1,
+  source = 'Banco de México (SIE)', license = 'Banxico Términos de Uso (attribution; not open — Clause 8)',
+  track = 'pulse', canonical = true }) {
   return {
     manifest: {
       id,
       title,
       metric,
-      canonicalSource: true, // Banxico is canonical for MX rates/FX
-      source: 'Banco de México (SIE)',
+      canonicalSource: canonical, // Banxico is canonical for MX rates/FX; SHCP series are republished via SIE
+      source,
       sourceUrl: `https://www.banxico.org.mx/SieAPIRest/service/v1/series/${serie}/datos`,
-      license: 'Banxico Términos de Uso (attribution; not open — Clause 8)',
+      license,
       cadence,
       units,
-      track: 'pulse',
+      track,
       kind: 'series',
       granularity: 'national',
       thresholds: { maxPctChange: maxPct, minRows: 3 },
@@ -201,4 +203,19 @@ export const connectors = [
   // A 12-year window covers the "since 2018" real-wage comparison. makeConnector emits d.dato as-is, and
   // for SP1 that IS the index level — no custom normalize needed.
   makeConnector({ id: 'banxico-inpc', title: 'INPC — índice general (nivel)', metric: 'cpi_index', serie: 'SP1', units: 'index (2Q Jul 2018 = 100)', cadence: 'monthly', maxPct: 20, years: 12 }),
+
+  // ---- EXPECTATIONS (Encuesta de Expectativas del Sector Privado, 2026-07-16). The professional
+  // consensus, which unlocks "actual vs expected" on every release. Median (Mediana) series for the
+  // close of the current year. Series IDs verified live against /datos (titulo confirmed). Monthly survey.
+  makeConnector({ id: 'banxico-exp-inflacion', title: 'Expectativa de inflación general (mediana, cierre del año)', metric: 'exp_inflation_eoy', serie: 'SR14139', units: '% anual', cadence: 'monthly', maxPct: 40, years: 3, track: 'context' }),
+  makeConnector({ id: 'banxico-exp-pib',       title: 'Expectativa de crecimiento del PIB (mediana, año en curso)', metric: 'exp_gdp_cy', serie: 'SR14448', units: '% anual', cadence: 'monthly', maxPct: 200, years: 3, track: 'context' }),
+  makeConnector({ id: 'banxico-exp-cete',      title: 'Expectativa de la tasa de Cetes 28d (mediana, cierre del año)', metric: 'exp_cete_eoy', serie: 'SR14749', units: '%', cadence: 'monthly', maxPct: 40, years: 3, track: 'context' }),
+  makeConnector({ id: 'banxico-exp-usdmxn',    title: 'Expectativa de tipo de cambio USD/MXN (mediana, cierre del año)', metric: 'exp_fx_eoy', serie: 'SR14770', units: 'MXN per USD', cadence: 'monthly', maxPct: 15, years: 3, track: 'context' }),
+
+  // ---- PUBLIC FINANCES (SHCP, republished via Banxico SIE under the SG prefix; 2026-07-16). The fiscal/
+  // debt story (Moody's downgrade, Pemex) had no live number. SHCP is the canonical source; SIE is the
+  // access path. IDs verified live against /datos. SG14 = in-year cumulative balance (resets each January,
+  // so month-over-month swings are structural — a wide maxPct guard). SG18 = net public debt level (clean).
+  makeConnector({ id: 'shcp-balance-publico', title: 'Balance público (acumulado en el año)', metric: 'fiscal_balance', serie: 'SG14', units: 'million MXN', cadence: 'monthly', maxPct: 100000, years: 3, track: 'context', source: 'SHCP (Estadísticas Oportunas) vía Banco de México (SIE)', license: 'SHCP Libre Uso MX (attribution)', canonical: false }),
+  makeConnector({ id: 'shcp-deuda-neta',      title: 'Deuda neta del sector público (saldo)',   metric: 'public_debt_net', serie: 'SG18', units: 'thousand million MXN', cadence: 'monthly', maxPct: 20, years: 4, track: 'context', source: 'SHCP (Estadísticas Oportunas) vía Banco de México (SIE)', license: 'SHCP Libre Uso MX (attribution)', canonical: false }),
 ];
