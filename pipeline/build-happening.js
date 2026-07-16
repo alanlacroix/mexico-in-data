@@ -27,16 +27,31 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
 import { REPORT, BAN } from './lib/voice.js';   // shared voice (Fable 2026-07-12): headlines + context REPORT plain
-import { lintReportText } from './lib/lint.js';
+import { lintReportText, slopFlags, isSlop } from './lib/lint.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const D = (...p) => path.join(ROOT, 'data', ...p);
 const OUT = process.env.HAPPENING_OUT || D('happening.json');
+const QUARANTINE_OUT = D('happening-quarantine.json');
+
+// Canonical description of the log. Overrides any stale note carried in the existing
+// file (the old "hand-curated for now" note was wrong once the pipeline took over).
+const NOTE = "Curated cross-domain event log — the developments moving Mexico, each rewritten in plain English, dated, and linked to a first-party or record source. Auto-generated from the news wire on every refresh; raw or non-English items are quarantined, never published.";
 
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
 const arr = (v) => (Array.isArray(v) ? v : []);
+
+// Items rejected this run (raw source language, feed boilerplate, truncation, or a
+// missing link/date). They never reach the log; they are written to a quarantine file
+// for visibility and are re-encountered from the news ledger on the next run, so a
+// down-LLM cycle retries automatically. See lib/lint.js slopFlags.
+const QUARANTINE = [];
+function quarantine(ev, flags) {
+  QUARANTINE.push({ ...ev, _flags: flags });
+  console.warn(`  quarantine ${ev.id || ev.title?.slice(0, 40)}: ${flags.join('; ')}`);
+}
 
 const WINDOW_DAYS = 30;      // consider news from the last 30 days
 const KEEP_DAYS = 60;        // the stored log holds a rolling ~60-day window (older ages out, unless imp 5)
@@ -134,8 +149,11 @@ function curateFallback(cands, now) {
   for (const { x } of scored) {
     const s = beatSection(x);
     if ((cap[s] || 0) >= 2) continue;                                     // ≤2 per section, keep it cross-domain
+    const ev = mkEvent(x, s, 2, x.title, (x.dek || '').slice(0, 180));    // imp 2: never outranks a real event
+    const flags = slopFlags(ev);
+    if (flags.length) { quarantine(ev, flags); continue; }                // no LLM to translate/clean → raw source is quarantined, never published
     cap[s] = (cap[s] || 0) + 1;
-    out.push(mkEvent(x, s, 2, x.title, (x.dek || '').slice(0, 180)));     // imp 2: never outranks a real event
+    out.push(ev);
     if (out.length >= MAX_NEW) break;
   }
   return out;
@@ -163,7 +181,12 @@ ${REPORT}
 
 ${BAN}`;
   const payload = cands.map((x, i) => ({ i, beat: x.beat, date: (x.published_at || '').slice(0, 10), title: x.title, dek: (x.dek || '').slice(0, 200) }));
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 3800 });
+  // Headroom matters: up to MAX_NEW events with a rewritten title + 1-2 sentence why
+  // each can exceed a few thousand output tokens, and a truncated JSON body silently
+  // fails to parse and drops the ENTIRE clean batch to the raw-source fallback. That
+  // was the real "slop" engine. Budget well above the worst case; the gate still caps
+  // event count and why length, so actual output stays small.
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 8000 });
   if (!out || !Array.isArray(out.events)) { console.warn('  curate: no model result — deterministic fallback'); return curateFallback(cands, now); }
   const events = [];
   for (const r of out.events) {
@@ -180,15 +203,26 @@ ${BAN}`;
       console.warn(`  reject generated event ${r.i}: ${gate.flags.join('; ')}`);
       continue;
     }
-    events.push(mkEvent(x, sec, r.importance, r.title, r.why));
+    const ev = mkEvent(x, sec, r.importance, r.title, r.why);
+    const slop = slopFlags(ev);                                           // enforce the copy contract even on model output (link/date/language/whole-sentence)
+    if (slop.length) { quarantine(ev, slop); continue; }
+    events.push(ev);
   }
   return events.slice(0, MAX_NEW);
 }
 
 // ---- merge append-only into the existing log ----
 function mergeLog(existing, fresh, now) {
-  const events = arr(existing.events).slice();
+  let events = arr(existing.events).slice();
   const before = events.length;
+  // Self-heal: purge any stored entry that no longer meets the copy contract (raw
+  // source language, feed boilerplate, truncation, missing link/date). Legacy fallback
+  // pollution and any future regression get swept every run, not only the day they land.
+  events = events.filter((e) => {
+    const flags = slopFlags(e);
+    if (flags.length) { quarantine(e, ['purged: ' + flags.join('; ')]); return false; }
+    return true;
+  });
   const nn = (e) => normTitle(e.title || '');
   for (const e of fresh) {
     const dup = events.find((o) =>
@@ -220,7 +254,7 @@ async function main() {
   const out = {
     meta: {
       title: "What's happening",
-      note: (existing.meta && existing.meta.note) || "Curated cross-domain event log — the developments moving Mexico, dated and linked to a first-party or record source. Auto-updated from the news wire, hand-seeded.",
+      note: NOTE,
       updated: now.toISOString().slice(0, 10),
       source: 'The Mexico Brief', sourceUrl: 'https://mexicobrief.com/sources',
       count: events.length, generatedAt: now.toISOString(), llm: hasLLM(),
@@ -230,9 +264,14 @@ async function main() {
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
 
+  // Persist this run's rejects for visibility + the "should we keep quarantining"
+  // risk check (gitignored — never a site input, never committed).
+  const qOut = { meta: { note: 'Items rejected by the slop gate this run — never published. See pipeline/lib/lint.js slopFlags.', generatedAt: now.toISOString(), count: QUARANTINE.length }, items: QUARANTINE.slice(0, 120) };
+  fs.writeFileSync(QUARANTINE_OUT, JSON.stringify(qOut, null, 2));
+
   const bySec = {}; events.forEach((e) => { bySec[e.section] = (bySec[e.section] || 0) + 1; });
   const u = usage();
-  console.log(`  wrote ${path.relative(ROOT, OUT)} · ${events.length} events · sections ${JSON.stringify(bySec)}`);
+  console.log(`  wrote ${path.relative(ROOT, OUT)} · ${events.length} events · ${QUARANTINE.length} quarantined · sections ${JSON.stringify(bySec)}`);
   console.log(`  llm: ${u.calls} calls · ${u.input}+${u.output} tok · ~$${u.costUSD.toFixed(4)}\n`);
 }
 

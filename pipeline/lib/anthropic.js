@@ -72,6 +72,9 @@ export async function askJSON({ system, user, schema, maxTokens = 1500 }) {
     // tolerate a stray code fence if structured output wasn't used
     const m = txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
     if (m) { try { return JSON.parse(m[0]); } catch { /* fall through */ } }
+    // Loud on failure: a max_tokens truncation used to fall through silently to the
+    // caller's fallback, which is how a capped curation batch became published slop.
+    console.warn(`  llm: unparseable JSON (stop_reason=${j.stop_reason}, ${txt.length} chars)${j.stop_reason === 'max_tokens' ? ' — RAISE maxTokens' : ''}`);
     return null;
   }
 }

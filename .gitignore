@@ -12,6 +12,8 @@ pipeline/.env
 pipeline/alerts.json
 pipeline/.lastgood/
 tmp/
+# Slop-gate rejects — visibility/debug only, never a site input
+data/happening-quarantine.json
 
 # Local environment files. Keep examples, never real values.
 .env

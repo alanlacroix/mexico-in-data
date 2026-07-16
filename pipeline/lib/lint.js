@@ -49,6 +49,38 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   return { ok: flags.length === 0, flags };
 }
 
+// ---- slop gate (Fable audit 2026-07-16): the hard, objective junk filter ----
+// Distinct from the style lint above. lintReportText judges TASTE on model output
+// (hype, tics, unsupported numbers) and triggers a regeneration. This judges whether
+// a candidate is RAW SOURCE JUNK that must never publish and must be purged if already
+// stored: untranslated source language, WordPress feed boilerplate, mid-sentence
+// truncation, or a missing source link/date. The copy contract is clean English, one
+// or two whole sentences, every item dated and linked. Failure = quarantine, never
+// publish-raw. Seeded from the known 2026-07 fallback pollution as a regression set.
+const FEED_BOILERPLATE = /\bla publicaci[oó]n\b|appeared first on|\bthe post\b|contin[uú]a leyendo|continue reading|read more|leer m[aá]s|\[\s*[…\.]{2,}\s*\]/i;
+// Unambiguous Spanish function words + dead giveaways (mdp/mdd = millones de pesos/
+// dólares). Cognates and single letters are excluded to avoid English false positives
+// ("de" in "Círculo de Crédito" is one hit; the bar is two). Two or more = untranslated.
+const SPANISH = /\b(de|del|la|el|los|las|un|una|unos|unas|por|con|que|para|se|su|sus|al|lo|m[aá]s|seg[uú]n|ante|entre|sobre|desde|hasta|pero|como|este|esta|estos|estas|ya|y|mdp|mdd|sexenio|arancel|aranceles|empresas?|gobierno|millones|d[oó]lar|d[oó]lares)\b/gi;
+const spanishDominant = (s) => (String(s || '').match(SPANISH) || []).length >= 2;
+const endsClean = (s) => /[.!?]["'”’)\]]?$/.test(String(s || '').trim());
+
+// Objective slop flags for an event-log entry. `context`/`why` carries the public copy.
+export function slopFlags(ev = {}) {
+  const flags = [];
+  const title = String(ev.title || '').trim();
+  const body = String(ev.context || ev.why || '').trim();
+  if (!title) flags.push('empty title');
+  if (!ev.url) flags.push('no source link');
+  if (!ev.date) flags.push('no date');
+  if (FEED_BOILERPLATE.test(title + ' ' + body)) flags.push('feed boilerplate');
+  if (spanishDominant(title)) flags.push('non-English title');
+  if (body && spanishDominant(body)) flags.push('non-English context');
+  if (body && !endsClean(body)) flags.push('truncated context');
+  return flags;
+}
+export const isSlop = (ev) => slopFlags(ev).length > 0;
+
 // Returns { ok, hard, flags[] }. hard = a violation worth one regeneration attempt.
 export function lintSummary({ summary = '', why = '' }) {
   const flags = [];
