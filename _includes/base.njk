@@ -9,10 +9,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <title>{{ title }}</title>
 <meta name="description" content="{{ description }}" />
 <meta name="author" content="Alan Lacroix" />
-{% if noindex %}<meta name="robots" content="noindex, nofollow" />{% endif %}
+{% if noindex %}<meta name="robots" content="noindex, nofollow" />{% else %}<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />{% endif %}
 <link rel="canonical" href="https://mexicobrief.com{{ page.url | canonicalPath }}" />
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
@@ -21,11 +23,50 @@
 <meta property="og:url" content="https://mexicobrief.com{{ page.url | canonicalPath }}" />
 <meta property="og:site_name" content="The Mexico Brief" />
 <meta property="og:locale" content="en_US" />
+<meta property="og:image" content="https://mexicobrief.com/assets/og.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="The Mexico Brief — Mexico in official numbers" />
 <meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://mexicobrief.com/assets/og.svg" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a7d4d'/%3E%3Cpath d='M8 22.5 L8 10 L16 17.5 L24 10 L24 22.5' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 <link rel="stylesheet" href="/design/mckinsey-mx.css?v={{ cssv }}" />
 {% if pageStyle %}<style>{{ pageStyle | safe }}</style>{% endif %}
 {% if headExtra %}{{ headExtra | safe }}{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NewsMediaOrganization",
+      "@id": "https://mexicobrief.com/#org",
+      "name": "The Mexico Brief",
+      "url": "https://mexicobrief.com/",
+      "logo": { "@type": "ImageObject", "url": "https://mexicobrief.com/assets/og.svg" },
+      "founder": { "@type": "Person", "name": "Alan Lacroix" },
+      "description": "Mexico's economy, politics, trade, and U.S. relationship in official numbers, dated and linked to the original source."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://mexicobrief.com/#website",
+      "url": "https://mexicobrief.com/",
+      "name": "The Mexico Brief",
+      "publisher": { "@id": "https://mexicobrief.com/#org" },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://mexicobrief.com{{ page.url | canonicalPath }}#webpage",
+      "url": "https://mexicobrief.com{{ page.url | canonicalPath }}",
+      "name": {{ (ogTitle or title) | dump | safe }},
+      "description": {{ description | dump | safe }},
+      "isPartOf": { "@id": "https://mexicobrief.com/#website" },
+      "inLanguage": "en-US",
+      "dateModified": "{{ buildTime }}"
+    }
+  ]
+}
+</script>
 </head>
 <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
 <a class="skip-link" href="#main">Skip to content</a>
