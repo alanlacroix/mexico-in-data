@@ -159,7 +159,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
       <span id="today">Today</span>
       <a class="fresh" id="fresh" href="/sources.html"><span class="dot"></span><span id="status">Checking the data</span></a>
     </div>
-    <h1>Mexico this morning.</h1>
+    <h1 id="hero-title">Mexico this morning</h1>
   </section>
 
   <section class="morning-summary" aria-label="Morning summary">
@@ -347,6 +347,9 @@ function renderTimeline(){
 
 (async()=>{
   document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  // Live, time-aware hero greeting: "Mexico Thursday morning/afternoon/evening" (visitor's
+  // local day + time). No-JS fallback stays "Mexico this morning" (the daily-starting-point line).
+  {const now=new Date();const wd=now.toLocaleDateString('en-US',{weekday:'long'});const hr=now.getHours();const tod=hr<12?'morning':hr<18?'afternoon':'evening';const ht=document.getElementById('hero-title');if(ht)ht.textContent=`Mexico ${wd} ${tod}`;}
   document.querySelectorAll('.js-date').forEach(el=>{el.textContent=dateLabel(el.dataset.date);});
   // Personal daily delta: quietly mark the stories this visitor has not seen yet (localStorage,
   // client-side only, no account, no server, no tracking). First visit seeds the baseline and
