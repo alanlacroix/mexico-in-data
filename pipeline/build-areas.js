@@ -124,7 +124,9 @@ async function main() {
   const synthd = await synthesize(withItems);
   const areas = synthd.map((a) => ({
     key: a.key, label: a.label, href: a.href, synthesis: a.synthesis, synthesisStatus: a.synthesisStatus,
-    headlines: a.items.map((i) => ({ title: i.title, source: i.source, url: i.url, date: i.date })),
+    // context carried through for the hover-preview feature (Fable 2026-07-16): already gated
+    // + sourced, so surfacing it costs nothing and no headline appears that can't explain itself.
+    headlines: a.items.map((i) => ({ title: i.title, source: i.source, url: i.url, date: i.date, context: i.context })),
   }));
   const out = { meta: { title: 'The areas', updated: now.toISOString().slice(0, 10), generatedAt: now.toISOString(), llm: hasLLM() }, areas };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));

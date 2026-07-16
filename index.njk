@@ -92,7 +92,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .company-source{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);white-space:nowrap}
 
   .areas{display:grid;grid-template-columns:1fr;gap:8px;border-top:1px solid var(--line);padding-top:1px}
-  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;overflow:hidden;padding-top:0}}
+  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;padding-top:0}}
   .area{background:var(--paper);padding:21px 21px 19px}
   @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:4px}}
   .area-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none;margin-bottom:8px}
@@ -100,11 +100,21 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .area-go{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
   .area-h:hover .area-go{color:var(--green-d)}
   .area-syn{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);margin:0 0 13px}
-  .area-hl .hl{display:block;padding:9px 0;border-top:1px solid var(--line);text-decoration:none}
+  .area-hl .hl{display:block;padding:9px 0;border-top:1px solid var(--line);position:relative}
   .area-hl .hl:first-child{border-top:none;padding-top:1px}
+  .hl-a{display:block;text-decoration:none}
   .hl-t{display:block;font-size:var(--fs-small);color:var(--ink);font-weight:500;line-height:1.36}
-  .area-hl .hl:hover .hl-t{color:var(--green-d)}
+  .hl-t-ctx{text-decoration:underline dotted var(--line-2);text-underline-offset:3px}
+  .hl-a:hover .hl-t{color:var(--green-d)}
   .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
+  /* Hover preview (Fable 2026-07-16): reveal the pre-generated, gated context. No fetch, no
+     model, no mascot — the record explaining itself. Desktop = hover/focus; touch = tap the ¿. */
+  .hl-info{position:absolute;top:7px;right:0;width:21px;height:21px;padding:0;border:1px solid var(--line-2);border-radius:50%;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:12px;line-height:1;cursor:pointer;display:none}
+  .hl-pop{position:absolute;left:0;right:0;top:100%;z-index:20;margin-top:5px;background:var(--paper);border:1px solid var(--line-2);border-radius:4px;padding:11px 13px;opacity:0;visibility:hidden;transition:opacity .12s ease;pointer-events:none}
+  .hl-pop p{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2);margin:0}
+  .hl-pop-src{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.02em;color:var(--mut);margin-top:8px}
+  .hl:hover .hl-pop,.hl:focus-within .hl-pop,.hl.is-open .hl-pop{opacity:1;visibility:visible}
+  @media(hover:none){.hl-info{display:block}.hl:hover .hl-pop,.hl:focus-within .hl-pop{opacity:0;visibility:hidden}.hl.is-open .hl-pop{opacity:1;visibility:visible}}
 
   .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .timeline-item{padding:16px 18px 17px 0}
@@ -328,7 +338,15 @@ function renderNow(){
 
 function renderAreas(data){
   const areas=(data&&data.areas)||[];
-  return areas.map(a=>{const hls=(a.headlines||[]).slice(0,3);const links=hls.map(h=>`<a class="hl" href="${esc(h.url||'#')}"${/^https?:/.test(h.url||'')?' target="_blank" rel="noopener"':''}><span class="hl-t">${esc(h.title)}</span><span class="hl-m">${esc([h.source,dateLabel(h.date)].filter(Boolean).join(' · '))}</span></a>`).join('');return `<div class="area"><a class="area-h" href="${esc(a.href||'#')}"><span class="area-k">${esc(a.label)}</span><span class="area-go">more →</span></a>${a.synthesis?`<p class="area-syn">${esc(a.synthesis)}</p>`:''}<div class="area-hl">${links}</div></div>`;}).join('');
+  const hl=(h)=>{
+    const meta=esc([h.source,dateLabel(h.date)].filter(Boolean).join(' · '));
+    const ext=/^https?:/.test(h.url||'')?' target="_blank" rel="noopener"':'';
+    const link=`<a class="hl-a" href="${esc(h.url||'#')}"${ext}><span class="hl-t${h.context?' hl-t-ctx':''}">${esc(h.title)}</span><span class="hl-m">${meta}</span></a>`;
+    if(!h.context) return `<div class="hl">${link}</div>`;
+    // Inlined pre-generated context — reveals on hover (desktop) or a ¿ tap (touch). No fetch, no model.
+    return `<div class="hl">${link}<button class="hl-info" type="button" aria-label="What this means" aria-expanded="false">¿</button><div class="hl-pop" role="tooltip"><p>${esc(h.context)}</p><div class="hl-pop-src">${meta}</div></div></div>`;
+  };
+  return areas.map(a=>{const links=(a.headlines||[]).slice(0,3).map(hl).join('');return `<div class="area"><a class="area-h" href="${esc(a.href||'#')}"><span class="area-k">${esc(a.label)}</span><span class="area-go">more →</span></a>${a.synthesis?`<p class="area-syn">${esc(a.synthesis)}</p>`:''}<div class="area-hl">${links}</div></div>`;}).join('');
 }
 function eventCopy(e){
   const t=String(e.label||'');
@@ -400,4 +418,14 @@ function renderTimeline(){
   // Keep the baked static floor (last-known dated values) rather than blanking it.
   window.reportMexicoDataError?.('homepage',err);
 });
+
+// Hover-preview on touch: tap the ¿ to toggle a headline's context; tap elsewhere or Escape closes.
+// (Desktop reveals on hover/focus via CSS; this only powers the tap path where hover does not exist.)
+const closePops=()=>document.querySelectorAll('.hl.is-open').forEach(o=>{o.classList.remove('is-open');o.querySelector('.hl-info')?.setAttribute('aria-expanded','false');});
+document.addEventListener('click',(e)=>{
+  const info=e.target.closest('.hl-info');
+  if(info){e.preventDefault();e.stopPropagation();const hl=info.closest('.hl');const willOpen=!hl.classList.contains('is-open');closePops();if(willOpen){hl.classList.add('is-open');info.setAttribute('aria-expanded','true');}return;}
+  if(!e.target.closest('.hl-pop'))closePops();
+});
+document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closePops();});
 </script>
