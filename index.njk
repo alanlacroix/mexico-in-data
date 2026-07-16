@@ -72,6 +72,13 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .now-more p{font-size:12px;line-height:1.45;color:var(--ink-2);margin-top:6px}
   .section-link{display:inline-block;margin-top:11px;font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
   .now-loading{border-top:1px solid var(--line);padding:16px 0;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .now-floor{list-style:none;border-top:1px solid var(--line)}
+  .now-floor .nf-row{display:flex;flex-direction:column;gap:3px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .now-floor a{display:flex;align-items:baseline;justify-content:space-between;gap:12px;text-decoration:none;color:var(--ink)}
+  .now-floor a:hover .nf-label{color:var(--green-d)}
+  .nf-label{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.03em;color:var(--mut);font-weight:600}
+  .nf-val{font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .nf-meta{font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.02em}
 
   .companies,.topics,.coming,.subscribe-section{margin-top:42px}
   .company-list{border-top:1px solid var(--line)}
@@ -188,7 +195,13 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
       <section class="section-rule" aria-labelledby="now-title">
         <div class="section-k">Current readings</div>
         <h2 class="section-title" id="now-title">Mexico now</h2>
-        <div id="mexico-now"><div class="now-loading">Loading the latest readings…</div></div>
+        <div id="mexico-now">
+          <ul class="now-floor">
+            {% for m in nowBoard %}
+            <li class="nf-row"><a href="{{ m.href }}"><span class="nf-label">{{ m.label }}</span><span class="nf-val">{{ m.display }}</span></a><span class="nf-meta"><span class="js-date" data-date="{{ m.date }}">{{ m.date }}</span> · {{ m.source }}</span></li>
+            {% endfor %}
+          </ul>
+        </div>
         <a class="section-link" href="/chart.html">Open all charts →</a>
       </section>
     </aside>
@@ -220,7 +233,11 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   <section class="coming section-rule" aria-labelledby="next-title">
     <div class="section-headline"><div class="section-k">Next</div><div class="asof">Four dates to watch</div></div>
     <h2 class="section-title" id="next-title">Coming up</h2>
-    <div class="timeline" id="timeline"><div class="now-loading">Loading the calendar…</div></div>
+    <div class="timeline" id="timeline">
+      {% for e in calendar %}
+      <article class="timeline-item"><div class="timeline-date">{% if e.approx %}Week of {% endif %}<span class="js-date" data-date="{{ e.date }}">{{ e.date }}</span></div><div class="timeline-title">{{ e.title }}</div>{% if e.why %}<div class="timeline-why">{{ e.why }}</div>{% endif %}<div class="timeline-source">{{ e.source }}</div></article>
+      {% endfor %}
+    </div>
     <a class="section-link" href="/sources.html#calendar">Open the full calendar →</a>
   </section>
 
@@ -302,7 +319,9 @@ function renderNow(){
   if(rem){let arrow='→',move='Comparison unavailable',compare='';let tone='neutral';if(remY){const delta=(rem.value/remY.value-1)*100;arrow=delta>0?'▲':delta<0?'▼':'→';move=`${n(Math.abs(delta),1)}% ${delta>=0?'higher':'lower'}`;compare='Versus the same month last year';tone=delta>=0?'good':'bad';}else if(remP){const delta=rem.value-remP.value;arrow=delta>0?'▲':delta<0?'▼':'→';move=`US$${n(Math.abs(delta),0)}m ${delta>=0?'more':'less'}`;compare=`Versus ${monthLabel(remP.date)} · monthly totals are seasonal`;}releases.push(metricCard({id:'banxico-remesas',name:'Remittances',cadence:'Monthly',value:`US$${n(rem.value/1000,2)}bn`,arrow,move,compare,stamp:`${periodLabel('banxico-remesas',rem.date)} · Banxico`,tone,why:'Money sent home from abroad, mostly the US. It supports household spending and brings dollars into Mexico. The same month a year earlier is the better comparison.'}));}
   if(res){const delta=resP?res.value-resP.value:0;const year=resY?(res.value/resY.value-1)*100:null;releases.push(metricCard({id:'banxico-reservas',name:'International reserves',cadence:'Weekly',value:`US$${n(res.value/1000,0)}bn`,arrow:delta>0?'▲':delta<0?'▼':'→',move:resP?`US$${n(Math.abs(delta),0)}m ${delta>0?'higher':delta<0?'lower':'unchanged'}`:'Comparison unavailable',compare:year==null?'':`${n(Math.abs(year),1)}% ${year>=0?'higher':'lower'} over 1Y`,stamp:`${periodLabel('banxico-reservas',res.date)} · Banxico`,tone:'neutral',why:"Banxico's foreign-currency buffer against external shocks."}));}
   const el=document.getElementById('mexico-now');
-  if(el) el.innerHTML=`<div class="now-group"><div class="now-group-head"><div class="now-group-title">Daily movers</div><div class="now-group-note">Previous close</div></div><div class="metric-grid">${daily.join('')}</div></div><div class="now-group"><div class="now-group-head"><div class="now-group-title">Latest official readings</div><div class="now-group-note">Latest available</div></div><div class="metric-grid">${releases.join('')}</div></div>`;
+  // Only replace the baked static floor once we actually have live cards. If the series
+  // did not load, leave the build-time last-known values in place (degrade to floor).
+  if(el && (daily.length||releases.length)) el.innerHTML=`<div class="now-group"><div class="now-group-head"><div class="now-group-title">Daily movers</div><div class="now-group-note">Previous close</div></div><div class="metric-grid">${daily.join('')}</div></div><div class="now-group"><div class="now-group-head"><div class="now-group-title">Latest official readings</div><div class="now-group-note">Latest available</div></div><div class="metric-grid">${releases.join('')}</div></div>`;
 }
 
 function renderAreas(data){
@@ -324,7 +343,7 @@ function renderTimeline(){
   const ev=wanted.map(pattern=>future.find(e=>pattern.test(String(e.label||'')))).filter(Boolean);
   for(const e of future){if(ev.length>=4)break;if(!ev.includes(e))ev.push(e);}
   const html=ev.map(e=>{const c=eventCopy(e),d=new Date(e.date+'T00:00:00'),label=e.approx?`Week of ${dateLabel(e.date)}`:dateLabel(e.date);return `<article class="timeline-item"><div class="timeline-date">${esc(label)}</div><div class="timeline-title">${esc(c.title)}</div><div class="timeline-why">${esc(c.why)}</div><div class="timeline-source">${esc(e.source||'')}</div></article>`;}).join('');
-  const el=document.getElementById('timeline'); if(el)el.innerHTML=html||'<div class="now-loading">No dated releases are on the calendar yet.</div>';
+  const el=document.getElementById('timeline'); if(el&&ev.length)el.innerHTML=html;   // else keep the baked floor
 }
 
 (async()=>{
@@ -370,7 +389,7 @@ function renderTimeline(){
   const summary=document.getElementById('morning-summary'),tail=document.getElementById('summary-next')?.textContent?.trim();
   if(summary){const parts=[summary.textContent.trim()];const p=point('banxico-usdmxn-fix'),py=nearAgo('banxico-usdmxn-fix',365,10),i=point('banxico-inflacion'),c=point('banxico-inflacion-subyacente');if(p&&py)parts.push(`The exchange rate is ${n(Math.abs((p.value/py.value-1)*100),1)}% ${p.value<py.value?'lower':'higher'} than a year ago, which means a ${p.value<py.value?'stronger':'weaker'} peso.`);if(i)parts.push(`${monthLabel(i.date)} inflation was ${n(i.value,2)}% and ${i.value>=2&&i.value<=4?'inside':'outside'} Banxico's target. Core inflation is ${c?n(c.value,2)+'%':'not available'}.`);if(tail)parts.push(tail);summary.textContent=parts.join(' ');}
 })().catch(err=>{
-  const now=document.getElementById('mexico-now');if(now)now.innerHTML='<div class="now-loading">The current readings could not be loaded. The source links remain available.</div>';
+  // Keep the baked static floor (last-known dated values) rather than blanking it.
   window.reportMexicoDataError?.('homepage',err);
 });
 </script>
