@@ -66,12 +66,11 @@ module.exports = function () {
     // an honest quiet stretch (nothing recent leads). Drives the "what changed" signal.
     newCount: Number(meta.newCount) || 0,
     quiet: !!meta.quiet,
-    // The one big thing, stated — the lead HEADLINE as a sentence. Never the lead's
-    // why-context: that text is written against its headline, so alone it dangles
-    // ("The order comes as…" with no order introduced) and then repeats verbatim in
-    // the lead story's box below. The headline anchors; the client script appends the
-    // live macro readings (peso vs a year ago, inflation) after it.
-    summaryLead: (() => { const h = clean(lead && lead.h1); return h ? h.replace(/\.?\s*$/, '.') : clean(stories[0] && stories[0].title) + '.'; })(),
+    // THE BRIEF: the pipeline's gated synthesis of the day's key stories (build-brief
+    // writeSummary). Fallback = the lead HEADLINE as a sentence — never the lead's
+    // why-context, which dangles without its headline and duplicates the box below.
+    // The client script appends the live macro readings (peso, inflation) after it.
+    summaryLead: clean(brief.summary) || (() => { const h = clean(lead && lead.h1); return h ? h.replace(/\.?\s*$/, '.') : clean(stories[0] && stories[0].title) + '.'; })(),
     summaryNext: '',
     stories,
     // Companies watchlist: auto-tracked, machine-written from gated facts (see COMPANIES_LIVE).

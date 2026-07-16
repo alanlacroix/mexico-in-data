@@ -38,15 +38,9 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .story-meta .beat{color:var(--green-d);font-weight:600;text-decoration:none}
   a.beat:hover{text-decoration:underline;text-underline-offset:3px}
   .brief-row h3{font-size:var(--fs-h3);line-height:1.25;letter-spacing:-.006em;margin:0 0 6px;max-width:42ch}
-  /* The LEAD: the ranking, expressed. Hierarchy lives in the HEADLINE sizes;
-     the why-layer is ONE size everywhere (.story-ctx p, 15px). */
-  .brief-lead h3{font-size:var(--fs-h2);line-height:1.16;letter-spacing:-.012em;max-width:34ch}
-  /* Compact rows (stories 4+): headline + tag + date; context via the hover preview. */
-  .brief-compact{padding:13px 0;position:relative}
-  .brief-compact h3{font-size:var(--fs-small);font-weight:600;line-height:1.4;margin:0;max-width:60ch;display:inline}
-  .brief-compact .story-meta{margin-bottom:3px}
-  .story-foot{display:flex;align-items:center;gap:2px 14px;flex-wrap:wrap;margin-top:10px;min-height:44px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
-  .story-foot a{color:var(--green-d)}
+  .story-meta .src{color:var(--mut)}
+  .h-link{text-decoration:none;color:inherit;display:block}
+  .h-link:hover h3{color:var(--green-d)}
 
   .now-group{margin-top:15px}
   .now-group+.now-group{margin-top:22px}
@@ -99,18 +93,22 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .company-signal b{color:var(--ink);font-weight:600}
   .company-source{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);white-space:nowrap}
 
-  /* "Where things stand" — six one-line syntheses, each a door to its room (Fable 2026-07-16:
-     the repeated headlines are gone; the synthesis is the unique value). */
-  .areas{border-top:1px solid var(--line)}
-  .stand{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 20px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--line);text-decoration:none}
-  .stand:hover .stand-k{text-decoration:underline;text-underline-offset:3px}
-  .stand-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600;white-space:nowrap}
-  .stand-s{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:76ch}
-  @media(max-width:650px){.stand{grid-template-columns:1fr;gap:3px}}
+  /* "Mexico by topic" cards (restored per Alan 2026-07-16: the strip "makes no sense") —
+     six area cards: synthesis + 3 headlines, each headline with its Why-it-matters preview. */
+  .areas{display:grid;grid-template-columns:1fr;gap:8px;border-top:1px solid var(--line);padding-top:1px}
+  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;padding-top:0}}
+  .area{background:var(--paper);padding:21px 21px 19px}
+  @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:4px}}
+  .area-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none;margin-bottom:8px}
+  .area-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600}
+  .area-go{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
+  .area-h:hover .area-go{color:var(--green-d)}
+  .area-syn{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);margin:0 0 13px}
+  .area-hl .hl{display:block;padding:9px 0;border-top:1px solid var(--line)}
+  .area-hl .hl:first-child{border-top:none;padding-top:1px}
   .hl{position:relative}
   .hl-a{display:block;text-decoration:none}
   .hl-t{display:block;font-size:var(--fs-small);color:var(--ink);font-weight:500;line-height:1.36}
-  .hl-t-ctx{text-decoration:underline dotted var(--line-2);text-underline-offset:3px}
   .hl-a:hover .hl-t,.hl-a:hover h3{color:var(--green-d)}
   .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
   /* Hover preview (Fable 2026-07-16): reveal the pre-generated, gated context. No fetch, no
@@ -173,7 +171,6 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
     .brief-row{padding:18px 0}
     .brief-row h3{line-height:1.25}
     .brief-row>p{line-height:1.48}
-    .story-foot{gap:0 13px}
     .metric-grid{grid-template-columns:1fr}
     .metric-card:last-child:nth-child(odd){grid-column:auto}
     .metric-card{padding:12px 13px 10px}
@@ -211,37 +208,18 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
       <div class="section-headline"><div class="section-k">Latest</div><div class="asof" id="news-asof" data-date="{{ dailyBrief.newsThrough }}">Updated {{ dailyBrief.newsThrough }}</div></div>
       <h2 class="section-title" id="news-title">Today's news</h2>
       <div class="brief-list">
-        {# Lead hierarchy (Fable 2026-07-16): the front page expresses the ranking the pipeline
-           computes. Story 1 = the LEAD (h2 scale, full context); 2-3 = secondaries; 4+ = a
-           compact list (headline + tag + date; context lives in the hover preview). The topic
-           TAG is the link to its room — one story, one home, one tag. #}
+        {# ONE uniform story treatment (Alan 2026-07-16, reverting the lead/compact split:
+           "confusing… I liked the way we had it before"). Every story: meta line (topic link ·
+           date · source name), the HEADLINE AS THE HYPERLINK to the article (no separate
+           source row), the why line, and More background when the pipeline has read the piece. #}
         {% for story in dailyBrief.stories %}
-        {% if loop.index == 1 %}
-        <article class="brief-row brief-lead" data-url="{{ story.url }}">
-          <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
-          <h3>{{ story.title }}</h3>
-          <div class="story-ctx"><p><span class="why-k">Why it matters</span>{{ story.context }}</p>
-            {% if story.background %}<details class="ctx-more"><summary>More background</summary><p>{{ story.background }}</p></details>{% endif %}
-          </div>
-          <div class="story-foot"><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
-        </article>
-        {% elif loop.index <= 3 %}
         <article class="brief-row" data-url="{{ story.url }}">
-          <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
-          <h3>{{ story.title }}</h3>
+          <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span class="src">{{ story.source }}</span>{% endif %}</div>
+          <a class="h-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>
           <div class="story-ctx"><p><span class="why-k">Why it matters</span>{{ story.context }}</p>
             {% if story.background %}<details class="ctx-more"><summary>More background</summary><p>{{ story.background }}</p></details>{% endif %}
           </div>
-          <div class="story-foot"><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
         </article>
-        {% else %}
-        <article class="brief-row brief-compact hl" data-url="{{ story.url }}">
-          <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
-          <a class="hl-a" href="{{ story.url }}" target="_blank" rel="noopener"><h3 class="{% if story.context %}hl-t-ctx{% endif %}">{{ story.title }}</h3></a>
-          {% if story.context %}<button class="hl-info" type="button" aria-expanded="false">Why it matters</button>
-          <div class="hl-pop" role="tooltip"><p><span class="why-k">Why it matters</span>{{ story.context }}</p>{% if story.background %}<p class="pop-bg">{{ story.background }}</p>{% endif %}<div class="hl-pop-src">{{ story.source }} · <span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div></div>{% endif %}
-        </article>
-        {% endif %}
         {% endfor %}
       </div>
     </section>
@@ -280,7 +258,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
 
   <section class="topics section-rule" aria-labelledby="topics-title">
     <div class="section-headline"><div class="section-k">By topic</div><div class="asof" id="areas-asof"></div></div>
-    <h2 class="section-title" id="topics-title">Where things stand</h2>
+    <h2 class="section-title" id="topics-title">Mexico by topic</h2>
     <div class="areas" id="areas"></div>
   </section>
 
@@ -401,10 +379,17 @@ function renderNow(){
 }
 
 function renderAreas(data){
-  // "Where things stand": one synthesis line per topic, the label linking to its room.
-  // The repeated headlines are gone (they already live in Today's news + the rooms).
+  // "Mexico by topic" cards (restored): synthesis + 3 headlines per area; each headline
+  // carries its pre-generated Why-it-matters as a hover/tap preview.
   const areas=(data&&data.areas)||[];
-  return areas.filter(a=>a.synthesis).map(a=>`<a class="stand" href="${esc(a.href||'#')}"><span class="stand-k">${esc(a.label)} →</span><span class="stand-s">${esc(a.synthesis)}</span></a>`).join('');
+  const hl=(h)=>{
+    const meta=esc([h.source,dateLabel(h.date)].filter(Boolean).join(' · '));
+    const ext=/^https?:/.test(h.url||'')?' target="_blank" rel="noopener"':'';
+    const link=`<a class="hl-a" href="${esc(h.url||'#')}"${ext}><span class="hl-t">${esc(h.title)}</span><span class="hl-m">${meta}</span></a>`;
+    if(!h.context) return `<div class="hl">${link}</div>`;
+    return `<div class="hl">${link}<button class="hl-info" type="button" aria-expanded="false">Why it matters</button><div class="hl-pop" role="tooltip"><p><span class="why-k">Why it matters</span>${esc(h.context)}</p><div class="hl-pop-src">${meta}</div></div></div>`;
+  };
+  return areas.map(a=>{const links=(a.headlines||[]).slice(0,3).map(hl).join('');return `<div class="area"><a class="area-h" href="${esc(a.href||'#')}"><span class="area-k">${esc(a.label)}</span><span class="area-go">more →</span></a>${a.synthesis?`<p class="area-syn">${esc(a.synthesis)}</p>`:''}<div class="area-hl">${links}</div></div>`;}).join('');
 }
 function eventCopy(e){
   const t=String(e.label||'');

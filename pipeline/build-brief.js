@@ -190,6 +190,23 @@ function buildStanding(nums) {
     refs: pick.map((n) => n.id), href: '/economy.html', source: 'Banco de México / INEGI' };
 }
 
+// THE BRIEF summary (Alan 2026-07-16: "too short — it should summarize all key news
+// stories"). A 2-4 sentence synthesis of the picked stories, closed-world: written ONLY
+// from their titles + shipped context, every number verbatim, gated by the report lint.
+// Fail-soft to the lead headline; regenerated only when the story set changes (no churn).
+async function writeSummary(picked) {
+  if (!hasLLM()) return '';
+  const items = picked.map((e) => ({ section: e.section, title: e.title, context: shippedContext(e) }));
+  const schema = { type: 'object', additionalProperties: false, required: ['summary'], properties: { summary: { type: 'string' } } };
+  const system = `Write THE BRIEF: the 2-4 sentence paragraph that opens The Mexico Brief, synthesizing today's key developments for someone tracking Mexico. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Connect the stories where they genuinely connect (do not enumerate mechanically); lead with the most consequential. Plain, calm, concrete English. No opinion, no forecasts, no em-dash, no "meanwhile". Maximum 80 words. Return JSON: {summary}.`;
+  const out = await askJSON({ system, user: JSON.stringify(items), schema, maxTokens: 2500 });
+  const text = String(out && out.summary || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
+  if (!text) return '';
+  const gate = lintReportText({ text, inputs: items.flatMap((i) => [i.title, i.context]), maxWords: 90, maxSentences: 5 });
+  if (!gate.ok) { console.warn(`  summary rejected: ${gate.flags.join('; ')}`); return ''; }
+  return text;
+}
+
 async function main() {
   const now = new Date();
   console.log(`\nbuild-brief · ${hasLLM() ? 'llm available (drafts only, gated)' : 'no llm — human context'}`);
@@ -237,9 +254,12 @@ async function main() {
   const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig;
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
   const stampDate = new Date(reviewedAt);
+  // The synthesis is stable prose: keep the previous one on an unchanged story set (no
+  // re-paraphrasing), write a fresh one only when the set actually changed.
+  const summary = (unchanged && String(prev.summary || '').trim()) || await writeSummary(picked) || '';
   const out = { meta: { title: 'The brief', updated: reviewedAt.slice(0, 10), asOf: `${MO[stampDate.getUTCMonth()]} ${stampDate.getUTCDate()}`,
     reviewedAt, latestItemDate: selectedDates.at(-1) || '', quiet, newCount,
-    generatedAt: reviewedAt, mode: 'curated', count: 1 + items.length, words, contentSig }, lead, items, standing };
+    generatedAt: reviewedAt, mode: 'curated', count: 1 + items.length, words, contentSig }, summary, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
   console.log(`  wrote ${path.relative(ROOT, OUT)} · ${1 + items.length} items · ${words} words · picked: ${picked.map((e) => e.importance).join('/')} · ${unchanged ? 'content unchanged (clock held)' : 'content changed (clock bumped)'}`);
 }
