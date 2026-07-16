@@ -1,474 +1,195 @@
 ---
 layout: base.njk
 permalink: /
-title: "The Mexico Brief: Mexico in official numbers"
-description: "A daily starting point for Mexico's economy, politics, trade, society, and relationship with the US, with dates and links to the original sources."
+title: "The Mexico Brief"
+description: "The major developments in Mexico, the numbers moving today, and the dates coming next — with links to the original sources."
 ogTitle: "The Mexico Brief"
-ogDescription: "Mexico's important numbers, what changed, and the original sources."
+ogDescription: "Mexico's major developments, key numbers, and original sources."
 ---
 <style>
-  body{font-size:var(--fs-body)}
   .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
-  .home a{text-underline-offset:2px}
-  .home-hero{padding:44px 0 18px}
-  .home-topline{display:flex;align-items:center;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.035em;text-transform:uppercase;color:var(--mut)}
-  .home-topline .fresh{display:inline-flex;align-items:center;gap:7px;color:var(--mut);text-decoration:none}
-  .home-topline .fresh:hover{color:var(--green-d)}
-  .home-topline .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
-  .home-topline .fresh.has-expected .dot{background:#a87813}
-  .home-topline .fresh.has-issue .dot{background:var(--red)}
-  .home-hero h1{font-size:var(--fs-display);line-height:1.04;letter-spacing:-.025em;margin:10px 0 6px}
-  .section-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.055em;text-transform:uppercase;color:var(--green-d);font-weight:600}
-  .morning-summary{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:13px 0 15px}
-  .morning-summary p{font-size:var(--fs-body);line-height:1.6;color:var(--ink-2);max-width:66ch}
-  .brief-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .delta-chip{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;font-weight:700;color:var(--green-d);white-space:nowrap}
-  .delta-chip.quiet{color:var(--mut);font-weight:600}
-  .tag-new{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:var(--green-d);border:1px solid var(--green);border-radius:3px;padding:0 5px;line-height:1.5}
+  .home a{text-underline-offset:3px}
+  .home-head{padding:32px 0 14px;display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  .home-date{font-size:clamp(20px,2.2vw,28px);font-weight:650;letter-spacing:-.015em}
+  .home-status{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-decoration:none}
+  .home-status:hover{color:var(--green-d)}
+  .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
+  .section-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
+  .section-title{font-size:var(--fs-h2);line-height:1.12;letter-spacing:-.018em;margin:5px 0 0}
+  .section-note,.asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .text-link{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
 
-  .top-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(330px,.85fr);gap:36px;margin-top:56px}
-  .section-rule{border-top:1px solid var(--line);padding-top:12px}
-  .section-headline{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px}
-  .section-headline .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
-  .section-title{font-size:var(--fs-h2);line-height:1.12;margin:4px 0 8px}
+  .brief{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:16px 0 20px;margin-top:28px}
+  .brief-copy{font-size:clamp(18px,1.65vw,22px);line-height:1.58;color:var(--ink-2);max-width:78ch;margin-top:13px}
+  .brief-view{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:76ch;margin-top:13px;padding-left:14px;border-left:2px solid var(--green)}
+  .brief-view b{color:var(--ink)}
+  .brief-sources{display:flex;align-items:center;gap:5px 14px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--mut)}
+  .brief-sources a{color:var(--green-d)}
 
-  .brief-list{border-top:1px solid var(--line)}
-  .brief-row{padding:24px 0;border-bottom:1px solid var(--line)}
-  .story-meta{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
-  .story-meta .beat{color:var(--green-d);font-weight:600;text-decoration:none}
-  a.beat:hover{text-decoration:underline;text-underline-offset:3px}
-  .brief-row h3{font-size:var(--fs-h3);line-height:1.25;letter-spacing:-.006em;margin:0 0 6px;max-width:42ch}
-  .story-meta .src{color:var(--mut)}
-  .h-link{text-decoration:none;color:inherit;display:block}
-  .h-link:hover h3{color:var(--green-d)}
+  .news{margin-top:46px;max-width:920px}
+  .story-list{border-top:1px solid var(--line);margin-top:12px}
+  .brief-story{padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
+  .story-meta{display:flex;align-items:center;gap:5px 11px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
+  .story-topic{font-weight:650;color:var(--green-d);text-decoration:none}
+  .story-title-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
+  .story-link{color:var(--ink);text-decoration:none}
+  .story-link:hover{color:var(--green-d)}
+  .brief-story h3{font-size:clamp(20px,2vw,27px);line-height:1.24;letter-spacing:-.012em;margin:0;max-width:50ch}
 
-  .now-group{margin-top:15px}
-  .now-group+.now-group{margin-top:22px}
-  .now-group-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:7px}
-  .now-group-title{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:600}
-  .now-group-note{font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.025em}
-  .metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
-  .metric-card{display:flex;flex-direction:column;min-width:0;background:var(--paper);padding:12px 13px 10px;color:var(--ink)}
-  .metric-card:last-child:nth-child(odd){grid-column:1 / -1}
-  .metric-main{display:block;color:var(--ink);text-decoration:none;min-width:0}
-  .metric-main:hover{text-decoration:none}
-  .metric-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-  .metric-name,.metric-cadence{font-family:var(--mono);font-size:10px;line-height:1.25;letter-spacing:.035em;text-transform:uppercase}
-  .metric-name{color:var(--mut);font-weight:600}
-  .metric-cadence{color:var(--green-d);white-space:nowrap}
-  .metric-main:hover .metric-name{color:var(--green-d)}
-  .metric-value{font-size:clamp(25px,2.1vw,31px);line-height:1;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:9px;white-space:nowrap}
-  .metric-value small{font-family:var(--mono);font-size:10px;letter-spacing:0;color:var(--mut);font-weight:400;margin-left:3px}
-  .metric-move{font-size:13px;line-height:1.3;font-weight:650;margin-top:8px;font-variant-numeric:tabular-nums}
-  .metric-move.good{color:var(--green-d)}
-  .metric-move.bad{color:var(--red)}
-  .metric-move.neutral{color:var(--ink-2)}
-  .metric-compare{font-size:11px;line-height:1.35;color:var(--ink-2);margin-top:3px;min-height:29px}
-  .metric-stamp{font-family:var(--mono);font-size:10px;line-height:1.35;color:var(--mut);text-transform:uppercase;letter-spacing:.02em;margin-top:7px}
-  .metric-consensus{font-family:var(--mono);font-size:10px;line-height:1.35;color:var(--green-d);text-transform:uppercase;letter-spacing:.02em;margin-top:5px}
-  .spark{display:block;margin-top:8px;color:var(--mut);opacity:.55;max-width:100%}
-  .now-more{margin-top:auto;padding-top:8px}
-  .now-more summary{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:24px;font-family:var(--mono);font-size:10px;line-height:1.3;color:var(--green-d);cursor:pointer;list-style:none}
-  .now-more summary::-webkit-details-marker{display:none}
-  .now-more summary::after{content:"+";font-size:14px}
-  .now-more[open] summary::after{content:"–"}
-  .now-more p{font-size:12px;line-height:1.45;color:var(--ink-2);margin-top:6px}
-  .section-link{display:inline-block;margin-top:11px;font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
-  .now-loading{border-top:1px solid var(--line);padding:16px 0;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
-  .now-floor{list-style:none;border-top:1px solid var(--line)}
-  .now-floor .nf-row{display:flex;flex-direction:column;gap:3px;padding:11px 0;border-bottom:1px solid var(--line)}
-  .now-floor a{display:flex;align-items:baseline;justify-content:space-between;gap:12px;text-decoration:none;color:var(--ink)}
-  .now-floor a:hover .nf-label{color:var(--green-d)}
-  .nf-label{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.03em;color:var(--mut);font-weight:600}
-  .nf-val{font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .nf-meta{font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.02em}
+  .context{position:relative;z-index:2}
+  .context summary{list-style:none;width:22px;height:22px;border:1px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-d);font-family:var(--mono);font-size:12px;font-weight:650;cursor:pointer;background:var(--paper)}
+  .context summary::-webkit-details-marker{display:none}
+  .context summary:hover{color:#fff;background:var(--green)}
+  .context-pop{display:none;position:absolute;right:0;top:29px;width:min(440px,calc(100vw - 48px));padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 28px rgba(0,0,0,.09);font-size:13px;line-height:1.55;color:var(--ink-2);font-weight:400;text-align:left;z-index:20}
+  .context-pop p+p{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+  .context-pop .context-source{font-family:var(--mono);font-size:10px;color:var(--mut)}
+  .context[open] .context-pop,.context:hover .context-pop,.context:focus-within .context-pop{display:block}
+  .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 
-  .companies,.topics,.coming,.subscribe-section{margin-top:56px}
-  .company-list{border-top:1px solid var(--line)}
-  .company-row{display:grid;grid-template-columns:140px minmax(0,1fr) auto;gap:8px 20px;align-items:start;padding:17px 0;border-bottom:1px solid var(--line)}
-  .company-name{font-family:var(--mono);font-size:var(--fs-label);line-height:1.45;text-transform:uppercase;letter-spacing:.035em;color:var(--green-d);font-weight:600}
-  .company-name span{display:block;color:var(--mut);font-weight:400;text-transform:none;letter-spacing:0}
-  .company-body h3{font-size:var(--fs-body);line-height:1.3;margin:0 0 3px}
-  .company-body p,.company-signal{font-size:var(--fs-small);line-height:1.5;color:var(--ink-2);margin:0}
-  .company-signal b{color:var(--ink);font-weight:600}
-  .company-source{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);white-space:nowrap}
+  .markets,.week,.subscribe-section{margin-top:54px}
+  .markets{border-top:2px solid var(--green);padding-top:14px}
+  .market-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:5px;overflow:visible;margin-top:14px}
+  .market-card{position:relative;min-width:0;padding:15px 16px 14px;background:var(--paper)}
+  .market-card+.market-card{border-left:1px solid var(--line)}
+  .market-link{display:block;color:inherit;text-decoration:none}
+  .market-name{font-family:var(--mono);font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut);padding-right:28px}
+  .market-value{font-size:clamp(28px,3vw,39px);font-weight:650;line-height:1.04;letter-spacing:-.025em;margin-top:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .market-unit{font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:0;margin-left:3px}
+  .market-move{font-size:13px;line-height:1.35;font-weight:650;margin-top:8px;font-variant-numeric:tabular-nums}
+  .market-move.up{color:var(--green-d)}
+  .market-move.down{color:var(--red)}
+  .market-move.flat{color:var(--ink-2)}
+  .market-compare{font-size:12px;line-height:1.4;color:var(--ink-2);margin-top:3px;min-height:34px}
+  .market-date{font-family:var(--mono);font-size:10px;line-height:1.4;text-transform:uppercase;letter-spacing:.02em;color:var(--mut);margin-top:9px}
+  .market-card>.context{position:absolute;right:13px;top:12px}
+  .market-floor .market-compare{min-height:0}
 
-  /* "Mexico by topic" cards (restored per Alan 2026-07-16: the strip "makes no sense") —
-     six area cards: synthesis + 3 headlines, each headline with its Why-it-matters preview. */
-  .areas{display:grid;grid-template-columns:1fr;gap:8px;border-top:1px solid var(--line);padding-top:1px}
-  @media(min-width:760px){.areas{grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:4px;padding-top:0}}
-  .area{background:var(--paper);padding:21px 21px 19px}
-  @media(max-width:759px){.area{border:1px solid var(--line-2);border-radius:4px}}
-  .area-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;text-decoration:none;margin-bottom:8px}
-  .area-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);font-weight:600}
-  .area-go{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
-  .area-h:hover .area-go{color:var(--green-d)}
-  .area-syn{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);margin:0 0 13px}
-  .area-hl .hl{display:block;padding:9px 0;border-top:1px solid var(--line)}
-  .area-hl .hl:first-child{border-top:none;padding-top:1px}
-  .hl{position:relative}
-  .hl-a{display:block;text-decoration:none}
-  .hl-t{display:block;font-size:var(--fs-small);color:var(--ink);font-weight:500;line-height:1.36}
-  .hl-a:hover .hl-t,.hl-a:hover h3{color:var(--green-d)}
-  .hl-m{display:block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);margin-top:3px}
-  /* Hover preview (Fable 2026-07-16): reveal the pre-generated, gated context. No fetch, no
-     model, no mascot — the record explaining itself. Desktop = hover/focus; touch = tap the ¿. */
-  /* "Why it matters" — the site's signature layer (same phrase as the board tiles).
-     QUIET treatment (Alan 2026-07-16, reverting the boxed callout: "what we had at the
-     beginning was much better"): the inline mono kicker marks the layer; type and
-     whitespace do the rest. No tint, no rules, no apparatus. */
-  .why-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;margin-right:8px}
-  .story-ctx p{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);max-width:66ch;margin:0}
-  /* "More background" — article-grounded extra detail, expandable inside the box. */
-  .ctx-more{margin-top:7px}
-  .ctx-more summary{display:inline-flex;align-items:center;min-height:24px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;cursor:pointer;list-style:none}
-  .ctx-more summary::-webkit-details-marker{display:none}
-  .ctx-more summary::after{content:" +"}
-  .ctx-more[open] summary::after{content:" –"}
-  .ctx-more summary:hover{text-decoration:underline;text-underline-offset:3px}
-  .ctx-more p{margin-top:5px}
-  .pop-bg{margin-top:7px !important}
-  .hl-info{display:block;margin-top:5px;padding:2px 0;border:none;background:none;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.045em;text-transform:uppercase;color:var(--green-d);font-weight:700;cursor:pointer;min-height:24px}
-  .hl-info::after{content:" +"}
-  .hl.is-open .hl-info::after{content:" –"}
-  .hl-info:hover{text-decoration:underline;text-underline-offset:3px}
-  .hl-pop{position:absolute;left:0;right:0;top:100%;z-index:20;margin-top:5px;background:var(--paper);border:1px solid var(--line-2);border-radius:4px;padding:11px 14px;opacity:0;visibility:hidden;transition:opacity .12s ease;pointer-events:none}
-  .hl-pop p{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2);margin:0}
-  .hl-pop-src{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.02em;color:var(--mut);margin-top:8px}
-  .hl:hover .hl-pop,.hl:focus-within .hl-pop,.hl.is-open .hl-pop{opacity:1;visibility:visible}
-  @media(hover:none){.hl:hover .hl-pop,.hl:focus-within .hl-pop{opacity:0;visibility:hidden}.hl.is-open .hl-pop{opacity:1;visibility:visible}}
-
-  .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .timeline-item{padding:16px 18px 17px 0}
+  .week{border-top:1px solid var(--line);padding-top:14px}
+  .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:13px}
+  .timeline-item{padding:17px 18px 18px 0}
   .timeline-item+.timeline-item{border-left:1px solid var(--line);padding-left:18px}
-  .timeline-date{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.035em;text-transform:uppercase;color:var(--green-d);font-weight:600}
-  .timeline-title{font-size:var(--fs-small);line-height:1.35;color:var(--ink);font-weight:600;margin-top:6px}
-  .timeline-why{font-size:var(--fs-meta);line-height:1.45;color:var(--ink-2);margin-top:5px}
-  .timeline-cons{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);margin-top:6px;text-transform:uppercase;letter-spacing:.02em}
-  .timeline-source{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px}
+  .timeline-date{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.035em;text-transform:uppercase;color:var(--green-d);font-weight:650}
+  .timeline-title{font-size:var(--fs-small);line-height:1.35;font-weight:650;margin-top:6px}
+  .timeline-why{font-size:var(--fs-meta);line-height:1.48;color:var(--ink-2);margin-top:5px}
+  .timeline-source{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:8px}
 
-  .sub{border:1px solid var(--line);border-radius:8px;padding:20px 22px 16px;background:#fbfaf6}
-  .sub .lab{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700}
-  .sub .line{font-size:var(--fs-small);color:var(--ink-2);margin-top:8px;line-height:1.5;max-width:76ch}
-  .sub form{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:var(--fs-small);padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
-  .sub input[type=email]:focus{outline:none;border-color:var(--green)}
-  .sub button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:8px;padding:12px 24px;cursor:pointer}
-  .sub button:hover{background:var(--green-d)}
-  .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:11px;line-height:1.6}
+  .sub{border:1px solid var(--line);border-radius:7px;padding:20px 22px 17px;background:#fbfaf6}
+  .sub .line{font-size:var(--fs-small);color:var(--ink-2);margin-top:7px;line-height:1.5;max-width:74ch}
+  .sub form{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}
+  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:var(--fs-small);padding:12px 14px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+  .sub button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:0;border-radius:7px;padding:12px 24px;cursor:pointer}
+  .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:10px}
 
   @media(max-width:900px){
-    .top-grid{grid-template-columns:1fr;gap:34px}
-    .company-row{grid-template-columns:120px minmax(0,1fr) auto}
+    .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .market-card:nth-child(3){border-left:0;border-top:1px solid var(--line)}
+    .market-card:nth-child(4){border-top:1px solid var(--line)}
     .timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
     .timeline-item:nth-child(3){border-left:0;border-top:1px solid var(--line);padding-left:0}
     .timeline-item:nth-child(4){border-top:1px solid var(--line)}
   }
   @media(max-width:650px){
-    .home-hero{padding:32px 0 16px}
-    .top-grid{margin-top:40px}
-    .section-title{font-size:28px}
-    .brief-row{padding:18px 0}
-    .brief-row h3{line-height:1.25}
-    .brief-row>p{line-height:1.48}
-    .metric-grid{grid-template-columns:1fr}
-    .metric-card:last-child:nth-child(odd){grid-column:auto}
-    .metric-card{padding:12px 13px 10px}
-    .metric-value{font-size:28px}
-    .metric-compare{min-height:0}
-    .company-row{grid-template-columns:1fr;gap:5px;padding:15px 0}
-    .company-signal{grid-column:auto}
-    .company-source{padding-top:5px}
+    .home-head{padding-top:24px}
+    .brief{margin-top:22px}
+    .brief-copy{font-size:18px;line-height:1.52}
+    .news{margin-top:38px}
+    .brief-story{padding:17px 0}
+    .brief-story h3{font-size:21px;line-height:1.28}
+    .market-grid{grid-template-columns:1fr}
+    .market-card+.market-card,.market-card:nth-child(3){border-left:0;border-top:1px solid var(--line)}
+    .market-value{font-size:32px}
+    .market-compare{min-height:0}
     .timeline{grid-template-columns:1fr}
-    .timeline-item{padding:14px 0 15px}
-    .timeline-item+.timeline-item,.timeline-item:nth-child(3),.timeline-item:nth-child(4){border-left:0;border-top:1px solid var(--line);padding-left:0}
+    .timeline-item,.timeline-item+.timeline-item,.timeline-item:nth-child(3),.timeline-item:nth-child(4){padding:14px 0 15px;border-left:0;border-top:1px solid var(--line)}
+    .timeline-item:first-child{border-top:0}
   }
 </style>
 
 <div class="home">
-  <section class="home-hero">
-    <div class="home-topline">
-      <span id="today">Today</span>
-      <a class="fresh" id="fresh" href="/sources.html"><span class="dot"></span><span id="status">Checking the data</span></a>
-    </div>
-    <h1 id="hero-title">Mexico this morning</h1>
+  <header class="home-head">
+    <div class="home-date" id="today">Mexico this morning</div>
+    <a class="home-status" id="status" href="/sources.html">Checking the data</a>
+  </header>
+
+  <section class="brief" aria-labelledby="brief-title">
+    <div class="section-top"><div class="kicker" id="brief-title">The brief</div><div class="asof" id="brief-asof" data-date="{{ dailyBrief.newsThrough }}">Updated {{ dailyBrief.newsThrough }}</div></div>
+    <p class="brief-copy">{{ dailyBrief.summaryLead }}</p>
+    {% if dailyBrief.view %}<p class="brief-view"><b>My view:</b> {{ dailyBrief.view }}</p>{% endif %}
+    {% if dailyBrief.briefSources.length %}<div class="brief-sources"><span>Sources:</span>{% for item in dailyBrief.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
   </section>
 
-  <section class="morning-summary" aria-label="Morning summary">
-    <div class="brief-head">
-      <div class="section-k">The brief</div>
-      {% if dailyBrief.quiet %}<span class="delta-chip quiet">Quiet stretch</span>{% else %}<span class="delta-chip" id="delta-chip" hidden></span>{% endif %}
-    </div>
-    <p id="morning-summary">{{ dailyBrief.summaryLead }}</p>
-    <span id="summary-next" hidden>{{ dailyBrief.summaryNext }}</span>
-  </section>
-
-  <div class="top-grid">
-    <section class="section-rule" aria-labelledby="news-title">
-      <div class="section-headline"><div class="section-k">Latest</div><div class="asof" id="news-asof" data-date="{{ dailyBrief.newsThrough }}">Updated {{ dailyBrief.newsThrough }}</div></div>
-      <h2 class="section-title" id="news-title">Today's news</h2>
-      <div class="brief-list">
-        {# ONE uniform story treatment (Alan 2026-07-16, reverting the lead/compact split:
-           "confusing… I liked the way we had it before"). Every story: meta line (topic link ·
-           date · source name), the HEADLINE AS THE HYPERLINK to the article (no separate
-           source row), the why line, and More background when the pipeline has read the piece. #}
-        {% for story in dailyBrief.stories %}
-        <article class="brief-row" data-url="{{ story.url }}">
-          <div class="story-meta"><a class="beat" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span class="src">{{ story.source }}</span>{% endif %}</div>
-          <a class="h-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>
-          <div class="story-ctx"><p><span class="why-k">Why it matters</span>{{ story.context }}</p>
-            {% if story.background %}<details class="ctx-more"><summary>More background</summary><p>{{ story.background }}</p></details>{% endif %}
-          </div>
-        </article>
-        {% endfor %}
-      </div>
-    </section>
-
-    <aside class="rail">
-      <section class="section-rule" aria-labelledby="now-title">
-        <div class="section-k">Current readings</div>
-        <h2 class="section-title" id="now-title">Mexico now</h2>
-        <div id="mexico-now">
-          <ul class="now-floor">
-            {% for m in nowBoard %}
-            <li class="nf-row"><a href="{{ m.href }}"><span class="nf-label">{{ m.label }}</span><span class="nf-val">{{ m.display }}</span></a><span class="nf-meta"><span class="js-date" data-date="{{ m.date }}">{{ m.date }}</span> · {{ m.source }}</span></li>
-            {% endfor %}
-          </ul>
+  <section class="news" aria-labelledby="news-title">
+    <div class="section-top"><div><div class="kicker">Major stories</div><h2 class="section-title" id="news-title">What happened</h2></div><a class="text-link" href="/latest.html">All latest →</a></div>
+    <div class="story-list">
+      {% for story in dailyBrief.stories %}
+      <article class="brief-story">
+        <div class="story-meta"><a class="story-topic" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
+        <div class="story-title-row">
+          <a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>
+          {% if story.context %}<details class="context"><summary><span aria-hidden="true">?</span><span class="sr-only">Context</span></summary><div class="context-pop"><p>{{ story.context }}</p>{% if story.background %}<p>{{ story.background }}</p>{% endif %}</div></details>{% endif %}
         </div>
-        <a class="section-link" href="/chart.html">Open all charts →</a>
-      </section>
-    </aside>
-  </div>
-
-{% if dailyBrief.companies.length %}
-  <section class="companies section-rule" aria-labelledby="companies-title">
-    <div class="section-headline"><div class="section-k">Companies</div><div class="asof">Latest signal and why I am watching</div></div>
-    <h2 class="section-title" id="companies-title">Companies worth following</h2>
-    <div class="company-list">
-      {% for company in dailyBrief.companies %}
-      <article class="company-row">
-        <div class="company-name">{{ company.name }}<span>{{ company.sector }}</span></div>
-        <div class="company-body">{% if company.thesis %}<h3>{{ company.title }}</h3><p>{{ company.thesis }}</p>{% endif %}<p class="company-signal"><b>Latest:</b> {{ company.signal }}</p></div>
-        <a class="company-source" href="{{ company.url }}" target="_blank" rel="noopener"><span class="js-date" data-date="{{ company.date }}">{{ company.date }}</span> ↗</a>
       </article>
       {% endfor %}
     </div>
   </section>
-{% endif %}
 
-  <section class="topics section-rule" aria-labelledby="topics-title">
-    <div class="section-headline"><div class="section-k">By topic</div><div class="asof" id="areas-asof"></div></div>
-    <h2 class="section-title" id="topics-title">Mexico by topic</h2>
-    <div class="areas" id="areas"></div>
+  <section class="markets" aria-labelledby="markets-title">
+    <div class="section-top"><div><div class="kicker">Markets today</div><h2 class="section-title" id="markets-title">Mexico-relevant prices</h2></div><a class="text-link" href="/chart.html">All numbers →</a></div>
+    <div class="market-grid market-floor" id="market-grid">
+      {% for item in nowBoard %}<article class="market-card"><a class="market-link" href="{{ item.href }}"><div class="market-name">{{ item.label }}</div><div class="market-value">{{ item.display }}</div><div class="market-date"><span class="js-date" data-date="{{ item.date }}">{{ item.date }}</span></div></a></article>{% endfor %}
+    </div>
   </section>
 
-  <section class="coming section-rule" aria-labelledby="next-title">
-    <div class="section-headline"><div class="section-k">Next</div><div class="asof">Four dates to watch</div></div>
-    <h2 class="section-title" id="next-title">Coming up</h2>
-    <div class="timeline" id="timeline">
-      {% for e in calendar %}
-      <article class="timeline-item"><div class="timeline-date">{% if e.approx %}Week of {% endif %}<span class="js-date" data-date="{{ e.date }}">{{ e.date }}</span></div><div class="timeline-title">{{ e.title }}</div>{% if e.why %}<div class="timeline-why">{{ e.why }}</div>{% endif %}<div class="timeline-source">{{ e.source }}</div></article>
-      {% endfor %}
+  <section class="week" aria-labelledby="week-title">
+    <div class="section-top"><div><div class="kicker">This week</div><h2 class="section-title" id="week-title">What to watch</h2></div><span class="section-note">Official releases and meetings</span></div>
+    <div class="timeline">
+      {% for event in calendar %}<article class="timeline-item"><div class="timeline-date">{% if event.approx %}Week of {% endif %}<span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span></div><div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
     </div>
-    <a class="section-link" href="/sources.html#calendar">Open the full calendar →</a>
   </section>
 
   <section class="subscribe-section">
-    <div class="sub">
-      <div class="lab">The email</div>
-      <p class="line">Once a week, I send the few things that changed in Mexico's economy, politics, and relationship with the United States that I think are worth knowing. The original sources are included if you want to go deeper. <a href="/weekly.html" style="color:var(--green-d);font-weight:600">See an example →</a></p>
-      <form class="subform" method="post" action="/api/subscribe" novalidate>
-        <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required />
-        <label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
-        <button type="submit">Subscribe</button>
-      </form>
-      <div class="fine submsg" aria-live="polite">One email a week. Unsubscribe whenever you want.</div>
-      <div class="privacy-note">Your email is handled by Beehiiv for this newsletter. <a href="/privacy.html">Privacy</a>.</div>
-    </div>
+    <div class="sub"><div class="kicker">The email</div><p class="line">Once a week, I send the few things that changed in Mexico that I think are worth knowing. The original sources are there if you want to go deeper. <a href="/weekly.html">See an example →</a></p><form class="subform" method="post" action="/api/subscribe" novalidate><input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required /><label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label><button type="submit">Subscribe</button></form><div class="fine submsg" aria-live="polite">One email a week. Unsubscribe whenever you want.</div></div>
   </section>
 </div>
 
 <script type="module">
-import { loadSeries, S, EVENTS, relTime } from '/assets/mb.js?v=18';
+import { loadSeries, S, relTime } from '/assets/mb.js?v=18';
 
-const RD={'#q3':'/economy.html','#q4':'/economy.html','#q5':'/economy.html','#q6':'/society.html','#q7':'/politics.html','#q8':'/us-mexico.html','#q9':'/society.html','#q10':'/economy.html','#q11':'/model.html'};
-if(RD[location.hash]) location.replace(RD[location.hash]);
-
-const esc=(s)=>String(s==null?'':s).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
-const point=(id)=>S[id]?.data?.at(-1)||null;
+const esc=(value)=>String(value==null?'':value).replace(/[&<>\"]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+const last=(id)=>S[id]?.data?.at(-1)||null;
 const prior=(id)=>S[id]?.data?.at(-2)||null;
-function nearAgo(id,days,tolerance=60){
-  const a=S[id]?.data||[]; if(!a.length) return null;
-  const end=Date.parse(a.at(-1).date),target=end-days*864e5; let best=null,dist=Infinity;
-  for(const p of a){const d=Math.abs(Date.parse(p.date)-target);if(d<dist){dist=d;best=p;}}
-  return dist<=tolerance*864e5?best:null;
-}
-const n=(v,d=2)=>Number(v).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
-const signed=(v,d=2)=>`${Number(v)>=0?'+':''}${n(v,d)}%`;
-function dateLabel(iso,withYear=false){
-  if(!iso) return '';
-  const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);
-  return isNaN(d)?'':d.toLocaleDateString('en-US',{month:'short',day:'numeric',...(withYear?{year:'numeric'}:{})});
-}
-function periodLabel(id,iso){
-  if(!iso) return '';
-  const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);
-  if(isNaN(d)) return '';
-  if(S[id]?.meta?.cadence==='monthly') return d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-}
-function monthLabel(iso){
-  if(!iso) return '';
-  const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);
-  return isNaN(d)?'':d.toLocaleDateString('en-US',{month:'long'});
-}
-function currentStreak(id){
-  const a=S[id]?.data||[]; if(!a.length) return null;
-  const value=a.at(-1).value; let i=a.length-1;
-  while(i>0&&a[i-1].value===value)i--;
-  return {date:a[i].date,value,previous:i>0?a[i-1]:null};
-}
-// Sparkline (Fable 2026-07-16, narrowly un-banning them for board tiles only): the recent
-// shape of the series, one ink color, no fill, no axes. Cadence-aware window — last 30 days
-// for daily series, last 12 observations for weekly/monthly, 8 for quarterly — so the line
-// always shows a real shape, never one or two points.
-function sparkOf(id){
-  const s=S[id]; const a=s?.data||[]; if(a.length<3) return '';
-  const cad=String(s?.meta?.cadence||'');
-  let pts;
-  if(/daily/i.test(cad)){const cut=Date.parse(a.at(-1).date)-30*864e5;pts=a.filter(p=>Date.parse(p.date)>=cut);}
-  else if(/quarter/i.test(cad)) pts=a.slice(-8);
-  else pts=a.slice(-12);
-  if(pts.length<3) return '';
-  const vs=pts.map(p=>+p.value).filter(Number.isFinite); if(vs.length<3) return '';
-  const min=Math.min(...vs),max=Math.max(...vs),range=(max-min)||1;
-  const W=96,H=24,P=2;
-  const d=vs.map((v,i)=>((i?'L':'M')+(P+i*(W-2*P)/(vs.length-1)).toFixed(1)+' '+(H-P-((v-min)/range)*(H-2*P)).toFixed(1))).join('');
-  return `<svg class="spark" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" aria-hidden="true" focusable="false"><path d="${d}" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-}
-function metricCard({id,name,cadence,value,unit='',arrow='→',move,compare='',stamp,tone='neutral',why,consensus=''}){
-  const spark=sparkOf(String(id).split(',')[0]);
-  return `<article class="metric-card"><a class="metric-main" href="/chart.html?v=${esc(id)}"><div class="metric-top"><span class="metric-name">${esc(name)}</span><span class="metric-cadence">${esc(cadence)}</span></div><div class="metric-value">${esc(value)}${unit?` <small>${esc(unit)}</small>`:''}</div><div class="metric-move ${esc(tone)}"><span aria-hidden="true">${esc(arrow)}</span> ${esc(move)}</div>${compare?`<div class="metric-compare">${esc(compare)}</div>`:'<div class="metric-compare"></div>'}${spark}${consensus?`<div class="metric-consensus">${esc(consensus)}</div>`:''}<div class="metric-stamp">${esc(stamp)}</div></a><details class="now-more"><summary>Why it matters</summary><p>${esc(why)}</p></details></article>`;
-}
-function renderNow(){
-  const peso=point('banxico-usdmxn-fix'),pesoP=prior('banxico-usdmxn-fix'),pesoY=nearAgo('banxico-usdmxn-fix',365,10);
-  const inf=point('banxico-inflacion'),infP=prior('banxico-inflacion'),core=point('banxico-inflacion-subyacente');
-  const rate=point('banxico-tasa-objetivo'),rateStreak=currentStreak('banxico-tasa-objetivo'),igae=point('banxico-igae'),igaeP=prior('banxico-igae');
-  const rem=point('banxico-remesas'),remP=prior('banxico-remesas'),remY=nearAgo('banxico-remesas',365,45);
-  const res=point('banxico-reservas'),resP=prior('banxico-reservas'),resY=nearAgo('banxico-reservas',365,60);
-  const ipc=point('banxico-bmv-ipc'),ipcP=prior('banxico-bmv-ipc'),ipcY=nearAgo('banxico-bmv-ipc',365,10);
-  const cetes=point('banxico-cetes-28d'),cetesP=prior('banxico-cetes-28d'),cetesY=nearAgo('banxico-cetes-28d',365,10);
-  const ust=point('fred-ust10'),ustP=prior('fred-ust10'),ustY=nearAgo('fred-ust10',365,10);
-  const expInf=point('banxico-exp-inflacion'),expCete=point('banxico-exp-cete'),expFx=point('banxico-exp-usdmxn'),expPib=point('banxico-exp-pib');
-  const debt=point('shcp-deuda-neta'),debtP=prior('shcp-deuda-neta');
-  const daily=[]; const releases=[];
-  if(peso){const stronger=pesoP&&peso.value<pesoP.value;const weaker=pesoP&&peso.value>pesoP.value;const dayMove=pesoP?Math.abs((peso.value/pesoP.value-1)*100):null;const yearMove=pesoY?Math.abs((peso.value/pesoY.value-1)*100):null;daily.push(metricCard({id:'banxico-usdmxn-fix',name:'Peso',cadence:'Daily',value:n(peso.value,2),unit:'MXN / US$',arrow:stronger?'▲':weaker?'▼':'→',move:pesoP?`${n(dayMove,2)}% ${stronger?'stronger':weaker?'weaker':'unchanged'}`:'Comparison unavailable',compare:pesoY?`${n(yearMove,1)}% ${peso.value<pesoY.value?'stronger':'weaker'} over 1Y`:'',stamp:`${periodLabel('banxico-usdmxn-fix',peso.date)} · Banxico`,tone:stronger?'good':weaker?'bad':'neutral',consensus:expFx?`Consensus ${n(expFx.value,2)} · year-end`:'',why:'A lower exchange-rate quote means a stronger peso. That makes imports cheaper, but each export or remittance dollar converts into fewer pesos.'}));}
-  if(ipc){const move=ipcP?(ipc.value/ipcP.value-1)*100:null;const year=ipcY?(ipc.value/ipcY.value-1)*100:null;daily.push(metricCard({id:'banxico-bmv-ipc',name:'S&P/BMV IPC',cadence:'Daily',value:n(ipc.value,0),arrow:move>0?'▲':move<0?'▼':'→',move:move==null?'Comparison unavailable':`${n(Math.abs(move),2)}% ${move>0?'higher':move<0?'lower':'unchanged'}`,compare:year==null?'':`${n(Math.abs(year),1)}% ${year>0?'higher':year<0?'lower':'unchanged'} over 1Y`,stamp:`${periodLabel('banxico-bmv-ipc',ipc.date)} · Banxico / BMV`,tone:move>0?'good':move<0?'bad':'neutral',why:'The main index of large companies listed in Mexico. It is a useful market signal, but it is not the whole economy.'}));}
-  if(cetes){const move=cetesP?cetes.value-cetesP.value:null;const year=cetesY?cetes.value-cetesY.value:null;daily.push(metricCard({id:'banxico-cetes-28d',name:'Cetes · 28 days',cadence:'Daily',value:`${n(cetes.value,2)}%`,arrow:move>0?'▲':move<0?'▼':'→',move:move==null?'Comparison unavailable':`${n(Math.abs(move),2)} pp ${move>0?'higher':move<0?'lower':'unchanged'}`,compare:year==null?'':`${n(Math.abs(year),2)} pp ${year>0?'higher':year<0?'lower':'unchanged'} over 1Y`,stamp:`${periodLabel('banxico-cetes-28d',cetes.date)} · Banxico`,tone:'neutral',consensus:expCete?`Consensus ${n(expCete.value,2)}% · year-end`:'',why:'The market yield on very short-term Mexican government debt. Unlike the policy rate, it can move between Banxico meetings.'}));}
-  if(ust){const move=ustP?ust.value-ustP.value:0;const year=ustY?ust.value-ustY.value:null;daily.push(metricCard({id:'fred-ust10',name:'U.S. 10-year yield',cadence:'Daily',value:`${n(ust.value,2)}%`,arrow:move>0?'▲':move<0?'▼':'→',move:ustP?`${n(Math.abs(move),2)} pp ${move>0?'higher':move<0?'lower':'unchanged'}`:'Comparison unavailable',compare:year==null?'':`${n(Math.abs(year),2)} pp ${year>0?'higher':year<0?'lower':'unchanged'} over 1Y`,stamp:`${periodLabel('fred-ust10',ust.date)} · U.S. Fed`,tone:'neutral',why:'A benchmark for dollar borrowing costs. Higher U.S. yields can reduce the relative appeal of peso assets, but they are only one input into the exchange rate.'}));}
-  if(inf){const delta=infP?inf.value-infP.value:0;const inside=inf.value>=2&&inf.value<=4;releases.push(metricCard({id:'banxico-inflacion,banxico-inflacion-subyacente',name:'Inflation',cadence:'Monthly',value:`${n(inf.value,2)}%`,arrow:delta>0?'▲':delta<0?'▼':'→',move:infP?`${n(Math.abs(delta),2)} pp ${delta>0?'higher':delta<0?'lower':'unchanged'}`:'Comparison unavailable',compare:`${inside?'Inside':'Outside'} the 2–4% target · vs ${infP?monthLabel(infP.date):'prior month'}`,stamp:`${periodLabel('banxico-inflacion',inf.date)} · INEGI`,tone:inside?'good':'bad',consensus:expInf?`Consensus ${n(expInf.value,2)}% · year-end`:'',why:`Prices are still rising, just more slowly. Core inflation is ${core?n(core.value,2)+'%':'not available'}.`}));}
-  if(rate){const prev=rateStreak?.previous,delta=prev?rate.value-prev.value:0;const gap=core?n(rate.value-core.value,2):null;releases.push(metricCard({id:'banxico-tasa-objetivo,banxico-inflacion-subyacente',name:'Banxico rate',cadence:'Policy meetings',value:`${n(rate.value,2)}%`,arrow:delta>0?'▲':delta<0?'▼':'→',move:prev?`${n(Math.abs(delta),2)} pp ${delta>0?'higher':delta<0?'lower':'unchanged'} at latest change`:'No earlier change available',compare:gap?`${gap} pp above core inflation`:'',stamp:`Current since ${dateLabel(rateStreak?.date)} · Banxico`,tone:'neutral',why:'Higher rates help contain inflation and support the peso, but make borrowing more expensive.'}));}
-  if(igae){const delta=igaeP?igae.value-igaeP.value:0;releases.push(metricCard({id:'banxico-igae',name:'Economic activity',cadence:'Monthly',value:signed(igae.value,2),unit:'YoY',arrow:delta>0?'▲':delta<0?'▼':'→',move:igaeP?`from ${signed(igaeP.value,2)} prior month`:`${igae.value>=0?'Growing':'Contracting'} from a year earlier`,compare:'Year-over-year growth · IGAE',stamp:`${periodLabel('banxico-igae',igae.date)} · INEGI`,tone:igae.value>=0?'good':'bad',consensus:expPib?`Consensus ${n(expPib.value,1)}% GDP · 2026`:'',why:"The closest monthly reading of whether Mexico's economy is growing before quarterly GDP arrives."}));}
-  if(rem){let arrow='→',move='Comparison unavailable',compare='';let tone='neutral';if(remY){const delta=(rem.value/remY.value-1)*100;arrow=delta>0?'▲':delta<0?'▼':'→';move=`${n(Math.abs(delta),1)}% ${delta>=0?'higher':'lower'}`;compare='Versus the same month last year';tone=delta>=0?'good':'bad';}else if(remP){const delta=rem.value-remP.value;arrow=delta>0?'▲':delta<0?'▼':'→';move=`US$${n(Math.abs(delta),0)}m ${delta>=0?'more':'less'}`;compare=`Versus ${monthLabel(remP.date)} · monthly totals are seasonal`;}releases.push(metricCard({id:'banxico-remesas',name:'Remittances',cadence:'Monthly',value:`US$${n(rem.value/1000,2)}bn`,arrow,move,compare,stamp:`${periodLabel('banxico-remesas',rem.date)} · Banxico`,tone,why:'Money sent home from abroad, mostly the US. It supports household spending and brings dollars into Mexico. The same month a year earlier is the better comparison.'}));}
-  if(res){const delta=resP?res.value-resP.value:0;const year=resY?(res.value/resY.value-1)*100:null;releases.push(metricCard({id:'banxico-reservas',name:'International reserves',cadence:'Weekly',value:`US$${n(res.value/1000,0)}bn`,arrow:delta>0?'▲':delta<0?'▼':'→',move:resP?`US$${n(Math.abs(delta),0)}m ${delta>0?'higher':delta<0?'lower':'unchanged'}`:'Comparison unavailable',compare:year==null?'':`${n(Math.abs(year),1)}% ${year>=0?'higher':'lower'} over 1Y`,stamp:`${periodLabel('banxico-reservas',res.date)} · Banxico`,tone:'neutral',why:"Banxico's foreign-currency buffer against external shocks."}));}
-  if(debt){const dMove=debtP?debt.value-debtP.value:null;releases.push(metricCard({id:'shcp-deuda-neta',name:'Public debt · net',cadence:'Monthly',value:`MX$${n(debt.value/1000,1)}tn`,arrow:dMove>0?'▲':dMove<0?'▼':'→',move:dMove==null?'':`MX$${n(Math.abs(dMove),0)}bn ${dMove>0?'higher':dMove<0?'lower':'unchanged'}`,compare:'Net public-sector debt',stamp:`${periodLabel('shcp-deuda-neta',debt.date)} · SHCP`,tone:'neutral',why:"The government's net debt. The cost of supporting Pemex on top of structural deficits is the story behind the Baa3 credit rating."}));}
-  const el=document.getElementById('mexico-now');
-  // Only replace the baked static floor once we actually have live cards. If the series
-  // did not load, leave the build-time last-known values in place (degrade to floor).
-  if(el && (daily.length||releases.length)) el.innerHTML=`<div class="now-group"><div class="now-group-head"><div class="now-group-title">Daily movers</div><div class="now-group-note">Previous close</div></div><div class="metric-grid">${daily.join('')}</div></div><div class="now-group"><div class="now-group-head"><div class="now-group-title">Latest official readings</div><div class="now-group-note">Latest available</div></div><div class="metric-grid">${releases.join('')}</div></div>`;
+const nearAgo=(id,days)=>{const rows=S[id]?.data||[];if(!rows.length)return null;const target=Date.parse(rows.at(-1).date)-days*864e5;let best=null,dist=Infinity;for(const row of rows){const d=Math.abs(Date.parse(row.date)-target);if(d<dist){dist=d;best=row;}}return dist<45*864e5?best:null;};
+const num=(value,digits=2)=>Number(value).toLocaleString('en-US',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+const date=(iso,year=false)=>{if(!iso)return'';const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{month:'short',day:'numeric',...(year?{year:'numeric'}:{})});};
+
+function card({id,name,value,unit='',move='',direction='flat',compare='',stamp,context,source}){
+  return `<article class="market-card"><a class="market-link" href="/chart.html?v=${esc(id)}"><div class="market-name">${esc(name)}</div><div class="market-value">${esc(value)}${unit?`<span class="market-unit">${esc(unit)}</span>`:''}</div><div class="market-move ${esc(direction)}">${esc(move)}</div>${compare?`<div class="market-compare">${esc(compare)}</div>`:'<div class="market-compare"></div>'}<div class="market-date">${esc(stamp)}</div></a><details class="context"><summary><span aria-hidden="true">?</span><span class="sr-only">Context and source</span></summary><div class="context-pop"><p>${esc(context)}</p><p class="context-source">Source: ${esc(source)}</p></div></details></article>`;
 }
 
-function renderAreas(data){
-  // "Mexico by topic" cards (restored): synthesis + 3 headlines per area; each headline
-  // carries its pre-generated Why-it-matters as a hover/tap preview.
-  const areas=(data&&data.areas)||[];
-  const hl=(h)=>{
-    const meta=esc([h.source,dateLabel(h.date)].filter(Boolean).join(' · '));
-    const ext=/^https?:/.test(h.url||'')?' target="_blank" rel="noopener"':'';
-    const link=`<a class="hl-a" href="${esc(h.url||'#')}"${ext}><span class="hl-t">${esc(h.title)}</span><span class="hl-m">${meta}</span></a>`;
-    if(!h.context) return `<div class="hl">${link}</div>`;
-    return `<div class="hl">${link}<button class="hl-info" type="button" aria-expanded="false">Why it matters</button><div class="hl-pop" role="tooltip"><p><span class="why-k">Why it matters</span>${esc(h.context)}</p><div class="hl-pop-src">${meta}</div></div></div>`;
-  };
-  return areas.map(a=>{const links=(a.headlines||[]).slice(0,3).map(hl).join('');return `<div class="area"><a class="area-h" href="${esc(a.href||'#')}"><span class="area-k">${esc(a.label)}</span><span class="area-go">more →</span></a>${a.synthesis?`<p class="area-syn">${esc(a.synthesis)}</p>`:''}<div class="area-hl">${links}</div></div>`;}).join('');
-}
-function eventCopy(e){
-  const t=String(e.label||'');
-  if(/USMCA talks/i.test(t)) return {title:'Mexico–U.S. trade talks',why:'The next round after the first USMCA review.'};
-  if(/first-fortnight July/i.test(t)) return {title:'First-half July inflation',why:'Shows whether the June decline continued.'};
-  if(/IGAE/i.test(t)) return {title:'May economic activity',why:'The best monthly check on growth before GDP.'};
-  if(/GDP flash/i.test(t)) return {title:'First estimate of Q2 GDP',why:'Shows whether the economy left the Q1 slowdown behind.'};
-  return {title:t.split(/\s+[—–]\s+/)[0],why:e.mechanism||''};
-}
-function renderTimeline(){
-  const today=new Date(); today.setHours(0,0,0,0);
-  const future=((EVENTS&&EVENTS.events)||[]).filter(e=>Date.parse(e.date)>=today.getTime()-864e5).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
-  const wanted=[/USMCA talks/i,/first-fortnight July/i,/IGAE/i,/GDP flash/i];
-  const ev=wanted.map(pattern=>future.find(e=>pattern.test(String(e.label||'')))).filter(Boolean);
-  for(const e of future){if(ev.length>=4)break;if(!ev.includes(e))ev.push(e);}
-  // Consensus on the calendar: annotate the CPI and growth releases with the professional
-  // year-end expectation, turning the date list into an economic calendar (Fable move #2).
-  const xInf=point('banxico-exp-inflacion'),xPib=point('banxico-exp-pib');
-  const html=ev.map(e=>{const c=eventCopy(e),d=new Date(e.date+'T00:00:00'),label=e.approx?`Week of ${dateLabel(e.date)}`:dateLabel(e.date);const t=String(e.label||'')+' '+c.title;const cons=(/cpi|inflaci|inflation|precios|fortnight/i.test(t)&&xInf)?`Consensus ${n(xInf.value,2)}% · year-end`:((/igae|gdp|pib|activity|actividad|econom/i.test(t)&&xPib)?`Consensus ${n(xPib.value,1)}% GDP · 2026`:'');return `<article class="timeline-item"><div class="timeline-date">${esc(label)}</div><div class="timeline-title">${esc(c.title)}</div><div class="timeline-why">${esc(c.why)}</div>${cons?`<div class="timeline-cons">${esc(cons)}</div>`:''}<div class="timeline-source">${esc(e.source||'')}</div></article>`;}).join('');
-  const el=document.getElementById('timeline'); if(el&&ev.length)el.innerHTML=html;   // else keep the baked floor
+function renderMarkets(){
+  const cards=[];
+  const peso=last('banxico-usdmxn-fix'),pesoP=prior('banxico-usdmxn-fix'),pesoY=nearAgo('banxico-usdmxn-fix',365);
+  if(peso){const change=pesoP?(peso.value/pesoP.value-1)*100:0;const stronger=change<0;const year=pesoY?(peso.value/pesoY.value-1)*100:null;cards.push(card({id:'banxico-usdmxn-fix',name:'Peso · per US dollar',value:num(peso.value),move:pesoP?`${change<0?'↓':'↑'} ${num(Math.abs(change),2)}% today · ${stronger?'stronger':'weaker'}`:'Latest reading',direction:stronger?'up':'down',compare:year==null?'':`${num(Math.abs(year),1)}% ${year<0?'stronger':'weaker'} than a year ago`,stamp:`${date(peso.date,true)} · daily`,context:'A lower number means a stronger peso. Imports become cheaper, while each dollar earned by exporters or sent home as a remittance converts into fewer pesos.',source:'Banco de México (FIX)'}));}
+  const ipc=last('banxico-bmv-ipc'),ipcP=prior('banxico-bmv-ipc'),ipcY=nearAgo('banxico-bmv-ipc',365);
+  if(ipc){const change=ipcP?(ipc.value/ipcP.value-1)*100:0;const year=ipcY?(ipc.value/ipcY.value-1)*100:null;cards.push(card({id:'banxico-bmv-ipc',name:'S&P/BMV IPC',value:num(ipc.value,0),move:ipcP?`${change>=0?'↑':'↓'} ${num(Math.abs(change),2)}% today`:'Latest close',direction:change>0?'up':change<0?'down':'flat',compare:year==null?'':`${num(Math.abs(year),1)}% ${year>=0?'higher':'lower'} than a year ago`,stamp:`${date(ipc.date,true)} · close`,context:'Mexico’s main stock index. It tracks large listed companies, so it is useful for market sentiment but should not be read as the whole economy.',source:'Banco de México / BMV'}));}
+  const cetes=last('banxico-cetes-28d'),cetesP=prior('banxico-cetes-28d');
+  if(cetes){const change=cetesP?cetes.value-cetesP.value:0;cards.push(card({id:'banxico-cetes-28d',name:'Cetes · 28 days',value:`${num(cetes.value)}%`,move:cetesP?`${change>=0?'↑':'↓'} ${num(Math.abs(change),2)} points today`:'Latest yield',direction:change>0?'up':change<0?'down':'flat',compare:'Short-term Mexican government debt',stamp:`${date(cetes.date,true)} · daily`,context:'The market yield on very short-term Mexican government debt. It can move between Banxico meetings and is a useful check on near-term rate expectations.',source:'Banco de México'}));}
+  const ust=last('fred-ust10'),ustP=prior('fred-ust10');
+  if(ust){const change=ustP?ust.value-ustP.value:0;cards.push(card({id:'fred-ust10',name:'U.S. 10-year',value:`${num(ust.value)}%`,move:ustP?`${change>=0?'↑':'↓'} ${num(Math.abs(change),2)} points today`:'Latest yield',direction:change>0?'up':change<0?'down':'flat',compare:'Benchmark for dollar borrowing costs',stamp:`${date(ust.date,true)} · daily`,context:'Higher U.S. yields can make peso assets relatively less attractive and raise dollar borrowing costs for Mexican companies. They are one input, not a complete explanation for the peso.',source:'Federal Reserve (FRED)'}));}
+  const grid=document.getElementById('market-grid');if(grid&&cards.length){grid.classList.remove('market-floor');grid.innerHTML=cards.join('');}
 }
 
-(async()=>{
-  document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  // Live, time-aware hero greeting: "Mexico Thursday morning/afternoon/evening" (visitor's
-  // local day + time). No-JS fallback stays "Mexico this morning" (the daily-starting-point line).
-  {const now=new Date();const wd=now.toLocaleDateString('en-US',{weekday:'long'});const hr=now.getHours();const tod=hr<12?'morning':hr<18?'afternoon':'evening';const ht=document.getElementById('hero-title');if(ht)ht.textContent=`Mexico ${wd} ${tod}`;}
-  document.querySelectorAll('.js-date').forEach(el=>{el.textContent=dateLabel(el.dataset.date);});
-  // Personal daily delta: quietly mark the stories this visitor has not seen yet (localStorage,
-  // client-side only, no account, no server, no tracking). First visit seeds the baseline and
-  // shows nothing; a returning visitor sees only what is genuinely new to them. Copy stays
-  // neutral ("N new"). The site never claims to track a visit.
-  try{
-    const KEY='mb_seen_stories';
-    const seen=new Set(JSON.parse(localStorage.getItem(KEY)||'[]'));
-    const first=seen.size===0;
-    const rows=[...document.querySelectorAll('.brief-row[data-url]')];
-    let fresh=0;
-    for(const row of rows){
-      const u=row.dataset.url; if(!u) continue;
-      if(!first&&!seen.has(u)){
-        fresh++;
-        const meta=row.querySelector('.story-meta');
-        if(meta){const tag=document.createElement('span');tag.className='tag-new';tag.textContent='New';meta.insertBefore(tag,meta.querySelector('.js-date'));}
-      }
-    }
-    const urls=rows.map(r=>r.dataset.url).filter(Boolean);
-    localStorage.setItem(KEY,JSON.stringify([...new Set([...urls,...seen])].slice(0,300)));
-    const chip=document.getElementById('delta-chip');
-    if(chip&&fresh>0){chip.textContent=`${fresh} new ${fresh===1?'story':'stories'}`;chip.hidden=false;}
-  }catch(e){}
-  const newsAsof=document.getElementById('news-asof'); if(newsAsof){const d=new Date(newsAsof.dataset.date);newsAsof.textContent=`Updated ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
-  const [loaded,health,areasData]=await Promise.all([
-    loadSeries(['banxico-usdmxn-fix','banxico-bmv-ipc','banxico-cetes-28d','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-igae','banxico-remesas','banxico-reservas','fred-ust10','banxico-exp-inflacion','banxico-exp-cete','banxico-exp-usdmxn','banxico-exp-pib','shcp-deuda-neta']),
-    fetch('/data/health.json').then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch('/data/areas.json').then(r=>r.ok?r.json():null).catch(()=>null)
-  ]);
-  renderNow(); renderTimeline();
-  const areas=document.getElementById('areas'); if(areas){areas.innerHTML=renderAreas(areasData);if(!areas.innerHTML)areas.closest('section')?.remove();}
-  const aa=document.getElementById('areas-asof'); if(aa&&areasData?.meta?.updated)aa.textContent='updated '+dateLabel(areasData.meta.updated);
-  const sources=health?.sources||[],sm=health?{current:0,reviews:0,expected:0,issues:0}:null;
-  if(sm)for(const source of sources){if(source.status==='failed')sm.issues++;else if(source.status==='ok_flagged'){const flags=source.flags||[];if(flags.some(flag=>String(flag).startsWith('stale_')))sm.expected++;else sm.reviews++;}else if(source.status==='ok')sm.current++;else if(source.status!=='skipped')sm.expected++;}
-  const status=document.getElementById('status'),fresh=document.getElementById('fresh');
-  if(sm&&status){const checked=health.generatedAt?Date.parse(health.generatedAt):null;const stale=checked&&(Date.now()-checked)>18*3600*1000;const parts=[`${(sm.current||0)+(sm.reviews||0)+(sm.expected||0)} data feeds`];if(sm.issues)parts.push(`${sm.issues} down`);if(sm.expected)parts.push(`${sm.expected} awaiting release`);if(checked)parts.push(`updated ${relTime(checked)}`);if(stale)parts.push('may be behind');status.textContent=parts.join(' · ');fresh.title='The official data feeds behind every number on this site, and when each was last checked. Click for the full list.';fresh.classList.add((stale||sm.issues)?'has-issue':sm.expected?'has-expected':'all-current');}
-  else if(status)status.textContent='Feed status unavailable';
-  const summary=document.getElementById('morning-summary'),tail=document.getElementById('summary-next')?.textContent?.trim();
-  if(summary){const parts=[summary.textContent.trim()];const p=point('banxico-usdmxn-fix'),py=nearAgo('banxico-usdmxn-fix',365,10),i=point('banxico-inflacion'),c=point('banxico-inflacion-subyacente');if(p&&py)parts.push(`The exchange rate is ${n(Math.abs((p.value/py.value-1)*100),1)}% ${p.value<py.value?'lower':'higher'} than a year ago, which means a ${p.value<py.value?'stronger':'weaker'} peso.`);if(i)parts.push(`${monthLabel(i.date)} inflation was ${n(i.value,2)}% and ${i.value>=2&&i.value<=4?'inside':'outside'} Banxico's target. Core inflation is ${c?n(c.value,2)+'%':'not available'}.`);if(tail)parts.push(tail);summary.textContent=parts.join(' ');}
-})().catch(err=>{
-  // Keep the baked static floor (last-known dated values) rather than blanking it.
-  window.reportMexicoDataError?.('homepage',err);
-});
+document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+document.querySelectorAll('.js-date').forEach((el)=>{el.textContent=date(el.dataset.date);});
+const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);asof.textContent=isNaN(d)?'':`Updated ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
 
-// Hover-preview on touch: tap the ¿ to toggle a headline's context; tap elsewhere or Escape closes.
-// (Desktop reveals on hover/focus via CSS; this only powers the tap path where hover does not exist.)
-const closePops=()=>document.querySelectorAll('.hl.is-open').forEach(o=>{o.classList.remove('is-open');o.querySelector('.hl-info')?.setAttribute('aria-expanded','false');});
-document.addEventListener('click',(e)=>{
-  const info=e.target.closest('.hl-info');
-  if(info){e.preventDefault();e.stopPropagation();const hl=info.closest('.hl');const willOpen=!hl.classList.contains('is-open');closePops();if(willOpen){hl.classList.add('is-open');info.setAttribute('aria-expanded','true');}return;}
-  if(!e.target.closest('.hl-pop'))closePops();
-});
-document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closePops();});
+Promise.all([
+  loadSeries(['banxico-usdmxn-fix','banxico-bmv-ipc','banxico-cetes-28d','fred-ust10']),
+  fetch('/data/health.json').then((r)=>r.ok?r.json():null).catch(()=>null)
+]).then(([,health])=>{
+  renderMarkets();
+  const status=document.getElementById('status');
+  if(status&&health?.generatedAt){const checked=Date.parse(health.generatedAt);const failed=(health.sources||[]).filter((s)=>s.status==='failed').length;status.textContent=`Data checked ${relTime(checked)}${failed?` · ${failed} feed ${failed===1?'issue':'issues'}`:''}`;}
+  else if(status)status.textContent='Open data sources';
+}).catch(()=>{const status=document.getElementById('status');if(status)status.textContent='Open data sources';});
 </script>

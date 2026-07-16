@@ -17,11 +17,10 @@ if (new Set(routes.map((x) => x.permalink)).size !== routes.length) fail('topic 
 const menu = nav.find((x) => x.label === 'Topics')?.menu?.find((x) => x.group === 'Sections')?.links || [];
 const navHrefs = menu.map((x) => x.href);
 const routeLinks = routes.map((x) => x.permalink);
-// Prune (Fable 2026-07-16): Payments is MERGED under Economy and demoted to the footer, so it
-// remains a real route/page but is deliberately not a masthead link. Every masthead topic link
-// must still be a real route, in registry order; the only route allowed to be absent is Payments.
-if (!navHrefs.every((h) => routeLinks.includes(h))) fail('masthead topic link points to a non-route');
-if (navHrefs.join(',') !== routeLinks.filter((h) => h !== '/payments.html').join(',')) fail('masthead topic links drifted from the route registry (minus the demoted /payments.html)');
+if (menu.length) fail('topic pages belong under Explore, not a second masthead menu');
+if (!nav.some((item) => item.href === '/explore.html')) fail('masthead must link to Explore');
+const explore = fs.readFileSync(path.join(root, 'explore.njk'), 'utf8');
+for (const href of routeLinks) if (!explore.includes('href="' + href + '"')) fail('Explore is missing topic route ' + href);
 
 const redirects = fs.readFileSync(path.join(root, '_redirects'), 'utf8');
 for (const retired of ['/money.html', '/security.html', '/topics-start-mockup.html']) {

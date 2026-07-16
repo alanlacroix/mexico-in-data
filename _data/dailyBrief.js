@@ -19,12 +19,12 @@ const read = (rel) => {
 
 // section (from the event log / brief) → homepage beat kicker + topic room + link.
 const SECTIONS = {
-  economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/economy.html' },
-  money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/economy.html' },
-  politics:    { beat: 'Politics',        room: 'Politics',            url: '/politics.html' },
-  security:    { beat: 'Security',        room: 'Society & security',  url: '/society.html' },
-  society:     { beat: 'Society',         room: 'Society & security',  url: '/society.html' },
-  'us-mexico': { beat: 'U.S.–Mexico',     room: 'U.S.–Mexico',         url: '/us-mexico.html' },
+  economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/latest.html?topic=economy' },
+  money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/latest.html?topic=economy' },
+  politics:    { beat: 'Politics',        room: 'Politics',            url: '/latest.html?topic=politics' },
+  security:    { beat: 'Security',        room: 'Society & security',  url: '/latest.html?topic=society' },
+  society:     { beat: 'Society',         room: 'Society & security',  url: '/latest.html?topic=society' },
+  'us-mexico': { beat: 'U.S.–Mexico',     room: 'U.S.–Mexico',         url: '/latest.html?topic=us-mexico' },
 };
 
 // The auto companies tracker (pipeline/build-companies.js → data/companies.json) runs DARK
@@ -33,6 +33,21 @@ const SECTIONS = {
 const COMPANIES_LIVE = false;
 
 const clean = (s) => String(s || '').trim();
+const clusterKey = (e) => {
+  const title = clean(e && (e.h1 || e.headline || e.title)).toLowerCase();
+  if ((e && e.section) === 'us-mexico' && /(usmca|ustr)/.test(title) && /(tariff|quota|rules? of origin|trade deficit|review|negotiat)/.test(title)) return `${e.date}:usmca-review`;
+  return clean(e && (e.href || e.url)) || `${e && e.date}:${title.replace(/[^a-z0-9]+/g, ' ').split(' ').slice(0, 8).join('-')}`;
+};
+const quality = (e) => (clean(e && e.background) ? 3 : 0) + (!/google news/i.test(clean(e && e.source)) ? 2 : 0) + (/^https?:/.test(clean(e && (e.href || e.url))) ? 1 : 0);
+const dedupe = (events) => {
+  const groups = new Map();
+  events.filter(Boolean).forEach((e, index) => {
+    const key = clusterKey(e);
+    const current = groups.get(key);
+    if (!current || quality(e) > quality(current.event)) groups.set(key, { event: e, index: current ? current.index : index });
+  });
+  return [...groups.values()].sort((a, b) => a.index - b.index).map((x) => x.event);
+};
 const toStory = (e) => {
   const s = SECTIONS[e && e.section] || SECTIONS.economy;
   return {
@@ -53,7 +68,13 @@ module.exports = function () {
   const brief = read('brief.json') || {};
   const lead = brief.lead || null;
   const items = Array.isArray(brief.items) ? brief.items : [];
-  const stories = [lead, ...items].filter(Boolean).map(toStory).filter((x) => x.title);
+  const stories = dedupe([lead, ...items]).map(toStory).filter((x) => x.title).slice(0, 6);
+  const briefSources = [];
+  for (const story of stories) {
+    if (!story.source || !story.url || briefSources.some((x) => x.source === story.source)) continue;
+    briefSources.push({ source: story.source, url: story.url });
+    if (briefSources.length === 4) break;
+  }
 
   const meta = brief.meta || {};
   const co = COMPANIES_LIVE ? (read('companies.json') || {}) : {};
@@ -73,6 +94,8 @@ module.exports = function () {
     summaryLead: clean(brief.summary) || (() => { const h = clean(lead && lead.h1); return h ? h.replace(/\.?\s*$/, '.') : clean(stories[0] && stories[0].title) + '.'; })(),
     summaryNext: '',
     stories,
+    briefSources,
+    view: clean(brief.view || brief.analysis),
     // Companies watchlist: auto-tracked, machine-written from gated facts (see COMPANIES_LIVE).
     companies,
   };

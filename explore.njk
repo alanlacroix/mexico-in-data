@@ -1,0 +1,43 @@
+---
+layout: base.njk
+permalink: /explore.html
+title: "Explore Mexico · The Mexico Brief"
+description: "Background, official data, and original sources on Mexico's economy, trade, politics, society, security, and relationship with the United States."
+---
+<style>
+  .explore{max-width:var(--maxw);margin:0 auto;padding:40px clamp(18px,4vw,44px) 0}
+  .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
+  .explore h1{font-size:var(--fs-display);line-height:1.04;letter-spacing:-.025em;margin:8px 0 9px}
+  .dek{font-size:var(--fs-body);line-height:1.55;color:var(--ink-2);max-width:66ch}
+  .start{border-top:2px solid var(--green);border-bottom:1px solid var(--line);margin-top:30px;padding:18px 0 20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:end}
+  .start h2{font-size:var(--fs-h2);line-height:1.16;margin:4px 0 7px}
+  .start p{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:66ch}
+  .start a{font-family:var(--mono);font-size:var(--fs-label);color:#fff;background:var(--green);border-radius:5px;text-decoration:none;padding:11px 15px;white-space:nowrap}
+  .section-title{font-size:var(--fs-h2);line-height:1.12;margin:48px 0 13px}
+  .rooms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .room{padding:22px 24px 24px;color:inherit;text-decoration:none;min-height:154px}
+  .room:nth-child(even){border-left:1px solid var(--line)}
+  .room:nth-child(n+3){border-top:1px solid var(--line)}
+  .room:hover h3{color:var(--green-d)}
+  .room .label{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.045em;text-transform:uppercase;color:var(--green-d)}
+  .room h3{font-size:var(--fs-h3);line-height:1.25;margin:7px 0 6px}
+  .room p{font-size:var(--fs-small);line-height:1.52;color:var(--ink-2);max-width:48ch}
+  @media(max-width:650px){.explore{padding-top:28px}.explore h1{font-size:42px}.start{grid-template-columns:1fr;align-items:start}.start a{justify-self:start}.rooms{grid-template-columns:1fr}.room:nth-child(even){border-left:0}.room+.room{border-top:1px solid var(--line)}}
+</style>
+<div class="explore">
+  <div class="kicker">Explore</div>
+  <h1>Mexico by topic</h1>
+  <p class="dek">Background, official data, and the original sources. These pages explain the country; the <a href="/">Brief</a> covers what changed today.</p>
+  <section class="start"><div><div class="kicker">Start here</div><h2>A guide to Mexico</h2><p>A 26-page overview of the economy, politics, people, trade, and relationship with the United States.</p></div><a href="/reports/mexico-overview-2026.html">Open the overview →</a></section>
+  <h2 class="section-title">Topics</h2>
+  <div class="rooms">
+    <a class="room" href="/economy.html"><span class="label">Economy &amp; money</span><h3>Growth, prices, rates, wages, and the peso</h3><p>The current readings, what they measure, and how they fit together.</p></a>
+    <a class="room" href="/trade.html"><span class="label">Trade</span><h3>What Mexico sells, buys, and builds</h3><p>Exports, imports, manufacturing, USMCA, and Mexico's dependence on the United States.</p></a>
+    <a class="room" href="/politics.html"><span class="label">Politics</span><h3>Power, elections, and institutions</h3><p>The presidency, Congress, the courts, and the dates that matter next.</p></a>
+    <a class="room" href="/society.html"><span class="label">Society &amp; security</span><h3>Work, population, poverty, and crime</h3><p>The social indicators behind the headlines, including the limits of the available data.</p></a>
+    <a class="room" href="/us-mexico.html"><span class="label">U.S.–Mexico</span><h3>Trade, migration, security, and investment</h3><p>The policies and cross-border flows that affect both countries.</p></a>
+    <a class="room" href="/payments.html"><span class="label">Payments</span><h3>Cash, cards, transfers, and fintech</h3><p>How money moves in Mexico and where digital payments are actually gaining ground.</p></a>
+    <a class="room" href="/atlas.html"><span class="label">Atlas</span><h3>Mexico across states and municipalities</h3><p>Population, income, poverty, and local differences from official data.</p></a>
+    <a class="room" href="/sources.html"><span class="label">Sources</span><h3>Check every number</h3><p>The source, observation date, update schedule, and current status of the data feeds.</p></a>
+  </div>
+</div>

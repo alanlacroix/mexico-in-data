@@ -12,21 +12,9 @@
 // top-level (a trust product shows its receipts); About stays (method + authorship visible).
 module.exports = [
   { label: 'Brief', href: '/' },
-  { label: 'Charts', href: '/chart.html' },         // the metric explorer: every variable, one place
-  {
-    label: 'Topics',
-    match: ['/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html'],
-    menu: [
-      { group: 'Sections', links: [
-        { label: 'Economy & money', href: '/economy.html' },
-        { label: 'Trade', href: '/trade.html' },
-        { label: 'Politics', href: '/politics.html' },
-        { label: 'Society & security', href: '/society.html' },
-        { label: 'U.S.–Mexico', href: '/us-mexico.html' },
-      ] },
-    ],
-  },
+  { label: 'Latest', href: '/latest.html' },
+  { label: 'Numbers', href: '/chart.html' },
+  { label: 'Explore', href: '/explore.html' },
   { label: 'Sources', href: '/sources.html' },
-  { label: 'About', href: '/about.html' },
   { label: 'Subscribe', href: '/weekly.html', cta: true },
 ];

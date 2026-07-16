@@ -1,0 +1,66 @@
+---
+layout: base.njk
+permalink: /latest.html
+title: "Latest news about Mexico · The Mexico Brief"
+description: "The latest Mexico stories in the economy, business, politics, society, security, and the relationship with the United States."
+---
+<style>
+  .latest{max-width:var(--maxw);margin:0 auto;padding:38px clamp(18px,4vw,44px) 0}
+  .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
+  .latest h1{font-size:var(--fs-display);line-height:1.04;letter-spacing:-.025em;margin:8px 0 9px}
+  .dek{font-size:var(--fs-body);line-height:1.55;color:var(--ink-2);max-width:67ch}
+  .filters{display:flex;gap:7px;overflow-x:auto;padding:22px 0 13px;border-bottom:1px solid var(--line);scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .filter{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink-2);padding:9px 14px;font-size:13px;cursor:pointer}
+  .filter:hover,.filter.active{border-color:var(--green);color:var(--green-d);background:#f2f8f5}
+  .latest-list{max-width:920px}
+  .latest-story{padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
+  .latest-story[hidden]{display:none}
+  .story-meta{display:flex;gap:5px 11px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
+  .story-meta b{color:var(--green-d)}
+  .story-title-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
+  .story-link{color:var(--ink);text-decoration:none}
+  .story-link:hover{color:var(--green-d)}
+  .latest-story h2{font-size:clamp(20px,2vw,27px);line-height:1.24;letter-spacing:-.012em;margin:0;max-width:50ch}
+  .context{position:relative;z-index:2}
+  .context summary{list-style:none;width:22px;height:22px;border:1px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--green-d);font-family:var(--mono);font-size:12px;font-weight:650;cursor:pointer;background:var(--paper)}
+  .context summary::-webkit-details-marker{display:none}
+  .context summary:hover{color:#fff;background:var(--green)}
+  .context-pop{display:none;position:absolute;right:0;top:29px;width:min(440px,calc(100vw - 48px));padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 28px rgba(0,0,0,.09);font-size:13px;line-height:1.55;color:var(--ink-2);font-weight:400;text-align:left;z-index:20}
+  .context-pop p+p{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+  .context[open] .context-pop,.context:hover .context-pop,.context:focus-within .context-pop{display:block}
+  .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+  .empty{font-size:var(--fs-small);color:var(--mut);padding:30px 0}
+  @media(max-width:650px){.latest{padding-top:28px}.latest h1{font-size:42px}.latest-story{padding:17px 0}.latest-story h2{font-size:21px}}
+</style>
+<div class="latest">
+  <div class="kicker">Latest</div>
+  <h1>News about Mexico</h1>
+  <p class="dek">The stories I am following, organized by topic and linked to the source. Tap the <b>?</b> when you want the context.</p>
+  <nav class="filters" aria-label="Filter stories">
+    <button class="filter active" type="button" data-topic="all">All</button>
+    <button class="filter" type="button" data-topic="economy">Economy &amp; business</button>
+    <button class="filter" type="button" data-topic="politics">Politics</button>
+    <button class="filter" type="button" data-topic="society">Society &amp; security</button>
+    <button class="filter" type="button" data-topic="us-mexico">U.S.–Mexico</button>
+  </nav>
+  <div class="latest-list" id="latest-list">
+    {% for story in latestStories %}
+    <article class="latest-story" data-topic="{{ story.topic }}">
+      <div class="story-meta"><b>{{ story.topicLabel }}</b><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span><span>{{ story.source }}</span></div>
+      <div class="story-title-row"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h2>{{ story.title }}</h2></a>{% if story.context %}<details class="context"><summary><span aria-hidden="true">?</span><span class="sr-only">Context</span></summary><div class="context-pop"><p>{{ story.context }}</p>{% if story.background %}<p>{{ story.background }}</p>{% endif %}</div></details>{% endif %}</div>
+    </article>
+    {% endfor %}
+  </div>
+  <p class="empty" id="empty" hidden>No stories in this section yet.</p>
+</div>
+<script>
+(function(){
+  var buttons=[].slice.call(document.querySelectorAll('.filter')),stories=[].slice.call(document.querySelectorAll('.latest-story')),empty=document.getElementById('empty');
+  var format=function(iso){var d=new Date(iso+'T00:00:00');return isNaN(d)?iso:d.toLocaleDateString('en-US',{month:'short',day:'numeric'});};
+  document.querySelectorAll('.js-date').forEach(function(el){el.textContent=format(el.dataset.date);});
+  function show(topic,push){var count=0;buttons.forEach(function(b){b.classList.toggle('active',b.dataset.topic===topic);});stories.forEach(function(s){var on=topic==='all'||s.dataset.topic===topic;s.hidden=!on;if(on)count++;});empty.hidden=count>0;if(push){var u=new URL(location.href);if(topic==='all')u.searchParams.delete('topic');else u.searchParams.set('topic',topic);history.replaceState({},'',u);}}
+  buttons.forEach(function(b){b.addEventListener('click',function(){show(b.dataset.topic,true);});});
+  var initial=new URLSearchParams(location.search).get('topic')||'all';if(!buttons.some(function(b){return b.dataset.topic===initial;}))initial='all';show(initial,false);
+})();
+</script>

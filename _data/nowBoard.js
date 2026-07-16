@@ -21,15 +21,14 @@ const last = (id) => {
 };
 const tile = (id, label, fmt) => {
   const p = last(id);
-  return p ? { label, display: fmt(p.value), date: p.date, source: p.source, href: '/economy.html' } : null;
+  return p ? { label, display: fmt(p.value), date: p.date, source: p.source, href: '/chart.html?v=' + id } : null;
 };
 
 module.exports = function () {
   return [
     tile('banxico-usdmxn-fix', 'Peso', (v) => v.toFixed(2) + ' MXN/US$'),
-    tile('banxico-inflacion', 'Inflation', (v) => v.toFixed(2) + '%'),
-    tile('banxico-tasa-objetivo', 'Banxico rate', (v) => v.toFixed(2) + '%'),
-    tile('banxico-igae', 'Economic activity', (v) => (v >= 0 ? '+' : '') + v.toFixed(1) + '% YoY'),
-    tile('banxico-remesas', 'Remittances', (v) => 'US$' + (v / 1000).toFixed(2) + 'bn'),
+    tile('banxico-bmv-ipc', 'S&P/BMV IPC', (v) => Math.round(v).toLocaleString('en-US')),
+    tile('banxico-cetes-28d', 'Cetes · 28 days', (v) => v.toFixed(2) + '%'),
+    tile('fred-ust10', 'U.S. 10-year', (v) => v.toFixed(2) + '%'),
   ].filter(Boolean);
 };

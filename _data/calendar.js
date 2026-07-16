@@ -17,11 +17,23 @@ module.exports = function () {
     .filter((e) => e && e.date && Date.parse(e.date) >= cutoff)
     .sort((a, b) => String(a.date).localeCompare(String(b.date)))
     .slice(0, 4)
-    .map((e) => ({
-      date: e.date,
-      approx: !!e.approx,
-      title: String(e.label || '').split(/\s+[—–]\s+/)[0].trim(),   // short label before the em-dash gloss
-      why: String(e.mechanism || '').trim(),
-      source: String(e.source || '').trim(),
-    }));
+    .map((e) => {
+      const rawTitle = String(e.label || '').split(/\s+[—–]\s+/)[0].trim();
+      const title = /USMCA talks/i.test(rawTitle) ? 'Mexico–U.S. trade talks'
+        : /INEGI CPI/i.test(rawTitle) ? 'First-half July inflation'
+        : /INEGI IGAE/i.test(rawTitle) ? 'May economic activity'
+        : /INEGI unemployment/i.test(rawTitle) ? 'June employment'
+        : rawTitle;
+      const why = /USMCA talks/i.test(rawTitle)
+        ? 'USMCA stays in force. Mexico and the United States return to the table after the U.S. declined a 16-year extension.'
+        : String(e.mechanism || '').trim();
+      return {
+        date: e.date,
+        approx: !!e.approx,
+        title,
+        why,
+        source: String(e.source || '').trim(),
+        sourceUrl: String(e.sourceUrl || '').trim(),
+      };
+    });
 };
