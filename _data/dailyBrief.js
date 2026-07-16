@@ -39,6 +39,7 @@ const toStory = (e) => {
     url: clean(e.href || e.url),
     topic: s.room,
     topicUrl: s.url,
+    isNew: !!(e && e.isNew),   // entered the brief since the last update — the daily delta
   };
 };
 
@@ -53,6 +54,10 @@ module.exports = function () {
     // Editorial clock: when the pipeline last rebuilt the brief (real, not hand-typed).
     // Distinct from the data clock (the "N feeds checked" line, from health.json).
     newsThrough: meta.reviewedAt || meta.generatedAt || (stories[0] && stories[0].date) || '',
+    // The daily delta: how many stories are new since the last update, and whether it is
+    // an honest quiet stretch (nothing recent leads). Drives the "what changed" signal.
+    newCount: Number(meta.newCount) || 0,
+    quiet: !!meta.quiet,
     // The one big thing, explained — the pipeline's lead context. The homepage script
     // then appends the live macro readings (peso vs a year ago, inflation) after it.
     summaryLead: clean(lead && lead.context) || (stories[0] && stories[0].context) || '',

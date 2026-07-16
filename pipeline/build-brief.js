@@ -142,15 +142,32 @@ const contextGate = (e) => lintReportText({
   maxSentences: 2,
 });
 const ctxOf = (e) => stripDash(contextGate(e).ok ? shippedContext(e) : '');
-// select the lead items by the rubric (importance >= 5, cap 8 per the 2026-07-16 audit,
-// soft floor 3). The threshold is the selectivity; the count flexes 3-8. See BRIEF-RUBRIC.md.
-function select(events) {
+
+// Recency decay (Fable QA 2026-07-16, the daily-habit fix). Importance alone optimizes
+// for a MONTHLY visitor: a defining July-1 story holds the lede for weeks. For a page
+// someone opens every morning, the headline must be what's NEW. A story stays on the
+// page on importance, but its LEDE eligibility decays after a couple of days. An old,
+// important story becomes context below the fold; it cannot stay the headline.
+const DAY = 864e5;
+function recencyWeight(ageDays) {
+  if (ageDays <= 2) return 1;      // today / yesterday: full weight
+  if (ageDays <= 4) return 0.6;
+  if (ageDays <= 8) return 0.3;
+  if (ageDays <= 16) return 0.15;
+  return 0.08;                     // still on the page if important, never the headline
+}
+const ledeScore = (e, nowMs) => (e.importance || 0) * recencyWeight(Math.max(0, (nowMs - (e._t || 0)) / DAY));
+
+// Select the story set by the rubric (importance >= 5 = the selectivity, cap 8, soft
+// floor 3), then ORDER by importance x recency so the freshest consequential story leads.
+function select(events, nowMs) {
   const THRESH = 5, CAP = 8, FLOOR = 3;
-  const ranked = events.filter((e) => {
+  const eligible = events.filter((e) => {
     const gate = contextGate(e);
     if (!gate.ok && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: ${gate.flags.join('; ')}`);
     return gate.ok && e.url && e.source;
-  }).sort((a, b) => (b.importance - a.importance) || (b._t - a._t));
+  });
+  const ranked = eligible.slice().sort((a, b) => (ledeScore(b, nowMs) - ledeScore(a, nowMs)) || (b._t - a._t));
   let picked = ranked.filter((e) => (e.importance || 0) >= THRESH).slice(0, CAP);
   if (picked.length < FLOOR) picked = ranked.slice(0, FLOOR);
   return picked;
@@ -168,14 +185,28 @@ async function main() {
   const P = pool();
   if (!P.events.length) { console.warn('  no events — nothing to write'); return; }
 
-  const picked = select(P.events);
+  // The prior brief (the last content-changed version): powers the "new since your last
+  // visit" delta and the change-gated clock below.
+  const prev = readJson(OUT, null);
+  const prevHrefs = new Set([prev && prev.lead && prev.lead.href, ...arr(prev && prev.items).map((i) => i.href)].filter(Boolean));
+
+  const nowMs = now.getTime();
+  const picked = select(P.events, nowMs);
   if (!picked.length) throw new Error('no reviewed event context is ready for the Brief; keeping the last-good brief');
+  // A story is NEW when it entered the brief since the last update AND is genuinely recent
+  // (not an old-dated item that only just cleared the bar). This is the daily-delta signal.
+  const isNew = (e) => !prevHrefs.has(e.url || '') && ((nowMs - (e._t || 0)) / DAY) <= 4;
   const lead0 = picked[0];
   const lead = { h1: stripDash(lead0.title).replace(/\.\s*$/, ''), context: ctxOf(lead0), refs: [lead0.id],
-    href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '' };
+    href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0) };
   const items = picked.slice(1).map((e) => ({ headline: stripDash(e.title).replace(/\.\s*$/, ''), context: ctxOf(e),
-    refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '' }));
+    refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', isNew: isNew(e) }));
   const standing = buildStanding(P.nums);
+  // Quiet-stretch honesty (Fable: "quiet day is the truth"): when nothing recent leads,
+  // say so rather than dressing a week-old story as today's news.
+  const leadAgeDays = (nowMs - (lead0._t || 0)) / DAY;
+  const quiet = leadAgeDays > 3;
+  const newCount = [lead, ...items].filter((it) => it.isNew).length;
 
   // the link law + word caps (warn, never truncate — the curator trims the `why`, we don't mangle it)
   for (const it of [lead, ...items]) if (!it.href || !it.refs.length) console.warn('  WARN missing source link:', it.headline || it.h1);
@@ -185,22 +216,18 @@ async function main() {
   const words = WORDS(lead.context) + items.reduce((n, it) => n + WORDS(it.context), 0) + (standing ? WORDS(standing.text) : 0);
   const selectedDates = [lead, ...items].map((it) => it.date).filter(Boolean).sort();
 
-  // Change-gate the editorial clock. The brief rebuilds on every 4x/day refresh, but
-  // the prose only CHANGES when the selected story set changes (append-only merge keeps
-  // each story's wording stable). So bump the "updated" stamp only when the content
-  // signature moves; on an unchanged run, preserve the prior timestamp. This kills
-  // machine-churn and makes "Updated <when>" an honest claim, never the run time. The
-  // live standing numbers still refresh underneath (they are re-rendered from the series).
-  const contentSig = JSON.stringify({
-    lead: [lead.h1, lead.context, lead.date, lead.href],
-    items: items.map((it) => [it.headline, it.context, it.date, it.href]),
-  });
-  const prev = readJson(OUT, null);
+  // Change-gate the editorial clock. The brief rebuilds on every 4x/day refresh, but the
+  // "Updated <when>" stamp only moves when the story SET or its order changes. The signature
+  // keys on story IDENTITY (href + date + position), not the prose (Fable watch item), so a
+  // re-worded curator output never churns the stamp, and the append-only merge keeps wording
+  // stable anyway. On an unchanged run, preserve the prior timestamp. The live standing
+  // numbers still refresh underneath (they are re-rendered from the series client-side).
+  const contentSig = JSON.stringify([lead, ...items].map((it) => [it.href, it.date]));
   const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig;
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
   const stampDate = new Date(reviewedAt);
   const out = { meta: { title: 'The brief', updated: reviewedAt.slice(0, 10), asOf: `${MO[stampDate.getUTCMonth()]} ${stampDate.getUTCDate()}`,
-    reviewedAt, latestItemDate: selectedDates.at(-1) || '',
+    reviewedAt, latestItemDate: selectedDates.at(-1) || '', quiet, newCount,
     generatedAt: reviewedAt, mode: 'curated', count: 1 + items.length, words, contentSig }, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
   console.log(`  wrote ${path.relative(ROOT, OUT)} · ${1 + items.length} items · ${words} words · picked: ${picked.map((e) => e.importance).join('/')} · ${unchanged ? 'content unchanged (clock held)' : 'content changed (clock bumped)'}`);

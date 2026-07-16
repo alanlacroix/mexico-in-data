@@ -21,6 +21,10 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   .section-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.055em;text-transform:uppercase;color:var(--green-d);font-weight:600}
   .morning-summary{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:13px 0 15px}
   .morning-summary p{font-size:var(--fs-body);line-height:1.52;color:var(--ink-2);max-width:82ch}
+  .brief-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .delta-chip{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border-radius:999px;padding:3px 11px;white-space:nowrap}
+  .delta-chip.quiet{background:transparent;color:var(--mut);border:1px solid var(--line);font-weight:600}
+  .tag-new{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:var(--green-d);border:1px solid var(--green);border-radius:3px;padding:0 5px;line-height:1.5}
 
   .top-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(330px,.85fr);gap:36px;margin-top:30px}
   .section-rule{border-top:2px solid var(--green);padding-top:12px}
@@ -153,7 +157,10 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
   </section>
 
   <section class="morning-summary" aria-label="Morning summary">
-    <div class="section-k">The brief</div>
+    <div class="brief-head">
+      <div class="section-k">The brief</div>
+      {% if dailyBrief.quiet %}<span class="delta-chip quiet">Quiet stretch</span>{% else %}<span class="delta-chip" id="delta-chip" hidden></span>{% endif %}
+    </div>
     <p id="morning-summary">{{ dailyBrief.summaryLead }}</p>
     <span id="summary-next" hidden>{{ dailyBrief.summaryNext }}</span>
   </section>
@@ -164,7 +171,7 @@ ogDescription: "Mexico's important numbers, what changed, and the original sourc
       <h2 class="section-title" id="news-title">Today's news</h2>
       <div class="brief-list">
         {% for story in dailyBrief.stories %}
-        <article class="brief-row">
+        <article class="brief-row" data-url="{{ story.url }}">
           <div class="story-meta"><span class="beat">{{ story.beat }}</span><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span></div>
           <h3>{{ story.title }}</h3>
           <p>{{ story.context }}</p>
@@ -323,6 +330,29 @@ function renderTimeline(){
 (async()=>{
   document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   document.querySelectorAll('.js-date').forEach(el=>{el.textContent=dateLabel(el.dataset.date);});
+  // Personal daily delta: quietly mark the stories this visitor has not seen yet (localStorage,
+  // client-side only, no account, no server, no tracking). First visit seeds the baseline and
+  // shows nothing; a returning visitor sees only what is genuinely new to them. Copy stays
+  // neutral ("N new"). The site never claims to track a visit.
+  try{
+    const KEY='mb_seen_stories';
+    const seen=new Set(JSON.parse(localStorage.getItem(KEY)||'[]'));
+    const first=seen.size===0;
+    const rows=[...document.querySelectorAll('.brief-row[data-url]')];
+    let fresh=0;
+    for(const row of rows){
+      const u=row.dataset.url; if(!u) continue;
+      if(!first&&!seen.has(u)){
+        fresh++;
+        const meta=row.querySelector('.story-meta');
+        if(meta){const tag=document.createElement('span');tag.className='tag-new';tag.textContent='New';meta.insertBefore(tag,meta.querySelector('.js-date'));}
+      }
+    }
+    const urls=rows.map(r=>r.dataset.url).filter(Boolean);
+    localStorage.setItem(KEY,JSON.stringify([...new Set([...urls,...seen])].slice(0,300)));
+    const chip=document.getElementById('delta-chip');
+    if(chip&&fresh>0){chip.textContent=`${fresh} new`;chip.hidden=false;}
+  }catch(e){}
   const newsAsof=document.getElementById('news-asof'); if(newsAsof){const d=new Date(newsAsof.dataset.date);newsAsof.textContent=`Updated ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
   const [loaded,health,areasData]=await Promise.all([
     loadSeries(['banxico-usdmxn-fix','banxico-bmv-ipc','banxico-cetes-28d','banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo','banxico-igae','banxico-remesas','banxico-reservas','fred-ust10']),
