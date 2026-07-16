@@ -224,7 +224,7 @@ const dms=864e5;
    r    = default render for a single view: area | line | step | bars
    core = true → primary catalog; false → "More series"
    def  = plain-English definition · watch = why Alan watches · e = related ids */
-const G=['Peso & rates','Prices','Activity & external','Payments & cash'];
+const G=['Peso & rates','Prices','Activity & external','Payments & cash','Public finances'];
 const M={
   'banxico-usdmxn-fix':   {g:0,l:'Peso',u:'MXN/USD',cad:'business-daily',agg:'avg',kind:'fx',r:'area',core:1,
     def:'Pesos per US dollar, the Banxico daily fix. A lower number means a stronger peso.',
@@ -357,6 +357,36 @@ const M={
     def:'Online card-purchase value, reported quarterly (nominal pesos).',
     watch:'Tracks digital-commerce activity, in nominal terms.',
     e:['banxico-tarjetas-debito']},
+
+  // Expectations (Banxico survey median, year-end) — pair with the realized series for actual-vs-expected.
+  'banxico-exp-usdmxn':{g:0,l:'Peso, year-end consensus',u:'MXN/USD',cad:'monthly',agg:'last',kind:'fx',r:'line',core:0,
+    def:"Analysts' median forecast for the USD/MXN rate at year-end (Banxico expectations survey).",
+    watch:'Where the market expects the peso to end the year, versus where it is now.',
+    e:['banxico-usdmxn-fix']},
+  'banxico-exp-cete':{g:0,l:'Cetes, year-end consensus',u:'%',cad:'monthly',agg:'last',kind:'rate',r:'line',core:0,
+    def:"Analysts' median forecast for the 28-day Cetes yield at year-end (Banxico survey).",
+    watch:'The consensus path for short-term rates.',
+    e:['banxico-cetes-28d','banxico-tasa-objetivo']},
+  'banxico-exp-inflacion':{g:1,l:'Inflation, year-end consensus',u:'%',cad:'monthly',agg:'last',kind:'rate',r:'line',core:0,
+    def:"Analysts' median forecast for year-end headline inflation (Banxico survey).",
+    watch:'Compare with realized inflation to see where the Street expects it to go.',
+    e:['banxico-inflacion']},
+  'banxico-exp-pib':{g:2,l:'GDP growth, consensus',u:'% YoY',cad:'monthly',agg:'last',kind:'pct',r:'line',core:0,
+    def:"Analysts' median forecast for full-year GDP growth (Banxico survey).",
+    watch:'The consensus call on the economy for the year.',
+    e:['banxico-pib-crecimiento','banxico-igae']},
+  'inegi-desempleo':{g:2,l:'Unemployment rate',u:'%',cad:'quarterly',agg:'last',kind:'rate',r:'line',core:0,
+    def:'National unemployment rate, share of the labour force (INEGI ENOE).',
+    watch:'The official read on the labour market.',
+    e:['banxico-igae']},
+  'shcp-deuda-neta':{g:4,l:'Public debt, net',u:'tn MXN',cad:'monthly',agg:'last',kind:'level',r:'line',core:1,
+    def:'Net public-sector debt (SHCP, published via Banxico SIE).',
+    watch:"The debt trajectory behind Mexico's credit rating.",
+    e:['shcp-balance-publico']},
+  'shcp-balance-publico':{g:4,l:'Public balance, in-year',u:'bn MXN',cad:'monthly',agg:'last',kind:'balance',r:'line',core:0,
+    def:'Public-sector balance, accumulated within the year (SHCP via Banxico SIE). Resets each January.',
+    watch:'The fiscal deficit as it builds through the year.',
+    e:['shcp-deuda-neta']},
 };
 
 /* ---------- derived series (built after load from real inputs) ----------
@@ -468,6 +498,8 @@ const PREC={
   'banxico-inflacion-subyacente':v=>({v:v.toFixed(2),s:'%'}),              // 4.03%
   'fred-us-indpro':v=>({v:v.toFixed(1),s:'index'}),                        // 102.6
   'fred-usd-broad':v=>({v:v.toFixed(1),s:'index'}),                        // 120.7
+  'shcp-deuda-neta':v=>({v:(v/1000).toFixed(1),s:'tn MXN'}),               // 17,779 bn → 17.8 tn
+  'shcp-balance-publico':v=>({v:enNum(Math.round(v/1e3)),s:'bn MXN'}),     // -391,303 mn → -391 bn
 };
 function disp(id,v){ if(DERIVED[id])return DERIVED[id].fmt(v); if(PREC[id])return PREC[id](v); return fmt(id,v,meta(id).units||unit(id)); }
 function dtext(id,v){
