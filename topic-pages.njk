@@ -52,16 +52,13 @@ footerBlurb: "The important numbers, the developments behind them, and the origi
   .reading-change{font-family:var(--mono);font-size:var(--fs-meta);line-height:1.35;color:var(--ink-2);font-variant-numeric:tabular-nums;margin-top:8px;min-height:2.6em}
   .reading-context{font-size:var(--fs-meta);line-height:1.46;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px;margin-top:9px}
   .reading-guide{margin-top:5px}
-  .reading-guide summary{display:flex;align-items:center;min-height:32px;list-style:none;cursor:pointer;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;color:var(--green-d)}
-  .reading-guide summary::-webkit-details-marker{display:none}
-  .reading-guide summary::after{content:"+";margin-left:5px;color:var(--mut)}
-  .reading-guide[open] summary::after{content:"−"}
-  .reading-guide summary:focus-visible{outline:2px solid var(--green);outline-offset:3px;border-radius:2px}
+  .reading-guide .be-summary{min-width:36px;min-height:36px;justify-content:flex-start}
   .reading-guide-body{padding:3px 0 2px;color:var(--ink-2)}
   .reading-guide-body p{font-size:var(--fs-meta);line-height:1.5}
   .reading-guide-body p+p{margin-top:7px}
   .reading-guide-body b{color:var(--ink);font-weight:600}
   .reading-guide-body a{display:inline-block;margin-top:8px;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label)}
+  .reading-key{margin:0 0 12px}
   .reading-source{display:flex;align-items:baseline;gap:4px 9px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);padding-top:11px}
   .reading-source a{color:var(--green-d)}
   .reading-open{margin-left:auto;white-space:nowrap}
@@ -170,7 +167,7 @@ footerBlurb: "The important numbers, the developments behind them, and the origi
     .reading-value{font-size:var(--fs-h3);grid-column:2;grid-row:1 / span 2;text-align:right;align-self:center}
     .reading-change{min-height:0;grid-column:1;margin-top:2px}
     .reading-context{grid-column:1 / -1;margin-top:7px;padding-top:8px}
-    .reading-guide summary{min-height:44px}
+    .reading-guide .be-summary{min-width:44px;min-height:44px}
     .reading-source{grid-column:1 / -1;padding-top:3px}
     .evidence-head{grid-template-columns:1fr;gap:10px;padding:14px 13px 11px}
     .evidence-body{padding:12px 9px 0}
@@ -288,7 +285,7 @@ function deltaText(v,unit='%',n=1){if(v==null||!Number.isFinite(v))return 'Compa
 function guideHTML(guide){
   if(!guide)return '';
   const items=(guide.items||[]).filter(x=>x?.label&&x?.text).map(x=>`<p><b>${esc(x.label)}:</b> ${esc(x.text)}</p>`).join('');
-  return `<details class="reading-guide"><summary>${esc(guide.summary||'Explain this')}</summary><div class="reading-guide-body">${items}${guide.href?`<a href="${guide.href}" target="_blank" rel="noopener">${esc(guide.link||'Read the definition')} ↗</a>`:''}</div></details>`;
+  return `<details class="reading-guide"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="reading-guide-body">${items}${guide.href?`<a href="${guide.href}" target="_blank" rel="noopener">${esc(guide.link||'Read the definition')} ↗</a>`:''}</div></details>`;
 }
 function card({label,value,unit='',change,context,guide,source,date,sourceHref=SOURCE_FALLBACK,href=''}){return `<article class="reading-card"><div class="reading-label">${label}</div><div class="reading-value">${value}${unit?` <small>${unit}</small>`:''}</div><div class="reading-change">${change||''}</div><div class="reading-context">${context||''}${guideHTML(guide)}</div><div class="reading-source"><a href="${sourceHref}" target="_blank" rel="noopener">${source||'Source'} ↗</a>${date?`<span>· ${date}</span>`:''}${href&&href!==sourceHref?`<a class="reading-open" href="${href}">Open →</a>`:''}</div></article>`;}
 function evidenceSources(items=[]){return items.length?`<div class="evidence-source">Source: ${items.map(x=>`<a href="${x.href}" target="_blank" rel="noopener">${x.label} ↗</a>`).join(' · ')}</div>`:'';}
@@ -596,7 +593,7 @@ function render(topic){
   $('#topicApp').innerHTML=`
     <section class="topic-hero"><div><div class="mono-k">Topic</div><h1>${t.title}</h1><p class="topic-scope">${t.scope}</p></div><div class="topic-asof">${t.asof}</div></section>
     <section class="now"><div class="mono-k">Now</div><div><h2>${t.nowTitle}</h2>${t.nowText?`<p>${t.nowText}</p>`:''}</div></section>
-    <section class="section" aria-labelledby="snapshotTitle"><div class="section-head"><div><div class="mono-k">Snapshot</div><h2 id="snapshotTitle">Key readings</h2></div><div class="section-note">Different observation dates are shown on each reading.</div></div><div class="snapshot">${t.cards.map(card).join('')}</div></section>
+    <section class="section" aria-labelledby="snapshotTitle"><div class="section-head"><div><div class="mono-k">Snapshot</div><h2 id="snapshotTitle">Key readings</h2></div><div class="section-note">Different observation dates are shown on each reading.</div></div>${t.cards.some(x=>x.guide)?`<div class="be-key reading-key"><span class="be-mark" aria-hidden="true">BE</span><span><b>Briefly Explained.</b> Open it when a number needs more context.</span></div>`:''}<div class="snapshot">${t.cards.map(card).join('')}</div></section>
     ${evidenceBlock(t.evidence,'topic-evidence')}
     ${evidenceBlock(t.composition,'trade-composition','Composition')}
     <section class="section" id="topicModules"><div class="section-head"><div><h2>${t.modulesTitle}</h2></div></div><div class="topic-modules count-${t.modules.length}">${t.modules.map(moduleCard).join('')}</div></section>

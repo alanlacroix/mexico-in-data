@@ -40,24 +40,16 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .story-summary{font-size:15.5px;line-height:1.5;color:var(--ink-2);max-width:72ch;margin:7px 0 0}
   .major-list>.brief-story:first-child .story-summary{font-size:16px}
 
-  .be-key{display:flex;align-items:center;gap:9px;margin-top:13px;font-size:12px;line-height:1.4;color:var(--mut)}
-  .be-key b{color:var(--ink-2);font-weight:600}
-  .be-mark{display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:24px;padding:0 4px;background:#fff;color:var(--ink);border:1px solid var(--ink);border-bottom:3px solid var(--green);border-radius:3px;font-family:var(--mono);font-size:10px;line-height:1;font-weight:750;letter-spacing:.04em;transition:background .12s,color .12s}
-
   .context{position:relative;z-index:2}
   .context[open]{z-index:30}
-  .context summary{list-style:none;display:inline-flex;align-items:center;cursor:pointer;background:transparent;white-space:nowrap}
-  .context summary::-webkit-details-marker{display:none}
-  .context summary:hover .be-mark,.context[open] summary .be-mark{background:var(--green);border-color:var(--green);color:#fff}
-  .context-pop{display:none;position:absolute;right:0;top:29px;width:min(440px,calc(100vw - 48px));padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 28px rgba(0,0,0,.09);font-size:13px;line-height:1.55;color:var(--ink-2);font-weight:400;text-align:left;z-index:20}
+  .context summary{white-space:nowrap}
+  .context-pop{display:none;position:absolute;right:0;top:42px;width:min(440px,calc(100vw - 48px));padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 28px rgba(0,0,0,.09);font-size:13px;line-height:1.55;color:var(--ink-2);font-weight:400;text-align:left;z-index:20}
   .context-pop p+p{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
   .context-pop .context-source{font-family:var(--mono);font-size:10px;color:var(--mut)}
   .context[open] .context-pop{display:block}
   .story-title-row>.context[open]{grid-column:1/-1}
   .story-title-row>.context[open] summary{margin-left:auto}
   .story-title-row .context-pop{position:static;width:auto;margin-top:10px;padding:12px 14px;background:#f8f7f2;border:0;border-left:2px solid var(--green);border-radius:0;box-shadow:none;font-size:14px;line-height:1.55}
-  .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-
   .all-news{margin-top:24px;border-bottom:1px solid var(--line)}
   .all-news>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.035em;text-transform:uppercase;cursor:pointer}
   .all-news>summary::-webkit-details-marker{display:none}
@@ -154,7 +146,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
         <div class="story-meta"><a class="story-topic" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
         <div class="story-title-row">
           <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-          <details class="context"><summary aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop"><p>{{ story.explanation }}</p></div></details>
+          <details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop"><p>{{ story.explanation }}</p></div></details>
         </div>
       </article>
       {% endfor %}
@@ -176,7 +168,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
             <div class="story-meta"><a class="story-topic" href="/?topic={{ story.topic }}#all-news">{{ story.topicLabel }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
             <div class="story-title-row">
               <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-              <details class="context"><summary aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop"><p>{{ story.explanation }}</p></div></details>
+              <details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop"><p>{{ story.explanation }}</p></div></details>
             </div>
           </article>
           {% endif %}{% endfor %}
@@ -194,7 +186,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   </section>
 
   <section class="week" aria-labelledby="week-title">
-    <div class="section-top"><div><div class="kicker">This week</div><h2 class="section-title" id="week-title">What to watch</h2></div><span class="section-note">Official releases and meetings</span></div>
+    <div class="section-top"><div><div class="kicker">This week</div><h2 class="section-title" id="week-title">What I’m watching</h2></div><span class="section-note">Official releases and meetings</span></div>
     <div class="timeline">
       {% for event in calendar %}<article class="timeline-item"><div class="timeline-date">{% if event.approx %}Week of {% endif %}<span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span></div><div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
     </div>
@@ -235,7 +227,7 @@ if(initialTopic!=='all'&&allNews)allNews.open=true;
 showNews(initialTopic);
 
 function card({id,name,value,unit='',move='',direction='flat',compare='',stamp,context,source}){
-  return `<article class="market-card"><a class="market-link" href="/chart.html?v=${esc(id)}"><div class="market-name">${esc(name)}</div><div class="market-value">${esc(value)}${unit?`<span class="market-unit">${esc(unit)}</span>`:''}</div><div class="market-move ${esc(direction)}">${esc(move)}</div>${compare?`<div class="market-compare">${esc(compare)}</div>`:'<div class="market-compare"></div>'}<div class="market-date">${esc(stamp)}</div></a><details class="context"><summary aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop"><p>${esc(context)}</p><p class="context-source">Source: ${esc(source)}</p></div></details></article>`;
+  return `<article class="market-card"><a class="market-link" href="/chart.html?v=${esc(id)}"><div class="market-name">${esc(name)}</div><div class="market-value">${esc(value)}${unit?`<span class="market-unit">${esc(unit)}</span>`:''}</div><div class="market-move ${esc(direction)}">${esc(move)}</div>${compare?`<div class="market-compare">${esc(compare)}</div>`:'<div class="market-compare"></div>'}<div class="market-date">${esc(stamp)}</div></a><details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop"><p>${esc(context)}</p><p class="context-source">Source: ${esc(source)}</p></div></details></article>`;
 }
 
 function renderMarkets(){

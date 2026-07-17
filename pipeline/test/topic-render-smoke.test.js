@@ -98,7 +98,7 @@ for (const route of routes) {
     if (output.includes('A live, imperfect check')) throw new Error('payments: quarterly ATM data must not be described as live');
     if (!output.includes('Debit-card value series SF62279 is excluded')) throw new Error('payments: anomalous debit-card value is not visibly quarantined in the method');
     if (output.includes('1,169bn MXN')) throw new Error('payments: quarantined debit-card value still appears editorially');
-    if (!output.includes('reading-guide') || !output.includes('Explain this')) throw new Error('payments: metric explainers are missing');
+    if (!output.includes('reading-guide') || !output.includes('Briefly Explained')) throw new Error('payments: metric explainers are missing');
   }
   if (output.includes('waiting for its required source data')) throw new Error(`${route.key}: failed closed with complete fixture data`);
 }

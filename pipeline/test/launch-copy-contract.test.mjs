@@ -27,7 +27,7 @@ assert.match(home, /Briefly Explained\.<\/b>/i, 'the homepage must explain the B
 assert.match(home, /class="be-mark"[^>]*>BE</i, 'stories must use the BE house mark for optional context');
 assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
 assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as a duplicate footer destination');
-assert.match(home, /What to watch/i, 'homepage must show the next official releases and meetings');
+assert.match(home, /What I(?:’|')m watching/i, 'homepage must show Alan’s next official releases and meetings');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
 assert.match(home, /today ·.*stronger|today.*stronger/i,
   'homepage peso reading should include a short-term comparison');

@@ -91,6 +91,16 @@ small{font-size:var(--fs-label)}
 .col{max-width:var(--measure)}
 .mono{font-family:var(--mono)} .tnum{font-variant-numeric:tabular-nums}
 .eyebrow{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
+/* Briefly Explained — one house mark, used only where a compact layer of context exists. */
+.be-key{display:flex;align-items:center;gap:9px;margin-top:13px;font-size:12px;line-height:1.4;color:var(--mut)}
+.be-key b{color:var(--ink-2);font-weight:600}
+.be-mark{display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:24px;padding:0 4px;background:#fff;color:var(--ink);border:1px solid var(--ink);border-bottom:3px solid var(--green);border-radius:3px;font-family:var(--mono);font-size:10px;line-height:1;font-weight:750;letter-spacing:.04em;transition:background .12s,color .12s}
+.be-summary{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:0;padding:0;list-style:none;cursor:pointer;background:transparent;border:0}
+.be-summary::-webkit-details-marker{display:none}
+.be-summary:hover .be-mark,details[open]>.be-summary .be-mark{background:var(--green);border-color:var(--green);color:#fff}
+.be-summary:focus-visible{outline:2px solid var(--green);outline-offset:1px;border-radius:4px}
 
 /* section head — the signature hairline green rule is the tweak */
 .section-head{border-top:2px solid var(--green);padding-top:14px;margin-bottom:14px}
