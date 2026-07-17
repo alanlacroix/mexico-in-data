@@ -345,14 +345,19 @@ function compositionEvidence(p){
 }
 function timeline(items){return `<ol class="timeline">${items.map(x=>`<li><div class="timeline-date">${x.date}</div><div class="timeline-title">${x.title}</div><div class="timeline-text">${x.text}</div></li>`).join('')}</ol>`;}
 function timelineTable(items){return `<table><thead><tr><th>Date</th><th>Event</th><th>Why it matters</th></tr></thead><tbody>${items.map(x=>`<tr><td>${x.date}</td><td>${x.title}</td><td style="text-align:left;white-space:normal">${x.text}</td></tr>`).join('')}</tbody></table>`;}
-function updateList(items){return items.length?`<div class="update-list">${items.map(x=>`<article class="update"><div class="update-type">${x.type}</div><div><h3>${x.title}</h3>${x.text?`<p>${x.text}</p>`:''}<div class="update-meta"><a href="${x.href}" target="_blank" rel="noopener">${x.source} ↗</a> · ${x.date}</div></div></article>`).join('')}</div>`:`<p class="chart-note">No dated changes have passed the source checks yet.</p>`;}
+function updateList(items){return items.length?`<div class="update-list">${items.map(x=>`<article class="update"><div class="update-type">${x.type}</div><div><h3>${x.title}</h3>${x.text?`<p>${x.text}</p>`:''}${x.guide?guideHTML(x.guide):''}<div class="update-meta"><a href="${x.href}" target="_blank" rel="noopener">${x.source} ↗</a> · ${x.date}</div></div></article>`).join('')}</div>`:`<p class="chart-note">No dated changes have passed the source checks yet.</p>`;}
 function upcomingList(items){return items.length?`<div class="upcoming-list">${items.map(x=>{const d=/^\d{4}-/.test(x.date)?dateObj(x.date):null;return `<div class="upcoming"><div class="upcoming-date">${d?d.toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'}):x.date}${d?`<small>${d.getUTCFullYear()}</small>`:''}</div><div><div class="upcoming-title">${x.label}</div><div class="upcoming-meta">${x.source||''}${x.approx?' · approximate':''}</div></div></div>`}).join('')}</div>`:`<p class="chart-note">No source-backed date is in the calendar yet.</p>`;}
 
 function eventMatches(rx,n=4,exclude=null){const today=new Date();today.setUTCHours(0,0,0,0);return DB.events.filter(e=>dateObj(e.date)>=today&&rx.test(`${e.kind} ${e.label} ${e.mechanism||''}`)&&!(exclude&&exclude.test(`${e.label} ${e.sourceUrl||''}`))).slice(0,n);}
 function changedMatches(section,n=3){
   const aliases={economy:/^(economy|money)$/,payments:/^(payments|money)$/,trade:/^(trade|economy)$/,politics:/^politics$/,society:/^(society|security|economy)$/,usmexico:/^us-mexico$/};
   const rx=aliases[section]||new RegExp(`^${section}$`);
-  return DB.happening.filter(e=>rx.test(e.section||'')&&e.date&&e.title&&e.source&&e.url).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,n).map(e=>({type:e.kind==='release'?'Official data':'Dated development',title:e.title,text:e.context||'',source:e.source,href:e.url,date:shortDate(e.date)}));
+  return DB.happening.filter(e=>rx.test(e.section||'')&&e.date&&e.title&&e.source&&e.url).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,n).map(e=>{
+    // The four-part Briefly Explained rides along wherever the story appears (the same
+    // gated fields as the homepage): Background · Drivers · Implications · What's next.
+    const parts=[['Background',e.background],['Drivers',e.drivers],['Implications',e.implications],["What's next",e.next]].filter(p=>p[1]);
+    return {type:e.kind==='release'?'Official data':'Dated development',title:e.title,text:e.context||'',source:e.source,href:e.url,date:shortDate(e.date),guide:parts.length?{items:parts.map(([label,text])=>({label,text}))}:null};
+  });
 }
 function area(key){return DB.areas.find(a=>a.key===key)||{headlines:[]};}
 function topicSource(id,label){const sid=seriesId(id);return {label:(label||sourceName(id))+(sid?` · ${sid}`:''),href:sourceUrl(id),date:obs(id)};}
