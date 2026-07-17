@@ -93,7 +93,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:13px}
   .timeline-item{padding:17px 18px 18px 0}
   .timeline-item+.timeline-item{border-left:1px solid var(--line);padding-left:18px}
-  .timeline-date{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.035em;text-transform:uppercase;color:var(--green-d);font-weight:650}
+  .timeline-date{font-size:var(--fs-body);font-weight:700;letter-spacing:-.01em;color:var(--ink)}
   .timeline-title{font-size:var(--fs-small);line-height:1.35;font-weight:650;margin-top:6px}
   .timeline-why{font-size:var(--fs-meta);line-height:1.48;color:var(--ink-2);margin-top:5px}
   .timeline-source{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:8px}
@@ -146,7 +146,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   </section>
 
   <section class="news" aria-labelledby="news-title">
-    <div class="section-top"><div><div class="kicker">Major stories</div><h2 class="section-title" id="news-title">What happened</h2></div></div>
+    <div class="section-top"><div><h2 class="section-title" id="news-title">What happened</h2></div></div>
     <div class="be-key"><span class="be-mark" aria-hidden="true">BE</span><span><b>Briefly Explained.</b> Open it for more context behind a headline.</span></div>
     <div class="story-list major-list">
       {% for story in dailyBrief.stories %}
@@ -187,14 +187,14 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   </section>
 
   <section class="markets" aria-labelledby="markets-title">
-    <div class="section-top"><div><div class="kicker">Markets today</div><h2 class="section-title" id="markets-title">Mexico-relevant prices</h2></div><a class="text-link" href="/chart.html">All numbers →</a></div>
+    <div class="section-top"><div><h2 class="section-title" id="markets-title">Markets today</h2></div><a class="text-link" href="/chart.html">All numbers →</a></div>
     <div class="market-grid market-floor" id="market-grid">
       {% for item in nowBoard %}<article class="market-card"><a class="market-link" href="{{ item.href }}"><div class="market-name">{{ item.label }}</div><div class="market-value">{{ item.display }}</div><div class="market-date"><span class="js-date" data-date="{{ item.date }}">{{ item.date }}</span></div></a></article>{% endfor %}
     </div>
   </section>
 
   <section class="week" aria-labelledby="week-title">
-    <div class="section-top"><div><div class="kicker">This week</div><h2 class="section-title" id="week-title">What I’m watching</h2></div><span class="section-note">Official releases and meetings</span></div>
+    <div class="section-top"><div><h2 class="section-title" id="week-title">This week</h2></div><span class="section-note">Official releases and meetings</span></div>
     <div class="timeline">
       {% for event in calendar %}<article class="timeline-item"><div class="timeline-date">{% if event.approx %}Week of {% endif %}<span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span></div><div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
     </div>
