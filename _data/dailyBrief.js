@@ -19,12 +19,12 @@ const read = (rel) => {
 
 // section (from the event log / brief) → homepage beat kicker + topic room + link.
 const SECTIONS = {
-  economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/latest.html?topic=economy' },
-  money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/latest.html?topic=economy' },
-  politics:    { beat: 'Politics',        room: 'Politics',            url: '/latest.html?topic=politics' },
-  security:    { beat: 'Security',        room: 'Society & security',  url: '/latest.html?topic=society' },
-  society:     { beat: 'Society',         room: 'Society & security',  url: '/latest.html?topic=society' },
-  'us-mexico': { beat: 'U.S.–Mexico',     room: 'U.S.–Mexico',         url: '/latest.html?topic=us-mexico' },
+  economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/?topic=economy#all-news' },
+  money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/?topic=economy#all-news' },
+  politics:    { beat: 'Politics',        room: 'Politics',            url: '/?topic=politics#all-news' },
+  security:    { beat: 'Security',        room: 'Society & security',  url: '/?topic=society#all-news' },
+  society:     { beat: 'Society',         room: 'Society & security',  url: '/?topic=society#all-news' },
+  'us-mexico': { beat: 'U.S.–Mexico',     room: 'U.S.–Mexico',         url: '/?topic=us-mexico#all-news' },
 };
 
 // The auto companies tracker (pipeline/build-companies.js → data/companies.json) runs DARK
@@ -57,7 +57,10 @@ const toStory = (e) => {
     // Keep the card readable without asking for a click. The first sentence says what
     // happened; the optional drawer carries the extra background.
     summary: clean(e.summary || e.dek || e.context),
-    explanation: clean(e.explanation || e.background),
+    // Older entries predate the separate background field. Keep BE available on every
+    // card; as the pipeline revisits an article, its fuller background replaces this
+    // one-line fallback automatically.
+    explanation: clean(e.explanation || e.background || e.context),
     source: clean(e.source),
     url: clean(e.href || e.url),
     topic: s.room,

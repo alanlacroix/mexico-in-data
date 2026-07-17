@@ -12,7 +12,6 @@
 // top-level (a trust product shows its receipts); About stays (method + authorship visible).
 module.exports = [
   { label: 'Brief', href: '/' },
-  { label: 'Latest', href: '/latest.html' },
   { label: 'Numbers', href: '/chart.html' },
   { label: 'Explore', href: '/explore.html' },
   { label: 'Sources', href: '/sources.html' },

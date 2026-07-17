@@ -7,7 +7,8 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
 const text = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const json = (file) => JSON.parse(text(file));
 const home = text('index.njk');
-const latest = text('latest.njk');
+const nav = text('_data/nav.js');
+const footerNav = text('_data/footernav.js');
 const topics = text('topic-pages.njk');
 const model = text('model.njk');
 const brief = json('data/brief.json');
@@ -21,8 +22,11 @@ assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend t
 assert.match(home, /Markets today/i, 'homepage must separate fast-moving readings');
 assert.match(home, /What happened/i, 'homepage must lead readers through the major stories');
 assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
-assert.match(latest, /class="story-summary"/, 'latest stories must show a short summary without requiring a click');
-assert.match(home, /Briefly explained/i, 'homepage may offer additional context behind a clear label');
+assert.match(home, /for story in latestStories/, 'the full news feed must live on the Brief instead of a separate Latest page');
+assert.match(home, /Briefly Explained\.<\/b>/i, 'the homepage must explain the BE mark once in plain language');
+assert.match(home, /class="be-mark"[^>]*>BE</i, 'stories must use the BE house mark for optional context');
+assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
+assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as a duplicate footer destination');
 assert.match(home, /What to watch/i, 'homepage must show the next official releases and meetings');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
 assert.match(home, /today ·.*stronger|today.*stronger/i,

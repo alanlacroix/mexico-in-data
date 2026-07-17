@@ -24,6 +24,13 @@ module.exports = function () {
   try { events = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'happening.json'), 'utf8')).events || []; }
   catch { return []; }
 
+  let brief = {};
+  try { brief = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'brief.json'), 'utf8')); }
+  catch { brief = {}; }
+  const briefEntries = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])].filter(Boolean);
+  const briefUrls = new Set(briefEntries.map((item) => clean(item.href || item.url)).filter(Boolean));
+  const briefTitles = new Set(briefEntries.map((item) => normalize(item.h1 || item.headline || item.title)).filter(Boolean));
+
   const groups = new Map();
   events.forEach((event, index) => {
     if (!event || !event.title || !event.date) return;
@@ -43,9 +50,12 @@ module.exports = function () {
         topicLabel: section.label,
         title: clean(event.title).replace(/\.\s*$/, ''),
         summary: clean(event.summary || event.dek || event.why),
-        explanation: clean(event.explanation || event.background),
+        // `background` is the preferred BE copy. Legacy entries only have `why`, so it
+        // remains the honest fallback until the next article-background pass fills it.
+        explanation: clean(event.explanation || event.background || event.why),
         source: clean(event.source),
         url: clean(event.url),
+        inBrief: briefUrls.has(clean(event.url)) || briefTitles.has(normalize(event.title)),
       };
     });
 };

@@ -1,7 +1,6 @@
 // The footer keeps the two utility links. About now lives in the masthead.
 // Rendered identically on every page by _includes/partials/footer.njk.
 module.exports = [
-  { label: 'Latest', href: '/latest.html' },
   { label: 'Explore', href: '/explore.html' },
   { label: 'Sources', href: '/sources.html' },
   { label: 'About', href: '/about.html' },
