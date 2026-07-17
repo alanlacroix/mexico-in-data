@@ -254,8 +254,12 @@ async function addBackgrounds(events, now) {
   // earlier, looser caps) also re-analyze so everything converges tight (Alan: "not crazy long").
   const totalWords = (e) => ['background', 'drivers', 'implications', 'next']
     .reduce((n, f) => n + String(e[f] || '').split(/\s+/).filter(Boolean).length, 0);
-  const want = events.filter((e) => (e.importance || 0) >= 5 && (!e.drivers || totalWords(e) > 130 || (!e.image && !e.imageChecked)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
+  // analysisV 2 (Alan): background = the NEWCOMER PRIMER (what the thing at the center IS
+  // and the standing situation around it), grounded in the site's curated standing facts +
+  // the article — never a restatement of the news event. v1 analyses regenerate once.
+  const want = events.filter((e) => (e.importance || 0) >= 5 && (!e.drivers || totalWords(e) > 130 || e.analysisV !== 2 || (!e.image && !e.imageChecked)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
+  const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
   const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '' })) })));
   // The article's own link-preview image rides along free with the analysis fetch
   // (unfurl-style story thumbnail; https-only, may be empty; attributed via the source line).
@@ -267,18 +271,18 @@ async function addBackgrounds(events, now) {
   const schema = { type: 'object', additionalProperties: false, required: ['analyses'], properties: { analyses: { type: 'array', items: {
     type: 'object', additionalProperties: false, required: ['i', 'background', 'drivers', 'implications', 'next'], properties: {
       i: { type: 'integer' }, background: FIELD, drivers: FIELD, implications: FIELD, next: FIELD } } } } };
-  const system = `For each item you are given a headline, a one-line summary, and the ARTICLE TEXT. Write the four-part BRIEFLY EXPLAINED analysis, each field drawn ONLY from the article text, none repeating the given summary line:
-- background: one to three sentences — what led to this; the setup a newcomer needs to place the story.
-- drivers: one to two sentences — the forces pushing it: who wants what, and why now.
-- implications: one to two sentences — what it changes for Mexico, its markets, or the US relationship, as supported by the text. No speculation beyond the text.
-- next: one to two sentences — ONLY concrete next steps the text itself states (a scheduled meeting, a deadline, a vote, a filing, a stated plan with a date). If the text states none, return "".
+  const system = `You are given STANDING FACTS (the site's curated structural facts about Mexico) and, per item, a headline, a one-line summary, and the ARTICLE TEXT. Write the four-part BRIEFLY EXPLAINED analysis. Nothing may repeat the given summary line:
+- background: one to three sentences a NEWCOMER needs to understand the story: what the institution, agreement, or thing at the center IS, and the standing situation around it. Draw on the STANDING FACTS and the article. NEVER a restatement of the news event itself (the summary already says what happened) — if the story is about a USMCA review, background explains what USMCA is and why reviews are happening, not who spoke where.
+- drivers: one to two sentences, from the ARTICLE ONLY — the forces pushing it: who wants what, and why now.
+- implications: one to two sentences, from the ARTICLE ONLY — what it changes for Mexico, its markets, or the US relationship, as supported by the text. No speculation beyond the text.
+- next: one to two sentences, from the ARTICLE ONLY — concrete next steps the text itself states (a scheduled meeting, a deadline, a vote, a filing, a stated plan with a date). If the text states none, return "".
 KEEP IT TIGHT: prefer ONE sentence per field; the whole four-part analysis should read in under 90 words. A reader opens this for a fast layer of understanding, not an essay.
-Calm, concrete, whole sentences. No opinion, no forecasts beyond stated plans, no em-dash, and no number that does not appear in the provided text. Return "" for any field the text cannot honestly support. Return JSON.
+Calm, concrete, whole sentences. No opinion, no forecasts beyond stated plans, no em-dash, and no number that does not appear in the provided material. Return "" for any field you cannot honestly support. Return JSON.
 
 ${REPORT}
 
 ${BAN}`;
-  const payload = items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', text: x.body }));
+  const payload = { standingFacts: standingText, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', text: x.body })) };
   const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000 });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
   const CAPS = { background: [55, 2], drivers: [35, 2], implications: [40, 2], next: [35, 2] };
@@ -290,12 +294,16 @@ ${BAN}`;
       const text = stripDashWs(r[field]);
       if (!text) continue;
       const [maxWords, maxSentences] = CAPS[field];
-      const gate = lintReportText({ text, inputs: [item.e.title, item.e.context || item.e.why, item.body], maxWords, maxSentences });
+      // Background may ground in the curated standing facts (its numbers are theirs);
+      // the other three fields stay article-only.
+      const inputs = [item.e.title, item.e.context || item.e.why, item.body];
+      if (field === 'background') inputs.push(standingText);
+      const gate = lintReportText({ text, inputs, maxWords, maxSentences });
       const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
       if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
       item.e[field] = text; landed++;
     }
-    if (landed) added++;
+    if (landed) { item.e.analysisV = 2; added++; }
   }
   return added;
 }
