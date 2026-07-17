@@ -94,6 +94,8 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .timeline-item{padding:17px 18px 18px 0}
   .timeline-item+.timeline-item{border-left:1px solid var(--line);padding-left:18px}
   .timeline-date{font-size:var(--fs-body);font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+  .timeline-rel{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:2px}
+  .timeline-rel:empty{display:none}
   .timeline-title{font-size:var(--fs-small);line-height:1.35;font-weight:650;margin-top:6px}
   .timeline-why{font-size:var(--fs-meta);line-height:1.48;color:var(--ink-2);margin-top:5px}
   .timeline-source{display:inline-block;font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:8px}
@@ -194,9 +196,9 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   </section>
 
   <section class="week" aria-labelledby="week-title">
-    <div class="section-top"><div><h2 class="section-title" id="week-title">What’s happening this week</h2></div><span class="section-note">Official releases and meetings</span></div>
+    <div class="section-top"><div><h2 class="section-title" id="week-title">The week ahead</h2></div><span class="section-note">Official releases and meetings</span></div>
     <div class="timeline">
-      {% for event in calendar %}<article class="timeline-item"><div class="timeline-date">{% if event.approx %}Week of {% endif %}<span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span></div><div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
+      {% for event in calendar %}<article class="timeline-item"><div class="timeline-date">{% if event.approx %}Week of <span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span>{% else %}<span class="js-caldate" data-date="{{ event.date }}">{{ event.date }}</span>{% endif %}</div><div class="timeline-rel js-rel" data-date="{{ event.date }}" data-approx="{{ 'y' if event.approx else '' }}"></div><div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
     </div>
   </section>
 
@@ -253,6 +255,13 @@ function renderMarkets(){
 
 document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 document.querySelectorAll('.js-date').forEach((el)=>{el.textContent=date(el.dataset.date);});
+// Calendar dates carry the WEEKDAY (so "Jul 23" isn't a floating number) plus a relative
+// "how far from now" line — the anchor that answers "what week is this" (Alan 2026-07-17).
+const calDate=(iso)=>{if(!iso)return'';const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});};
+document.querySelectorAll('.js-caldate').forEach((el)=>{el.textContent=calDate(el.dataset.date);});
+const weekStart=(d)=>{const x=new Date(d.getTime());x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x;};
+const relDay=(iso,approx)=>{const d=new Date(iso+'T00:00:00');if(isNaN(d))return'';const t=new Date();t.setHours(0,0,0,0);const n=Math.round((d-t)/864e5);if(n<0)return'';if(approx){const w=Math.round((weekStart(d)-weekStart(t))/(7*864e5));return w<=0?'this week':w===1?'next week':'in '+w+' weeks';}if(n===0)return'today';if(n===1)return'tomorrow';return 'in '+n+' days';};
+document.querySelectorAll('.js-rel').forEach((el)=>{el.textContent=relDay(el.dataset.date,el.dataset.approx==='y');});
 const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);asof.textContent=isNaN(d)?'':`Updated ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
 
 Promise.all([
