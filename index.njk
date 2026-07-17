@@ -194,7 +194,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   </section>
 
   <section class="week" aria-labelledby="week-title">
-    <div class="section-top"><div><h2 class="section-title" id="week-title">This week</h2></div><span class="section-note">Official releases and meetings</span></div>
+    <div class="section-top"><div><h2 class="section-title" id="week-title">What’s happening this week</h2></div><span class="section-note">Official releases and meetings</span></div>
     <div class="timeline">
       {% for event in calendar %}<article class="timeline-item"><div class="timeline-date">{% if event.approx %}Week of {% endif %}<span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span></div><div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
     </div>
