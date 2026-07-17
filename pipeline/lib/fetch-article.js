@@ -16,10 +16,12 @@ export async function fetchArticle(url) {
     try {
       const { execFileSync } = await import('node:child_process');
       html = execFileSync('curl', ['-sL', '--compressed', '--max-time', '22', '-A', UA, url], { encoding: 'utf8', maxBuffer: 24 * 1024 * 1024 });
-    } catch { return { ok: false, text: '' }; }
+    } catch { return { ok: false, text: '', image: '', fetched: false }; }
   }
   const text = extractText(html);
-  return { ok: text.length >= 400, text, image: extractOgImage(html) };
+  // `fetched` = we actually obtained the page (vs a network failure). Lets callers tell a
+  // legitimately image-less page from a transient failure that should be retried.
+  return { ok: text.length >= 400, text, image: extractOgImage(html), fetched: true };
 }
 
 // The article's own link-preview image (og:image / twitter:image) — the thumbnail the

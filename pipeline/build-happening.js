@@ -261,10 +261,16 @@ async function addBackgrounds(events, now) {
   const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (!e.drivers || totalWords(e) > 130 || e.analysisV !== 3 || (!e.image && !e.imageChecked)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
   const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
-  const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '' })) })));
+  const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '', fetched: false })) })));
   // The article's own link-preview image rides along free with the analysis fetch
   // (unfurl-style story thumbnail; https-only, may be empty; attributed via the source line).
-  for (const x of fetched) { if (x.r.image && !x.e.image) x.e.image = x.r.image; x.e.imageChecked = 1; }   // one shot per story; no image on the page ≠ refetch forever
+  // Mark "checked" only once we actually loaded the page — a transient fetch failure retries
+  // next run (bounded to 3 tries) instead of blanking the image forever (Alan 2026-07-17).
+  for (const x of fetched) {
+    if (x.r.image && !x.e.image) x.e.image = x.r.image;
+    x.e.imgTries = (x.e.imgTries || 0) + 1;
+    if (x.r.fetched || x.e.imgTries >= 3) x.e.imageChecked = 1;
+  }
   const items = fetched.filter((x) => x.r.ok).map((x, i) => ({ i, e: x.e, body: x.r.text.slice(0, 1600) }));
   console.log(`  analysis: ${want.length} wanted · ${items.length} article bodies fetched`);
   if (!items.length) return 0;

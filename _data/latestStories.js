@@ -17,7 +17,31 @@ const keyFor = (event) => {
   if (event.section === 'us-mexico' && /(usmca|ustr)/.test(title) && /(tariff|quota|rules? of origin|trade deficit|review|negotiat)/.test(title)) return `${event.date}:usmca-review`;
   return clean(event.url) || `${event.date}:${event.section}:${title}`;
 };
-const quality = (event) => (clean(event.background) ? 3 : 0) + (!/google news/i.test(clean(event.source)) ? 2 : 0);
+const hasImg = (e) => /^https:\/\//i.test(clean(e && e.image));
+const quality = (event) => (clean(event.background) ? 3 : 0) + (!/google news/i.test(clean(event.source)) ? 2 : 0) + (hasImg(event) ? 2 : 0);
+// Cross-source near-duplicate collapse (mirrors build-brief): the same story from two
+// sources must not appear twice, and the version WITH an image wins the slot.
+const titleWords = (t) => new Set(normalize(t).split(' ').filter((w) => w.length > 3));
+const jaccard = (a, b) => { if (!a.size || !b.size) return 0; let i = 0; for (const w of a) if (b.has(w)) i++; return i / (a.size + b.size - i); };
+const sameStory = (a, b) => {
+  const j = jaccard(titleWords(a.title), titleWords(b.title));
+  const sameCo = clean(a.company) && clean(a.company).toLowerCase() === clean(b.company).toLowerCase();
+  const days = Math.abs((Date.parse(a.date) || 0) - (Date.parse(b.date) || 0)) / 864e5;
+  return j >= 0.5 || (sameCo && days <= 3 && j >= 0.25);
+};
+const betterRep = (a, b) => {
+  if (hasImg(a) !== hasImg(b)) return hasImg(a) ? a : b;
+  if ((a.importance || 0) !== (b.importance || 0)) return (a.importance || 0) > (b.importance || 0) ? a : b;
+  return String(a.date).localeCompare(String(b.date)) >= 0 ? a : b;
+};
+const collapseDuplicates = (events) => {
+  const kept = [];
+  for (const e of events) {
+    const at = kept.findIndex((k) => sameStory(k, e));
+    if (at < 0) kept.push(e); else kept[at] = betterRep(kept[at], e);
+  }
+  return kept;
+};
 
 module.exports = function () {
   let events = [];
@@ -39,10 +63,12 @@ module.exports = function () {
     if (!current || quality(event) > quality(current.event)) groups.set(key, { event, index: current ? current.index : index });
   });
 
-  return [...groups.values()]
+  const ordered = [...groups.values()]
     .sort((a, b) => String(b.event.date).localeCompare(String(a.event.date)) || b.event.importance - a.event.importance || a.index - b.index)
+    .map(({ event }) => event);
+  return collapseDuplicates(ordered)
     .slice(0, 60)
-    .map(({ event }) => {
+    .map((event) => {
       const section = SECTION[event.section] || SECTION.economy;
       return {
         date: clean(event.date),

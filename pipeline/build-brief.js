@@ -171,6 +171,36 @@ const ledeScore = (e, nowMs) => effImp(e) * recencyWeight(Math.max(0, (nowMs - (
 
 // Select the story set by the rubric (effective importance >= 5 = the selectivity, cap 8,
 // soft floor 3), then ORDER by importance x recency so the freshest consequential story leads.
+// Collapse cross-source duplicates of the SAME story before ranking (Alan 2026-07-17: the
+// same BlackRock news ran from two sources — one with an og:image, one without — and BOTH
+// entered the brief keyed by their differing URLs, so the imageless card showed). Two events
+// are the same story when their titles overlap heavily, or (same company, within 3 days) with
+// some overlap. The surviving representative prefers a version WITH an image, then importance,
+// then recency — so a duplicate never costs a story its picture.
+const titleWords = (t) => new Set(String(t || '').toLowerCase().replace(/[^a-z0-9áéíóúñü ]/g, ' ').split(/\s+/).filter((w) => w.length > 3));
+const jaccard = (a, b) => { if (!a.size || !b.size) return 0; let i = 0; for (const w of a) if (b.has(w)) i++; return i / (a.size + b.size - i); };
+const hasImg = (e) => /^https:\/\//i.test(String((e && e.image) || ''));
+function sameStory(a, b) {
+  const j = jaccard(titleWords(a.title), titleWords(b.title));
+  const sameCo = a.company && b.company && String(a.company).toLowerCase() === String(b.company).toLowerCase();
+  const days = Math.abs((a._t || 0) - (b._t || 0)) / DAY;
+  return j >= 0.5 || (sameCo && days <= 3 && j >= 0.25);
+}
+function betterRep(a, b) {
+  if (hasImg(a) !== hasImg(b)) return hasImg(a) ? a : b;                                    // a version WITH an image wins the slot
+  if ((a.importance || 0) !== (b.importance || 0)) return (a.importance || 0) > (b.importance || 0) ? a : b;
+  return (a._t || 0) >= (b._t || 0) ? a : b;
+}
+function dedupeStories(events) {
+  const kept = [];
+  for (const e of events) {
+    const at = kept.findIndex((k) => sameStory(k, e));
+    if (at < 0) { kept.push(e); continue; }
+    const win = betterRep(kept[at], e);
+    if (win !== kept[at]) { console.log(`  dedup: "${e.title.slice(0, 40)}" — kept the version ${hasImg(win) ? 'with' : 'without'} an image`); kept[at] = win; }
+  }
+  return kept;
+}
 function select(events, nowMs) {
   const THRESH = 5, CAP = 8, FLOOR = 3;
   const eligible = events.filter((e) => {
@@ -178,7 +208,7 @@ function select(events, nowMs) {
     if (!gate.ok && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: ${gate.flags.join('; ')}`);
     return gate.ok && e.url && e.source;
   });
-  const ranked = eligible.slice().sort((a, b) => (ledeScore(b, nowMs) - ledeScore(a, nowMs)) || (b._t - a._t));
+  const ranked = dedupeStories(eligible.slice().sort((a, b) => (ledeScore(b, nowMs) - ledeScore(a, nowMs)) || (b._t - a._t)));
   let picked = ranked.filter((e) => effImp(e) >= THRESH).slice(0, CAP);
   if (picked.length < FLOOR) picked = ranked.slice(0, FLOOR);
   return picked;
