@@ -50,8 +50,11 @@ module.exports = function () {
         topicLabel: section.label,
         title: clean(event.title).replace(/\.\s*$/, ''),
         summary: clean(event.summary || event.dek || event.why),
-        // `background` is the preferred BE copy. Legacy entries only have `why`, so it
-        // remains the honest fallback until the next article-background pass fills it.
+        // The four-part Briefly Explained, so "More headlines" shows the SAME structured
+        // Context as the top stories (Alan 2026-07-17: apply it throughout). May be empty
+        // until the pipeline's analysis pass reaches this story; `explanation` is the
+        // one-line fallback (legacy entries only have `why`).
+        bg: clean(event.background), drivers: clean(event.drivers), implications: clean(event.implications), next: clean(event.next),
         explanation: clean(event.explanation || event.background || event.why),
         source: clean(event.source),
         url: clean(event.url),

@@ -243,8 +243,9 @@ ${BAN}`;
 //                   no-forecast law holds: if the source states nothing, the field is empty.
 // Every field: style lint + every numeral must appear in the provided text + the slop
 // contract. Reject field-by-field; a thin article yields fewer fields, never filler. ----
-const BG_MAX = 10;            // per run; merged events keep their analysis, so coverage accumulates
-const BG_DAYS = 10;           // only recent, brief-eligible events earn the fetch
+const BG_MAX = 16;            // per run; merged events keep their analysis, so coverage accumulates
+const BG_DAYS = 14;           // recent events earn the analysis fetch
+const BG_MIN_IMP = 4;         // ...down to importance 4, so "More headlines" stories get structured Context too (Alan 2026-07-17)
 const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
 async function addBackgrounds(events, now) {
   if (!hasLLM()) return 0;
@@ -257,7 +258,7 @@ async function addBackgrounds(events, now) {
   // analysisV 2 (Alan): background = the NEWCOMER PRIMER (what the thing at the center IS
   // and the standing situation around it), grounded in the site's curated standing facts +
   // the article — never a restatement of the news event. v1 analyses regenerate once.
-  const want = events.filter((e) => (e.importance || 0) >= 5 && (!e.drivers || totalWords(e) > 130 || e.analysisV !== 3 || (!e.image && !e.imageChecked)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
+  const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (!e.drivers || totalWords(e) > 130 || e.analysisV !== 3 || (!e.image && !e.imageChecked)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
   const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
   const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '' })) })));
