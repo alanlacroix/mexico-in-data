@@ -55,9 +55,14 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .context-pop .context-source{font-family:var(--mono);font-size:10px;color:var(--mut)}
   .context-pop .ck{font-family:var(--mono);font-size:10px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-right:7px}
   .context[open] .context-pop{display:block}
-  .story-title-row>.context[open]{grid-column:1/-1}
-  .story-title-row>.context[open] summary{margin-left:auto}
-  .story-title-row .context-pop{position:static;width:auto;margin-top:10px;padding:12px 14px;background:#f8f7f2;border:0;border-left:2px solid var(--green);border-radius:0;box-shadow:none;font-size:14px;line-height:1.55}
+  /* Briefly Explained accordion (Alan 2026-07-17): the BE button stays put; the panel
+     opens full-width below the story and closes on second-click / outside-click / Esc —
+     no chasing a button that moved. Market cards keep the compact .context popover above. */
+  .be-btn[aria-expanded="true"] .be-mark{background:var(--green);border-color:var(--green);color:#fff}
+  .be-panel{margin:13px 0 2px;padding:13px 16px;background:#f8f7f2;border-left:2px solid var(--green);font-size:14px;line-height:1.56;color:var(--ink-2)}
+  .be-panel[hidden]{display:none}
+  .be-panel p+p{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+  .be-panel .ck{font-family:var(--mono);font-size:10px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-right:7px}
   .all-news{margin-top:24px;border-bottom:1px solid var(--line)}
   .all-news>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.035em;text-transform:uppercase;cursor:pointer}
   .all-news>summary::-webkit-details-marker{display:none}
@@ -123,7 +128,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
     .brief-story{padding:17px 0}
     .brief-story h3,.major-list>.brief-story:first-child h3{font-size:20px;line-height:1.32;font-weight:600}
     .story-title-row{grid-template-columns:1fr}
-    .story-title-row>.context{justify-self:start}
+    .story-title-row>.be-btn{justify-self:start}
     .market-grid{grid-template-columns:1fr}
     .market-card+.market-card,.market-card:nth-child(3){border-left:0;border-top:1px solid var(--line)}
     .market-value{font-size:32px}
@@ -156,8 +161,9 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
         <div class="story-meta"><a class="story-topic" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
         <div class="story-title-row">
           <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" loading="lazy" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-          <details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop">{% if story.drivers or story.implications or story.next %}{% if story.bg %}<p><span class="ck">Background</span>{{ story.bg }}</p>{% endif %}{% if story.drivers %}<p><span class="ck">Drivers</span>{{ story.drivers }}</p>{% endif %}{% if story.implications %}<p><span class="ck">Implications</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}{% else %}<p>{{ story.explanation }}</p>{% endif %}</div></details>
+          {% if story.bg or story.drivers or story.implications or story.next or story.explanation %}<button class="be-summary be-btn" type="button" aria-expanded="false" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></button>{% endif %}
         </div>
+        {% if story.bg or story.drivers or story.implications or story.next or story.explanation %}<div class="be-panel" hidden>{% if story.drivers or story.implications or story.next %}{% if story.bg %}<p><span class="ck">Background</span>{{ story.bg }}</p>{% endif %}{% if story.drivers %}<p><span class="ck">Drivers</span>{{ story.drivers }}</p>{% endif %}{% if story.implications %}<p><span class="ck">Implications</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}{% else %}<p>{{ story.explanation }}</p>{% endif %}</div>{% endif %}
       </article>
       {% endfor %}
     </div>
@@ -178,8 +184,9 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
             <div class="story-meta"><a class="story-topic" href="/?topic={{ story.topic }}#all-news">{{ story.topicLabel }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
             <div class="story-title-row">
               <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-              <details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop">{% if story.drivers or story.implications or story.next %}{% if story.bg %}<p><span class="ck">Background</span>{{ story.bg }}</p>{% endif %}{% if story.drivers %}<p><span class="ck">Drivers</span>{{ story.drivers }}</p>{% endif %}{% if story.implications %}<p><span class="ck">Implications</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}{% else %}<p>{{ story.explanation }}</p>{% endif %}</div></details>
+              {% if story.bg or story.drivers or story.implications or story.next or story.explanation %}<button class="be-summary be-btn" type="button" aria-expanded="false" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></button>{% endif %}
             </div>
+            {% if story.bg or story.drivers or story.implications or story.next or story.explanation %}<div class="be-panel" hidden>{% if story.drivers or story.implications or story.next %}{% if story.bg %}<p><span class="ck">Background</span>{{ story.bg }}</p>{% endif %}{% if story.drivers %}<p><span class="ck">Drivers</span>{{ story.drivers }}</p>{% endif %}{% if story.implications %}<p><span class="ck">Implications</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}{% else %}<p>{{ story.explanation }}</p>{% endif %}</div>{% endif %}
           </article>
           {% endif %}{% endfor %}
         </div>
@@ -217,7 +224,26 @@ const nearAgo=(id,days)=>{const rows=S[id]?.data||[];if(!rows.length)return null
 const num=(value,digits=2)=>Number(value).toLocaleString('en-US',{minimumFractionDigits:digits,maximumFractionDigits:digits});
 const date=(iso,year=false)=>{if(!iso)return'';const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{month:'short',day:'numeric',...(year?{year:'numeric'}:{})});};
 
-document.addEventListener('toggle',(event)=>{const detail=event.target;if(detail.matches?.('details.context')&&detail.open)document.querySelectorAll('details.context[open]').forEach((other)=>{if(other!==detail)other.open=false;});},true);
+// Briefly Explained (Alan 2026-07-17): story rows use a button+panel accordion — the BE
+// button stays in place, the panel opens full-width below the story, and it closes on a
+// second click, a click anywhere outside, or Esc (no chasing a moved button). Market cards
+// keep their compact <details> popover but gain the same outside-click / Esc dismissal.
+// One open at a time across both.
+function beCloseAll(except){
+  document.querySelectorAll('.be-btn[aria-expanded="true"]').forEach((b)=>{if(b!==except){b.setAttribute('aria-expanded','false');const p=b.closest('.brief-story')?.querySelector(':scope > .be-panel');if(p)p.hidden=true;}});
+  document.querySelectorAll('details.context[open]').forEach((d)=>{if(d!==except)d.open=false;});
+}
+document.querySelectorAll('.be-btn').forEach((btn)=>{
+  const panel=btn.closest('.brief-story')?.querySelector(':scope > .be-panel');
+  if(!panel)return;
+  btn.addEventListener('click',(e)=>{e.stopPropagation();const isOpen=btn.getAttribute('aria-expanded')==='true';beCloseAll(isOpen?null:btn);btn.setAttribute('aria-expanded',String(!isOpen));panel.hidden=isOpen;});
+});
+// Clicks inside an open panel or a market-card popover must not bubble out and self-close.
+document.querySelectorAll('.be-panel,details.context').forEach((el)=>el.addEventListener('click',(e)=>e.stopPropagation()));
+document.addEventListener('click',()=>beCloseAll(null));
+document.addEventListener('keydown',(e)=>{if(e.key==='Escape')beCloseAll(null);});
+// Opening a market-card popover closes any other open BE.
+document.addEventListener('toggle',(event)=>{const d=event.target;if(d.matches?.('details.context')&&d.open)beCloseAll(d);},true);
 
 const newsFilters=[...document.querySelectorAll('.filter')];
 const allStories=[...document.querySelectorAll('.all-story')];
