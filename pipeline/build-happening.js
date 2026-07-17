@@ -250,8 +250,11 @@ async function addBackgrounds(events, now) {
   if (!hasLLM()) return 0;
   const cutoff = now.getTime() - BG_DAYS * 864e5;
   // `drivers` marks the four-part model, so stories carrying only the old freeform
-  // background get upgraded on later runs too.
-  const want = events.filter((e) => (e.importance || 0) >= 5 && !e.drivers && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
+  // background get upgraded on later runs too. Over-long stored analyses (written under
+  // earlier, looser caps) also re-analyze so everything converges tight (Alan: "not crazy long").
+  const totalWords = (e) => ['background', 'drivers', 'implications', 'next']
+    .reduce((n, f) => n + String(e[f] || '').split(/\s+/).filter(Boolean).length, 0);
+  const want = events.filter((e) => (e.importance || 0) >= 5 && (!e.drivers || totalWords(e) > 130) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
   const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '' })) })));
   const items = fetched.filter((x) => x.r.ok).map((x, i) => ({ i, e: x.e, body: x.r.text.slice(0, 1600) }));
@@ -266,6 +269,7 @@ async function addBackgrounds(events, now) {
 - drivers: one to two sentences — the forces pushing it: who wants what, and why now.
 - implications: one to two sentences — what it changes for Mexico, its markets, or the US relationship, as supported by the text. No speculation beyond the text.
 - next: one to two sentences — ONLY concrete next steps the text itself states (a scheduled meeting, a deadline, a vote, a filing, a stated plan with a date). If the text states none, return "".
+KEEP IT TIGHT: prefer ONE sentence per field; the whole four-part analysis should read in under 90 words. A reader opens this for a fast layer of understanding, not an essay.
 Calm, concrete, whole sentences. No opinion, no forecasts beyond stated plans, no em-dash, and no number that does not appear in the provided text. Return "" for any field the text cannot honestly support. Return JSON.
 
 ${REPORT}
@@ -274,7 +278,7 @@ ${BAN}`;
   const payload = items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', text: x.body }));
   const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000 });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
-  const CAPS = { background: [80, 3], drivers: [50, 2], implications: [55, 2], next: [50, 2] };
+  const CAPS = { background: [55, 2], drivers: [35, 2], implications: [40, 2], next: [35, 2] };
   let added = 0;
   for (const r of out.analyses) {
     const item = items.find((x) => x.i === r.i); if (!item) continue;
