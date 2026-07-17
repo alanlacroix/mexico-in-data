@@ -61,6 +61,9 @@ const toStory = (e) => {
     // card; as the pipeline revisits an article, its fuller background replaces this
     // one-line fallback automatically.
     explanation: clean(e.explanation || e.background || e.context),
+    // The four-part Briefly Explained model (Alan 2026-07-16): background · drivers ·
+    // implications · what's next — article-grounded, field-by-field gated, may be empty.
+    bg: clean(e.background), drivers: clean(e.drivers), implications: clean(e.implications), next: clean(e.next),
     source: clean(e.source),
     url: clean(e.href || e.url),
     topic: s.room,

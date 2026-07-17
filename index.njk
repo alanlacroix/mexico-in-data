@@ -46,6 +46,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .context-pop{display:none;position:absolute;right:0;top:42px;width:min(440px,calc(100vw - 48px));padding:13px 15px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 28px rgba(0,0,0,.09);font-size:13px;line-height:1.55;color:var(--ink-2);font-weight:400;text-align:left;z-index:20}
   .context-pop p+p{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
   .context-pop .context-source{font-family:var(--mono);font-size:10px;color:var(--mut)}
+  .context-pop .ck{font-family:var(--mono);font-size:10px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-right:7px}
   .context[open] .context-pop{display:block}
   .story-title-row>.context[open]{grid-column:1/-1}
   .story-title-row>.context[open] summary{margin-left:auto}
@@ -146,7 +147,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
         <div class="story-meta"><a class="story-topic" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
         <div class="story-title-row">
           <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-          <details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop"><p>{{ story.explanation }}</p></div></details>
+          <details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop">{% if story.drivers or story.implications or story.next %}{% if story.bg %}<p><span class="ck">Background</span>{{ story.bg }}</p>{% endif %}{% if story.drivers %}<p><span class="ck">Drivers</span>{{ story.drivers }}</p>{% endif %}{% if story.implications %}<p><span class="ck">Implications</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}{% else %}<p>{{ story.explanation }}</p>{% endif %}</div></details>
         </div>
       </article>
       {% endfor %}
@@ -168,7 +169,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
             <div class="story-meta"><a class="story-topic" href="/?topic={{ story.topic }}#all-news">{{ story.topicLabel }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
             <div class="story-title-row">
               <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-              <details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop"><p>{{ story.explanation }}</p></div></details>
+              <details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop">{% if story.drivers or story.implications or story.next %}{% if story.bg %}<p><span class="ck">Background</span>{{ story.bg }}</p>{% endif %}{% if story.drivers %}<p><span class="ck">Drivers</span>{{ story.drivers }}</p>{% endif %}{% if story.implications %}<p><span class="ck">Implications</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}{% else %}<p>{{ story.explanation }}</p>{% endif %}</div></details>
             </div>
           </article>
           {% endif %}{% endfor %}

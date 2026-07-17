@@ -70,6 +70,9 @@ const MONEY_RX= /banxico|peso|inflaci|tasa de inter|bono|cetes|mercado|bolsa|\bb
 
 function beatSection(x) {
   const t = (x.title || '') + ' ' + (x.dek || '') + ' ' + (x.beat || '');
+  if (x.sourceName === 'Mexico Business News' && x.beat === 'economy') return 'economy';
+  if (x.beat === 'fintech') return 'money';
+  if (x.beat === 'companies' || x.beat === 'deals') return 'economy';
   if (SEC_RX.test(t)) return 'security';
   if (USMX_RX.test(t)) return 'us-mexico';
   if (POL_RX.test(t)) return 'politics';
@@ -99,10 +102,13 @@ function candidates(now) {
     }
   }
   const cutoff = now.getTime() - WINDOW_DAYS * 864e5;
-  // Keep google-news aggregator items here (unlike the email, which prefers clean links):
-  // politics and security coverage largely comes through them, and the redirect resolves to
-  // the real article. The model does the quality filtering; breadth matters more for the log.
-  const pool = all.filter((x) => Date.parse(x.published_at) >= cutoff);
+  // Aggregators are discovery tools, not publishers. A Google News redirect or a
+  // "via GDELT" label must never reach the public Brief. GDELT items with a real
+  // publisher domain are retained; raw Google News records remain in the ledger
+  // for discovery and health checks only.
+  const pool = all.filter((x) => Date.parse(x.published_at) >= cutoff)
+    .filter((x) => x.source !== 'news.google.com')
+    .filter((x) => !/^google news\b|^via gdelt$/i.test(String(x.sourceName || '')));
   pool.sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at));
   const kept = [];
   for (const x of pool) {
@@ -136,22 +142,31 @@ function mkEvent(x, section, importance, title, why, company = '') {
 // listicles, "the N most ___" rankings, brand-history features ("la historia de…"), routine FX
 // open/close recaps ("así abre el tipo de cambio", "peso busca rescatar…"), forecast-cut rehashes,
 // sports, how-tos, entertainment. The model path filters on meaning; this keeps the fallback honest.
-const JUNK_RX = /¿(qui[eé]n|c[óo]mo|qu[eé]|cu[áa]l)|vs\.?\s|los? m[áa]s (barat|car|vendid)|entre l[ao]s \d+ m[áa]s|la historia de|as[íi] (abre|cierra)|busca rescatar|(d[óo]lar|tipo de cambio) hoy|precio del d[óo]lar|recorte de expectativas|\branking\b|paso a paso|hor[óo]scopo|receta|qu[eé] ver|streaming|nfl|nba|mlb|liga mx|fichaje|premios|celebr|tel[ei]nov|checa (las|los)|te decimos|aqu[íi] (los|las)/i;
+const JUNK_RX = /¿(qui[eé]n|c[óo]mo|qu[eé]|cu[áa]l)|vs\.?\s|los? m[áa]s (barat|car|vendid)|entre l[ao]s \d+ m[áa]s|la historia de|as[íi] (abre|cierra)|busca rescatar|(d[óo]lar|tipo de cambio) hoy|precio del d[óo]lar|recorte de expectativas|pase vip|saltar fila|\branking\b|paso a paso|hor[óo]scopo|receta|qu[eé] ver|streaming|nfl|nba|mlb|liga mx|fichaje|premios|celebr|tel[ei]nov|checa (las|los)|te decimos|aqu[íi] (los|las)/i;
 const MX_RX = /m[eé]xic|mexican|\bcdmx\b|banxico|sheinbaum|\bpemex\b|\bfemsa\b|\boxxo\b|\bmorena\b|\binegi\b|\bcnbv\b|\bpeso(s)?\b|monterrey|guadalajara|\bbmv\b|nearshor|maquila|tmec|usmca|\bdof\b|hacienda|sat\b/i;
+const TASTE_RX = /automotive|vehicle|rail|manufactur|investment|nearshor|trade|usmca|t-?mec|fintech|bank|payment|embedded finance|\bai\b|artificial intelligence|data cent|energy|pemex|cfe|public financ|digital rules|technology/i;
+function firstWholeSentence(text, max = 280) {
+  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  const match = clean.match(/^(.{30,280}?[.!?])(?:\s|$)/);
+  if (match && match[1].length <= max) return match[1];
+  return clean.length <= max && /[.!?]$/.test(clean) ? clean : '';
+}
 function curateFallback(cands, now) {
   const tierW = (t) => (t === 1 ? 4 : t === 'specialist' ? 3 : t === 2 ? 2 : 1);
   const scored = cands
-    .filter((x) => (x.dek || '').trim())                                  // need a dek to justify a "why"
-    .filter((x) => x.tier === 1 || x.tier === 2 || x.tier === 'specialist') // drop raw aggregator items
-    .filter((x) => !JUNK_RX.test((x.title || '') + ' ' + (x.dek || '')))  // no listicles / sports / how-tos
-    .filter((x) => MX_RX.test((x.title || '') + ' ' + (x.dek || '')))     // must be about Mexico, not off-topic
-    .map((x) => ({ x, w: tierW(x.tier) * 2 + (Date.parse(x.published_at) > now.getTime() - 4 * 864e5 ? 2 : 0) }));
+    .map((x) => ({ x, summary: firstWholeSentence(x.dek) }))
+    .filter(({ summary }) => summary)                                     // need a whole sourced sentence for "why"
+    .filter(({ x }) => x.tier === 1 || x.tier === 2 || x.tier === 'specialist') // drop raw aggregator items
+    .filter(({ x }) => !JUNK_RX.test((x.title || '') + ' ' + (x.dek || '')))  // no listicles / sports / how-tos
+    .filter(({ x }) => MX_RX.test((x.title || '') + ' ' + (x.dek || '')))     // must be about Mexico, not off-topic
+    .filter(({ x }) => x.sourceName !== 'Mexico Business News' || TASTE_RX.test((x.title || '') + ' ' + (x.dek || '')))
+    .map(({ x, summary }) => ({ x, summary, w: tierW(x.tier) * 2 + (Date.parse(x.published_at) > now.getTime() - 4 * 864e5 ? 2 : 0) }));
   scored.sort((a, b) => b.w - a.w || Date.parse(b.x.published_at) - Date.parse(a.x.published_at));
   const out = [], cap = {};
-  for (const { x } of scored) {
+  for (const { x, summary } of scored) {
     const s = beatSection(x);
     if ((cap[s] || 0) >= 2) continue;                                     // ≤2 per section, keep it cross-domain
-    const ev = mkEvent(x, s, 2, x.title, (x.dek || '').slice(0, 180));    // imp 2: never outranks a real event
+    const ev = mkEvent(x, s, 2, x.title, summary);                        // imp 2: never outranks a real event
     const flags = slopFlags(ev);
     if (flags.length) { quarantine(ev, flags); continue; }                // no LLM to translate/clean → raw source is quarantined, never published
     cap[s] = (cap[s] || 0) + 1;
@@ -170,7 +185,7 @@ async function curate(cands, now) {
       i: { type: 'integer' }, section: { type: 'string', enum: SECTIONS }, importance: { type: 'integer' },
       title: { type: 'string' }, why: { type: 'string' }, company: { type: 'string' },
     } } } } };
-  const system = `You are the editor of The Mexico Brief's event log — "What's happening", the homepage lead. From the candidate news items, SELECT only the genuine, dated developments someone tracking Mexico needs to know: a decree or law (DOF), a Banxico or government policy decision, a court ruling, a security development, a tariff or USMCA move, an election or cabinet change, a major deal or company event. SKIP routine market recaps, price blurbs, listicles, opinion, sports, and near-duplicates of items you already picked.
+  const system = `You are the editor of The Mexico Brief's event log — "What's happening", the homepage lead. From the candidate news items, SELECT only the genuine, dated developments someone tracking Mexico needs to know: a decree or law (DOF), a Banxico or government policy decision, a court ruling, a security development, a tariff or USMCA move, an election or cabinet change, a major deal or company event. Give particular weight to companies, investment, trade, technology and AI, payments and fintech, energy, public finances, and policy changes with economic consequences. SKIP routine market recaps, price blurbs, consumer-service trivia, listicles, opinion, sports, generic global-market stories without a direct Mexico consequence, and near-duplicates of items you already picked.
 CRIME AND VIOLENCE SCOPE (important): The Mexico Brief is not a crime tracker. SKIP an event when the violence IS the story, reported for its own sake: cartel or gang violence, individual homicides, shootings, murders, kidnappings, disappearances, body counts, or a personal tragedy. KEEP an event that carries a genuine political, economic, electoral, or diplomatic angle even when it involves crime, gangs, or death: a security law or reform, a court or legal ruling with political weight, a U.S.-Mexico security or migration dispute, a sanction or extradition with diplomatic stakes, or the government's own crime statistics presented as a record of its performance. When a violent event also has real political or economic consequence, keep it and FRAME it by that consequence, not the violence. When in doubt, ask whether a reader following Mexico's economy, politics, and U.S. relationship needs it; if the only thing there is the crime itself, skip it.
 For each item you select, return:
 - i: its index in the list
@@ -216,43 +231,64 @@ ${BAN}`;
   return events.slice(0, MAX_NEW);
 }
 
-// ---- background: fuller factual detail, grounded in the ARTICLE BODY (Alan 2026-07-16:
-// "why it matters is key but we want more detail, not just the headline"). The why field's
-// honest ceiling is the feed dek; real depth needs the article itself. For the top events we
-// fetch the piece (fetch-article.js, fail-soft) and have the model write 2-4 sentences of
-// ADDITIONAL factual background from that text only — same gates as everything else (style
-// lint + every numeral must appear in the provided text + the slop contract). No body, no
-// clean pass, no key → no background; the event simply keeps its 1-2 sentence why. ----
-const BG_MAX = 10;            // per run; merged events keep their background, so coverage accumulates
+// ---- BRIEFLY EXPLAINED: the four-part analysis, grounded in the ARTICLE BODY (Alan
+// 2026-07-16: "background, drivers, prediction, implication — this is what makes us
+// unique"). For the top events we fetch the piece (fetch-article.js, fail-soft) and have
+// the model write FOUR gated fields from that text only:
+//   background    — what led here; the setup a newcomer needs
+//   drivers       — the forces pushing it (who wants what, and why now)
+//   implications  — what it changes for Mexico, markets, or the US relationship
+//   next          — the honest version of "prediction": ONLY next steps the text itself
+//                   states (a scheduled meeting, a deadline, a vote, a filing). The site's
+//                   no-forecast law holds: if the source states nothing, the field is empty.
+// Every field: style lint + every numeral must appear in the provided text + the slop
+// contract. Reject field-by-field; a thin article yields fewer fields, never filler. ----
+const BG_MAX = 10;            // per run; merged events keep their analysis, so coverage accumulates
 const BG_DAYS = 10;           // only recent, brief-eligible events earn the fetch
+const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
 async function addBackgrounds(events, now) {
   if (!hasLLM()) return 0;
   const cutoff = now.getTime() - BG_DAYS * 864e5;
-  const want = events.filter((e) => (e.importance || 0) >= 5 && !e.background && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
+  // `drivers` marks the four-part model, so stories carrying only the old freeform
+  // background get upgraded on later runs too.
+  const want = events.filter((e) => (e.importance || 0) >= 5 && !e.drivers && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
   const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '' })) })));
   const items = fetched.filter((x) => x.r.ok).map((x, i) => ({ i, e: x.e, body: x.r.text.slice(0, 1600) }));
-  console.log(`  background: ${want.length} wanted · ${items.length} article bodies fetched`);
+  console.log(`  analysis: ${want.length} wanted · ${items.length} article bodies fetched`);
   if (!items.length) return 0;
-  const schema = { type: 'object', additionalProperties: false, required: ['backgrounds'], properties: { backgrounds: { type: 'array', items: {
-    type: 'object', additionalProperties: false, required: ['i', 'background'], properties: { i: { type: 'integer' }, background: { type: 'string' } } } } } };
-  const system = `For each item you are given a headline, a one-line summary, and the ARTICLE TEXT. Write "background": two to four plain sentences of ADDITIONAL factual detail drawn ONLY from the article text — what happened, the key figures, who is involved, and what happens next if the text says so. Do not repeat the given summary line; add what it leaves out. Calm, concrete, whole sentences. No opinion, no forecasts, no em-dash, and no number that does not appear in the provided text. If the text is too thin to add anything real, return an empty string for that item. Return JSON.
+  const FIELD = { type: 'string' };
+  const schema = { type: 'object', additionalProperties: false, required: ['analyses'], properties: { analyses: { type: 'array', items: {
+    type: 'object', additionalProperties: false, required: ['i', 'background', 'drivers', 'implications', 'next'], properties: {
+      i: { type: 'integer' }, background: FIELD, drivers: FIELD, implications: FIELD, next: FIELD } } } } };
+  const system = `For each item you are given a headline, a one-line summary, and the ARTICLE TEXT. Write the four-part BRIEFLY EXPLAINED analysis, each field drawn ONLY from the article text, none repeating the given summary line:
+- background: one to three sentences — what led to this; the setup a newcomer needs to place the story.
+- drivers: one to two sentences — the forces pushing it: who wants what, and why now.
+- implications: one to two sentences — what it changes for Mexico, its markets, or the US relationship, as supported by the text. No speculation beyond the text.
+- next: one to two sentences — ONLY concrete next steps the text itself states (a scheduled meeting, a deadline, a vote, a filing, a stated plan with a date). If the text states none, return "".
+Calm, concrete, whole sentences. No opinion, no forecasts beyond stated plans, no em-dash, and no number that does not appear in the provided text. Return "" for any field the text cannot honestly support. Return JSON.
 
 ${REPORT}
 
 ${BAN}`;
   const payload = items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', text: x.body }));
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 8000 });
-  if (!out || !Array.isArray(out.backgrounds)) { console.warn('  background: no model result — skipped'); return 0; }
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000 });
+  if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
+  const CAPS = { background: [80, 3], drivers: [50, 2], implications: [55, 2], next: [50, 2] };
   let added = 0;
-  for (const r of out.backgrounds) {
+  for (const r of out.analyses) {
     const item = items.find((x) => x.i === r.i); if (!item) continue;
-    const bg = String(r.background || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
-    if (!bg) continue;
-    const gate = lintReportText({ text: bg, inputs: [item.e.title, item.e.context || item.e.why, item.body], maxWords: 120, maxSentences: 5 });
-    const slop = slopFlags({ title: item.e.title, context: bg, url: item.e.url, date: item.e.date });
-    if (!gate.ok || slop.length) { console.warn(`  background reject ${item.e.id}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
-    item.e.background = bg; added++;
+    let landed = 0;
+    for (const field of ['background', 'drivers', 'implications', 'next']) {
+      const text = stripDashWs(r[field]);
+      if (!text) continue;
+      const [maxWords, maxSentences] = CAPS[field];
+      const gate = lintReportText({ text, inputs: [item.e.title, item.e.context || item.e.why, item.body], maxWords, maxSentences });
+      const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
+      if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
+      item.e[field] = text; landed++;
+    }
+    if (landed) added++;
   }
   return added;
 }
@@ -265,6 +301,13 @@ function mergeLog(existing, fresh, now) {
   // source language, feed boilerplate, truncation, missing link/date). Legacy fallback
   // pollution and any future regression get swept every run, not only the day they land.
   events = events.filter((e) => {
+    if (/news\.google\.com/i.test(String(e.url || '')) || /^google news\b|^via gdelt$/i.test(String(e.source || ''))) {
+      quarantine(e, ['purged: aggregator is discovery, not a publishable source']);
+      return false;
+    }
+    // Re-evaluate low-confidence deterministic MBN picks on every run. Model- or
+    // human-curated MBN stories score 5+ and remain canonical.
+    if (e.source === 'Mexico Business News' && (e.importance || 0) <= 2) return false;
     const flags = slopFlags(e);
     if (flags.length) { quarantine(e, ['purged: ' + flags.join('; ')]); return false; }
     return true;
