@@ -42,10 +42,12 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .story-copy{min-width:0}
   .story-link{color:var(--ink);text-decoration:none}
   .story-link:hover{color:var(--green-d)}
-  /* All stories read at one weight (Alan 2026-07-17: the enlarged first headline looked
-     inconsistent — the ranking is expressed by ORDER, not by shouting the top one). */
   .brief-story h3{font-size:clamp(19px,1.55vw,23px);line-height:1.32;letter-spacing:-.008em;font-weight:600;margin:0;max-width:60ch}
+  /* The lead story stands out — bigger headline (Alan 2026-07-17: restore how it was; he
+     wanted the first headline under "What happened" to read differently, not flattened). */
+  .major-list>.brief-story:first-child h3{font-size:clamp(23px,1.9vw,27px);line-height:1.27;font-weight:650;max-width:50ch}
   .story-summary{font-size:15.5px;line-height:1.5;color:var(--ink-2);max-width:72ch;margin:7px 0 0}
+  .major-list>.brief-story:first-child .story-summary{font-size:16px}
 
   .context{position:relative;z-index:2}
   .context[open]{z-index:30}
@@ -131,12 +133,14 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
     .brief-copy{font-size:18px;line-height:1.52}
     .news{margin-top:38px}
     .brief-story{padding:17px 0}
-    .brief-story h3{font-size:20px;line-height:1.32;font-weight:600}
+    .brief-story h3,.major-list>.brief-story:first-child h3{font-size:20px;line-height:1.32;font-weight:600}
     .story-title-row{grid-template-columns:1fr}
     .story-title-row>.be-btn{justify-self:start}
     .market-grid{grid-template-columns:1fr}
     .market-card+.market-card,.market-card:nth-child(3){border-left:0;border-top:1px solid var(--line)}
-    .market-card .context-pop{left:0;right:auto;width:min(440px,calc(100vw - 40px))}
+    /* On phones the popover was anchored to the tiny BE box and ran off the right edge.
+       Make it a bottom sheet: fixed, full-width, never clipped, tap it or away to close. */
+    .market-card .context-pop{position:fixed;left:14px;right:14px;bottom:14px;top:auto;width:auto;max-width:none;box-shadow:0 -6px 28px rgba(0,0,0,.16)}
     .market-value{font-size:32px}
     .market-compare{min-height:0}
     .timeline{grid-template-columns:1fr}
@@ -245,7 +249,11 @@ document.querySelectorAll('.be-btn').forEach((btn)=>{
   btn.addEventListener('click',(e)=>{e.stopPropagation();const isOpen=btn.getAttribute('aria-expanded')==='true';beCloseAll(isOpen?null:btn);btn.setAttribute('aria-expanded',String(!isOpen));panel.hidden=isOpen;});
 });
 // Clicks inside an open panel or a market-card popover must not bubble out and self-close.
-document.querySelectorAll('.be-panel,details.context').forEach((el)=>el.addEventListener('click',(e)=>e.stopPropagation()));
+// Stop propagation on the story panels (reading them shouldn't close them) and on the
+// market BE button (so opening it doesn't immediately self-close) — but NOT on the market
+// popover itself, so tapping the popover or anywhere else always dismisses it. Fixes the
+// "no way to unclick" on the market cards, desktop and mobile (Alan 2026-07-17).
+document.querySelectorAll('.be-panel, .context > .be-summary').forEach((el)=>el.addEventListener('click',(e)=>e.stopPropagation()));
 document.addEventListener('click',()=>beCloseAll(null));
 document.addEventListener('keydown',(e)=>{if(e.key==='Escape')beCloseAll(null);});
 // Opening a market-card popover closes any other open BE.
