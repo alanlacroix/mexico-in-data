@@ -1,52 +1,178 @@
 {
   "meta": {
     "title": "Standing facts",
-    "note": "The durable structural conditions of Mexico — not events, not live numbers, but the facts that frame them. This is the old one-liner 'bottom line' decomposed and sourced. The homepage brief's 'where things stand' paragraph may draw ONLY from these, the board numbers, and the event log — every sentence links to one. Hand-curated; review quarterly.",
-    "updated": "2026-07-11",
+    "note": "The durable structural conditions of Mexico — not events, not live numbers, but the facts that frame them. This is the primer library behind every Briefly Explained background: the model may ground a story's background ONLY in these facts and the article. Expanded 2026-07-17 from the site's own Mexico 2026 overview report (reports/mexico-overview-2026), where every figure below is sourced and dated. Review quarterly; a story whose background finds no fact here is the signal for the next fact to add.",
+    "updated": "2026-07-17",
     "reviewCadence": "quarterly"
   },
   "facts": [
     {
       "id": "std-us-dependence",
+      "topics": ["trade", "us-mexico", "economy"],
       "fact": "About 80% of Mexico's exports go to the United States — the deepest single-partner dependence of any large economy.",
       "source": "U.S. Census / INEGI",
       "url": "https://www.census.gov/foreign-trade/balance/c2010.html"
     },
     {
       "id": "std-usmca-review",
-      "fact": "Trade under USMCA continues. The U.S. declined a 16-year extension, so the three countries will review the agreement again every year until they reach a deal or the current term ends in 2036.",
+      "topics": ["trade", "us-mexico"],
+      "fact": "Trade under USMCA continues. At the first joint review on 1 July 2026 the U.S. declined a 16-year extension, so under Article 34.7 the three countries now review the agreement every year; the treaty can run through 2036 unless extended or a country withdraws. Existing factories keep trading under the pact while new long-payback projects face uncertain future rules.",
       "source": "USTR",
       "url": "https://ustr.gov/"
     },
     {
+      "id": "std-trade-volume",
+      "topics": ["trade", "us-mexico"],
+      "fact": "U.S.–Mexico goods trade reached about US$872bn in 2025; Mexico exported about US$665bn of goods overall, led by vehicles, electronics, machinery and medical equipment.",
+      "source": "U.S. Census / Banco de México",
+      "url": "https://www.census.gov/foreign-trade/balance/c2010.html"
+    },
+    {
+      "id": "std-china-inputs",
+      "topics": ["trade", "us-mexico", "economy"],
+      "fact": "Mexico buys far more from China than it sells there — about US$129.5bn in imports against US$9.1bn in exports in 2024, mostly electronics, machinery and components. Those inputs make Mexican factories competitive but expose them to North American rules of origin aimed at Chinese content.",
+      "source": "UN Comtrade",
+      "url": "https://comtradeplus.un.org/"
+    },
+    {
+      "id": "std-fdi-composition",
+      "topics": ["economy", "trade"],
+      "fact": "Foreign direct investment reached US$40.9bn in 2025, but 67.7% was reinvested earnings and only 18.0% new investment — a record FDI headline is not proof of new plants. The honest nearshoring evidence is machinery imports, private construction, grid connections and formal hiring.",
+      "source": "Secretaría de Economía",
+      "url": "https://www.gob.mx/se"
+    },
+    {
       "id": "std-weak-growth",
-      "fact": "Trend growth is weak — external forecasters put 2026 GDP growth near 1%.",
-      "source": "IMF / World Bank",
+      "topics": ["economy"],
+      "fact": "Mexico is a US$1.83 trillion economy of about 132 million people that grew only about 0.6% in 2025, and real output per person is only about 7% higher than in 2000 — exports set records while the export plants have weak links to millions of small firms, so trade succeeds without producing much growth for the average person.",
+      "source": "World Bank / INEGI",
       "url": "https://www.imf.org/en/Countries/MEX"
     },
     {
-      "id": "std-informal-economy",
-      "fact": "A little over half of Mexican workers are in the informal economy, off the formal payroll and tax rolls.",
-      "source": "INEGI (ENOE)",
-      "url": "https://www.inegi.org.mx/programas/enoe/15ymas/"
+      "id": "std-investment-rate",
+      "topics": ["economy"],
+      "fact": "Fixed investment fell from 23.8% of GDP in 2024 to 22.4% in 2025 — the watch-number for whether announced projects become physical capacity.",
+      "source": "World Bank / INEGI",
+      "url": "https://www.inegi.org.mx/"
+    },
+    {
+      "id": "std-bank-credit",
+      "topics": ["money", "economy"],
+      "fact": "Commercial-bank credit to the private sector is only about 35.5% of GDP — low for a large economy. Big companies borrow from global banks or bond markets while small firms face high rates and collateral demands; that financing gap is what foreign private-credit funds are moving to fill.",
+      "source": "World Bank / Banco de México",
+      "url": "https://www.banxico.org.mx/"
+    },
+    {
+      "id": "std-stock-market",
+      "topics": ["money"],
+      "fact": "Mexico's listed market is far narrower than its economy: the S&P/BMV IPC held 35 companies in June 2026, more than half of it consumer staples and materials, so the index says little about startups, private manufacturers or foreign-owned factories.",
+      "source": "S&P/BMV",
+      "url": "https://www.spglobal.com/spdji/en/indices/equity/sp-bmv-ipc/"
     },
     {
       "id": "std-inflation-target",
-      "fact": "Banxico targets 3% inflation, give or take one point, and sets the policy rate to hold it there.",
+      "topics": ["money"],
+      "fact": "Banxico targets 3% inflation, give or take one point, and sets the policy rate to hold it there; high Mexican rates relative to U.S. rates are one of the main supports of the peso.",
+      "source": "Banco de México",
+      "url": "https://www.banxico.org.mx/"
+    },
+    {
+      "id": "std-peso-mechanics",
+      "topics": ["money", "economy"],
+      "fact": "A stronger peso cuts the peso cost of imports and helps contain inflation, but pays exporters and remittance families fewer pesos per dollar — the cause of a currency move matters more than the level itself.",
       "source": "Banco de México",
       "url": "https://www.banxico.org.mx/"
     },
     {
       "id": "std-remittances",
-      "fact": "Remittances from workers in the U.S. run about 3.5% of GDP — a bigger dollar inflow than foreign direct investment.",
+      "topics": ["economy", "us-mexico", "society"],
+      "fact": "Mexico received US$62.47bn in remittances in 2025, mostly from workers in the United States — a bigger dollar inflow than foreign direct investment. The money supports household spending and cushions weak stretches of the economy; a stronger peso reduces what each dollar delivers.",
       "source": "Banco de México",
       "url": "https://www.banxico.org.mx/"
     },
     {
-      "id": "std-fiscal-pemex",
-      "fact": "Mexico sits on the last investment-grade rung at Moody's, held down chiefly by the cost of supporting Pemex, the state oil company.",
-      "source": "Moody's / Hacienda",
+      "id": "std-fiscal-path",
+      "topics": ["fiscal", "economy"],
+      "fact": "Broad public debt rose from 52.0% of GDP in 2024 to 53.2% in 2025 and is projected near 54.7% in 2026 — moderate by large-economy standards, but pensions, interest payments and support for Pemex crowd out electricity, water, security and health spending, and a low tax take (narrowed by informality) limits the room.",
+      "source": "SHCP (Hacienda)",
       "url": "https://www.gob.mx/hacienda"
+    },
+    {
+      "id": "std-fiscal-pemex",
+      "topics": ["fiscal", "energy"],
+      "fact": "Mexico sits on the last investment-grade rung at Moody's, held down chiefly by the cost of supporting Pemex. The state oil company is not financially separate from the government — federal support, tax relief and sovereign-backed refinancing all use public capacity — and money spent propping it up cannot also build the grids, water systems and security that new factories need.",
+      "source": "Moody's / Hacienda / Pemex",
+      "url": "https://www.gob.mx/hacienda"
+    },
+    {
+      "id": "std-energy-constraint",
+      "topics": ["energy", "economy"],
+      "fact": "Reliable electricity and water at a specific site, with a connection date a company can plan around, are the operating constraints on new industrial projects; Mexico also imports large volumes of U.S. natural gas, tying its power system to the bilateral relationship.",
+      "source": "CENACE / U.S. EIA",
+      "url": "https://www.gob.mx/cenace"
+    },
+    {
+      "id": "std-political-system",
+      "topics": ["politics"],
+      "fact": "Mexico's president serves one six-year term with no reelection. Claudia Sheinbaum won 59.76% of the vote and took office in October 2024, and Morena with its allies commands the two-thirds congressional strength that, with a majority of state legislatures, can amend the constitution — so national institutions can change quickly.",
+      "source": "INE / Constitución",
+      "url": "https://www.ine.mx/"
+    },
+    {
+      "id": "std-judicial-reform",
+      "topics": ["politics"],
+      "fact": "The 2024 judicial reform replaced appointment with election for much of the federal judiciary; the first judicial election in June 2025 drew turnout near 13%, and the new Supreme Court took office that September. The practical tests are how long cases take, whether rulings are enforced, and whether courts stay independent when the government or powerful local interests are involved.",
+      "source": "OAS / Suprema Corte",
+      "url": "https://www.scjn.gob.mx/"
+    },
+    {
+      "id": "std-security-measures",
+      "topics": ["security", "politics"],
+      "fact": "The government reports daily homicides down 46% from September 2024 — preliminary prosecutor data, with final death certificates arriving later. INEGI's victimization survey counted 33.5 million crimes in 2024, of which 93.2% were never reported or investigated; extortion and cargo theft fall hardest on small firms that cannot pay for private security.",
+      "source": "SSPC / INEGI (ENVIPE)",
+      "url": "https://www.inegi.org.mx/programas/envipe/2025/"
+    },
+    {
+      "id": "std-informal-economy",
+      "topics": ["society", "economy"],
+      "fact": "55.2% of Mexican workers — about 33.4 million people — are informal, working without full legal, tax or social-security protection. With no broad unemployment insurance, people take informal work rather than none, which is why unemployment near 2.8% and mass informality coexist; informality also narrows the tax base and keeps small firms outside credit and supply chains.",
+      "source": "INEGI (ENOE)",
+      "url": "https://www.inegi.org.mx/programas/enoe/15ymas/"
+    },
+    {
+      "id": "std-wages-poverty",
+      "topics": ["society", "economy"],
+      "fact": "The real minimum wage rose roughly 68% from January 2021 to early 2026, and multidimensional poverty fell from 46.8 million people in 2022 to 38.5 million (29.6% of the population) in 2024 — though 48.2% of Mexicans still lack social-security access and 34.2% lack health-service access.",
+      "source": "OECD / INEGI",
+      "url": "https://www.inegi.org.mx/"
+    },
+    {
+      "id": "std-demographics",
+      "topics": ["society", "economy"],
+      "fact": "Fertility fell from 2.7 births per woman in 2000 to 1.89 in 2024, so the labor force will age and future growth depends on raising output per worker rather than adding workers.",
+      "source": "World Bank",
+      "url": "https://data.worldbank.org/indicator/SP.DYN.TFRT.IN?locations=MX"
+    },
+    {
+      "id": "std-migration",
+      "topics": ["us-mexico", "society"],
+      "fact": "Mexico is a country of emigration, return and transit: INEGI estimated about 1.2 million departures between August 2018 and September 2023, most to the United States for work, against about 276,000 returns — the human base of the remittance flow and of recurring U.S.–Mexico friction over enforcement.",
+      "source": "INEGI (ENADID)",
+      "url": "https://www.inegi.org.mx/programas/enadid/2023/"
+    },
+    {
+      "id": "std-regional-divide",
+      "topics": ["economy", "society"],
+      "fact": "Mexico's north produced 25.7% of GDP with 18.6% of the population in 2024, with GDP per resident about twice the south's (MX$352,000 vs MX$177,000) and poverty of 13.4% against the south's 47.2% — the industrial base is concentrated in the north, the Bajío and a few large cities.",
+      "source": "INEGI / CONAPO",
+      "url": "https://www.inegi.org.mx/"
+    },
+    {
+      "id": "std-economy-shape",
+      "topics": ["economy"],
+      "fact": "Services produce 58.9% of Mexico's GDP and manufacturing 20.0%; manufacturing draws the attention because its products cross the border, but most value is created in the services economy around it.",
+      "source": "World Bank",
+      "url": "https://data.worldbank.org/country/mexico"
     }
   ]
 }
