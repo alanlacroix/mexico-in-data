@@ -23,8 +23,8 @@ assert.match(home, /Markets today/i, 'homepage must separate fast-moving reading
 assert.match(home, /What happened/i, 'homepage must lead readers through the major stories');
 assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
 assert.match(home, /for story in latestStories/, 'the full news feed must live on the Brief instead of a separate Latest page');
-assert.match(home, /behind the headline\./i, 'the homepage must explain the Context mark once in plain language');
-assert.match(home, /class="be-mark"[^>]*>Context</i, 'stories must use the Context house mark for optional context');
+assert.match(home, /The context behind the headline\./i, 'the homepage must explain the BE mark once in plain language');
+assert.match(home, /class="be-mark"[^>]*>BE</i, 'stories must use the BE house mark for optional context');
 assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
 assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as a duplicate footer destination');
 assert.match(home, /id="week-title">The week ahead</i, 'homepage must show the week-ahead calendar section');
