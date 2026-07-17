@@ -225,7 +225,7 @@ async function main() {
   // (not an old-dated item that only just cleared the bar). This is the daily-delta signal.
   const isNew = (e) => !prevHrefs.has(e.url || '') && ((nowMs - (e._t || 0)) / DAY) <= 4;
   const lead0 = picked[0];
-  const pass4 = (e) => ({ background: String(e.background || '').trim(), drivers: String(e.drivers || '').trim(), implications: String(e.implications || '').trim(), next: String(e.next || '').trim() });
+  const pass4 = (e) => ({ background: String(e.background || '').trim(), drivers: String(e.drivers || '').trim(), implications: String(e.implications || '').trim(), next: String(e.next || '').trim(), image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '' });
   const lead = { h1: stripDash(lead0.title).replace(/\.\s*$/, ''), context: ctxOf(lead0), ...pass4(lead0), refs: [lead0.id],
     href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0) };
   const items = picked.slice(1).map((e) => ({ headline: stripDash(e.title).replace(/\.\s*$/, ''), context: ctxOf(e), ...pass4(e),

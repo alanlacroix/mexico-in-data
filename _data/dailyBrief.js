@@ -64,6 +64,8 @@ const toStory = (e) => {
     // The four-part Briefly Explained model (Alan 2026-07-16): background · drivers ·
     // implications · what's next — article-grounded, field-by-field gated, may be empty.
     bg: clean(e.background), drivers: clean(e.drivers), implications: clean(e.implications), next: clean(e.next),
+    // The article's own link-preview image (og:image, https-only) — unfurl-style thumbnail.
+    image: /^https:\/\//i.test(clean(e.image)) ? clean(e.image) : '',
     source: clean(e.source),
     url: clean(e.href || e.url),
     topic: s.room,

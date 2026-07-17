@@ -19,7 +19,19 @@ export async function fetchArticle(url) {
     } catch { return { ok: false, text: '' }; }
   }
   const text = extractText(html);
-  return { ok: text.length >= 400, text };
+  return { ok: text.length >= 400, text, image: extractOgImage(html) };
+}
+
+// The article's own link-preview image (og:image / twitter:image) — the thumbnail the
+// publisher explicitly marks up for sharing. Used as a SMALL preview on story cards that
+// link out, unfurl-style, attributed via the story's source line. https only; empty when
+// the page declares none.
+export function extractOgImage(html) {
+  if (!html) return '';
+  const m = html.match(/<meta[^>]+(?:property|name)=["'](?:og:image(?::secure_url)?|twitter:image(?::src)?)["'][^>]+content=["']([^"']+)["']/i)
+    || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["'](?:og:image(?::secure_url)?|twitter:image(?::src)?)["']/i);
+  const url = m ? m[1].replace(/&amp;/g, '&').trim() : '';
+  return /^https:\/\//i.test(url) ? url.slice(0, 500) : '';
 }
 
 export function extractText(html) {

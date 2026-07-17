@@ -254,9 +254,12 @@ async function addBackgrounds(events, now) {
   // earlier, looser caps) also re-analyze so everything converges tight (Alan: "not crazy long").
   const totalWords = (e) => ['background', 'drivers', 'implications', 'next']
     .reduce((n, f) => n + String(e[f] || '').split(/\s+/).filter(Boolean).length, 0);
-  const want = events.filter((e) => (e.importance || 0) >= 5 && (!e.drivers || totalWords(e) > 130) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
+  const want = events.filter((e) => (e.importance || 0) >= 5 && (!e.drivers || totalWords(e) > 130 || (!e.image && !e.imageChecked)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
-  const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '' })) })));
+  const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '' })) })));
+  // The article's own link-preview image rides along free with the analysis fetch
+  // (unfurl-style story thumbnail; https-only, may be empty; attributed via the source line).
+  for (const x of fetched) { if (x.r.image && !x.e.image) x.e.image = x.r.image; x.e.imageChecked = 1; }   // one shot per story; no image on the page ≠ refetch forever
   const items = fetched.filter((x) => x.r.ok).map((x, i) => ({ i, e: x.e, body: x.r.text.slice(0, 1600) }));
   console.log(`  analysis: ${want.length} wanted · ${items.length} article bodies fetched`);
   if (!items.length) return 0;

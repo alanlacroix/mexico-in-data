@@ -31,7 +31,12 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .brief-story{padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
   .story-meta{display:flex;align-items:center;gap:5px 11px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
   .story-topic{font-weight:650;color:var(--green-d);text-decoration:none}
-  .story-title-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
+  .story-title-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:start}
+  /* Story thumbnail: the article's own link-preview image, unfurl-style — small, quiet,
+     clicks through to the source (which the meta line names). Hidden automatically if it fails. */
+  .story-thumb{display:block;width:116px;height:76px;border-radius:4px;overflow:hidden;background:var(--paper-2)}
+  .story-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  @media(max-width:650px){.story-thumb{width:86px;height:58px}}
   .story-copy{min-width:0}
   .story-link{color:var(--ink);text-decoration:none}
   .story-link:hover{color:var(--green-d)}
@@ -147,6 +152,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
         <div class="story-meta"><a class="story-topic" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-date" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
         <div class="story-title-row">
           <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
+          {% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" loading="lazy" referrerpolicy="no-referrer" /></a>{% endif %}
           <details class="context"><summary class="be-summary" aria-label="Briefly Explained" title="Briefly Explained"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop">{% if story.drivers or story.implications or story.next %}{% if story.bg %}<p><span class="ck">Background</span>{{ story.bg }}</p>{% endif %}{% if story.drivers %}<p><span class="ck">Drivers</span>{{ story.drivers }}</p>{% endif %}{% if story.implications %}<p><span class="ck">Implications</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}{% else %}<p>{{ story.explanation }}</p>{% endif %}</div></details>
         </div>
       </article>
@@ -257,4 +263,11 @@ Promise.all([
   if(status&&health?.generatedAt){const checked=Date.parse(health.generatedAt);const failed=(health.sources||[]).filter((s)=>s.status==='failed').length;status.textContent=`Data checked ${relTime(checked)}${failed?` · ${failed} feed ${failed===1?'issue':'issues'}`:''}`;}
   else if(status)status.textContent='Open data sources';
 }).catch(()=>{const status=document.getElementById('status');if(status)status.textContent='Open data sources';});
+
+// Story thumbnails fail soft: a blocked or rotten image removes itself and the card
+// reverts to text. The image is an enhancement, never a dependency.
+document.querySelectorAll('.story-thumb img').forEach((img)=>{
+  const kill=()=>{const t=img.closest('.story-thumb');if(t)t.remove();};
+  if(img.complete&&img.naturalWidth===0)kill();else img.addEventListener('error',kill,{once:true});
+});
 </script>
