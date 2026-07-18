@@ -21,6 +21,8 @@ const read = (rel) => {
 const SECTIONS = {
   economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/?topic=economy#all-news' },
   money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/?topic=economy#all-news' },
+  payments:    { beat: 'Payments',        room: 'Payments & fintech',  url: '/?topic=payments#all-news' },
+  tech:        { beat: 'Tech',            room: 'Tech & startups',     url: '/?topic=tech#all-news' },
   politics:    { beat: 'Politics',        room: 'Politics',            url: '/?topic=politics#all-news' },
   security:    { beat: 'Security',        room: 'Society & security',  url: '/?topic=society#all-news' },
   society:     { beat: 'Society',         room: 'Society & security',  url: '/?topic=society#all-news' },

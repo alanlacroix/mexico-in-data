@@ -60,7 +60,19 @@ const MAX_STORE = 60;        // hard cap on stored entries
 const MAX_NEW = 16;          // model returns at most this many new events per run
 const MAX_CANDIDATES = 90;
 
-const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
+const SECTIONS = ['economy', 'money', 'payments', 'tech', 'politics', 'security', 'us-mexico', 'society'];
+
+// Dedicated fintech / startup-VC sources: whatever they publish is payments or tech by
+// nature, so tag it that way even if the model filed it under economy (Alan 2026-07-17:
+// give payments and tech/startups/VC their own homepage filters, and fill them).
+const FINTECH_SOURCES = /^(iupana)$/i;
+const STARTUP_SOURCES = /^(contxto|latamlist|crunchbase news|techcrunch)/i;
+function sourceSection(x) {
+  const s = String(x.sourceName || x.source || '');
+  if (FINTECH_SOURCES.test(s) || x.beat === 'fintech') return 'payments';
+  if (STARTUP_SOURCES.test(s) || x.beat === 'deals') return 'tech';
+  return null;
+}
 
 // Fallback section routing when the model isn't available (the model assigns section otherwise).
 const SEC_RX  = /homicid|violen|c[áa]rtel|cartel|narco|crimen|segurid|extradi|fentanil|desaparec|security|militar|guardia nacional/i;
@@ -70,9 +82,9 @@ const MONEY_RX= /banxico|peso|inflaci|tasa de inter|bono|cetes|mercado|bolsa|\bb
 
 function beatSection(x) {
   const t = (x.title || '') + ' ' + (x.dek || '') + ' ' + (x.beat || '');
+  const src = sourceSection(x); if (src) return src;
   if (x.sourceName === 'Mexico Business News' && x.beat === 'economy') return 'economy';
-  if (x.beat === 'fintech') return 'money';
-  if (x.beat === 'companies' || x.beat === 'deals') return 'economy';
+  if (x.beat === 'companies') return 'economy';
   if (SEC_RX.test(t)) return 'security';
   if (USMX_RX.test(t)) return 'us-mexico';
   if (POL_RX.test(t)) return 'politics';
@@ -116,6 +128,13 @@ function candidates(now) {
     if (kept.some((k) => jaccard(k._n, n) >= 0.6)) continue;   // collapse near-duplicate stories
     x._n = n; kept.push(x);
     if (kept.length >= MAX_CANDIDATES) break;
+  }
+  // Guarantee the specialist payments/tech sources a seat at the table: high-volume political
+  // feeds otherwise win the recency race and these never reach the editor, leaving the
+  // payments/tech filters empty (Alan 2026-07-17). Add up to 12 of their freshest items.
+  for (const x of pool.filter((y) => sourceSection(y) && !kept.includes(y)).slice(0, 12)) {
+    const n = normTitle(x.title);
+    if (!kept.some((k) => jaccard(k._n, n) >= 0.6)) { x._n = n; kept.push(x); }
   }
   return kept;
 }
@@ -189,12 +208,12 @@ async function curate(cands, now) {
 CRIME AND VIOLENCE SCOPE (important): The Mexico Brief is not a crime tracker. SKIP an event when the violence IS the story, reported for its own sake: cartel or gang violence, individual homicides, shootings, murders, kidnappings, disappearances, body counts, or a personal tragedy. KEEP an event that carries a genuine political, economic, electoral, or diplomatic angle even when it involves crime, gangs, or death: a security law or reform, a court or legal ruling with political weight, a U.S.-Mexico security or migration dispute, a sanction or extradition with diplomatic stakes, or the government's own crime statistics presented as a record of its performance. When a violent event also has real political or economic consequence, keep it and FRAME it by that consequence, not the violence. When in doubt, ask whether a reader following Mexico's economy, politics, and U.S. relationship needs it; if the only thing there is the crime itself, skip it.
 For each item you select, return:
 - i: its index in the list
-- section: exactly one of economy | money | politics | security | us-mexico | society
-- importance: 0-10, scored by the Brief rubric — add 0, 1, or 2 on EACH of five criteria: (1) national consequence, (2) US-Mexico stakes, (3) model impact (does it move or explain the peso, inflation, the policy rate, or growth?), (4) durability (still matters in 30 days — a first report of a real change scores; commentary and re-reports score 0), (5) officialness (a primary source like Banxico, INEGI, DOF, SHCP, or USTR is available). A defining national event (USMCA, a constitutional reform) scores 9-10; a solid worth-a-line item lands 5-6; anything below 5 will not make the Brief.
+- section: exactly one of economy | money | payments | tech | politics | security | us-mexico | society. Use "payments" for fintech, banking, remittances, digital-payment and card developments; use "tech" for startups, venture-capital raises, technology companies, AI, data centers, and software.
+- importance: 0-10, scored by the Brief rubric — add 0, 1, or 2 on EACH of five criteria: (1) national consequence, (2) US-Mexico stakes, (3) model impact (does it move or explain the peso, inflation, the policy rate, or growth?), (4) durability (still matters in 30 days — a first report of a real change scores; commentary and re-reports score 0), (5) officialness (a primary source like Banxico, INEGI, DOF, SHCP, or USTR is available). A defining national event (USMCA, a constitutional reform) scores 9-10; a solid worth-a-line item lands 5-6; anything below 5 will not make the Brief. SCORE BUSINESS, PAYMENTS AND TECH FAIRLY: a payments/fintech, startup/VC, or technology development that will not move the peso should be scored by its significance to Mexico's business and tech ecosystem instead — a notable funding round, a market entry or exit, a major product or data-center investment, or a regulator's action lands 5-6; do not floor these at 4 just because they lack an official macro source.
 - title: a clean, factual headline in the present tense — rewrite the source headline for clarity, no hype, no em-dash, no clickbait
 - why: ONE or two sentences of CONTEXT on why it matters — enough to actually explain the story, not just restate the headline. Write ONLY from the provided title and dek. State the stakes plainly; no invented facts, no numbers not present in the source, no adjectives doing the work of an argument.
 - company: if this event is primarily about ONE specific named company (a deal, earnings, an investment, a corporate move, a regulator's action against it), set this to that company's clean common name (e.g. "BYD", "Nu", "Pemex", "Femsa", "Volaris"). If it is not about a single identifiable company, set it to an empty string "". Never invent a company not named in the source.
-Aim for BREADTH across sections — a reader should see politics, security, and U.S.–Mexico, not only economics. Prefer the most consequential item when several cover the same story. Select at most ${MAX_NEW}. Return JSON.
+Aim for BREADTH across sections — a reader should see politics, security, and U.S.–Mexico, AND the notable business, payments/fintech and tech/startup developments, not only macro economics. When genuine payments/fintech or startup/VC/tech items are in the candidates, include the strongest few. Prefer the most consequential item when several cover the same story. Select at most ${MAX_NEW}. Return JSON.
 
 ${REPORT}
 
@@ -211,7 +230,7 @@ ${BAN}`;
   const events = [];
   for (const r of out.events) {
     const x = cands[r.i]; if (!x) continue;
-    const sec = SECTIONS.includes(r.section) ? r.section : beatSection(x);
+    const sec = sourceSection(x) || (SECTIONS.includes(r.section) ? r.section : beatSection(x));
     const report = `${String(r.title || '').trim()}. ${String(r.why || '').trim()}`;
     const gate = lintReportText({
       text: report,

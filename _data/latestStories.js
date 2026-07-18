@@ -2,8 +2,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const SECTION = {
-  economy: { key: 'economy', label: 'Economy & business' },
-  money: { key: 'economy', label: 'Economy & business' },
+  economy: { key: 'economy', label: 'Economy' },
+  money: { key: 'economy', label: 'Economy' },
+  payments: { key: 'payments', label: 'Payments' },
+  tech: { key: 'tech', label: 'Tech & startups' },
   politics: { key: 'politics', label: 'Politics' },
   security: { key: 'society', label: 'Society & security' },
   society: { key: 'society', label: 'Society & security' },
