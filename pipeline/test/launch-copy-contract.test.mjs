@@ -20,7 +20,7 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
 assert.match(home, /Mexico this morning/i, 'homepage must remain a daily starting point');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
 assert.match(home, /Markets today/i, 'homepage must separate fast-moving readings');
-assert.match(home, /What happened/i, 'homepage must lead readers through the major stories');
+assert.match(home, /Top stories/i, 'homepage must lead readers through the major stories');
 assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
 assert.match(home, /for story in latestStories/, 'the full news feed must live on the Brief instead of a separate Latest page');
 assert.match(home, /The context behind the headline\./i, 'the homepage must explain the BE mark once in plain language');

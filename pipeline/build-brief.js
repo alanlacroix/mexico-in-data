@@ -232,7 +232,11 @@ async function writeSummary(picked) {
   const out = await askJSON({ system, user: JSON.stringify(items), schema, maxTokens: 2500 });
   const text = String(out && out.summary || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
   if (!text) return '';
-  const gate = lintReportText({ text, inputs: items.flatMap((i) => [i.title, i.context]), maxWords: 90, maxSentences: 5 });
+  // Headroom over the ~80-word target: the model routinely overshoots by a few words, and
+  // a 2-word overage must not throw away the whole paragraph (Alan 2026-07-17: the brief
+  // collapsed to a one-line headline because a 92-word summary hit a 90 cap). maxSentences
+  // still keeps it a paragraph, not an essay.
+  const gate = lintReportText({ text, inputs: items.flatMap((i) => [i.title, i.context]), maxWords: 105, maxSentences: 5 });
   if (!gate.ok) { console.warn(`  summary rejected: ${gate.flags.join('; ')}`); return ''; }
   return text;
 }
@@ -286,8 +290,10 @@ async function main() {
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
   const stampDate = new Date(reviewedAt);
   // The synthesis is stable prose: keep the previous one on an unchanged story set (no
-  // re-paraphrasing), write a fresh one only when the set actually changed.
-  const summary = (unchanged && String(prev.summary || '').trim()) || await writeSummary(picked) || '';
+  // re-paraphrasing), write a fresh one only when the set actually changed. If a fresh write
+  // fails its gate, keep the LAST-GOOD paragraph rather than collapsing to the bare lead
+  // headline (Alan 2026-07-17: "why is our brief so short now"). Next good run refreshes it.
+  const summary = (unchanged && String(prev.summary || '').trim()) || await writeSummary(picked) || String(prev.summary || '').trim() || '';
   const out = { meta: { title: 'The brief', updated: reviewedAt.slice(0, 10), asOf: `${MO[stampDate.getUTCMonth()]} ${stampDate.getUTCDate()}`,
     reviewedAt, latestItemDate: selectedDates.at(-1) || '', quiet, newCount,
     generatedAt: reviewedAt, mode: 'curated', count: 1 + items.length, words, contentSig }, summary, lead, items, standing };
