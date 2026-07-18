@@ -79,15 +79,8 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .show-more:hover{color:var(--green)}
   .show-more[hidden]{display:none}
 
-  .markets,.week,.subscribe-section,.pays{margin-top:54px}
+  .markets,.week,.subscribe-section{margin-top:54px}
   .markets{border-top:2px solid var(--green);padding-top:14px}
-  /* "How Mexico pays" — the Payments DATA section (Fable 2026-07-17: payments is a first-party
-     data surface, not a news tab). Reuses the market-card grid; each card carries a plain-English note. */
-  .pays{border-top:2px solid var(--green);padding-top:14px}
-  .pays-primer{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);max-width:80ch;margin:13px 0 16px}
-  .pays-card{text-decoration:none;color:inherit}
-  .pays-card .market-name{padding-right:14px}
-  .pays-note{font-size:12px;line-height:1.42;color:var(--ink-2);margin-top:9px;min-height:32px}
   .market-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:5px;overflow:visible;margin-top:14px}
   .market-card{position:relative;min-width:0;padding:15px 16px 14px;background:var(--paper)}
   .market-card+.market-card{border-left:1px solid var(--line)}
@@ -221,15 +214,6 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
     </div>
   </section>
 
-  {% if paymentsBoard.length %}
-  <section class="pays" aria-labelledby="pays-title">
-    <div class="section-top"><div><h2 class="section-title" id="pays-title">How Mexico pays</h2></div><a class="text-link" href="/chart.html?v=banxico-spei-operaciones,banxico-codi-operaciones">All payment data →</a></div>
-    <p class="pays-primer"><b>About 78% of Mexican adults now hold at least one formal financial product</b> — the highest since 2015 (ENIF 2024) — yet the system is lopsided: SPEI, Banxico’s free instant-transfer rail, moves the money while CoDi, the QR push built to bank the unbanked, never caught on; cards and cash still share the counter; and remittances remain among the largest dollar inflows. First-party Banco de México and CNBV / INEGI data.</p>
-    <div class="market-grid">
-      {% for t in paymentsBoard %}<a class="market-card pays-card" href="{{ t.href }}"><div class="market-name">{{ t.label }}</div><div class="market-value">{{ t.display }}</div><div class="market-move {% if t.up === true %}up{% elif t.up === false %}down{% else %}flat{% endif %}">{{ t.change if t.change else 'latest reading' }}</div><div class="pays-note">{{ t.note }}</div><div class="market-date"><span class="js-date" data-date="{{ t.date }}">{{ t.date }}</span> · {{ t.source }}</div></a>{% endfor %}
-    </div>
-  </section>
-  {% endif %}
 
   <section class="week" aria-labelledby="week-title">
     <div class="section-top"><div><h2 class="section-title" id="week-title">The week ahead</h2></div><span class="section-note">Official releases and meetings</span></div>
