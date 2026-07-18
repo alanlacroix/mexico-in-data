@@ -13,7 +13,9 @@
 module.exports = [
   { label: 'Brief', href: '/' },
   { label: 'Numbers', href: '/chart.html' },
+  { label: 'Atlas', href: '/atlas.html' },
   { label: 'Explore', href: '/explore.html' },
   { label: 'Sources', href: '/sources.html' },
+  { label: 'About', href: '/about.html' },
   { label: 'Subscribe', href: '/weekly.html', cta: true },
 ];
