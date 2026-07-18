@@ -54,8 +54,8 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   <section class="hero">
     <span class="eyebrow">Atlas · 32 states</span>
     <h1>Mexico, state by state</h1>
-    <p class="dek">Compare the states by output, output per person, poverty, or informal employment. Pick one for the exact value, its rank, the national comparison, and the original source. Municipal poverty is available one level deeper.</p>
-    <p class="personal-note">I usually start with GDP per person. Total GDP tells you economic size; GDP per person makes states easier to compare.</p>
+    <p class="dek">Compare the states by output, output per person, population, poverty, or informal employment. Pick one for the exact value, its rank, the national comparison, and the original source. Municipal poverty is available one level deeper.</p>
+    <p class="personal-note">I usually start with GDP per person: total GDP tells you size, GDP per person makes states comparable. The clearest pattern on the map is the north–south divide — the north produces about twice the south per person, and poverty runs the other way.</p>
 
     <div class="controls">
       <div class="searchcol">
@@ -71,6 +71,7 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
         <div class="metricsel" id="metricsel" role="group" aria-label="Map metric">
           <button type="button" data-m="gdppc" class="on" aria-pressed="true">GDP / person</button>
           <button type="button" data-m="gdp" aria-pressed="false">Total GDP</button>
+          <button type="button" data-m="pop" aria-pressed="false">Population</button>
           <button type="button" data-m="pov" aria-pressed="false">Poverty</button>
           <button type="button" data-m="inf" aria-pressed="false">Informality</button>
         </div>

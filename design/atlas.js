@@ -15,7 +15,7 @@ let PROJ, MUNI = [], MBY = {}, SFEAT = [];
 let REGISTRY_PROMISE = null, MUNICIPAL_PROMISE = null;
 let LEVEL = 'states', METRIC = 'gdppc', SELSTATE = null, SEL = null, CURSTATE = null, SHOWALL = false;
 const NAT = { muniPoverty2020: 43.9114 };
-const STVAL = { gdppc: {}, gdp: {}, pov: {}, inf: {} };
+const STVAL = { gdppc: {}, gdp: {}, pov: {}, inf: {}, pop: {} };
 const MUNIVAL = { pov: {} };
 const RAMP_G = ['#e7f2ec', '#b7dcc5', '#79bd96', '#3a9866', '#0a7d4d'];
 const RAMP_A = ['#f4f0e6', '#e7c893', '#d99a4f', '#c26a26', '#8f4110'];
@@ -24,6 +24,7 @@ const fmtGDP = (v) => v >= 1_000_000 ? `MX$${(v / 1_000_000).toFixed(2)}tn` : `M
 const METRICS = {
   gdppc: { field: 'gdppc_mxn', label: 'GDP per person', unit: 'current MXN per person', fmt: (v) => `MX$${enNum(Math.round(v))}`, direction: 'higher', ramp: RAMP_G, source: 'gdp' },
   gdp: { field: 'gdp_mxn_m', label: 'Total GDP', unit: 'current MXN', fmt: fmtGDP, direction: 'higher', ramp: RAMP_G, source: 'gdp' },
+  pop: { field: 'pop', label: 'Population', unit: 'people', fmt: (v) => v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M` : enNum(Math.round(v)), direction: 'higher', ramp: RAMP_G, source: 'population' },
   pov: { field: 'poverty', label: 'Poverty', unit: '% of people', fmt: (v) => `${v.toFixed(1)}%`, direction: 'higher', ramp: RAMP_A, source: 'poverty' },
   inf: { field: 'informality', label: 'Informal employment', unit: '% of employed people', fmt: (v) => `${v.toFixed(1)}%`, direction: 'higher', ramp: RAMP_A, source: 'informality' }
 };
@@ -96,6 +97,7 @@ function computeStateValues() {
   for (const [code, state] of Object.entries(ST)) {
     STVAL.gdppc[code] = state.gdppc_mxn;
     STVAL.gdp[code] = state.gdp_mxn_m;
+    STVAL.pop[code] = state.pop;
     STVAL.pov[code] = state.poverty;
     STVAL.inf[code] = state.informality;
   }
@@ -329,6 +331,7 @@ function whatStandsOut(code) {
   const candidates = [
     { order: 0, label: 'GDP per person', value: METRICS.gdppc.fmt(state.gdppc_mxn), rank: rankAmong(Object.values(STVAL.gdppc), state.gdppc_mxn).rank, qualifier: 'by highest value' },
     { order: 1, label: 'Total GDP', value: METRICS.gdp.fmt(state.gdp_mxn_m), rank: rankAmong(Object.values(STVAL.gdp), state.gdp_mxn_m).rank, qualifier: 'by highest value' },
+    { order: 4, label: 'Population', value: METRICS.pop.fmt(state.pop), rank: rankAmong(Object.values(STVAL.pop), state.pop).rank, qualifier: 'by highest' },
     { order: 2, label: 'Poverty', value: METRICS.pov.fmt(state.poverty), rank: rankAmong(Object.values(STVAL.pov), state.poverty).rank, qualifier: 'by highest rate' },
     { order: 3, label: 'Informality', value: METRICS.inf.fmt(state.informality), rank: rankAmong(Object.values(STVAL.inf), state.informality).rank, qualifier: 'by highest rate' }
   ].map((candidate) => ({ ...candidate, distance: Math.abs(candidate.rank - 16.5) }))
