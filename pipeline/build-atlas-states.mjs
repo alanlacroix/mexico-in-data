@@ -87,6 +87,10 @@ const result = {
       informality: {
         label: 'INEGI · ENOE labor informality rate (TIL1)', period: 'Q1 2026', unit: '% of employed people',
         url: 'https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/enoe/enoe2026_05.pdf'
+      },
+      unemployment: {
+        label: 'INEGI · ENOE unemployment rate', period: 'Q1 2026', unit: '% of the labor force',
+        url: 'https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/enoe/enoe2026_05.pdf'
       }
     },
     national: {
