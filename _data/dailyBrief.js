@@ -24,7 +24,7 @@ const SECTIONS = {
   politics:    { beat: 'Politics',        room: 'Politics',            url: '/?topic=politics#all-news' },
   security:    { beat: 'Security',        room: 'Society & security',  url: '/?topic=society#all-news' },
   society:     { beat: 'Society',         room: 'Society & security',  url: '/?topic=society#all-news' },
-  'us-mexico': { beat: 'U.S.–Mexico',     room: 'U.S.–Mexico',         url: '/?topic=us-mexico#all-news' },
+  'us-mexico': { beat: 'US–Mexico',       room: 'US–Mexico',           url: '/?topic=us-mexico#all-news' },
 };
 
 // The auto companies tracker (pipeline/build-companies.js → data/companies.json) runs DARK
