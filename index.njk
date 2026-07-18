@@ -224,7 +224,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   {% if paymentsBoard.length %}
   <section class="pays" aria-labelledby="pays-title">
     <div class="section-top"><div><h2 class="section-title" id="pays-title">How Mexico pays</h2></div><a class="text-link" href="/chart.html?v=banxico-spei-operaciones,banxico-codi-operaciones">All payment data →</a></div>
-    <p class="pays-primer">SPEI, Banxico’s free instant-transfer rail, moves the money; CoDi, the QR system built to bank the unbanked, never caught on; cards and cash still share the counter; and remittances remain one of the country’s largest dollar inflows. First-party Banco de México data, updated as it publishes.</p>
+    <p class="pays-primer"><b>About 78% of Mexican adults now hold at least one formal financial product</b> — the highest since 2015 (ENIF 2024) — yet the system is lopsided: SPEI, Banxico’s free instant-transfer rail, moves the money while CoDi, the QR push built to bank the unbanked, never caught on; cards and cash still share the counter; and remittances remain among the largest dollar inflows. First-party Banco de México and CNBV / INEGI data.</p>
     <div class="market-grid">
       {% for t in paymentsBoard %}<a class="market-card pays-card" href="{{ t.href }}"><div class="market-name">{{ t.label }}</div><div class="market-value">{{ t.display }}</div><div class="market-move {% if t.up === true %}up{% elif t.up === false %}down{% else %}flat{% endif %}">{{ t.change if t.change else 'latest reading' }}</div><div class="pays-note">{{ t.note }}</div><div class="market-date"><span class="js-date" data-date="{{ t.date }}">{{ t.date }}</span> · {{ t.source }}</div></a>{% endfor %}
     </div>
