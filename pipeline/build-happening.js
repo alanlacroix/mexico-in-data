@@ -258,7 +258,7 @@ async function addBackgrounds(events, now) {
   // analysisV 2 (Alan): background = the NEWCOMER PRIMER (what the thing at the center IS
   // and the standing situation around it), grounded in the site's curated standing facts +
   // the article — never a restatement of the news event. v1 analyses regenerate once.
-  const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (!e.drivers || totalWords(e) > 130 || e.analysisV !== 3 || (!e.image && !e.imageChecked)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
+  const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (!e.drivers || totalWords(e) > 130 || e.analysisV !== 4 || (!e.image && !e.imageChecked)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
   const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
   const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '', fetched: false })) })));
@@ -315,7 +315,7 @@ ${BAN}`;
       if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
       item.e[field] = text; landed++;
     }
-    if (landed) { item.e.analysisV = 3; added++; }
+    if (landed) { item.e.analysisV = 4; added++; }   // v4: anti-repetition prompt + guard (Audit 2026-07-17)
     if (!stripDashWs(r.background)) console.warn(`  standing-gap: no background written for "${item.e.title.slice(0, 60)}" — is a standing fact missing?`);
   }
   return added;
