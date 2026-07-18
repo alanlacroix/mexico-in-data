@@ -258,7 +258,7 @@ async function addBackgrounds(events, now) {
   // analysisV 2 (Alan): background = the NEWCOMER PRIMER (what the thing at the center IS
   // and the standing situation around it), grounded in the site's curated standing facts +
   // the article — never a restatement of the news event. v1 analyses regenerate once.
-  const IMG_MAX_TRIES = 4;
+  const IMG_MAX_TRIES = 6;   // a few chances so a late og:image (or a now-unblocked fetch) is caught
   const needsAnalysis = (e) => !e.drivers || totalWords(e) > 130 || e.analysisV !== 4;
   // A fresh article often loads BEFORE its og:image is set (or behind a first-hit consent
   // page), so "fetched, no image" is NOT final — retry up to a few times over later runs so

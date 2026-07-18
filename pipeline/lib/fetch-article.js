@@ -4,18 +4,24 @@
 // fallback, crude tag-stripping. The captured text is for internal derivation only
 // (summaries, later structure), never republished.
 
-const UA = 'Mozilla/5.0 (compatible; mexico-brief; +https://mexicobrief.com)';
+// A realistic browser identity + language/accept headers. A crawler UA ("compatible;
+// mexico-brief") gets served a bot/consent-stripped page by some publishers (El País,
+// notably) — which drops the og:image the page otherwise carries, so images vanished on CI
+// while the same fetch worked from a normal machine (Audit 2026-07-18). We only read the
+// public link-preview markup a page publishes for sharing; a normal UA gets the real page.
+const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
+const HEADERS = { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'es-MX,es;q=0.9,en;q=0.8' };
 
 export async function fetchArticle(url) {
   let html = '';
   try {
-    const r = await fetch(url, { headers: { 'User-Agent': UA }, redirect: 'follow', signal: AbortSignal.timeout(20000) });
+    const r = await fetch(url, { headers: HEADERS, redirect: 'follow', signal: AbortSignal.timeout(20000) });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     html = await r.text();
   } catch {
     try {
       const { execFileSync } = await import('node:child_process');
-      html = execFileSync('curl', ['-sL', '--compressed', '--max-time', '22', '-A', UA, url], { encoding: 'utf8', maxBuffer: 24 * 1024 * 1024 });
+      html = execFileSync('curl', ['-sL', '--compressed', '--max-time', '22', '-A', UA, '-H', 'Accept-Language: es-MX,es;q=0.9,en;q=0.8', url], { encoding: 'utf8', maxBuffer: 24 * 1024 * 1024 });
     } catch { return { ok: false, text: '', image: '', fetched: false }; }
   }
   const text = extractText(html);
