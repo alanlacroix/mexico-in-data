@@ -258,21 +258,28 @@ async function addBackgrounds(events, now) {
   // analysisV 2 (Alan): background = the NEWCOMER PRIMER (what the thing at the center IS
   // and the standing situation around it), grounded in the site's curated standing facts +
   // the article — never a restatement of the news event. v1 analyses regenerate once.
-  const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (!e.drivers || totalWords(e) > 130 || e.analysisV !== 4 || (!e.image && !e.imageChecked)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
+  const IMG_MAX_TRIES = 4;
+  const needsAnalysis = (e) => !e.drivers || totalWords(e) > 130 || e.analysisV !== 4;
+  // A fresh article often loads BEFORE its og:image is set (or behind a first-hit consent
+  // page), so "fetched, no image" is NOT final — retry up to a few times over later runs so
+  // the picture is picked up once it appears (Audit 2026-07-18: an El País Ruffo story was
+  // permanently blank because the first fetch loaded the page image-less and locked it).
+  const needsImage = (e) => !e.image && (e.imgTries || 0) < IMG_MAX_TRIES;
+  const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (needsAnalysis(e) || needsImage(e)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
   const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
   const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '', fetched: false })) })));
-  // The article's own link-preview image rides along free with the analysis fetch
-  // (unfurl-style story thumbnail; https-only, may be empty; attributed via the source line).
-  // Mark "checked" only once we actually loaded the page — a transient fetch failure retries
-  // next run (bounded to 3 tries) instead of blanking the image forever (Alan 2026-07-17).
+  // The article's own link-preview image rides along free with the fetch (unfurl-style
+  // thumbnail; https-only). Count every attempt so retries are bounded at IMG_MAX_TRIES.
   for (const x of fetched) {
     if (x.r.image && !x.e.image) x.e.image = x.r.image;
     x.e.imgTries = (x.e.imgTries || 0) + 1;
-    if (x.r.fetched || x.e.imgTries >= 3) x.e.imageChecked = 1;
   }
-  const items = fetched.filter((x) => x.r.ok).map((x, i) => ({ i, e: x.e, body: x.r.text.slice(0, 1600) }));
-  console.log(`  analysis: ${want.length} wanted · ${items.length} article bodies fetched`);
+  // Only run the model for stories that actually need analysis — an image-only retry gets its
+  // picture from the fetch above and skips the (paid) model call.
+  const items = fetched.filter((x) => x.r.ok && needsAnalysis(x.e)).map((x, i) => ({ i, e: x.e, body: x.r.text.slice(0, 1600) }));
+  const imgGot = fetched.filter((x) => x.r.image).length;
+  console.log(`  fetch: ${want.length} wanted · ${items.length} to analyze · ${imgGot} images grabbed`);
   if (!items.length) return 0;
   const FIELD = { type: 'string' };
   const schema = { type: 'object', additionalProperties: false, required: ['analyses'], properties: { analyses: { type: 'array', items: {
