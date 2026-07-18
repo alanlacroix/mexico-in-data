@@ -42,12 +42,10 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .story-copy{min-width:0}
   .story-link{color:var(--ink);text-decoration:none}
   .story-link:hover{color:var(--green-d)}
+  /* All Top-stories headlines are one size — the ranking is expressed by ORDER, not size
+     (Alan 2026-07-17, chose "make them all uniform" when asked directly). */
   .brief-story h3{font-size:clamp(19px,1.55vw,23px);line-height:1.32;letter-spacing:-.008em;font-weight:600;margin:0;max-width:60ch}
-  /* The lead story stands out — bigger headline (Alan 2026-07-17: restore how it was; he
-     wanted the first headline under "What happened" to read differently, not flattened). */
-  .major-list>.brief-story:first-child h3{font-size:clamp(23px,1.9vw,27px);line-height:1.27;font-weight:650;max-width:50ch}
   .story-summary{font-size:15.5px;line-height:1.5;color:var(--ink-2);max-width:72ch;margin:7px 0 0}
-  .major-list>.brief-story:first-child .story-summary{font-size:16px}
 
   .context{position:relative;z-index:2}
   .context[open]{z-index:30}
@@ -133,7 +131,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
     .brief-copy{font-size:18px;line-height:1.52}
     .news{margin-top:38px}
     .brief-story{padding:17px 0}
-    .brief-story h3,.major-list>.brief-story:first-child h3{font-size:20px;line-height:1.32;font-weight:600}
+    .brief-story h3{font-size:20px;line-height:1.32;font-weight:600}
     .story-title-row{grid-template-columns:1fr}
     .story-title-row>.be-btn{justify-self:start}
     .market-grid{grid-template-columns:1fr}
