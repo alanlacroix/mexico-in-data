@@ -23,11 +23,17 @@ const quality = (event) => (clean(event.background) ? 3 : 0) + (!/google news/i.
 // sources must not appear twice, and the version WITH an image wins the slot.
 const titleWords = (t) => new Set(normalize(t).split(' ').filter((w) => w.length > 3));
 const jaccard = (a, b) => { if (!a.size || !b.size) return 0; let i = 0; for (const w of a) if (b.has(w)) i++; return i / (a.size + b.size - i); };
+const fullWords = (e) => titleWords([e.title, e.context, e.why, e.background, e.drivers, e.implications, e.next].filter(Boolean).join(' '));
 const sameStory = (a, b) => {
-  const j = jaccard(titleWords(a.title), titleWords(b.title));
+  const jt = jaccard(titleWords(a.title), titleWords(b.title));
   const sameCo = clean(a.company) && clean(a.company).toLowerCase() === clean(b.company).toLowerCase();
   const days = Math.abs((Date.parse(a.date) || 0) - (Date.parse(b.date) || 0)) / 864e5;
-  return j >= 0.5 || (sameCo && days <= 3 && j >= 0.25);
+  if (jt >= 0.5) return true;
+  if (sameCo && days <= 3 && jt >= 0.25) return true;
+  // Same company, same day, same event framed two ways (Honda: production vs sales) — the
+  // fuller text catches what the headlines don't overlap on.
+  if (sameCo && days <= 1 && jaccard(fullWords(a), fullWords(b)) >= 0.2) return true;
+  return false;
 };
 const betterRep = (a, b) => {
   if (hasImg(a) !== hasImg(b)) return hasImg(a) ? a : b;

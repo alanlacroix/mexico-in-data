@@ -284,6 +284,7 @@ async function addBackgrounds(events, now) {
 - implications: one to two sentences, from the ARTICLE ONLY — what it changes for Mexico, its markets, or the US relationship, as supported by the text. No speculation beyond the text.
 - next: one to two sentences, from the ARTICLE ONLY — concrete next steps the text itself states (a scheduled meeting, a deadline, a vote, a filing, a stated plan with a date). If the text states none, return "".
 KEEP IT TIGHT: prefer ONE sentence per field; the whole four-part analysis should read in under 90 words. A reader opens this for a fast layer of understanding, not an essay.
+EACH FIELD MUST ADD SOMETHING NEW: do not let two fields make the same point, and do not restate the one-line summary. If implications would just echo the summary, either give a genuinely different consequence or return "".
 Calm, concrete, whole sentences. No opinion, no forecasts beyond stated plans, no em-dash, and no number that does not appear in the provided material. Return "" for any field you cannot honestly support. Return JSON.
 
 ${REPORT}
@@ -308,6 +309,10 @@ ${BAN}`;
       const gate = lintReportText({ text, inputs, maxWords, maxSentences });
       const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
       if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
+      // Anti-repetition (Audit 2026-07-17): drop a field that merely restates the one-line
+      // summary or an earlier field, so the four parts stay four distinct things.
+      const priors = [item.e.context || item.e.why, item.e.background, item.e.drivers, item.e.implications].filter(Boolean);
+      if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
       item.e[field] = text; landed++;
     }
     if (landed) { item.e.analysisV = 3; added++; }

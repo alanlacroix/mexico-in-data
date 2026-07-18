@@ -180,11 +180,18 @@ const ledeScore = (e, nowMs) => effImp(e) * recencyWeight(Math.max(0, (nowMs - (
 const titleWords = (t) => new Set(String(t || '').toLowerCase().replace(/[^a-z0-9áéíóúñü ]/g, ' ').split(/\s+/).filter((w) => w.length > 3));
 const jaccard = (a, b) => { if (!a.size || !b.size) return 0; let i = 0; for (const w of a) if (b.has(w)) i++; return i / (a.size + b.size - i); };
 const hasImg = (e) => /^https:\/\//i.test(String((e && e.image) || ''));
+const fullWords = (e) => titleWords([e.title, e.context, e.why, e.background, e.drivers, e.implications, e.next].filter(Boolean).join(' '));
 function sameStory(a, b) {
-  const j = jaccard(titleWords(a.title), titleWords(b.title));
+  const jt = jaccard(titleWords(a.title), titleWords(b.title));
   const sameCo = a.company && b.company && String(a.company).toLowerCase() === String(b.company).toLowerCase();
   const days = Math.abs((a._t || 0) - (b._t || 0)) / DAY;
-  return j >= 0.5 || (sameCo && days <= 3 && j >= 0.25);
+  if (jt >= 0.5) return true;                                    // near-identical headlines
+  if (sameCo && days <= 3 && jt >= 0.25) return true;            // same company, similar headlines
+  // Same company, same day, one event framed two ways with little headline overlap — the
+  // fuller text still gives it away (Audit 2026-07-17: Honda "end production in Coahuila"
+  // vs "halt US sales" were the same story at titleJ 0.22 but full-text 0.29).
+  if (sameCo && days <= 1 && jaccard(fullWords(a), fullWords(b)) >= 0.2) return true;
+  return false;
 }
 function betterRep(a, b) {
   if (hasImg(a) !== hasImg(b)) return hasImg(a) ? a : b;                                    // a version WITH an image wins the slot
