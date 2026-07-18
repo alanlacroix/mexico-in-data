@@ -75,6 +75,9 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .filter:hover,.filter.active{border-color:var(--green);color:var(--green-d);background:#f2f8f5}
   .all-story[hidden]{display:none}
   .empty{font-size:var(--fs-small);color:var(--mut);padding:24px 0}
+  .show-more{display:block;width:100%;margin-top:2px;padding:13px 0;background:none;border:0;border-top:1px solid var(--line);color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.035em;text-transform:uppercase;cursor:pointer}
+  .show-more:hover{color:var(--green)}
+  .show-more[hidden]{display:none}
 
   .markets,.week,.subscribe-section{margin-top:54px}
   .markets{border-top:2px solid var(--green);padding-top:14px}
@@ -176,13 +179,13 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
       {% endfor %}
     </div>
 
-    <details class="all-news" id="all-news">
+    <details class="all-news" id="all-news" open>
       <summary>More headlines</summary>
       <div class="all-news-body">
         <nav class="filters" aria-label="Filter headlines">
-          <button class="filter active" type="button" data-topic="all">All</button>
+          <button class="filter active" type="button" data-topic="payments">Payments</button>
+          <button class="filter" type="button" data-topic="all">All</button>
           <button class="filter" type="button" data-topic="economy">Economy</button>
-          <button class="filter" type="button" data-topic="payments">Payments</button>
           <button class="filter" type="button" data-topic="tech">Tech &amp; startups</button>
           <button class="filter" type="button" data-topic="politics">Politics</button>
           <button class="filter" type="button" data-topic="society">Society &amp; security</button>
@@ -201,6 +204,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
           {% endif %}{% endfor %}
         </div>
         <p class="empty" id="news-empty" hidden>No stories in this section yet.</p>
+        <button class="show-more" id="news-more" type="button" hidden>Show more</button>
       </div>
     </details>
   </section>
@@ -263,17 +267,33 @@ const newsFilters=[...document.querySelectorAll('.filter')];
 const allStories=[...document.querySelectorAll('.all-story')];
 const allNews=document.getElementById('all-news');
 const newsEmpty=document.getElementById('news-empty');
+const newsMore=document.getElementById('news-more');
+const NEWS_LIMIT=2;   // show 2 headlines per filter, then "Show more" (Alan 2026-07-17)
+let newsTopic='payments', newsExpanded=false;
+function renderNews(){
+  newsFilters.forEach((b)=>b.classList.toggle('active',b.dataset.topic===newsTopic));
+  let matched=0, shown=0;
+  allStories.forEach((story)=>{
+    const match=newsTopic==='all'||story.dataset.topic===newsTopic;
+    if(!match){story.hidden=true;return;}
+    matched++;
+    const within=newsExpanded||shown<NEWS_LIMIT;
+    story.hidden=!within; if(within)shown++;
+  });
+  if(newsEmpty)newsEmpty.hidden=matched>0;
+  if(newsMore){const rest=matched-Math.min(matched,NEWS_LIMIT);newsMore.hidden=newsExpanded||rest<=0;newsMore.textContent='Show '+rest+' more';}
+}
 function showNews(topic,push=false){
-  let count=0;
-  newsFilters.forEach((button)=>button.classList.toggle('active',button.dataset.topic===topic));
-  allStories.forEach((story)=>{const show=topic==='all'||story.dataset.topic===topic;story.hidden=!show;if(show)count++;});
-  if(newsEmpty)newsEmpty.hidden=count>0;
-  if(push){const url=new URL(location.href);if(topic==='all')url.searchParams.delete('topic');else url.searchParams.set('topic',topic);url.hash='all-news';history.replaceState({},'',url);}
+  newsTopic=topic; newsExpanded=false; renderNews();
+  if(push){const url=new URL(location.href);if(topic==='payments')url.searchParams.delete('topic');else url.searchParams.set('topic',topic);url.hash='all-news';history.replaceState({},'',url);}
 }
 newsFilters.forEach((button)=>button.addEventListener('click',()=>showNews(button.dataset.topic,true)));
-let initialTopic=new URLSearchParams(location.search).get('topic')||'all';
-if(!newsFilters.some((button)=>button.dataset.topic===initialTopic))initialTopic='all';
-if(initialTopic!=='all'&&allNews)allNews.open=true;
+if(newsMore)newsMore.addEventListener('click',()=>{newsExpanded=true;renderNews();});
+let initialTopic=new URLSearchParams(location.search).get('topic')||'payments';
+if(!newsFilters.some((button)=>button.dataset.topic===initialTopic))initialTopic='payments';
+// The default tab is Payments (Alan 2026-07-17); if it has nothing yet, fall back to All so
+// the open section is never empty on load.
+if(initialTopic==='payments'&&!allStories.some((s)=>s.dataset.topic==='payments'))initialTopic='all';
 showNews(initialTopic);
 
 function card({id,name,value,unit='',move='',direction='flat',compare='',stamp,context,source}){

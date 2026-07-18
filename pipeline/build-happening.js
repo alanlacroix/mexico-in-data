@@ -68,9 +68,12 @@ const SECTIONS = ['economy', 'money', 'payments', 'tech', 'politics', 'security'
 const FINTECH_SOURCES = /^(iupana)$/i;
 const STARTUP_SOURCES = /^(contxto|latamlist|crunchbase news|techcrunch)/i;
 function sourceSection(x) {
+  // Match by dedicated-source NAME only. Do NOT use x.beat: general outlets like El CEO are
+  // configured beat:"fintech" but cover everything, so beat-matching floods payments/tech
+  // with macro stories (Audit: it mis-tagged an Apollo/Banxico story as payments).
   const s = String(x.sourceName || x.source || '');
-  if (FINTECH_SOURCES.test(s) || x.beat === 'fintech') return 'payments';
-  if (STARTUP_SOURCES.test(s) || x.beat === 'deals') return 'tech';
+  if (FINTECH_SOURCES.test(s)) return 'payments';
+  if (STARTUP_SOURCES.test(s)) return 'tech';
   return null;
 }
 
@@ -374,6 +377,44 @@ function mergeLog(existing, fresh, now) {
   return { events: kept.slice(0, MAX_STORE), added: kept.length - before > 0 ? kept.length - before : Math.max(0, events.length - before) };
 }
 
+// Deterministic payments/tech intake (Alan 2026-07-17): the macro-focused editor keeps
+// dropping genuine Mexico fintech and startup/VC developments — a $18M Series A is real
+// news for the Payments and Tech tabs but scores below a macro brief's bar, so the model
+// won't pick it. Pull the freshest Mexico-relevant, non-junk items straight from the
+// dedicated sources so those tabs are never empty. Same junk/Mexico/slop gates as
+// everything else; CONTENT decides payments (fintech) vs tech (everything else). Kept at
+// importance 4 so they fill More-headlines without crowding the macro top brief (>=5).
+const FINTECH_RX = /financ|\bcredit\b|lend|payment|fintech|neobank|remittance|remesa|\bbank|wallet|\bcard\b|insur|\bbnpl\b|capital markets|\bloan|micro-?credit|open finance|embedded finance|\bpos\b|acquir(er|ing)/i;
+const INTAKE_MAX = 8;
+function specialistIntake(now) {
+  const seen = new Set(), all = [];
+  for (let i = 0; i <= 5; i++) {
+    const w = weekKey(new Date(now.getTime() - i * 7 * 864e5));
+    for (const x of arr(readJson(D('news', w + '.json'), []))) {
+      if (x && x.url && x.title && !seen.has(x.url)) { seen.add(x.url); all.push(x); }
+    }
+  }
+  const cutoff = now.getTime() - WINDOW_DAYS * 864e5;
+  const pool = all
+    .filter((x) => sourceSection(x))                                        // from a dedicated fintech/startup source
+    .filter((x) => Date.parse(x.published_at) >= cutoff)
+    .filter((x) => (x.dek || '').trim())
+    .filter((x) => !JUNK_RX.test((x.title || '') + ' ' + (x.dek || '')))
+    .filter((x) => MX_RX.test((x.title || '') + ' ' + (x.dek || '')))
+    .sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at));
+  const events = [];
+  for (const x of pool) {
+    const why = firstWholeSentence(x.dek);
+    if (!why) continue;
+    const section = FINTECH_RX.test((x.title + ' ' + why).toLowerCase()) ? 'payments' : (sourceSection(x) || 'tech');
+    const ev = mkEvent(x, section, 4, x.title, why, '');
+    if (slopFlags(ev).length) continue;
+    events.push(ev);
+    if (events.length >= INTAKE_MAX) break;
+  }
+  return events;
+}
+
 async function main() {
   const now = new Date();
   console.log(`\nbuild-happening · model ${hasLLM() ? model : 'none (deterministic fallback)'}`);
@@ -382,7 +423,9 @@ async function main() {
   console.log(`  candidates ${cands.length} (last ${WINDOW_DAYS}d) · existing log ${arr(existing.events).length}`);
   const fresh = await curate(cands, now);
   console.log(`  curated ${fresh.length} fresh events`);
-  const merged = mergeLog(existing, fresh, now).events;
+  const intake = specialistIntake(now);
+  if (intake.length) console.log(`  specialist intake ${intake.length} payments/tech events (${intake.filter((e) => e.section === 'payments').length} payments · ${intake.filter((e) => e.section === 'tech').length} tech)`);
+  const merged = mergeLog(existing, [...fresh, ...intake], now).events;
   // Curated framing stays human; referenced values are re-derived from the stored
   // first-party dataset on every run so corrected source data cannot leave stale copy.
   const events = reconcileHappeningFactCopy(merged, { tradeUS: readJson(D('trade-us.json'), null) });
