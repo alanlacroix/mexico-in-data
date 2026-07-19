@@ -15,21 +15,27 @@ description: "Mexico’s peso, rates, prices, activity, trade, remittances and p
   .cx-hd p{font-size:var(--fs-small);color:var(--ink-2);margin:7px 0 0;max-width:60ch;line-height:1.5}
 
   /* plain-language questions */
+  .cx-question-select{display:none}
   .cx-views{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;margin-top:18px;background:var(--line-2);border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
   .cx-views button{font-family:var(--sans);font-size:13.5px;line-height:1.3;text-align:left;color:var(--ink-2);background:var(--paper);border:0;padding:10px 12px;cursor:pointer;min-height:52px}
   .cx-views button:hover{background:var(--paper-2);color:var(--green-d)}
   .cx-views button.on{background:var(--green-bg);color:var(--green-d);font-weight:600;box-shadow:inset 0 -2px var(--green)}
 
   /* calculated answer for a saved question */
-  .cx-qa{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:16px 24px;margin-top:14px;padding:13px 15px;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:7px;background:var(--paper-2)}
+  .cx-qa{margin-top:14px;padding:13px 15px;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:7px;background:var(--paper-2)}
   .cx-qa.unavailable{border-left-color:var(--amber2,#9a6a00)}
   .cx-qa-k{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--green-d);font-weight:700;margin-bottom:5px}
   .cx-qa.unavailable .cx-qa-k{color:var(--amber2,#9a6a00)}
-  .cx-qa-answer{font-family:var(--sans);font-size:17px;line-height:1.45;color:var(--ink);margin:0;max-width:68ch}
-  .cx-qa-side{font-family:var(--sans);font-size:13.5px;line-height:1.45;color:var(--ink-2)}
+  .cx-qa-answer{font-family:var(--sans);font-size:18px;line-height:1.4;color:var(--ink);margin:0;max-width:76ch}
+  .cx-qa-more{border-top:1px solid var(--line);margin-top:10px;padding-top:8px}
+  .cx-qa-more>summary{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);cursor:pointer;list-style:none}
+  .cx-qa-more>summary::-webkit-details-marker{display:none}
+  .cx-qa-more>summary::after{content:' +';color:var(--mut)}
+  .cx-qa-more[open]>summary::after{content:' –'}
+  .cx-qa-side{font-family:var(--sans);font-size:13.5px;line-height:1.5;color:var(--ink-2);margin-top:8px;max-width:76ch}
   .cx-qa-side p{margin:0 0 6px}
   .cx-qa-side b{color:var(--ink)}
-  .cx-qa-method{grid-column:1/-1;border-top:1px solid var(--line);padding-top:8px}
+  .cx-qa-method{border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
   .cx-qa-method summary{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--green-d);cursor:pointer;list-style:none}
   .cx-qa-method summary::-webkit-details-marker{display:none}
   .cx-qa-method summary::after{content:' +';color:var(--mut)}
@@ -56,6 +62,30 @@ description: "Mexico’s peso, rates, prices, activity, trade, remittances and p
   .cx-seg button[disabled]{opacity:.35;cursor:not-allowed}
   .cx-modelab{font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin-right:2px;align-self:center}
   .cx-mode-note{font-family:var(--sans);font-size:13px;line-height:1.45;color:var(--ink-2);margin:8px 0 0;max-width:76ch}
+  /* a series the pipeline flagged but we have not confirmed against the source */
+  .cx-review{font-family:var(--sans);font-size:13.5px;line-height:1.5;color:var(--ink-2);margin:10px 0 0;max-width:76ch;padding:9px 12px;border:1px solid var(--line);border-left:3px solid var(--amber2,#9a6a00);border-radius:7px;background:var(--paper-2)}
+  .cx-review b{color:var(--amber2,#9a6a00)}
+
+  /* full chart builder is available without competing with the guided view */
+  .cx-editor{margin-top:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .cx-editor>summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 2px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);cursor:pointer;list-style:none}
+  .cx-editor>summary::-webkit-details-marker{display:none}
+  .cx-editor>summary .cx-editor-label::after{content:' +';color:var(--mut)}
+  .cx-editor[open]>summary .cx-editor-label::after{content:' –'}
+  .cx-editor-meta{font-weight:400;color:var(--mut);text-align:right}
+  .cx-editor-body{padding:1px 0 13px}
+  .cx-editor .cx-chips{border-top:0;margin-top:0;padding-top:4px}
+  .cx-editor button[disabled]{display:none}
+
+  .cx-lead{font-family:var(--sans);font-size:15px;line-height:1.5;color:var(--ink-2);margin:13px 0 0;max-width:82ch}
+  .cx-analysis{margin-top:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .cx-analysis>summary{padding:10px 2px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--green-d);cursor:pointer;list-style:none}
+  .cx-analysis>summary::-webkit-details-marker{display:none}
+  .cx-analysis>summary::after{content:' +';color:var(--mut)}
+  .cx-analysis[open]>summary::after{content:' –'}
+  .cx-analysis-body{padding:0 2px 11px;max-width:78ch}
+  .cx-analysis-body p{font-family:var(--sans);font-size:14px;line-height:1.52;color:var(--ink-2);margin:0 0 7px}
+  .cx-analysis-body .cx-analysis-answer{font-size:15px;color:var(--ink)}
 
   /* chart */
   .cx-chart{margin-top:14px}
@@ -175,14 +205,16 @@ description: "Mexico’s peso, rates, prices, activity, trade, remittances and p
   .cx-err{font-family:var(--mono);font-size:14px;color:var(--red);margin-top:20px}
   @media (prefers-reduced-motion: reduce){.cx-skel{animation:none}}
   @media(max-width:560px){
-    .cx-views{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;background:none;border:0;border-radius:0;padding-bottom:3px}
-    .cx-views button{flex:0 0 205px;border:1px solid var(--line-2);border-radius:8px;scroll-snap-align:start;min-height:50px}
+    .cx-views{display:none}
+    .cx-question-select{display:block;margin-top:16px}
+    .cx-question-select label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);font-weight:700;margin-bottom:6px}
+    .cx-question-select select{width:100%;min-height:46px;padding:9px 38px 9px 11px;border:1px solid var(--line-2);border-radius:8px;background:var(--paper);color:var(--ink);font:600 15px/1.35 var(--sans)}
     .cx-chip{min-height:44px;padding-top:4px;padding-bottom:4px}
     .cx-chip .x{min-width:40px;min-height:40px;padding:0;display:inline-flex;align-items:center;justify-content:center}
     .cx-add,.cx-actions button,.cx-actions a{min-height:44px}
-    .cx-qa{grid-template-columns:1fr;gap:9px;padding:12px}
-    .cx-qa-answer{font-size:16px}
-    .cx-qa-method{grid-column:1}
+    .cx-qa{padding:12px}
+    .cx-qa-answer{font-size:17px}
+    .cx-editor-meta{display:none}
     .cx-strip{gap:12px}
     .cx-hd h1{font-size:26px}
   }
@@ -191,8 +223,8 @@ description: "Mexico’s peso, rates, prices, activity, trade, remittances and p
 <div class="cx">
   <section class="cx-hd">
     <span class="eyebrow">Charts</span>
-    <h1 id="cxTitle">Mexico in charts</h1>
-    <p id="cxIntro">Choose a number. Add another to compare. Everything links back to the source.</p>
+    <h1 id="cxTitle">Compare Mexico's numbers</h1>
+    <p id="cxIntro">Choose two or three numbers. The dates line up so you can see what moved together and what did not.</p>
   </section>
   <div id="cxBody"><div class="cx-skel" aria-hidden="true"></div></div>
 </div>
@@ -467,11 +499,11 @@ function pairKey(a,b){return [a,b].sort().join('|');}
 
 /* ---------- saved views ---------- */
 const VIEWS={
-  'peso-rates':{label:'Peso & rates',q:'Is the rate gap still helping the peso?',r:'1Y',v:['banxico-usdmxn-fix','d-rate-gap'],answer:answerPesoRates},
-  'inflation':{label:'Inflation',q:'Is inflation actually cooling?',r:'3Y',v:['banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo'],answer:answerInflation},
-  'us-demand':{label:'US demand',q:'Are Mexican exports moving with US factories?',r:'3Y',v:['d-exports-yoy','d-indpro-yoy'],answer:answerUsDemand},
-  'remittances':{label:'Remittances',q:'What are remittances worth in Mexico?',r:'1Y',v:['banxico-remesas','d-remesas-mxn'],answer:answerRemittances},
-  'wages':{label:'Minimum wage',q:'How much of the minimum-wage increase is real?',r:'MAX',v:['banxico-salario-minimo','d-real-minimo'],answer:answerWages},
+  'peso-rates':{label:'Peso + rate gap',q:'Is the rate gap still helping the peso?',r:'1Y',mode:'separate',v:['banxico-usdmxn-fix','d-rate-gap'],lead:'A wider rate gap can make peso assets more attractive. The peso also moves with the dollar, trade, risk and politics.',answer:answerPesoRates},
+  'inflation':{label:'Inflation + Banxico rate',q:'Is inflation actually cooling?',r:'3Y',mode:'actual',v:['banxico-inflacion','banxico-inflacion-subyacente','banxico-tasa-objetivo'],lead:'Headline inflation can fall while core prices remain sticky. Banxico watches both when it sets the policy rate.',answer:answerInflation},
+  'us-demand':{label:'Exports + US factories',q:'Are Mexican exports moving with US factories?',r:'3Y',mode:'separate',v:['d-exports-yoy','d-indpro-yoy'],lead:'US factories buy Mexican parts and finished goods. If US production slows, Mexican exports often feel it with a delay.',answer:answerUsDemand},
+  'remittances':{label:'Remittances: dollars + pesos',q:'What are remittances worth in Mexico?',r:'1Y',mode:'relative',v:['banxico-remesas','d-remesas-mxn'],lead:'The same dollars are worth more or fewer pesos as the exchange rate moves. This compares the dollar flow with what it converts to in Mexico.',answer:answerRemittances},
+  'wages':{label:'Minimum wage: nominal + real',q:'How much of the minimum-wage increase is real?',r:'MAX',mode:'actual',v:['banxico-salario-minimo','d-real-minimo'],lead:'The nominal wage is what the law sets. The real wage removes inflation and shows how much of the increase remains after prices.',answer:answerWages},
 };
 const DEFAULT_VIEW='peso-rates';
 
@@ -636,6 +668,29 @@ function freshNote(id){ const c=cadOf(id),last=lastPt(id); if(!last)return '';
 function fmtDate(d,cad){ const x=new Date(d.length<=7?d+'-01':d); const mo=x.toLocaleDateString('en-US',{month:'short',timeZone:'UTC'}),y=x.getUTCFullYear();
   return (cad==='daily'||cad==='business-daily'||cad==='weekly'||cad==='4-hourly')?`${mo} ${x.getUTCDate()}, ${y}`:cad==='quarterly'?`Q${Math.floor(x.getUTCMonth()/3)+1} ${y}`:cad==='annual'?`${y}`:`${mo} ${y}`; }
 
+/* A connector can pass every validation check and still carry a review flag: a move so far
+   outside the series' own history that the pipeline refuses to call it settled. The chart
+   used to plot those points as clean fact. Read the flag the pipeline already writes and say
+   so on the chart itself — driven by the flag rather than a named series, so it covers the
+   next anomaly automatically and clears itself the moment the source revises.
+
+   Only the LATEST observation earns a caveat. Most jump flags sit on settled history that the
+   chart already shows honestly — the 1995 inflation spike, the 2020 export collapse — or on a
+   definitional rollover (banxico-exp-pib restarts each January on a new reference year, which
+   trips the guard every year and is not an error). Captioning those would cry wolf on good
+   data. An unconfirmed jump on the newest point is the one a reader is being asked to trust. */
+function reviewNote(id,named){
+  const last=lastPt(id); if(!last)return '';
+  const parts=(meta(id).flags||[]).map((flag)=>{
+    const m=/^series_jump_(\d{4})-(\d{2})-\d{2}_(\d+(?:\.\d+)?)pct$/.exec(String(flag));
+    if(!m||!String(last.date).startsWith(`${m[1]}-${m[2]}`))return null;
+    return `${Math.round(+m[3])}%`;
+  }).filter(Boolean);
+  if(!parts.length)return '';
+  const subject=named?esc(label(id)):'This series';
+  return `<p class="cx-review"><b>Under review.</b> ${subject} moved ${parts.join(', ')} in ${fmtDate(last.date,cadOf(id))}, far outside its own history. That change has not been confirmed against the source, so read the latest observation with caution.</p>`;
+}
+
 /* ---------- deterministic answers for the saved questions ----------
    These are calculations and fixed editorial definitions, not generated copy. */
 function latestPoint(pts){ return pts&&pts.length?pts[pts.length-1]:null; }
@@ -764,12 +819,11 @@ function qaSourceLinks(ids){
 function questionAnswerHTML(){
   const view=state.view&&VIEWS[state.view]; if(!view||typeof view.answer!=='function')return '';
   let result; try{ result=view.answer(); }catch(e){ result=qaUnavailable('The calculation could not be completed from the loaded observations.',view.v); }
-  const stamp=result.unavailable?'Can’t answer this yet':`From the data${result.asOf?' · complete through '+result.asOf:''}`;
-  return `<section class="cx-qa${result.unavailable?' unavailable':''}" aria-label="Answer from the data" aria-live="polite">
-    <div><div class="cx-qa-k">${esc(stamp)}</div><p class="cx-qa-answer">${esc(result.answer)}</p></div>
-    <div class="cx-qa-side"><p>${esc(result.explain)}</p><p><b>Keep in mind:</b> ${esc(result.caveat)}</p></div>
+  const stamp=result.unavailable?'Can’t explain this yet':`Briefly explained${result.asOf?' · through '+result.asOf:''}`;
+  return `<details class="cx-analysis"><summary>${esc(stamp)}</summary><div class="cx-analysis-body">
+    <p class="cx-analysis-answer">${esc(result.answer)}</p><p>${esc(result.explain)}</p><p><b>Keep in mind:</b> ${esc(result.caveat)}</p>
     <details class="cx-qa-method"><summary>How I calculated it</summary><div>${esc(result.method)}<br>${qaSourceLinks(result.sources)}</div></details>
-  </section>`;
+  </div></details>`;
 }
 
 /* ---------- colors for up to 3 lines ---------- */
@@ -862,19 +916,20 @@ function wireCross(container){
 
 /* ============================ STATE ============================ */
 let state={v:[DEFAULT_VIEW && VIEWS[DEFAULT_VIEW].v].flat(), r:VIEWS[DEFAULT_VIEW].r, mode:null, view:DEFAULT_VIEW};
+let EDIT_OPEN=false;
 const LS='mb-chart-v1';
 const MODE_NAMES=new Set(['actual','relative','separate']);
 function validMode(mode){ return MODE_NAMES.has(mode)?mode:null; }
 function readState(){
   const q=new URLSearchParams(location.search);
-  if(q.get('q')&&VIEWS[q.get('q')]){ applyView(q.get('q')); state.r=validRange(q.get('r'),VIEWS[state.view].r); state.mode=validMode(q.get('mode')); return; }
+  if(q.get('q')&&VIEWS[q.get('q')]){ applyView(q.get('q')); state.r=validRange(q.get('r'),VIEWS[state.view].r); state.mode=validMode(q.get('mode'))||VIEWS[state.view].mode||null; return; }
   if(q.get('m')||q.get('v')){ const v=(q.get('m')||q.get('v')).split(',').filter(id=>M[id]||DERIVED[id]).slice(0,3);
     if(v.length){ state.v=v; state.view=viewMatch(v); state.r=validRange(q.get('r'),'3Y'); state.mode=validMode(q.get('mode')); return; } }
   try{ const s=JSON.parse(localStorage.getItem(LS)||'null'); if(s&&s.v&&s.v.length){ state.v=s.v.filter(id=>M[id]||DERIVED[id]).slice(0,3); state.r=validRange(s.r,'3Y'); state.mode=validMode(s.mode); state.view=viewMatch(state.v); return; } }catch(e){}
   applyView(DEFAULT_VIEW);
 }
 function viewMatch(v){ for(const k in VIEWS){ if(VIEWS[k].v.length===v.length&&VIEWS[k].v.every((x,i)=>x===v[i]))return k; } return null; }
-function applyView(k){ state.view=k; state.v=VIEWS[k].v.slice(); state.r=VIEWS[k].r; state.mode=null; }
+function applyView(k){ state.view=k; state.v=VIEWS[k].v.slice(); state.r=VIEWS[k].r; state.mode=VIEWS[k].mode||null; EDIT_OPEN=false; }
 function persist(){ try{localStorage.setItem(LS,JSON.stringify({v:state.v,r:state.r,mode:state.mode}));}catch(e){} }
 function pushURL(){ const u=new URL(location); u.search=state.view?('?q='+state.view+'&r='+state.r+(state.mode?'&mode='+state.mode:'')):(state.v.length?('?v='+state.v.join(',')+'&r='+state.r+(state.mode?'&mode='+state.mode:'')):''); history.replaceState(null,'',u); }
 
@@ -909,11 +964,13 @@ function render(){
   const ids=state.v.filter(id=>store[id]&&raw(id).length);
   const rangeAvail=availableRanges(ids); if(!rangeAvail.has(state.r))state.r='MAX';
   if(ids.length<2)state.mode=null; else if(state.mode&&!modeAvail(ids)[state.mode])state.mode=null;
-  if(!ids.length){ body.innerHTML=controlsHTML([],rangeAvail)+questionAnswerHTML()+'<div class="cx-err">The selected series could not be loaded. Use another question or add a variable.</div>'+allSeriesHTML(); bindControls(); bindAll(); pushURL(); persist(); return; }
-  $('#cxTitle').textContent = ids.length===1 ? label(ids[0]) : 'Mexico in charts';
-  let html=controlsHTML(ids,rangeAvail)+questionAnswerHTML();
-  if(ids.length===1) html+=singleHTML(ids[0]);
-  else html+=compareHTML(ids);
+  if(!state.view)EDIT_OPEN=true;
+  if(!ids.length){ body.innerHTML=questionSelectorHTML()+comparisonLeadHTML([])+'<div class="cx-err">The selected series could not be loaded. Use another comparison or add a variable.</div>'+editorControlsHTML([],rangeAvail)+allSeriesHTML(); bindControls(); bindAll(); pushURL(); persist(); return; }
+  $('#cxTitle').textContent = ids.length===1 ? label(ids[0]) : "Compare Mexico's numbers";
+  const editor=editorControlsHTML(ids,rangeAvail);
+  let html=questionSelectorHTML()+comparisonLeadHTML(ids);
+  if(ids.length===1) html+=singleHTML(ids[0],editor);
+  else html+=compareHTML(ids,editor);
   html+=allSeriesHTML();
   body.innerHTML=html;
   bindControls();
@@ -923,10 +980,19 @@ function render(){
   pushURL(); persist();
 }
 
-/* ---- controls (views, chips, ranges, modes) ---- */
-function controlsHTML(ids,rangeAvail){
+/* ---- guided questions + optional full chart builder ---- */
+function questionSelectorHTML(){
+  const options=(state.view?'':'<option selected>Custom comparison</option>')+Object.keys(VIEWS).map(k=>`<option value="${k}"${state.view===k?' selected':''}>${esc(VIEWS[k].label)}</option>`).join('');
+  const views=Object.keys(VIEWS).map(k=>`<button data-view="${k}" aria-pressed="${state.view===k}"${state.view===k?' class="on"':''} title="${esc(VIEWS[k].q)}">${esc(VIEWS[k].label)}</button>`).join('');
+  return `<div class="cx-question-select"><label for="cxViewSelect">Comparison</label><select id="cxViewSelect">${options}</select></div><div class="cx-views" role="group" aria-label="Saved comparisons">${views}</div>`;
+}
+function comparisonLeadHTML(ids){
+  if(state.view&&VIEWS[state.view]?.lead)return `<p class="cx-lead">${esc(VIEWS[state.view].lead)}</p>`;
+  if(ids.length===2){ const pc=PAIRS[pairKey(ids[0],ids[1])]; if(pc)return `<p class="cx-lead">${esc(pc.mech)}</p>`; }
+  return ids.length>1?'<p class="cx-lead">The dates line up. Look for periods when the numbers move together and when they split.</p>':'';
+}
+function editorControlsHTML(ids,rangeAvail){
   rangeAvail=rangeAvail||availableRanges(ids);
-  const views=Object.keys(VIEWS).map(k=>`<button data-view="${k}" aria-pressed="${state.view===k}"${state.view===k?' class="on"':''} title="${esc(VIEWS[k].label)}">${esc(VIEWS[k].q)}</button>`).join('');
   const chips=ids.map((id,i)=>{const d=DERIVED[id];return `<span class="cx-chip${d?' derived':''}"><i class="sw" style="background:${COLORS[i%3]}"></i>${label(id)}${d?' <span class="cx-db">derived</span>':''}<button class="x" data-rm="${id}" aria-label="Remove ${label(id)}">×</button></span>`;}).join('');
   const add=`<button class="cx-add" id="cxAdd"${ids.length>=3?' disabled title="Up to three"':''}>+ Add variable</button>`;
   const ranges=`<div class="cx-seg" role="group" aria-label="Time range">${RANGES.map(([r])=>{const ok=rangeAvail.has(r);return `<button data-r="${r}" aria-pressed="${state.r===r}"${state.r===r?' class="on"':''}${ok?'':' disabled title="The selected data do not cover this range"'}>${r}</button>`;}).join('')}</div>`;
@@ -935,20 +1001,23 @@ function controlsHTML(ids,rangeAvail){
     const b=(m,lab)=>`<button data-mode="${m}" aria-pressed="${cur===m}"${cur===m?' class="on"':''}${av[m]?'':' disabled title="Not safe for these series"'}>${lab}</button>`;
     modes=`<div class="cx-seg" role="group" aria-label="Comparison mode"><span class="cx-modelab">Compare</span>${b('actual','Actual')}${b('relative','Relative')}${b('separate','Separate scales')}</div>`;
     if(!av.actual)modeNote='<p class="cx-mode-note">These numbers use different units. Relative compares their movement from a common starting point. Separate scales keeps the dates aligned and gives each number its own axis.</p>'; }
-  return `<div class="cx-views" role="group" aria-label="Questions">${views}</div>
+  const chosenMode=ids.length>=2?(state.mode||autoMode(ids)):'';
+  const rmeta=state.r==='MAX'?'Full history':state.r.replace('Y',' year');
+  const mmeta=chosenMode==='separate'?'separate scales':chosenMode;
+  return `<details class="cx-editor" id="cxEditor"${EDIT_OPEN?' open':''}><summary><span class="cx-editor-label">Edit chart</span><span class="cx-editor-meta">${rmeta}${mmeta?' · '+mmeta:''}</span></summary><div class="cx-editor-body">
     <div class="cx-chips">${chips}${add}</div>
-    <div class="cx-ctrls">${ranges}${modes}</div>${modeNote}`;
+    <div class="cx-ctrls">${ranges}${modes}</div>${modeNote}</div></details>`;
 }
 function renderControls(){ /* used on error path */ }
 
 /* ---- single-variable view ---- */
-function singleHTML(id){
+function singleHTML(id,editor){
   const m=reg(id), last=lastPt(id);
   const fv=disp(id,last.value);
   const chg=changeText(id,state.r);
   const rel=(m.e||[]).filter(x=>(M[x]||DERIVED[x])).map(x=>`<button class="chip" data-add="${x}"><span class="ar">＋</span>${label(x)}</button>`).join('');
   return `<div class="cx-chart"><div class="cw" id="cw0"></div></div>
-    <div class="cx-big"><span class="bv">${fv.v} <small>${fv.s}</small></span><span class="bc" id="bigChg">${chg}</span></div>
+    <div class="cx-big"><span class="bv">${fv.v} <small>${fv.s}</small></span><span class="bc" id="bigChg">${chg}</span></div>${reviewNote(id)}${editor}
     <div class="cx-def">${m.def||''}</div>
     <div class="cx-disc">${freshNote(id)} · ${raw(id).length} observations</div>
     <details class="cx-ctx"><summary>Briefly Explained</summary><div class="cxc-body"><p>${m.watch||''}</p></div></details>
@@ -964,7 +1033,7 @@ function changeText(id,r){ const p=sliceRange(raw(id),r); if(p.length<2)return '
   const pc=a?((b-a)/Math.abs(a)*100):0; return `${pc>=0?'+':''}${pc.toFixed(1)}% <span class="rl">· ${r}</span>`; }
 
 /* ---- comparison view ---- */
-function compareHTML(ids){
+function compareHTML(ids,editor){
   const mode=state.mode||autoMode(ids);
   const AL=alignAll(ids);
   const charts = mode==='separate'
@@ -972,8 +1041,8 @@ function compareHTML(ids){
     : `<div class="cw" id="cw0"></div>`;
   const strip=`<div class="cx-strip" id="cxStrip"></div>`;
   const disc=discLine(ids,AL,mode);
-  const ctx=pairContextHTML(ids);
-  return `<div class="cx-chart">${charts}</div>${strip}<div class="cx-disc${AL.n<12?' warn':''}" id="cxDisc">${disc}</div>${ctx}
+  const ctx=state.view?questionAnswerHTML():pairContextHTML(ids);
+  return `<div class="cx-chart">${charts}</div>${strip}${ids.map((id)=>reviewNote(id,true)).join('')}${ctx}${editor}<div class="cx-disc${AL.n<12?' warn':''}" id="cxDisc">${disc}</div>
     <div class="cx-actions">${actionsHTML(null,ids)}</div>
     <div class="cx-tbl" id="cxTable" hidden></div>
     <div class="cx-srcs">${ids.map(srcBlock).join('')}</div>`;
@@ -1036,7 +1105,7 @@ function drawCompare(ids){ const mode=state.mode||autoMode(ids); const AL=alignA
   const ser=ids.map((id,si)=>({id,label:label(id),color:COLORS[si%3],render:reg(id).r==='bars'?'bars':(reg(id).r==='step'?'step':'line'),
     pts:useIdx.map((i,j)=>({date:dates[j],value:AL.series[si].pts[i].value}))}));
   if(mode==='separate'){
-    ser.forEach((s,i)=>{ const cw=document.querySelector(`.cw[data-cw="${i}"]`); if(cw){ drawChart(cw,[s],{single:true,height:document.querySelector('.cw[data-cw]')&&window.innerWidth<560?160:175,mode:'actual',axisCad:AL.freq}); } });
+    ser.forEach((s,i)=>{ const cw=document.querySelector(`.cw[data-cw="${i}"]`); if(cw){ drawChart(cw,[s],{single:true,height:document.querySelector('.cw[data-cw]')&&window.innerWidth<560?175:165,mode:'actual',axisCad:AL.freq}); } });
   } else {
     const cw=$('#cw0'); if(cw) drawChart(cw,ser,{mode:mode==='relative'?'relative':'actual',axisCad:AL.freq});
   }
@@ -1075,12 +1144,14 @@ function downloadCSV(ids){ const {csv}=buildRows(ids); const esc=v=>{const s=Str
 /* ============================ BINDINGS ============================ */
 function bindControls(){
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',async()=>{ applyView(b.dataset.view); await ensure(state.v); render(); }));
+  const viewSelect=$('#cxViewSelect'); if(viewSelect)viewSelect.addEventListener('change',async()=>{ if(!viewSelect.value)return; applyView(viewSelect.value); await ensure(state.v); render(); });
+  const editor=$('#cxEditor'); if(editor)editor.addEventListener('toggle',()=>{ EDIT_OPEN=editor.open; });
   document.querySelectorAll('[data-r]').forEach(b=>{ if(b.disabled)return; b.addEventListener('click',()=>{ state.r=b.dataset.r; render(); }); });
   document.querySelectorAll('[data-mode]').forEach(b=>{ if(b.disabled)return; b.addEventListener('click',()=>{ state.mode=b.dataset.mode; render(); }); });
-  document.querySelectorAll('[data-rm]').forEach(b=>b.addEventListener('click',()=>{ state.v=state.v.filter(x=>x!==b.dataset.rm); state.view=viewMatch(state.v); state.mode=null; if(state.v.length)render(); }));
+  document.querySelectorAll('[data-rm]').forEach(b=>b.addEventListener('click',()=>{ state.v=state.v.filter(x=>x!==b.dataset.rm); state.view=viewMatch(state.v); state.mode=null; EDIT_OPEN=true; if(state.v.length)render(); }));
   const add=$('#cxAdd'); if(add)add.addEventListener('click',openSheet);
 }
-async function openAlone(id){ state.v=[id]; state.view=viewMatch(state.v); state.mode=null; await ensure(state.v); render(); window.scrollTo({top:0,behavior:'smooth'}); }
+async function openAlone(id){ state.v=[id]; state.view=viewMatch(state.v); state.mode=null; EDIT_OPEN=true; await ensure(state.v); render(); window.scrollTo({top:0,behavior:'smooth'}); }
 function bindCatalog(root){ (root||document).querySelectorAll('[data-open]').forEach(b=>{ if(b.__b)return; b.__b=1; b.addEventListener('click',()=>openAlone(b.dataset.open)); }); }
 function bindAll(){
   document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',async()=>{ await addVar(b.dataset.add); }));
@@ -1089,7 +1160,7 @@ function bindAll(){
   const ids=state.v.filter(id=>store[id]&&raw(id).length);
   document.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.act==='table')toggleTable(ids,b); else downloadCSV(ids); }));
 }
-async function addVar(id){ if(state.v.includes(id)){ return; } if(state.v.length>=3)return; state.v=[...state.v,id]; state.view=viewMatch(state.v); state.mode=null; await ensure(state.v); render(); }
+async function addVar(id){ if(state.v.includes(id)){ return; } if(state.v.length>=3)return; state.v=[...state.v,id]; state.view=viewMatch(state.v); state.mode=null; EDIT_OPEN=true; await ensure(state.v); render(); }
 
 /* ---- add-variable sheet ---- */
 let SHEET_RETURN=null;

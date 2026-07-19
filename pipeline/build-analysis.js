@@ -56,6 +56,15 @@ function stat(id) {
     date: last.date, value: round(last.value, 4), prev: round(prev.value, 4),
     change: round(change, 4), changePct: round(changePct, 2), dir, z, streak,
     isRecordHigh: isHigh, isRecordLow: isLow, trend3: trend(3), trend12: trend(12),
+    // This pack is the trust boundary: anything here may be stated as fact downstream. A latest
+    // observation that trips the connector's jump guard has NOT been confirmed against the source,
+    // so it is carried but labelled rather than published clean — otherwise the number we trust
+    // least reads identically to the ones we verified (SF62279 doubled in 2026-Q1 on flat
+    // transaction counts). Clears itself when the source revises and the flag drops.
+    underReview: (meta(id).flags || []).some((flag) => {
+      const jump = /^series_jump_(\d{4}-\d{2})-\d{2}_/.exec(String(flag));
+      return !!jump && String(last.date).startsWith(jump[1]);
+    }),
   };
 }
 
@@ -96,12 +105,17 @@ for (const id of WATCH) {
   if (!GROWTH.test(id) && id !== 'banxico-tasa-objetivo' && (data(id) || []).length >= 40 && Math.abs(m.z || 0) >= 0.8) {
     if (m.isRecordHigh) flags.push('record high'); if (m.isRecordLow) flags.push('record low');
   }
-  moved.push({ id, label: LABEL[id] || id, value: m.value, units: m.units, change: m.change, changePct: m.changePct, z: m.z, dir: m.dir, cadence: m.cadence, date: m.date, flags });
+  moved.push({ id, label: LABEL[id] || id, value: m.value, units: m.units, change: m.change, changePct: m.changePct, z: m.z, dir: m.dir, cadence: m.cadence, date: m.date, flags, underReview: m.underReview });
 }
-// rank by |z|; a move is "notable" if |z|>=1.5 or it carries a flag
+// rank by |z|; a move is "notable" if |z|>=1.5 or it carries a flag.
+// An unconfirmed series is dropped from the ranking first: its z is enormous BY CONSTRUCTION, so
+// ranking by |z| would hand the lead slot to the one number we are least willing to stand behind.
+// (No WATCH series is under review today; this keeps that true if one is ever added.)
 moved.sort((a, b) => Math.abs(b.z || 0) - Math.abs(a.z || 0));
-const notable = moved.filter((x) => Math.abs(x.z || 0) >= 1.5 || x.flags.length);
-const whatMoved = { quiet: notable.length === 0, items: (notable.length ? notable : moved).slice(0, 6) };
+const publishable = moved.filter((x) => !x.underReview);
+for (const x of moved) if (x.underReview) console.warn(`  analysis: holding ${x.id} out of What Moved (unconfirmed ${x.changePct}% move)`);
+const notable = publishable.filter((x) => Math.abs(x.z || 0) >= 1.5 || x.flags.length);
+const whatMoved = { quiet: notable.length === 0, items: (notable.length ? notable : publishable).slice(0, 6) };
 
 // ---- cross-metrics Fable 2 blessed (each has a real mechanism) ----
 function pairSeries(aId, bId, fn) {
