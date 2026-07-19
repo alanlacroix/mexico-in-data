@@ -128,12 +128,25 @@ jobs:
             if (!real.length) return;
             const body = real.map(a => `- **${a.id}** (${a.source}): ${a.message}`).join('\n');
             const title = `Data pipeline: ${real.length} connector failure(s)`;
+            // The SAME failure recurring every run used to post a comment each time, which
+            // emails a notification on every cycle (Alan 2026-07-19: "I keep getting these").
+            // Now: fingerprint the failure set. An unchanged set silently refreshes the issue
+            // body (edits do not notify); only a CHANGED set posts a comment worth an email.
+            const crypto = require('crypto');
+            const sig = crypto.createHash('sha1')
+              .update(real.map(a => `${a.id}:${a.message}`).sort().join('|')).digest('hex').slice(0, 12);
+            const marker = `<!-- failure-set:${sig} -->`;
+            const stamped = `${body}\n\n_Still failing as of ${new Date().toISOString()}._\n${marker}`;
             const { data: open } = await github.rest.issues.listForRepo({
               owner: context.repo.owner, repo: context.repo.repo,
               state: 'open', labels: 'data-alert',
             });
             if (open[0]) {
-              await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: open[0].number, body: `Recurred ${new Date().toISOString()}:\n${body}` });
+              const unchanged = (open[0].body || '').includes(marker);
+              await github.rest.issues.update({ owner: context.repo.owner, repo: context.repo.repo, issue_number: open[0].number, title, body: stamped });
+              if (!unchanged) {
+                await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: open[0].number, body: `Failure set changed ${new Date().toISOString()}:\n${body}` });
+              }
             } else {
-              await github.rest.issues.create({ owner: context.repo.owner, repo: context.repo.repo, title, labels: ['data-alert'], body });
+              await github.rest.issues.create({ owner: context.repo.owner, repo: context.repo.repo, title, labels: ['data-alert'], body: stamped });
             }

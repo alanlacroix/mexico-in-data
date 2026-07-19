@@ -46,6 +46,26 @@ export function findOfficialWorkbook(html) {
   return url.href;
 }
 
+// The SE page rate-limits / serves a stripped page to datacenter IPs, so link DISCOVERY can
+// fail in CI while the CMS attachment itself stays fetchable (verified 2026-07-19: the page
+// and link resolve fine from a residential IP). Remember the workbook we last used so a
+// blocked discovery degrades to "reuse the known file" instead of failing the connector and
+// alerting every cycle. Discovery still wins whenever it works, so a new quarter is picked up.
+const CACHE_PATH = new URL('../../data/cache/se-ied-workbook.json', import.meta.url);
+const WORKBOOK_RX = /^https:\/\/www\.gob\.mx\/cms\/uploads\/attachment\/file\/\d+\/[^/]+\.xlsx$/i;
+async function rememberWorkbook(workbookUrl) {
+  try {
+    await fs.mkdir(new URL('.', CACHE_PATH), { recursive: true });
+    await fs.writeFile(CACHE_PATH, `${JSON.stringify({ workbookUrl, discoveredAt: new Date().toISOString() }, null, 2)}\n`);
+  } catch { /* caching is best-effort; never fail the fetch over it */ }
+}
+async function lastKnownWorkbook() {
+  try {
+    const cached = JSON.parse(await fs.readFile(CACHE_PATH, 'utf8'));
+    return WORKBOOK_RX.test(cached?.workbookUrl || '') ? cached.workbookUrl : null;
+  } catch { return null; }
+}
+
 async function unzipEntry(file, entry) {
   const { stdout } = await execFileAsync('unzip', ['-p', file, entry], {
     encoding: 'utf8', maxBuffer: 12 * 1024 * 1024,
@@ -159,8 +179,16 @@ export const connectors = [
       thresholds: { maxPctChange: 100000, minRows: 100, maxRowDrop: 0.05 }, // FDI is lumpy quarter to quarter
     },
     async fetchRaw() {
-      const page = await getText(PAGE_URL, { timeoutMs: 45_000 });
-      const workbookUrl = findOfficialWorkbook(page);
+      let workbookUrl;
+      try {
+        workbookUrl = findOfficialWorkbook(await getText(PAGE_URL, { timeoutMs: 45_000 }));
+        await rememberWorkbook(workbookUrl);          // discovery won — refresh the fallback
+      } catch (error) {
+        const prior = await lastKnownWorkbook();
+        if (!prior) throw error;                      // nothing to fall back to — fail closed as before
+        console.warn(`  se-ied: discovery failed (${error.message}); reusing last known workbook`);
+        workbookUrl = prior;
+      }
       return { workbookUrl, data: await parseWorkbook(await getBuffer(workbookUrl, { timeoutMs: 60_000 })) };
     },
     normalize(raw) {
