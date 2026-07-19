@@ -259,7 +259,7 @@ async function addBackgrounds(events, now) {
   // and the standing situation around it), grounded in the site's curated standing facts +
   // the article — never a restatement of the news event. v1 analyses regenerate once.
   const IMG_MAX_TRIES = 6;   // a few chances so a late og:image (or a now-unblocked fetch) is caught
-  const needsAnalysis = (e) => !e.drivers || totalWords(e) > 130 || e.analysisV !== 4;
+  const needsAnalysis = (e) => !e.drivers || totalWords(e) > 130 || e.analysisV !== 5;
   // A fresh article often loads BEFORE its og:image is set (or behind a first-hit consent
   // page), so "fetched, no image" is NOT final — retry up to a few times over later runs so
   // the picture is picked up once it appears (Audit 2026-07-18: an El País Ruffo story was
@@ -288,11 +288,11 @@ async function addBackgrounds(events, now) {
   const system = `You are given STANDING FACTS (the site's curated structural facts about Mexico) and, per item, a headline, a one-line summary, and the ARTICLE TEXT. Write the four-part BRIEFLY EXPLAINED analysis. Nothing may repeat the given summary line:
 - background: one to three sentences a NEWCOMER needs to understand the story: what the institution, agreement, or thing at the center IS, and the standing situation around it. Draw on the STANDING FACTS and the article. NEVER a restatement of the news event itself (the summary already says what happened) — if the story is about a USMCA review, background explains what USMCA is and why reviews are happening, not who spoke where.
 - drivers: one to two sentences, from the ARTICLE ONLY — the forces pushing it: who wants what, and why now.
-- implications: one to two sentences, from the ARTICLE ONLY — what it changes for Mexico, its markets, or the US relationship, as supported by the text. No speculation beyond the text.
-- next: one to two sentences, from the ARTICLE ONLY — concrete next steps the text itself states (a scheduled meeting, a deadline, a vote, a filing, a stated plan with a date). If the text states none, return "".
+- implications: one to two sentences, from the ARTICLE ONLY — a consequence the article itself states or directly supports (what it changes for Mexico, its markets, or the US relationship). Do NOT add analyst inference, prediction, or framing the article does not support: do not infer a policy decision the source never mentions (e.g. a rate cut it never discusses), do not reframe a role (a cabinet secretary is not a "government"), and do not assert one process is "separate from" or "part of" another unless the article says so. If the article states no clear implication, return "".
+- next: one to two sentences, from the ARTICLE ONLY — a concrete next step the text states (a scheduled meeting, deadline, vote, filing, or a stated plan) that is NOT already in the summary or drivers. Keep the KEY qualifying detail: if a stated plan would otherwise seem to contradict the news, include the clause that reconciles it (e.g. if exports halted but a leader vows to keep supplying, say HOW — through whom). If the text states no genuine next step, return "".
 KEEP IT TIGHT: prefer ONE sentence per field; the whole four-part analysis should read in under 90 words. A reader opens this for a fast layer of understanding, not an essay.
-EACH FIELD MUST ADD SOMETHING NEW: do not let two fields make the same point, and do not restate the one-line summary. If implications would just echo the summary, either give a genuinely different consequence or return "".
-Calm, concrete, whole sentences. No opinion, no forecasts beyond stated plans, no em-dash, and no number that does not appear in the provided material. Return "" for any field you cannot honestly support. Return JSON.
+EACH FIELD MUST ADD SOMETHING NEW: do not let two fields make the same point, and do not restate the one-line summary or repeat a date already given. If implications would just echo the summary, either give a genuinely different consequence or return "".
+Calm, concrete, whole sentences. Use the article's OWN words for roles, entities and what is at stake — do not upgrade, soften or generalize them (crude oil is not "petroleum products"; "amid pressure" is not "sustained pressure"). No opinion, no forecasts beyond stated plans, no em-dash, and no number that does not appear in the provided material. Return "" for any field you cannot honestly support. Return JSON.
 
 ${REPORT}
 
@@ -322,7 +322,7 @@ ${BAN}`;
       if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
       item.e[field] = text; landed++;
     }
-    if (landed) { item.e.analysisV = 4; added++; }   // v4: anti-repetition prompt + guard (Audit 2026-07-17)
+    if (landed) { item.e.analysisV = 5; added++; }   // v5: QA fixes — implications article-only (no analyst inference/misframe), next keeps the reconciling clause (QA 2026-07-18)
     if (!stripDashWs(r.background)) console.warn(`  standing-gap: no background written for "${item.e.title.slice(0, 60)}" — is a standing fact missing?`);
   }
   return added;
