@@ -1,6 +1,6 @@
 {
   "meta": {
-    "note": "News source registry for The Mexico Brief. All RSS/API, no scrapes. Adding a source = one line here. Pan-LatAm/global feeds set mx:true and get a Mexico keyword filter; Mexico-native feeds set mx:false and pass through. GDELT (build-news.js) stays as the wire backstop for Reuters/AP/Bloomberg. Verified 2026-07-15.",
+    "note": "News source registry for The Mexico Brief. All RSS/API, no scrapes. Google News and GDELT are discovery backstops only and are never shown as publishers. Pan-LatAm/global feeds set mx:true and get a Mexico keyword filter; Mexico-native feeds set mx:false and pass through. Verified 2026-07-16.",
     "beatToTag": { "politics": "politics", "economy": "economy", "companies": "markets", "fintech": "markets", "deals": "trade", "us-mexico": "trade", "society": "society", "security": "security" }
   },
   "sources": [
@@ -19,6 +19,7 @@
     { "id": "crunchbase", "name": "Crunchbase News", "url": "https://news.crunchbase.com/feed/", "beat": "deals", "tier": 2, "lang": "en", "mx": true },
     { "id": "guardian-mx", "name": "The Guardian — Mexico", "url": "https://www.theguardian.com/world/mexico/rss", "beat": "politics", "tier": 1, "lang": "en", "mx": false },
     { "id": "bloomberglinea", "name": "Bloomberg Línea", "url": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml", "beat": "economy", "tier": 2, "lang": "es", "mx": true },
+    { "id": "mexico-business-news", "name": "Mexico Business News", "url": "https://mexicobusiness.news/jsonapi/node/article?page%5Blimit%5D=100&sort=-created", "baseUrl": "https://mexicobusiness.news", "format": "jsonapi", "beat": "companies", "tier": "specialist", "lang": "en", "mx": false },
     { "id": "ascoa", "name": "AS/COA", "url": "https://www.as-coa.org/rss.xml", "beat": "us-mexico", "tier": "specialist", "lang": "en", "mx": true },
     { "id": "techcrunch-mx", "name": "TechCrunch — Mexico", "url": "https://techcrunch.com/tag/mexico/feed/", "beat": "deals", "tier": 2, "lang": "en", "mx": false },
     { "id": "gnews-usmca", "name": "Google News — trade & tariffs", "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(aranceles%20OR%20USMCA%20OR%20TMEC%20OR%20Trump%20comercio)&hl=es-419&gl=MX&ceid=MX:es", "beat": "us-mexico", "tier": "aggregator", "lang": "es", "mx": false },

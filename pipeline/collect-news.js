@@ -73,6 +73,29 @@ function parseFeed(xml) {
   return items;
 }
 
+// Mexico Business News does not publish a usable RSS feed, but its public
+// Drupal JSON:API exposes the same article metadata. Keep this adapter small:
+// headline, direct article URL, summary and publication date only.
+function parseJsonApi(text, baseUrl) {
+  const json = JSON.parse(text);
+  return (Array.isArray(json.data) ? json.data : []).flatMap((node) => {
+    const a = node && node.attributes;
+    const alias = a && a.path && a.path.alias;
+    if (!a || !a.title || !alias || !alias.includes('/news/')) return []; // reported news only
+    const link = new URL(alias, baseUrl).toString();
+    const dek = clean((a.body && (a.body.summary || a.body.value)) || '').slice(0, 320);
+    return [{ title: clean(a.title), link, dek, date: a.created || a.changed || '' }];
+  });
+}
+
+function beatFor(s, url) {
+  if (s.id !== 'mexico-business-news') return s.beat;
+  if (/\/(finance|payments)\//i.test(url)) return 'fintech';
+  if (/\/(trade-and-investment|policyandeconomy)\//i.test(url)) return 'economy';
+  if (/\/(cloudanddata|tech)\//i.test(url)) return 'companies';
+  return 'companies';
+}
+
 // ---- normalize ----
 function canonical(u) {
   try {
@@ -115,7 +138,7 @@ async function main() {
     let n = 0, ok = false;
     try {
       const xml = await fetchText(s.url);
-      const items = parseFeed(xml);
+      const items = s.format === 'jsonapi' ? parseJsonApi(xml, s.baseUrl || s.url) : parseFeed(xml);
       ok = items.length > 0;
       for (const it of items) {
         const url = canonical(it.link);
@@ -126,7 +149,7 @@ async function main() {
         seen.add(id);
         ledger.push({
           id, url, title: it.title, dek: it.dek,
-          source: domainOf(url) || s.id, sourceName: s.name, tier: s.tier, beat: s.beat, lang: s.lang,
+          source: domainOf(url) || s.id, sourceName: s.name, tier: s.tier, beat: beatFor(s, url), lang: s.lang,
           published_at: toISO(it.date) || now.toISOString(),
           first_seen: now.toISOString(),
         });
@@ -151,7 +174,8 @@ async function main() {
     for (const a of gdelt.articles) {
       const url = canonical(a.url); const id = idOf(url);
       if (seen.has(id)) continue; seen.add(id);
-      ledger.push({ id, url, title: a.title, dek: '', source: a.domain || domainOf(url), sourceName: 'via GDELT',
+      const publisher = a.domain || domainOf(url);
+      ledger.push({ id, url, title: a.title, dek: '', source: publisher, sourceName: publisher,
         tier: 1, beat: a.tag === 'trade' ? 'us-mexico' : (a.tag === 'markets' ? 'economy' : a.tag || 'politics'),
         lang: 'en', published_at: a.date || now.toISOString(), first_seen: now.toISOString() });
       added++;

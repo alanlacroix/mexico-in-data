@@ -51,6 +51,8 @@ assert.match(topicPages, /pnif\.cnbv\.gob\.mx\/dnoticia\/basededatosinclusionfin
 for (const renderedData of [briefData, areasData, happeningData]) {
   assert.doesNotMatch(renderedData, /dof\.gob\.mx\/abrirPDF\.php/i,
     'Brief links should use the readable DOF issue page, not a PDF download endpoint');
+  assert.doesNotMatch(renderedData, /news\.google\.com|Google News|via GDELT/i,
+    'Google News and GDELT are discovery tools, not public source labels or links');
 }
 
 // The catalog-count header is a JS-computed number with a static SSR fallback. The
