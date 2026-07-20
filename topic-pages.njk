@@ -719,7 +719,7 @@ function render(topic){
     $('#topicApp').className='';
     $('#topicApp').innerHTML=`
       <section class="topic-hero"><div><div class="mono-k">Topic</div><h1>${t.title}</h1><p class="topic-scope">${t.scope}</p></div><div class="topic-asof story-stamp">${t.asof}</div></section>
-      ${t.story.map((sec,i)=>`<section class="section story-sec"><h2>${sec.h2}</h2>${sec.prose.map(p=>`<p class="story-p">${p}</p>`).join('')}${sec.chart?chartShell(sec.chart,'story-ev-'+i):''}</section>`).join('')}
+      ${t.story.map((sec,i)=>`<section class="section story-sec"><h2>${String(sec.h2).replace(/\.\s*$/,'')}</h2>${sec.prose.map(p=>`<p class="story-p">${p}</p>`).join('')}${sec.chart?chartShell(sec.chart,'story-ev-'+i):''}</section>`).join('')}
       <section class="section"><div class="changes-grid"><div><div class="section-head"><div><div class="mono-k">Latest</div><h2>What's moving</h2></div></div>${updateList(t.updates)}</div><aside><div class="section-head"><div><div class="mono-k">Next</div><h2>${t.upcomingTitle||'Coming up'}</h2></div></div>${upcomingList(t.upcoming)}</aside></div></section>
       <details class="sources"><summary>Sources and method</summary><div class="sources-body">${renderSources(t)}</div></details>`;
     $$('[data-evidence-for]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.evidenceFor,table=b.dataset.evidence==='table',group=$$(`[data-evidence-for="${id}"]`);group.forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',x===b?'true':'false')});$('#'+id+'-visual').classList.toggle('hidden',table);$('#'+id+'-table').classList.toggle('open',table)}));
