@@ -201,7 +201,7 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
         <div class="story-list" id="all-news-list">
           {% for story in latestStories %}{% if not story.inBrief %}
           <article class="brief-story all-story" data-topic="{{ story.topic }}">
-            <div class="story-meta"><a class="story-topic" href="/?topic={{ story.topic }}#all-news">{{ story.topicLabel }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
+            <div class="story-meta"><a class="story-topic" href="{{ '/us-mexico.html' if story.topic == 'us-mexico' else '/' + story.topic + '.html' }}">{{ story.topicLabel }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
             <div class="story-title-row">
               <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
               {% if story.bg and story.drivers and story.implications %}<button class="be-summary be-btn" type="button" aria-expanded="false" aria-label="Context behind the headline" title="The context behind the headline"><span class="be-mark" aria-hidden="true">BE</span></button>{% endif %}

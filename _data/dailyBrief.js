@@ -18,13 +18,15 @@ const read = (rel) => {
 };
 
 // section (from the event log / brief) → homepage beat kicker + topic room + link.
+// Kickers link to the topic STORY pages (the state-of-things reads), not the homepage news
+// filter — the filter has its own tabs in More headlines (Alan 2026-07-20).
 const SECTIONS = {
-  economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/?topic=economy#all-news' },
-  money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/?topic=economy#all-news' },
-  politics:    { beat: 'Politics',        room: 'Politics',            url: '/?topic=politics#all-news' },
-  security:    { beat: 'Security',        room: 'Society & security',  url: '/?topic=society#all-news' },
-  society:     { beat: 'Society',         room: 'Society & security',  url: '/?topic=society#all-news' },
-  'us-mexico': { beat: 'US–Mexico',       room: 'US–Mexico',           url: '/?topic=us-mexico#all-news' },
+  economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/economy.html' },
+  money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/economy.html' },
+  politics:    { beat: 'Politics',        room: 'Politics',            url: '/politics.html' },
+  security:    { beat: 'Security',        room: 'Society & security',  url: '/society.html' },
+  society:     { beat: 'Society',         room: 'Society & security',  url: '/society.html' },
+  'us-mexico': { beat: 'US–Mexico',       room: 'US–Mexico',           url: '/us-mexico.html' },
 };
 
 // The auto companies tracker (pipeline/build-companies.js → data/companies.json) runs DARK
