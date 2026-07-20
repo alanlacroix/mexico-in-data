@@ -82,12 +82,13 @@ module.exports = function () {
         topicLabel: section.label,
         title: clean(event.title).replace(/\.\s*$/, ''),
         summary: clean(event.summary || event.dek || event.why),
-        // The four-part Briefly Explained, so "More headlines" shows the SAME structured
-        // Context as the top stories (Alan 2026-07-17: apply it throughout). May be empty
-        // until the pipeline's analysis pass reaches this story; `explanation` is the
-        // one-line fallback (legacy entries only have `why`).
+        // The Briefly Explained contract (Alan 2026-07-20: "has to be consistent"): the
+        // CORE three — Background · Drivers · Implications — ship together or not at all;
+        // "What's next" rides along only when the article states a real next step. A story
+        // the analysis pass has only partially reached shows NO BE (the pipeline retries it)
+        // rather than a lone unlabeled paragraph that reads as a different, broken format.
         bg: clean(event.background), drivers: clean(event.drivers), implications: clean(event.implications), next: clean(event.next),
-        explanation: clean(event.explanation || event.background || event.why),
+        explanation: clean(event.explanation),
         source: clean(event.source),
         url: clean(event.url),
         inBrief: briefUrls.has(clean(event.url)) || briefTitles.has(normalize(event.title)),

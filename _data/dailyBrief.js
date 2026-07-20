@@ -57,12 +57,12 @@ const toStory = (e) => {
     // Keep the card readable without asking for a click. The first sentence says what
     // happened; the optional drawer carries the extra background.
     summary: clean(e.summary || e.dek || e.context),
-    // Older entries predate the separate background field. Keep BE available on every
-    // card; as the pipeline revisits an article, its fuller background replaces this
-    // one-line fallback automatically.
-    explanation: clean(e.explanation || e.background || e.context),
-    // The four-part Briefly Explained model (Alan 2026-07-16): background · drivers ·
-    // implications · what's next — article-grounded, field-by-field gated, may be empty.
+    // The Briefly Explained contract (Alan 2026-07-20: "has to be consistent"): the CORE
+    // three — Background · Drivers · Implications — ship together or not at all; "What's
+    // next" is an explicit bonus when the article states a real next step. No more falling
+    // back to a bare background/context paragraph: a partially-analysed story shows NO BE
+    // until the pipeline's retry completes it, so every visible panel has the same shape.
+    explanation: clean(e.explanation),
     bg: clean(e.background), drivers: clean(e.drivers), implications: clean(e.implications), next: clean(e.next),
     // The article's own link-preview image (og:image, https-only) — unfurl-style thumbnail.
     image: /^https:\/\//i.test(clean(e.image)) ? clean(e.image) : '',

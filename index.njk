@@ -63,6 +63,10 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   .be-panel[hidden]{display:none}
   .be-panel p+p{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
   .be-panel .ck{font-family:var(--mono);font-size:10px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-right:7px}
+  /* Background, Drivers and Implications are the contract — always all three. "What's next"
+     is an explicit extra, present only when the article states a real next step (most news
+     does not). The arrow marks it as forward-looking so a story without one reads complete. */
+  .be-panel .be-next .ck::before{content:'\2192\00a0';color:var(--green)}
   .all-news{margin-top:24px;border-bottom:1px solid var(--line)}
   .all-news>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.035em;text-transform:uppercase;cursor:pointer}
   .all-news>summary::-webkit-details-marker{display:none}
@@ -172,9 +176,9 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
         <div class="story-meta"><a class="story-topic" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
         <div class="story-title-row">
           <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" loading="lazy" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-          {% if story.bg or story.drivers or story.implications or story.next or story.explanation %}<button class="be-summary be-btn" type="button" aria-expanded="false" aria-label="Context behind the headline" title="The context behind the headline"><span class="be-mark" aria-hidden="true">BE</span></button>{% endif %}
+          {% if story.bg and story.drivers and story.implications %}<button class="be-summary be-btn" type="button" aria-expanded="false" aria-label="Context behind the headline" title="The context behind the headline"><span class="be-mark" aria-hidden="true">BE</span></button>{% endif %}
         </div>
-        {% if story.bg or story.drivers or story.implications or story.next or story.explanation %}<div class="be-panel" hidden>{% if story.drivers or story.implications or story.next %}{% if story.bg %}<p><span class="ck">Background</span>{{ story.bg }}</p>{% endif %}{% if story.drivers %}<p><span class="ck">Drivers</span>{{ story.drivers }}</p>{% endif %}{% if story.implications %}<p><span class="ck">Implications</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}{% else %}<p>{{ story.explanation }}</p>{% endif %}</div>{% endif %}
+        {% if story.bg and story.drivers and story.implications %}<div class="be-panel" hidden><p><span class="ck">Background</span>{{ story.bg }}</p><p><span class="ck">Drivers</span>{{ story.drivers }}</p><p><span class="ck">Implications</span>{{ story.implications }}</p>{% if story.next %}<p class="be-next"><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}</div>{% endif %}
       </article>
       {% endfor %}
     </div>
@@ -195,9 +199,9 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
             <div class="story-meta"><a class="story-topic" href="/?topic={{ story.topic }}#all-news">{{ story.topicLabel }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
             <div class="story-title-row">
               <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-              {% if story.bg or story.drivers or story.implications or story.next or story.explanation %}<button class="be-summary be-btn" type="button" aria-expanded="false" aria-label="Context behind the headline" title="The context behind the headline"><span class="be-mark" aria-hidden="true">BE</span></button>{% endif %}
+              {% if story.bg and story.drivers and story.implications %}<button class="be-summary be-btn" type="button" aria-expanded="false" aria-label="Context behind the headline" title="The context behind the headline"><span class="be-mark" aria-hidden="true">BE</span></button>{% endif %}
             </div>
-            {% if story.bg or story.drivers or story.implications or story.next or story.explanation %}<div class="be-panel" hidden>{% if story.drivers or story.implications or story.next %}{% if story.bg %}<p><span class="ck">Background</span>{{ story.bg }}</p>{% endif %}{% if story.drivers %}<p><span class="ck">Drivers</span>{{ story.drivers }}</p>{% endif %}{% if story.implications %}<p><span class="ck">Implications</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}{% else %}<p>{{ story.explanation }}</p>{% endif %}</div>{% endif %}
+            {% if story.bg and story.drivers and story.implications %}<div class="be-panel" hidden><p><span class="ck">Background</span>{{ story.bg }}</p><p><span class="ck">Drivers</span>{{ story.drivers }}</p><p><span class="ck">Implications</span>{{ story.implications }}</p>{% if story.next %}<p class="be-next"><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}</div>{% endif %}
           </article>
           {% endif %}{% endfor %}
         </div>

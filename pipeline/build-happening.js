@@ -259,7 +259,15 @@ async function addBackgrounds(events, now) {
   // and the standing situation around it), grounded in the site's curated standing facts +
   // the article — never a restatement of the news event. v1 analyses regenerate once.
   const IMG_MAX_TRIES = 6;   // a few chances so a late og:image (or a now-unblocked fetch) is caught
-  const needsAnalysis = (e) => !e.drivers || totalWords(e) > 130 || e.analysisV !== 5;
+  // The CORE three are the published contract (Alan 2026-07-20: "has to be consistent").
+  // A story missing any of them is retried on later runs rather than shipped partial —
+  // article text improves as outlets fill a story in, so a retry often completes it.
+  // "next" is deliberately NOT in the contract: most news states no concrete next step,
+  // so requiring it would either gut coverage (it completes on 41% of stories) or force
+  // the model to invent one. It ships as an explicit bonus when the article really has it.
+  const CORE = ['background', 'drivers', 'implications'];
+  const coreComplete = (e) => CORE.every((f) => stripDashWs(e[f]));
+  const needsAnalysis = (e) => !coreComplete(e) || totalWords(e) > 130 || e.analysisV !== 5;
   // A fresh article often loads BEFORE its og:image is set (or behind a first-hit consent
   // page), so "fetched, no image" is NOT final — retry up to a few times over later runs so
   // the picture is picked up once it appears (Audit 2026-07-18: an El País Ruffo story was
@@ -322,7 +330,10 @@ ${BAN}`;
       if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
       item.e[field] = text; landed++;
     }
-    if (landed) { item.e.analysisV = 5; added++; }   // v5: QA fixes — implications article-only (no analyst inference/misframe), next keeps the reconciling clause (QA 2026-07-18)
+    // v6: only a story whose CORE three landed counts as analysed. An incomplete one keeps
+    // its old analysisV so a later run retries it, instead of being frozen half-written.
+    if (coreComplete(item.e)) { item.e.analysisV = 5; added++; }
+    else if (landed) console.warn(`  analysis incomplete ${item.e.id}: missing ${CORE.filter((f) => !stripDashWs(item.e[f])).join(', ')} — will retry, no BE shown`);
     if (!stripDashWs(r.background)) console.warn(`  standing-gap: no background written for "${item.e.title.slice(0, 60)}" — is a standing fact missing?`);
   }
   return added;
