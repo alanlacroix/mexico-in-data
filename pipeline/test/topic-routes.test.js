@@ -14,11 +14,16 @@ const fail = (message) => { throw new Error(message); };
 if (routes.map((x) => x.key).join(',') !== expected.join(',')) fail('topic registry must contain the approved six routes in order');
 if (new Set(routes.map((x) => x.permalink)).size !== routes.length) fail('topic permalinks must be unique');
 
-const menu = nav.find((x) => x.label === 'Topics')?.menu?.find((x) => x.group === 'Sections')?.links || [];
-const navHrefs = menu.map((x) => x.href);
+// Nav contract updated 2026-07-20 (Alan: "any better way to access these pages" — supersedes
+// the 2026-07-16 prune): the masthead carries a Topics dropdown with ALL six story pages,
+// and Explore stays reachable inside it as the index.
+const topicsMenu = nav.find((x) => x.label === 'Topics');
+const menuLinks = (topicsMenu?.menu || []).flatMap((g) => g.links || []).map((x) => x.href);
 const routeLinks = routes.map((x) => x.permalink);
-if (menu.length) fail('topic pages belong under Explore, not a second masthead menu');
-if (!nav.some((item) => item.href === '/explore.html')) fail('masthead must link to Explore');
+if (!topicsMenu) fail('masthead must carry the Topics dropdown');
+for (const href of routeLinks) if (!menuLinks.includes(href)) fail('Topics dropdown is missing ' + href);
+if (!menuLinks.includes('/explore.html')) fail('Topics dropdown must keep the Explore index reachable');
+for (const href of routeLinks) if (!(topicsMenu.match || []).includes(href)) fail('Topics must light active on ' + href);
 const explore = fs.readFileSync(path.join(root, 'explore.njk'), 'utf8');
 for (const href of routeLinks) if (!explore.includes('href="' + href + '"')) fail('Explore is missing topic route ' + href);
 
