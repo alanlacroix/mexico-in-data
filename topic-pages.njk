@@ -223,7 +223,7 @@ const SERIES_IDS=[
   'banxico-spei-operaciones','banxico-spei-monto','banxico-codi-operaciones','banxico-tpv-debito-monto','banxico-tpv-credito-monto',
   'banxico-tpv-debito-ops','banxico-tpv-credito-ops','banxico-cajeros-ops','banxico-ecommerce-monto','banxico-ecommerce-ops',
   'banxico-tarjetas-debito','banxico-tarjetas-credito','banxico-circulante',
-  'banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-salario-minimo','banxico-remesas','banxico-remesas-electronicas','wb-population','wb-unemployment'
+  'banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-salario-minimo','banxico-remesas','banxico-remesas-electronicas','cre-gasolina-regular','wb-population','wb-unemployment'
 ];
 const DB={series:{},events:[],areas:[],happening:[],partners:null,products:null,tradeUS:null,demographics:null,vitals:null,crime:null,poverty:null};
 function validProducts(p){
@@ -351,7 +351,7 @@ function compositionEvidence(p){
     visual:treemapSVG(items,{W:900,H:470,label:`Mexico goods exports by product group, ${year}`,desc:'Rectangle area is proportional to export value. Use the table view for exact values.'}),
     legend:`<div class="composition-legend">${sectors.map(x=>`<span><i style="background:${x.color}"></i>${x.key}</span>`).join('')}</div>`,table:compositionTable(p),
     note:`Goods only. UN COMTRADE's total differs from Banxico CE125 by ${fmt(Number(r.deltaPct),1)}%, inside the ${fmt(Number(r.tolerancePct||2),0)}% publication limit.`,sources:[{label:'UN COMTRADE · HS 2-digit exports',href:source,date:String(year)}],
-    read:['A larger rectangle means a larger share of export dollars.','It does not measure services, profit, jobs, or the share of value created in Mexico.'],css:'composition-evidence'};
+    read:['A larger rectangle means a larger share of export dollars.','Services, profit, jobs, or the share of value created in Mexico.'],css:'composition-evidence'};
 }
 function timeline(items){return `<ol class="timeline">${items.map(x=>`<li><div class="timeline-date">${x.date}</div><div class="timeline-title">${x.title}</div><div class="timeline-text">${x.text}</div></li>`).join('')}</ol>`;}
 function timelineTable(items){return `<table><thead><tr><th>Date</th><th>Event</th><th>Why it matters</th></tr></thead><tbody>${items.map(x=>`<tr><td>${x.date}</td><td>${x.title}</td><td style="text-align:left;white-space:normal">${x.text}</td></tr>`).join('')}</tbody></table>`;}
@@ -360,7 +360,7 @@ function upcomingList(items){return items.length?`<div class="upcoming-list">${i
 
 function eventMatches(rx,n=4,exclude=null){const today=new Date();today.setUTCHours(0,0,0,0);return DB.events.filter(e=>dateObj(e.date)>=today&&rx.test(`${e.kind} ${e.label} ${e.mechanism||''}`)&&!(exclude&&exclude.test(`${e.label} ${e.sourceUrl||''}`))).slice(0,n);}
 function changedMatches(section,n=3){
-  const aliases={economy:/^(economy|money)$/,payments:/^(payments|money)$/,trade:/^(trade|economy)$/,politics:/^politics$/,society:/^(society|security|economy)$/,usmexico:/^us-mexico$/};
+  const aliases={economy:/^(economy|money)$/,payments:/^payments$/,trade:/^trade$/,politics:/^politics$/,society:/^(society|security)$/,usmexico:/^us-mexico$/};
   const rx=aliases[section]||new RegExp(`^${section}$`);
   return DB.happening.filter(e=>rx.test(e.section||'')&&e.date&&e.title&&e.source&&e.url).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,n).map(e=>{
     // The four-part Briefly Explained rides along wherever the story appears (the same
@@ -377,35 +377,58 @@ const LABELS={economy:'Economy & money',payments:'Payments',trade:'Trade',politi
 const ROUTES={economy:'/economy.html',payments:'/payments.html',trade:'/trade.html',politics:'/politics.html',society:'/society.html',usmexico:'/us-mexico.html'};
 
 function economyTopic(){
-  const inf=s('banxico-inflacion'),core=s('banxico-inflacion-subyacente'),rateRaw=s('banxico-tasa-objetivo'),rate=monthlyLast(rateRaw),igae=s('banxico-igae'),peso=s('banxico-usdmxn-fix');
-  const I=last(inf),Ip=prior(inf),C=last(core),R=last(rateRaw),Ry=yearAgo(rateRaw),G=last(igae),P=last(peso),Py=yearAgo(peso);
-  const pesoMove=Py?(Py.value/P.value-1)*100:null;
-  const lines=[{name:'Headline inflation',points:inf,color:INK,format:v=>fmt(v,2)+'%'},{name:'Core inflation',points:core.slice(-inf.length),color:GREEN,format:v=>fmt(v,2)+'%'},{name:'Policy rate',points:rate.filter(p=>dateObj(p.date)>=dateObj(inf[0].date)),color:AMBER,format:v=>fmt(v,2)+'%'}];
+  const inf=s('banxico-inflacion'),core=s('banxico-inflacion-subyacente'),rateRaw=s('banxico-tasa-objetivo'),igae=s('banxico-igae'),gdp=s('banxico-pib-crecimiento'),peso=s('banxico-usdmxn-fix'),gas=s('cre-gasolina-regular'),real=realWage(),wageNow=last(monthlyLast(s('banxico-salario-minimo')));
+  const I=last(inf),Ic=last(core),R=last(rateRaw),G=last(igae),GY=yearAgo(igae),GDP=last(gdp),P=last(peso),RW=last(real),RWy=yearAgo(real,RW),Gas=last(gas);
+  if(!I||!Ic||!R||!G||!GY||!GDP||!P||!RW||!Gas)throw new Error('Economy inputs are incomplete');
+  const P3=atOrBefore(peso,new Date(dateObj(P.date).getTime()-90*86400000).toISOString().slice(0,10)),PY=yearAgo(peso,P);
+  const bnd=bandWord(I.value,2,4),stance=stanceWord(rateRaw),tIgae=trendWord(G.value,GY.value,{past:false}),tRW=trendWord(RW.value,RWy?RWy.value:null);
+  // The last actual move: walk back to the most recent change in the policy rate.
+  const lastMove=(()=>{for(let i=rateRaw.length-1;i>0;i--){if(rateRaw[i].value!==rateRaw[i-1].value)return {bp:Math.round((rateRaw[i].value-rateRaw[i-1].value)*100),date:rateRaw[i].date};}return null;})();
+  const pesoWord=(base)=>{const d=base?pct(P.value,base.value):null;return d==null?null:Math.abs(d)<0.5?'about where it was':d<0?'stronger than':'weaker than';};
+  const pesoPct=(base)=>{const d=base?pct(P.value,base.value):null;return d==null||Math.abs(d)<0.5?'':fmt(Math.abs(d),1)+'%';};
+  const pctOf=t=>t.known&&t.pct!=null?fmt(Math.abs(t.pct),1)+'%':'';
+  const line=(name,points,color,format)=>({name,points,color,format});
+  const newest=[I.date,R.date,P.date].sort().at(-1);
   return {
-    title:'Economy & money',scope:'Growth, prices, rates, and the peso.',asof:`Latest observations range from ${dateLabel(G.date)} to ${dateLabel(R.date)}.`,
-    nowTitle:'Headline inflation is below core inflation. The policy rate remains higher than both.',
-    nowText:`Headline inflation is <b>${fmt(I.value,2)}%</b>. Core inflation is <b>${fmt(C.value,2)}%</b>, and Banxico's rate is <b>${fmt(R.value,2)}%</b>. Activity was <b>${signed(G.value,2,'%')}</b> from a year earlier in ${dateLabel(G.date)}.`,
-    cards:[
-      {label:'Economic activity · annual',value:signed(G.value,2),unit:'%',change:'IGAE · year over year',context:'A monthly check on output between quarterly GDP releases.',source:'INEGI / Banxico',sourceHref:sourceUrl('banxico-igae'),date:dateLabel(G.date),href:'/chart.html?v=banxico-igae'},
-      {label:'Headline inflation',value:fmt(I.value,2),unit:'%',change:deltaText(I.value-Ip.value,' pp',2)+` from ${dateLabel(Ip.date)}`,context:`Core inflation is ${fmt(C.value,2)}%.`,guide:{items:[{label:'How to read it',text:`${fmt(I.value,2)}% means the INPC was ${fmt(I.value,2)}% higher than a year earlier. It does not mean every price rose by that amount.`},{label:'Why core is different',text:'Core removes the most volatile food and energy prices. It usually changes more slowly and helps show whether price pressure is broad.'}]},source:'INEGI / Banxico',sourceHref:sourceUrl('banxico-inflacion'),date:dateLabel(I.date),href:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente'},
-      {label:'Policy rate',value:fmt(R.value,2),unit:'%',change:Ry?deltaText(R.value-Ry.value,' pp',2)+' vs a year ago':'',context:`${fmt(R.value-C.value,2)} points above core inflation.`,guide:{items:[{label:'What it is',text:'The overnight interest-rate target set by Banxico.'},{label:'The trade-off',text:'Higher rates can help slow inflation and support the peso, but they also make borrowing more expensive. Lower rates reverse that trade-off.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-tasa-objetivo'),date:shortDate(R.date),href:'/chart.html?v=banxico-tasa-objetivo'},
-      {label:'Peso · per US dollar',value:fmt(P.value,2),unit:'MXN per US$',change:pesoMove!=null?`${fmt(Math.abs(pesoMove),1)}% ${pesoMove>=0?'stronger':'weaker'} than a year ago`:'',context:'Banxico’s official daily FIX rate.',guide:{items:[{label:'What it is',text:`${fmt(P.value,2)} means US$1 buys MX$${fmt(P.value,2)}.`},{label:'How to read it',text:`${fmt(P.value-.5,2)} would be a stronger peso. ${fmt(P.value+.5,2)} would be a weaker peso.`},{label:'What moves it',text:'Rates in Mexico and the US, the dollar itself, trade and investment flows, risk and politics can all matter. The rate alone cannot tell us which mattered most.'},{label:'The trade-off',text:'A stronger peso usually lowers the peso cost of imports and dollar debt. It also means fewer pesos for each dollar of exports or remittances. A weaker peso reverses that trade-off.'},{label:'Keep in mind',text:'FIX is a wholesale-market reference. A bank, card or cash rate will differ.'}],href:'https://www.banxico.org.mx/tipcamb/tipCamMIAction.do?idioma=en',link:'How Banxico calculates FIX'},source:'Banxico',sourceHref:sourceUrl('banxico-usdmxn-fix'),date:shortDate(P.date),href:'/chart.html?v=banxico-usdmxn-fix'}
+    title:'Economy & money',scope:'Prices, rates, activity, the peso, and what a paycheck buys.',
+    asof:`Last revised ${shortDate(new Date().toISOString().slice(0,10))}, ${new Date().getUTCFullYear()} · newest number ${dateLabel(newest)}`,
+    story:[
+      {h2:`Prices are rising at ${fmt(I.value,1)}% a year, ${bnd.word} Banxico's comfort zone.`,
+       prose:[`Headline inflation was <b>${fmt(I.value,1)}%</b> in ${dateLabel(I.date)}, ${bnd.word} the central bank's 2 to 4% target band. Core inflation, which strips out the most volatile prices, was ${fmt(Ic.value,1)}%. ${Ic.value>I.value+0.15?'Core above headline means the pressure is broad, not mainly food and energy.':Ic.value<I.value-0.15?'Headline above core means food and energy are doing much of the pushing.':'The two are close, so the pressure is spread evenly across the basket.'}`],
+       chart:{title:`Inflation was ${fmt(I.value,1)}% in ${dateLabel(I.date)}`,sub:'Annual change in consumer prices, monthly · the shaded band is Banxico\'s 2-4% target range',series:[line('Headline',inf.slice(-72),GREEN,v=>fmt(v,1)+'%'),line('Core',core.slice(-72),INK,v=>fmt(v,1)+'%')],yFormat:v=>fmt(v,1)+'%',band:[2,4],label:'Headline and core inflation with the target band',
+        note:'Annual percentage change in the consumer-price index. The band is the target range, not a forecast.',
+        sources:[topicSource('banxico-inflacion','Banxico / INEGI · headline inflation'),topicSource('banxico-inflacion-subyacente','Banxico / INEGI · core inflation')],
+        read:['Whether prices are rising faster or slower than the central bank wants.','Your personal inflation. The index weights a national consumption basket.']}},
+      {h2:`Banxico is ${stance.word} its rate at ${fmt(R.value,2)}%.`,
+       prose:[`The overnight target rate stands at <b>${fmt(R.value,2)}%</b>${lastMove?`. The last move was a ${Math.abs(lastMove.bp)} basis point ${lastMove.bp<0?'cut':'increase'} in ${dateLabel(lastMove.date)}`:''}. The rate is the price of pesos: it shapes what banks charge for credit, what savings pay, and how attractive peso assets look next to dollar ones.`],
+       chart:{title:`The policy rate is ${fmt(R.value,2)}%`,sub:'Overnight interbank target rate, monthly',series:[line('Policy rate',monthlyLast(rateRaw).slice(-96),GREEN,v=>fmt(v,2)+'%')],yFormat:v=>fmt(v,1)+'%',label:'Banxico overnight target rate',
+        note:'Month-end level of the target rate. Decisions land on announcement dates, not month ends.',
+        sources:[topicSource('banxico-tasa-objetivo','Banxico · target rate')],
+        read:['Where the central bank has set the price of money, and the path it took.','Why. The statement behind each move lives at the source link.']}},
+      {h2:`The economy ${G.value>=0.5?'is growing':G.value<=-0.5?'is shrinking':'is close to flat'}: ${G.value>=0?'up':'down'} ${fmt(Math.abs(G.value),1)}% on a year ago.`,
+       prose:[`The monthly activity measure, IGAE, ${G.value>=0?'grew':'shrank'} <b>${fmt(Math.abs(G.value),1)}%</b> in ${dateLabel(G.date)} against the same month a year earlier. ${Math.abs(G.value-GDP.value)<=0.7?`The quarterly measure tells a similar story: GDP ${GDP.value>=0?'grew':'shrank'} ${fmt(Math.abs(GDP.value),1)}% year over year in the latest quarter.`:`The quarterly measure is ${Math.abs(GDP.value)<Math.abs(G.value)?'softer':'stronger'}: GDP ${GDP.value>=0?'grew':'shrank'} only ${fmt(Math.abs(GDP.value),1)}% year over year in the latest quarter.`} IGAE moves first and gets revised; GDP moves later and settles the record.`],
+       chart:{title:`Activity ${G.value>=0?'grew':'shrank'} ${fmt(Math.abs(G.value),1)}% year over year in ${dateLabel(G.date)}`,sub:'IGAE, annual percentage change by month · points below zero are contractions',series:[line('IGAE annual change',igae.slice(-72),GREEN,v=>fmt(v,1)+'%')],yFormat:v=>fmt(v,1)+'%',label:'IGAE annual percentage change by month',
+        note:'Annual growth of the monthly activity measure. Early readings are revised as fuller data arrives.',
+        sources:[topicSource('banxico-igae','INEGI / Banxico · IGAE')],
+        read:['Whether the whole economy is producing more or less than a year ago, month by month.','Which sectors drive it. The measure blends agriculture, industry and services.']}},
+      {h2:`The peso is trading around ${fmt(P.value,2)} to the dollar.`,
+       prose:[`One dollar bought <b>${fmt(P.value,2)} pesos</b> on ${shortDate(P.date)}. The peso is ${pesoPct(P3)} ${pesoWord(P3)} three months ago${pesoWord(PY)?`, and ${pesoPct(PY)} ${pesoWord(PY)} a year ago`:''}. A stronger peso makes imports and dollar debts cheaper; it also shrinks what each remittance dollar is worth at home.`],
+       chart:{title:`One dollar buys ${fmt(P.value,2)} pesos`,sub:'Official FIX exchange rate, daily · one year',series:[line('MXN per USD',peso.slice(-260),GREEN,v=>fmt(v,2))],yFormat:v=>fmt(v,1),label:'Peso per dollar FIX rate, one year',
+        note:'Banxico\'s official FIX reference rate. Down on this chart means a stronger peso.',
+        sources:[topicSource('banxico-usdmxn-fix','Banxico · FIX rate')],
+        read:['What a dollar costs in pesos, day by day.','Why it moved. Rates, trade and risk appetite all push the price.']}},
+      {h2:`The minimum wage buys ${fmt(Math.abs(RW.value-100),0)}% ${RW.value>=100?'more':'less'} than in ${dateObj(real[0].date).getUTCFullYear()}.`,
+       prose:[`After adjusting for inflation, the general minimum wage ${tRW.known?`${tRW.word} ${pctOf(tRW)} over the past year and `:''}sits ${fmt(Math.abs(RW.value-100),0)}% ${RW.value>=100?'above':'below'} its ${dateObj(real[0].date).getUTCFullYear()} purchasing power. The floor itself is MX$${fmt(wageNow.value,2)} a day, and it is the floor, not the typical wage. For scale: a day at the minimum wage buys about ${fmt(wageNow.value/Gas.value,0)} liters of regular gasoline at ${dateLabel(Gas.date)} prices.`],
+       chart:{title:`A minimum-wage peso goes ${fmt(Math.abs(RW.value-100),0)}% ${RW.value>=100?'further':'less far'} than in ${dateObj(real[0].date).getUTCFullYear()}`,sub:`Minimum wage adjusted for consumer prices · index, ${dateObj(real[0].date).getUTCFullYear()} = 100`,series:[line('Real minimum wage',real,GREEN,v=>fmt(v,0))],yFormat:v=>fmt(v,0),label:'Inflation-adjusted general minimum wage index',
+        note:'The statutory general minimum wage deflated with the consumer-price index.',
+        sources:[topicSource('banxico-salario-minimo','CONASAMI / Banxico · minimum wage'),topicSource('banxico-inpc','INEGI / Banxico · consumer prices')],
+        read:['Whether the wage floor outruns prices.','The wage of the typical worker, hours worked, or informal pay.']}}
     ],
-    evidence:{k:'Prices and rates',title:'Headline inflation fell faster than core inflation',sub:'Annual inflation and Banxico policy rate · %',visual:chartSVG({series:lines,yFormat:v=>fmt(v,1)+'%',label:'Headline inflation, core inflation and the Banxico policy rate'}),legend:legend(lines),table:dataTable(lines),note:'Observation dates, not fetch dates. Rate differences are shown in percentage points.',sources:[topicSource('banxico-inflacion','Headline · INPC'),topicSource('banxico-inflacion-subyacente','Core inflation'),topicSource('banxico-tasa-objetivo','Policy rate')],read:['Headline inflation moves with food and energy. Core inflation is the slower-moving check on underlying pressure.',`This comparison does not show causality. The peso, supply shocks and earlier policy decisions also affect prices.`]},
-    modulesTitle:'Activity, prices, and financial conditions',
-    modules:[
-      {k:'Activity',title:'Monthly activity and GDP are separate checks',value:`IGAE ${signed(G.value,2,'%')} YoY · GDP ${signed(last(s('banxico-pib-crecimiento')).value,2,'%')} YoY`,text:'IGAE moves monthly; GDP is the slower quarterly confirmation. Their observation dates stay separate.',href:'/chart.html?v=banxico-igae,banxico-pib-crecimiento',link:'Open growth charts →'},
-      {k:'Prices and rates',title:'Core inflation is above headline inflation',value:`Core ${fmt(C.value,2)}% · headline ${fmt(I.value,2)}% · rate ${fmt(R.value,2)}%`,text:'Headline and core inflation show different parts of price pressure. The policy rate shows where Banxico has set borrowing conditions.',href:'/chart.html?v=banxico-inflacion,banxico-inflacion-subyacente,banxico-tasa-objetivo',link:'See the underlying series →'},
-      {k:'Financial conditions',title:`The peso is ${fmt(Math.abs(pesoMove),1)}% ${pesoMove>=0?'stronger':'weaker'} than a year ago`,value:`${fmt(P.value,2)} MXN/USD`,text:'The rate gap is one thing to compare with the currency. US rates, trade and risk also matter.',href:'/chart.html?v=banxico-usdmxn-fix,banxico-tasa-objetivo,fred-fedfunds',link:'Compare the peso and rates →'}
-    ],
-    updates:[
-      {type:'Official data',title:`${dateLabel(I.date)} inflation fell to ${fmt(I.value,2)}%`,text:`The annual rate moved ${I.value<Ip.value?'down':'up'} ${fmt(Math.abs(I.value-Ip.value),2)} percentage points from ${dateLabel(Ip.date)}. Core inflation is ${fmt(C.value,2)}%.`,source:'INEGI / Banxico',href:sourceUrl('banxico-inflacion'),date:dateLabel(I.date)},
-      {type:'Official data',title:`${dateLabel(G.date)} activity was ${signed(G.value,2,'%')} from a year earlier`,text:'This is the latest monthly IGAE reading.',source:'INEGI / Banxico',href:sourceUrl('banxico-igae'),date:dateLabel(G.date)},
-      {type:'Policy',title:`Banxico's target rate is ${fmt(R.value,2)}%`,text:'The latest setting remains above both headline and core inflation.',source:'Banxico',href:sourceUrl('banxico-tasa-objetivo'),date:shortDate(R.date)}
-    ],
+    updates:changedMatches('economy',3),
     upcoming:eventMatches(/CPI|INPC|IGAE|GDP|Banxico monetary|expectations/i,5),
-    sources:[topicSource('banxico-igae'),topicSource('banxico-inflacion'),topicSource('banxico-inflacion-subyacente'),topicSource('banxico-tasa-objetivo'),topicSource('banxico-usdmxn-fix')],
-    method:'Each card carries its own observation date. A fresh fetch never makes an old observation look new. Trade and remittances are referenced here only when needed; their full views live in Trade and Society.'
+    upcomingTitle:'Data schedule',
+    sources:[topicSource('banxico-inflacion'),topicSource('banxico-inflacion-subyacente'),topicSource('banxico-tasa-objetivo'),topicSource('banxico-igae'),topicSource('banxico-pib-crecimiento'),topicSource('banxico-usdmxn-fix'),topicSource('banxico-salario-minimo'),topicSource('banxico-inpc'),topicSource('cre-gasolina-regular')],
+    method:'Every reading keeps its own observation date. Direction words are computed from the series, never written by hand. The real wage divides the statutory wage by the consumer-price index.'
   };
 }
 
@@ -415,10 +438,10 @@ function paymentsTopic(){
   const spei=s('banxico-spei-operaciones'),speiMonto=s('banxico-spei-monto'),codi=s('banxico-codi-operaciones'),debitOps=s('banxico-tpv-debito-ops'),creditOps=s('banxico-tpv-credito-ops'),atmOps=s('banxico-cajeros-ops'),ecomOps=s('banxico-ecommerce-ops'),debitCards=s('banxico-tarjetas-debito'),creditCards=s('banxico-tarjetas-credito'),circ=s('banxico-circulante'),rem=s('banxico-remesas'),remE=s('banxico-remesas-electronicas');
   const cardOps=sumShared(debitOps,creditOps),S=last(spei),SM=last(speiMonto),CoDi=last(codi),Card=last(cardOps),CardY=yearAgo(cardOps),Debit=debitOps.find(p=>p.date===Card?.date),ATM=last(atmOps),ATMY=yearAgo(atmOps),E=last(ecomOps),EY=yearAgo(ecomOps),DC=last(debitCards),CC=last(creditCards),C=last(circ),CYr=yearAgo(circ);
   if(!S||!SM||!CoDi||!Card||!CardY||!Debit||!ATM||!ATMY||!E||!EY||!DC||!CC||!C||!CYr)throw new Error('Payments inputs are incomplete');
-  // SPEI's stored history is still short of a full year; compare to a year earlier once the
-  // series can support it, and to the month before until then. The basis is named in the sentence.
-  const speiBase=yearAgo(spei)?{p:yearAgo(spei),label:'a year earlier'}:{p:prior(spei),label:'the month before'};
-  if(!speiBase.p)throw new Error('Payments inputs are incomplete');
+  // SPEI's stored history is still short of a full year. A month-over-month read is noise
+  // (month length alone moves it), so the growth sentence renders only once a year-earlier
+  // comparison exists. Until then the level speaks for itself. (QA 2026-07-20)
+  const speiYear=yearAgo(spei);
   // Survey constants: fixed results of a dated survey, not moving series. The vintage is
   // part of the sentence wherever they appear.
   const FACTS={enifCashSmall:{v:85.2,label:'ENIF 2024'},enifCashLarge:{v:73.5,label:'ENIF 2024'},enifUrl:'https://inegi.org.mx/contenidos/programas/enif/2024/doc/enif_2024_resultados.pdf'};
@@ -427,7 +450,7 @@ function paymentsTopic(){
   const debitShare=Debit.value/Card.value*100,daysInSpeiMonth=new Date(Date.UTC(dateObj(S.date).getUTCFullYear(),dateObj(S.date).getUTCMonth()+1,0)).getUTCDate();
   const codiRatio=(()=>{const sameMonth=spei.find(p=>p.date===CoDi.date);return sameMonth?Math.round(sameMonth.value/CoDi.value):null;})();
   const remShare=(()=>{const e=last(remE);if(!e)return null;const r=rem.find(p=>p.date===e.date);return r?{v:e.value/r.value*100,date:e.date}:null;})();
-  const tCirc=trendWord(C.value,CYr.value),tSpei=trendWord(S.value,speiBase.p.value),tCard=trendWord(Card.value,CardY.value),tAtm=trendWord(ATM.value,ATMY.value),tEcom=trendWord(E.value,EY.value);
+  const tCirc=trendWord(C.value,CYr.value),tSpei=speiYear?trendWord(S.value,speiYear.value):null,tCard=trendWord(Card.value,CardY.value),tAtm=trendWord(ATM.value,ATMY.value),tEcom=trendWord(E.value,EY.value);
   const pctOf=t=>t.known&&t.pct!=null?fmt(Math.abs(t.pct),1)+'%':'';
   const line=(name,points,color,format)=>({name,points,color,format});
   const newest=[S.date,Card.date,C.date,CoDi.date].sort().at(-1);
@@ -437,13 +460,13 @@ function paymentsTopic(){
     asof:`Last revised ${shortDate(new Date().toISOString().slice(0,10))}, ${new Date().getUTCFullYear()} · newest number ${dateLabel(newest)}`,
     story:[
       {h2:'Cash is still how most of Mexico pays.',
-       prose:[`For purchases of MX$500 or less, <b>${fmt(FACTS.enifCashSmall.v,1)}%</b> of adults said cash was their usual payment method in INEGI's ${FACTS.enifCashSmall.label} survey. Above MX$500 it was still ${fmt(FACTS.enifCashLarge.v,1)}%. The stock of notes and coins backs the survey up: <b>MX$${fmt(C.value/1e6,2)} trillion</b> was in circulation in ${dateLabel(C.date)}, and it ${tCirc.word}${tCirc.known&&Math.abs(tCirc.pct)>=0.5?` ${pctOf(tCirc)}`:''} over a year. Cash withdrawals at ATMs, one imperfect check on cash use, ${tAtm.word} ${pctOf(tAtm)} over the same period, to ${fmt(ATM.value/1e6,0)} million in ${quarterLabel(ATM.date)}.`],
-       chart:{title:`Notes and coins in circulation ${tCirc.word} over the past year`,sub:`Monthly stock, million MXN · through ${dateLabel(C.date)}`,series:[line('Currency in circulation',circ.slice(-72),GREEN,v=>'$'+fmt(v/1e6,2)+'tn')],yFormat:v=>'$'+fmt(v/1e6,1)+'tn',label:'Notes and coins in circulation, monthly stock',
+       prose:[`For purchases of MX$500 or less, <b>${fmt(FACTS.enifCashSmall.v,1)}%</b> of adults said cash was their usual payment method in INEGI's ${FACTS.enifCashSmall.label} survey. Above MX$500 it was still ${fmt(FACTS.enifCashLarge.v,1)}%. The stock of notes and coins backs the survey up: <b>MX$${fmt(C.value/1e6,2)} trillion</b> was in circulation in ${dateLabel(C.date)}, and it ${tCirc.word}${tCirc.known&&Math.abs(tCirc.pct)>=0.5?` ${pctOf(tCirc)}`:''} over a year. Cash withdrawals at ATMs, one imperfect check on cash use, ${tAtm.word} ${pctOf(tAtm)} in the year to ${quarterLabel(ATM.date)}, to ${fmt(ATM.value/1e6,0)} million.`],
+       chart:{title:`Notes and coins in circulation ${tCirc.word} over the past year`,sub:`Monthly stock, million MXN · through ${dateLabel(C.date)}`,series:[line('Currency in circulation',circ.slice(-72),GREEN,v=>'MX$'+fmt(v/1e6,2)+'tn')],yFormat:v=>'MX$'+fmt(v/1e6,1)+'tn',label:'Notes and coins in circulation, monthly stock',
         note:'Banxico monthly stock of billetes y monedas. A growing stock is consistent with a cash economy; it does not count cash payments directly.',
         sources:[topicSource('banxico-circulante','Banxico · currency in circulation')],
         read:['How many pesos exist as physical cash, month by month.','How often that cash changes hands. Circulation is a stock, not spending.']}},
       {h2:'When money moves digitally, it moves over SPEI.',
-       prose:[`Banxico's transfer system processed <b>${fmt(S.value/1e6,0)} million transfers</b> in ${dateLabel(S.date)}, about ${fmt(S.value/daysInSpeiMonth/1e6,1)} million per calendar day. Volume ${tSpei.word} ${pctOf(tSpei)} from ${speiBase.label}. The pesos moved that month came to MX$${fmt(SM.value/1e12,1)} trillion, though the total value is dominated by large transfers, so the transaction count is the cleaner read on everyday use.`],
+       prose:[`Banxico's transfer system processed <b>${fmt(S.value/1e6,0)} million transfers</b> in ${dateLabel(S.date)}, about ${fmt(S.value/daysInSpeiMonth/1e6,1)} million per calendar day. ${tSpei?`Volume ${tSpei.word} ${pctOf(tSpei)} from a year earlier. `:''}Those transfers moved MX$${fmt(SM.value/1e12,1)} trillion in the month, though the total value is dominated by large transfers, so the transaction count is the cleaner read on everyday use.`],
        chart:{title:`SPEI carried ${fmt(S.value/1e6,0)} million transfers in ${dateLabel(S.date)}`,sub:'Monthly third-party transfers, millions',series:[line('SPEI transfers',spei.slice(-72),GREEN,v=>fmt(v/1e6,0)+'m')],yFormat:v=>fmt(v/1e6,0)+'m',label:'SPEI monthly transfer count',
         note:'Third-party transfers of every size. A longer month can produce more transfers.',
         sources:[topicSource('banxico-spei-operaciones','Banxico · SPEI operations')],
@@ -461,8 +484,8 @@ function paymentsTopic(){
         note:'The scale is the story: compare the axis here with the SPEI chart above.',
         sources:[topicSource('banxico-codi-operaciones','Banxico · CoDi operations')],
         read:['How much CoDi is actually used, month by month.','Why adoption stalled. The count records the outcome, not the reason.']}},
-      {h2:'Buying online is still the smallest rail.',
-       prose:[`Online card purchases came to ${fmt(E.value/1e6,0)} million in ${quarterLabel(E.date)}, and ${tEcom.word} ${pctOf(tEcom)} over a year${remShare&&remShare.v>90?`. One digital shift is already complete: ${fmt(remShare.v,1)}% of remittance dollars arrived electronically in ${dateLabel(remShare.date)}`:''}.`],
+      {h2:E.value<Card.value?'Online card buying is still a fraction of in-store card use.':'Online card buying has caught up with in-store card use.',
+       prose:[`Online card purchases came to ${fmt(E.value/1e6,0)} million in ${quarterLabel(E.date)}, and ${tEcom.word} ${pctOf(tEcom)} over a year. For every online card purchase there were about ${fmt(Card.value/E.value,1)} in-store ones${remShare&&remShare.v>90?`. One digital shift is already complete: ${fmt(remShare.v,1)}% of remittance dollars arrived electronically in ${dateLabel(remShare.date)}`:''}.`],
        chart:{title:`Online card purchases ${tEcom.word} ${pctOf(tEcom)} in a year`,sub:'Quarterly online card purchases, millions',series:[line('Online purchases',ecomOps.slice(-24),AMBER,v=>fmt(v/1e6,0)+'m')],yFormat:v=>fmt(v/1e6,0)+'m',label:'Quarterly online card purchases',
         note:'This series arrives later than the terminal data; the chart keeps its own observation date.',
         sources:[topicSource('banxico-ecommerce-ops','Banxico · online card purchases')],
@@ -484,39 +507,49 @@ function paymentsTopic(){
 }
 
 function tradeTopic(){
-  const ex=s('banxico-exports-total'),im=s('banxico-imports-total'),bal=s('banxico-trade-balance'),inter=s('banxico-imports-intermediate'),ex12=rolling12(ex,1e6),im12=rolling12(im,1e6),inter12=rolling12(inter,1e6),E=last(ex12),Ey=yearAgo(ex12),I=last(im12),Iy=yearAgo(im12),B=last(bal),M=last(inter12),partners=DB.partners?.exports?.items||[],us=partners.find(x=>x.name==='USA'),canada=partners.find(x=>x.name==='Canada'),china=partners.find(x=>x.name==='China'),products=DB.products,pYear=Number(products?.referenceYear||products?.year||DB.partners?.referenceYear||DB.partners?.year),leadShare=products?.items?.filter(x=>['84','85','87'].includes(String(x.code).padStart(2,'0'))).reduce((t,x)=>t+Number(x.share),0);
+  const ex=s('banxico-exports-total'),im=s('banxico-imports-total'),bal=s('banxico-trade-balance'),inter=s('banxico-imports-intermediate');
+  const ex12=rolling12(ex,1e6),im12=rolling12(im,1e6),inter12=rolling12(inter,1e6),E=last(ex12),I=last(im12),B=last(bal),M=last(inter12);
+  const partners=DB.partners?.exports?.items||[],us=partners.find(x=>x.name==='USA'),canada=partners.find(x=>x.name==='Canada'),china=partners.find(x=>x.name==='China');
+  const products=DB.products,pYear=Number(products?.referenceYear||products?.year||DB.partners?.referenceYear||DB.partners?.year);
   if(!E||!I||!B||!M||!us||!canada||!china||!Number.isFinite(pYear))throw new Error('Trade inputs are incomplete');
+  const comp=compositionEvidence(products);
+  const leadShare=products?.items?.filter(x=>['84','85','87'].includes(String(x.code).padStart(2,'0'))).reduce((t,x)=>t+Number(x.share),0);
+  const balW=balanceWord(B.value),intermediateShare=M.value/I.value*100;
   const usmca=DB.happening.find(e=>e.id==='usmca-not-renewed-2026-07-01');
-  const intermediateShare=M.value/I.value*100;
-  const comtradePartnerUrl='https://comtradeplus.un.org/TradeFlow/';
-  const comtradeProductUrl='https://comtradeplus.un.org/TradeFlow/';
-  const lines=[{name:'Exports',points:ex12.slice(-132),color:GREEN,format:v=>'$'+fmt(v,0)+'bn'},{name:'Imports',points:im12.slice(-132),color:INK,format:v=>'$'+fmt(v,0)+'bn'}];
+  const next=eventMatches(/USMCA|tariff|trade talks|export|import/i,6);
+  const todayMid=new Date();todayMid.setUTCHours(0,0,0,0);
+  const timelineItems=next.map(e=>({date:(dateObj(e.date).getTime()===todayMid.getTime()?'Today · ':'')+shortDate(e.date)+' '+dateObj(e.date).getUTCFullYear(),title:e.label,text:e.mechanism||'Official dated event.'}));
+  const line=(name,points,color,format)=>({name,points,color,format});
+  const newest=[last(ex).date,B.date].sort().at(-1);
   return {
-    title:'Trade',scope:'What Mexico sells and buys, where it goes, and what it depends on.',asof:`Trade flows through ${dateLabel(last(ex).date)} · annual composition and partner shares ${pYear}.`,
-    nowTitle:usmca?esc(usmca.title):'Exports and imports moved together over the latest 12 months. The US remains the dominant buyer.',
-    nowText:usmca?`${esc(usmca.context||'')} Mexico exported <b>$${fmt(E.value,0)}bn</b> of goods over the latest 12 months; <b>${fmt(us.share,1)}%</b> of ${DB.partners.year} exports went to the United States.`:`Mexico exported <b>$${fmt(E.value,0)}bn</b> of goods over the latest 12 months and imported <b>$${fmt(I.value,0)}bn</b>. In ${DB.partners.year}, <b>${fmt(us.share,1)}%</b> of exports went to the United States.`,
-    cards:[
-      {label:'Exports · last 12 months',value:'$'+fmt(E.value,0),unit:'bn',change:Ey?deltaText(pct(E.value,Ey.value),'%',1)+' vs prior 12m':'',context:'Goods only. Services are not included.',source:'Banxico',sourceHref:sourceUrl('banxico-exports-total'),date:`12m to ${dateLabel(E.date)}`,href:'/chart.html?v=banxico-exports-total'},
-      {label:'Imports · last 12 months',value:'$'+fmt(I.value,0),unit:'bn',change:Iy?deltaText(pct(I.value,Iy.value),'%',1)+' vs prior 12m':'',context:`Intermediate goods were ${fmt(intermediateShare,1)}% of the same 12-month total.`,source:'Banxico',sourceHref:sourceUrl('banxico-imports-total'),date:`12m to ${dateLabel(I.date)}`,href:'/chart.html?v=banxico-imports-total,banxico-imports-intermediate'},
-      {label:'Trade balance · monthly',value:(B.value>=0?'+':'−')+'$'+fmt(Math.abs(B.value)/1e6,1),unit:'bn',change:'Exports minus imports',context:'A monthly balance is noisy; the long-run relationship matters more.',source:'Banxico',sourceHref:sourceUrl('banxico-trade-balance'),date:dateLabel(B.date),href:'/chart.html?v=banxico-trade-balance'},
-      {label:'Exports to the US',value:fmt(us.share,1),unit:'%',change:'Share of goods exports',context:`Canada is second at ${fmt(canada.share,1)}%.`,source:'UN COMTRADE',sourceHref:comtradePartnerUrl,date:String(DB.partners.year),href:'#topicModules'}
+    title:'Trade',scope:'What Mexico sells and buys, to whom, and what the USMCA review changes.',
+    asof:`Last revised ${shortDate(new Date().toISOString().slice(0,10))}, ${new Date().getUTCFullYear()} · newest number ${dateLabel(newest)}`,
+    story:[
+      {h2:'Mexico sells almost everything to one customer.',
+       prose:[`In ${DB.partners.year}, <b>${fmt(us.share,1)}%</b> of Mexico's goods exports went to the United States. Canada was second at ${fmt(canada.share,1)}%, China took ${fmt(china.share,1)}%. That concentration is the single most important fact about Mexican trade: it is why a tariff dispute or a treaty review lands so hard here.`]},
+      {h2:`Exports run at $${fmt(E.value,0)} billion a year, mostly manufactured goods.`,
+       prose:[`Over the latest twelve months Mexico exported <b>$${fmt(E.value,0)} billion</b> of goods and imported $${fmt(I.value,0)} billion. Vehicles, electronics and machinery alone made up ${fmt(leadShare,0)}% of export value in ${pYear}. Mexico does not mainly sell oil or produce; it sells factory output.`],
+       chart:comp?{title:comp.title,sub:comp.sub,visual:comp.visual,legend:comp.legend,table:comp.table,note:comp.note,sources:comp.sources,read:comp.read,css:'composition-evidence',visualLabel:'Map',tableLabel:'Table'}:null},
+      {h2:`The latest monthly balance is a ${balW.word}.`,
+       prose:[`In ${dateLabel(B.date)} Mexico ran a goods ${balW.word} of <b>$${fmt(Math.abs(B.value)/1e6,1)} billion</b>. Any single month is noisy; the longer line matters more than the latest point.`],
+       chart:{title:`The monthly goods balance was ${B.value>=0?'+':'-'}$${fmt(Math.abs(B.value)/1e6,1)} billion in ${dateLabel(B.date)}`,sub:'Monthly goods trade balance, US$ billions · exports minus imports',series:[line('Trade balance',bal.slice(-72).map(p=>({date:p.date,value:p.value/1e6})),GREEN,v=>(v>=0?'+$':'-$')+fmt(Math.abs(v),1)+'bn')],yFormat:v=>(v>=0?'+$':'-$')+fmt(Math.abs(v),1),label:'Monthly goods trade balance',
+        note:'Banxico\'s national ledger, goods only. Points above zero are surpluses, below are deficits.',
+        sources:[topicSource('banxico-trade-balance','Banxico · trade balance')],
+        read:['Whether Mexico sold more than it bought, month by month.','Services, investment income, or remittances. Goods only.']}},
+      {h2:`Imports are mostly factory inputs, not shopping.`,
+       prose:[`<b>${fmt(intermediateShare,1)}%</b> of the last twelve months of imports were intermediate goods: parts and materials that factories turn into exports. That is part of why exports and imports rise and fall together here, and why a tariff on inputs is also a tax on Mexico's own export machine.`]},
+      {h2:'The USMCA review is the thing to watch.',
+       prose:[usmca?`${esc(usmca.title)}. ${esc((usmca.context||'').split('. ').slice(0,2).join('. '))}`:`The treaty that governs North American trade is under its scheduled review.`,`This page reports what has happened and what is scheduled. It does not predict the outcome.`],
+       chart:timelineItems.length?{title:'The next dated events on the trade calendar',sub:'Official events and deadlines, ordered by date',visual:timeline(timelineItems),legend:'',table:timelineTable(timelineItems),visualLabel:'Timeline',tableLabel:'Details',
+        note:'Dates refer to the event or official publication. A scheduled event is not a prediction.',
+        sources:usmca?[{label:'USTR · USMCA review',href:usmca.url,date:shortDate(usmca.date)}]:[],
+        read:['What is on the official calendar, in order.','How any of it will be resolved.']}:null}
     ],
-    evidence:{k:'Scale and balance',title:'Exports and imports have risen together',sub:'Trailing 12-month goods trade · US$ billions',visual:chartSVG({series:lines,yFormat:v=>'$'+fmt(v,0),label:'Mexico goods exports and imports, trailing twelve months'}),legend:legend(lines),table:dataTable(lines),note:'Trailing 12-month sums reduce seasonal noise. Goods only. The chart uses Banxico’s Mexico-side ledger.',sources:[topicSource('banxico-exports-total','Exports'),topicSource('banxico-imports-total','Imports')],read:['Part of the reason both lines rise together is that Mexico imports parts and materials, then exports finished goods.',`A surplus is not automatically good and a deficit is not automatically bad. The composition of trade matters.`]},
-    composition:compositionEvidence(products),
-    modulesTitle:'Products, partners, and inputs',
-    modules:[
-      {k:'What Mexico sells',title:'Vehicles, electronics and machinery dominate',value:products?`${fmt(leadShare,1)}% of goods exports · ${pYear}`:'Composition temporarily unavailable',text:products?`${products.items[0].name} is the largest product group at ${fmt(products.items[0].share,1)}%. The full basket is shown above.`:'The site will restore this module after the annual basket passes its source checks.',href:'#trade-composition',link:'Open the export basket →'},
-      {k:'Where it goes',title:'The US is in a category of its own',value:`US ${fmt(us.share,2)}% · Canada ${fmt(canada.share,2)}%`,text:`Canada is second at ${fmt(canada.share,2)}%; China is ${fmt(china.share,2)}%. No other destination is close.`,href:'#trade-composition',link:'Open the evidence →'},
-      {k:'What Mexico buys',title:'Intermediate goods dominate the import bill',value:`${fmt(intermediateShare,1)}% of latest 12-month imports`,text:'This is the share of Banxico’s import total classified as intermediate goods over the same 12-month window.',href:'/chart.html?v=banxico-imports-intermediate,banxico-imports-total',link:'Open imports by use →'}
-    ],
-    updates:[
-      ...(usmca?[{type:'Trade policy',title:usmca.title,text:usmca.context||'',source:usmca.source,href:usmca.url,date:shortDate(usmca.date)}]:[]),
-      {type:'Official data',title:`${dateLabel(last(ex).date)} exports were $${fmt(last(ex).value/1e6,1)}bn`,text:`Imports were $${fmt(last(im).value/1e6,1)}bn, leaving a ${B.value>=0?'surplus':'deficit'} of $${fmt(Math.abs(B.value)/1e6,1)}bn.`,source:'Banxico',href:sourceUrl('banxico-exports-total'),date:dateLabel(last(ex).date)},
-      {type:'Reconciled data',title:`The US bought ${fmt(us.share,2)}% of Mexican goods exports`,text:`The UN COMTRADE total differs from Banxico’s official annual total by ${fmt(DB.partners.exports.reconciliation.deltaPct,1)}%.`,source:'UN COMTRADE',href:comtradePartnerUrl,date:String(DB.partners.year)}
-    ],
-    upcoming:eventMatches(/trade data|foreign.direct.investment|export|import|balance of payments/i,5),
-    sources:[...(usmca?[{label:'USTR · USMCA first review',href:usmca.url,date:shortDate(usmca.date)}]:[]),topicSource('banxico-exports-total'),topicSource('banxico-imports-total'),topicSource('banxico-imports-intermediate'),topicSource('banxico-trade-balance'),{label:'UN COMTRADE · Mexico export partners',href:comtradePartnerUrl,date:String(DB.partners.year)},...(products?[{label:'UN COMTRADE · export composition',href:comtradeProductUrl,date:String(pYear)}]:[])],
-    method:'Banxico owns the national trade ledger. UN COMTRADE supplies the product and partner detail and is shown only after reconciling its annual total to Banxico within the stated tolerance.'
+    updates:changedMatches('trade',3),
+    upcoming:eventMatches(/USMCA|tariff|trade|export|import/i,5),
+    upcomingTitle:'Data schedule',
+    sources:[topicSource('banxico-exports-total'),topicSource('banxico-imports-total'),topicSource('banxico-trade-balance'),topicSource('banxico-imports-intermediate'),{label:'UN COMTRADE · partner and product shares',href:'https://comtradeplus.un.org/TradeFlow/',date:String(pYear)},...(usmca?[{label:'USTR · USMCA review',href:usmca.url,date:shortDate(usmca.date)}]:[])],
+    method:'Flows use Banxico\'s national ledger; composition and partner shares use UN COMTRADE reconciled to Banxico before publication. The two ledgers are never spliced.'
   };
 }
 
@@ -524,91 +557,130 @@ function politicsTopic(){
   const today=new Date();today.setUTCHours(0,0,0,0);
   const official=DB.events.filter(e=>e.date&&dateObj(e.date)>=today&&e.sourceUrl&&(e.kind==='political'||e.kind==='fiscal'||/Congress|election|electoral|budget|informe|presidential/i.test(`${e.label} ${e.mechanism||''}`))).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
   if(!official.length)throw new Error('Political calendar is unavailable');
-  const cards=official.slice(0,4).map(e=>{const d=dateObj(e.date);return {label:e.kind==='fiscal'?'Fiscal calendar':'Political calendar',value:d.toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'}),unit:String(d.getUTCFullYear()),change:e.label,context:e.mechanism||'Official dated event.',source:e.source,sourceHref:e.sourceUrl,date:e.approx?'Approximate date':'Official calendar'};});
+  const nextEvent=official[0],daysAway=Math.round((dateObj(nextEvent.date)-today)/86400000);
+  // Long calendar labels carry dashes and parentheticals that garble a sentence; prose uses
+  // the short name and the timeline keeps the full title. (QA 2026-07-20)
+  const shortName=l=>esc(String(l).split('\u2014')[0].split('(')[0].trim());
+  const sentence=t=>{const x=esc(String(t||'').trim());return x?(/[.!?]$/.test(x)?x+' ':x+'. '):'';};
+  const fiscal=official.filter(e=>e.kind==='fiscal');
   const timelineItems=official.slice(0,6).map(e=>({date:shortDate(e.date)+' '+dateObj(e.date).getUTCFullYear(),title:e.label,text:e.mechanism||'Official dated event.'}));
-  const sourceItems=official.slice(0,8).map(e=>({label:e.source,href:e.sourceUrl,date:e.date}));
   const updates=changedMatches('politics',3);
   return {
-    title:'Politics',scope:'Official political and fiscal dates, and the decisions attached to them.',asof:`Calendar through ${dateLabel(last(official).date)}.`,
-    nowTitle:`The next dated item is ${official[0].label}.`,
-    nowText:`It is scheduled for <b>${shortDate(official[0].date)}, ${dateObj(official[0].date).getUTCFullYear()}</b>. The calendar below keeps political events, fiscal deadlines and election dates tied to their original source.`,
-    cards,
-    evidence:{k:'Political calendar',title:'The next official dates, in order',sub:'Political events and fiscal deadlines, ordered by date',visual:timeline(timelineItems),legend:'',table:timelineTable(timelineItems),visualLabel:'Timeline',tableLabel:'Details',note:'Dates refer to the event or official publication, not the day this page was checked. Approximate dates are labeled.',sources:sourceItems,read:['These are the next dates on the political and fiscal calendar, and what each one controls.',`A scheduled event is not a prediction of what will happen.`]},
-    modulesTitle:'What the calendar controls',
-    modules:official.slice(0,3).map(e=>({k:e.kind==='fiscal'?'Fiscal process':'Political process',title:e.label,value:`${shortDate(e.date)}, ${dateObj(e.date).getUTCFullYear()}`,text:e.mechanism||'Open the official record for details.',href:e.sourceUrl,link:`Open ${e.source} ↗`})),
-    updates:updates.length?updates:[{type:'Calendar',title:official[0].label,text:official[0].mechanism||'Open the original source for the full record.',source:official[0].source,href:official[0].sourceUrl,date:shortDate(official[0].date)}],
+    title:'Politics',scope:'Official political and fiscal dates, and the documented events attached to them.',
+    asof:`Last revised ${shortDate(new Date().toISOString().slice(0,10))}, ${new Date().getUTCFullYear()} · calendar through ${dateLabel(last(official).date)}`,
+    story:[
+      {h2:'What this page can and cannot tell you.',
+       prose:[`This page tracks two things: official dates, from election calendars to budget deadlines, and documented events with a source attached. It carries no polls, no seat math, and no forecasts. When something here matters for markets or trade, it shows up in the other topics; this page is the calendar and the record.`]},
+      {h2:`The next fixed date is ${daysAway===0?'today':daysAway===1?'tomorrow':`${fmt(daysAway,0)} days away`}.`,
+       prose:[`<b>${shortName(nextEvent.label)}</b> is scheduled for ${shortDate(nextEvent.date)}, ${dateObj(nextEvent.date).getUTCFullYear()}. ${sentence(nextEvent.mechanism)}The timeline below keeps every political and fiscal date tied to its original source; approximate dates are labeled.`],
+       chart:{title:'The next official dates, in order',sub:'Political events and fiscal deadlines',visual:timeline(timelineItems),legend:'',table:timelineTable(timelineItems),visualLabel:'Timeline',tableLabel:'Details',
+        note:'Dates refer to the event or official publication, not the day this page was checked.',
+        sources:official.slice(0,4).map(e=>({label:e.source,href:e.sourceUrl,date:e.date})),
+        read:['What is on the official calendar, and what each date controls.','What will happen on those dates. A scheduled event is not a prediction.']}},
+      {h2:'The budget cycle is the recurring story.',
+       prose:[`Every fall the federal budget defines the government's real priorities: the economic package arrives in early September, and the spending budget must pass by mid November.${fiscal.length?` The next fiscal date on the calendar is ${shortName(fiscal[0].label)}, due ${shortDate(fiscal[0].date)}, ${dateObj(fiscal[0].date).getUTCFullYear()}.`:''} Between those dates, follow the documented record below rather than the commentary.`]}
+    ],
+    updates:(updates.length?updates:[{type:'Calendar',title:nextEvent.label,text:nextEvent.mechanism||'Open the original source for the full record.',source:nextEvent.source,href:nextEvent.sourceUrl,date:shortDate(nextEvent.date)}])
+      // The page promises the calendar and the record, no commentary. Strip the analysis
+      // fields from its news rail: factual background stays, framing goes. (QA 2026-07-20)
+      .map(u=>({...u,text:'',guide:u.guide?{items:u.guide.items.filter(x=>/^(Background|What's next)$/.test(x.label))}:null})),
     upcoming:official.slice(0,5),
-    sources:sourceItems,
-    method:'This page includes only political and fiscal dates tied to an original source. It does not infer seat counts, polling averages, or outcomes.'
+    upcomingTitle:'Calendar',
+    sources:[...new Map(official.slice(0,8).map(e=>[`${e.source}|${e.sourceUrl}`,{label:e.source,href:e.sourceUrl,date:e.date}])).values()],
+    method:'Only political and fiscal dates tied to an original source appear here. No polling averages, seat counts, or outcome inference.'
   };
 }
 
 function societyTopic(){
-  const wage=monthlyLast(s('banxico-salario-minimo')),nom=indexed(wage),real=realWage(),W=last(wage),rem=last(s('banxico-remesas'));
-  const RW=last(real),RWy=yearAgo(real,RW),remY=yearAgo(s('banxico-remesas'),rem),wageYear=dateObj(W.date).getUTCFullYear(),demo=DB.demographics,vitals=DB.vitals,crime=DB.crime;
-  const pop=demo?.population?.latest,popYear=demo?.latestYear,births=vitals?.births?.latest,deaths=vitals?.deaths?.latest,crimeTotal=crime?.values?Object.values(crime.values).reduce((t,v)=>t+Number(v||0),0):null,crimePeriod=observationPeriod(crime?.meta);
-  if(!W||!RW||!rem||!Number.isFinite(pop)||!births||!deaths||!Number.isFinite(crimeTotal))throw new Error('Society inputs are incomplete');
-  const lines=[{name:'Cash minimum wage',points:nom,color:INK,format:v=>fmt(v,0)},{name:'After inflation',points:real,color:GREEN,format:v=>fmt(v,0)}];
+  const wage=monthlyLast(s('banxico-salario-minimo')),real=realWage(),W=last(wage),RW=last(real),RWy=yearAgo(real,RW),rem=s('banxico-remesas'),R=last(rem),RY=yearAgo(rem,R);
+  const demo=DB.demographics,vitals=DB.vitals,crime=DB.crime;
+  const pop=demo?.population?.latest,popYear=demo?.latestYear,births=vitals?.births,deaths=vitals?.deaths;
+  const crimeTotal=crime?.values?Object.values(crime.values).reduce((t,v)=>t+Number(v||0),0):null,crimePeriod=observationPeriod(crime?.meta);
+  if(!W||!RW||!R||!Number.isFinite(pop)||!births?.latest||!deaths?.latest||!Number.isFinite(crimeTotal))throw new Error('Society inputs are incomplete');
+  const bSeries=(births.series||[]).map(p=>({date:`${p.year}-01-01`,value:p.value})),dSeries=(deaths.series||[]).map(p=>({date:`${p.year}-01-01`,value:p.value}));
+  const bFirst=births.series?.[0],tBirths=trendWord(births.latest.value,bFirst?bFirst.value:null);
+  const tRW=trendWord(RW.value,RWy?RWy.value:null),tRem=trendWord(R.value,RY?RY.value:null);
+  const pctOf=t=>t.known&&t.pct!=null?fmt(Math.abs(t.pct),1)+'%':'';
+  const baseYear=dateObj(real[0].date).getUTCFullYear();
+  const line=(name,points,color,format)=>({name,points,color,format});
+  const newest=[W.date,R.date].sort().at(-1);
   return {
-    title:'Society & security',scope:'Living standards, population, household flows, and reported crime.',asof:'Observation dates vary by measure · annual figures stay visibly annual.',
-    nowTitle:RWy?`The general minimum wage is MX$${fmt(W.value,2)} a day. After inflation, it is ${fmt(Math.abs(pct(RW.value,RWy.value)),1)}% ${RW.value>=RWy.value?'higher':'lower'} than a year earlier.`:`The general minimum wage is MX$${fmt(W.value,2)} a day.`,
-    nowText:`The CONAPO population projection is <b>${fmt(pop/1e6,1)} million</b> for ${popYear}. The municipal SESNSP file contains <b>${compact(crimeTotal)}</b> reported common-jurisdiction offenses in ${crimePeriod}.`,
-    cards:[
-      {label:'General minimum wage',value:'MX$'+fmt(W.value,2),unit:'per day',change:RWy?deltaText(pct(RW.value,RWy.value),'%',1)+` real vs ${wageYear-1}`:'',context:'The statutory general wage. The change shown is after inflation.',source:'CONASAMI / Banxico',sourceHref:sourceUrl('banxico-salario-minimo'),date:`Effective ${wageYear}`,href:'/chart.html?v=banxico-salario-minimo'},
-      {label:'Population · projection',value:fmt(pop/1e6,1),unit:'million',change:`Median age ${demo.medianAge}`,context:'CONAPO projection. The last census anchor remains in the source data.',source:'CONAPO',sourceHref:demo.sourceUrl,date:String(popYear)},
-      {label:'Registered births',value:compact(births.value),change:'Annual registration count',context:'Year of registration, which is not always the year of birth.',source:'INEGI · ENR',sourceHref:vitals.births.sourceUrl,date:String(births.year)},
-      {label:'Reported offenses · municipal total',value:compact(crimeTotal),change:`Across ${compact(crime.meta.rowCount)} municipalities`,context:'Cumulative reported common-jurisdiction offenses for the year to date. This is not a population-adjusted risk rate.',source:'SESNSP',sourceHref:crime.meta.sourceUrl,date:crimePeriod}
+    title:'Society & security',scope:'Population, pay, money from abroad, and what the crime numbers can honestly say.',
+    asof:`Last revised ${shortDate(new Date().toISOString().slice(0,10))}, ${new Date().getUTCFullYear()} · newest number ${dateLabel(newest)}`,
+    story:[
+      {h2:'Mexico is getting older, and fewer babies are being born.',
+       prose:[`CONAPO projects <b>${fmt(pop/1e6,1)} million</b> people in ${popYear}, with a median age of ${demo.medianAge}. Registered births ${tBirths.word} ${pctOf(tBirths)} between ${bFirst?bFirst.year:''} and ${births.latest.year}, to ${fmt(births.latest.value/1e6,1)} million, while deaths were about ${fmt(Math.round(deaths.latest.value/1e3),0)},000. The gap between those two lines is Mexico's demographic future, and it is closing.`],
+       chart:bSeries.length>5?{title:`Births ${tBirths.word} ${pctOf(tBirths)} since ${bFirst.year}`,sub:'Registered births and deaths per year, millions',series:[line('Births',bSeries,GREEN,v=>fmt(v/1e6,2)+'m'),line('Deaths',dSeries,INK,v=>fmt(v/1e6,2)+'m')],yFormat:v=>fmt(v/1e6,1)+'m',label:'Registered births and deaths per year',
+        note:'Registration year, which is not always the year of birth or death. Annual releases arrive with a lag.',
+        sources:[{label:'INEGI · registered births',href:births.sourceUrl,date:String(births.latest.year)},{label:'INEGI · registered deaths',href:deaths.sourceUrl,date:String(deaths.latest.year)}],
+        read:['How fast the base of Mexico\'s population pyramid is narrowing.','Migration, which also shapes the population and is not in these counts.']}:null},
+      {h2:`The minimum wage buys ${fmt(Math.abs(RW.value-100),0)}% ${RW.value>=100?'more':'less'} than in ${baseYear}.`,
+       prose:[`The general minimum wage is <b>MX$${fmt(W.value,2)} a day</b>. After inflation it ${tRW.known?`${tRW.word} ${pctOf(tRW)} over the past year and `:''}sits ${fmt(Math.abs(RW.value-100),0)}% ${RW.value>=100?'above':'below'} its ${baseYear} purchasing power. It is the wage floor, not the typical wage: informal work, hours and regional differences decide what most households actually take home.`],
+       chart:{title:`A minimum-wage peso goes ${fmt(Math.abs(RW.value-100),0)}% ${RW.value>=100?'further':'less far'} than in ${baseYear}`,sub:`Minimum wage adjusted for consumer prices · index, ${baseYear} = 100`,series:[line('Real minimum wage',real,GREEN,v=>fmt(v,0))],yFormat:v=>fmt(v,0),label:'Inflation-adjusted general minimum wage index',
+        note:'The statutory general minimum wage deflated with the consumer-price index.',
+        sources:[topicSource('banxico-salario-minimo','CONASAMI / Banxico · minimum wage'),topicSource('banxico-inpc','INEGI / Banxico · consumer prices')],
+        read:['Whether the wage floor outruns prices.','The wage of the typical worker.']}},
+      {h2:'Money sent home is a pillar of household income.',
+       prose:[`Remittances brought in <b>$${fmt(R.value/1000,1)} billion</b> in ${dateLabel(R.date)}${tRem.known?`, ${tRem.word==='rose'?'up':tRem.word==='fell'?'down':tRem.word} ${pctOf(tRem)} from a year earlier`:''}. For millions of households this flow rivals wages, and its peso value moves with the exchange rate as much as with the dollar amount.`],
+       chart:{title:`Remittances were $${fmt(R.value/1000,1)} billion in ${dateLabel(R.date)}`,sub:'Monthly remittance inflows, US$ billions',series:[line('Remittances',rem.slice(-72).map(p=>({date:p.date,value:p.value/1000})),GREEN,v=>'$'+fmt(v,1)+'bn')],yFormat:v=>'$'+fmt(v,1)+'bn',label:'Monthly remittance inflows',
+        note:'Dollar inflows recorded by Banxico. What families can buy with them also depends on the peso.',
+        sources:[topicSource('banxico-remesas','Banxico · remittances')],
+        read:['The dollar flow arriving to households, month by month.','Who receives it, or what it purchases.']}},
+      {h2:'What the crime numbers can and cannot say.',
+       prose:[`The official municipal file records <b>${fmt(crimeTotal/1e6,2)} million</b> reported common-jurisdiction offenses in ${crimePeriod}. That is a count of crimes reported to prosecutors, not crimes committed, and reporting behavior differs across states and offense types. This page keeps the number and its limits in the same sentence on purpose.`,`For poverty, the official CONEVAL rates live on the municipal map in the <a href="/atlas.html">Atlas</a>.`]}
     ],
-    evidence:{k:'Living standards',title:'The real-wage line separates pesos from purchasing power',sub:`Index · ${dateLabel(nom[0].date)} = 100`,visual:chartSVG({series:lines,yFormat:v=>fmt(v,0),label:'Nominal and inflation-adjusted general minimum wage index'}),legend:legend(lines),table:dataTable(lines),note:'The real line adjusts the statutory general minimum wage with the official consumer-price index. It is not the wage of the typical worker.',sources:[topicSource('banxico-salario-minimo','General minimum wage'),topicSource('banxico-inpc','Consumer-price index')],read:['The announced wage tells you how many pesos someone receives. The real line asks how much more those pesos can buy.',`Minimum-wage gains do not describe everyone. Informal work, hours, regional wages and enforcement all matter.`]},
-    modulesTitle:'Wages, household flows, population, and security',
-    modules:[
-      {k:'Living standards',title:'The real-wage line is the better comparison',value:`Index ${fmt(RW.value,0)} · ${dateLabel(RW.date)}`,text:'The general minimum wage is deflated with the official consumer-price index. It is not the wage of the typical worker.',href:'#topic-evidence',link:'Open the evidence →'},
-      {k:'Household income',title:'Remittances remain a major household flow',value:`$${fmt(rem.value/1000,1)}bn · ${dateLabel(rem.date)}`,text:remY?`${deltaText(pct(rem.value,remY.value),'%',1)} from a year earlier. The dollar amount and the peso exchange rate both matter to recipients.`:'The dollar amount and the peso exchange rate both matter to recipients.',href:'/chart.html?v=banxico-remesas',link:'Open remittances →'},
-      {k:'Population',title:'Births and deaths are annual registered events',value:`${compact(births.value)} births · ${compact(deaths.value)} deaths · ${births.year}`,text:'Registration year and occurrence year can differ. The source file keeps that caveat with the series.',href:vitals.births.sourceUrl,link:'Open the births release ↗'},
-      {k:'Security',title:'The municipal file shows where reports are concentrated',value:`${compact(crimeTotal)} reported offenses · ${crimePeriod}`,text:'Municipal totals are not risk rates. Reporting behavior, population and offense mix all matter.',href:crime.meta.sourceUrl,link:'Open the SESNSP source ↗'}
-    ],
-    updates:[
-      {type:'Wages',title:`The general minimum wage is MX$${fmt(W.value,2)} a day`,text:'The real comparison above adjusts the full history for consumer prices.',source:'CONASAMI / Banxico',href:sourceUrl('banxico-salario-minimo'),date:dateLabel(W.date)},
-      {type:'Population',title:`The ${popYear} population projection is ${fmt(pop/1e6,1)} million`,text:`The same source file reports a median age of ${demo.medianAge}.`,source:'CONAPO',href:demo.sourceUrl,date:String(popYear)},
-      {type:'Security data',title:`The municipal layer totals ${compact(crimeTotal)} reported offenses for ${crimePeriod}`,text:'This is a year-to-date count. It stays separate from homicide records and survey measures.',source:'SESNSP',href:crime.meta.sourceUrl,date:crimePeriod}
-    ],
+    updates:changedMatches('society',3),
     upcoming:eventMatches(/unemployment|remittance|wage|poverty|population|migration|employment/i,5),
-    sources:[topicSource('banxico-salario-minimo','CONASAMI / Banxico · minimum wage'),topicSource('banxico-inpc','INEGI / Banxico · consumer prices'),topicSource('banxico-remesas','Banxico · remittances'),{label:'CONAPO · population projections',href:demo.sourceUrl,date:String(popYear)},{label:'INEGI · registered births',href:vitals.births.sourceUrl,date:String(births.year)},{label:'INEGI · registered deaths',href:vitals.deaths.sourceUrl,date:String(deaths.year)},{label:'SESNSP · municipal reported offenses',href:crime.meta.sourceUrl,date:crimePeriod}],
-    method:'Every measure keeps its own observation period. Population is a projection; births and deaths are registrations; the security layer is a raw count of reported offenses. Those measures are not blended into one score.'
+    upcomingTitle:'Data schedule',
+    sources:[topicSource('banxico-salario-minimo','CONASAMI / Banxico · minimum wage'),topicSource('banxico-inpc','INEGI / Banxico · consumer prices'),topicSource('banxico-remesas','Banxico · remittances'),{label:'CONAPO · population projections',href:demo.sourceUrl,date:String(popYear)},{label:'INEGI · registered births',href:births.sourceUrl,date:String(births.latest.year)},{label:'INEGI · registered deaths',href:deaths.sourceUrl,date:String(deaths.latest.year)},{label:'SESNSP · municipal reported offenses',href:crime.meta.sourceUrl,date:crimePeriod}],
+    method:'Population is a projection; births and deaths are registrations; the security figure is a year-to-date count of reported offenses. The measures keep their own observation periods and are never blended into one score.'
   };
 }
 
 function usMexicoTopic(){
-  const tu=DB.tradeUS||{},imports=(tu.series?.imports||[]).map(p=>({date:p.month+'-01',value:p.value})),exports=(tu.series?.exports||[]).map(p=>({date:p.month+'-01',value:p.value})),L=tu.latest||{},partners=DB.partners?.exports?.items||[],us=partners.find(x=>x.name==='USA'),partnerYear=Number(DB.partners?.referenceYear||DB.partners?.year),lines=[{name:'US buys from Mexico',points:imports,color:GREEN,format:v=>'$'+fmt(v,1)+'bn'},{name:'US sells to Mexico',points:exports,color:INK,format:v=>'$'+fmt(v,1)+'bn'}];
-  if(!L.month||!Number.isFinite(Number(L.twoway_bn))||!imports.length||!exports.length||!us||!Number.isFinite(partnerYear))throw new Error('U.S.–Mexico inputs are incomplete');
-  const tradeMonth=L.month+'-01',mexicoBalance=-(Number(L.balance_bn)||0),balanceSide=mexicoBalance>=0?'surplus':'deficit',balanceAction=mexicoBalance>=0?'buys more goods from Mexico than it sells there':'sells more goods to Mexico than it buys there',censusMexicoUrl='https://www.census.gov/foreign-trade/balance/c2010.html',comtradePartnerUrl='https://comtradeplus.un.org/TradeFlow/',rem=last(s('banxico-remesas')),remY=yearAgo(s('banxico-remesas'),rem),peso=last(s('banxico-usdmxn-fix'));
+  const tu=DB.tradeUS||{},imports=(tu.series?.imports||[]).map(p=>({date:p.month+'-01',value:p.value})),exports=(tu.series?.exports||[]).map(p=>({date:p.month+'-01',value:p.value})),L=tu.latest||{};
+  const partners=DB.partners?.exports?.items||[],us=partners.find(x=>x.name==='USA'),canada=partners.find(x=>x.name==='Canada'),partnerYear=Number(DB.partners?.referenceYear||DB.partners?.year);
+  const rem=s('banxico-remesas'),R=last(rem),RY=yearAgo(rem,R),peso=last(s('banxico-usdmxn-fix'));
+  if(!L.month||!Number.isFinite(Number(L.twoway_bn))||!imports.length||!exports.length||!us||!Number.isFinite(partnerYear)||!R||!peso)throw new Error('U.S.-Mexico inputs are incomplete');
+  const tradeMonth=L.month+'-01',mexicoBalance=-(Number(L.balance_bn)||0),balW=balanceWord(mexicoBalance);
+  const censusMexicoUrl='https://www.census.gov/foreign-trade/balance/c2010.html',comtradePartnerUrl='https://comtradeplus.un.org/TradeFlow/';
   const usmca=DB.happening.find(e=>e.id==='usmca-not-renewed-2026-07-01');
-  const next=eventMatches(/USMCA|U.S.–Mexico|US–Mexico|tariff|trade talks|border|foreign direct investment/i,5);
+  const next=eventMatches(/USMCA|U.S.|US-Mexico|tariff|trade talks|border|bilateral/i,6,/Presupuesto|Paquete|Ley de Ingresos|foreign direct investment|IED/i);
+  const todayMid=new Date();todayMid.setUTCHours(0,0,0,0);
+  const timelineItems=next.map(e=>({date:(dateObj(e.date).getTime()===todayMid.getTime()?'Today · ':'')+shortDate(e.date)+' '+dateObj(e.date).getUTCFullYear(),title:e.label,text:e.mechanism||'Official dated event.'}));
+  const tRem=trendWord(R.value,RY?RY.value:null);
+  const pctOf=t=>t.known&&t.pct!=null?fmt(Math.abs(t.pct),1)+'%':'';
+  const line=(name,points,color,format)=>({name,points,color,format});
   return {
-    title:'U.S.–Mexico',scope:'Bilateral goods trade, Mexico’s export exposure, household flows, and the next official dates.',asof:`Trade data through ${dateLabel(tradeMonth)} · export exposure ${partnerYear}.`,
-    nowTitle:usmca?esc(usmca.title):'Four out of every five Mexican export dollars go to the US.',
-    nowText:usmca?`${esc(usmca.context||'')} The US bought <b>${fmt(us.share,1)}%</b> of Mexico’s goods exports in ${partnerYear}; two-way goods trade was <b>$${fmt(L.twoway_bn,1)}bn</b> in ${dateLabel(tradeMonth)}.`:`The US bought <b>${fmt(us.share,1)}%</b> of Mexico’s goods exports in ${partnerYear}. In ${dateLabel(tradeMonth)}, two-way goods trade was <b>$${fmt(L.twoway_bn,1)}bn</b> in the U.S. Census ledger.`,
-    cards:[
-      {label:'Two-way goods trade · month',value:'$'+fmt(L.twoway_bn,1),unit:'bn',change:'US-side ledger',context:'US imports from Mexico plus US exports to Mexico.',source:'U.S. Census',sourceHref:censusMexicoUrl,date:dateLabel(tradeMonth)},
-      {label:`Mexico's goods ${balanceSide}`,value:'$'+fmt(Math.abs(mexicoBalance),1),unit:'bn',change:'For the month',context:`The US ${balanceAction}.`,source:'U.S. Census',sourceHref:censusMexicoUrl,date:dateLabel(tradeMonth)},
-      {label:'Mexican exports to the US',value:fmt(us.share,1),unit:'%',change:`Share of ${partnerYear} goods exports`,context:'Annual export exposure from the reconciled partner file.',source:'UN COMTRADE',sourceHref:comtradePartnerUrl,date:String(partnerYear),href:'/trade.html'},
-      {label:'Remittances · month',value:'$'+fmt(rem.value/1000,1),unit:'bn',change:remY?deltaText(pct(rem.value,remY.value),'%',1)+' vs a year ago':'',context:'A household flow from abroad. The peso changes what recipients receive locally.',source:'Banxico',sourceHref:sourceUrl('banxico-remesas'),date:dateLabel(rem.date),href:'/chart.html?v=banxico-remesas,banxico-usdmxn-fix'}
+    title:'U.S.-Mexico',scope:'The trade ledger, the exposure, the money flows, and the dates that decide the relationship.',
+    asof:`Last revised ${shortDate(new Date().toISOString().slice(0,10))}, ${new Date().getUTCFullYear()} · newest number ${dateLabel([tradeMonth,R.date].sort().at(-1))}`,
+    story:[
+      {h2:'The two economies are wired together, but not equally.',
+       prose:[`Two-way goods trade was <b>$${fmt(L.twoway_bn,1)} billion</b> in ${dateLabel(tradeMonth)}: the US bought $${fmt(L.imports_bn,1)} billion from Mexico and sold $${fmt(L.exports_bn,1)} billion to it, leaving Mexico a monthly ${balW.word} of $${fmt(Math.abs(mexicoBalance),1)} billion in the U.S. ledger. The asymmetry runs the other way too: this trade is a far larger share of Mexico's economy than of America's.`],
+       chart:{title:`The US consistently buys more from Mexico than it sells there`,sub:'Monthly US goods trade with Mexico, US$ billions · U.S. Census ledger',series:[line('US buys from Mexico',imports,GREEN,v=>'$'+fmt(v,1)+'bn'),line('US sells to Mexico',exports,INK,v=>'$'+fmt(v,1)+'bn')],yFormat:v=>'$'+fmt(v,0),label:'Monthly US imports from and exports to Mexico',
+        note:'U.S. Census ledger. Banxico\'s national totals differ on valuation and timing; the two are never mixed.',
+        sources:[{label:'U.S. Census · trade with Mexico',href:censusMexicoUrl}],
+        read:['The gap between the lines is Mexico\'s monthly goods surplus in the US ledger.','Services, investment, migration, or the full effect of a trade dispute.']}},
+      {h2:`${fmt(us.share,0)}% of Mexico's export dollars come from the United States.`,
+       prose:[`In ${partnerYear}, <b>${fmt(us.share,1)}%</b> of Mexico's goods exports went to the US; Canada, in second place, took ${fmt(canada.share,1)}%. There is no plan B customer at that scale. Every negotiation on this page happens in that shadow.`]},
+      {h2:'Money sent home is the other pipeline.',
+       prose:[`Remittances brought <b>$${fmt(R.value/1000,1)} billion</b> into Mexican households in ${dateLabel(R.date)}${tRem.known?`, ${tRem.word==='rose'?'up':tRem.word==='fell'?'down':tRem.word} ${pctOf(tRem)} from a year earlier`:''}. At the current exchange rate of ${fmt(peso.value,2)} pesos per dollar, that month's flow was worth about MX$${fmt(R.value*peso.value/1e3,0)} billion at home.`],
+       chart:{title:`Remittances were $${fmt(R.value/1000,1)} billion in ${dateLabel(R.date)}`,sub:'Monthly remittance inflows, US$ billions',series:[line('Remittances',rem.slice(-72).map(p=>({date:p.date,value:p.value/1000})),GREEN,v=>'$'+fmt(v,1)+'bn')],yFormat:v=>'$'+fmt(v,1)+'bn',label:'Monthly remittance inflows',
+        note:'Dollar inflows recorded by Banxico. The peso decides what each dollar is worth at home.',
+        sources:[topicSource('banxico-remesas','Banxico · remittances'),topicSource('banxico-usdmxn-fix','Banxico · FIX rate')],
+        read:['The scale of the household pipeline from the US.','Who sends it or receives it.']}},
+      {h2:'Tariffs and the USMCA review set the stakes.',
+       prose:[usmca?`${esc(usmca.title)}. ${esc((usmca.context||'').split('. ').slice(0,2).join('. '))}`:'The treaty that governs North American trade is under its scheduled review.',`This page reports what has happened and what is scheduled. It does not predict the outcome.`],
+       chart:timelineItems.length?{title:'The next dated events between the two countries',sub:'Official events and deadlines, ordered by date',visual:timeline(timelineItems),legend:'',table:timelineTable(timelineItems),visualLabel:'Timeline',tableLabel:'Details',
+        note:'Dates refer to the event or official publication. A scheduled event is not a prediction.',
+        sources:usmca?[{label:'USTR · USMCA review',href:usmca.url,date:shortDate(usmca.date)}]:[],
+        read:['What is on the official calendar, in order.','How any of it will be resolved.']}:null}
     ],
-    evidence:{k:'Bilateral ledger',title:'The US consistently buys more goods from Mexico than it sells there',sub:'Monthly US goods trade with Mexico · US$ billions',visual:chartSVG({series:lines,yFormat:v=>'$'+fmt(v,0),label:'Monthly U.S. imports from and exports to Mexico'}),legend:legend(lines),table:dataTable(lines),note:'U.S. Census ledger. Banxico and Census totals differ because of valuation, timing and re-exports; the two ledgers are not mixed.',sources:[{label:'U.S. Census · trade with Mexico',href:censusMexicoUrl}],read:[`The gap between the lines is Mexico's monthly goods ${balanceSide} in the U.S. Census ledger.`,`It does not capture services, investment, migration, or the full economic effect of a trade dispute.`]},
-    modulesTitle:'Exposure, the ledger, and household flows',
-    modules:[
-      {k:'Exposure',title:'The US takes most Mexican goods exports',value:`${fmt(us.share,2)}% · ${partnerYear}`,text:'The annual partner share is reconciled to Banxico before it appears here.',href:'/trade.html#trade-composition',link:'See the trade structure →'},
-      {k:'The ledger',title:`Mexico's monthly goods ${balanceSide} was $${fmt(Math.abs(mexicoBalance),1)}bn`,value:`Two-way trade $${fmt(L.twoway_bn,1)}bn · ${dateLabel(tradeMonth)}`,text:'This is the U.S.-side measure and should not be mixed with Banxico’s national trade totals.',href:censusMexicoUrl,link:'Open Census trade data ↗'},
-      {k:'Household flow',title:'Remittances and the peso belong together',value:`$${fmt(rem.value/1000,1)}bn · ${fmt(peso.value,2)} MXN/USD`,text:'The dollar inflow and the exchange rate answer different parts of what reaches Mexican households.',href:'/chart.html?v=banxico-remesas,banxico-usdmxn-fix',link:'Compare the two series →'}
-    ],
-    updates:[
-      ...(usmca?[{type:'Trade policy',title:usmca.title,text:usmca.context||'',source:usmca.source,href:usmca.url,date:shortDate(usmca.date)}]:[]),
-      {type:'Official data',title:`Two-way goods trade reached $${fmt(L.twoway_bn,1)}bn in ${dateLabel(tradeMonth)}`,text:`The US imported $${fmt(L.imports_bn,1)}bn from Mexico and exported $${fmt(L.exports_bn,1)}bn to it.`,source:'U.S. Census',href:censusMexicoUrl,date:dateLabel(tradeMonth)},
-      {type:'Household flow',title:`Remittances were $${fmt(rem.value/1000,1)}bn in ${dateLabel(rem.date)}`,text:remY?`That was ${fmt(Math.abs(pct(rem.value,remY.value)),1)}% ${rem.value>=remY.value?'above':'below'} a year earlier.`:'The source series does not yet support a year-earlier comparison.',source:'Banxico',href:sourceUrl('banxico-remesas'),date:dateLabel(rem.date)}
-    ],
-    upcoming:next,
-    sources:[...(usmca?[{label:'USTR · USMCA first review',href:usmca.url,date:shortDate(usmca.date)}]:[]),{label:'U.S. Census · trade with Mexico',href:censusMexicoUrl,date:tu.meta.latestMonth},{label:'UN COMTRADE · export exposure',href:comtradePartnerUrl,date:String(partnerYear)},topicSource('banxico-remesas'),topicSource('banxico-usdmxn-fix')],
-    method:'The bilateral ledger uses U.S. Census throughout. Banxico remains the owner of Mexico’s national trade accounts. The two series are not spliced together because valuation, timing and re-exports differ.'
+    updates:changedMatches('usmexico',3),
+    upcoming:next.slice(0,5),
+    upcomingTitle:'Calendar',
+    sources:[...(usmca?[{label:'USTR · USMCA first review',href:usmca.url,date:shortDate(usmca.date)}]:[]),{label:'U.S. Census · trade with Mexico',href:censusMexicoUrl,date:tu.meta?.latestMonth},{label:'UN COMTRADE · export exposure',href:comtradePartnerUrl,date:String(partnerYear)},topicSource('banxico-remesas'),topicSource('banxico-usdmxn-fix')],
+    method:'The bilateral ledger uses U.S. Census throughout; Banxico owns Mexico\'s national accounts, and the two are never spliced. Direction words are computed from the series.'
   };
 }
 
@@ -624,8 +696,11 @@ function evidenceBlock(e,id,label='In the data'){
 // A chart inside a story section: the same trusted shell (chart/table toggle, note,
 // what-it-shows / what-it-does-not footers) without its own page-section wrapper.
 function chartShell(c,id){
-  const visual=chartSVG({series:c.series,yFormat:c.yFormat,label:c.label,band:c.band||null});
-  return `<article class="evidence-shell"><header class="evidence-head"><div><h3>${c.title}</h3><div class="evidence-sub">${c.sub}</div></div><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="active" aria-pressed="true" data-evidence-for="${id}" data-evidence="visual">Chart</button><button type="button" aria-pressed="false" data-evidence-for="${id}" data-evidence="table">Table</button></div></header><div class="evidence-body" id="${id}-visual"><div class="chart-legend">${legend(c.series)}</div><div class="chart-wrap">${visual}</div><div class="chart-note">${c.note}${evidenceSources(c.sources)}</div></div><div class="table-wrap" id="${id}-table">${dataTable(c.series,24)}</div><div class="evidence-read"><div><h4>What it shows</h4><p>${c.read[0]}</p></div><div><h4>What it does not show</h4><p>${c.read[1]}</p></div></div></article>`;
+  // A section chart built from series, or a prebuilt visual (treemap, timeline) with its own table.
+  const visual=c.visual||chartSVG({series:c.series,yFormat:c.yFormat,label:c.label,band:c.band||null});
+  const legendHtml=c.visual?(c.legend||''):`<div class="chart-legend">${legend(c.series)}</div>`;
+  const table=c.table||dataTable(c.series,24);
+  return `<article class="evidence-shell ${c.css||''}"><header class="evidence-head"><div><h3>${c.title}</h3><div class="evidence-sub">${c.sub}</div></div><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="active" aria-pressed="true" data-evidence-for="${id}" data-evidence="visual">${c.visualLabel||'Chart'}</button><button type="button" aria-pressed="false" data-evidence-for="${id}" data-evidence="table">${c.tableLabel||'Table'}</button></div></header><div class="evidence-body" id="${id}-visual">${legendHtml}<div class="chart-wrap">${visual}</div><div class="chart-note">${c.note}${evidenceSources(c.sources)}</div></div><div class="table-wrap" id="${id}-table">${table}</div><div class="evidence-read"><div><h4>What it shows</h4><p>${c.read[0]}</p></div><div><h4>What it does not show</h4><p>${c.read[1]}</p></div></div></article>`;
 }
 function render(topic){
   current=topic;let t;

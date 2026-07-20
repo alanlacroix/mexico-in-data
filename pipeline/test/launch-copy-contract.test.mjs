@@ -37,9 +37,9 @@ assert.match(home, /banxico-bmv-ipc/i,
 assert.match(home, /banxico-cetes-28d/i,
   'homepage markets should include the short-term Mexican government yield');
 
-assert.match(topics, /general minimum wage is MX\$\$\{fmt\(W\.value,2\)\} a day/i,
+assert.match(topics, /general minimum wage is (?:<b>)?MX\$\$\{fmt\(W\.value,2\)\} a day/i,
   'minimum-wage copy must identify Mexican pesos');
-assert.match(topics, /Part of the reason both lines rise together/i,
+assert.match(topics, /part of why exports and imports rise and fall together/i,
   'trade copy must not claim one complete cause for co-movement');
 for (const phrase of [/local source registry/i, /event registry/i, /local feed/i, /fails closed/i, /automatically colored as good/i]) {
   assert.doesNotMatch(topics, phrase, `topic pages must not expose internal QA language: ${phrase}`);

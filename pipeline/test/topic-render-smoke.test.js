@@ -95,7 +95,7 @@ for (const route of routes) {
   }
   if (route.key === 'payments') {
     // Story contract (Fable plan 2026-07-20): five sections, every judgment word derived.
-    for (const headline of ['Cash is still how most of Mexico pays', 'When money moves digitally, it moves over SPEI', 'CoDi never took off', 'Buying online is still the smallest rail']) {
+    for (const headline of ['Cash is still how most of Mexico pays', 'When money moves digitally, it moves over SPEI', 'CoDi never took off', 'Online card buying is still a fraction of in-store card use']) {
       if (!output.includes(headline)) throw new Error(`payments: missing story section "${headline}"`);
     }
     if (!output.includes(`${expectedCardPurchases} billion purchases a quarter`)) throw new Error(`payments: combined card purchases do not match the source operations (${expectedCardPurchases}bn)`);
