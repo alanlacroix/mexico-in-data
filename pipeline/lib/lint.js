@@ -75,6 +75,9 @@ export function slopFlags(ev = {}) {
   if (!ev.date) flags.push('no date');
   if (FEED_BOILERPLATE.test(title + ' ' + body)) flags.push('feed boilerplate');
   if (spanishDominant(title)) flags.push('non-English title');
+  // "20,000 million dollars" is a calque of "20,000 millones de dólares": garbled in English
+  // and ambiguous (Audit 2026-07-20: one reached the homepage as an Apollo headline).
+  if (/\b\d{1,3},\d{3}\s+millions?\s+(?:dollars|pesos|d[oó]lares)/i.test(title + ' ' + body)) flags.push('money calque (N,000 million)');
   if (body && spanishDominant(body)) flags.push('non-English context');
   if (body && !endsClean(body)) flags.push('truncated context');
   return flags;

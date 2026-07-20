@@ -76,6 +76,7 @@ for (const route of routes) {
   const output = node('#topicApp').innerHTML;
   if (reported) throw new Error(`${route.key}: rendered the failure state (${reported})`);
   const storyPage = output.includes('story-sec');
+  if (storyPage && (output.match(/class="story-so"/g) || []).length < 3) throw new Error(`${route.key}: story page carries fewer than 3 So-what strips`);
   for (const required of storyPage
     ? ["What's moving", 'Sources and method', 'What it does not show']
     : ['Snapshot', 'What changed', 'Sources and method']) {

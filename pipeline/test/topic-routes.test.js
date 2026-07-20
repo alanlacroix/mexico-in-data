@@ -22,7 +22,9 @@ const menuLinks = (topicsMenu?.menu || []).flatMap((g) => g.links || []).map((x)
 const routeLinks = routes.map((x) => x.permalink);
 if (!topicsMenu) fail('masthead must carry the Topics dropdown');
 for (const href of routeLinks) if (!menuLinks.includes(href)) fail('Topics dropdown is missing ' + href);
-if (!menuLinks.includes('/explore.html')) fail('Topics dropdown must keep the Explore index reachable');
+// 2026-07-20 Alan: "Remove index, what is that" — the six topics ARE the menu; Explore
+// stays reachable from the footer, not the dropdown.
+if (menuLinks.includes('/explore.html')) fail('the Topics dropdown carries only the six topics');
 for (const href of routeLinks) if (!(topicsMenu.match || []).includes(href)) fail('Topics must light active on ' + href);
 const explore = fs.readFileSync(path.join(root, 'explore.njk'), 'utf8');
 for (const href of routeLinks) if (!explore.includes('href="' + href + '"')) fail('Explore is missing topic route ' + href);

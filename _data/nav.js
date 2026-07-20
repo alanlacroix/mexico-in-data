@@ -9,7 +9,7 @@ module.exports = [
   { label: 'Numbers', href: '/chart.html' },
   { label: 'Atlas', href: '/atlas.html' },
   { label: 'Topics',
-    match: ['/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html', '/explore.html'],
+    match: ['/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html'],
     menu: [
       { group: 'Mexico by topic', links: [
         { label: 'Economy & money', href: '/economy.html' },
@@ -19,7 +19,6 @@ module.exports = [
         { label: 'Society & security', href: '/society.html' },
         { label: 'U.S.–Mexico', href: '/us-mexico.html' },
       ] },
-      { group: 'Index', links: [ { label: 'All topics', href: '/explore.html' } ] },
     ] },
   { label: 'Sources', href: '/sources.html' },
   { label: 'About', href: '/about.html' },
