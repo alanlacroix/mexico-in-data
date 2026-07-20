@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { trendWord, bandWord, stanceWord, staleness, balanceWord } from '../../assets/prose.js';
 import { fileURLToPath } from 'node:url';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -45,7 +46,8 @@ for (const route of routes) {
   const match = html.match(/<script type="module">([\s\S]*?)<\/script>/);
   if (!match) throw new Error(`${route.key}: module script missing`);
   const code = match[1].replace(/import \{treemapSVG,humanSrc\} from '[^']+';/,
-    "const treemapSVG=()=>'<svg role=\"img\"></svg>'; const humanSrc=(u)=>u; ");
+    "const treemapSVG=()=>'<svg role=\"img\"></svg>'; const humanSrc=(u)=>u; ")
+    .replace(/import \{trendWord,bandWord,stanceWord,staleness,balanceWord\} from '[^']+';/, '');
 
   const nodes = new Map();
   const node = (selector) => {
@@ -70,10 +72,13 @@ for (const route of routes) {
     return { ok: true, status: 200, json: async () => JSON.parse(fs.readFileSync(file, 'utf8')) };
   };
 
-  await new AsyncFunction(code)();
+  await new AsyncFunction('trendWord', 'bandWord', 'stanceWord', 'staleness', 'balanceWord', code)(trendWord, bandWord, stanceWord, staleness, balanceWord);
   const output = node('#topicApp').innerHTML;
   if (reported) throw new Error(`${route.key}: rendered the failure state (${reported})`);
-  for (const required of ['Snapshot', 'What changed', 'Sources and method']) {
+  const storyPage = output.includes('story-sec');
+  for (const required of storyPage
+    ? ["What's moving", 'Sources and method', 'What it does not show']
+    : ['Snapshot', 'What changed', 'Sources and method']) {
     if (!output.includes(required)) throw new Error(`${route.key}: missing ${required}`);
   }
   if (['society', 'usmexico'].includes(route.key) && !output.includes(expectedRemittance)) {
@@ -89,16 +94,21 @@ for (const route of routes) {
     if (!output.includes('year-to-date count')) throw new Error('society: SESNSP total must be labeled year to date');
   }
   if (route.key === 'payments') {
-    for (const label of ['Card purchases · quarter', 'SPEI transfers · month', 'ATM withdrawals · quarter', 'Online card purchases · quarter']) {
-      if (!output.includes(label)) throw new Error(`payments: missing ${label}`);
+    // Story contract (Fable plan 2026-07-20): five sections, every judgment word derived.
+    for (const headline of ['Cash is still how most of Mexico pays', 'When money moves digitally, it moves over SPEI', 'CoDi never took off', 'Buying online is still the smallest rail']) {
+      if (!output.includes(headline)) throw new Error(`payments: missing story section "${headline}"`);
     }
-    if (!output.includes(expectedCardPurchases)) throw new Error(`payments: combined card purchases do not match the source operations (${expectedCardPurchases}bn)`);
-    if (!output.includes(`Debit cards made up ${expectedDebitShare}%`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
-    if (!output.includes('85.2% of adults said cash was their usual method')) throw new Error('payments: ENIF cash figure must preserve the adult-response denominator');
-    if (output.includes('A live, imperfect check')) throw new Error('payments: quarterly ATM data must not be described as live');
-    if (!output.includes('Debit-card value series SF62279 is excluded')) throw new Error('payments: anomalous debit-card value is not visibly quarantined in the method');
+    if (!output.includes(`${expectedCardPurchases} billion purchases a quarter`)) throw new Error(`payments: combined card purchases do not match the source operations (${expectedCardPurchases}bn)`);
+    if (!output.includes(`${expectedDebitShare}%</b> of those purchases used a debit card`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
+    if (!output.includes('85.2%</b> of adults said cash was their usual payment method')) throw new Error('payments: ENIF cash figure must preserve the adult-response denominator');
+    if (!output.includes('ENIF 2024')) throw new Error('payments: the survey vintage must appear in the sentence');
+    if (!/under review after a jump far outside its own history|series SF62279 is excluded/.test(output)) throw new Error('payments: anomalous debit-card value is not visibly quarantined');
     if (output.includes('1,169bn MXN')) throw new Error('payments: quarantined debit-card value still appears editorially');
-    if (!output.includes('reading-guide') || !output.includes('Briefly Explained')) throw new Error('payments: metric explainers are missing');
+    const storyCharts = (output.match(/evidence-shell/g) || []).length;
+    if (storyCharts < 4) throw new Error(`payments: expected at least 4 inline charts, found ${storyCharts}`);
+    for (const banned of ['—', 'surged', 'soared', 'plunged', 'robust', 'landscape', 'ecosystem', 'testament', 'currently']) {
+      if (output.includes(banned)) throw new Error(`payments: banned word or mark in story prose: "${banned}"`);
+    }
   }
   if (output.includes('waiting for its required source data')) throw new Error(`${route.key}: failed closed with complete fixture data`);
 }

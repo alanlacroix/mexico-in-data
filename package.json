@@ -6,11 +6,13 @@
     "build:site": "npm run clean && eleventy",
     "build": "npm run build:site && npm run check && npm run check:release",
     "release": "npm run build",
-    "check": "node pipeline/assert.js && node pipeline/test/publication-contract.test.js && node pipeline/test/fact-copy-contract.test.mjs && node pipeline/test/sources-copy-contract.test.mjs && node pipeline/test/launch-copy-contract.test.mjs && node pipeline/test/health-status.test.mjs && node pipeline/test/automation-contract.test.mjs && node pipeline/test/official-source-connectors.test.mjs && node pipeline/assert-data.js && node pipeline/test/topic-routes.test.js && node pipeline/test/topic-render-smoke.test.js && node pipeline/test/chart-contract.test.js && node pipeline/test/report-mobile-contract.test.mjs && node pipeline/test/inline-script-check.test.mjs",
+    "check": "node pipeline/test/prose-tokens.test.mjs && node pipeline/assert.js && node pipeline/test/publication-contract.test.js && node pipeline/test/fact-copy-contract.test.mjs && node pipeline/test/sources-copy-contract.test.mjs && node pipeline/test/launch-copy-contract.test.mjs && node pipeline/test/health-status.test.mjs && node pipeline/test/automation-contract.test.mjs && node pipeline/test/official-source-connectors.test.mjs && node pipeline/assert-data.js && node pipeline/test/topic-routes.test.js && node pipeline/test/topic-render-smoke.test.js && node pipeline/test/chart-contract.test.js && node pipeline/test/report-mobile-contract.test.mjs && node pipeline/test/inline-script-check.test.mjs",
     "check:release": "node pipeline/release-check.mjs",
     "test:data": "node pipeline/test/publication-contract.test.js && node pipeline/test/fact-copy-contract.test.mjs && node pipeline/test/health-status.test.mjs && node pipeline/test/automation-contract.test.mjs && node pipeline/test/official-source-connectors.test.mjs && node pipeline/assert-data.js && node pipeline/test/topic-routes.test.js && node pipeline/test/topic-render-smoke.test.js && node pipeline/test/chart-contract.test.js",
     "test:chart": "node pipeline/test/chart-contract.test.js",
     "check-links": "node pipeline/check-links.mjs"
   },
-  "devDependencies": { "@11ty/eleventy": "^3.0.0" }
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
 }

@@ -144,6 +144,15 @@ footerBlurb: "The important numbers, the developments behind them, and the origi
   .topic-foot{font-family:var(--mono);font-size:var(--fs-label);line-height:1.55;color:var(--mut);margin:23px 0 4px}
   .loading{padding:45px 0;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
 
+  /* Story pages (Fable plan 2026-07-20): the page IS a readable walkthrough. Each section
+     is a sentence-headline, 80-150 words of prose with live numbers woven in, and at most
+     one chart placed right after the sentence it proves. */
+  .story-sec h2{font-size:var(--fs-h2);line-height:1.22;letter-spacing:-.015em;margin:4px 0 0;max-width:42ch}
+  .story-p{font-size:var(--fs-body);line-height:1.62;color:var(--ink-2);max-width:72ch;margin:11px 0 0}
+  .story-p b{color:var(--ink);font-weight:600}
+  .story-sec .evidence-shell{margin-top:15px}
+  .story-stamp{font-family:var(--mono);font-size:var(--fs-label);line-height:1.5;color:var(--mut)}
+
   @media(max-width:900px){
     .topic-switch{grid-template-columns:repeat(3,minmax(0,1fr))}
     .snapshot{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -200,6 +209,7 @@ footerBlurb: "The important numbers, the developments behind them, and the origi
 
 <script type="module">
 import {treemapSVG,humanSrc} from '/assets/mb.js?v=18';
+import {trendWord,bandWord,stanceWord,staleness,balanceWord} from '/assets/prose.js?v=1';
 {% endraw %}
 const ROUTE_TOPIC={{ topicRoute.key | dump | safe }};
 {% raw %}
@@ -213,7 +223,7 @@ const SERIES_IDS=[
   'banxico-spei-operaciones','banxico-spei-monto','banxico-codi-operaciones','banxico-tpv-debito-monto','banxico-tpv-credito-monto',
   'banxico-tpv-debito-ops','banxico-tpv-credito-ops','banxico-cajeros-ops','banxico-ecommerce-monto','banxico-ecommerce-ops',
   'banxico-tarjetas-debito','banxico-tarjetas-credito','banxico-circulante',
-  'banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-salario-minimo','banxico-remesas','wb-population','wb-unemployment'
+  'banxico-exports-total','banxico-imports-total','banxico-trade-balance','banxico-imports-intermediate','banxico-salario-minimo','banxico-remesas','banxico-remesas-electronicas','wb-population','wb-unemployment'
 ];
 const DB={series:{},events:[],areas:[],happening:[],partners:null,products:null,tradeUS:null,demographics:null,vitals:null,crime:null,poverty:null};
 function validProducts(p){
@@ -400,49 +410,76 @@ function economyTopic(){
 }
 
 function paymentsTopic(){
-  const spei=s('banxico-spei-operaciones'),codi=s('banxico-codi-operaciones'),debitOps=s('banxico-tpv-debito-ops'),creditOps=s('banxico-tpv-credito-ops'),atmOps=s('banxico-cajeros-ops'),ecomOps=s('banxico-ecommerce-ops'),debitCards=s('banxico-tarjetas-debito'),creditCards=s('banxico-tarjetas-credito');
-  const cardOps=sumShared(debitOps,creditOps),S=last(spei),Sp=prior(spei),CoDi=last(codi),Card=last(cardOps),CardY=yearAgo(cardOps),Debit=debitOps.find(p=>p.date===Card?.date),Credit=creditOps.find(p=>p.date===Card?.date),ATM=last(atmOps),ATMY=yearAgo(atmOps),E=last(ecomOps),Ey=yearAgo(ecomOps),DC=last(debitCards),CC=last(creditCards);
-  if(!S||!CoDi||!Card||!CardY||!Debit||!Credit||!ATM||!ATMY||!E||!DC||!CC)throw new Error('Payments inputs are incomplete');
+  // STORY PAGE (Fable plan 2026-07-20). Every judgment word about a moving number comes
+  // from assets/prose.js tokens; survey constants sit in FACTS with their vintage attached.
+  const spei=s('banxico-spei-operaciones'),speiMonto=s('banxico-spei-monto'),codi=s('banxico-codi-operaciones'),debitOps=s('banxico-tpv-debito-ops'),creditOps=s('banxico-tpv-credito-ops'),atmOps=s('banxico-cajeros-ops'),ecomOps=s('banxico-ecommerce-ops'),debitCards=s('banxico-tarjetas-debito'),creditCards=s('banxico-tarjetas-credito'),circ=s('banxico-circulante'),rem=s('banxico-remesas'),remE=s('banxico-remesas-electronicas');
+  const cardOps=sumShared(debitOps,creditOps),S=last(spei),SM=last(speiMonto),CoDi=last(codi),Card=last(cardOps),CardY=yearAgo(cardOps),Debit=debitOps.find(p=>p.date===Card?.date),ATM=last(atmOps),ATMY=yearAgo(atmOps),E=last(ecomOps),EY=yearAgo(ecomOps),DC=last(debitCards),CC=last(creditCards),C=last(circ),CYr=yearAgo(circ);
+  if(!S||!SM||!CoDi||!Card||!CardY||!Debit||!ATM||!ATMY||!E||!EY||!DC||!CC||!C||!CYr)throw new Error('Payments inputs are incomplete');
+  // SPEI's stored history is still short of a full year; compare to a year earlier once the
+  // series can support it, and to the month before until then. The basis is named in the sentence.
+  const speiBase=yearAgo(spei)?{p:yearAgo(spei),label:'a year earlier'}:{p:prior(spei),label:'the month before'};
+  if(!speiBase.p)throw new Error('Payments inputs are incomplete');
+  // Survey constants: fixed results of a dated survey, not moving series. The vintage is
+  // part of the sentence wherever they appear.
+  const FACTS={enifCashSmall:{v:85.2,label:'ENIF 2024'},enifCashLarge:{v:73.5,label:'ENIF 2024'},enifUrl:'https://inegi.org.mx/contenidos/programas/enif/2024/doc/enif_2024_resultados.pdf'};
+  const cnbv='https://pnif.cnbv.gob.mx/dnoticia/basededatosinclusionfinanciera2024',mobileRules='https://www.banxico.org.mx/publicaciones-y-prensa/miscelaneos/%7BEA247344-5771-6144-71DC-5688A28E78A1%7D.pdf',cardConsult='https://www.banxico.org.mx/ConsultaRegulacionWeb/index.jsp';
   const debitReview=(meta('banxico-tpv-debito-monto').flags||[]).some(flag=>String(flag).startsWith('series_jump_'));
-  const compareDates=new Set(cardOps.map(p=>p.date).filter(d=>atmOps.some(x=>x.date===d)&&ecomOps.some(x=>x.date===d))),through=[...compareDates].sort().at(-1),base=[...compareDates].sort()[0];
-  const comparable=a=>a.filter(p=>compareDates.has(p.date)),lines=[
-    {name:'Card purchases',points:indexed(comparable(cardOps)),color:GREEN,format:v=>fmt(v,0)},
-    {name:'Online card purchases',points:indexed(comparable(ecomOps)),color:AMBER,format:v=>fmt(v,0)},
-    {name:'ATM withdrawals',points:indexed(comparable(atmOps)),color:INK,format:v=>fmt(v,0)}
-  ];
-  const daysInSpeiMonth=new Date(Date.UTC(dateObj(S.date).getUTCFullYear(),dateObj(S.date).getUTCMonth()+1,0)).getUTCDate(),debitShare=Debit.value/Card.value*100;
-  const enif='https://inegi.org.mx/contenidos/programas/enif/2024/doc/enif_2024_resultados.pdf',cnbv='https://pnif.cnbv.gob.mx/dnoticia/basededatosinclusionfinanciera2024',mobileRules='https://www.banxico.org.mx/publicaciones-y-prensa/miscelaneos/%7BEA247344-5771-6144-71DC-5688A28E78A1%7D.pdf',cardConsult='https://www.banxico.org.mx/ConsultaRegulacionWeb/index.jsp';
+  const debitShare=Debit.value/Card.value*100,daysInSpeiMonth=new Date(Date.UTC(dateObj(S.date).getUTCFullYear(),dateObj(S.date).getUTCMonth()+1,0)).getUTCDate();
+  const codiRatio=(()=>{const sameMonth=spei.find(p=>p.date===CoDi.date);return sameMonth?Math.round(sameMonth.value/CoDi.value):null;})();
+  const remShare=(()=>{const e=last(remE);if(!e)return null;const r=rem.find(p=>p.date===e.date);return r?{v:e.value/r.value*100,date:e.date}:null;})();
+  const tCirc=trendWord(C.value,CYr.value),tSpei=trendWord(S.value,speiBase.p.value),tCard=trendWord(Card.value,CardY.value),tAtm=trendWord(ATM.value,ATMY.value),tEcom=trendWord(E.value,EY.value);
+  const pctOf=t=>t.known&&t.pct!=null?fmt(Math.abs(t.pct),1)+'%':'';
+  const line=(name,points,color,format)=>({name,points,color,format});
+  const newest=[S.date,Card.date,C.date,CoDi.date].sort().at(-1);
+
   return {
-    title:'Payments',scope:'Transfers, cards, cash, and financial access.',asof:`Latest observations range from ${quarterLabel(E.date)} to ${dateLabel(S.date)}.`,
-    nowTitle:`Card purchases rose while ATM withdrawals fell.`,
-    nowText:`Banxico counted <b>${fmt(Card.value/1e9,2)}bn card purchases</b> in ${quarterLabel(Card.date)}, ${fmt(Math.abs(pct(Card.value,CardY.value)),1)}% above a year earlier. ATM withdrawals fell ${fmt(Math.abs(pct(ATM.value,ATMY.value)),1)}% to <b>${fmt(ATM.value/1e6,0)}m</b>. SPEI processed <b>${fmt(S.value/1e6,0)}m transfers</b> in ${dateLabel(S.date)}.`,
-    cards:[
-      {label:'Card purchases · quarter',value:fmt(Card.value/1e9,2),unit:'bn',change:deltaText(pct(Card.value,CardY.value),'%',1)+' vs a year ago',context:`Debit cards made up ${fmt(debitShare,1)}% of these transactions.`,guide:{items:[{label:'What it counts',text:'Purchases made at terminals with debit or credit cards. This is the number of transactions, not the pesos spent.'},{label:'How to read it',text:'More purchases can mean more people paying by card, the same people using cards more often, or both. It does not tell us which by itself.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-tpv-debito-ops'),date:quarterLabel(Card.date),href:'/chart.html?v=banxico-tpv-debito-ops,banxico-tpv-credito-ops'},
-      {label:'SPEI transfers · month',value:fmt(S.value/1e6,0),unit:'million',change:deltaText(pct(S.value,Sp.value),'%',1)+` from ${dateLabel(Sp.date)}`,context:`About ${fmt(S.value/daysInSpeiMonth/1e6,1)}m transfers per calendar day.`,guide:{items:[{label:'What it is',text:'Mexico’s real-time bank-transfer system. This count covers third-party transfers of every size.'},{label:'Keep in mind',text:'A longer month can produce more transfers. The total peso value is also dominated by large transfers, so transaction count is the cleaner usage measure here.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-spei-operaciones'),date:dateLabel(S.date),href:'/chart.html?v=banxico-spei-operaciones'},
-      {label:'ATM withdrawals · quarter',value:fmt(ATM.value/1e6,0),unit:'million',change:deltaText(pct(ATM.value,ATMY.value),'%',1)+' vs a year ago',context:'An imperfect quarterly check on cash use.',guide:{items:[{label:'What it counts',text:'Cash withdrawals at ATMs, not the pesos withdrawn and not every cash payment.'},{label:'How to read it',text:'Fewer withdrawals may mean less dependence on cash. It can also mean people are withdrawing larger amounts less often.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-cajeros-ops'),date:quarterLabel(ATM.date),href:'/chart.html?v=banxico-cajeros-ops'},
-      {label:'Online card purchases · quarter',value:fmt(E.value/1e6,0),unit:'million',change:Ey?deltaText(pct(E.value,Ey.value),'%',1)+' vs a year ago':'',context:'The latest online reading is one quarter older than the card and ATM data.',guide:{items:[{label:'What it counts',text:'Card purchase transactions made online. It measures activity, not the number of buyers or merchants.'},{label:'Why the date matters',text:'This series arrives later than the other payment data. The site keeps its actual observation date rather than making it look current.'}]},source:'Banxico',sourceHref:sourceUrl('banxico-ecommerce-ops'),date:quarterLabel(E.date),href:'/chart.html?v=banxico-ecommerce-ops'},
+    title:'Payments',scope:'How money actually moves in Mexico: cash, transfers, cards, and what is gaining ground.',
+    asof:`Last revised ${shortDate(new Date().toISOString().slice(0,10))}, ${new Date().getUTCFullYear()} · newest number ${dateLabel(newest)}`,
+    story:[
+      {h2:'Cash is still how most of Mexico pays.',
+       prose:[`For purchases of MX$500 or less, <b>${fmt(FACTS.enifCashSmall.v,1)}%</b> of adults said cash was their usual payment method in INEGI's ${FACTS.enifCashSmall.label} survey. Above MX$500 it was still ${fmt(FACTS.enifCashLarge.v,1)}%. The stock of notes and coins backs the survey up: <b>MX$${fmt(C.value/1e6,2)} trillion</b> was in circulation in ${dateLabel(C.date)}, and it ${tCirc.word}${tCirc.known&&Math.abs(tCirc.pct)>=0.5?` ${pctOf(tCirc)}`:''} over a year. Cash withdrawals at ATMs, one imperfect check on cash use, ${tAtm.word} ${pctOf(tAtm)} over the same period, to ${fmt(ATM.value/1e6,0)} million in ${quarterLabel(ATM.date)}.`],
+       chart:{title:`Notes and coins in circulation ${tCirc.word} over the past year`,sub:`Monthly stock, million MXN · through ${dateLabel(C.date)}`,series:[line('Currency in circulation',circ.slice(-72),GREEN,v=>'$'+fmt(v/1e6,2)+'tn')],yFormat:v=>'$'+fmt(v/1e6,1)+'tn',label:'Notes and coins in circulation, monthly stock',
+        note:'Banxico monthly stock of billetes y monedas. A growing stock is consistent with a cash economy; it does not count cash payments directly.',
+        sources:[topicSource('banxico-circulante','Banxico · currency in circulation')],
+        read:['How many pesos exist as physical cash, month by month.','How often that cash changes hands. Circulation is a stock, not spending.']}},
+      {h2:'When money moves digitally, it moves over SPEI.',
+       prose:[`Banxico's transfer system processed <b>${fmt(S.value/1e6,0)} million transfers</b> in ${dateLabel(S.date)}, about ${fmt(S.value/daysInSpeiMonth/1e6,1)} million per calendar day. Volume ${tSpei.word} ${pctOf(tSpei)} from ${speiBase.label}. The pesos moved that month came to MX$${fmt(SM.value/1e12,1)} trillion, though the total value is dominated by large transfers, so the transaction count is the cleaner read on everyday use.`],
+       chart:{title:`SPEI carried ${fmt(S.value/1e6,0)} million transfers in ${dateLabel(S.date)}`,sub:'Monthly third-party transfers, millions',series:[line('SPEI transfers',spei.slice(-72),GREEN,v=>fmt(v/1e6,0)+'m')],yFormat:v=>fmt(v/1e6,0)+'m',label:'SPEI monthly transfer count',
+        note:'Third-party transfers of every size. A longer month can produce more transfers.',
+        sources:[topicSource('banxico-spei-operaciones','Banxico · SPEI operations')],
+        read:['How many bank transfers Mexico makes each month.','Who makes them. One person can transfer many times; count is usage, not users.']}},
+      {h2:`Cards add up to ${fmt(Card.value/1e9,2)} billion purchases a quarter.`,
+       prose:[`Terminal purchases with debit and credit cards ${tCard.word} ${pctOf(tCard)} over a year, to ${fmt(Card.value/1e9,2)} billion in ${quarterLabel(Card.date)}. Debit does most of the work: <b>${fmt(debitShare,1)}%</b> of those purchases used a debit card. There are ${fmt(DC.value/1e6,0)} million debit cards and ${fmt(CC.value/1e6,1)} million credit cards in circulation, and one person can hold several.`,
+        debitReview?`One number is missing on purpose. Banxico's series for the peso value of debit-card purchases is under review after a jump far outside its own history, so this page counts transactions and leaves those pesos out until the numbers settle.`:''].filter(Boolean),
+       chart:{title:`Debit cards carried ${fmt(debitShare,0)}% of terminal purchases in ${quarterLabel(Card.date)}`,sub:'Quarterly card purchases at terminals, millions',series:[line('Debit',debitOps.slice(-24),GREEN,v=>fmt(v/1e6,0)+'m'),line('Credit',creditOps.slice(-24),INK,v=>fmt(v/1e6,0)+'m')],yFormat:v=>fmt(v/1e6,0)+'m',label:'Quarterly debit and credit card purchases',
+        note:'Transaction counts, not pesos spent. More purchases can mean more people paying by card, the same people using cards more often, or both.',
+        sources:[topicSource('banxico-tpv-debito-ops','Banxico · debit card purchases'),topicSource('banxico-tpv-credito-ops','Banxico · credit card purchases')],
+        read:['Which card Mexico actually taps at the terminal, quarter by quarter.','Pesos spent per card, or how many people hold them.']}},
+      {h2:'CoDi never took off.',
+       prose:[`Banxico launched CoDi in 2019 as a QR payment rail on top of SPEI. In ${dateLabel(CoDi.date)} it moved <b>${fmt(CoDi.value/1e3,0)} thousand payments</b>${codiRatio?`. For every CoDi payment, SPEI carried about ${fmt(codiRatio,0)} ordinary transfers`:''}. The rail works; people simply kept using regular transfers.`],
+       chart:{title:`CoDi moved ${fmt(CoDi.value/1e3,0)} thousand payments in ${dateLabel(CoDi.date)}`,sub:'Monthly CoDi operations, thousands',series:[line('CoDi payments',codi.slice(-72),AMBER,v=>fmt(v/1e3,0)+'k')],yFormat:v=>fmt(v/1e3,0)+'k',label:'CoDi monthly operations',
+        note:'The scale is the story: compare the axis here with the SPEI chart above.',
+        sources:[topicSource('banxico-codi-operaciones','Banxico · CoDi operations')],
+        read:['How much CoDi is actually used, month by month.','Why adoption stalled. The count records the outcome, not the reason.']}},
+      {h2:'Buying online is still the smallest rail.',
+       prose:[`Online card purchases came to ${fmt(E.value/1e6,0)} million in ${quarterLabel(E.date)}, and ${tEcom.word} ${pctOf(tEcom)} over a year${remShare&&remShare.v>90?`. One digital shift is already complete: ${fmt(remShare.v,1)}% of remittance dollars arrived electronically in ${dateLabel(remShare.date)}`:''}.`],
+       chart:{title:`Online card purchases ${tEcom.word} ${pctOf(tEcom)} in a year`,sub:'Quarterly online card purchases, millions',series:[line('Online purchases',ecomOps.slice(-24),AMBER,v=>fmt(v/1e6,0)+'m')],yFormat:v=>fmt(v/1e6,0)+'m',label:'Quarterly online card purchases',
+        note:'This series arrives later than the terminal data; the chart keeps its own observation date.',
+        sources:[topicSource('banxico-ecommerce-ops','Banxico · online card purchases')],
+        read:['How fast card payments are moving online.','Total e-commerce. Marketplace wallets, transfers and cash on delivery are not in this count.']}}
     ],
-    evidence:{k:'How people are paying',title:'Card purchases rose while ATM withdrawals fell',sub:`Quarterly transaction counts · ${quarterLabel(base)} = 100 · through ${quarterLabel(through)}`,visual:chartSVG({series:lines,yFormat:v=>fmt(v,0),label:'Indexed card purchases, online card purchases and ATM withdrawals'}),legend:legend(lines),table:dataTable(lines),note:'Each line starts at 100, so this compares change rather than the size of the systems.',sources:[topicSource('banxico-tpv-debito-ops','Debit-card purchases'),topicSource('banxico-tpv-credito-ops','Credit-card purchases'),topicSource('banxico-ecommerce-ops','Online card purchases'),topicSource('banxico-cajeros-ops','ATM withdrawals')],read:['A move from 100 to 150 means 50% more transactions than in the starting quarter.','ATM withdrawals are only a proxy for cash use. Cash received outside an ATM and cash purchases do not appear here.']},
-    modulesTitle:'Cards, cash, access, and transfer rails',
-    modules:[
-      {k:'Cards',title:'Three of every four terminal purchases use debit',value:`Debit ${fmt(debitShare,1)}% · credit ${fmt(100-debitShare,1)}%`,text:'This is the share of transaction count, not pesos spent or unique cardholders.',href:'/chart.html?v=banxico-tpv-debito-ops,banxico-tpv-credito-ops',link:'Compare debit and credit →'},
-      {k:'Cash',title:'Cash is still the usual payment method for most adults',value:'85.2% at MX$500 or less · ENIF 2024',text:'For purchases of MX$500 or less, 85.2% of adults said cash was their usual method; 73.5% said the same for purchases above MX$500. The survey is the slower check on what ATM data can only suggest.',href:enif,link:'Open the ENIF survey ↗'},
-      {k:'Access',title:'Active cards are not the same as people with an account',value:`${fmt(DC.value/1e6,0)}m debit · ${fmt(CC.value/1e6,1)}m credit`,text:'One person can hold several cards. CNBV separately tracks accounts, terminals, ATMs and banking correspondents.',href:cnbv,link:'Open CNBV inclusion data ↗'},
-      {k:'Transfer rails',title:'SPEI and CoDi operate at very different scales',value:`SPEI ${fmt(S.value/1e6,0)}m (${shortDate(S.date)}) · CoDi ${fmt(CoDi.value/1e3,0)}k (${shortDate(CoDi.date)})`,text:'These are monthly transactions, not registrations. CoDi remains small next to ordinary bank transfers.',href:'/chart.html?v=banxico-spei-operaciones,banxico-codi-operaciones',link:'Compare the transfer rails →'}
-    ],
-    updates:[
-      {type:'Official data',title:`Card purchases rose ${fmt(Math.abs(pct(Card.value,CardY.value)),1)}%; ATM withdrawals fell ${fmt(Math.abs(pct(ATM.value,ATMY.value)),1)}%`,text:`Both comparisons use ${quarterLabel(Card.date)} against the same quarter a year earlier.`,source:'Banxico',href:sourceUrl('banxico-tpv-debito-ops'),date:quarterLabel(Card.date)},
+    updates:(()=>{const u=changedMatches('payments',3);return u.length?u:[
       {type:'Payment rules',title:'Banxico published a common mobile-transfer flow',text:'Banks will have to make mobile transfers follow a more consistent set of steps. The rules also add a simplified account for small merchants receiving digital payments.',source:'Banxico',href:mobileRules,date:'Jun 17'},
       {type:'Card rules',title:'Banxico opened consultations on card-clearing changes',text:'The proposals cover clearing-house rules and a common message standard. They are proposals, not final rules.',source:'Banxico',href:cardConsult,date:'2026'}
-    ],
+    ];})(),
     upcoming:[
       {date:'Monthly',label:'SPEI and CoDi system totals',source:'Banxico · release date varies'},
       {date:'Quarterly',label:'Card, point-of-sale and ATM activity',source:'Banxico · release date varies'},
       {date:'Monthly',label:'Currency in circulation',source:'Banxico · release date varies'}
     ],
     upcomingTitle:'Data schedule',
-    sources:[topicSource('banxico-spei-operaciones'),topicSource('banxico-codi-operaciones'),topicSource('banxico-tpv-debito-ops'),topicSource('banxico-tpv-credito-ops'),topicSource('banxico-cajeros-ops'),topicSource('banxico-ecommerce-ops'),topicSource('banxico-tarjetas-debito'),topicSource('banxico-tarjetas-credito'),{label:'INEGI · ENIF 2024',href:enif,date:'2024'},{label:'CNBV · financial inclusion databases',href:cnbv,date:''},{label:'Banxico · mobile-transfer rules',href:mobileRules,date:'2026-06-17'}],
-    method:`Transaction count and nominal value answer different questions. This page leads with count. The indexed chart compares change, not system size. ${debitReview?'Debit-card value series SF62279 is excluded while its Q1 2026 jump remains under review.':''}`
+    sources:[topicSource('banxico-spei-operaciones'),topicSource('banxico-spei-monto'),topicSource('banxico-codi-operaciones'),topicSource('banxico-tpv-debito-ops'),topicSource('banxico-tpv-credito-ops'),topicSource('banxico-cajeros-ops'),topicSource('banxico-ecommerce-ops'),topicSource('banxico-tarjetas-debito'),topicSource('banxico-tarjetas-credito'),topicSource('banxico-circulante'),{label:'INEGI · ENIF 2024',href:FACTS.enifUrl,date:'2024'},{label:'CNBV · financial inclusion databases',href:cnbv,date:''}],
+    method:`Counts and peso values answer different questions; this page leads with counts. Each chart keeps its own observation date. Survey figures carry their survey year in the sentence. ${debitReview?'The debit-card value series SF62279 is excluded while its jump remains under review.':''}`
   };
 }
 
@@ -584,6 +621,12 @@ function evidenceBlock(e,id,label='In the data'){
   const titleId=id+'-title',visualId=id+'-visual',tableId=id+'-table';
   return `<section class="section ${e.css||''}" id="${id}" aria-labelledby="${titleId}"><div class="section-head"><div><div class="mono-k">${label}</div><h2 id="${titleId}">${e.k}</h2></div></div><article class="evidence-shell"><header class="evidence-head"><div><h3>${e.title}</h3><div class="evidence-sub">${e.sub}</div></div><div class="view-toggle" role="group" aria-label="Choose ${e.k} view"><button type="button" class="active" aria-pressed="true" data-evidence-for="${id}" data-evidence="visual">${e.visualLabel||'Chart'}</button><button type="button" aria-pressed="false" data-evidence-for="${id}" data-evidence="table">${e.tableLabel||'Table'}</button></div></header><div class="evidence-body" id="${visualId}">${e.legend?`<div class="chart-legend">${e.legend}</div>`:''}<div class="chart-wrap">${e.visual}</div><div class="chart-note">${e.note}${evidenceSources(e.sources)}</div></div><div class="table-wrap" id="${tableId}">${e.table}</div><div class="evidence-read"><div><h4>What it shows</h4><p>${e.read[0]}</p></div><div><h4>What it does not show</h4><p>${e.read[1]}</p></div></div></article></section>`;
 }
+// A chart inside a story section: the same trusted shell (chart/table toggle, note,
+// what-it-shows / what-it-does-not footers) without its own page-section wrapper.
+function chartShell(c,id){
+  const visual=chartSVG({series:c.series,yFormat:c.yFormat,label:c.label,band:c.band||null});
+  return `<article class="evidence-shell"><header class="evidence-head"><div><h3>${c.title}</h3><div class="evidence-sub">${c.sub}</div></div><div class="view-toggle" role="group" aria-label="Choose view"><button type="button" class="active" aria-pressed="true" data-evidence-for="${id}" data-evidence="visual">Chart</button><button type="button" aria-pressed="false" data-evidence-for="${id}" data-evidence="table">Table</button></div></header><div class="evidence-body" id="${id}-visual"><div class="chart-legend">${legend(c.series)}</div><div class="chart-wrap">${visual}</div><div class="chart-note">${c.note}${evidenceSources(c.sources)}</div></div><div class="table-wrap" id="${id}-table">${dataTable(c.series,24)}</div><div class="evidence-read"><div><h4>What it shows</h4><p>${c.read[0]}</p></div><div><h4>What it does not show</h4><p>${c.read[1]}</p></div></div></article>`;
+}
 function render(topic){
   current=topic;let t;
   try{t=BUILDERS[topic]();}
@@ -594,6 +637,19 @@ function render(topic){
     return;
   }
   $$('.topic-switch a').forEach(b=>b.classList.toggle('active',b.dataset.topic===topic));$('.topic-select').value=topic;
+  // Story pages (Fable plan 2026-07-20): sentence-headline sections, prose with live
+  // numbers, at most one chart per section right after the sentence it proves. Topics
+  // still on the dashboard shape use the legacy template below until each is converted.
+  if(t.story){
+    $('#topicApp').className='';
+    $('#topicApp').innerHTML=`
+      <section class="topic-hero"><div><div class="mono-k">Topic</div><h1>${t.title}</h1><p class="topic-scope">${t.scope}</p></div><div class="topic-asof story-stamp">${t.asof}</div></section>
+      ${t.story.map((sec,i)=>`<section class="section story-sec"><h2>${sec.h2}</h2>${sec.prose.map(p=>`<p class="story-p">${p}</p>`).join('')}${sec.chart?chartShell(sec.chart,'story-ev-'+i):''}</section>`).join('')}
+      <section class="section"><div class="changes-grid"><div><div class="section-head"><div><div class="mono-k">Latest</div><h2>What's moving</h2></div></div>${updateList(t.updates)}</div><aside><div class="section-head"><div><div class="mono-k">Next</div><h2>${t.upcomingTitle||'Coming up'}</h2></div></div>${upcomingList(t.upcoming)}</aside></div></section>
+      <details class="sources"><summary>Sources and method</summary><div class="sources-body">${renderSources(t)}</div></details>`;
+    $$('[data-evidence-for]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.evidenceFor,table=b.dataset.evidence==='table',group=$$(`[data-evidence-for="${id}"]`);group.forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',x===b?'true':'false')});$('#'+id+'-visual').classList.toggle('hidden',table);$('#'+id+'-table').classList.toggle('open',table)}));
+    return;
+  }
   $('#topicApp').className='';
   $('#topicApp').innerHTML=`
     <section class="topic-hero"><div><div class="mono-k">Topic</div><h1>${t.title}</h1><p class="topic-scope">${t.scope}</p></div><div class="topic-asof">${t.asof}</div></section>
