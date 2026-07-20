@@ -76,12 +76,24 @@ function parseFeed(xml) {
 // Mexico Business News does not publish a usable RSS feed, but its public
 // Drupal JSON:API exposes the same article metadata. Keep this adapter small:
 // headline, direct article URL, summary and publication date only.
+//
+// Provenance is the whole game here. The site files expert-contributor columns,
+// press releases and weekly roundups under the SAME /news/ path as reported
+// journalism, so the URL tells us nothing — filtering on it let a vendor op-ed
+// onto the front page (an HR platform's executive writing up the 40-hour reform,
+// with his own headshot as the story image). field_document_type is the honest
+// signal. Take only originally-reported work: an expert column is a company
+// promoting itself and a press release is a company quoting itself, and neither
+// belongs in a ledger of what happened. Roundups are aggregations of stories we
+// already carry, so they only duplicate.
+const REPORTED_TYPES = new Set(['article', 'analysis']);
 function parseJsonApi(text, baseUrl) {
   const json = JSON.parse(text);
   return (Array.isArray(json.data) ? json.data : []).flatMap((node) => {
     const a = node && node.attributes;
     const alias = a && a.path && a.path.alias;
-    if (!a || !a.title || !alias || !alias.includes('/news/')) return []; // reported news only
+    if (!a || !a.title || !alias) return [];
+    if (!REPORTED_TYPES.has(String(a.field_document_type || ''))) return [];
     const link = new URL(alias, baseUrl).toString();
     const dek = clean((a.body && (a.body.summary || a.body.value)) || '').slice(0, 320);
     return [{ title: clean(a.title), link, dek, date: a.created || a.changed || '' }];
