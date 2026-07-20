@@ -208,16 +208,63 @@ function dedupeStories(events) {
   }
   return kept;
 }
+// ---- interest weighting (Fable ruling 2026-07-20) ----
+// Alan's declared interests REORDER the news; they never define what counts as news.
+// data/interests.json holds tag+regex pairs. A tagged story earns +2 effective importance
+// in the SECOND fill pass only. Pass 1 seats every 8+ story first, tags irrelevant, so a
+// security crisis or peso shock leads even though "security" is not on the interest list.
+// Anti-bubble wildcard: at most CAP-1 slots may be boosted; if the fill would be all
+// interest stories, the best untagged qualifying story takes the last slot. Every published
+// story records base importance, tags, boost and final rank, so "why is this #2" always
+// has a mechanical answer.
+const INTERESTS = (() => {
+  try {
+    return JSON.parse(fs.readFileSync(new URL('../data/interests.json', import.meta.url), 'utf8'))
+      .interests.map((x) => ({ tag: x.tag, rx: new RegExp(x.pattern, 'i') }));
+  } catch { return []; }
+})();
+const interestTags = (e) => {
+  const hay = `${e.title || ''} ${e.why || ''} ${e.section || ''}`;
+  return INTERESTS.filter((x) => x.rx.test(hay)).map((x) => x.tag);
+};
 function select(events, nowMs) {
-  const THRESH = 5, CAP = 8, FLOOR = 3;
+  const THRESH = 5, CAP = 5, FLOOR = 3, NEVER_OUTRANKED = 8, BOOST = 2, MAX_BOOSTED = CAP - 1;
   const eligible = events.filter((e) => {
     const gate = contextGate(e);
     if (!gate.ok && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: ${gate.flags.join('; ')}`);
     return gate.ok && e.url && e.source;
   });
-  const ranked = dedupeStories(eligible.slice().sort((a, b) => (ledeScore(b, nowMs) - ledeScore(a, nowMs)) || (b._t - a._t)));
-  let picked = ranked.filter((e) => effImp(e) >= THRESH).slice(0, CAP);
-  if (picked.length < FLOOR) picked = ranked.slice(0, FLOOR);
+  const ranked = dedupeStories(eligible.slice().sort((a, b) => (ledeScore(b, nowMs) - ledeScore(a, nowMs)) || (b._t - a._t)))
+    .filter((e) => effImp(e) >= THRESH);
+  for (const e of ranked) { e._tags = interestTags(e); e._boosted = false; }
+
+  // Pass 1: crisis-grade stories take slots first, in importance x recency order, tags irrelevant.
+  const picked = ranked.filter((e) => effImp(e) >= NEVER_OUTRANKED).slice(0, CAP);
+
+  // Pass 2: remaining slots by boosted score (+2 if interest-tagged), same order otherwise.
+  const rest = ranked.filter((e) => !picked.includes(e))
+    .sort((a, b) => {
+      const sa = (effImp(a) + (a._tags.length ? BOOST : 0)) * recencyWeight(Math.max(0, (nowMs - (a._t || 0)) / DAY));
+      const sb = (effImp(b) + (b._tags.length ? BOOST : 0)) * recencyWeight(Math.max(0, (nowMs - (b._t || 0)) / DAY));
+      return (sb - sa) || (b._t - a._t);
+    });
+  for (const e of rest) {
+    if (picked.length >= CAP) break;
+    e._boosted = e._tags.length > 0;
+    picked.push(e);
+  }
+
+  // Anti-bubble wildcard: the brief can never be all interest stories.
+  const boostedCount = picked.filter((e) => e._tags.length).length;
+  if (picked.length === CAP && boostedCount === CAP) {
+    const wildcard = ranked.find((e) => !picked.includes(e) && !e._tags.length);
+    if (wildcard) {
+      const dropped = picked[picked.length - 1];
+      picked[picked.length - 1] = wildcard;
+      console.log(`  wildcard: "${wildcard.title.slice(0, 50)}" replaces "${dropped.title.slice(0, 50)}" (anti-bubble slot)`);
+    }
+  }
+  if (picked.length < FLOOR) for (const e of ranked) { if (picked.length >= FLOOR) break; if (!picked.includes(e)) picked.push(e); }
   return picked;
 }
 function buildStanding(nums) {
@@ -267,10 +314,12 @@ async function main() {
   const isNew = (e) => !prevHrefs.has(e.url || '') && ((nowMs - (e._t || 0)) / DAY) <= 4;
   const lead0 = picked[0];
   const pass4 = (e) => ({ background: String(e.background || '').trim(), drivers: String(e.drivers || '').trim(), implications: String(e.implications || '').trim(), next: String(e.next || '').trim(), image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '' });
+  // Ranking provenance (Fable 2026-07-20): base importance, interest tags, boost, final rank.
+  const rankOf = (e, i) => ({ rank: i + 1, importance: e.importance || 0, tags: e._tags || [], boosted: !!e._boosted });
   const lead = { h1: stripDash(lead0.title).replace(/\.\s*$/, ''), context: ctxOf(lead0), ...pass4(lead0), refs: [lead0.id],
-    href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0) };
-  const items = picked.slice(1).map((e) => ({ headline: stripDash(e.title).replace(/\.\s*$/, ''), context: ctxOf(e), ...pass4(e),
-    refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', isNew: isNew(e) }));
+    href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0), ranking: rankOf(lead0, 0) };
+  const items = picked.slice(1).map((e, i) => ({ headline: stripDash(e.title).replace(/\.\s*$/, ''), context: ctxOf(e), ...pass4(e),
+    refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', isNew: isNew(e), ranking: rankOf(e, i + 1) }));
   const standing = buildStanding(P.nums);
   // Quiet-stretch honesty (Fable: "quiet day is the truth"): when nothing recent leads,
   // say so rather than dressing a week-old story as today's news.

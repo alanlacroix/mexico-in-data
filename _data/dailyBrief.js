@@ -80,7 +80,7 @@ module.exports = function () {
   const brief = read('brief.json') || {};
   const lead = brief.lead || null;
   const items = Array.isArray(brief.items) ? brief.items : [];
-  const stories = dedupe([lead, ...items]).map(toStory).filter((x) => x.title).slice(0, 6);
+  const stories = dedupe([lead, ...items]).map(toStory).filter((x) => x.title).slice(0, 5);
   const briefSources = [];
   for (const story of stories) {
     if (!story.source || !story.url || briefSources.some((x) => x.source === story.source)) continue;
