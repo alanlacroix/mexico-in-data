@@ -39,8 +39,12 @@ assert.match(home, /banxico-cetes-28d/i,
 
 assert.match(topics, /general minimum wage is (?:<b>)?MX\$\$\{fmt\(W\.value,2\)\} a day/i,
   'minimum-wage copy must identify Mexican pesos');
-assert.match(topics, /part of why exports and imports rise and fall together/i,
+// Guard the overclaim itself rather than one frozen sentence (2026-07-21): intermediate
+// imports are A reason exports and imports co-move, never the whole reason.
+assert.doesNotMatch(topics, /(?:that is|thats|this is) why exports and imports rise and fall/i,
   'trade copy must not claim one complete cause for co-movement');
+assert.match(topics, /exports and imports (?:therefore )?rise and fall together/i,
+  'trade copy should still explain the co-movement');
 for (const phrase of [/local source registry/i, /event registry/i, /local feed/i, /fails closed/i, /automatically colored as good/i]) {
   assert.doesNotMatch(topics, phrase, `topic pages must not expose internal QA language: ${phrase}`);
 }

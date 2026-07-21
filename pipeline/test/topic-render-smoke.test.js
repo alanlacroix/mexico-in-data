@@ -127,8 +127,10 @@ for (const route of routes) {
     if (!output.includes('year-to-date count')) throw new Error('society: SESNSP total must be labeled year to date');
   }
   if (route.key === 'payments') {
-    for (const headline of ['Cash is the habit everything else competes with', 'When money moves digitally, it moves over SPEI', 'At the counter, the cash replacement is a debit card']) {
-      if (!output.includes(headline)) throw new Error(`payments: missing section "${headline}"`);
+    // Headings are findings with numbers (business-writing house rules, 2026-07-21), so they
+    // interpolate. Assert the shape, not a frozen string.
+    for (const headline of [/Cash still wins [\d.]+% of everyday purchases/, /SPEI carries [\d,]+ million transfers a day/, /[\d.]+% of card purchases are debit, not credit/]) {
+      if (!headline.test(output)) throw new Error(`payments: missing section matching ${headline}`);
     }
     if (!output.includes(`${expectedCardPurchases} billion`)) throw new Error(`payments: card purchases do not match the source operations (${expectedCardPurchases}bn)`);
     if (!output.includes(`${expectedDebitShare}% used a debit card`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
