@@ -1,4 +1,4 @@
-// prose.js — the derived-token layer behind the topic-page stories (Fable plan 2026-07-20).
+// prose.mjs — the derived-token layer behind the topic-page stories (Fable plan 2026-07-20).
 //
 // The story pages weave live numbers into written sentences. A wrong stat card is a wrong
 // number; a wrong sentence is a lie in fluent prose. So every judgment word a sentence uses

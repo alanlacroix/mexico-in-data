@@ -14,6 +14,7 @@ assert.ok(
   run.indexOf(alertWrite) < run.indexOf('if (alerts.length)'),
   'the alert ledger must be replaced before the non-empty reporting branch',
 );
+assert.match(run, /if \(only && records\.some\(\(record\) => record\.status === 'failed'\)\)/, 'a scoped connector failure must make its workflow step fail');
 
 assert.match(
   happening,

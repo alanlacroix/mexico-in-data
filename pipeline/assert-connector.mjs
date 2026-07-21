@@ -1,7 +1,6 @@
-// Publication gate for a scoped connector workflow. run.js deliberately exits
-// zero when an upstream source fails so the full site can keep serving last-good
-// data. A dedicated monthly job needs the opposite behavior: do not commit a
-// failed health record as though the scoped refresh succeeded.
+// Publication gate for a scoped connector workflow. The orchestrator now exits
+// non-zero when a scoped fetch fails; this second gate validates the artifact,
+// vintage, and merged health record before a monthly job can commit it.
 
 import fs from 'node:fs';
 import path from 'node:path';

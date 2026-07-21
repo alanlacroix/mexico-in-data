@@ -165,7 +165,7 @@ async function fetchRaw() {
   if (process.env.ENABLE_SESNSP !== '1') throw new Error('SESNSP disabled this cycle (set ENABLE_SESNSP=1)');
   const page = await getText(PAGE_URL, { timeoutMs: 45_000 });
   const workbookUrl = findOfficialMunicipalWorkbook(page);
-  const parsed = await parseWorkbook(await getBuffer(workbookUrl, { timeoutMs: 90_000 }));
+  const parsed = await parseWorkbook(await getBuffer(workbookUrl, { timeoutMs: 90_000, expect: 'zip' }));
   return { ...parsed, workbookUrl };
 }
 

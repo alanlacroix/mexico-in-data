@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { lintReportText } from '../lib/lint.js';
+import { domainTrusted, publicHeadlineEligible } from '../lib/news-trust.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const require = createRequire(import.meta.url);
@@ -14,6 +17,8 @@ const dailyBrief = dailyBriefFactory();
 const latestStories = latestStoriesFactory();
 const currentEditorial = homeEditorialFactory();
 const nowBoard = require(path.join(root, '_data/nowBoard.js'))();
+const registry = require(path.join(root, 'pipeline/news-sources.json'));
+const wire = require(path.join(root, 'data/news/wire.json'));
 
 assert.equal(editorialDay('2026-07-21T03:00:00Z'), '2026-07-20', 'the editorial day must not roll over at UTC midnight');
 assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial day must follow Mexico City');
@@ -64,5 +69,26 @@ assert.equal(officialThenNewer[0].event.source, 'Outlet C', 'a newer report must
 const requiredNumbers = new Set(['banxico-usdmxn-fix', 'banxico-inflacion', 'banxico-tasa-objetivo', 'banxico-igae', 'banxico-exports-total', 'banxico-remesas']);
 assert.deepEqual(new Set(nowBoard.map((item) => item.id)), requiredNumbers, 'Latest numbers must remain a finite first-party set');
 assert.ok(nowBoard.every((item) => item.date && item.source && item.compare && !/\btoday\b/i.test(item.compare)), 'every number needs its own date, source, and honest comparison');
+
+assert.ok(lintReportText({ text: 'One claim; another claim.', inputs: ['One claim', 'another claim'] }).flags.includes('semicolon'), 'public model copy must reject semicolons');
+assert.equal(domainTrusted('actionforex.com'), false, 'an unknown GDELT publisher must not enter the public wire');
+assert.equal(domainTrusted('graphics.reuters.com'), true, 'subdomains of an allowlisted publisher must remain eligible');
+assert.equal(publicHeadlineEligible('Ozempic study compares pérdida de peso'), false, 'the word peso as weight must not create a Mexico match');
+assert.equal(publicHeadlineEligible('Peso gains against the dollar during USMCA talks'), true, 'a Mexico currency headline must remain eligible');
+assert.equal(publicHeadlineEligible('Why Mexico is the next big thing?'), false, 'question-style and sensational framing must not enter the public wire');
+
+const sourceByName = new Map(registry.sources.map((source) => [source.name, source]));
+assert.equal(sourceByName.get('El País — México')?.mx, true, 'the broad El País feed must pass the Mexico relevance gate');
+assert.equal(registry.sources.some((source) => source.id === 'animalpolitico'), false, 'a feed with no successful run must not remain in the active registry');
+assert.equal(wire.meta.count, wire.articles.length, 'the public wire count must describe the published slice');
+for (const article of wire.articles) {
+  const registered = sourceByName.get(article.sourceName);
+  assert.ok(registered || domainTrusted(article.domain), `public wire publisher is neither registered nor allowlisted: ${article.domain}`);
+  assert.ok(publicHeadlineEligible(article.title), `${article.sourceName} item fails the public headline gate`);
+}
+
+const homepageTemplate = fs.readFileSync(path.join(root, 'index.njk'), 'utf8');
+assert.doesNotMatch(homepageTemplate, /from ['"]\/assets\/mb\.js/, 'the homepage must not download the full render toolkit for one time helper');
+assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepage source status must be embedded at build time');
 
 console.log('homepage-feed-contract: ok');

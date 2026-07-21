@@ -34,6 +34,7 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   const clean = String(text || '').trim();
   if (!clean) return { ok: false, flags: ['empty report text'] };
   if (/[—–]|(?:^|\s)--(?:\s|$)/.test(clean)) flags.push('em-dash');
+  if (/;/.test(clean)) flags.push('semicolon');
   const hype = clean.match(HYPE); if (hype) flags.push(`hype: "${hype[0]}"`);
   const tic = clean.match(AI_TICS); if (tic) flags.push(`AI tic: "${tic[0]}"`);
   const editorial = clean.match(EDITORIALIZING); if (editorial) flags.push(`editorial shorthand: "${editorial[0]}"`);

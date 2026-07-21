@@ -28,6 +28,7 @@ import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
 import { REPORT, BAN } from './lib/voice.js';   // shared voice (Fable 2026-07-12): headlines + context REPORT plain
 import { lintReportText, slopFlags, isSlop } from './lib/lint.js';
+import { mexicoRelevant } from './lib/news-trust.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
 import { fetchArticle } from './lib/fetch-article.js';
 import newsDay from './lib/news-day.cjs';
@@ -44,7 +45,7 @@ const QUARANTINE_OUT = D('happening-quarantine.json');
 
 // Canonical description of the log. Overrides any stale note carried in the existing
 // file (the old "hand-curated for now" note was wrong once the pipeline took over).
-const NOTE = "Curated cross-domain event log — the developments moving Mexico, each rewritten in plain English, dated, and linked to a first-party or record source. Auto-generated from the news wire on every refresh; raw or non-English items are quarantined, never published.";
+const NOTE = "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.";
 
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
 const arr = (v) => (Array.isArray(v) ? v : []);
@@ -87,6 +88,10 @@ function beatSection(x) {
 
 // ---- candidate gathering (dedup, 30-day window) — mirrors build-email's candidates() ----
 const normTitle = (t) => (t || '').toLowerCase().replace(/[^a-z0-9áéíóúñü ]/g, ' ').replace(/\s+/g, ' ').trim();
+const TASTE_RX = /automotive|vehicle|rail|manufactur|investment|nearshor|trade|usmca|t-?mec|fintech|bank|payment|embedded finance|\bai\b|artificial intelligence|data cent|energy|pemex|cfe|public financ|digital rules|technology/i;
+const publishableCandidate = (x) => (x.tier === 1 || x.tier === 2 || x.tier === 'specialist')
+  && mexicoRelevant(`${x.title || ''} ${x.dek || ''}`)
+  && (x.sourceName !== 'Mexico Business News' || TASTE_RX.test(`${x.title || ''} ${x.dek || ''}`));
 function jaccard(a, b) {
   const A = new Set(a.split(' ').filter((w) => w.length > 3)), B = new Set(b.split(' ').filter((w) => w.length > 3));
   if (!A.size || !B.size) return 0; let i = 0; for (const w of A) if (B.has(w)) i++;
@@ -113,7 +118,8 @@ function candidates(now) {
   // for discovery and health checks only.
   const pool = all.filter((x) => Date.parse(x.published_at) >= cutoff)
     .filter((x) => x.source !== 'news.google.com')
-    .filter((x) => !/^google news\b|^via gdelt$/i.test(String(x.sourceName || '')));
+    .filter((x) => !/^google news\b|^via gdelt$/i.test(String(x.sourceName || '')))
+    .filter(publishableCandidate);
   pool.sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at));
   const kept = [];
   for (const x of pool) {
@@ -167,8 +173,6 @@ function mkEvent(x, section, importance, title, why, company = '') {
 // sports, how-tos, entertainment. The model path filters on meaning; this keeps the fallback honest.
 const JUNK_RX = /¿(qui[eé]n|c[óo]mo|qu[eé]|cu[áa]l)|vs\.?\s|los? m[áa]s (barat|car|vendid)|entre l[ao]s \d+ m[áa]s|la historia de|as[íi] (abre|cierra)|busca rescatar|(d[óo]lar|tipo de cambio) hoy|precio del d[óo]lar|recorte de expectativas|pase vip|saltar fila|\branking\b|paso a paso|hor[óo]scopo|receta|qu[eé] ver|streaming|nfl|nba|mlb|liga mx|fichaje|premios|celebr|tel[ei]nov|checa (las|los)|te decimos|aqu[íi] (los|las)/i;
 const RAW_HEADLINE_RX = /^[“"'‘].{0,100}[”"'’]:|\b(batman|mother courage|avenging|bombshell|nightmare|you won.t believe|shocking|stunning|slams?|blasts?)\b|\bmarks? the end\b|\b(?:tariff|crime|migration) wave\b|[!?]{2,}/i;
-const MX_RX = /m[eé]xic|mexican|\bcdmx\b|banxico|sheinbaum|\bpemex\b|\bfemsa\b|\boxxo\b|\bmorena\b|\binegi\b|\bcnbv\b|\bpeso(s)?\b|monterrey|guadalajara|\bbmv\b|nearshor|maquila|tmec|usmca|\bdof\b|hacienda|sat\b/i;
-const TASTE_RX = /automotive|vehicle|rail|manufactur|investment|nearshor|trade|usmca|t-?mec|fintech|bank|payment|embedded finance|\bai\b|artificial intelligence|data cent|energy|pemex|cfe|public financ|digital rules|technology/i;
 function firstWholeSentence(text, max = 280) {
   const clean = String(text || '').replace(/\s+/g, ' ').trim();
   const match = clean.match(/^(.{30,280}?[.!?])(?:\s|$)/);
@@ -183,7 +187,7 @@ function curateFallback(cands, now) {
     .filter(({ x }) => x.tier === 1 || x.tier === 2 || x.tier === 'specialist') // drop raw aggregator items
     .filter(({ x }) => !JUNK_RX.test((x.title || '') + ' ' + (x.dek || '')))  // no listicles / sports / how-tos
     .filter(({ x }) => !RAW_HEADLINE_RX.test(x.title || ''))                   // no raw clickbait without an editor rewrite
-    .filter(({ x }) => MX_RX.test((x.title || '') + ' ' + (x.dek || '')))     // must be about Mexico, not off-topic
+    .filter(({ x }) => mexicoRelevant((x.title || '') + ' ' + (x.dek || ''))) // must be about Mexico, not off-topic
     .filter(({ x }) => x.sourceName !== 'Mexico Business News' || TASTE_RX.test((x.title || '') + ' ' + (x.dek || '')))
     .map(({ x, summary }) => ({ x, summary, w: tierW(x.tier) * 2 + (Date.parse(x.published_at) > now.getTime() - 4 * 864e5 ? 2 : 0) }));
   scored.sort((a, b) => b.w - a.w || Date.parse(b.x.published_at) - Date.parse(a.x.published_at));

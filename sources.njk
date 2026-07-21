@@ -185,7 +185,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   /* section heads: reuse .section-head; letter badge in .no */
   .grp{margin:22px 0 0;border-top:1px solid var(--line);padding-top:0}
   .section-head .no{text-transform:uppercase}
-  .grp>.section-head{position:relative;margin:0;padding:17px 52px 13px 0;cursor:pointer}
+  .grp>.section-head{position:relative;margin:0;padding:17px 52px 13px 0}
   .grp>.section-head h2{margin-top:0}
   .grp>.section-head .dek{margin-bottom:0}
   .grp-toggle{position:absolute;right:0;top:16px;width:40px;height:40px;border:1px solid var(--line-2);border-radius:6px;background:var(--paper);color:var(--ink-2);font-family:var(--mono);font-size:18px;line-height:1;cursor:pointer}
@@ -222,6 +222,8 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   /* narrow phones: the catalog stops being an 840px horizontal-scroll table and becomes stacked,
      labeled cards (the review's largest mobile fix). Pure CSS off the existing td classes. */
   @media(max-width:600px){
+    .feed-toggle{min-height:44px}
+    .grp-toggle{width:44px;height:44px;top:14px}
     .tblwrap{overflow-x:visible}
     table.mck.src{min-width:0;display:block}
     .src thead{display:none}
@@ -1454,7 +1456,7 @@ function flagText(flag){
         const owner=(m&&m.owner)||r.source||'';
         const cadKey=cadOf(r);
         const st=stateOf(r);
-        const through=r.vintage?fmtVintage(r.vintage):'—';
+        const through=(r.vintage||r.servingVintage)?fmtVintage(r.vintage||r.servingVintage):'—';
         const checked=r.finishedAt||r.fetchedAt;
         const reason=st.w==='Update expected'?(r.flags&&r.flags.length?flagText(r.flags[0]):'latest observation is older than its cadence'):
           st.w==='Review flag'?(r.flags&&r.flags.length?flagText(r.flags[0]):'an automatic validation check needs review'):
@@ -1490,7 +1492,7 @@ function flagText(flag){
         st.w==='Review flag'?(r.flags&&r.flags.length?flagText(r.flags[0]):'An automatic validation check needs review.'):
         (r.error||r.message||(r.flags&&r.flags.length?flagText(r.flags[0]):'The last fetch did not complete'));
       const checked=r.finishedAt||r.fetchedAt;
-      const through=r.vintage?fmtVintage(r.vintage):'—';
+      const through=(r.vintage||r.servingVintage)?fmtVintage(r.vintage||r.servingVintage):'—';
       const dburl=(m&&m.db)||r.sourceUrl||'';
       const source=dburl?`<a href="${esc(dburl)}" target="_blank" rel="noopener">source ↗</a>`:esc(r.source||'');
       return `<div class="healthissue"><div><div class="hi-name">${esc(name)}</div><div class="hi-owner">${esc(owner)}</div></div>`+

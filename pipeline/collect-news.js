@@ -12,15 +12,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { domainTrusted, mexicoRelevant, publicHeadlineEligible } from './lib/news-trust.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const NEWSDIR = path.join(ROOT, 'data', 'news');
 const REG = JSON.parse(fs.readFileSync(path.join(__dirname, 'news-sources.json'), 'utf8'));
+const SOURCE_BY_NAME = new Map(REG.sources.map((source) => [source.name, source]));
 const UA = 'Mozilla/5.0 (compatible; mexico-brief news collector; +https://mexicobrief.com)';
-
-// Mexico relevance filter for pan-LatAm / global feeds (mx:true).
-const MX = /m[eé]xic|mexican|\bcdmx\b|banxico|\bcnbv\b|sheinbaum|\bpemex\b|\bmorena\b|nearshor|monterrey|guadalajara|\bbmv\b|banorte|\bfemsa\b|\boxxo\b|\bpeso(s)?\b|remittanc|remesas|maquila/i;
 
 // ---- tiny fetch (node fetch, curl fallback) ----
 async function fetchText(url) {
@@ -157,7 +156,7 @@ async function main() {
         if (!url) continue;
         const id = idOf(url);
         if (seen.has(id)) continue;
-        if (s.mx && !MX.test(it.title + ' ' + it.dek)) continue;   // Mexico filter on pan-LatAm feeds
+        if (s.mx && !mexicoRelevant(`${it.title} ${it.dek}`)) continue;   // Mexico filter on pan-LatAm feeds
         seen.add(id);
         ledger.push({
           id, url, title: it.title, dek: it.dek,
@@ -185,8 +184,10 @@ async function main() {
   if (gdelt && Array.isArray(gdelt.articles)) {
     for (const a of gdelt.articles) {
       const url = canonical(a.url); const id = idOf(url);
-      if (seen.has(id)) continue; seen.add(id);
+      if (seen.has(id)) continue;
       const publisher = a.domain || domainOf(url);
+      if (!domainTrusted(publisher)) continue;
+      seen.add(id);
       ledger.push({ id, url, title: a.title, dek: '', source: publisher, sourceName: publisher,
         tier: 1, beat: a.tag === 'trade' ? 'us-mexico' : (a.tag === 'markets' ? 'economy' : a.tag || 'politics'),
         lang: 'en', published_at: a.date || now.toISOString(), first_seen: now.toISOString() });
@@ -207,15 +208,20 @@ async function main() {
   for (const x of recent) {
     if (wireSeen.has(x.id)) continue;
     if (x.source === 'news.google.com') continue;        // aggregator stays in the ledger, not the public wire
+    const publisherName = /^via gdelt$/i.test(String(x.sourceName || '')) ? x.source : x.sourceName;
+    const registered = SOURCE_BY_NAME.get(publisherName);
+    if (!registered && !domainTrusted(x.source)) continue;
+    if (!publicHeadlineEligible(x.title)) continue;
     if ((perDom[x.source] || 0) >= 6) continue;          // no single outlet floods the wire
     wireSeen.add(x.id); perDom[x.source] = (perDom[x.source] || 0) + 1;
-    articles.push({ title: x.title, url: x.url, domain: x.source, date: x.published_at, tag: tagOf[x.beat] || 'economy', beat: x.beat, sourceName: x.sourceName });
+    articles.push({ title: x.title, url: x.url, domain: x.source, date: x.published_at, tag: tagOf[x.beat] || 'economy', beat: x.beat, sourceName: publisherName });
   }
+  const publicArticles = articles.slice(0, 60);
   const wire = {
     meta: { source: 'Multi-source RSS + GDELT', sourceUrl: 'https://mexicobrief.com/sources',
       note: 'Headlines from a trusted-source allowlist, last 72 hours, each linked to its origin and unsummarized.',
-      cadence: 'continuous', fetchedAt: now.toISOString(), count: articles.length },
-    articles: articles.slice(0, 60),
+      cadence: 'continuous', fetchedAt: now.toISOString(), count: publicArticles.length },
+    articles: publicArticles,
   };
   fs.writeFileSync(path.join(NEWSDIR, 'wire.json'), JSON.stringify(wire));
   fs.writeFileSync(path.join(NEWSDIR, 'health.json'), JSON.stringify(health, null, 2));

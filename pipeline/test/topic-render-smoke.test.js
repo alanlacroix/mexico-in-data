@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { trendWord, bandWord, stanceWord, staleness, balanceWord } from '../../assets/prose.js';
+import { trendWord, bandWord, stanceWord, staleness, balanceWord } from '../../assets/prose.mjs';
 import { fileURLToPath } from 'node:url';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');

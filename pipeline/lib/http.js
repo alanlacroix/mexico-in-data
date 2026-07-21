@@ -82,6 +82,7 @@ export async function getBuffer(url, opts = {}) {
     backoffMs = 1500,
     timeoutMs = 60_000,
     headers = {},
+    expect = null, // 'zip' | null
   } = opts;
 
   let lastErr;
@@ -101,6 +102,9 @@ export async function getBuffer(url, opts = {}) {
       // A SharePoint sign-in page or WAF challenge can arrive with HTTP 200.
       // Checking the first bytes prevents either from reaching an archive parser.
       assertNotChallenge(body.subarray(0, 800).toString('utf8'), null, url);
+      if (expect === 'zip' && body.subarray(0, 2).toString('ascii') !== 'PK') {
+        throw new Error(`expected ZIP/XLSX archive but got another response from ${redact(url)}`);
+      }
       return body;
     } catch (err) {
       clearTimeout(timer);

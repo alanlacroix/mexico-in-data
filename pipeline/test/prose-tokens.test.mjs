@@ -4,7 +4,7 @@
 // missing and stale series, and fail on any wording drift.
 
 import assert from 'node:assert/strict';
-import { trendWord, bandWord, stanceWord, staleness, balanceWord } from '../../assets/prose.js';
+import { trendWord, bandWord, stanceWord, staleness, balanceWord } from '../../assets/prose.mjs';
 
 // trend: rising, falling, flat, dead-zone, missing
 assert.equal(trendWord(106, 100).word, 'rose');

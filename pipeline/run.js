@@ -144,7 +144,13 @@ async function main() {
     for (const a of alerts) console.log(`    - [${a.id}] ${a.message}`);
   }
   console.log(`\n  health -> data/health.json\n`);
-  // Exit 0 even with data failures: the site deploys with last-good; CI reads alerts.json.
+  // A full refresh stays fail-soft and deploys last-good data. A scoped source
+  // workflow is an explicit publication attempt, so its runner must see the
+  // failure immediately instead of reporting a green fetch step.
+  if (only && records.some((record) => record.status === 'failed')) {
+    console.error(`scoped refresh failed: ${records.filter((record) => record.status === 'failed').map((record) => record.id).join(', ')}`);
+    process.exitCode = 1;
+  }
 }
 
 main().catch((e) => { console.error('FATAL orchestrator error:', e); process.exit(1); });

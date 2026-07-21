@@ -174,7 +174,7 @@ header.mast .wrap{display:flex;align-items:center;justify-content:space-between;
 .navtoggle span{display:block;width:20px;height:2px;background:var(--ink);border-radius:2px}
 @media(max-width:1000px){
   .navtoggle{display:flex}
-  .mnav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:#fff;border-bottom:1px solid var(--line-2);padding:2px clamp(18px,4vw,44px) 10px}
+  .mnav{display:none;position:absolute;top:100%;left:0;right:0;max-height:calc(100dvh - 52px);overflow-y:auto;overscroll-behavior:contain;flex-direction:column;align-items:stretch;gap:0;background:#fff;border-bottom:1px solid var(--line-2);padding:2px clamp(18px,4vw,44px) calc(10px + env(safe-area-inset-bottom))}
   .navtoggle[aria-expanded="true"] ~ .mnav{display:flex}
   .mnav a{padding:12px 2px;font-size:13px;border-bottom:1px solid var(--line)}
   .mnav a:last-child{border-bottom:0}
@@ -216,9 +216,12 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .navdrop-t .caret{font-size:var(--fs-label);position:relative;top:1px}
 .navdrop.here-sec>.navdrop-t{color:var(--ink);font-weight:600}
 .navdrop-menu{position:absolute;top:100%;left:0;margin-top:6px;background:#fff;border:1px solid var(--line-2);border-radius:8px;padding:8px 0;min-width:210px;display:none;z-index:60}
-.navdrop:hover .navdrop-menu,.navdrop:focus-within .navdrop-menu,.navdrop.open .navdrop-menu{display:block}
+.navdrop.open .navdrop-menu{display:block}
 /* bridge the 6px gap between the button and the menu so hover doesn't drop mid-travel (desktop only) */
-@media(min-width:1001px){.navdrop-menu::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}}
+@media(min-width:1001px){
+  .navdrop:hover .navdrop-menu,.navdrop:focus-within .navdrop-menu{display:block}
+  .navdrop-menu::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}
+}
 .navdrop-grp+.navdrop-grp{border-top:1px solid var(--line);margin-top:6px;padding-top:8px}
 .navdrop-gl{display:block;font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.05em;color:var(--mut);padding:2px 16px 5px}
 .navdrop-menu a{display:block;font-family:var(--mono);font-size:var(--fs-label);text-transform:none;letter-spacing:0;color:var(--ink-2);padding:6px 16px;white-space:nowrap;border:0}
@@ -227,8 +230,10 @@ footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 @media(max-width:1000px){
   .navdrop{display:block;width:100%}
   .navdrop-t{width:100%;justify-content:flex-start;min-height:44px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:13px}
-  .navdrop-t .caret{display:none}
-  .navdrop-menu{position:static;display:block;border:0;border-radius:0;padding:0;margin:0;min-width:0}
+  .navdrop-t .caret{display:inline-block;margin-left:auto;transition:transform .15s ease}
+  .navdrop.open .navdrop-t .caret{transform:rotate(180deg)}
+  .navdrop-menu{position:static;display:none;border:0;border-radius:0;padding:0;margin:0;min-width:0}
+  .navdrop.open .navdrop-menu{display:block}
   .navdrop-grp+.navdrop-grp{border-top:0;margin:0;padding:0}
   .navdrop-gl{padding:10px 2px 2px}
   .navdrop-menu a{padding:11px 2px 11px 16px;border-bottom:1px solid var(--line);font-size:13px}

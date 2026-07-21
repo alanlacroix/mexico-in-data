@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-21T14:19:15.211Z",
-  "runId": "20260721141915",
+  "generatedAt": "2026-07-21T18:50:11.698Z",
+  "runId": "20260721185011",
   "geoEpoch": {
     "epoch": "mg-2020",
     "source": "INEGI Marco Geoestadístico",
@@ -8,22 +8,13 @@
     "count": 2478
   },
   "summary": {
-    "ok": 53,
+    "ok": 54,
     "flagged": 10,
-    "failed": 1,
+    "failed": 0,
     "skipped": 1,
     "darkSources": []
   },
-  "alerts": [
-    {
-      "id": "se-ied",
-      "source": "Secretaría de Economía (RNIE)",
-      "metric": "fdi",
-      "severity": "error",
-      "message": "IED: official workbook is not an XLSX archive",
-      "at": "2026-07-21T14:19:15.211Z"
-    }
-  ],
+  "alerts": [],
   "reconciliation": [],
   "sources": [
     {
@@ -1093,27 +1084,6 @@
       "finishedAt": "2026-07-21T14:19:22.896Z"
     },
     {
-      "id": "se-ied",
-      "title": "Inversión Extranjera Directa (flujo trimestral)",
-      "metric": "fdi",
-      "source": "Secretaría de Economía (RNIE)",
-      "seriesId": "",
-      "sourceUrl": "https://www.gob.mx/se/acciones-y-programas/competitividad-y-normatividad-inversion-extranjera-directa?state=published",
-      "track": "pulse",
-      "kind": "series",
-      "cadence": "quarterly",
-      "freshnessGraceDays": null,
-      "canonicalSource": true,
-      "status": "failed",
-      "flags": [],
-      "startedAt": "2026-07-21T14:19:15.211Z",
-      "hard": false,
-      "message": "IED: official workbook is not an XLSX archive",
-      "servingVintage": "2026-01",
-      "stale": false,
-      "finishedAt": "2026-07-21T14:19:23.093Z"
-    },
-    {
       "id": "fred-ust10",
       "title": "US 10-year Treasury yield",
       "metric": "us_10y",
@@ -1275,33 +1245,6 @@
       "finishedAt": "2026-07-21T14:19:25.228Z"
     },
     {
-      "id": "sesnsp-delitos",
-      "title": "Incidencia delictiva (total)",
-      "metric": "crime_total",
-      "source": "SESNSP (Secretariado Ejecutivo del SNSP)",
-      "seriesId": "",
-      "sourceUrl": "https://www.gob.mx/sesnsp/documentos/historico-de-incidencia-delictiva-del-fuero-comun?state=published",
-      "track": "map",
-      "kind": "layer",
-      "cadence": "monthly",
-      "freshnessGraceDays": 70,
-      "canonicalSource": true,
-      "status": "ok",
-      "flags": [],
-      "startedAt": "2026-07-13T21:17:10.409Z",
-      "vintage": "2026-05",
-      "fetchedAt": "2026-07-13T21:17:10.409Z",
-      "rowCount": 2478,
-      "file": "data/layers/sesnsp-delitos.json",
-      "coverage": {
-        "covered": 2478,
-        "universe": 2478
-      },
-      "finishedAt": "2026-07-13T21:17:15.613Z",
-      "gatedBy": "ENABLE_SESNSP",
-      "scheduledSeparately": true
-    },
-    {
       "id": "wb-gdp-usd",
       "title": "PIB (GDP, US$ corrientes)",
       "metric": "gdp_usd",
@@ -1413,6 +1356,52 @@
       "rowCount": 35,
       "file": "data/series/wb-unemployment.json",
       "finishedAt": "2026-07-21T14:21:34.242Z"
+    },
+    {
+      "id": "se-ied",
+      "title": "Inversión Extranjera Directa (flujo trimestral)",
+      "metric": "fdi",
+      "source": "Secretaría de Economía (RNIE)",
+      "seriesId": "",
+      "sourceUrl": "https://www.gob.mx/se/acciones-y-programas/competitividad-y-normatividad-inversion-extranjera-directa?state=published",
+      "track": "pulse",
+      "kind": "series",
+      "cadence": "quarterly",
+      "freshnessGraceDays": null,
+      "canonicalSource": true,
+      "status": "ok",
+      "flags": [],
+      "startedAt": "2026-07-21T18:49:59.367Z",
+      "vintage": "2026-01",
+      "fetchedAt": "2026-07-21T18:49:59.367Z",
+      "rowCount": 109,
+      "file": "data/series/se-ied.json",
+      "finishedAt": "2026-07-21T18:50:00.024Z"
+    },
+    {
+      "id": "sesnsp-delitos",
+      "title": "Incidencia delictiva (total)",
+      "metric": "crime_total",
+      "source": "SESNSP (Secretariado Ejecutivo del SNSP)",
+      "seriesId": "",
+      "sourceUrl": "https://www.gob.mx/sesnsp/documentos/historico-de-incidencia-delictiva-del-fuero-comun?state=published",
+      "track": "map",
+      "kind": "layer",
+      "cadence": "monthly",
+      "freshnessGraceDays": 70,
+      "canonicalSource": true,
+      "status": "ok",
+      "flags": [],
+      "startedAt": "2026-07-21T18:50:11.698Z",
+      "vintage": "2026-06",
+      "fetchedAt": "2026-07-21T18:50:11.698Z",
+      "rowCount": 2478,
+      "file": "data/layers/sesnsp-delitos.json",
+      "coverage": {
+        "covered": 2478,
+        "universe": 2478
+      },
+      "finishedAt": "2026-07-21T18:50:18.233Z"
     }
   ]
 }

@@ -11,6 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getJson } from './lib/http.js';
+import { domainTrusted } from './lib/news-trust.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, '..', 'data', 'news.json');
@@ -35,26 +36,6 @@ const URL =
 const RELEVANT = /\bmexic|banxico|sheinbaum|\bpemex\b|\bmorena\b|\bamlo\b|nearshor|usmca|claudia sheinbaum/i;
 const EXCLUDE  = /new mexico/i;
 const isRelevant = (t) => RELEVANT.test(t) && !EXCLUDE.test(t);
-
-// Curated allow-list of trusted outlets — a headline wire is only as credible as
-// its sources. Wire agencies, majors, financial press, ratings, and reputable
-// Mexico-focused English outlets. Everything else is dropped (no random blogs).
-const TRUSTED = new Set([
-  'reuters.com','apnews.com','bloomberg.com','ft.com','wsj.com','economist.com',
-  'nytimes.com','washingtonpost.com','theguardian.com','bbc.com','bbc.co.uk',
-  'cnbc.com','marketwatch.com','forbes.com','fortune.com','barrons.com','axios.com',
-  'politico.com','foreignpolicy.com','americasquarterly.org','as-coa.org','csis.org',
-  'brookings.edu','piie.com','imf.org','worldbank.org','oecd.org',
-  'mexiconewsdaily.com','mexicobusiness.news','bnamericas.com','latinfinance.com',
-  'spglobal.com','fitchratings.com','moodys.com','aljazeera.com','france24.com',
-  'dw.com','cnn.com','npr.org','pbs.org','time.com','thehill.com','elpais.com',
-]);
-function domainTrusted(d) {
-  d = (d || '').toLowerCase().replace(/^www\./, '');
-  if (TRUSTED.has(d)) return true;
-  for (const t of TRUSTED) if (d === t || d.endsWith('.' + t)) return true;
-  return false;
-}
 
 // "20260709T113000Z" -> ISO
 function seenToIso(s) {
@@ -86,14 +67,11 @@ async function fetchGdelt() {
   }
 }
 
-// Low-quality / hyperlocal / propaganda domains never make the wire, even as fill.
-const JUNK = /aginfo|farm|fox\d|houston|abc\d|nbc\d|cbs\d|patch\.com|\.tv$|dailymail|breitbart|infowars|zerohedge|\brt\.com|sputnik|newsbreak|msn\.com|yahoo\.com|prnewswire|businesswire|globenewswire|presswire|newswire|cecildaily|dailytimes|\bstar\.com|mexicostar/i;
-
 async function main() {
   const raw = await fetchGdelt();
   const arts = Array.isArray(raw?.articles) ? raw.articles : [];
   const seen = new Set();
-  const trusted = [], backup = [];
+  const trusted = [];
   for (const a of arts) {
     if (!a.url || !a.title) continue;
     if (!isRelevant(a.title)) continue;   // must be about Mexico
@@ -103,12 +81,9 @@ async function main() {
     seen.add(key);
     const item = { title: a.title.trim(), url: a.url, domain, date: seenToIso(a.seendate), tag: tagOf(a.title) };
     if (domainTrusted(domain)) trusted.push(item);
-    else if (!JUNK.test(domain)) backup.push(item);   // reputable-enough fill, never junk
   }
-  // Prefer the trusted allow-list; only fall back to non-junk sources if the wire would be thin.
-  let items = trusted.slice(0, 20);
-  if (items.length < 6) items = items.concat(backup.slice(0, 8 - items.length));
-  if (!items.length) throw new Error('GDELT returned no usable articles');
+  const items = trusted.slice(0, 20);
+  if (!items.length) throw new Error('GDELT returned no articles from the trusted-source allowlist');
 
   const out = {
     meta: {

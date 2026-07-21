@@ -189,7 +189,7 @@ export const connectors = [
         console.warn(`  se-ied: discovery failed (${error.message}); reusing last known workbook`);
         workbookUrl = prior;
       }
-      return { workbookUrl, data: await parseWorkbook(await getBuffer(workbookUrl, { timeoutMs: 60_000 })) };
+      return { workbookUrl, data: await parseWorkbook(await getBuffer(workbookUrl, { timeoutMs: 60_000, expect: 'zip' })) };
     },
     normalize(raw) {
       const data = raw?.data;
