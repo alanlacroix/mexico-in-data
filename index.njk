@@ -2,16 +2,18 @@
 layout: base.njk
 permalink: /
 title: "The Mexico Brief"
-description: "The major developments in Mexico, the numbers moving today, and the dates coming next — with links to the original sources."
+description: "Today’s important Mexico headlines, the latest official numbers, and the connections between them, with links to the original sources."
 ogTitle: "The Mexico Brief"
-ogDescription: "Mexico's major developments, key numbers, and original sources."
+ogDescription: "Today’s Mexico headlines, official numbers, and the connections worth watching."
 ---
 <style>
   .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
   .home a{text-underline-offset:3px}
-  .home-head{padding:32px 0 14px;display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
-  .home-date{font-size:clamp(20px,2.2vw,28px);font-weight:650;letter-spacing:-.015em}
-  .home-status{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-decoration:none}
+  .home-head{padding:32px 0 15px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
+  .home-date,.home-status{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .home-date{margin-top:6px}
+  .home-status{text-decoration:none}
   .home-status:hover{color:var(--green-d)}
   .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
   .section-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
@@ -21,57 +23,43 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
 
   .brief{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:16px 0 20px;margin-top:28px}
   .brief-copy{font-size:clamp(18px,1.65vw,22px);line-height:1.58;color:var(--ink-2);max-width:78ch;margin-top:13px}
-  .brief-view{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:76ch;margin-top:13px;padding-left:14px;border-left:2px solid var(--green)}
-  .brief-view b{color:var(--ink)}
+  .my-read{max-width:78ch;margin-top:17px;padding:13px 15px;border-left:2px solid var(--green);background:#f8f7f2}
+  .my-read p{font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
+  .my-read strong{color:var(--ink)}
+  .read-evidence{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .read-number{display:inline-flex;gap:6px;align-items:baseline;padding:6px 9px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:10px}
+  .read-number b{font-size:11px}
+  .read-story{display:inline-flex;align-items:center;padding:6px 9px;color:var(--green-d);font-family:var(--mono);font-size:10px;text-decoration:none}
+  .source-state{margin-top:13px;padding:11px 13px;border-left:2px solid var(--red);background:#fff7f7;font-size:var(--fs-small);line-height:1.5;color:var(--ink-2)}
+  .source-state strong{color:var(--ink)}
+  .source-state a{margin-left:8px;color:var(--green-d)}
   .brief-sources{display:flex;align-items:center;gap:5px 14px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--mut)}
   .brief-sources a{color:var(--green-d)}
 
   .news{margin-top:46px;max-width:920px}
   .story-list{border-top:1px solid var(--line);margin-top:12px}
   .brief-story{padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
-  .story-meta{display:flex;align-items:center;gap:5px 11px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
+  .story-meta{display:flex;align-items:center;gap:5px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
   .story-topic{font-weight:650;color:var(--green-d);text-decoration:none}
-  /* The BE column is RESERVED even when a story has no BE yet (it may still be analysing),
-     so thumbnails and text keep one right edge down the whole page instead of jumping 44px. */
-  .story-title-row{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:10px;align-items:start}
-  /* Story thumbnail: the article's own link-preview image — tucked top-right of the story
-     with the headline and summary wrapping beside it (news-list convention), same size on
-     every screen. Clicks through to the source named on the meta line; removed if it fails. */
-  .story-copy{display:flow-root}
+  .story-title-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
+  .story-copy{display:flow-root;min-width:0}
   .story-thumb{float:right;width:132px;height:88px;margin:4px 0 10px 14px;border-radius:4px;overflow:hidden;background:var(--paper-2)}
   .story-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-  @media(max-width:650px){.story-thumb{width:112px;height:74px;margin:3px 0 8px 12px}}
-  .story-copy{min-width:0}
   .story-link{color:var(--ink);text-decoration:none}
   .story-link:hover{color:var(--green-d)}
-  /* All Top-stories headlines are one size — the ranking is expressed by ORDER, not size
-     (Alan 2026-07-17, chose "make them all uniform" when asked directly). */
   .brief-story h3{font-size:clamp(19px,1.55vw,23px);line-height:1.32;letter-spacing:-.008em;font-weight:600;margin:0;max-width:60ch}
   .story-summary{font-size:15.5px;line-height:1.5;color:var(--ink-2);max-width:72ch;margin:7px 0 0}
+  .context-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--green-d);padding:7px 9px;font-family:var(--mono);font-size:10px;font-weight:650;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+  .context-btn:hover,.context-btn[aria-expanded="true"]{border-color:var(--green);background:#f2f8f5}
+  .context-btn .context-icon{font-size:14px;line-height:1;transition:transform .15s ease}
+  .context-btn[aria-expanded="true"] .context-icon{transform:rotate(45deg)}
+  .story-context{margin:13px 0 2px;padding:13px 16px;background:#f8f7f2;border-left:2px solid var(--green);font-size:14px;line-height:1.56;color:var(--ink-2)}
+  .story-context[hidden]{display:none}
+  .story-context p+p,.story-context .coverage{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+  .context-label{font-family:var(--mono);font-size:10px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-right:7px}
+  .coverage-links{display:flex;gap:6px 12px;flex-wrap:wrap;margin-top:5px;font-family:var(--mono);font-size:10px}
+  .coverage-links a{color:var(--green-d)}
 
-  .context{position:relative;z-index:2}
-  .context[open]{z-index:30}
-  .context summary{white-space:nowrap}
-  /* Same BE, same skin: the market popover wears the story panel's dress (panel background,
-     green left rule, same type) so BE reads as ONE feature everywhere — only the floating
-     position and shadow differ, because a stat card has no room for an inline panel. */
-  .context-pop{display:none;position:absolute;right:0;top:42px;width:min(440px,calc(100vw - 48px));padding:13px 16px;background:#f8f7f2;border:1px solid var(--line);border-left:2px solid var(--green);border-radius:6px;box-shadow:0 10px 28px rgba(0,0,0,.09);font-size:14px;line-height:1.56;color:var(--ink-2);font-weight:400;text-align:left;z-index:20}
-  .context-pop p+p{margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
-  .context-pop .context-source{font-family:var(--mono);font-size:10px;color:var(--mut)}
-  .context-pop .ck{font-family:var(--mono);font-size:10px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-right:7px}
-  .context[open] .context-pop{display:block}
-  /* Briefly Explained accordion (Alan 2026-07-17): the BE button stays put; the panel
-     opens full-width below the story and closes on second-click / outside-click / Esc —
-     no chasing a button that moved. Market cards keep the compact .context popover above. */
-  .be-btn[aria-expanded="true"] .be-mark{background:var(--green);border-color:var(--green);color:#fff}
-  .be-panel{margin:13px 0 2px;padding:13px 16px;background:#f8f7f2;border-left:2px solid var(--green);font-size:14px;line-height:1.56;color:var(--ink-2)}
-  .be-panel[hidden]{display:none}
-  .be-panel p+p{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
-  .be-panel .ck{font-family:var(--mono);font-size:10px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-right:7px}
-  /* Background, Drivers and Implications are the contract — always all three. "What's next"
-     is an explicit extra, present only when the article states a real next step (most news
-     does not). The arrow marks it as forward-looking so a story without one reads complete. */
-  .be-panel .be-next .ck::before{content:'\2192\00a0';color:var(--green)}
   .all-news{margin-top:24px;border-bottom:1px solid var(--line)}
   .all-news>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.035em;text-transform:uppercase;cursor:pointer}
   .all-news>summary::-webkit-details-marker{display:none}
@@ -90,24 +78,16 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
 
   .markets,.week,.subscribe-section{margin-top:54px}
   .markets{border-top:2px solid var(--green);padding-top:14px}
-  .market-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:5px;overflow:visible;margin-top:14px}
-  .market-card{position:relative;min-width:0;padding:15px 16px 14px;background:var(--paper)}
-  .market-card+.market-card{border-left:1px solid var(--line)}
+  .market-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+  .market-card{min-width:0;padding:15px 16px 14px;border:1px solid var(--line);border-radius:5px;background:var(--paper)}
   .market-link{display:block;color:inherit;text-decoration:none}
-  .market-name{font-family:var(--mono);font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut);padding-right:94px}
-  .market-value{font-size:clamp(28px,3vw,39px);font-weight:650;line-height:1.04;letter-spacing:-.025em;margin-top:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .market-name{font-family:var(--mono);font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut)}
+  .market-value{font-size:clamp(27px,3vw,38px);font-weight:650;line-height:1.04;letter-spacing:-.025em;margin-top:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
   .market-unit{font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:0;margin-left:3px}
-  .market-move{font-size:13px;line-height:1.35;font-weight:650;margin-top:8px;font-variant-numeric:tabular-nums}
-  .market-move.up{color:var(--green-d)}
-  .market-move.down{color:var(--red)}
-  .market-move.flat{color:var(--ink-2)}
-  .market-compare{font-size:12px;line-height:1.4;color:var(--ink-2);margin-top:3px;min-height:34px}
-  .market-date{font-family:var(--mono);font-size:10px;line-height:1.4;text-transform:uppercase;letter-spacing:.02em;color:var(--mut);margin-top:9px}
-  .market-card>.context{position:absolute;right:13px;top:12px}
-  /* Keep the market popover on-screen: it was clipping off the left edge on the leftmost
-     card (Alan 2026-07-17). Left-half cards open rightward; right-half keep the default (left). */
-  .market-card:nth-child(-n+2) .context-pop{left:0;right:auto}
-  .market-floor .market-compare{min-height:0}
+  .market-compare{font-size:12px;line-height:1.4;color:var(--ink-2);margin-top:8px;min-height:34px}
+  .market-date,.market-source{font-family:var(--mono);font-size:10px;line-height:1.4;color:var(--mut)}
+  .market-date{text-transform:uppercase;letter-spacing:.02em;margin-top:9px}
+  .market-source{margin-top:2px}
 
   .week{border-top:1px solid var(--line);padding-top:14px}
   .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:13px}
@@ -129,29 +109,21 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
 
   @media(max-width:900px){
     .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .market-card:nth-child(3){border-left:0;border-top:1px solid var(--line)}
-    .market-card:nth-child(4){border-top:1px solid var(--line)}
-    .market-card:nth-child(odd) .context-pop{left:0;right:auto}
-    .market-card:nth-child(even) .context-pop{left:auto;right:0}
     .timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
     .timeline-item:nth-child(3){border-left:0;border-top:1px solid var(--line);padding-left:0}
     .timeline-item:nth-child(4){border-top:1px solid var(--line)}
   }
   @media(max-width:650px){
-    .home-head{padding-top:24px}
+    .home-head{padding-top:24px;align-items:flex-start}
     .brief{margin-top:22px}
     .brief-copy{font-size:18px;line-height:1.52}
     .news{margin-top:38px}
     .brief-story{padding:17px 0}
-    .brief-story h3{font-size:20px;line-height:1.32;font-weight:600}
+    .brief-story h3{font-size:20px;line-height:1.32}
     .story-title-row{grid-template-columns:1fr}
-    .story-title-row>.be-btn{justify-self:start}
+    .context-btn{justify-self:start}
+    .story-thumb{width:112px;height:74px;margin:3px 0 8px 12px}
     .market-grid{grid-template-columns:1fr}
-    .market-card+.market-card,.market-card:nth-child(3){border-left:0;border-top:1px solid var(--line)}
-    /* On phones the popover was anchored to the tiny BE box and ran off the right edge.
-       Make it a bottom sheet: fixed, full-width, never clipped, tap it or away to close. */
-    .market-card .context-pop{position:fixed;left:14px;right:14px;bottom:14px;top:auto;width:auto;max-width:none;box-shadow:0 -6px 28px rgba(0,0,0,.16)}
-    .market-value{font-size:32px}
     .market-compare{min-height:0}
     .timeline{grid-template-columns:1fr}
     .timeline-item,.timeline-item+.timeline-item,.timeline-item:nth-child(3),.timeline-item:nth-child(4){padding:14px 0 15px;border-left:0;border-top:1px solid var(--line)}
@@ -159,205 +131,145 @@ ogDescription: "Mexico's major developments, key numbers, and original sources."
   }
 </style>
 
-<div class="home">
+{% macro storyCard(story, isAll=false) %}
+{% set topicHref = story.topicUrl if story.topicUrl else ('/us-mexico.html' if story.topic == 'us-mexico' else '/' + story.topic + '.html') %}
+{% set hasContext = story.bg or story.implications or story.next or story.sourceCount > 1 %}
+{% set contextId = 'story-context-' + story.id %}
+<article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}" data-interests="{{ story.interestTags | join(',') if story.interestTags else '' }}"{% endif %}>
+  <div class="story-meta"><a class="story-topic" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.reportTime %}<span class="js-storytime" data-date="{{ story.reportTime }}" data-label="{{ 'Latest report' if story.sourceCount > 1 else 'Published' }}"></span>{% endif %}{% if story.source %}<span>{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span>{{ story.sourceCount }} reports</span>{% endif %}</div>
+  <div class="story-title-row">
+    <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" loading="lazy" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
+    {% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}"><span>Context</span><span class="context-icon" aria-hidden="true">+</span></button>{% endif %}
+  </div>
+  {% if hasContext %}<div class="story-context" id="{{ contextId }}" hidden>{% if story.bg %}<p><span class="context-label">Background</span>{{ story.bg }}</p>{% endif %}{% if story.implications %}<p><span class="context-label">Why it matters</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="context-label">Watch next</span>{{ story.next }}</p>{% endif %}{% if story.sourceCount > 1 %}<div class="coverage"><span class="context-label">Reporting</span><div class="coverage-links">{% for source in story.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source or 'Source' }} ↗</a>{% endfor %}</div></div>{% endif %}</div>{% endif %}
+</article>
+{% endmacro %}
+
+<div class="home" data-editorial-date="{{ dailyBrief.editorialDate }}">
   <header class="home-head">
-    <div class="home-date" id="today">Mexico this morning</div>
+    <div><h1 class="home-title">Mexico this morning</h1><div class="home-date" id="today">{{ dailyBrief.editorialDate }}</div></div>
     <a class="home-status" id="status" href="/sources.html">Checking the data</a>
   </header>
 
   <section class="brief" aria-labelledby="brief-title">
-    <div class="section-top"><div class="kicker" id="brief-title">The brief</div><div class="asof" id="brief-asof" data-date="{{ dailyBrief.newsThrough }}">Updated {{ dailyBrief.newsThrough }}</div></div>
+    <div class="section-top"><div class="kicker" id="brief-title">What changed</div><div class="asof" id="brief-asof" data-date="{{ dailyBrief.newsThrough }}">Updated {{ dailyBrief.newsThrough }}</div></div>
     <p class="brief-copy">{{ dailyBrief.summaryLead }}</p>
-    {% if dailyBrief.view %}<p class="brief-view"><b>My view:</b> {{ dailyBrief.view }}</p>{% endif %}
+    {% if homeEditorial and homeEditorial.myRead %}<div class="my-read"><p><strong>{{ homeEditorial.myRead.label or 'My read' }}:</strong> {{ homeEditorial.myRead.text }}</p><div class="read-evidence">{% for item in homeEditorial.myRead.numbers %}<a class="read-number" href="{{ item.href }}"><span>{{ item.label }}</span><b>{{ item.display }}{% if item.unit %} {{ item.unit }}{% endif %}</b><span>{{ item.observed }}</span></a>{% endfor %}<a class="read-story" href="{{ homeEditorial.myRead.storyUrl }}" target="_blank" rel="noopener">Related: {{ homeEditorial.myRead.storyLabel }} ↗</a></div></div>{% endif %}
+    {% if homeEditorial and homeEditorial.sourceState %}<div class="source-state"><strong>Sources disagree:</strong> {{ homeEditorial.sourceState.note }}{% for source in homeEditorial.sourceState.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.label }} ↗</a>{% endfor %}</div>{% endif %}
     {% if dailyBrief.briefSources.length %}<div class="brief-sources"><span>Sources:</span>{% for item in dailyBrief.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
   </section>
 
   <section class="news" aria-labelledby="news-title">
-    <div class="section-top"><div><h2 class="section-title" id="news-title">Top stories</h2></div><span class="section-note" id="news-window"></span></div>
-    <div class="be-key"><span class="be-mark" aria-hidden="true">BE</span><span>The context behind the headline.</span></div>
+    <div class="section-top"><div><h2 class="section-title" id="news-title">Worth knowing</h2></div><span class="section-note">Today only</span></div>
     <div class="story-list major-list">
-      {% for story in dailyBrief.stories %}
-      <article class="brief-story">
-        <div class="story-meta"><a class="story-topic" href="{{ story.topicUrl }}">{{ story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
-        <div class="story-title-row">
-          <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" loading="lazy" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-          {% if story.bg and story.drivers and story.implications %}<button class="be-summary be-btn" type="button" aria-expanded="false" aria-label="Context behind the headline" title="The context behind the headline"><span class="be-mark" aria-hidden="true">BE</span></button>{% endif %}
-        </div>
-        {% if story.bg and story.drivers and story.implications %}<div class="be-panel" hidden><p><span class="ck">Background</span>{{ story.bg }}</p><p><span class="ck">Drivers</span>{{ story.drivers }}</p><p><span class="ck">Implications</span>{{ story.implications }}</p>{% if story.next %}<p class="be-next"><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}</div>{% endif %}
-      </article>
-      {% endfor %}
+      {% for story in dailyBrief.stories %}{{ storyCard(story) }}{% else %}<p class="empty">No major stories have cleared the brief yet today.</p>{% endfor %}
     </div>
 
-    <details class="all-news" id="all-news" open>
-      <summary>More headlines</summary>
+    {% if latestStories.length %}<details class="all-news" id="all-news" open>
+      <summary>All headlines</summary>
       <div class="all-news-body">
-        <nav class="filters" aria-label="Filter headlines">
+        <nav class="filters" aria-label="Filter today’s headlines">
           <button class="filter active" type="button" data-topic="all">All</button>
+          <button class="filter" type="button" data-topic="mine">My topics</button>
           <button class="filter" type="button" data-topic="economy">Economy</button>
           <button class="filter" type="button" data-topic="politics">Politics</button>
           <button class="filter" type="button" data-topic="society">Society &amp; security</button>
           <button class="filter" type="button" data-topic="us-mexico">US–Mexico</button>
         </nav>
         <div class="story-list" id="all-news-list">
-          {% for story in latestStories %}{% if not story.inBrief %}
-          <article class="brief-story all-story" data-topic="{{ story.topic }}">
-            <div class="story-meta"><a class="story-topic" href="{{ '/us-mexico.html' if story.topic == 'us-mexico' else '/' + story.topic + '.html' }}">{{ story.topicLabel }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}</div>
-            <div class="story-title-row">
-              <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-              {% if story.bg and story.drivers and story.implications %}<button class="be-summary be-btn" type="button" aria-expanded="false" aria-label="Context behind the headline" title="The context behind the headline"><span class="be-mark" aria-hidden="true">BE</span></button>{% endif %}
-            </div>
-            {% if story.bg and story.drivers and story.implications %}<div class="be-panel" hidden><p><span class="ck">Background</span>{{ story.bg }}</p><p><span class="ck">Drivers</span>{{ story.drivers }}</p><p><span class="ck">Implications</span>{{ story.implications }}</p>{% if story.next %}<p class="be-next"><span class="ck">What's next</span>{{ story.next }}</p>{% endif %}</div>{% endif %}
-          </article>
-          {% endif %}{% endfor %}
+          {% for story in latestStories %}{{ storyCard(story, true) }}{% endfor %}
         </div>
-        <p class="empty" id="news-empty" hidden>No stories in this section yet.</p>
+        <p class="empty" id="news-empty" hidden>No stories in this section yet today.</p>
         <button class="show-more" id="news-more" type="button" hidden>Show more</button>
       </div>
-    </details>
+    </details>{% endif %}
   </section>
 
   <section class="markets" aria-labelledby="markets-title">
-    <div class="section-top"><div><h2 class="section-title" id="markets-title">Markets today</h2></div><a class="text-link" href="/chart.html">All numbers →</a></div>
-    <div class="market-grid market-floor" id="market-grid">
-      {% for item in nowBoard %}<article class="market-card"><a class="market-link" href="{{ item.href }}"><div class="market-name">{{ item.label }}</div><div class="market-value">{{ item.display }}</div><div class="market-date"><span class="js-date" data-date="{{ item.date }}">{{ item.date }}</span></div></a></article>{% endfor %}
+    <div class="section-top"><div><h2 class="section-title" id="markets-title">Latest numbers</h2></div><a class="text-link" href="/chart.html">Compare the numbers →</a></div>
+    <div class="market-grid" id="market-grid">
+      {% for item in nowBoard %}<article class="market-card"><a class="market-link" href="{{ item.href }}"><div class="market-name">{{ item.label }}</div><div class="market-value">{{ item.display }}{% if item.unit %}<span class="market-unit">{{ item.unit }}</span>{% endif %}</div><div class="market-compare">{{ item.compare }}</div><div class="market-date">{{ item.observed }} · {{ item.cadence }}</div><div class="market-source">{{ item.source }}</div></a></article>{% endfor %}
     </div>
   </section>
 
-
   <section class="week" aria-labelledby="week-title">
-    <div class="section-top"><div><h2 class="section-title" id="week-title">The week ahead</h2></div><span class="section-note">Official releases and meetings</span></div>
+    <div class="section-top"><div><h2 class="section-title" id="week-title">Coming up</h2></div><span class="section-note">Known next</span></div>
     <div class="timeline">
       {% for event in calendar %}<article class="timeline-item"><div class="timeline-date">{% if event.approx %}Week of <span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span>{% else %}<span class="js-caldate" data-date="{{ event.date }}">{{ event.date }}</span>{% endif %}</div><div class="timeline-rel js-rel" data-date="{{ event.date }}" data-approx="{{ 'y' if event.approx else '' }}"></div><div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
     </div>
   </section>
 
   <section class="subscribe-section">
-    <div class="sub"><div class="kicker">The email</div><p class="line">Once a week, I send the few things that changed in Mexico that I think are worth knowing. The original sources are there if you want to go deeper. <a href="/weekly.html">See an example →</a></p><form class="subform" method="post" action="/api/subscribe" novalidate><input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required /><label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label><button type="submit">Subscribe</button></form><div class="fine submsg" aria-live="polite">One email a week. Unsubscribe whenever you want.</div></div>
+    <div class="sub"><div class="kicker">Weekly email</div><p class="line">Once a week, I send the few things that changed in Mexico that I think are worth knowing. The original sources are there if you want to go deeper. <a href="/weekly.html">See an example →</a></p><form class="subform" method="post" action="/api/subscribe" novalidate><input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required /><label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label><button type="submit">Subscribe</button></form><div class="fine submsg" aria-live="polite">One email a week. Unsubscribe whenever you want.</div></div>
   </section>
 </div>
 
 <script type="module">
-import { loadSeries, S, relTime } from '/assets/mb.js?v=18';
+import { relTime } from '/assets/mb.js?v=18';
 
-const esc=(value)=>String(value==null?'':value).replace(/[&<>\"]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
-const last=(id)=>S[id]?.data?.at(-1)||null;
-const prior=(id)=>S[id]?.data?.at(-2)||null;
-const nearAgo=(id,days)=>{const rows=S[id]?.data||[];if(!rows.length)return null;const target=Date.parse(rows.at(-1).date)-days*864e5;let best=null,dist=Infinity;for(const row of rows){const d=Math.abs(Date.parse(row.date)-target);if(d<dist){dist=d;best=row;}}return dist<45*864e5?best:null;};
-const num=(value,digits=2)=>Number(value).toLocaleString('en-US',{minimumFractionDigits:digits,maximumFractionDigits:digits});
-const date=(iso,year=false)=>{if(!iso)return'';const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{month:'short',day:'numeric',...(year?{year:'numeric'}:{})});};
+const editorialDate=document.querySelector('.home')?.dataset.editorialDate||'';
+const date=(iso,year=false)=>{if(!iso)return'';const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T12:00:00Z':iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric',...(year?{year:'numeric'}:{})});};
 
-// Briefly Explained (Alan 2026-07-17): story rows use a button+panel accordion — the BE
-// button stays in place, the panel opens full-width below the story, and it closes on a
-// second click, a click anywhere outside, or Esc (no chasing a moved button). Market cards
-// keep their compact <details> popover but gain the same outside-click / Esc dismissal.
-// One open at a time across both.
-function beCloseAll(except){
-  document.querySelectorAll('.be-btn[aria-expanded="true"]').forEach((b)=>{if(b!==except){b.setAttribute('aria-expanded','false');const p=b.closest('.brief-story')?.querySelector(':scope > .be-panel');if(p)p.hidden=true;}});
-  document.querySelectorAll('details.context[open]').forEach((d)=>{if(d!==except)d.open=false;});
+function closeContext(except){
+  document.querySelectorAll('.context-btn[aria-expanded="true"]').forEach((button)=>{
+    if(button===except)return;
+    button.setAttribute('aria-expanded','false');
+    const panel=button.closest('.brief-story')?.querySelector(':scope > .story-context');
+    if(panel)panel.hidden=true;
+  });
 }
-document.querySelectorAll('.be-btn').forEach((btn)=>{
-  const panel=btn.closest('.brief-story')?.querySelector(':scope > .be-panel');
+document.querySelectorAll('.context-btn').forEach((button)=>{
+  const panel=button.closest('.brief-story')?.querySelector(':scope > .story-context');
   if(!panel)return;
-  btn.addEventListener('click',(e)=>{e.stopPropagation();const isOpen=btn.getAttribute('aria-expanded')==='true';beCloseAll(isOpen?null:btn);btn.setAttribute('aria-expanded',String(!isOpen));panel.hidden=isOpen;});
+  button.addEventListener('click',(event)=>{event.stopPropagation();const open=button.getAttribute('aria-expanded')==='true';closeContext(open?null:button);button.setAttribute('aria-expanded',String(!open));panel.hidden=open;});
 });
-// Outside-dismissal is DELEGATED, not bound per element. The market cards render after
-// this script runs (they wait on live data), so binding stopPropagation on their buttons
-// at init silently missed them — the document click handler then closed the popover the
-// native toggle was reopening, and a second click on BE could never close it (Alan
-// 2026-07-20: "no way to click out of it"). One document-level pointerdown now closes
-// every open BE unless the press is on a BE control or inside a story panel; the controls'
-// own click handlers (and the native <details> toggle) keep sole charge of toggling.
-// pointerdown rather than click because iPhone Safari does not reliably fire document
-// clicks for taps on non-interactive elements — the other half of "can't dismiss on my phone".
-document.addEventListener('pointerdown',(e)=>{
-  if(e.target.closest?.('.be-btn, .be-panel, details.context > summary'))return;
-  beCloseAll(null);
-});
-document.addEventListener('keydown',(e)=>{if(e.key==='Escape')beCloseAll(null);});
-// Opening a market-card popover closes any other open BE.
-document.addEventListener('toggle',(event)=>{const d=event.target;if(d.matches?.('details.context')&&d.open)beCloseAll(d);},true);
+document.addEventListener('pointerdown',(event)=>{if(!event.target.closest?.('.context-btn,.story-context'))closeContext(null);});
+document.addEventListener('keydown',(event)=>{if(event.key==='Escape')closeContext(null);});
 
 const newsFilters=[...document.querySelectorAll('.filter')];
 const allStories=[...document.querySelectorAll('.all-story')];
-const allNews=document.getElementById('all-news');
 const newsEmpty=document.getElementById('news-empty');
 const newsMore=document.getElementById('news-more');
-const NEWS_LIMIT=2;   // show 2 headlines per filter, then "Show more" (Alan 2026-07-17)
-let newsTopic='all', newsExpanded=false;
+const NEWS_LIMIT=4;
+const FILTER_KEY='mexico-brief-headline-filter';
+let newsTopic='all',newsExpanded=false;
+function matchesTopic(story){if(newsTopic==='all')return true;if(newsTopic==='mine')return Boolean(story.dataset.interests);return story.dataset.topic===newsTopic;}
 function renderNews(){
-  newsFilters.forEach((b)=>b.classList.toggle('active',b.dataset.topic===newsTopic));
-  let matched=0, shown=0;
-  allStories.forEach((story)=>{
-    const match=newsTopic==='all'||story.dataset.topic===newsTopic;
-    if(!match){story.hidden=true;return;}
-    matched++;
-    const within=newsExpanded||shown<NEWS_LIMIT;
-    story.hidden=!within; if(within)shown++;
-  });
+  newsFilters.forEach((button)=>button.classList.toggle('active',button.dataset.topic===newsTopic));
+  let matched=0,shown=0;
+  allStories.forEach((story)=>{const match=matchesTopic(story);if(!match){story.hidden=true;return;}matched++;const within=newsExpanded||shown<NEWS_LIMIT;story.hidden=!within;if(within)shown++;});
   if(newsEmpty)newsEmpty.hidden=matched>0;
   if(newsMore){const rest=matched-Math.min(matched,NEWS_LIMIT);newsMore.hidden=newsExpanded||rest<=0;newsMore.textContent='Show '+rest+' more';}
 }
 function showNews(topic,push=false){
-  newsTopic=topic; newsExpanded=false; renderNews();
+  newsTopic=topic;newsExpanded=false;renderNews();
+  try{localStorage.setItem(FILTER_KEY,topic);}catch{}
   if(push){const url=new URL(location.href);if(topic==='all')url.searchParams.delete('topic');else url.searchParams.set('topic',topic);url.hash='all-news';history.replaceState({},'',url);}
 }
 newsFilters.forEach((button)=>button.addEventListener('click',()=>showNews(button.dataset.topic,true)));
 if(newsMore)newsMore.addEventListener('click',()=>{newsExpanded=true;renderNews();});
-let initialTopic=new URLSearchParams(location.search).get('topic')||'all';
+let initialTopic=new URLSearchParams(location.search).get('topic');
+if(!initialTopic){try{initialTopic=localStorage.getItem(FILTER_KEY);}catch{}}
 if(!newsFilters.some((button)=>button.dataset.topic===initialTopic))initialTopic='all';
 showNews(initialTopic);
 
-function card({id,name,value,unit='',move='',direction='flat',compare='',stamp,context,source}){
-  return `<article class="market-card"><a class="market-link" href="/chart.html?v=${esc(id)}"><div class="market-name">${esc(name)}</div><div class="market-value">${esc(value)}${unit?`<span class="market-unit">${esc(unit)}</span>`:''}</div><div class="market-move ${esc(direction)}">${esc(move)}</div>${compare?`<div class="market-compare">${esc(compare)}</div>`:'<div class="market-compare"></div>'}<div class="market-date">${esc(stamp)}</div></a><details class="context"><summary class="be-summary" aria-label="Context behind the headline" title="The context behind the headline"><span class="be-mark" aria-hidden="true">BE</span></summary><div class="context-pop"><p><span class="ck">Background</span>${esc(context)}</p><p class="context-source">Source: ${esc(source)}</p></div></details></article>`;
-}
+const headerDay=new Date((editorialDate||new Date().toISOString().slice(0,10))+'T12:00:00Z');
+document.getElementById('today').textContent=headerDay.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',weekday:'long',month:'long',day:'numeric',year:'numeric'});
+document.querySelectorAll('.js-date').forEach((element)=>{element.textContent=date(element.dataset.date);});
+document.querySelectorAll('.js-storydate').forEach((element)=>{element.textContent=element.dataset.date===editorialDate?'Today':date(element.dataset.date,true);});
+document.querySelectorAll('.js-storytime').forEach((element)=>{const d=new Date(element.dataset.date);element.textContent=isNaN(d)?'':`${element.dataset.label||'Published'} ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;});
+const calDate=(iso)=>{const d=new Date(iso+'T12:00:00Z');return isNaN(d)?iso:d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',weekday:'short',month:'short',day:'numeric'});};
+document.querySelectorAll('.js-caldate').forEach((element)=>{element.textContent=calDate(element.dataset.date);});
+const weekStart=(d)=>{const x=new Date(d.getTime());x.setUTCHours(0,0,0,0);x.setUTCDate(x.getUTCDate()-((x.getUTCDay()+6)%7));return x;};
+const relDay=(iso,approx)=>{const d=new Date(iso+'T00:00:00Z'),t=new Date(editorialDate+'T00:00:00Z');if(isNaN(d)||isNaN(t))return'';const n=Math.round((d-t)/864e5);if(n<0)return'';if(approx){const w=Math.round((weekStart(d)-weekStart(t))/(7*864e5));return w<=0?'this week':w===1?'next week':'in '+w+' weeks';}if(n===0)return'today';if(n===1)return'tomorrow';return'in '+n+' days';};
+document.querySelectorAll('.js-rel').forEach((element)=>{element.textContent=relDay(element.dataset.date,element.dataset.approx==='y');});
+const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);asof.textContent=isNaN(d)?'':`Updated ${d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;}
 
-function renderMarkets(){
-  const cards=[];
-  const peso=last('banxico-usdmxn-fix'),pesoP=prior('banxico-usdmxn-fix'),pesoY=nearAgo('banxico-usdmxn-fix',365);
-  if(peso){const change=pesoP?(peso.value/pesoP.value-1)*100:0;const stronger=change<0;const year=pesoY?(peso.value/pesoY.value-1)*100:null;cards.push(card({id:'banxico-usdmxn-fix',name:'Peso · per US dollar',value:num(peso.value),move:pesoP?`${change<0?'↓':'↑'} ${num(Math.abs(change),2)}% today · ${stronger?'stronger':'weaker'}`:'Latest reading',direction:stronger?'up':'down',compare:year==null?'':`${num(Math.abs(year),1)}% ${year<0?'stronger':'weaker'} than a year ago`,stamp:`${date(peso.date,true)} · daily`,context:'A lower number means a stronger peso. Imports become cheaper, while each dollar earned by exporters or sent home as a remittance converts into fewer pesos.',source:'Banco de México (FIX)'}));}
-  const ipc=last('banxico-bmv-ipc'),ipcP=prior('banxico-bmv-ipc'),ipcY=nearAgo('banxico-bmv-ipc',365);
-  if(ipc){const change=ipcP?(ipc.value/ipcP.value-1)*100:0;const year=ipcY?(ipc.value/ipcY.value-1)*100:null;cards.push(card({id:'banxico-bmv-ipc',name:'S&P/BMV IPC',value:num(ipc.value,0),move:ipcP?`${change>=0?'↑':'↓'} ${num(Math.abs(change),2)}% today`:'Latest close',direction:change>0?'up':change<0?'down':'flat',compare:year==null?'':`${num(Math.abs(year),1)}% ${year>=0?'higher':'lower'} than a year ago`,stamp:`${date(ipc.date,true)} · close`,context:'Mexico’s main stock index. It tracks large listed companies, so it is useful for market sentiment but should not be read as the whole economy.',source:'Banco de México / BMV'}));}
-  const cetes=last('banxico-cetes-28d'),cetesP=prior('banxico-cetes-28d');
-  if(cetes){const change=cetesP?cetes.value-cetesP.value:0;cards.push(card({id:'banxico-cetes-28d',name:'Cetes · 28 days',value:`${num(cetes.value)}%`,move:cetesP?`${change>=0?'↑':'↓'} ${num(Math.abs(change),2)} points today`:'Latest yield',direction:change>0?'up':change<0?'down':'flat',compare:'Short-term Mexican government debt',stamp:`${date(cetes.date,true)} · daily`,context:'The market yield on very short-term Mexican government debt. It can move between Banxico meetings and is a useful check on near-term rate expectations.',source:'Banco de México'}));}
-  const ust=last('fred-ust10'),ustP=prior('fred-ust10');
-  if(ust){const change=ustP?ust.value-ustP.value:0;cards.push(card({id:'fred-ust10',name:'U.S. 10-year',value:`${num(ust.value)}%`,move:ustP?`${change>=0?'↑':'↓'} ${num(Math.abs(change),2)} points today`:'Latest yield',direction:change>0?'up':change<0?'down':'flat',compare:'Benchmark for dollar borrowing costs',stamp:`${date(ust.date,true)} · daily`,context:'Higher U.S. yields can make peso assets relatively less attractive and raise dollar borrowing costs for Mexican companies. They are one input, not a complete explanation for the peso.',source:'Federal Reserve (FRED)'}));}
-  const grid=document.getElementById('market-grid');if(grid&&cards.length){grid.classList.remove('market-floor');grid.innerHTML=cards.join('');}
-}
-
-document.getElementById('today').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-document.querySelectorAll('.js-date').forEach((el)=>{el.textContent=date(el.dataset.date);});
-// Story dates read as WHEN, plainly (Alan 2026-07-17: "make the date more clear"): Today /
-// Yesterday for the fresh ones, weekday + date for the rest — so it's obvious a top story
-// dated yesterday is yesterday's, not today's.
-const storyDate=(iso)=>{const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);if(isNaN(d))return iso;const t=new Date();t.setHours(0,0,0,0);const n=Math.round((t-d)/864e5);if(n<=0)return'Today';if(n===1)return'Yesterday';if(n<=6)return d.toLocaleDateString('en-US',{weekday:'short'})+', '+d.toLocaleDateString('en-US',{month:'short',day:'numeric'});return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});};
-document.querySelectorAll('.js-storydate').forEach((el)=>{el.textContent=storyDate(el.dataset.date);});
-// The "Top stories" window — answers "these are from when?" (they're ranked by importance,
-// so the newest isn't always first). Derived from the oldest story shown.
-const newsWin=document.getElementById('news-window');const topDates=document.querySelectorAll('.major-list .js-storydate');
-if(newsWin&&topDates.length){const times=[...topDates].map((el)=>Date.parse(el.dataset.date+'T00:00:00')).filter((x)=>!isNaN(x));if(times.length){const t=new Date();t.setHours(0,0,0,0);const days=Math.max(1,Math.round((t-Math.min(...times))/864e5)+1);newsWin.textContent=days<=1?'Today':`Past ${days} days`;}}
-// Calendar dates carry the WEEKDAY (so "Jul 23" isn't a floating number) plus a relative
-// "how far from now" line — the anchor that answers "what week is this" (Alan 2026-07-17).
-const calDate=(iso)=>{if(!iso)return'';const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T00:00:00':iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});};
-document.querySelectorAll('.js-caldate').forEach((el)=>{el.textContent=calDate(el.dataset.date);});
-const weekStart=(d)=>{const x=new Date(d.getTime());x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x;};
-const relDay=(iso,approx)=>{const d=new Date(iso+'T00:00:00');if(isNaN(d))return'';const t=new Date();t.setHours(0,0,0,0);const n=Math.round((d-t)/864e5);if(n<0)return'';if(approx){const w=Math.round((weekStart(d)-weekStart(t))/(7*864e5));return w<=0?'this week':w===1?'next week':'in '+w+' weeks';}if(n===0)return'today';if(n===1)return'tomorrow';return 'in '+n+' days';};
-document.querySelectorAll('.js-rel').forEach((el)=>{el.textContent=relDay(el.dataset.date,el.dataset.approx==='y');});
-const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);asof.textContent=isNaN(d)?'':`Updated ${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}`;}
-
-Promise.all([
-  loadSeries(['banxico-usdmxn-fix','banxico-bmv-ipc','banxico-cetes-28d','fred-ust10']),
-  fetch('/data/health.json').then((r)=>r.ok?r.json():null).catch(()=>null)
-]).then(([,health])=>{
-  renderMarkets();
+fetch('/data/health.json').then((response)=>response.ok?response.json():null).then((health)=>{
   const status=document.getElementById('status');
-  if(status&&health?.generatedAt){const checked=Date.parse(health.generatedAt);const failed=(health.sources||[]).filter((s)=>s.status==='failed').length;status.textContent=`Data checked ${relTime(checked)}${failed?` · ${failed} feed ${failed===1?'issue':'issues'}`:''}`;}
+  if(status&&health?.generatedAt){const checked=Date.parse(health.generatedAt);const failed=(health.sources||[]).filter((source)=>source.status==='failed').length;status.textContent=`Data checked ${relTime(checked)}${failed?` · ${failed} feed ${failed===1?'issue':'issues'}`:''}`;}
   else if(status)status.textContent='Open data sources';
 }).catch(()=>{const status=document.getElementById('status');if(status)status.textContent='Open data sources';});
 
-// Story thumbnails fail soft: a blocked or rotten image removes itself and the card
-// reverts to text. The image is an enhancement, never a dependency.
-document.querySelectorAll('.story-thumb img').forEach((img)=>{
-  const kill=()=>{const t=img.closest('.story-thumb');if(t)t.remove();};
-  if(img.complete&&img.naturalWidth===0)kill();else img.addEventListener('error',kill,{once:true});
-});
+document.querySelectorAll('.story-thumb img').forEach((image)=>{const remove=()=>image.closest('.story-thumb')?.remove();if(image.complete&&image.naturalWidth===0)remove();else image.addEventListener('error',remove,{once:true});});
 </script>

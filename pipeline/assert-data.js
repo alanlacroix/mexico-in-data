@@ -3,6 +3,7 @@
 // valid last-good data warn; the page must date it, not silently replace it.
 
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -13,6 +14,9 @@ import {
 } from './lib/publication-contract.js';
 import { freshnessStatus } from './lib/freshness.js';
 import { lintReportText } from './lib/lint.js';
+import newsDay from './lib/news-day.cjs';
+
+const { editorialDay } = newsDay;
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
@@ -124,6 +128,7 @@ try {
     ids.add(event.id);
     for (const key of ['date', 'section', 'title', 'source', 'url']) if (!event[key]) fails.push(`happening: ${event.id || index} missing ${key}`);
     if (!validPeriod(event.date)) fails.push(`happening: ${event.id || index} has invalid date ${event.date}`);
+    if (event.publishedAt && editorialDay(event.publishedAt) !== event.date) fails.push(`happening: ${event.id || index} date does not match its Mexico City publication day`);
     for (const key of ['title', 'source', 'why']) checkText(`happening: ${event.id || index}.${key}`, event[key]);
     if (!isSafeHttpUrl(event.url)) fails.push(`happening: ${event.id || index} has invalid source URL`);
   }
@@ -132,17 +137,61 @@ try {
 
   const brief = read('data/brief.json');
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
-  if (!brief.lead || !brief.items?.length) fails.push('brief: needs a lead and at least one item');
+  const expectedContentSig = createHash('sha256').update(JSON.stringify(claims.map((claim) => [
+    claim.href, claim.date, claim.h1 || claim.headline, claim.context, claim.source,
+    claim.background, claim.implications, claim.next,
+  ]))).digest('hex');
+  if (!validPeriod(brief.meta?.editorialDate || '')) fails.push('brief: meta.editorialDate is missing or invalid');
+  if (!claims.length && (!brief.meta?.quiet || !String(brief.summary || '').trim())) {
+    fails.push('brief: an empty day must be marked quiet and include an honest empty-state summary');
+  }
+  if (claims.length && !brief.lead) fails.push('brief: a non-empty day needs a lead');
   if (brief.meta?.count !== claims.length) fails.push(`brief: meta.count ${brief.meta?.count} does not match ${claims.length} total claims`);
+  if (brief.meta?.contentSig !== expectedContentSig) fails.push('brief: content signature does not match the visible story set');
   for (const [index, claim] of claims.entries()) {
     for (const key of [index ? 'headline' : 'h1', 'context', 'href', 'source']) if (!claim[key]) fails.push(`brief: claim ${index + 1} missing ${key}`);
     for (const key of [index ? 'headline' : 'h1', 'context', 'source']) checkText(`brief: claim ${index + 1}.${key}`, claim[key]);
     if (!isSafeHttpUrl(claim.href)) fails.push(`brief: claim ${index + 1} has invalid source URL`);
     if (!Array.isArray(claim.refs) || !claim.refs.length) fails.push(`brief: claim ${index + 1} has no evidence ref`);
     for (const ref of claim.refs || []) if (!ids.has(ref)) fails.push(`brief: evidence ref ${ref} is absent from happening.json`);
+    if (claim.date !== brief.meta?.editorialDate) fails.push(`brief: claim ${index + 1} is dated ${claim.date}, not editorial day ${brief.meta?.editorialDate}`);
   }
   for (const live of brief.standing?.live || []) if (!servedById.has(live.series)) fails.push(`brief: standing line needs missing series ${live.series}`);
   if (dayAge(brief.meta?.generatedAt) > 4) warns.push(`brief: generated ${Math.floor(dayAge(brief.meta.generatedAt))} days ago`);
+
+  if (exists('data/home-editorial.json')) {
+    const editorial = read('data/home-editorial.json');
+    if (!validPeriod(editorial.forDate || '')) fails.push('home editorial: forDate is missing or invalid');
+    if (editorial.myRead) {
+      checkText('home editorial: myRead.text', editorial.myRead.text);
+      if (!editorial.myRead.text) fails.push('home editorial: myRead.text is required');
+      if (!String(editorial.myRead.storyLabel || '').trim()) fails.push('home editorial: myRead.storyLabel is required');
+      if (!isSafeHttpUrl(editorial.myRead.storyUrl)) fails.push('home editorial: myRead.storyUrl must be a source URL');
+      if (!events.some((event) => event.date === editorial.forDate && event.url === editorial.myRead.storyUrl)) fails.push('home editorial: myRead.storyUrl must point to a story from that editorial day');
+      if (!Array.isArray(editorial.myRead.seriesIds) || !editorial.myRead.seriesIds.length) fails.push('home editorial: myRead needs at least one related series');
+      for (const id of editorial.myRead.seriesIds || []) if (!servedById.has(id)) fails.push(`home editorial: related series ${id} is missing`);
+    }
+    if (editorial.sourceState) {
+      checkText('home editorial: sourceState.note', editorial.sourceState.note);
+      if (!editorial.sourceState.note) fails.push('home editorial: sourceState.note is required');
+      if (!Array.isArray(editorial.sourceState.sources) || editorial.sourceState.sources.length < 2) fails.push('home editorial: a disagreement needs at least two sources');
+      for (const source of editorial.sourceState.sources || []) if (!isSafeHttpUrl(source.url)) fails.push('home editorial: disagreement source URL is invalid');
+    }
+  }
+
+  if (exists('data/connection-rules.json')) {
+    const connections = read('data/connection-rules.json');
+    const ruleIds = new Set();
+    for (const rule of connections.rules || []) {
+      if (!rule.id || ruleIds.has(rule.id)) fails.push('connection rules: every rule needs a unique id');
+      ruleIds.add(rule.id);
+      try { new RegExp(rule.pattern, 'i'); } catch { fails.push(`connection rules: ${rule.id || 'unknown'} has an invalid pattern`); }
+      checkText(`connection rules: ${rule.id || 'unknown'}.text`, rule.text);
+      if (!String(rule.text || '').trim()) fails.push(`connection rules: ${rule.id || 'unknown'} needs text`);
+      if (!Array.isArray(rule.seriesIds) || !rule.seriesIds.length) fails.push(`connection rules: ${rule.id || 'unknown'} needs related series`);
+      for (const id of rule.seriesIds || []) if (!servedById.has(id)) fails.push(`connection rules: related series ${id} is missing`);
+    }
+  }
 
   const areas = read('data/areas.json');
   addErrors('areas taxonomy', validateTopicAreasDocument(areas));

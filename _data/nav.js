@@ -5,7 +5,7 @@
 // 2026-07-20 (Alan: "any better way to access these pages"): the six topic story pages come out from
 // behind Explore and live in a Topics dropdown — one click from anywhere. `match` lights it as active.
 module.exports = [
-  { label: 'Brief', href: '/' },
+  { label: 'Today', href: '/' },
   { label: 'Numbers', href: '/chart.html' },
   { label: 'Atlas', href: '/atlas.html' },
   { label: 'Topics',

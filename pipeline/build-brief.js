@@ -1,30 +1,19 @@
-// build-brief.js — the homepage brief generator. Writes the two-paragraph synthesis that
-// opens the site: paragraph 1 = "what's moving" (this week's developments), paragraph 2 =
-// "where things stand" (standing conditions + live numbers). Per Fable's ruling, the model
-// only ARRANGES facts we already own; it is never the source of truth.
-//
-// THE LAW — enforced by this build, not by the prompt:
-//   • Closed world. The only inputs are three files: happening.json (events), the board
-//     numbers, and standing.json (structural facts). Nothing else.
-//   • No sentence without a link. Every output sentence carries the item id(s) it draws
-//     from; a sentence with no ref, or a ref to an id that isn't in the pool, is rejected.
-//     This bans forecasts, outside facts, and vibes — they'd have nothing to link to.
-//   • The model never does math. Any number in the prose must appear verbatim in an input.
-//   • 120 words, hard cap. The anti-wall-of-text guarantee.
-//   • Fail-soft is a feature. No key, refusal, lint fail, or an unlinked sentence → a
-//     deterministic stitch (top events + a standing line), which Fable judged 90% of the
-//     value at zero model risk. The page never blocks on the model, never ships unlinked prose.
-//
-//   node build-brief.js            # write data/brief.json
-//
-// Output: data/brief.json — { meta, mode, paragraphs:[[{text, refs:[id]}]] }. The homepage
-// renders each sentence as a subtle link to the item it cites.
+// Build the homepage brief from reviewed events dated today in Mexico City.
+// The optional model may only synthesize the selected titles and context. Every card keeps
+// its source link and event ref; a failed synthesis gets a plain headline fallback. A day
+// with no qualifying events is written as an explicit quiet day, never filled with old news.
 
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
+import { askJSON, hasLLM } from './lib/anthropic.js';
 import { lintReportText } from './lib/lint.js';
+import newsDay from './lib/news-day.cjs';
+import newsThreads from './lib/news-threads.cjs';
+
+const { editorialDay } = newsDay;
+const { groupEvents } = newsThreads;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -32,10 +21,9 @@ const D = (...p) => path.join(ROOT, 'data', ...p);
 const OUT = process.env.BRIEF_OUT || D('brief.json');
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
 const arr = (v) => (Array.isArray(v) ? v : []);
-const WORD_CAP = 120;
+const fingerprint = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
 // ---- the board (a few live numbers, each a referenceable item) ----
-const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function series(id) {
   const j = readJson(D('series', id + '.json'), null);
   return (j?.data || []).filter((x) => x && x.value != null)
@@ -55,75 +43,20 @@ function board() {
 }
 
 // ---- the referenceable pool: events + standing facts + board numbers ----
-function pool() {
+function pool(now = new Date()) {
+  const forDate = editorialDay(now);
   const events = arr(readJson(D('happening.json'), { events: [] }).events)
-    .map((e) => ({ ...e, _t: Date.parse(e.date) || 0 }))
+    .map((e) => ({ ...e, _t: Date.parse(e.publishedAt || e.date) || 0 }))
+    .filter((e) => e.date === forDate)
     .sort((a, b) => (b.importance - a.importance) || (b._t - a._t));
-  const standing = arr(readJson(D('standing.json'), { facts: [] }).facts);
-  const nums = board();
-  const byId = new Map();
-  [...events.map((e) => ({ id: e.id, url: e.url, source: e.source })),
-   ...standing.map((s) => ({ id: s.id, url: s.url, source: s.source })),
-   ...nums.map((n) => ({ id: n.id, url: n.url, source: n.source }))].forEach((x) => byId.set(x.id, x));
-  return { events, standing, nums, byId };
+  return { events, nums: board() };
 }
 
-const wordCount = (paras) => paras.flat().reduce((n, s) => n + (s.text.trim().split(/\s+/).filter(Boolean).length), 0);
-
-// ---- deterministic stitch (the always-valid fallback; ships when the model can't) ----
 const endPunct = (t) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t && !/[.!?]$/.test(t) ? t + '.' : t; };
-function stitch({ events, standing, nums }) {
-  const p1 = [];
-  for (const e of events.slice(0, 3)) if (e.title) p1.push({ text: endPunct(e.title), refs: [e.id] });
-  const p2 = [];
-  // one structural anchor + the standing swing factor
-  const usmca = standing.find((s) => s.id === 'std-usmca-review'), dep = standing.find((s) => s.id === 'std-us-dependence'), growth = standing.find((s) => s.id === 'std-weak-growth');
-  if (dep) p2.push({ text: dep.fact, refs: [dep.id] });
-  if (growth) p2.push({ text: growth.fact, refs: [growth.id] });
-  // the live numbers, in one verbatim sentence
-  if (nums.length) {
-    const pick = nums.filter((n) => ['board-inflation', 'board-rate', 'board-peso'].includes(n.id));
-    if (pick.length) p2.push({ text: capitalize(pick.map((n) => n.text).join('; ')) + '.', refs: pick.map((n) => n.id), live: pick.map((n) => ({ series: n.series, tmpl: n.tmpl })) });
-  }
-  if (usmca) p2.push({ text: usmca.fact, refs: [usmca.id] });
-  return [p1.length ? p1 : (p2.splice(0, 1)), p2].filter((p) => p.length);
-}
 const capitalize = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
-
-// ---- validation: every sentence must carry a ref, and every ref must exist ----
-function valid(paras, byId) {
-  if (!paras.length || !paras.flat().length) return false;
-  for (const s of paras.flat()) {
-    if (!s || !s.text || !Array.isArray(s.refs) || !s.refs.length) return false;
-    if (!s.refs.every((id) => byId.has(id))) return false;
-  }
-  if (wordCount(paras) > WORD_CAP) return false;
-  return true;
-}
-
-// ---- model path: arrange the owned facts into two paragraphs, each sentence linked ----
-async function modelBrief(P) {
-  const { events, standing, nums, byId } = P;
-  const items = [
-    ...events.slice(0, 8).map((e) => ({ id: e.id, kind: 'event', date: e.date, section: e.section, text: `${e.title}${e.why ? ' — ' + e.why : ''}` })),
-    ...standing.map((s) => ({ id: s.id, kind: 'standing', text: s.fact })),
-    ...nums.map((n) => ({ id: n.id, kind: 'number', text: n.text })),
-  ];
-  const schema = { type: 'object', additionalProperties: false, required: ['paragraphs'], properties: { paragraphs: { type: 'array', items: {
-    type: 'array', items: { type: 'object', additionalProperties: false, required: ['text', 'refs'], properties: {
-      text: { type: 'string' }, refs: { type: 'array', items: { type: 'string' } } } } } } } };
-  const system = `You write the two-paragraph brief that opens The Mexico Brief — a personal daily read for someone who wants to understand Mexico. You do NOT report; you ARRANGE the facts already gathered below into a tight synthesis.
-IRON RULES:
-- Use ONLY the items provided. Every sentence must set "refs" to the id(s) of the item(s) it is built from. Never state anything you cannot attribute to a provided item's id.
-- No forecasts, no outside facts, no opinion, no adjectives standing in for an argument. Any number must appear verbatim in an item you cite.
-- Paragraph 1 = "what's moving": synthesize the 3-4 most important recent EVENTS into flowing prose, date-anchored ("This week…"), not a list.
-- Paragraph 2 = "where things stand": the standing conditions and live numbers — the structural state and the swing factor.
-- Hard limit: 120 words across both paragraphs. Plain, calm, concrete. Return JSON: paragraphs = array of paragraphs; each paragraph = array of {text, refs}.`;
-  const out = await askJSON({ system, user: JSON.stringify(items), schema, maxTokens: 900 });
-  if (!out || !Array.isArray(out.paragraphs)) return null;
-  const paras = out.paragraphs.map((p) => arr(p).map((s) => ({ text: String(s.text || '').trim(), refs: arr(s.refs).filter((id) => byId.has(id)) })));
-  return valid(paras, byId) ? paras : null;
-}
+const fallbackSummary = (picked) => picked.slice(0, 3)
+  .map((event) => endPunct(stripDash(event.title)))
+  .join(' ');
 
 // ---- the new Brief (Fable 2026-07-12): 3-5 rubric-ranked items, each headline + explained context ----
 const stripDash = (t) => String(t || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();  // voice law: no em-dash
@@ -143,80 +76,15 @@ const contextGate = (e) => lintReportText({
 });
 const ctxOf = (e) => stripDash(contextGate(e).ok ? shippedContext(e) : '');
 
-// Recency decay (Fable QA 2026-07-16, the daily-habit fix). Importance alone optimizes
-// for a MONTHLY visitor: a defining July-1 story holds the lede for weeks. For a page
-// someone opens every morning, the headline must be what's NEW. A story stays on the
-// page on importance, but its LEDE eligibility decays after a couple of days. An old,
-// important story becomes context below the fold; it cannot stay the headline.
-const DAY = 864e5;
-function recencyWeight(ageDays) {
-  if (ageDays <= 2) return 1;      // today / yesterday: full weight
-  if (ageDays <= 4) return 0.6;
-  if (ageDays <= 8) return 0.3;
-  if (ageDays <= 16) return 0.15;
-  return 0.08;                     // still on the page if important, never the headline
-}
-// Priority signal (Alan, 2026-07-16): a major foreign investment or capital commitment to
-// Mexico — a multi-billion fund target, a large private-credit / nearshoring commitment, a
-// big acquisition or stake — is a top-of-page story (national consequence + US-Mexico stakes).
-// Floor its EFFECTIVE importance so it leads even when the curator scored it conservatively
-// (the Apollo $20bn miss). Requires both a large-money signal AND an investment term, so a
-// political "20 billion pesos" subsidy story is not swept in. Config as taste, applied
-// deterministically at ranking time (re-ranks stored events too, not just future ones).
+// Major investment commitments get a deterministic floor so an unusually large deal is not
+// buried by a conservative source score. Both a money signal and an investment term must match.
 const BIG_MONEY = /\$?\s?\d{1,4}\s?(?:billion|bn)\b|\d{1,4}\s?mil\s?millones\s?de\s?d[oó]lares/i;
 const INVEST_TERM = /\b(invest|inversi[oó]n|private credit|cr[eé]dito privado|nearshoring|fund|fondo|acquisi|adquisici|stake|\bIPO\b)\b/i;
 const bigCapital = (e) => { const t = `${e.title || ''} ${e.why || ''} ${e.context || ''}`; return BIG_MONEY.test(t) && INVEST_TERM.test(t); };
 const effImp = (e) => (bigCapital(e) ? Math.max(e.importance || 0, 8) : (e.importance || 0));
-const ledeScore = (e, nowMs) => effImp(e) * recencyWeight(Math.max(0, (nowMs - (e._t || 0)) / DAY));
 
-// Select the story set by the rubric (effective importance >= 5 = the selectivity, cap 8,
-// soft floor 3), then ORDER by importance x recency so the freshest consequential story leads.
-// Collapse cross-source duplicates of the SAME story before ranking (Alan 2026-07-17: the
-// same BlackRock news ran from two sources — one with an og:image, one without — and BOTH
-// entered the brief keyed by their differing URLs, so the imageless card showed). Two events
-// are the same story when their titles overlap heavily, or (same company, within 3 days) with
-// some overlap. The surviving representative prefers a version WITH an image, then importance,
-// then recency — so a duplicate never costs a story its picture.
-const titleWords = (t) => new Set(String(t || '').toLowerCase().replace(/[^a-z0-9áéíóúñü ]/g, ' ').split(/\s+/).filter((w) => w.length > 3));
-const jaccard = (a, b) => { if (!a.size || !b.size) return 0; let i = 0; for (const w of a) if (b.has(w)) i++; return i / (a.size + b.size - i); };
-const hasImg = (e) => /^https:\/\//i.test(String((e && e.image) || ''));
-const fullWords = (e) => titleWords([e.title, e.context, e.why, e.background, e.drivers, e.implications, e.next].filter(Boolean).join(' '));
-function sameStory(a, b) {
-  const jt = jaccard(titleWords(a.title), titleWords(b.title));
-  const sameCo = a.company && b.company && String(a.company).toLowerCase() === String(b.company).toLowerCase();
-  const days = Math.abs((a._t || 0) - (b._t || 0)) / DAY;
-  if (jt >= 0.5) return true;                                    // near-identical headlines
-  if (sameCo && days <= 3 && jt >= 0.25) return true;            // same company, similar headlines
-  // Same company, same day, one event framed two ways with little headline overlap — the
-  // fuller text still gives it away (Audit 2026-07-17: Honda "end production in Coahuila"
-  // vs "halt US sales" were the same story at titleJ 0.22 but full-text 0.29).
-  if (sameCo && days <= 1 && jaccard(fullWords(a), fullWords(b)) >= 0.2) return true;
-  return false;
-}
-function betterRep(a, b) {
-  if (hasImg(a) !== hasImg(b)) return hasImg(a) ? a : b;                                    // a version WITH an image wins the slot
-  if ((a.importance || 0) !== (b.importance || 0)) return (a.importance || 0) > (b.importance || 0) ? a : b;
-  return (a._t || 0) >= (b._t || 0) ? a : b;
-}
-function dedupeStories(events) {
-  const kept = [];
-  for (const e of events) {
-    const at = kept.findIndex((k) => sameStory(k, e));
-    if (at < 0) { kept.push(e); continue; }
-    const win = betterRep(kept[at], e);
-    if (win !== kept[at]) { console.log(`  dedup: "${e.title.slice(0, 40)}" — kept the version ${hasImg(win) ? 'with' : 'without'} an image`); kept[at] = win; }
-  }
-  return kept;
-}
-// ---- interest weighting (Fable ruling 2026-07-20) ----
-// Alan's declared interests REORDER the news; they never define what counts as news.
-// data/interests.json holds tag+regex pairs. A tagged story earns +2 effective importance
-// in the SECOND fill pass only. Pass 1 seats every 8+ story first, tags irrelevant, so a
-// security crisis or peso shock leads even though "security" is not on the interest list.
-// Anti-bubble wildcard: at most CAP-1 slots may be boosted; if the fill would be all
-// interest stories, the best untagged qualifying story takes the last slot. Every published
-// story records base importance, tags, boost and final rank, so "why is this #2" always
-// has a mechanical answer.
+// Declared interests reorder qualifying news; they never decide what counts as news. Stories
+// at importance 8+ take their slots first, and one untagged wildcard prevents a closed bubble.
 const INTERESTS = (() => {
   try {
     return JSON.parse(fs.readFileSync(new URL('../data/interests.json', import.meta.url), 'utf8'))
@@ -227,27 +95,27 @@ const interestTags = (e) => {
   const hay = `${e.title || ''} ${e.why || ''} ${e.section || ''}`;
   return INTERESTS.filter((x) => x.rx.test(hay)).map((x) => x.tag);
 };
-function select(events, nowMs) {
-  const THRESH = 5, CAP = 5, FLOOR = 3, NEVER_OUTRANKED = 8, BOOST = 2, MAX_BOOSTED = CAP - 1;
+function select(events) {
+  const THRESH = 5, CAP = 5, NEVER_OUTRANKED = 8, BOOST = 2;
   const eligible = events.filter((e) => {
     const gate = contextGate(e);
     if (!gate.ok && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: ${gate.flags.join('; ')}`);
     return gate.ok && e.url && e.source;
   });
-  const ranked = dedupeStories(eligible.slice().sort((a, b) => (ledeScore(b, nowMs) - ledeScore(a, nowMs)) || (b._t - a._t)))
-    .filter((e) => effImp(e) >= THRESH);
+  const ranked = groupEvents(eligible).map((group) => ({
+    ...group.event,
+    importance: group.importance,
+    coverage: group.coverage,
+  })).filter((e) => effImp(e) >= THRESH)
+    .sort((a, b) => (effImp(b) - effImp(a)) || (b._t - a._t));
   for (const e of ranked) { e._tags = interestTags(e); e._boosted = false; }
 
-  // Pass 1: crisis-grade stories take slots first, in importance x recency order, tags irrelevant.
+  // Pass 1: defining stories take slots first, regardless of the interest list.
   const picked = ranked.filter((e) => effImp(e) >= NEVER_OUTRANKED).slice(0, CAP);
 
-  // Pass 2: remaining slots by boosted score (+2 if interest-tagged), same order otherwise.
+  // Pass 2: remaining slots by importance plus the explicit interest boost.
   const rest = ranked.filter((e) => !picked.includes(e))
-    .sort((a, b) => {
-      const sa = (effImp(a) + (a._tags.length ? BOOST : 0)) * recencyWeight(Math.max(0, (nowMs - (a._t || 0)) / DAY));
-      const sb = (effImp(b) + (b._tags.length ? BOOST : 0)) * recencyWeight(Math.max(0, (nowMs - (b._t || 0)) / DAY));
-      return (sb - sa) || (b._t - a._t);
-    });
+    .sort((a, b) => (effImp(b) + (b._tags.length ? BOOST : 0)) - (effImp(a) + (a._tags.length ? BOOST : 0)) || (b._t - a._t));
   for (const e of rest) {
     if (picked.length >= CAP) break;
     e._boosted = e._tags.length > 0;
@@ -264,7 +132,6 @@ function select(events, nowMs) {
       console.log(`  wildcard: "${wildcard.title.slice(0, 50)}" replaces "${dropped.title.slice(0, 50)}" (anti-bubble slot)`);
     }
   }
-  if (picked.length < FLOOR) for (const e of ranked) { if (picked.length >= FLOOR) break; if (!picked.includes(e)) picked.push(e); }
   return picked;
 }
 function buildStanding(nums) {
@@ -297,23 +164,38 @@ async function writeSummary(picked) {
 
 async function main() {
   const now = new Date();
+  const editorialDate = editorialDay(now);
   console.log(`\nbuild-brief · ${hasLLM() ? 'llm available (drafts only, gated)' : 'no llm — human context'}`);
-  const P = pool();
-  if (!P.events.length) { console.warn('  no events — nothing to write'); return; }
+  const P = pool(now);
 
   // The prior brief (the last content-changed version): powers the "new since your last
   // visit" delta and the change-gated clock below.
   const prev = readJson(OUT, null);
   const prevHrefs = new Set([prev && prev.lead && prev.lead.href, ...arr(prev && prev.items).map((i) => i.href)].filter(Boolean));
 
-  const nowMs = now.getTime();
-  const picked = select(P.events, nowMs);
-  if (!picked.length) throw new Error('no reviewed event context is ready for the Brief; keeping the last-good brief');
-  // A story is NEW when it entered the brief since the last update AND is genuinely recent
-  // (not an old-dated item that only just cleared the bar). This is the daily-delta signal.
-  const isNew = (e) => !prevHrefs.has(e.url || '') && ((nowMs - (e._t || 0)) / DAY) <= 4;
+  const picked = select(P.events);
+  if (!picked.length) {
+    const contentSig = fingerprint([]);
+    const unchanged = prev?.meta?.contentSig === contentSig && prev?.meta?.editorialDate === editorialDate;
+    const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
+    const out = {
+      meta: {
+        title: 'What changed', editorialDate, updated: editorialDate, asOf: editorialDate,
+        reviewedAt, latestItemDate: '', quiet: true, newCount: 0,
+        generatedAt: now.toISOString(), mode: 'curated', count: 0, words: 9, contentSig,
+      },
+      summary: 'No major developments have cleared the brief yet today.',
+      lead: null,
+      items: [],
+      standing: buildStanding(P.nums),
+    };
+    fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
+    console.log(`  wrote ${path.relative(ROOT, OUT)} · quiet day · 0 items`);
+    return;
+  }
+  const isNew = (e) => !prevHrefs.has(e.url || '');
   const lead0 = picked[0];
-  const pass4 = (e) => ({ background: String(e.background || '').trim(), drivers: String(e.drivers || '').trim(), implications: String(e.implications || '').trim(), next: String(e.next || '').trim(), image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '' });
+  const pass4 = (e) => ({ background: String(e.background || '').trim(), drivers: String(e.drivers || '').trim(), implications: String(e.implications || '').trim(), next: String(e.next || '').trim(), image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '', publishedAt: String(e.publishedAt || '').trim(), coverage: arr(e.coverage) });
   // Ranking provenance (Fable 2026-07-20): base importance, interest tags, boost, final rank.
   const rankOf = (e, i) => ({ rank: i + 1, importance: e.importance || 0, tags: e._tags || [], boosted: !!e._boosted });
   const lead = { h1: stripDash(lead0.title).replace(/\.\s*$/, ''), context: ctxOf(lead0), ...pass4(lead0), refs: [lead0.id],
@@ -321,10 +203,7 @@ async function main() {
   const items = picked.slice(1).map((e, i) => ({ headline: stripDash(e.title).replace(/\.\s*$/, ''), context: ctxOf(e), ...pass4(e),
     refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', isNew: isNew(e), ranking: rankOf(e, i + 1) }));
   const standing = buildStanding(P.nums);
-  // Quiet-stretch honesty (Fable: "quiet day is the truth"): when nothing recent leads,
-  // say so rather than dressing a week-old story as today's news.
-  const leadAgeDays = (nowMs - (lead0._t || 0)) / DAY;
-  const quiet = leadAgeDays > 3;
+  const quiet = false;
   const newCount = [lead, ...items].filter((it) => it.isNew).length;
 
   // the link law + word caps (warn, never truncate — the curator trims the `why`, we don't mangle it)
@@ -335,24 +214,20 @@ async function main() {
   const words = WORDS(lead.context) + items.reduce((n, it) => n + WORDS(it.context), 0) + (standing ? WORDS(standing.text) : 0);
   const selectedDates = [lead, ...items].map((it) => it.date).filter(Boolean).sort();
 
-  // Change-gate the editorial clock. The brief rebuilds on every 4x/day refresh, but the
-  // "Updated <when>" stamp only moves when the story SET or its order changes. The signature
-  // keys on story IDENTITY (href + date + position), not the prose (Fable watch item), so a
-  // re-worded curator output never churns the stamp, and the append-only merge keeps wording
-  // stable anyway. On an unchanged run, preserve the prior timestamp. The live standing
-  // numbers still refresh underneath (they are re-rendered from the series client-side).
-  const contentSig = JSON.stringify([lead, ...items].map((it) => [it.href, it.date]));
-  const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig;
+  // Hold the editorial clock only when every visible story field is unchanged. generatedAt
+  // still records the actual build time for operations and health checks.
+  const contentSig = fingerprint([lead, ...items].map((it) => [
+    it.href, it.date, it.h1 || it.headline, it.context, it.source,
+    it.background, it.implications, it.next,
+  ]));
+  const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig && prev.meta.editorialDate === editorialDate;
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
-  const stampDate = new Date(reviewedAt);
-  // The synthesis is stable prose: keep the previous one on an unchanged story set (no
-  // re-paraphrasing), write a fresh one only when the set actually changed. If a fresh write
-  // fails its gate, keep the LAST-GOOD paragraph rather than collapsing to the bare lead
-  // headline (Alan 2026-07-17: "why is our brief so short now"). Next good run refreshes it.
-  const summary = (unchanged && String(prev.summary || '').trim()) || await writeSummary(picked) || String(prev.summary || '').trim() || '';
-  const out = { meta: { title: 'The brief', updated: reviewedAt.slice(0, 10), asOf: `${MO[stampDate.getUTCMonth()]} ${stampDate.getUTCDate()}`,
+  // Keep an unchanged summary stable. When the story set changes, a failed model draft gets
+  // a deterministic summary of the current headlines, never prose from the previous set.
+  const summary = (unchanged && String(prev.summary || '').trim()) || await writeSummary(picked) || fallbackSummary(picked);
+  const out = { meta: { title: 'What changed', editorialDate, updated: editorialDate, asOf: editorialDate,
     reviewedAt, latestItemDate: selectedDates.at(-1) || '', quiet, newCount,
-    generatedAt: reviewedAt, mode: 'curated', count: 1 + items.length, words, contentSig }, summary, lead, items, standing };
+    generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words, contentSig }, summary, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
   console.log(`  wrote ${path.relative(ROOT, OUT)} · ${1 + items.length} items · ${words} words · picked: ${picked.map((e) => e.importance).join('/')} · ${unchanged ? 'content unchanged (clock held)' : 'content changed (clock bumped)'}`);
 }

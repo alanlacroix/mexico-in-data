@@ -11,7 +11,9 @@ const nav = text('_data/nav.js');
 const footerNav = text('_data/footernav.js');
 const topics = text('topic-pages.njk');
 const model = text('model.njk');
+const nowBoard = text('_data/nowBoard.js');
 const brief = json('data/brief.json');
+const homeEditorial = json('data/home-editorial.json');
 const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
   .filter((row) => row?.value != null && Number.isFinite(Number(row.value)))
   .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
@@ -19,23 +21,26 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
 
 assert.match(home, /Mexico this morning/i, 'homepage must remain a daily starting point');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
-assert.match(home, /Markets today/i, 'homepage must separate fast-moving readings');
-assert.match(home, /Top stories/i, 'homepage must lead readers through the major stories');
+assert.match(home, /Latest numbers/i, 'homepage must place official readings beside the news');
+assert.match(home, /Worth knowing/i, 'homepage must lead readers through the major stories');
+assert.match(home, /Today only/i, 'homepage must state the news window plainly');
+assert.match(home, /All headlines/i, 'homepage must retain a deeper chronological feed');
+assert.match(home, /My topics/i, 'homepage must expose Alan’s declared interests');
+assert.match(home, /homeEditorial\.myRead\.label/, 'homepage must render the reviewed or deterministic connection label');
+assert.ok(homeEditorial.myRead?.text, 'a reviewed prediction must remain explicitly separate from reported facts');
 assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
 assert.match(home, /for story in latestStories/, 'the full news feed must live on the Brief instead of a separate Latest page');
-assert.match(home, /The context behind the headline\./i, 'the homepage must explain the BE mark once in plain language');
-assert.match(home, /class="be-mark"[^>]*>BE</i, 'stories must use the BE house mark for optional context');
+assert.match(home, />Context</i, 'stories must offer optional context in plain language');
+assert.doesNotMatch(home, />BE</i, 'the homepage must not make readers decode the old BE badge');
 assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
 assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as a duplicate footer destination');
-assert.match(home, /id="week-title">The week ahead</i, 'homepage must show the week-ahead calendar section');
-assert.match(home, /Official releases and meetings/i, 'homepage must show Alan’s next official releases and meetings');
+assert.match(home, /id="week-title">Coming up</i, 'homepage must show the next official dates');
+assert.match(home, /Known next/i, 'homepage must distinguish scheduled events from a forecast');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
-assert.match(home, /today ·.*stronger|today.*stronger/i,
-  'homepage peso reading should include a short-term comparison');
-assert.match(home, /banxico-bmv-ipc/i,
-  'homepage markets should include the Mexican equity market');
-assert.match(home, /banxico-cetes-28d/i,
-  'homepage markets should include the short-term Mexican government yield');
+assert.doesNotMatch(home, /% today|points today/i, 'an older observation must never be described as moving today');
+for (const id of ['banxico-usdmxn-fix', 'banxico-inflacion', 'banxico-tasa-objetivo', 'banxico-igae', 'banxico-exports-total', 'banxico-remesas']) {
+  assert.match(nowBoard, new RegExp(id), `latest numbers must include ${id}`);
+}
 
 assert.match(topics, /general minimum wage is (?:<b>)?MX\$\$\{fmt\(W\.value,2\)\} a day/i,
   'minimum-wage copy must identify Mexican pesos');

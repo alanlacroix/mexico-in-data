@@ -1,0 +1,29 @@
+{
+  "note": "Small, deterministic fallbacks for connecting a current story to official numbers. A reviewed entry in home-editorial.json always takes precedence.",
+  "rules": [
+    {
+      "id": "trade-to-peso-and-exports",
+      "pattern": "USMCA|T-MEC|TMEC|tariff|trade talks|exports?",
+      "text": "If trade friction increases, USD/MXN should rise before monthly export totals weaken. If talks reduce the risk, the sequence should reverse. The peso is the early signal; the next export release is the slower check.",
+      "seriesIds": ["banxico-usdmxn-fix", "banxico-exports-total"]
+    },
+    {
+      "id": "inflation-to-policy-and-peso",
+      "pattern": "inflation|Banxico|policy rate|interest rate",
+      "text": "If inflation keeps falling while the policy rate is unchanged, the gap between them widens. That should support the peso first. A renewed rise in inflation would weaken the read.",
+      "seriesIds": ["banxico-inflacion", "banxico-tasa-objetivo", "banxico-usdmxn-fix"]
+    },
+    {
+      "id": "investment-to-activity",
+      "pattern": "investment|nearshoring|manufactur|industrial|economic activity|data center|artificial intelligence|\\bAI\\b",
+      "text": "If the investment story is becoming measurable growth, economic activity and goods exports should improve in later monthly releases. If both stay flat, the announcement has not yet become broad activity.",
+      "seriesIds": ["banxico-igae", "banxico-exports-total"]
+    },
+    {
+      "id": "migration-to-remittances",
+      "pattern": "migration|migrant|remittance|deport|ICE|border",
+      "text": "If tighter US enforcement is materially affecting Mexican workers, remittances should weaken in a later monthly release. A stable remittance series would weaken that read.",
+      "seriesIds": ["banxico-remesas"]
+    }
+  ]
+}

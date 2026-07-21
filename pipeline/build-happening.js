@@ -12,8 +12,8 @@
 //
 // Fail-soft by design: with no ANTHROPIC_API_KEY it falls back to a deterministic pick
 // (top-tier, most-recent, spread across sections) so the log still refreshes — the model
-// only sharpens the selection and the "why". Existing entries always win a dedup, so the
-// hand-seeded events (the ones curated before the pipeline existed) are never clobbered.
+// only sharpens the selection and the "why". Within one editorial day, an event keeps one
+// stable id, moves to the newest curated report, and retains other reports as coverage.
 //
 //   node build-happening.js                    # update data/happening.json in place
 //   HAPPENING_OUT=/tmp/h.json node build-happening.js   # write elsewhere (dry test)
@@ -30,6 +30,11 @@ import { REPORT, BAN } from './lib/voice.js';   // shared voice (Fable 2026-07-1
 import { lintReportText, slopFlags, isSlop } from './lib/lint.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
 import { fetchArticle } from './lib/fetch-article.js';
+import newsDay from './lib/news-day.cjs';
+import newsThreads from './lib/news-threads.cjs';
+
+const { editorialDay } = newsDay;
+const { mergeCoverage } = newsThreads;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -113,8 +118,21 @@ function candidates(now) {
   const kept = [];
   for (const x of pool) {
     const n = normTitle(x.title);
-    if (kept.some((k) => jaccard(k._n, n) >= 0.6)) continue;   // collapse near-duplicate stories
-    x._n = n; kept.push(x);
+    const duplicate = kept.find((candidate) => editorialDay(candidate.published_at) === editorialDay(x.published_at)
+      && jaccard(candidate._n, n) >= 0.6);
+    const report = {
+      source: x.sourceName || x.source || '', url: x.url, publishedAt: x.published_at || '',
+      date: editorialDay(x.published_at), title: x.title || '', summary: x.dek || '',
+    };
+    if (duplicate) {
+      // Keep one candidate for selection, but retain every source. The public event can
+      // then show the current state once and still let a reader inspect the reporting.
+      duplicate._coverage = mergeCoverage(duplicate._coverage || [], report);
+      continue;
+    }
+    x._n = n;
+    x._coverage = mergeCoverage(report);
+    kept.push(x);
     if (kept.length >= MAX_CANDIDATES) break;
   }
   return kept;
@@ -124,12 +142,17 @@ function candidates(now) {
 const clampImp = (n) => Math.max(0, Math.min(10, Math.round(+n || 5)));   // 0-10 Brief rubric (see BRIEF-RUBRIC.md)
 const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 52);
 function mkEvent(x, section, importance, title, why, company = '') {
-  const date = (x.published_at || '').slice(0, 10);
+  const date = editorialDay(x.published_at);
   return {
     id: 'n-' + slug(x.title) + '-' + date,
     date, section, title: (title || x.title || '').trim(), why: (why || '').trim(),
     company: (company || '').trim(),
     source: x.sourceName || x.source || '', url: x.url, importance: clampImp(importance), kind: 'event',
+    publishedAt: x.published_at || '', sourceTier: x.tier || '',
+    coverage: mergeCoverage(x._coverage || [], {
+      source: x.sourceName || x.source || '', url: x.url, publishedAt: x.published_at || '',
+      date, title: (title || x.title || '').trim(), summary: (why || x.dek || '').trim(),
+    }),
   };
 }
 
@@ -143,6 +166,7 @@ function mkEvent(x, section, importance, title, why, company = '') {
 // open/close recaps ("así abre el tipo de cambio", "peso busca rescatar…"), forecast-cut rehashes,
 // sports, how-tos, entertainment. The model path filters on meaning; this keeps the fallback honest.
 const JUNK_RX = /¿(qui[eé]n|c[óo]mo|qu[eé]|cu[áa]l)|vs\.?\s|los? m[áa]s (barat|car|vendid)|entre l[ao]s \d+ m[áa]s|la historia de|as[íi] (abre|cierra)|busca rescatar|(d[óo]lar|tipo de cambio) hoy|precio del d[óo]lar|recorte de expectativas|pase vip|saltar fila|\branking\b|paso a paso|hor[óo]scopo|receta|qu[eé] ver|streaming|nfl|nba|mlb|liga mx|fichaje|premios|celebr|tel[ei]nov|checa (las|los)|te decimos|aqu[íi] (los|las)/i;
+const RAW_HEADLINE_RX = /^[“"'‘].{0,100}[”"'’]:|\b(batman|mother courage|avenging|bombshell|nightmare|you won.t believe|shocking|stunning|slams?|blasts?)\b|\bmarks? the end\b|\b(?:tariff|crime|migration) wave\b|[!?]{2,}/i;
 const MX_RX = /m[eé]xic|mexican|\bcdmx\b|banxico|sheinbaum|\bpemex\b|\bfemsa\b|\boxxo\b|\bmorena\b|\binegi\b|\bcnbv\b|\bpeso(s)?\b|monterrey|guadalajara|\bbmv\b|nearshor|maquila|tmec|usmca|\bdof\b|hacienda|sat\b/i;
 const TASTE_RX = /automotive|vehicle|rail|manufactur|investment|nearshor|trade|usmca|t-?mec|fintech|bank|payment|embedded finance|\bai\b|artificial intelligence|data cent|energy|pemex|cfe|public financ|digital rules|technology/i;
 function firstWholeSentence(text, max = 280) {
@@ -158,6 +182,7 @@ function curateFallback(cands, now) {
     .filter(({ summary }) => summary)                                     // need a whole sourced sentence for "why"
     .filter(({ x }) => x.tier === 1 || x.tier === 2 || x.tier === 'specialist') // drop raw aggregator items
     .filter(({ x }) => !JUNK_RX.test((x.title || '') + ' ' + (x.dek || '')))  // no listicles / sports / how-tos
+    .filter(({ x }) => !RAW_HEADLINE_RX.test(x.title || ''))                   // no raw clickbait without an editor rewrite
     .filter(({ x }) => MX_RX.test((x.title || '') + ' ' + (x.dek || '')))     // must be about Mexico, not off-topic
     .filter(({ x }) => x.sourceName !== 'Mexico Business News' || TASTE_RX.test((x.title || '') + ' ' + (x.dek || '')))
     .map(({ x, summary }) => ({ x, summary, w: tierW(x.tier) * 2 + (Date.parse(x.published_at) > now.getTime() - 4 * 864e5 ? 2 : 0) }));
@@ -199,7 +224,7 @@ Aim for BREADTH across sections — a reader should see politics, security, and 
 ${REPORT}
 
 ${BAN}`;
-  const payload = cands.map((x, i) => ({ i, beat: x.beat, date: (x.published_at || '').slice(0, 10), title: x.title, dek: (x.dek || '').slice(0, 200) }));
+  const payload = cands.map((x, i) => ({ i, beat: x.beat, date: editorialDay(x.published_at), title: x.title, dek: (x.dek || '').slice(0, 200) }));
   // Headroom matters: this model reasons over the full candidate list before it
   // emits JSON, and that reasoning is billed as output tokens. Measured: an 8000-token
   // ceiling was spent almost entirely on reasoning and the JSON still truncated, which
@@ -212,6 +237,10 @@ ${BAN}`;
   for (const r of out.events) {
     const x = cands[r.i]; if (!x) continue;
     const sec = SECTIONS.includes(r.section) ? r.section : beatSection(x);
+    if (RAW_HEADLINE_RX.test(String(r.title || ''))) {
+      console.warn(`  reject generated event ${r.i}: headline is not neutral`);
+      continue;
+    }
     const report = `${String(r.title || '').trim()}. ${String(r.why || '').trim()}`;
     const gate = lintReportText({
       text: report,
@@ -360,11 +389,25 @@ function mergeLog(existing, fresh, now) {
   });
   const nn = (e) => normTitle(e.title || '');
   for (const e of fresh) {
-    const dup = events.find((o) =>
+    const dup = events.find((o) => o.date === e.date && (
       (o.url && e.url && o.url === e.url) ||
       (o.id && e.id && o.id === e.id) ||
-      (jaccard(nn(o), nn(e)) >= 0.6 && Math.abs((Date.parse(o.date) || 0) - (Date.parse(e.date) || 0)) <= 5 * 864e5));
-    if (dup) continue;                    // existing wins — hand-seeded + earlier entries are canonical
+      jaccard(nn(o), nn(e)) >= 0.6));
+    if (dup) {
+      dup.coverage = mergeCoverage(dup, dup.coverage || [], e, e.coverage || []);
+      const freshTime = Date.parse(e.publishedAt) || 0;
+      const priorTime = Date.parse(dup.publishedAt) || Date.parse(dup.date) || 0;
+      if (freshTime > priorTime) {
+        // One editorial-day event keeps a stable id while its visible state moves to the
+        // latest report. A similar event tomorrow remains a separate dated record.
+        for (const key of ['date', 'section', 'title', 'why', 'company', 'source', 'url', 'publishedAt', 'sourceTier', 'image', 'imgTries']) {
+          if (e[key] !== undefined) dup[key] = e[key];
+        }
+        dup.importance = Math.max(dup.importance || 0, e.importance || 0);
+        for (const key of ['background', 'drivers', 'implications', 'next', 'analysisV']) delete dup[key];
+      }
+      continue;
+    }
     events.push(e);
   }
   const cutoff = now.getTime() - KEEP_DAYS * 864e5;
@@ -392,7 +435,7 @@ async function main() {
     meta: {
       title: "What's happening",
       note: NOTE,
-      updated: now.toISOString().slice(0, 10),
+      updated: editorialDay(now),
       source: 'The Mexico Brief', sourceUrl: 'https://mexicobrief.com/sources',
       count: events.length, generatedAt: now.toISOString(), llm: hasLLM(),
     },
