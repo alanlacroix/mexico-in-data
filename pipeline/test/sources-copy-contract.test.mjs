@@ -46,8 +46,13 @@ for (const rawLink of [
 }
 assert.doesNotMatch(topicPages, /www\.cnbv\.gob\.mx\/Inclusi%C3%B3n\/Paginas\/Bases-de-Datos\.aspx/i,
   'Payments must not link to CNBV’s certificate-failing legacy database page');
-assert.match(topicPages, /pnif\.cnbv\.gob\.mx\/dnoticia\/basededatosinclusionfinanciera2024/i,
-  'Payments should link to CNBV’s readable financial-inclusion release');
+// The CNBV reference was cut in the 2026-07-20 letter-register rebuild (kill list: nothing
+// kept for completeness). If it ever returns, it must use the readable release, never the
+// certificate-failing legacy page (the doesNotMatch above stays unconditional).
+if (/cnbv/i.test(topicPages)) {
+  assert.match(topicPages, /pnif\.cnbv\.gob\.mx\/dnoticia\/basededatosinclusionfinanciera2024/i,
+    'Payments should link to CNBV’s readable financial-inclusion release');
+}
 for (const renderedData of [briefData, areasData, happeningData]) {
   assert.doesNotMatch(renderedData, /dof\.gob\.mx\/abrirPDF\.php/i,
     'Brief links should use the readable DOF issue page, not a PDF download endpoint');

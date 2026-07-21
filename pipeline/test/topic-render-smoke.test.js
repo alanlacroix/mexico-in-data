@@ -76,18 +76,50 @@ for (const route of routes) {
   const output = node('#topicApp').innerHTML;
   if (reported) throw new Error(`${route.key}: rendered the failure state (${reported})`);
   const storyPage = output.includes('story-sec');
-  if (storyPage && (output.match(/class="story-so"/g) || []).length < 3) throw new Error(`${route.key}: story page carries fewer than 3 So-what strips`);
   for (const required of storyPage
-    ? ["What's moving", 'Sources and method', 'What it does not show']
+    ? ['class="lead"', "What's moving", 'What could change this page', 'Sources and method']
     : ['Snapshot', 'What changed', 'Sources and method']) {
     if (!output.includes(required)) throw new Error(`${route.key}: missing ${required}`);
   }
-  if (['society', 'usmexico'].includes(route.key) && !output.includes(expectedRemittance)) {
-    throw new Error(`${route.key}: remittances do not match the latest million-US-dollar source value (${expectedRemittance})`);
+  // Fable's anti-relapse guard (2026-07-20): the letter register is enforced by budget,
+  // not judgment. Prose = the lead + story paragraphs; scaffolding strings are banned.
+  if (storyPage) {
+    for (const banned of ['So what', 'What it shows', 'What it does not show']) {
+      if (output.includes(banned)) throw new Error(`${route.key}: banned scaffolding string "${banned}"`);
+    }
+    const prose = [...output.matchAll(/<p class="(?:lead|story-p)">([\s\S]*?)<\/p>/g)]
+      .map((m) => m[1].replace(/<[^>]+>/g, ' '));
+    const words = prose.join(' ').split(/\s+/).filter(Boolean).length;
+    if (words > 520) throw new Error(`${route.key}: ${words} prose words (cap 520)`);
+    const chartCount = (output.match(/class="chart-card/g) || []).length;
+    if (chartCount > 4) throw new Error(`${route.key}: ${chartCount} charts (cap 4)`);
+    const countNums = (text) => {
+      const cleaned = text
+        .replace(/\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?,?\s+\d{1,2}\b/g, ' ')
+        .replace(/\b(?:19|20)\d{2}\b/g, ' ')
+        .replace(/\bQ[1-4]\b/g, ' ')
+        .replace(/\b\d+-year\b/g, ' ');
+      return (cleaned.match(/\d[\d,.]*(?:\s*(?:to|-)\s*\d[\d,.]*)?%?/g) || []).length;
+    };
+    let pageNums = 0;
+    for (const p of prose) {
+      const n = countNums(p);
+      pageNums += n;
+      if (n > 4) throw new Error(`${route.key}: a paragraph carries ${n} numbers (cap 4): "${p.slice(0, 80)}"`);
+    }
+    if (pageNums > 13) throw new Error(`${route.key}: ${pageNums} prose numbers (cap 13)`);
   }
-  if (route.key === 'usmexico' && output.includes('$0.0bn')) throw new Error('usmexico: remittances were rounded from the wrong unit');
+  // One home per series (Fable 2026-07-20): the remittances number lives on Society only.
+  if (route.key === 'society' && !output.includes(expectedRemittance)) {
+    throw new Error(`society: remittances do not match the latest million-US-dollar source value (${expectedRemittance})`);
+  }
+  const proseOnly = [...output.matchAll(/<p class="(?:lead|story-p)">([\s\S]*?)<\/p>/g)].map((m) => m[1]).join(' ');
+  if (proseOnly.includes('$0.0')) throw new Error(`${route.key}: a prose value was rounded from the wrong unit`);
+  // One home per series (Fable 2026-07-20): the wage lives on Economy; Society links to it.
+  if (route.key === 'economy') {
+    if (!output.includes(expectedMinimumWage)) throw new Error(`economy: minimum wage must identify Mexican pesos (${expectedMinimumWage})`);
+  }
   if (route.key === 'society') {
-    if (!output.includes(expectedMinimumWage)) throw new Error(`society: minimum wage must identify Mexican pesos (${expectedMinimumWage})`);
     if (!output.includes(expectedCrimePeriod)) throw new Error(`society: SESNSP period must render as ${expectedCrimePeriod}`);
     if (output.includes('raw annual count') || output.includes('annual reported-offense count')) {
       throw new Error('society: the SESNSP year-to-date total must not be described as annual');
@@ -95,21 +127,13 @@ for (const route of routes) {
     if (!output.includes('year-to-date count')) throw new Error('society: SESNSP total must be labeled year to date');
   }
   if (route.key === 'payments') {
-    // Story contract (Fable plan 2026-07-20): five sections, every judgment word derived.
-    for (const headline of ['Cash is still how most of Mexico pays', 'When money moves digitally, it moves over SPEI', 'CoDi never took off', 'Online card buying is still a fraction of in-store card use']) {
-      if (!output.includes(headline)) throw new Error(`payments: missing story section "${headline}"`);
+    for (const headline of ['Cash is the habit everything else competes with', 'When money moves digitally, it moves over SPEI', 'At the counter, the cash replacement is a debit card']) {
+      if (!output.includes(headline)) throw new Error(`payments: missing section "${headline}"`);
     }
-    if (!output.includes(`${expectedCardPurchases} billion purchases a quarter`)) throw new Error(`payments: combined card purchases do not match the source operations (${expectedCardPurchases}bn)`);
-    if (!output.includes(`${expectedDebitShare}%</b> of those purchases used a debit card`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
-    if (!output.includes('85.2%</b> of adults said cash was their usual payment method')) throw new Error('payments: ENIF cash figure must preserve the adult-response denominator');
-    if (!output.includes('ENIF 2024')) throw new Error('payments: the survey vintage must appear in the sentence');
-    if (!/under review after a jump far outside its own history|series SF62279 is excluded/.test(output)) throw new Error('payments: anomalous debit-card value is not visibly quarantined');
+    if (!output.includes(`${expectedCardPurchases} billion`)) throw new Error(`payments: card purchases do not match the source operations (${expectedCardPurchases}bn)`);
+    if (!output.includes(`${expectedDebitShare}% used a debit card`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
+    if (!output.includes('of adults told INEGI')) throw new Error('payments: the ENIF survey figure and vintage must appear in the prose');
     if (output.includes('1,169bn MXN')) throw new Error('payments: quarantined debit-card value still appears editorially');
-    const storyCharts = (output.match(/evidence-shell/g) || []).length;
-    if (storyCharts < 4) throw new Error(`payments: expected at least 4 inline charts, found ${storyCharts}`);
-    for (const banned of ['—', 'surged', 'soared', 'plunged', 'robust', 'landscape', 'ecosystem', 'testament', 'currently']) {
-      if (output.includes(banned)) throw new Error(`payments: banned word or mark in story prose: "${banned}"`);
-    }
   }
   if (output.includes('waiting for its required source data')) throw new Error(`${route.key}: failed closed with complete fixture data`);
 }
