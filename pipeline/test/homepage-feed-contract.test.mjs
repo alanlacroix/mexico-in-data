@@ -25,6 +25,7 @@ assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial 
 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
 assert.ok(dailyBrief.stories.every((story) => story.date === dailyBrief.editorialDate), 'Worth knowing must contain today’s stories only');
+assert.ok(dailyBrief.stories.every((story) => story.bg || story.implications || story.next || story.sourceCount > 1), 'every Worth knowing story must offer useful context or multiple reports');
 assert.ok(latestStories.every((story) => story.date === dailyBrief.editorialDate), 'All headlines must contain today’s stories only');
 if (currentEditorial) assert.ok(['My read', 'Connection to watch'].includes(currentEditorial.myRead?.label), 'a connection must state whether it is reviewed or deterministic');
 assert.equal(dailyBriefFactory({}).editorialDate, dailyBrief.editorialDate, 'Eleventy’s data argument must not be mistaken for a clock');

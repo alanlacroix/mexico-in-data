@@ -41,7 +41,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .brief-story{padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
   .story-meta{display:flex;align-items:center;gap:5px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
   .story-topic{font-weight:650;color:var(--green-d);text-decoration:none}
-  .story-title-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
+  .story-title-row{display:block}
   .story-copy{display:flow-root;min-width:0}
   .story-thumb{float:right;width:132px;height:88px;margin:4px 0 10px 14px;border-radius:4px;overflow:hidden;background:var(--paper-2)}
   .story-thumb img{width:100%;height:100%;object-fit:cover;display:block}
@@ -50,6 +50,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .brief-story h3{font-size:clamp(19px,1.55vw,23px);line-height:1.32;letter-spacing:-.008em;font-weight:600;margin:0;max-width:60ch}
   .story-summary{font-size:15.5px;line-height:1.5;color:var(--ink-2);max-width:72ch;margin:7px 0 0}
   .context-btn{display:inline-flex;align-items:center;min-height:40px;gap:6px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--green-d);padding:7px 9px;font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+  .story-copy .context-btn{margin-top:11px}
   .context-btn:hover,.context-btn[aria-expanded="true"]{border-color:var(--green);background:#f2f8f5}
   .context-btn .context-icon{font-size:14px;line-height:1;transition:transform .15s ease}
   .context-btn[aria-expanded="true"] .context-icon{transform:rotate(45deg)}
@@ -120,8 +121,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
     .news{margin-top:38px}
     .brief-story{padding:17px 0}
     .brief-story h3{font-size:20px;line-height:1.32}
-    .story-title-row{grid-template-columns:1fr}
-    .context-btn{justify-self:start;min-height:44px}
+    .context-btn{min-height:44px}
     .story-thumb{width:112px;height:74px;margin:3px 0 8px 12px}
     .market-grid{grid-template-columns:1fr}
     .market-compare{min-height:0}
@@ -138,8 +138,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 <article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}" data-interests="{{ story.interestTags | join(',') if story.interestTags else '' }}"{% endif %}>
   <div class="story-meta"><a class="story-topic" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.reportTime %}<span class="js-storytime" data-date="{{ story.reportTime }}" data-label="{{ 'Latest report' if story.sourceCount > 1 else 'Published' }}"></span>{% endif %}{% if story.source %}<span>{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span>{{ story.sourceCount }} reports</span>{% endif %}</div>
   <div class="story-title-row">
-    <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="132" height="88" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}</div>
-    {% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}"><span>Context</span><span class="context-icon" aria-hidden="true">+</span></button>{% endif %}
+    <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="132" height="88" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}{% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}"><span>Context</span><span class="context-icon" aria-hidden="true">+</span></button>{% endif %}</div>
   </div>
   {% if hasContext %}<div class="story-context" id="{{ contextId }}" hidden>{% if story.bg %}<p><span class="context-label">Background</span>{{ story.bg }}</p>{% endif %}{% if story.implications %}<p><span class="context-label">Why it matters</span>{{ story.implications }}</p>{% endif %}{% if story.next %}<p><span class="context-label">Watch next</span>{{ story.next }}</p>{% endif %}{% if story.sourceCount > 1 %}<div class="coverage"><span class="context-label">Reporting</span><div class="coverage-links">{% for source in story.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source or 'Source' }} ↗</a>{% endfor %}</div></div>{% endif %}</div>{% endif %}
 </article>
