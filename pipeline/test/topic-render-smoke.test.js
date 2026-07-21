@@ -108,6 +108,19 @@ for (const route of routes) {
       if (n > 4) throw new Error(`${route.key}: a paragraph carries ${n} numbers (cap 4): "${p.slice(0, 80)}"`);
     }
     if (pageNums > 13) throw new Error(`${route.key}: ${pageNums} prose numbers (cap 13)`);
+    // A figure states its case ONCE (Alan 2026-07-21: "this just sounds clunky, hard for me
+    // to read"). The lead and section one were repeating the same number 40 words apart, so
+    // the reader read it twice and the page dragged. The lead makes the claim; a section
+    // must advance it, not restate it.
+    // Strip trailing punctuation BEFORE testing for a year, or "2026." slips past the year
+    // filter and reads as a repeated figure.
+    const figures = (text) => new Set((text.match(/\d[\d,]*\.?\d*%?/g) || [])
+      .map((n) => n.replace(/[,.]$/, ''))
+      .filter((n) => !/^(?:19|20)\d{2}$/.test(n.replace('%', ''))));
+    const leadFigures = figures(prose[0] || '');
+    const bodyFigures = figures(prose.slice(1).join(' '));
+    const echoed = [...leadFigures].filter((n) => bodyFigures.has(n));
+    if (echoed.length) throw new Error(`${route.key}: the lead's figure(s) ${echoed.join(', ')} reappear in the body; a number gets one home`);
   }
   // One home per series (Fable 2026-07-20): the remittances number lives on Society only.
   if (route.key === 'society' && !output.includes(expectedRemittance)) {
@@ -129,12 +142,13 @@ for (const route of routes) {
   if (route.key === 'payments') {
     // Headings are findings with numbers (business-writing house rules, 2026-07-21), so they
     // interpolate. Assert the shape, not a frozen string.
-    for (const headline of [/Cash still wins [\d.]+% of everyday purchases/, /SPEI carries [\d,]+ million transfers a day/, /[\d.]+% of card purchases are debit, not credit/]) {
+    for (const headline of [/Cash in circulation grew [\d.]+% in a year|Cash in circulation/, /lost to plain transfers/, /counter still beats the internet/]) {
       if (!headline.test(output)) throw new Error(`payments: missing section matching ${headline}`);
     }
     if (!output.includes(`${expectedCardPurchases} billion`)) throw new Error(`payments: card purchases do not match the source operations (${expectedCardPurchases}bn)`);
-    if (!output.includes(`${expectedDebitShare}% used a debit card`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
-    if (!output.includes('of adults told INEGI')) throw new Error('payments: the ENIF survey figure and vintage must appear in the prose');
+    // The debit share states its case once, in the lead, at full precision.
+    if (!output.includes(`${expectedDebitShare}% of them are debit`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
+    if (!/told INEGI's 2024 survey/.test(output)) throw new Error('payments: the ENIF survey attribution and vintage must appear in the prose');
     if (output.includes('1,169bn MXN')) throw new Error('payments: quarantined debit-card value still appears editorially');
   }
   if (output.includes('waiting for its required source data')) throw new Error(`${route.key}: failed closed with complete fixture data`);
