@@ -19,7 +19,7 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
   .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
   .at(-1).value;
 
-assert.match(home, /Mexico this morning/i, 'homepage must remain a daily starting point');
+assert.match(home, /Mexico today/i, 'homepage must remain a daily starting point without expiring after noon');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
 assert.match(home, /Latest numbers/i, 'homepage must place official readings beside the news');
 assert.match(home, /Worth knowing/i, 'homepage must lead readers through the major stories');
