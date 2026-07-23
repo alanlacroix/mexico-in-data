@@ -15,8 +15,10 @@ import {
 import { freshnessStatus } from './lib/freshness.js';
 import { lintReportText } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
+import newsWindow from './lib/news-window.cjs';
 
 const { editorialDay } = newsDay;
+const { eventTimestamp } = newsWindow;
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
@@ -148,13 +150,36 @@ try {
   if (claims.length && !brief.lead) fails.push('brief: a non-empty day needs a lead');
   if (brief.meta?.count !== claims.length) fails.push(`brief: meta.count ${brief.meta?.count} does not match ${claims.length} total claims`);
   if (brief.meta?.contentSig !== expectedContentSig) fails.push('brief: content signature does not match the visible story set');
+  if (String(brief.summary || '').trim()) {
+    const summaryGate = lintReportText({
+      text: brief.summary,
+      inputs: claims.flatMap((claim) => [claim.h1 || claim.headline, claim.context]),
+      maxWords: 105,
+      maxSentences: 5,
+    });
+    if (!summaryGate.ok) fails.push(`brief: opening summary fails the public copy gate (${summaryGate.flags.join('; ')})`);
+  }
   for (const [index, claim] of claims.entries()) {
     for (const key of [index ? 'headline' : 'h1', 'context', 'href', 'source']) if (!claim[key]) fails.push(`brief: claim ${index + 1} missing ${key}`);
     for (const key of [index ? 'headline' : 'h1', 'context', 'source']) checkText(`brief: claim ${index + 1}.${key}`, claim[key]);
     if (!isSafeHttpUrl(claim.href)) fails.push(`brief: claim ${index + 1} has invalid source URL`);
     if (!Array.isArray(claim.refs) || !claim.refs.length) fails.push(`brief: claim ${index + 1} has no evidence ref`);
     for (const ref of claim.refs || []) if (!ids.has(ref)) fails.push(`brief: evidence ref ${ref} is absent from happening.json`);
-    if (claim.date !== brief.meta?.editorialDate) fails.push(`brief: claim ${index + 1} is dated ${claim.date}, not editorial day ${brief.meta?.editorialDate}`);
+    if (claim.date > brief.meta?.editorialDate) fails.push(`brief: claim ${index + 1} is future-dated ${claim.date}`);
+    const builtAt = Date.parse(brief.meta?.generatedAt);
+    const maxAge = (Number(brief.meta?.windowHours) || 36) * 60 * 60 * 1000;
+    const backedInWindow = (claim.refs || []).some((ref) => {
+      const event = events.find((candidate) => candidate.id === ref);
+      const published = eventTimestamp(event);
+      return Number.isFinite(builtAt) && published && published <= builtAt + (15 * 60 * 1000) && published >= builtAt - maxAge;
+    });
+    if (!backedInWindow) fails.push(`brief: claim ${index + 1} falls outside its ${Number(brief.meta?.windowHours) || 36}-hour news window`);
+    const sourceInputs = (claim.refs || []).flatMap((ref) => {
+      const event = events.find((candidate) => candidate.id === ref);
+      return event ? [event.date, event.title, event.context, event.why] : [];
+    });
+    const contextGate = lintReportText({ text: claim.context, inputs: sourceInputs, maxWords: 55, maxSentences: 2 });
+    if (!contextGate.ok) fails.push(`brief: claim ${index + 1} context fails the public copy gate (${contextGate.flags.join('; ')})`);
   }
   for (const live of brief.standing?.live || []) if (!servedById.has(live.series)) fails.push(`brief: standing line needs missing series ${live.series}`);
   if (dayAge(brief.meta?.generatedAt) > 4) warns.push(`brief: generated ${Math.floor(dayAge(brief.meta.generatedAt))} days ago`);
@@ -188,6 +213,8 @@ try {
       try { new RegExp(rule.pattern, 'i'); } catch { fails.push(`connection rules: ${rule.id || 'unknown'} has an invalid pattern`); }
       checkText(`connection rules: ${rule.id || 'unknown'}.text`, rule.text);
       if (!String(rule.text || '').trim()) fails.push(`connection rules: ${rule.id || 'unknown'} needs text`);
+      const gate = lintReportText({ text: rule.text, inputs: [rule.text], maxWords: 70, maxSentences: 4 });
+      if (!gate.ok) fails.push(`connection rules: ${rule.id || 'unknown'} fails the public copy gate (${gate.flags.join('; ')})`);
       if (!Array.isArray(rule.seriesIds) || !rule.seriesIds.length) fails.push(`connection rules: ${rule.id || 'unknown'} needs related series`);
       for (const id of rule.seriesIds || []) if (!servedById.has(id)) fails.push(`connection rules: related series ${id} is missing`);
     }

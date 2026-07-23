@@ -26,7 +26,7 @@ module.exports = function (now = new Date()) {
 
   if (!myRead) {
     const claims = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])]
-      .filter((claim) => claim && clean(claim.date) === forDate);
+      .filter(Boolean);
     for (const rule of read('connection-rules.json', { rules: [] }).rules || []) {
       let pattern;
       try { pattern = new RegExp(rule.pattern, 'i'); } catch { continue; }

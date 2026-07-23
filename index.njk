@@ -151,7 +151,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   </header>
 
   <section class="brief" aria-labelledby="brief-title">
-    <div class="section-top"><h2 class="kicker" id="brief-title">What changed</h2><div class="asof" id="brief-asof" data-date="{{ dailyBrief.newsThrough }}">Brief reviewed {{ dailyBrief.newsThrough }}</div></div>
+    <div class="section-top"><h2 class="kicker" id="brief-title">The brief</h2><div class="asof" id="brief-asof" data-date="{{ dailyBrief.newsThrough }}">Updated {{ dailyBrief.newsThrough }}</div></div>
     <p class="brief-copy">{{ dailyBrief.summaryLead }}</p>
     {% if homeEditorial and homeEditorial.myRead %}<div class="my-read"><p><strong>{{ homeEditorial.myRead.label or 'My read' }}:</strong> {{ homeEditorial.myRead.text }}</p><div class="read-evidence">{% for item in homeEditorial.myRead.numbers %}<a class="read-number" href="{{ item.href }}"><span>{{ item.label }}</span><b>{{ item.display }}{% if item.unit %} {{ item.unit }}{% endif %}</b><span>{{ item.observed }}</span></a>{% endfor %}<a class="read-story" href="{{ homeEditorial.myRead.storyUrl }}" target="_blank" rel="noopener">Related: {{ homeEditorial.myRead.storyLabel }} ↗</a></div></div>{% endif %}
     {% if homeEditorial and homeEditorial.sourceState %}<div class="source-state"><strong>Sources disagree:</strong> {{ homeEditorial.sourceState.note }}{% for source in homeEditorial.sourceState.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.label }} ↗</a>{% endfor %}</div>{% endif %}
@@ -159,15 +159,15 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   </section>
 
   <section class="news" aria-labelledby="news-title">
-    <div class="section-top"><div><h2 class="section-title" id="news-title">Worth knowing</h2></div><span class="section-note">Today only</span></div>
+    <div class="section-top"><div><h2 class="section-title" id="news-title">Key developments</h2></div><span class="section-note">{{ dailyBrief.windowLabel }}</span></div>
     <div class="story-list major-list">
-      {% for story in dailyBrief.stories %}{{ storyCard(story) }}{% else %}<p class="empty">No major stories have cleared the brief yet today.</p>{% endfor %}
+      {% for story in dailyBrief.stories %}{{ storyCard(story) }}{% else %}<p class="empty">No major stories have cleared the brief yet.</p>{% endfor %}
     </div>
 
     {% if latestStories.length %}<details class="all-news" id="all-news" open>
       <summary>All headlines</summary>
       <div class="all-news-body">
-        <nav class="filters" aria-label="Filter today’s headlines">
+        <nav class="filters" aria-label="Filter recent headlines">
           <button class="filter active" type="button" data-topic="all" aria-pressed="true">All</button>
           <button class="filter" type="button" data-topic="mine" aria-pressed="false">My topics</button>
           <button class="filter" type="button" data-topic="economy" aria-pressed="false">Economy</button>
@@ -178,7 +178,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
         <div class="story-list" id="all-news-list">
           {% for story in latestStories %}{{ storyCard(story, true) }}{% endfor %}
         </div>
-        <p class="empty" id="news-empty" hidden>No stories in this section yet today.</p>
+        <p class="empty" id="news-empty" hidden>No recent stories in this section.</p>
         <button class="show-more" id="news-more" type="button" hidden>Show more</button>
       </div>
     </details>{% endif %}
@@ -256,14 +256,19 @@ showNews(initialTopic);
 const headerDay=new Date((editorialDate||new Date().toISOString().slice(0,10))+'T12:00:00Z');
 document.getElementById('today').textContent=headerDay.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',weekday:'long',month:'long',day:'numeric',year:'numeric'});
 document.querySelectorAll('.js-date').forEach((element)=>{element.textContent=date(element.dataset.date);});
-document.querySelectorAll('.js-storydate').forEach((element)=>{element.textContent=element.dataset.date===editorialDate?'Today':date(element.dataset.date,true);});
+document.querySelectorAll('.js-storydate').forEach((element)=>{
+  if(element.dataset.date===editorialDate){element.textContent='Today';return;}
+  const storyDay=new Date(element.dataset.date+'T12:00:00Z');
+  const priorDay=new Date((editorialDate||new Date().toISOString().slice(0,10))+'T12:00:00Z');priorDay.setUTCDate(priorDay.getUTCDate()-1);
+  element.textContent=!isNaN(storyDay)&&storyDay.toISOString().slice(0,10)===priorDay.toISOString().slice(0,10)?'Yesterday':date(element.dataset.date,true);
+});
 document.querySelectorAll('.js-storytime').forEach((element)=>{const d=new Date(element.dataset.date);element.textContent=isNaN(d)?'':`${element.dataset.label||'Published'} ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;});
 const calDate=(iso)=>{const d=new Date(iso+'T12:00:00Z');return isNaN(d)?iso:d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',weekday:'short',month:'short',day:'numeric'});};
 document.querySelectorAll('.js-caldate').forEach((element)=>{element.textContent=calDate(element.dataset.date);});
 const weekStart=(d)=>{const x=new Date(d.getTime());x.setUTCHours(0,0,0,0);x.setUTCDate(x.getUTCDate()-((x.getUTCDay()+6)%7));return x;};
 const relDay=(iso,approx)=>{const d=new Date(iso+'T00:00:00Z'),t=new Date(editorialDate+'T00:00:00Z');if(isNaN(d)||isNaN(t))return'';const n=Math.round((d-t)/864e5);if(n<0)return'';if(approx){const w=Math.round((weekStart(d)-weekStart(t))/(7*864e5));return w<=0?'this week':w===1?'next week':'in '+w+' weeks';}if(n===0)return'today';if(n===1)return'tomorrow';return'in '+n+' days';};
 document.querySelectorAll('.js-rel').forEach((element)=>{element.textContent=relDay(element.dataset.date,element.dataset.approx==='y');});
-const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);asof.textContent=isNaN(d)?'':`Brief reviewed ${d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;}
+const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);asof.textContent=isNaN(d)?'':`Updated ${d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;}
 
 const status=document.getElementById('status');
 if(status){const checked=Date.parse(status.dataset.checkedAt);const issues=Number(status.dataset.issues)||0;status.textContent=Number.isFinite(checked)?`Sources checked ${relTime(checked)}${issues?` · ${issues} ${issues===1?'issue':'issues'}`:''}`:'Open data sources';}

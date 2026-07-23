@@ -10,6 +10,7 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
 const require = createRequire(import.meta.url);
 const { editorialDay } = require(path.join(root, 'pipeline/lib/news-day.cjs'));
 const { coverageForDay, groupEvents } = require(path.join(root, 'pipeline/lib/news-threads.cjs'));
+const { recentEvents } = require(path.join(root, 'pipeline/lib/news-window.cjs'));
 const dailyBriefFactory = require(path.join(root, '_data/dailyBrief.js'));
 const latestStoriesFactory = require(path.join(root, '_data/latestStories.js'));
 const homeEditorialFactory = require(path.join(root, '_data/homeEditorial.js'));
@@ -24,9 +25,9 @@ assert.equal(editorialDay('2026-07-21T03:00:00Z'), '2026-07-20', 'the editorial 
 assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial day must follow Mexico City');
 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
-assert.ok(dailyBrief.stories.every((story) => story.date === dailyBrief.editorialDate), 'Worth knowing must contain today’s stories only');
+assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
 assert.ok(dailyBrief.stories.every((story) => story.bg || story.implications || story.next || story.sourceCount > 1), 'every Worth knowing story must offer useful context or multiple reports');
-assert.ok(latestStories.every((story) => story.date === dailyBrief.editorialDate), 'All headlines must contain today’s stories only');
+assert.ok(latestStories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'recent headlines must not contain future-dated stories');
 if (currentEditorial) assert.ok(['My read', 'Connection to watch'].includes(currentEditorial.myRead?.label), 'a connection must state whether it is reviewed or deterministic');
 assert.equal(dailyBriefFactory({}).editorialDate, dailyBrief.editorialDate, 'Eleventy’s data argument must not be mistaken for a clock');
 
@@ -37,6 +38,16 @@ assert.equal(staleBrief.stories.length, 0, 'a failed next-day refresh must rende
 assert.match(staleBrief.summaryLead, /No major developments/i);
 assert.equal(latestStoriesFactory(staleNow).length, 0, 'a failed next-day refresh must not retain yesterday’s headlines');
 assert.equal(homeEditorialFactory(staleNow), null, 'a prior-day My read must disappear on the next day');
+
+const midnightWindow = recentEvents([
+  { date: '2026-07-22', publishedAt: '2026-07-23T03:30:00Z', title: 'Useful report from the prior evening' },
+  { date: '2026-07-23', publishedAt: '2026-07-23T13:00:00Z', title: 'Useful report from this morning' },
+  { date: '2026-07-20', publishedAt: '2026-07-20T13:00:00Z', title: 'Stale report' },
+], new Date('2026-07-23T14:00:00Z'), 36);
+assert.deepEqual(midnightWindow.map((event) => event.title).sort(), [
+  'Useful report from the prior evening',
+  'Useful report from this morning',
+], 'the brief window must cross midnight without retaining stale news');
 
 const grouped = groupEvents([
   { date: '2026-07-21', title: 'Mexico and the US open the annual USMCA review', source: 'Outlet A', url: 'https://example.com/a', publishedAt: '2026-07-21T12:00:00Z' },
@@ -72,6 +83,14 @@ assert.deepEqual(new Set(nowBoard.map((item) => item.id)), requiredNumbers, 'Lat
 assert.ok(nowBoard.every((item) => item.date && item.source && item.compare && !/\btoday\b/i.test(item.compare)), 'every number needs its own date, source, and honest comparison');
 
 assert.ok(lintReportText({ text: 'One claim; another claim.', inputs: ['One claim', 'another claim'] }).flags.includes('semicolon'), 'public model copy must reject semicolons');
+assert.ok(lintReportText({
+  text: 'Federal transfers are losing momentum and tightening fiscal room.',
+  inputs: ['Federal transfers are losing momentum and tightening fiscal room.'],
+}).flags.some((flag) => flag.startsWith('vague newsroom phrase')), 'automated copy must reject vague pseudo-analysis');
+assert.equal(lintReportText({
+  text: 'Federal revenue shared with the states grew 0.9% from a year earlier.',
+  inputs: ['Federal revenue shared with the states grew 0.9% from a year earlier.'],
+}).ok, true, 'plain actor-action copy must pass the report gate');
 assert.equal(domainTrusted('actionforex.com'), false, 'an unknown GDELT publisher must not enter the public wire');
 assert.equal(domainTrusted('graphics.reuters.com'), true, 'subdomains of an allowlisted publisher must remain eligible');
 assert.equal(publicHeadlineEligible('Ozempic study compares pérdida de peso'), false, 'the word peso as weight must not create a Mexico match');

@@ -4,25 +4,25 @@
     {
       "id": "trade-to-peso-and-exports",
       "pattern": "USMCA|T-MEC|TMEC|tariff|trade talks|exports?",
-      "text": "If trade friction increases, USD/MXN should rise before monthly export totals weaken. If talks reduce the risk, the sequence should reverse. The peso is the early signal; the next export release is the slower check.",
+      "text": "If the trade talks get harder, the peso will probably react before the monthly export data does. A weaker peso would be the first signal. The next export report will show whether the disagreement is affecting actual trade.",
       "seriesIds": ["banxico-usdmxn-fix", "banxico-exports-total"]
     },
     {
       "id": "inflation-to-policy-and-peso",
       "pattern": "inflation|Banxico|policy rate|interest rate",
-      "text": "If inflation keeps falling while the policy rate is unchanged, the gap between them widens. That should support the peso first. A renewed rise in inflation would weaken the read.",
+      "text": "If inflation keeps falling and Banxico holds its rate, Mexico's interest-rate advantage grows. That tends to support the peso. A renewed rise in inflation would complicate that.",
       "seriesIds": ["banxico-inflacion", "banxico-tasa-objetivo", "banxico-usdmxn-fix"]
     },
     {
       "id": "investment-to-activity",
       "pattern": "investment|nearshoring|manufactur|industrial|economic activity|data center|artificial intelligence|\\bAI\\b",
-      "text": "If the investment story is becoming measurable growth, economic activity and goods exports should improve in later monthly releases. If both stay flat, the announcement has not yet become broad activity.",
+      "text": "Announcements are easy. The test is whether factories open, exports rise, and economic activity improves in later releases. If those numbers stay flat, the investment has not spread through the economy yet.",
       "seriesIds": ["banxico-igae", "banxico-exports-total"]
     },
     {
       "id": "migration-to-remittances",
       "pattern": "migration|migrant|remittance|deport|ICE|border",
-      "text": "If tighter US enforcement is materially affecting Mexican workers, remittances should weaken in a later monthly release. A stable remittance series would weaken that read.",
+      "text": "If tighter US enforcement is affecting Mexican workers, remittances should eventually fall. If remittances hold up, that would suggest the effect is still limited.",
       "seriesIds": ["banxico-remesas"]
     }
   ]

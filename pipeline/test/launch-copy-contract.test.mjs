@@ -22,8 +22,8 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
 assert.match(home, /Mexico today/i, 'homepage must remain a daily starting point without expiring after noon');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
 assert.match(home, /Latest numbers/i, 'homepage must place official readings beside the news');
-assert.match(home, /Worth knowing/i, 'homepage must lead readers through the major stories');
-assert.match(home, /Today only/i, 'homepage must state the news window plainly');
+assert.match(home, /Key developments/i, 'homepage must lead readers through the major stories');
+assert.match(home, /dailyBrief\.windowLabel/i, 'homepage must state the rolling news window plainly');
 assert.match(home, /All headlines/i, 'homepage must retain a deeper chronological feed');
 assert.match(home, /My topics/i, 'homepage must expose Alan’s declared interests');
 assert.match(home, /homeEditorial\.myRead\.label/, 'homepage must render the reviewed or deterministic connection label');

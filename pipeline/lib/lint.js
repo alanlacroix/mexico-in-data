@@ -26,6 +26,10 @@ const AI_TICS = /\b(delve|dive into|rich tapestry|vibrant|think of it as|let'?s 
 // biggest, sharpest, central, or defining story. This is intentionally narrower than
 // a general style checker: it protects the automated surfaces, not Alan's essays.
 const EDITORIALIZING = /\b(biggest overhang|sharpest escalation|story of the moment|this is the print|freshest print|central (?:monetary |political |economic )?pivot|the whole [^.]{0,70}\b(?:rests|is an open question)|story is (?:still )?intact|first read on how|board is being set|a bet on)\b/i;
+// Vague newsroom abstractions are especially expensive on a short brief: they sound
+// analytical without telling the reader who did what. Keep this list narrow and based on
+// copy that has actually failed review.
+const VAGUE_NEWSROOM = /\b(losing momentum|fiscal room|budgetary room|welfare commitments|signals? (?:a|the) broader shift|raises? (?:fresh )?questions|mounting pressure|evolving landscape)\b/i;
 const numericTokens = (s) => (String(s || '').match(/\d+(?:[.,]\d+)*/g) || [])
   .map((x) => x.replace(/,/g, '').replace(/^0+(?=\d)/, ''));
 
@@ -38,6 +42,7 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   const hype = clean.match(HYPE); if (hype) flags.push(`hype: "${hype[0]}"`);
   const tic = clean.match(AI_TICS); if (tic) flags.push(`AI tic: "${tic[0]}"`);
   const editorial = clean.match(EDITORIALIZING); if (editorial) flags.push(`editorial shorthand: "${editorial[0]}"`);
+  const vague = clean.match(VAGUE_NEWSROOM); if (vague) flags.push(`vague newsroom phrase: "${vague[0]}"`);
   if (/\.{3}|…/.test(clean)) flags.push('ellipsis or truncated copy');
   const words = clean.split(/\s+/).filter(Boolean).length;
   if (words > maxWords) flags.push(`${words} words (cap ${maxWords})`);

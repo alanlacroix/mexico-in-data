@@ -55,17 +55,15 @@ module.exports = function (now = new Date()) {
   const clock = now instanceof Date || typeof now === 'string' || typeof now === 'number' ? now : new Date();
   const editorialDate = editorialDay(clock);
   const claims = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])].filter(Boolean);
-  const currentClaims = claims.filter((claim) => clean(claim.date) === editorialDate);
-  const currentEvents = (happening.events || []).filter((event) => clean(event.date) === editorialDate);
-  const briefGroups = groupEvents(currentClaims).map((group) => {
-    const related = currentEvents.filter((event) => sameThread(group.event, event));
+  const generatedForToday = clean(meta.editorialDate) === editorialDate;
+  const visibleClaims = generatedForToday ? claims : [];
+  const briefGroups = groupEvents(visibleClaims).map((group) => {
+    const related = (happening.events || []).filter((event) => sameThread(group.event, event));
     return { ...group, coverage: mergeCoverage(group.coverage, related, related.flatMap((event) => event.coverage || [])) };
   });
   const stories = briefGroups.map(toStory).filter((story) => story.title).slice(0, 5);
-  const allClaimsCurrent = claims.length === currentClaims.length;
-  const generatedForToday = clean(meta.editorialDate) === editorialDate && allClaimsCurrent;
   const fallback = stories.slice(0, 3).map((story) => sentence(story.title)).join(' ');
-  const quietCopy = 'No major developments have cleared the brief yet today.';
+  const quietCopy = 'No major developments have cleared the brief yet.';
 
   const briefSources = [];
   for (const story of stories) {
@@ -84,5 +82,7 @@ module.exports = function (now = new Date()) {
     summaryLead: generatedForToday && clean(brief.summary) ? clean(brief.summary) : (fallback || quietCopy),
     stories,
     briefSources,
+    windowHours: Number(meta.windowHours) || 36,
+    windowLabel: `Past ${Number(meta.windowHours) || 36} hours`,
   };
 };

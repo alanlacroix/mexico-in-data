@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { editorialDay } = require('../pipeline/lib/news-day.cjs');
 const { coverageForDay, groupEvents, normalize } = require('../pipeline/lib/news-threads.cjs');
+const { DEFAULT_WINDOW_HOURS, recentEvents } = require('../pipeline/lib/news-window.cjs');
 
 const SECTION = {
   economy: { key: 'economy', label: 'Economy' },
@@ -31,15 +32,14 @@ module.exports = function (now = new Date()) {
   const clock = now instanceof Date || typeof now === 'string' || typeof now === 'number' ? now : new Date();
   const editorialDate = editorialDay(clock);
   const briefEntries = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])]
-    .filter((entry) => entry && clean(entry.date) === editorialDate && clean(brief.meta?.editorialDate) === editorialDate);
+    .filter((entry) => entry && clean(brief.meta?.editorialDate) === editorialDate);
   const briefUrls = new Set(briefEntries.flatMap((entry) => [clean(entry.href || entry.url), ...(entry.coverage || []).map((source) => clean(source.url))]).filter(Boolean));
   const briefTitles = new Set(briefEntries.map((entry) => normalize(entry.h1 || entry.headline || entry.title)).filter(Boolean));
   const interestRules = interests();
 
-  const current = (happening.events || [])
-    .filter((event) => event && event.title && clean(event.date) === editorialDate)
-    .sort((a, b) => (Date.parse(b.publishedAt) || 0) - (Date.parse(a.publishedAt) || 0)
-      || (b.importance || 0) - (a.importance || 0));
+  const windowHours = Math.max(DEFAULT_WINDOW_HOURS, Number(brief.meta?.windowHours) || 0);
+  const current = recentEvents(happening.events || [], clock, windowHours)
+    .filter((event) => event && event.title);
 
   return groupEvents(current).slice(0, 60).map((group) => {
     const event = group.event;

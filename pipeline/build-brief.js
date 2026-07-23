@@ -1,7 +1,8 @@
-// Build the homepage brief from reviewed events dated today in Mexico City.
+// Build the homepage brief from the latest reviewed events.
 // The optional model may only synthesize the selected titles and context. Every card keeps
-// its source link and event ref; a failed synthesis gets a plain headline fallback. A day
-// with no qualifying events is written as an explicit quiet day, never filled with old news.
+// its source link and event ref; a failed synthesis gets a plain headline fallback. The brief
+// uses a rolling window so it does not become empty at midnight or turn one early article into
+// the whole day. The wider fallback is capped and every story keeps its publication date.
 
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -11,9 +12,11 @@ import { askJSON, hasLLM } from './lib/anthropic.js';
 import { lintReportText } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
+import newsWindow from './lib/news-window.cjs';
 
 const { editorialDay } = newsDay;
 const { groupEvents } = newsThreads;
+const { DEFAULT_WINDOW_HOURS, FALLBACK_WINDOW_HOURS, recentEvents } = newsWindow;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -42,14 +45,14 @@ function board() {
   return items;
 }
 
-// ---- the referenceable pool: events + standing facts + board numbers ----
+// ---- the referenceable pool: recent events + standing facts + board numbers ----
 function pool(now = new Date()) {
-  const forDate = editorialDay(now);
-  const events = arr(readJson(D('happening.json'), { events: [] }).events)
-    .map((e) => ({ ...e, _t: Date.parse(e.publishedAt || e.date) || 0 }))
-    .filter((e) => e.date === forDate)
-    .sort((a, b) => (b.importance - a.importance) || (b._t - a._t));
-  return { events, nums: board() };
+  const events = arr(readJson(D('happening.json'), { events: [] }).events);
+  return {
+    recent: recentEvents(events, now, DEFAULT_WINDOW_HOURS),
+    fallback: recentEvents(events, now, FALLBACK_WINDOW_HOURS),
+    nums: board(),
+  };
 }
 
 const endPunct = (t) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t && !/[.!?]$/.test(t) ? t + '.' : t; };
@@ -113,11 +116,21 @@ function select(events) {
   // Pass 1: defining stories take slots first, regardless of the interest list.
   const picked = ranked.filter((e) => effImp(e) >= NEVER_OUTRANKED).slice(0, CAP);
 
-  // Pass 2: remaining slots by importance plus the explicit interest boost.
-  const rest = ranked.filter((e) => !picked.includes(e))
-    .sort((a, b) => (effImp(b) + (b._tags.length ? BOOST : 0)) - (effImp(a) + (a._tags.length ? BOOST : 0)) || (b._t - a._t));
-  for (const e of rest) {
-    if (picked.length >= CAP) break;
+  // Pass 2: remaining slots by importance, interests and a small breadth preference.
+  // Breadth is only a tiebreaker. It can surface another qualified source or beat, but it
+  // cannot make weak news outrank an important development.
+  const rest = ranked.filter((e) => !picked.includes(e));
+  while (picked.length < CAP && rest.length) {
+    const usedSources = new Set(picked.map((e) => e.source).filter(Boolean));
+    const usedSections = new Set(picked.map((e) => e.section).filter(Boolean));
+    rest.sort((a, b) => {
+      const score = (e) => effImp(e)
+        + (e._tags.length ? BOOST : 0)
+        + (!usedSources.has(e.source) ? 0.6 : 0)
+        + (!usedSections.has(e.section) ? 0.25 : 0);
+      return score(b) - score(a) || b._t - a._t;
+    });
+    const e = rest.shift();
     e._boosted = e._tags.length > 0;
     picked.push(e);
   }
@@ -149,7 +162,7 @@ async function writeSummary(picked) {
   if (!hasLLM()) return '';
   const items = picked.map((e) => ({ section: e.section, title: e.title, context: shippedContext(e) }));
   const schema = { type: 'object', additionalProperties: false, required: ['summary'], properties: { summary: { type: 'string' } } };
-  const system = `Write THE BRIEF: the 2-4 sentence paragraph that opens The Mexico Brief, synthesizing today's key developments for someone tracking Mexico. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Connect the stories where they genuinely connect (do not enumerate mechanically); lead with the most consequential. Plain, calm, concrete English. No opinion, no forecasts, no em-dash, no "meanwhile". Maximum 80 words. Return JSON: {summary}.`;
+  const system = `Write THE BRIEF: the 2-4 sentence paragraph that opens The Mexico Brief, explaining the latest key developments for someone tracking Mexico. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Use named actors and concrete verbs. State what happened before explaining the consequence. Connect stories only when the items support the connection. Do not use vague phrases such as "losing momentum", "fiscal room", "welfare commitments", "signals a broader shift", or "raises questions". No opinion, forecasts, em-dash, semicolon, "meanwhile", or marketing language. Maximum 80 words. Return JSON: {summary}.`;
   const out = await askJSON({ system, user: JSON.stringify(items), schema, maxTokens: 2500 });
   const text = String(out && out.summary || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
   if (!text) return '';
@@ -173,18 +186,27 @@ async function main() {
   const prev = readJson(OUT, null);
   const prevHrefs = new Set([prev && prev.lead && prev.lead.href, ...arr(prev && prev.items).map((i) => i.href)].filter(Boolean));
 
-  const picked = select(P.events);
+  let windowHours = DEFAULT_WINDOW_HOURS;
+  let picked = select(P.recent);
+  if (picked.length < 3) {
+    const wider = select(P.fallback);
+    if (wider.length > picked.length) {
+      picked = wider;
+      windowHours = FALLBACK_WINDOW_HOURS;
+    }
+  }
   if (!picked.length) {
     const contentSig = fingerprint([]);
     const unchanged = prev?.meta?.contentSig === contentSig && prev?.meta?.editorialDate === editorialDate;
     const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
     const out = {
       meta: {
-        title: 'What changed', editorialDate, updated: editorialDate, asOf: editorialDate,
+        title: 'The brief', editorialDate, updated: editorialDate, asOf: editorialDate,
         reviewedAt, latestItemDate: '', quiet: true, newCount: 0,
-        generatedAt: now.toISOString(), mode: 'curated', count: 0, words: 9, contentSig,
+        generatedAt: now.toISOString(), mode: 'curated', count: 0, words: 8,
+        windowHours,
       },
-      summary: 'No major developments have cleared the brief yet today.',
+      summary: 'No major developments have cleared the brief yet.',
       lead: null,
       items: [],
       standing: buildStanding(P.nums),
@@ -225,9 +247,10 @@ async function main() {
   // Keep an unchanged summary stable. When the story set changes, a failed model draft gets
   // a deterministic summary of the current headlines, never prose from the previous set.
   const summary = (unchanged && String(prev.summary || '').trim()) || await writeSummary(picked) || fallbackSummary(picked);
-  const out = { meta: { title: 'What changed', editorialDate, updated: editorialDate, asOf: editorialDate,
+  const out = { meta: { title: 'The brief', editorialDate, updated: editorialDate, asOf: editorialDate,
     reviewedAt, latestItemDate: selectedDates.at(-1) || '', quiet, newCount,
-    generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words, contentSig }, summary, lead, items, standing };
+    generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words, contentSig,
+    windowHours }, summary, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
   console.log(`  wrote ${path.relative(ROOT, OUT)} · ${1 + items.length} items · ${words} words · picked: ${picked.map((e) => e.importance).join('/')} · ${unchanged ? 'content unchanged (clock held)' : 'content changed (clock bumped)'}`);
 }
