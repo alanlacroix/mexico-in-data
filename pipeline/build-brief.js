@@ -13,10 +13,12 @@ import { lintReportText } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
 import newsWindow from './lib/news-window.cjs';
+import plainLanguage from './lib/plain-language.cjs';
 
 const { editorialDay } = newsDay;
 const { groupEvents } = newsThreads;
 const { DEFAULT_WINDOW_HOURS, FALLBACK_WINDOW_HOURS, recentEvents } = newsWindow;
+const { plainExplanation, plainHeadline } = plainLanguage;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -58,7 +60,7 @@ function pool(now = new Date()) {
 const endPunct = (t) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t && !/[.!?]$/.test(t) ? t + '.' : t; };
 const capitalize = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
 const fallbackSummary = (picked) => picked.slice(0, 3)
-  .map((event) => endPunct(stripDash(event.title)))
+  .map((event) => endPunct(plainHeadline(stripDash(event.title))))
   .join(' ');
 
 // ---- the new Brief (Fable 2026-07-12): 3-5 rubric-ranked items, each headline + explained context ----
@@ -162,7 +164,7 @@ async function writeSummary(picked) {
   if (!hasLLM()) return '';
   const items = picked.map((e) => ({ section: e.section, title: e.title, context: shippedContext(e) }));
   const schema = { type: 'object', additionalProperties: false, required: ['summary'], properties: { summary: { type: 'string' } } };
-  const system = `Write THE BRIEF: the 2-4 sentence paragraph that opens The Mexico Brief, explaining the latest key developments for someone tracking Mexico. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Use named actors and concrete verbs. State what happened before explaining the consequence. Connect stories only when the items support the connection. Do not use vague phrases such as "losing momentum", "fiscal room", "welfare commitments", "signals a broader shift", or "raises questions". No opinion, forecasts, em-dash, semicolon, "meanwhile", or marketing language. Maximum 80 words. Return JSON: {summary}.`;
+  const system = `Write THE BRIEF: the 2-4 sentence paragraph that opens The Mexico Brief, explaining the latest key developments for someone tracking Mexico. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Use named actors and concrete verbs. State what happened before explaining the consequence. Connect stories only when the items support the connection. Never make the reader decode an acronym: write the institution, agreement or indicator in plain English on first mention (for example, "US trade office", "US-Mexico-Canada Agreement", and "Mexico's statistics agency"). "US" is fine. Do not use vague phrases such as "losing momentum", "fiscal room", "welfare commitments", "signals a broader shift", or "raises questions". No opinion, forecasts, em-dash, semicolon, "meanwhile", or marketing language. Maximum 80 words. Return JSON: {summary}.`;
   const out = await askJSON({ system, user: JSON.stringify(items), schema, maxTokens: 2500 });
   const text = String(out && out.summary || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
   if (!text) return '';
@@ -172,7 +174,7 @@ async function writeSummary(picked) {
   // still keeps it a paragraph, not an essay.
   const gate = lintReportText({ text, inputs: items.flatMap((i) => [i.title, i.context]), maxWords: 105, maxSentences: 5 });
   if (!gate.ok) { console.warn(`  summary rejected: ${gate.flags.join('; ')}`); return ''; }
-  return text;
+  return plainExplanation(text);
 }
 
 async function main() {
@@ -217,12 +219,12 @@ async function main() {
   }
   const isNew = (e) => !prevHrefs.has(e.url || '');
   const lead0 = picked[0];
-  const pass4 = (e) => ({ background: String(e.background || '').trim(), drivers: String(e.drivers || '').trim(), implications: String(e.implications || '').trim(), next: String(e.next || '').trim(), image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '', publishedAt: String(e.publishedAt || '').trim(), coverage: arr(e.coverage) });
+  const pass4 = (e) => ({ background: plainExplanation(e.background), drivers: plainExplanation(e.drivers), implications: plainExplanation(e.implications), next: plainExplanation(e.next), image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '', publishedAt: String(e.publishedAt || '').trim(), coverage: arr(e.coverage) });
   // Ranking provenance (Fable 2026-07-20): base importance, interest tags, boost, final rank.
   const rankOf = (e, i) => ({ rank: i + 1, importance: e.importance || 0, tags: e._tags || [], boosted: !!e._boosted });
-  const lead = { h1: stripDash(lead0.title).replace(/\.\s*$/, ''), context: ctxOf(lead0), ...pass4(lead0), refs: [lead0.id],
+  const lead = { h1: plainHeadline(stripDash(lead0.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(lead0)), ...pass4(lead0), refs: [lead0.id],
     href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0), ranking: rankOf(lead0, 0) };
-  const items = picked.slice(1).map((e, i) => ({ headline: stripDash(e.title).replace(/\.\s*$/, ''), context: ctxOf(e), ...pass4(e),
+  const items = picked.slice(1).map((e, i) => ({ headline: plainHeadline(stripDash(e.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(e)), ...pass4(e),
     refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', isNew: isNew(e), ranking: rankOf(e, i + 1) }));
   const standing = buildStanding(P.nums);
   const quiet = false;

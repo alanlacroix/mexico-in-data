@@ -70,8 +70,8 @@ module.exports = function () {
   if (inflation) {
     const current = latest(inflation), gap = current.value - 3;
     cards.push({ id: inflation.id, label: 'Inflation', display: number(current.value), unit: '% y/y',
-      compare: `${number(Math.abs(gap), 2)} pp ${gap >= 0 ? 'above' : 'below'} Banxico’s 3% target`,
-      date: current.date, cadence: 'monthly', source: 'INEGI · Banxico target', href: link(inflation.id) });
+      compare: `${number(Math.abs(gap), 2)} pp ${gap >= 0 ? 'above' : 'below'} the central bank’s 3% target`,
+      date: current.date, cadence: 'monthly', source: 'Mexico statistics agency · central bank target', href: link(inflation.id) });
   }
 
   if (rate) {
@@ -86,7 +86,7 @@ module.exports = function () {
     const current = latest(activity), prior = previous(activity);
     cards.push({ id: activity.id, label: 'Economic activity', display: `${current.value >= 0 ? '+' : ''}${number(current.value)}`, unit: '% y/y',
       compare: prior ? movementFromPrior(current.value - prior.value) : 'Latest annual change',
-      date: current.date, cadence: 'monthly', source: 'INEGI', href: link(activity.id) });
+      date: current.date, cadence: 'monthly', source: 'Mexico statistics agency', href: link(activity.id) });
   }
 
   if (exportsTotal) {

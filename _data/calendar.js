@@ -7,6 +7,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const { plainExplanation, plainHeadline, plainSourceName } = require('../pipeline/lib/plain-language.cjs');
 
 module.exports = function () {
   let events = [];
@@ -23,16 +24,16 @@ module.exports = function () {
         : /INEGI CPI/i.test(rawTitle) ? 'First-half July inflation'
         : /INEGI IGAE/i.test(rawTitle) ? 'May economic activity'
         : /INEGI unemployment/i.test(rawTitle) ? 'June employment'
-        : rawTitle;
+        : plainHeadline(rawTitle);
       const why = /USMCA talks/i.test(rawTitle)
-        ? 'USMCA stays in force. Mexico and the United States return to the table after the U.S. declined a 16-year extension.'
-        : String(e.mechanism || '').trim();
+        ? 'The US-Mexico-Canada trade agreement stays in force. Mexico and the United States return to the table after the US declined a 16-year extension.'
+        : plainExplanation(e.mechanism).replace(/\s*[—–]\s*/g, '. ');
       return {
         date: e.date,
         approx: !!e.approx,
         title,
         why,
-        source: String(e.source || '').trim(),
+        source: plainSourceName(e.source),
         sourceUrl: String(e.sourceUrl || '').trim(),
       };
     });

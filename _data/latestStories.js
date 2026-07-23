@@ -3,6 +3,7 @@ const path = require('node:path');
 const { editorialDay } = require('../pipeline/lib/news-day.cjs');
 const { coverageForDay, groupEvents, normalize } = require('../pipeline/lib/news-threads.cjs');
 const { DEFAULT_WINDOW_HOURS, recentEvents } = require('../pipeline/lib/news-window.cjs');
+const { plainExplanation, plainHeadline, plainSourceName } = require('../pipeline/lib/plain-language.cjs');
 
 const SECTION = {
   economy: { key: 'economy', label: 'Economy' },
@@ -44,7 +45,8 @@ module.exports = function (now = new Date()) {
   return groupEvents(current).slice(0, 60).map((group) => {
     const event = group.event;
     const section = SECTION[event.section] || SECTION.economy;
-    const sources = coverageForDay(clean(event.date), event, event.coverage || [], group.coverage || []);
+    const sources = coverageForDay(clean(event.date), event, event.coverage || [], group.coverage || [])
+      .map((source) => ({ ...source, source: plainSourceName(source.source) }));
     const latestSourceTime = sources.map((source) => clean(source.publishedAt)).find(Boolean);
     const haystack = `${event.title || ''} ${event.why || ''} ${event.section || ''}`;
     return {
@@ -52,12 +54,12 @@ module.exports = function (now = new Date()) {
       date: clean(event.date),
       topic: section.key,
       topicLabel: section.label,
-      title: clean(event.title).replace(/\.\s*$/, ''),
-      summary: clean(event.summary || event.dek || event.why),
-      bg: clean(event.background),
-      implications: clean(event.implications),
-      next: clean(event.next),
-      source: clean(event.source),
+      title: plainHeadline(event.title).replace(/\.\s*$/, ''),
+      summary: plainExplanation(event.summary || event.dek || event.why),
+      bg: plainExplanation(event.background),
+      implications: plainExplanation(event.implications),
+      next: plainExplanation(event.next),
+      source: plainSourceName(event.source),
       url: clean(event.url),
       reportTime: latestSourceTime || clean(event.publishedAt),
       sources,

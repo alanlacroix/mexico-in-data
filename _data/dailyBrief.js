@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { editorialDay } = require('../pipeline/lib/news-day.cjs');
 const { coverageForDay, groupEvents, mergeCoverage, sameThread } = require('../pipeline/lib/news-threads.cjs');
+const { plainExplanation, plainHeadline, plainSourceName } = require('../pipeline/lib/plain-language.cjs');
 
 const read = (rel) => {
   try { return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', rel), 'utf8')); }
@@ -26,19 +27,20 @@ const sentence = (value) => {
 function toStory(group) {
   const event = group.event;
   const section = SECTIONS[event && event.section] || SECTIONS.economy;
-  const sources = coverageForDay(clean(event.date), event, event.coverage || [], group.coverage || []);
+  const sources = coverageForDay(clean(event.date), event, event.coverage || [], group.coverage || [])
+    .map((source) => ({ ...source, source: plainSourceName(source.source) }));
   const latestSourceTime = sources.map((source) => clean(source.publishedAt)).find(Boolean);
   return {
     id: clean(event.id) || clean(event.h1 || event.headline || event.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     beat: section.beat,
     date: clean(event.date),
-    title: clean(event.h1 || event.headline || event.title).replace(/\.\s*$/, ''),
-    summary: clean(event.summary || event.dek || event.context || event.why),
-    bg: clean(event.background),
-    implications: clean(event.implications),
-    next: clean(event.next),
+    title: plainHeadline(event.h1 || event.headline || event.title).replace(/\.\s*$/, ''),
+    summary: plainExplanation(event.summary || event.dek || event.context || event.why),
+    bg: plainExplanation(event.background),
+    implications: plainExplanation(event.implications),
+    next: plainExplanation(event.next),
     image: /^https:\/\//i.test(clean(event.image)) ? clean(event.image) : '',
-    source: clean(event.source),
+    source: plainSourceName(event.source),
     url: clean(event.href || event.url),
     reportTime: latestSourceTime || clean(event.publishedAt),
     sources,
@@ -79,7 +81,7 @@ module.exports = function (now = new Date()) {
     editorialDate,
     newsThrough: clean(meta.reviewedAt || meta.generatedAt || happening.meta?.generatedAt),
     quiet: !stories.length || !!meta.quiet,
-    summaryLead: generatedForToday && clean(brief.summary) ? clean(brief.summary) : (fallback || quietCopy),
+    summaryLead: plainExplanation(generatedForToday && clean(brief.summary) ? clean(brief.summary) : (fallback || quietCopy)),
     stories,
     briefSources,
     windowHours: Number(meta.windowHours) || 36,

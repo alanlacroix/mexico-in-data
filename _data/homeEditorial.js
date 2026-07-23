@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { editorialDay } = require('../pipeline/lib/news-day.cjs');
+const { plainExplanation, plainHeadline } = require('../pipeline/lib/plain-language.cjs');
 const nowBoard = require('./nowBoard.js');
 
 const read = (rel, fallback = null) => {
@@ -19,6 +20,8 @@ module.exports = function (now = new Date()) {
   const numbersById = new Map(nowBoard().map((item) => [item.id, item]));
   const withNumbers = (entry) => ({
     ...entry,
+    text: plainExplanation(entry.text),
+    storyLabel: plainHeadline(entry.storyLabel),
     numbers: (entry.seriesIds || []).map((id) => numbersById.get(id)).filter(Boolean),
   });
   const reviewed = editorial?.forDate === forDate ? editorial : null;
