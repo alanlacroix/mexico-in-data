@@ -30,8 +30,11 @@ assert.match(home, /homeEditorial\.myRead\.label/, 'homepage must render the rev
 assert.ok(homeEditorial.myRead?.text, 'a reviewed prediction must remain explicitly separate from reported facts');
 assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
 assert.match(home, /for story in latestStories/, 'the full news feed must live on the Brief instead of a separate Latest page');
-assert.match(home, />Context</i, 'stories must offer optional context in plain language');
-assert.doesNotMatch(home, />BE</i, 'the homepage must not make readers decode the old BE badge');
+assert.match(home, /aria-label="Briefly explained:/i, 'key developments must offer the optional analysis layer');
+assert.match(home, /<b>BE<\/b> Briefly explained/i, 'the homepage must explain the BE badge once');
+assert.match(home, />Our view</i, 'the analysis layer must label the Brief’s judgment');
+assert.match(home, />What we’re watching</i, 'the analysis layer must state what could confirm or weaken the view');
+assert.doesNotMatch(topics, /class="be-mark"|class="be-summary"|guideHTML\(/i, 'BE belongs on the main Brief, not quarterly topic pages');
 assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
 assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as a duplicate footer destination');
 assert.match(home, /id="week-title">Coming up</i, 'homepage must show the next official dates');
@@ -42,8 +45,8 @@ for (const id of ['banxico-usdmxn-fix', 'banxico-inflacion', 'banxico-tasa-objet
   assert.match(nowBoard, new RegExp(id), `latest numbers must include ${id}`);
 }
 
-assert.match(topics, /general minimum wage is (?:<b>)?MX\$\$\{fmt\(W\.value,2\)\} a day/i,
-  'minimum-wage copy must identify Mexican pesos');
+assert.doesNotMatch(topics, /minimum wage is (?:<b>)?\$(?!\$\{)/i,
+  'minimum-wage copy must never use an unqualified dollar sign');
 // Guard the overclaim itself rather than one frozen sentence (2026-07-21): intermediate
 // imports are A reason exports and imports co-move, never the whole reason.
 assert.doesNotMatch(topics, /(?:that is|thats|this is) why exports and imports rise and fall/i,

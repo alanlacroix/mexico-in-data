@@ -1,6 +1,6 @@
 # The Brief — selection rubric (Fable ruling 2026-07-12)
 
-The homepage Brief is the daily glance: **3–5 of the most important things in Mexico right now**, each explained in 1–2 sentences, each linked to its source. This is the rubric that decides what makes it in, so "importance" is a score, not a vibe.
+The homepage Brief is the daily glance: **3–5 of the most important things in Mexico right now**, each summarized and linked to its source. The count follows the news. Never pad the page.
 
 ## How to score an event
 
@@ -15,13 +15,20 @@ Every candidate event in `data/happening.json` gets an `importance` from **0 to 
 ## What ships
 
 - **Threshold: importance ≥ 5.** Only events at 5+ are eligible.
-- **Cap: 5.** Never more, even in a huge week.
-- **Floor: 3 (soft).** If fewer than 3 clear the threshold, ship what clears it — never pad to a count.
-- The number of items flexes by the week: a big week naturally yields 5, a slow week 3. Length follows item count, never fatter items (target 150–250 words).
+- **Cap: 5.** Never more, even on a huge day.
+- **Floor: 3 (soft).** If fewer than 3 clear the threshold, ship what clears it. Never pad to a count.
+- **A fourth or fifth item must earn the extra space.** It needs importance ≥ 6 or a direct match to the stated interest list. A routine importance-5 item does not fill an empty slot.
+- Two reports about the same meeting or decision use one slot and retain both source links.
 
 ## Where the context comes from
 
-Each event's shipped context is its **`why`** field (or an explicit `context` field) — human-written, drawn only from the linked source and facts we already own. The lead item's context (the #1 story, the H1) Alan writes himself.
+The visible summary is factual and comes from the linked report. Only the three key developments can open **Briefly explained**, which has a stricter contract:
+
+- **Background:** the structural fact a newcomer needs, drawn from the report, related reporting, and the site's sourced standing facts.
+- **Our view:** a narrow judgment tied to a concrete mechanism or tradeoff. This is analysis, not reported fact.
+- **What we're watching:** a specific expectation or observable condition that would confirm or weaken the view.
+
+Each part must add something the visible summary did not already say. Keep the full layer under roughly 110 words. Ordinary headlines never get this layer.
 
 An LLM may pre-draft context into **`context_draft`** from a pasted `excerpt`, but **the build refuses to render `context_draft`** — nothing ships until it's promoted by hand to `context`/`why`. Draft text may never strengthen a claim beyond its source (no "proposed" → "passed").
 
@@ -30,4 +37,4 @@ An LLM may pre-draft context into **`context_draft`** from a pasted `excerpt`, b
 - Closed world: the only inputs are the curated event log, standing facts, and the live board numbers.
 - No sentence without a link: every shipped line carries its source id, or it's rejected.
 - The model never does math; every number appears verbatim in a cited input.
-- The Brief rebuilds once each morning, at Alan's curation pass. No intra-day updates.
+- The Brief may refresh as new reporting arrives, but the selection and analysis contract does not change during the day.

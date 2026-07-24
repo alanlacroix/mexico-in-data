@@ -26,7 +26,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
-import { REPORT, BAN } from './lib/voice.js';   // shared voice (Fable 2026-07-12): headlines + context REPORT plain
+import { REPORT, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
 import { lintReportText, slopFlags, isSlop } from './lib/lint.js';
 import { mexicoRelevant } from './lib/news-trust.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
@@ -264,43 +264,26 @@ ${BAN}`;
   return events.slice(0, MAX_NEW);
 }
 
-// ---- BRIEFLY EXPLAINED: the four-part analysis, grounded in the ARTICLE BODY (Alan
-// 2026-07-16: "background, drivers, prediction, implication — this is what makes us
-// unique"). For the top events we fetch the piece (fetch-article.js, fail-soft) and have
-// the model write FOUR gated fields from that text only:
-//   background    — what led here; the setup a newcomer needs
-//   drivers       — the forces pushing it (who wants what, and why now)
-//   implications  — what it changes for Mexico, markets, or the US relationship
-//   next          — the honest version of "prediction": ONLY next steps the text itself
-//                   states (a scheduled meeting, a deadline, a vote, a filing). The site's
-//                   no-forecast law holds: if the source states nothing, the field is empty.
-// Every field: style lint + every numeral must appear in the provided text + the slop
-// contract. Reject field-by-field; a thin article yields fewer fields, never filler. ----
-const BG_MAX = 16;            // per run; merged events keep their analysis, so coverage accumulates
+// ---- BRIEFLY EXPLAINED: the value-added layer for likely key developments.
+// The visible summary remains reported fact. The disclosure adds three distinct things:
+//   background  — the structural facts a newcomer needs
+//   view        — a narrow, evidence-backed judgment, explicitly labeled as ours
+//   prediction  — what we expect or the measurable condition that would change the view
+// All three are grounded in the article, same-thread reporting when available, and the
+// site's standing facts. A thin source yields no analysis, never filler. ----
+const BG_MAX = 8;             // fewer analyses, done properly
 const BG_DAYS = 14;           // recent events earn the analysis fetch
-const BG_MIN_IMP = 4;         // ...down to importance 4, so "More headlines" stories get structured Context too (Alan 2026-07-17)
+const BG_MIN_IMP = 5;         // ordinary headlines do not need an analysis layer
 const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
 async function addBackgrounds(events, now) {
   if (!hasLLM()) return 0;
   const cutoff = now.getTime() - BG_DAYS * 864e5;
-  // `drivers` marks the four-part model, so stories carrying only the old freeform
-  // background get upgraded on later runs too. Over-long stored analyses (written under
-  // earlier, looser caps) also re-analyze so everything converges tight (Alan: "not crazy long").
-  const totalWords = (e) => ['background', 'drivers', 'implications', 'next']
+  const totalWords = (e) => ['background', 'view', 'prediction']
     .reduce((n, f) => n + String(e[f] || '').split(/\s+/).filter(Boolean).length, 0);
-  // analysisV 2 (Alan): background = the NEWCOMER PRIMER (what the thing at the center IS
-  // and the standing situation around it), grounded in the site's curated standing facts +
-  // the article — never a restatement of the news event. v1 analyses regenerate once.
   const IMG_MAX_TRIES = 6;   // a few chances so a late og:image (or a now-unblocked fetch) is caught
-  // The CORE three are the published contract (Alan 2026-07-20: "has to be consistent").
-  // A story missing any of them is retried on later runs rather than shipped partial —
-  // article text improves as outlets fill a story in, so a retry often completes it.
-  // "next" is deliberately NOT in the contract: most news states no concrete next step,
-  // so requiring it would either gut coverage (it completes on 41% of stories) or force
-  // the model to invent one. It ships as an explicit bonus when the article really has it.
-  const CORE = ['background', 'drivers', 'implications'];
+  const CORE = ['background', 'view', 'prediction'];
   const coreComplete = (e) => CORE.every((f) => stripDashWs(e[f]));
-  const needsAnalysis = (e) => !coreComplete(e) || totalWords(e) > 130 || e.analysisV !== 5;
+  const needsAnalysis = (e) => !coreComplete(e) || totalWords(e) > 120 || e.analysisV !== 6;
   // A fresh article often loads BEFORE its og:image is set (or behind a first-hit consent
   // page), so "fetched, no image" is NOT final — retry up to a few times over later runs so
   // the picture is picked up once it appears (Audit 2026-07-18: an El País Ruffo story was
@@ -309,7 +292,17 @@ async function addBackgrounds(events, now) {
   const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (needsAnalysis(e) || needsImage(e)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
   const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
-  const fetched = await Promise.all(want.map(async (e) => ({ e, r: await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '', fetched: false })) })));
+  const fetched = await Promise.all(want.map(async (e) => {
+    const r = await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '', fetched: false }));
+    const related = arr(e.coverage).filter((source) => source.url && source.url !== e.url).slice(0, 2);
+    const secondary = await Promise.all(related.map(async (source) => ({
+      source: source.source || '',
+      title: source.title || '',
+      summary: source.summary || '',
+      result: await fetchArticle(source.url).catch(() => ({ ok: false, text: '' })),
+    })));
+    return { e, r, secondary };
+  }));
   // The article's own link-preview image rides along free with the fetch (unfurl-style
   // thumbnail; https-only). Count every attempt so retries are bounded at IMG_MAX_TRIES.
   for (const x of fetched) {
@@ -318,54 +311,63 @@ async function addBackgrounds(events, now) {
   }
   // Only run the model for stories that actually need analysis — an image-only retry gets its
   // picture from the fetch above and skips the (paid) model call.
-  const items = fetched.filter((x) => x.r.ok && needsAnalysis(x.e)).map((x, i) => ({ i, e: x.e, body: x.r.text.slice(0, 1600) }));
+  const items = fetched.filter((x) => x.r.ok && needsAnalysis(x.e)).map((x, i) => ({
+    i,
+    e: x.e,
+    body: x.r.text.slice(0, 1800),
+    secondary: x.secondary.filter((source) => source.result.ok).map((source) => ({
+      source: source.source,
+      title: source.title,
+      summary: source.summary,
+      text: source.result.text.slice(0, 1200),
+    })),
+  }));
   const imgGot = fetched.filter((x) => x.r.image).length;
   console.log(`  fetch: ${want.length} wanted · ${items.length} to analyze · ${imgGot} images grabbed`);
   if (!items.length) return 0;
   const FIELD = { type: 'string' };
   const schema = { type: 'object', additionalProperties: false, required: ['analyses'], properties: { analyses: { type: 'array', items: {
-    type: 'object', additionalProperties: false, required: ['i', 'background', 'drivers', 'implications', 'next'], properties: {
-      i: { type: 'integer' }, background: FIELD, drivers: FIELD, implications: FIELD, next: FIELD } } } } };
-  const system = `You are given STANDING FACTS (the site's curated structural facts about Mexico) and, per item, a headline, a one-line summary, and the ARTICLE TEXT. Write the four-part BRIEFLY EXPLAINED analysis. Nothing may repeat the given summary line:
-- background: one to three sentences a NEWCOMER needs to understand the story: what the institution, agreement, or thing at the center IS, and the standing situation around it. Draw on the STANDING FACTS and the article. NEVER a restatement of the news event itself (the summary already says what happened) — if the story is about a USMCA review, background explains what USMCA is and why reviews are happening, not who spoke where.
-- drivers: one to two sentences, from the ARTICLE ONLY — the forces pushing it: who wants what, and why now.
-- implications: one to two sentences, from the ARTICLE ONLY — a consequence the article itself states or directly supports (what it changes for Mexico, its markets, or the US relationship). Do NOT add analyst inference, prediction, or framing the article does not support: do not infer a policy decision the source never mentions (e.g. a rate cut it never discusses), do not reframe a role (a cabinet secretary is not a "government"), and do not assert one process is "separate from" or "part of" another unless the article says so. If the article states no clear implication, return "".
-- next: one to two sentences, from the ARTICLE ONLY — a concrete next step the text states (a scheduled meeting, deadline, vote, filing, or a stated plan) that is NOT already in the summary or drivers. Keep the KEY qualifying detail: if a stated plan would otherwise seem to contradict the news, include the clause that reconciles it (e.g. if exports halted but a leader vows to keep supplying, say HOW — through whom). If the text states no genuine next step, return "".
-KEEP IT TIGHT: prefer ONE sentence per field; the whole four-part analysis should read in under 90 words. A reader opens this for a fast layer of understanding, not an essay.
-EACH FIELD MUST ADD SOMETHING NEW: do not let two fields make the same point, and do not restate the one-line summary or repeat a date already given. If implications would just echo the summary, either give a genuinely different consequence or return "".
-Calm, concrete, whole sentences. Never make the reader decode an acronym: give the full plain-English name on first mention, and only retain the acronym if the same field uses it again. "US" is fine. Use the article's OWN words for roles, entities and what is at stake — do not upgrade, soften or generalize them (crude oil is not "petroleum products"; "amid pressure" is not "sustained pressure"). No opinion, no forecasts beyond stated plans, no em-dash, and no number that does not appear in the provided material. Return "" for any field you cannot honestly support. Return JSON.
+    type: 'object', additionalProperties: false, required: ['i', 'background', 'view', 'prediction'], properties: {
+      i: { type: 'integer' }, background: FIELD, view: FIELD, prediction: FIELD } } } } };
+  const system = `You are writing the optional BRIEFLY EXPLAINED layer for The Mexico Brief. The visible summary already reports what happened. Use the ARTICLE, any OTHER REPORTING, and the site's STANDING FACTS to add three distinct things:
+- background: one or two sentences explaining the institution, agreement, market, or structural fact a newcomer needs. Do not restate the event.
+- view: one or two sentences giving a narrow judgment about what matters most and why. This is explicitly labeled "Our view", so take a position. Tie it to a concrete mechanism or tradeoff in the supplied evidence. State uncertainty honestly. Do not write generic phrases such as "could have implications" or simply paraphrase a source.
+- prediction: one or two sentences saying what you expect next OR naming a measurable condition that would confirm or weaken the view. It must be specific enough to revisit. Do not invent a date, number, decision, or certainty.
+Prefer one sentence per field and keep all three under 110 words. Each field must add something new. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number that does not appear in the supplied material. Return "" rather than filler. Return JSON.
 
-${REPORT}
+${TRUST}
+
+${SEAM}
+
+${EARNED_LINE}
 
 ${BAN}`;
-  const payload = { standingFacts: standingText, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', text: x.body })) };
+  const payload = { standingFacts: standingText, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
   const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000 });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
-  const CAPS = { background: [55, 2], drivers: [35, 2], implications: [40, 2], next: [35, 2] };
+  const CAPS = { background: [50, 2], view: [45, 2], prediction: [40, 2] };
   let added = 0;
   for (const r of out.analyses) {
     const item = items.find((x) => x.i === r.i); if (!item) continue;
     let landed = 0;
-    for (const field of ['background', 'drivers', 'implications', 'next']) {
+    for (const field of CORE) {
       const text = stripDashWs(r[field]);
       if (!text) continue;
       const [maxWords, maxSentences] = CAPS[field];
-      // Background may ground in the curated standing facts (its numbers are theirs);
-      // the other three fields stay article-only.
-      const inputs = [item.e.title, item.e.context || item.e.why, item.body];
-      if (field === 'background') inputs.push(standingText);
+      const inputs = [item.e.title, item.e.context || item.e.why, item.body, standingText,
+        ...item.secondary.flatMap((source) => [source.title, source.summary, source.text])];
       const gate = lintReportText({ text, inputs, maxWords, maxSentences });
       const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
       if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
       // Anti-repetition (Audit 2026-07-17): drop a field that merely restates the one-line
       // summary or an earlier field, so the four parts stay four distinct things.
-      const priors = [item.e.context || item.e.why, item.e.background, item.e.drivers, item.e.implications].filter(Boolean);
+      const priors = [item.e.context || item.e.why, item.e.background, item.e.view, item.e.prediction].filter(Boolean);
       if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
       item.e[field] = text; landed++;
     }
     // v6: only a story whose CORE three landed counts as analysed. An incomplete one keeps
     // its old analysisV so a later run retries it, instead of being frozen half-written.
-    if (coreComplete(item.e)) { item.e.analysisV = 5; added++; }
+    if (coreComplete(item.e)) { item.e.analysisV = 6; added++; }
     else if (landed) console.warn(`  analysis incomplete ${item.e.id}: missing ${CORE.filter((f) => !stripDashWs(item.e[f])).join(', ')} — will retry, no BE shown`);
     if (!stripDashWs(r.background)) console.warn(`  standing-gap: no background written for "${item.e.title.slice(0, 60)}" — is a standing fact missing?`);
   }
@@ -408,7 +410,7 @@ function mergeLog(existing, fresh, now) {
           if (e[key] !== undefined) dup[key] = e[key];
         }
         dup.importance = Math.max(dup.importance || 0, e.importance || 0);
-        for (const key of ['background', 'drivers', 'implications', 'next', 'analysisV']) delete dup[key];
+        for (const key of ['background', 'view', 'prediction', 'drivers', 'implications', 'next', 'analysisV']) delete dup[key];
       }
       continue;
     }

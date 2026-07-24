@@ -24,6 +24,14 @@ function sameThread(a, b) {
   if (!a || !b || clean(a.date) !== clean(b.date)) return false;
   if (clean(a.url) && clean(a.url) === clean(b.url)) return true;
   if (jaccard(words(titleOf(a)), words(titleOf(b))) >= 0.5) return true;
+  // Different outlets often describe the same treaty meeting from different angles.
+  // Keep a progress quote and the meeting outcome on one card when they refer to the
+  // same day's USMCA review talks; do not merge broader treaty commentary or a new event.
+  const titleA = normalize(titleOf(a)), titleB = normalize(titleOf(b));
+  const usmcaReview = (title) => /\b(?:usmca|tmec|t mec)\b/.test(title)
+    && /\breview\b/.test(title)
+    && /\b(?:talks?|round|meeting|advance|progress)\b/.test(title);
+  if (usmcaReview(titleA) && usmcaReview(titleB)) return true;
   const companyA = normalize(a.company), companyB = normalize(b.company);
   return !!companyA && companyA === companyB
     && jaccard(words([titleOf(a), a.why, a.context].filter(Boolean).join(' ')), words([titleOf(b), b.why, b.context].filter(Boolean).join(' '))) >= 0.25;
@@ -63,8 +71,8 @@ function preferred(a, b) {
   const timeA = publishedAt(a), timeB = publishedAt(b);
   if (timeA !== timeB) return timeA > timeB ? a : b;
   if (isFirstParty(a) !== isFirstParty(b)) return isFirstParty(a) ? a : b;
-  const completeA = ['background', 'implications', 'next'].filter((field) => clean(a && a[field])).length;
-  const completeB = ['background', 'implications', 'next'].filter((field) => clean(b && b[field])).length;
+  const completeA = ['background', 'view', 'prediction', 'implications', 'next'].filter((field) => clean(a && a[field])).length;
+  const completeB = ['background', 'view', 'prediction', 'implications', 'next'].filter((field) => clean(b && b[field])).length;
   if (completeA !== completeB) return completeA > completeB ? a : b;
   if ((a.importance || 0) !== (b.importance || 0)) return (a.importance || 0) > (b.importance || 0) ? a : b;
   if (hasImage(a) !== hasImage(b)) return hasImage(a) ? a : b;

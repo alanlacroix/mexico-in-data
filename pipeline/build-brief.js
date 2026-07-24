@@ -60,10 +60,10 @@ function pool(now = new Date()) {
 const endPunct = (t) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t && !/[.!?]$/.test(t) ? t + '.' : t; };
 const capitalize = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
 const fallbackSummary = (picked) => picked.slice(0, 3)
-  .map((event) => endPunct(plainHeadline(stripDash(event.title))))
+  .map((event) => endPunct(plainExplanation(ctxOf(event)) || plainHeadline(stripDash(event.title))))
   .join(' ');
 
-// ---- the new Brief (Fable 2026-07-12): 3-5 rubric-ranked items, each headline + explained context ----
+// ---- the Brief: 3-5 rubric-ranked developments, each headline + explained context ----
 const stripDash = (t) => String(t || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();  // voice law: no em-dash
 const WORDS = (t) => stripDash(t).split(/\s+/).filter(Boolean).length;
 // The event's shipped context is its `context` field, or the curator's `why` when no
@@ -132,15 +132,19 @@ function select(events) {
         + (!usedSections.has(e.section) ? 0.25 : 0);
       return score(b) - score(a) || b._t - a._t;
     });
-    const e = rest.shift();
+    const nextIndex = picked.length < 3
+      ? 0
+      : rest.findIndex((candidate) => effImp(candidate) >= 6 || candidate._tags.length > 0);
+    if (nextIndex < 0) break;
+    const [e] = rest.splice(nextIndex, 1);
     e._boosted = e._tags.length > 0;
     picked.push(e);
   }
 
-  // Anti-bubble wildcard: the brief can never be all interest stories.
+  // One wildcard outside Alan's declared interests prevents a completely closed bubble.
   const boostedCount = picked.filter((e) => e._tags.length).length;
   if (picked.length === CAP && boostedCount === CAP) {
-    const wildcard = ranked.find((e) => !picked.includes(e) && !e._tags.length);
+    const wildcard = ranked.find((e) => !picked.includes(e) && !e._tags.length && effImp(e) >= 6);
     if (wildcard) {
       const dropped = picked[picked.length - 1];
       picked[picked.length - 1] = wildcard;
@@ -219,7 +223,7 @@ async function main() {
   }
   const isNew = (e) => !prevHrefs.has(e.url || '');
   const lead0 = picked[0];
-  const pass4 = (e) => ({ background: plainExplanation(e.background), drivers: plainExplanation(e.drivers), implications: plainExplanation(e.implications), next: plainExplanation(e.next), image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '', publishedAt: String(e.publishedAt || '').trim(), coverage: arr(e.coverage) });
+  const pass4 = (e) => ({ background: plainExplanation(e.background), view: plainExplanation(e.view), prediction: plainExplanation(e.prediction), drivers: plainExplanation(e.drivers), implications: plainExplanation(e.implications), next: plainExplanation(e.next), image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '', publishedAt: String(e.publishedAt || '').trim(), coverage: arr(e.coverage) });
   // Ranking provenance (Fable 2026-07-20): base importance, interest tags, boost, final rank.
   const rankOf = (e, i) => ({ rank: i + 1, importance: e.importance || 0, tags: e._tags || [], boosted: !!e._boosted });
   const lead = { h1: plainHeadline(stripDash(lead0.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(lead0)), ...pass4(lead0), refs: [lead0.id],
@@ -242,7 +246,7 @@ async function main() {
   // still records the actual build time for operations and health checks.
   const contentSig = fingerprint([lead, ...items].map((it) => [
     it.href, it.date, it.h1 || it.headline, it.context, it.source,
-    it.background, it.implications, it.next,
+    it.background, it.view, it.prediction, it.implications, it.next,
   ]));
   const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig && prev.meta.editorialDate === editorialDate;
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();

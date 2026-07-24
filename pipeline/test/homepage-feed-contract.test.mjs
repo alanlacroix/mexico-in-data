@@ -26,7 +26,8 @@ assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial 
 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
-assert.ok(dailyBrief.stories.every((story) => story.bg || story.implications || story.next || story.sourceCount > 1), 'every Worth knowing story must offer useful context or multiple reports');
+assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
+assert.ok(dailyBrief.stories.every((story) => story.bg), 'every key development must include background');
 assert.ok(latestStories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'recent headlines must not contain future-dated stories');
 if (currentEditorial) assert.ok(['My read', 'Connection to watch'].includes(currentEditorial.myRead?.label), 'a connection must state whether it is reviewed or deterministic');
 assert.equal(dailyBriefFactory({}).editorialDate, dailyBrief.editorialDate, 'Eleventy’s data argument must not be mistaken for a clock');
@@ -62,6 +63,12 @@ const relatedButDistinct = groupEvents([
   { date: '2026-07-21', title: 'Sheinbaum presses USMCA talks at the World Cup final', source: 'Outlet B', url: 'https://example.com/world-cup' },
 ]);
 assert.equal(relatedButDistinct.length, 2, 'related developments must remain separate unless they report the same event');
+
+const sameMeetingDifferentAngles = groupEvents([
+  { date: '2026-07-23', title: 'Mexico and US set fourth round of USMCA review talks for September', source: 'Outlet A', url: 'https://example.com/outcome' },
+  { date: '2026-07-23', title: 'Sheinbaum says Mexico and US advance in USMCA review talks', source: 'Outlet B', url: 'https://example.com/quote' },
+]);
+assert.equal(sameMeetingDifferentAngles.length, 1, 'two reports on the same treaty meeting must use one key-development slot');
 
 const acrossDays = groupEvents([
   { date: '2026-07-20', title: 'Mexico and the US open the annual USMCA review', source: 'Yesterday', url: 'https://example.com/yesterday', publishedAt: '2026-07-21T03:00:00Z' },
@@ -113,5 +120,7 @@ for (const article of wire.articles) {
 const homepageTemplate = fs.readFileSync(path.join(root, 'index.njk'), 'utf8');
 assert.doesNotMatch(homepageTemplate, /from ['"]\/assets\/mb\.js/, 'the homepage must not download the full render toolkit for one time helper');
 assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepage source status must be embedded at build time');
+assert.match(homepageTemplate, /\(not isAll\).*story\.bg and story\.view and story\.prediction/, 'only complete key-development analysis may expose the disclosure');
+assert.match(homepageTemplate, /storyCard\(story, true\)/, 'ordinary headlines must use the no-analysis card mode');
 
 console.log('homepage-feed-contract: ok');

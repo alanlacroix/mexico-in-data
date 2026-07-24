@@ -5,13 +5,13 @@
 // 2026-07-20 (Alan: "any better way to access these pages"): the six topic story pages come out from
 // behind Explore and live in a Topics dropdown — one click from anywhere. `match` lights it as active.
 module.exports = [
-  { label: 'Today', href: '/' },
-  { label: 'Numbers', href: '/chart.html' },
+  { label: 'Brief', href: '/' },
   { label: 'Atlas', href: '/atlas.html' },
   { label: 'Topics',
-    match: ['/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html'],
+    match: ['/overview.html', '/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html'],
     menu: [
-      { group: 'Mexico by topic', links: [
+      { group: 'Quarterly analysis', links: [
+        { label: 'Mexico overview', href: '/overview.html' },
         { label: 'Economy & money', href: '/economy.html' },
         { label: 'Payments', href: '/payments.html' },
         { label: 'Trade', href: '/trade.html' },

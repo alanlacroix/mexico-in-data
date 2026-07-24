@@ -37,6 +37,8 @@ function toStory(group) {
     title: plainHeadline(event.h1 || event.headline || event.title).replace(/\.\s*$/, ''),
     summary: plainExplanation(event.summary || event.dek || event.context || event.why),
     bg: plainExplanation(event.background),
+    view: plainExplanation(event.view),
+    prediction: plainExplanation(event.prediction),
     implications: plainExplanation(event.implications),
     next: plainExplanation(event.next),
     image: /^https:\/\//i.test(clean(event.image)) ? clean(event.image) : '',

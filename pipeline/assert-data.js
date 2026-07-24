@@ -141,7 +141,7 @@ try {
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
   const expectedContentSig = createHash('sha256').update(JSON.stringify(claims.map((claim) => [
     claim.href, claim.date, claim.h1 || claim.headline, claim.context, claim.source,
-    claim.background, claim.implications, claim.next,
+    claim.background, claim.view, claim.prediction, claim.implications, claim.next,
   ]))).digest('hex');
   if (!validPeriod(brief.meta?.editorialDate || '')) fails.push('brief: meta.editorialDate is missing or invalid');
   if (!claims.length && (!brief.meta?.quiet || !String(brief.summary || '').trim())) {
