@@ -333,6 +333,7 @@ async function addBackgrounds(events, now) {
 - background: one or two sentences explaining the institution, agreement, market, or structural fact a newcomer needs. Do not restate the event.
 - view: two or three sentences giving a narrow judgment about what changes in practice and why. This is explicitly labeled "Our view", so take a position. Explain the mechanism, the constraint, and who benefits. If the story leads with money, capacity, jobs, or another announcement number, give it a denominator or a useful comparison. If the supplied evidence has no comparison, return "" instead of calling the number large, nice, useful, or important.
 - prediction: state a base case AND the observable condition that would change it. Distinguish signing, financing, permits, construction and operation. Do not invent a date, number, decision, or certainty.
+Briefly Explained is not written in the first person. Do not use I, me, my, we, or our. Say "The base case is..." and "That view would change if..." First-person analysis is reserved for the quarterly review.
 Use the space the analysis earns, normally 100 to 170 words across all three fields. Each field must add something the visible summary does not. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number that does not appear in the supplied material. Return all three fields as "" rather than filler. Return JSON.
 
 ${TRUST}
@@ -364,7 +365,7 @@ ${BAN}`;
         ? lintReportText({ text, inputs, maxWords, maxSentences })
         : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
           requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
-          strictForecast: field === 'prediction' });
+          strictForecast: field === 'prediction', forbidFirstPerson: true });
       const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
       if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
       // Anti-repetition (Audit 2026-07-17): drop a field that merely restates the one-line

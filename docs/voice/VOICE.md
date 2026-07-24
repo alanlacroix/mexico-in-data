@@ -147,15 +147,18 @@ What makes it the standard:
 5. It says exactly what evidence would change the view.
 6. It ends with a practical implication for an investor or operator.
 
-This is a hard publication rule. Every substantial analysis uses two paragraphs.
+This is a hard publication rule for the quarterly review. Every quarterly analysis uses two paragraphs.
 The first states the view, supports it with evidence, and names the better test when
 the obvious headline is incomplete. The second begins with the base case, says what
-would change the view, and ends with the practical implication. Use ordinary first-
-person language: "My concern is," "My base case is," and "I would change that view
-if" are house phrases, not wording to polish away.
+would change the view, and ends with the practical implication. Use ordinary
+first-person language: "My concern is," "My base case is," and "I would change that view
+if" are house phrases there, not wording to polish away. The quarterly review is the
+only analysis surface that uses first person.
 
 Compact analysis, such as Briefly explained, keeps the same sequence in its labeled
-fields: Background, Our view, and What we're watching. If the evidence cannot support
+fields: Background, Our view, and What we're watching, but it never uses I, me, my,
+we, or our. Use "The base case is" and "That view would change if." If the evidence
+cannot support
 a view, a mechanism, and a measurable change-of-mind condition, the analysis does not
 publish. Never fill the shape with generic prose.
 

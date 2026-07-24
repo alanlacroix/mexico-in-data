@@ -37,6 +37,7 @@ const VAGUE_ANALYSIS = /\b(could have implications|could impact|important to wat
 const EMPTY_EVALUATION = /(?:\bthe\b[^.]{0,40}\b(?:number|deal|announcement)\b is (?:nice|good|big)|\bgenuinely useful\b|\bgood news\b|\bbad news\b|\bworth watching\b|\bmeaningful development\b|\bimportant development\b)/i;
 const SCALE_ANCHOR = /(?:%|\bshare\b|\baccounts? for\b|\bout of\b|\bof (?:the|that) (?:total|package|market|system|capacity|budget|economy)\b|\bcompared (?:with|to)\b|\brelative to\b|\broughly (?:a|one|two|three|four|five|\d)|\bcovered\b|\bexcluded\b|\bapplies only\b|\bfirst (?:package|round|award|project|test)\b)/i;
 const ANNOUNCEMENT_NUMBER = /(?:[$€£]\s*\d|\b\d+(?:[.,]\d+)?\s*(?:billion|million|trillion|bn|mn|mw|mwh|gw|gwh)\b)/i;
+const FIRST_PERSON = /\b(?:I|me|my|mine|we|our|ours)\b/i;
 const numericTokens = (s) => (String(s || '').match(/\d+(?:[.,]\d+)*/g) || [])
   .map((x) => x.replace(/,/g, '').replace(/^0+(?=\d)/, ''));
 
@@ -67,12 +68,13 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
 // enough to run on generated Briefly explained fields without dictating the facts.
 export const analysisNeedsScale = (inputs = []) => ANNOUNCEMENT_NUMBER.test(inputs.join(' '));
 
-export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWords = 45, maxSentences = 2, requireScale = false, strictForecast = true }) {
+export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWords = 45, maxSentences = 2, requireScale = false, strictForecast = true, forbidFirstPerson = false }) {
   const report = lintReportText({ text, inputs, maxWords, maxSentences });
   const flags = [...report.flags];
   const clean = String(text || '').trim();
   const vague = clean.match(VAGUE_ANALYSIS); if (vague) flags.push(`vague analysis: "${vague[0]}"`);
   const empty = clean.match(EMPTY_EVALUATION); if (empty) flags.push(`empty evaluation: "${empty[0]}"`);
+  if (forbidFirstPerson && FIRST_PERSON.test(clean)) flags.push('first person is reserved for the quarterly review');
   if (role === 'view' && !/\b(because|but|while|until|unless|if|when|means?|so|which|matters? more|depends? on|only if)\b/i.test(clean)) {
     flags.push('view has no concrete mechanism or tradeoff');
   }

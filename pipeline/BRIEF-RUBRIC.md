@@ -28,6 +28,8 @@ The visible summary is factual and comes from the linked report. Only the three 
 - **Our view:** a narrow judgment tied to a concrete mechanism or tradeoff. This is analysis, not reported fact.
 - **What we're watching:** a specific expectation or observable condition that would confirm or weaken the view.
 
+Briefly Explained never uses first person. Write "The base case is" and "That view would change if." First-person analysis belongs only in the quarterly review.
+
 Each part must add something the visible summary did not already say. Keep the full layer under roughly 110 words. Ordinary headlines never get this layer.
 
 An LLM may pre-draft context into **`context_draft`** from a pasted `excerpt`, but **the build refuses to render `context_draft`** — nothing ships until it's promoted by hand to `context`/`why`. Draft text may never strengthen a claim beyond its source (no "proposed" → "passed").

@@ -134,10 +134,17 @@ assert.ok(lintAnalysisText({
   requireScale: true,
 }).ok, 'an announcement number with a denominator and mechanism should pass');
 assert.ok(lintAnalysisText({
-  text: 'My base case is that construction starts in December. I would change that view if the remaining projects reach construction on schedule.',
+  text: 'The base case is that construction starts in December. That view would change if the remaining projects reach construction on schedule.',
   inputs: ['Construction starts in December. The remaining projects are scheduled to begin later.'],
   role: 'prediction',
+  forbidFirstPerson: true,
 }).ok, 'a base case with a change-of-mind condition should pass');
+assert.ok(lintAnalysisText({
+  text: 'My base case is that construction starts in December. I would change that view if the schedule slips.',
+  inputs: ['Construction starts in December. The schedule may slip.'],
+  role: 'prediction',
+  forbidFirstPerson: true,
+}).flags.includes('first person is reserved for the quarterly review'), 'Briefly Explained must reject first-person analysis');
 assert.equal(domainTrusted('actionforex.com'), false, 'an unknown GDELT publisher must not enter the public wire');
 assert.equal(domainTrusted('graphics.reuters.com'), true, 'subdomains of an allowlisted publisher must remain eligible');
 assert.equal(publicHeadlineEligible('Ozempic study compares pérdida de peso'), false, 'the word peso as weight must not create a Mexico match');
