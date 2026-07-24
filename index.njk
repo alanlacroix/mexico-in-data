@@ -137,7 +137,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 
 {% macro storyCard(story, isAll=false) %}
 {% set topicHref = story.topicUrl if story.topicUrl else ('/us-mexico.html' if story.topic == 'us-mexico' else '/' + story.topic + '.html') %}
-{% set hasContext = (not isAll) and story.bg and story.view and story.prediction %}
+{% set hasContext = (not isAll) and story.analysisV >= 7 and story.bg and story.view and story.prediction %}
 {% set contextId = 'story-context-' + story.id %}
 <article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}" data-interests="{{ story.interestTags | join(',') if story.interestTags else '' }}"{% endif %}>
   <div class="story-meta"><a class="story-topic" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.reportTime %}<span class="js-storytime" data-date="{{ story.reportTime }}" data-label="{{ 'Latest report' if story.sourceCount > 1 else 'Published' }}"></span>{% endif %}{% if story.source %}<span>{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span>{{ story.sourceCount }} reports</span>{% endif %}</div>

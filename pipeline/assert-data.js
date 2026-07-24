@@ -133,16 +133,18 @@ try {
     if (event.publishedAt && editorialDay(event.publishedAt) !== event.date) fails.push(`happening: ${event.id || index} date does not match its Mexico City publication day`);
     for (const key of ['title', 'source', 'why']) checkText(`happening: ${event.id || index}.${key}`, event[key]);
     if (!isSafeHttpUrl(event.url)) fails.push(`happening: ${event.id || index} has invalid source URL`);
-    const analysisInputs = [event.date, event.title, event.context, event.why, event.background,
+    const analysisInputs = [event.date, event.title, event.context, event.why, event.background, event.drivers, event.implications, event.next,
       ...(event.coverage || []).flatMap((source) => [source.title, source.summary])];
+    const completeAnalysis = ['background', 'view', 'prediction'].every((field) => String(event[field] || '').trim());
+    if (completeAnalysis && Number(event.analysisV) < 7) fails.push(`happening: ${event.id || index} has complete but unapproved BE analysis`);
     if (event.view) {
       const gate = lintAnalysisText({ text: event.view, inputs: analysisInputs, role: 'view', maxWords: 85, maxSentences: 5,
-        requireScale: event.analysisV >= 7 && analysisNeedsScale([event.title, event.context, event.why]) });
+        requireScale: completeAnalysis && analysisNeedsScale([event.title, event.context, event.why]) });
       if (!gate.ok) fails.push(`happening: ${event.id || index}.view fails the analysis voice gate (${gate.flags.join('; ')})`);
     }
     if (event.prediction) {
       const gate = lintAnalysisText({ text: event.prediction, inputs: analysisInputs, role: 'prediction', maxWords: 65, maxSentences: 4,
-        strictForecast: event.analysisV >= 7 });
+        strictForecast: completeAnalysis });
       if (!gate.ok) fails.push(`happening: ${event.id || index}.prediction fails the analysis voice gate (${gate.flags.join('; ')})`);
     }
   }
@@ -153,7 +155,7 @@ try {
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
   const expectedContentSig = createHash('sha256').update(JSON.stringify(claims.map((claim) => [
     claim.href, claim.date, claim.h1 || claim.headline, claim.context, claim.source,
-    claim.background, claim.view, claim.prediction, claim.implications, claim.next,
+    claim.background, claim.view, claim.prediction, claim.analysisV, claim.implications, claim.next,
   ]))).digest('hex');
   if (!validPeriod(brief.meta?.editorialDate || '')) fails.push('brief: meta.editorialDate is missing or invalid');
   if (!claims.length && (!brief.meta?.quiet || !String(brief.summary || '').trim())) {
@@ -192,6 +194,9 @@ try {
     });
     const contextGate = lintReportText({ text: claim.context, inputs: sourceInputs, maxWords: 55, maxSentences: 2 });
     if (!contextGate.ok) fails.push(`brief: claim ${index + 1} context fails the public copy gate (${contextGate.flags.join('; ')})`);
+    const claimHasAnalysis = ['background', 'view', 'prediction'].some((field) => String(claim[field] || '').trim());
+    const claimHasCompleteAnalysis = ['background', 'view', 'prediction'].every((field) => String(claim[field] || '').trim());
+    if (claimHasAnalysis && (!claimHasCompleteAnalysis || Number(claim.analysisV) < 7)) fails.push(`brief: claim ${index + 1} exposes incomplete or unapproved BE analysis`);
   }
   for (const live of brief.standing?.live || []) if (!servedById.has(live.series)) fails.push(`brief: standing line needs missing series ${live.series}`);
   if (dayAge(brief.meta?.generatedAt) > 4) warns.push(`brief: generated ${Math.floor(dayAge(brief.meta.generatedAt))} days ago`);

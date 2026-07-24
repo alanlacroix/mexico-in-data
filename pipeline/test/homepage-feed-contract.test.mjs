@@ -27,7 +27,7 @@ assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
 assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
-assert.ok(dailyBrief.stories.every((story) => story.bg), 'every key development must include background');
+assert.ok(dailyBrief.stories.every((story) => !story.bg || (story.analysisV >= 7 && story.view && story.prediction)), 'a BE disclosure must be complete and approved as one unit');
 assert.ok(latestStories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'recent headlines must not contain future-dated stories');
 if (currentEditorial) assert.ok(['My read', 'Connection to watch'].includes(currentEditorial.myRead?.label), 'a connection must state whether it is reviewed or deterministic');
 assert.equal(dailyBriefFactory({}).editorialDate, dailyBrief.editorialDate, 'Eleventy’s data argument must not be mistaken for a clock');
@@ -155,9 +155,14 @@ for (const article of wire.articles) {
 }
 
 const homepageTemplate = fs.readFileSync(path.join(root, 'index.njk'), 'utf8');
+const happeningBuilder = fs.readFileSync(path.join(root, 'pipeline/build-happening.js'), 'utf8');
+const briefBuilder = fs.readFileSync(path.join(root, 'pipeline/build-brief.js'), 'utf8');
 assert.doesNotMatch(homepageTemplate, /from ['"]\/assets\/mb\.js/, 'the homepage must not download the full render toolkit for one time helper');
 assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepage source status must be embedded at build time');
-assert.match(homepageTemplate, /\(not isAll\).*story\.bg and story\.view and story\.prediction/, 'only complete key-development analysis may expose the disclosure');
+assert.match(homepageTemplate, /\(not isAll\).*story\.analysisV >= 7.*story\.bg and story\.view and story\.prediction/, 'only versioned, complete key-development analysis may expose the disclosure');
 assert.match(homepageTemplate, /storyCard\(story, true\)/, 'ordinary headlines must use the no-analysis card mode');
+assert.match(happeningBuilder, /strictForecast: field === 'prediction'/, 'every generated BE forecast must include a base case and a change-of-mind condition');
+assert.match(happeningBuilder, /CORE\.every\(\(field\) => proposed\[field\]\)/, 'the three BE fields must be approved together, never assembled across runs');
+assert.match(briefBuilder, /Number\(e\.analysisV\) >= 7/, 'the brief builder must withhold unapproved BE analysis');
 
 console.log('homepage-feed-contract: ok');

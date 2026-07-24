@@ -223,7 +223,17 @@ async function main() {
   }
   const isNew = (e) => !prevHrefs.has(e.url || '');
   const lead0 = picked[0];
-  const pass4 = (e) => ({ background: plainExplanation(e.background), view: plainExplanation(e.view), prediction: plainExplanation(e.prediction), drivers: plainExplanation(e.drivers), implications: plainExplanation(e.implications), next: plainExplanation(e.next), image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '', publishedAt: String(e.publishedAt || '').trim(), coverage: arr(e.coverage) });
+  const pass4 = (e) => {
+    const approved = Number(e.analysisV) >= 7 && ['background', 'view', 'prediction'].every((field) => String(e[field] || '').trim());
+    return {
+      background: approved ? plainExplanation(e.background) : '',
+      view: approved ? plainExplanation(e.view) : '',
+      prediction: approved ? plainExplanation(e.prediction) : '',
+      analysisV: approved ? Number(e.analysisV) : 0,
+      drivers: plainExplanation(e.drivers), implications: plainExplanation(e.implications), next: plainExplanation(e.next),
+      image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '', publishedAt: String(e.publishedAt || '').trim(), coverage: arr(e.coverage),
+    };
+  };
   // Ranking provenance (Fable 2026-07-20): base importance, interest tags, boost, final rank.
   const rankOf = (e, i) => ({ rank: i + 1, importance: e.importance || 0, tags: e._tags || [], boosted: !!e._boosted });
   const lead = { h1: plainHeadline(stripDash(lead0.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(lead0)), ...pass4(lead0), refs: [lead0.id],
@@ -246,7 +256,7 @@ async function main() {
   // still records the actual build time for operations and health checks.
   const contentSig = fingerprint([lead, ...items].map((it) => [
     it.href, it.date, it.h1 || it.headline, it.context, it.source,
-    it.background, it.view, it.prediction, it.implications, it.next,
+    it.background, it.view, it.prediction, it.analysisV, it.implications, it.next,
   ]));
   const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig && prev.meta.editorialDate === editorialDate;
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();

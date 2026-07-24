@@ -39,6 +39,7 @@ function toStory(group) {
     bg: plainExplanation(event.background),
     view: plainExplanation(event.view),
     prediction: plainExplanation(event.prediction),
+    analysisV: Number(event.analysisV) || 0,
     implications: plainExplanation(event.implications),
     next: plainExplanation(event.next),
     image: /^https:\/\//i.test(clean(event.image)) ? clean(event.image) : '',

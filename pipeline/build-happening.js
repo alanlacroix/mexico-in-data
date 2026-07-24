@@ -351,7 +351,9 @@ ${BAN}`;
   let added = 0;
   for (const r of out.analyses) {
     const item = items.find((x) => x.i === r.i); if (!item) continue;
-    let landed = 0;
+    // Treat the disclosure as one editorial unit. Never combine a newly approved field
+    // with older prose and then call the whole thing reviewed.
+    const proposed = {};
     for (const field of CORE) {
       const text = stripDashWs(r[field]);
       if (!text) continue;
@@ -361,19 +363,24 @@ ${BAN}`;
       const gate = field === 'background'
         ? lintReportText({ text, inputs, maxWords, maxSentences })
         : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
-          requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]) });
+          requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
+          strictForecast: field === 'prediction' });
       const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
       if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
       // Anti-repetition (Audit 2026-07-17): drop a field that merely restates the one-line
       // summary or an earlier field, so the four parts stay four distinct things.
-      const priors = [item.e.context || item.e.why, item.e.background, item.e.view, item.e.prediction].filter(Boolean);
+      const priors = [item.e.context || item.e.why, ...Object.values(proposed)].filter(Boolean);
       if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
-      item.e[field] = text; landed++;
+      proposed[field] = text;
     }
-    // v7: only a story whose CORE three landed counts as analysed. An incomplete one keeps
-    // its old analysisV so a later run retries it, instead of being frozen half-written.
-    if (coreComplete(item.e)) { item.e.analysisV = 7; added++; }
-    else if (landed) console.warn(`  analysis incomplete ${item.e.id}: missing ${CORE.filter((f) => !stripDashWs(item.e[f])).join(', ')} — will retry, no BE shown`);
+    // v7: all three fields must pass together. An incomplete proposal changes none of the
+    // visible analysis and keeps its old version so a later run retries it.
+    if (CORE.every((field) => proposed[field])) {
+      Object.assign(item.e, proposed, { analysisV: 7 });
+      added++;
+    } else if (Object.keys(proposed).length) {
+      console.warn(`  analysis incomplete ${item.e.id}: missing ${CORE.filter((f) => !proposed[f]).join(', ')} — discarded as a set; no BE shown`);
+    }
     if (!stripDashWs(r.background)) console.warn(`  standing-gap: no background written for "${item.e.title.slice(0, 60)}" — is a standing fact missing?`);
   }
   return added;
