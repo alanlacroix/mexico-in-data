@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lintReportText } from '../lib/lint.js';
+import { lintReportText, lintAnalysisText } from '../lib/lint.js';
 import { domainTrusted, publicHeadlineEligible } from '../lib/news-trust.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -101,6 +101,26 @@ assert.equal(lintReportText({
   text: 'Federal revenue shared with the states grew 0.9% from a year earlier.',
   inputs: ['Federal revenue shared with the states grew 0.9% from a year earlier.'],
 }).ok, true, 'plain actor-action copy must pass the report gate');
+assert.ok(lintAnalysisText({
+  text: 'This could have implications for investors.',
+  inputs: ['This could have implications for investors.'],
+  role: 'view',
+}).flags.some((flag) => flag.startsWith('vague analysis')), 'generic significance language must fail the analysis gate');
+assert.ok(lintAnalysisText({
+  text: 'This matters.',
+  inputs: ['This matters.'],
+  role: 'view',
+}).flags.includes('view has no concrete mechanism or tradeoff'), 'a judgment without a mechanism must fail the analysis gate');
+assert.equal(lintAnalysisText({
+  text: 'The headline overstates the immediate hit because covered goods are excluded.',
+  inputs: ['The headline overstates the immediate hit because covered goods are excluded.'],
+  role: 'view',
+}).ok, true, 'a concrete view with a mechanism must pass');
+assert.ok(lintAnalysisText({
+  text: 'The outcome remains uncertain.',
+  inputs: ['The outcome remains uncertain.'],
+  role: 'prediction',
+}).flags.includes('forecast has no observable condition'), 'a forecast without a measurable condition must fail the analysis gate');
 assert.equal(domainTrusted('actionforex.com'), false, 'an unknown GDELT publisher must not enter the public wire');
 assert.equal(domainTrusted('graphics.reuters.com'), true, 'subdomains of an allowlisted publisher must remain eligible');
 assert.equal(publicHeadlineEligible('Ozempic study compares pérdida de peso'), false, 'the word peso as weight must not create a Mexico match');

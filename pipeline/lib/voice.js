@@ -30,14 +30,14 @@ export const BAN = `BANNED (delete on sight): em-dashes; semicolons; buzzwords (
 
 export const REPORT = `REGISTER: FACTUAL COPY. Write like a careful person explaining the week to a smart friend. Use short, connected paragraphs. State what happened, the useful comparison, and the next known date when there is one. Do not announce that something is important. Do not add a "why it matters" sentence. If a consequence is supported, name the consequence itself.`;
 
-export const ANALYSIS_SHAPE = `ALAN'S APPROVED ANALYSIS PATTERN:
+export const ANALYSIS_SHAPE = `ALAN'S APPROVED ANALYSIS PATTERN (HARD PUBLICATION RULE):
 - State the view in the first sentence, in ordinary language.
 - Use a few relevant facts to support the view. Numbers are evidence, not the view itself.
 - Identify the headline or reading that could mislead, then name the evidence that would answer the real question.
 - State a base case without pretending certainty.
 - Say what observable evidence would change the view.
 - End with a concrete implication for an investor or operator when the evidence supports one.
-This is a reasoning sequence, not a fixed paragraph template. Do not repeat the same opening, cadence, or closing across analyses. If the inputs cannot support one of these jobs, say so plainly or leave it out. Never fill the shape with generic prose.`;
+For substantial analysis, use two paragraphs. Paragraph one is view, evidence, and the better test. Paragraph two is base case, what would change the view, and the practical implication. "My concern is," "My base case is," and "I would change that view if" are approved house phrases. For compact Briefly explained analysis, preserve the same reasoning across Background, Our view, and What we're watching. If the inputs cannot support a view, a mechanism, and a measurable change-of-mind condition, return no analysis. This is not permission to copy the same cadence or closing mechanically. Never fill the shape with generic prose.`;
 
 export const READ = `REGISTER: THE READ, the home of the voice. This is analysis, so this is where the voice turns on. Write like a careful analyst thinking in public. Open with the clearest claim the data supports. Establish the pattern. Spell out the MECHANISM: why one number moves another, in plain words, no gesturing. Close on the consequence, or on the question that remains and what evidence would settle it. Explain in connected paragraphs, never in fact/interpretation/complication blocks. Give uncertainty a shape ("the data cannot separate X from Y until the next print"), never a vague "it is unclear". The Read is the formal register: no jokes, no asides. At most one memorable line, in final position only, and only if it passes the earned-line test. Every sentence here is your judgment, so the whole piece reads as your read.
 

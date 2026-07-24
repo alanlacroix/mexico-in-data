@@ -109,6 +109,8 @@ for (const route of routes) {
       if (n > 4) throw new Error(`${route.key}: a paragraph carries ${n} numbers (cap 4): "${p.slice(0, 80)}"`);
     }
     if (pageNums > 18) throw new Error(`${route.key}: ${pageNums} prose numbers (cap 18)`);
+    if (!output.includes('My base case')) throw new Error(`${route.key}: substantial analysis must state Alan's base case`);
+    if (!/I would change (?:that|this) view/.test(output)) throw new Error(`${route.key}: substantial analysis must say what would change Alan's view`);
   }
   const proseOnly = [...output.matchAll(/<p class="(?:lead|story-p)">([\s\S]*?)<\/p>/g)].map((m) => m[1]).join(' ');
   if (proseOnly.includes('$0.0')) throw new Error(`${route.key}: a prose value was rounded from the wrong unit`);

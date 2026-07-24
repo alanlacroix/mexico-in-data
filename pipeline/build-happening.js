@@ -27,7 +27,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
 import { REPORT, ANALYSIS_SHAPE, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
-import { lintReportText, slopFlags, isSlop } from './lib/lint.js';
+import { lintReportText, lintAnalysisText, slopFlags, isSlop } from './lib/lint.js';
 import { mexicoRelevant } from './lib/news-trust.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
 import { fetchArticle } from './lib/fetch-article.js';
@@ -347,7 +347,7 @@ ${BAN}`;
   const payload = { standingFacts: standingText, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
   const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000 });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
-  const CAPS = { background: [50, 2], view: [45, 2], prediction: [40, 2] };
+  const CAPS = { background: [50, 2], view: [45, 3], prediction: [40, 3] };
   let added = 0;
   for (const r of out.analyses) {
     const item = items.find((x) => x.i === r.i); if (!item) continue;
@@ -358,7 +358,9 @@ ${BAN}`;
       const [maxWords, maxSentences] = CAPS[field];
       const inputs = [item.e.title, item.e.context || item.e.why, item.body, standingText,
         ...item.secondary.flatMap((source) => [source.title, source.summary, source.text])];
-      const gate = lintReportText({ text, inputs, maxWords, maxSentences });
+      const gate = field === 'background'
+        ? lintReportText({ text, inputs, maxWords, maxSentences })
+        : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences });
       const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
       if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
       // Anti-repetition (Audit 2026-07-17): drop a field that merely restates the one-line

@@ -30,6 +30,7 @@ const EDITORIALIZING = /\b(biggest overhang|sharpest escalation|story of the mom
 // analytical without telling the reader who did what. Keep this list narrow and based on
 // copy that has actually failed review.
 const VAGUE_NEWSROOM = /\b(losing momentum|fiscal room|budgetary room|welfare commitments|signals? (?:a|the) broader shift|raises? (?:fresh )?questions|mounting pressure|evolving landscape)\b/i;
+const VAGUE_ANALYSIS = /\b(could have implications|could impact|important to watch|will be important to watch|suggests? that|indicates? that|underscores? (?:the|a)|highlights? (?:the|a)|reflects? (?:a|the) broader|may signal|broader trend|complex picture|key takeaway)\b/i;
 const numericTokens = (s) => (String(s || '').match(/\d+(?:[.,]\d+)*/g) || [])
   .map((x) => x.replace(/,/g, '').replace(/^0+(?=\d)/, ''));
 
@@ -52,6 +53,23 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   const allowed = new Set(numericTokens(inputs.join(' ')));
   const unsupported = [...new Set(numericTokens(clean).filter((n) => !allowed.has(n)))];
   if (unsupported.length) flags.push(`unsupported number${unsupported.length === 1 ? '' : 's'}: ${unsupported.join(', ')}`);
+  return { ok: flags.length === 0, flags };
+}
+
+// Analysis has a stricter job than report copy. A view must name a mechanism or
+// tradeoff; a forecast must name an observable condition. These checks are narrow
+// enough to run on generated Briefly explained fields without dictating the facts.
+export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWords = 45, maxSentences = 2 }) {
+  const report = lintReportText({ text, inputs, maxWords, maxSentences });
+  const flags = [...report.flags];
+  const clean = String(text || '').trim();
+  const vague = clean.match(VAGUE_ANALYSIS); if (vague) flags.push(`vague analysis: "${vague[0]}"`);
+  if (role === 'view' && !/\b(because|but|while|until|unless|if|when|means?|so|which|matters? more|depends? on|only if)\b/i.test(clean)) {
+    flags.push('view has no concrete mechanism or tradeoff');
+  }
+  if (role === 'prediction' && !/\b(watch|expect|base case|if|when|until|unless|next|would|should|confirm|weaken|appear|arrive|rise|fall|decline|increase|remain|begin|start)\b/i.test(clean)) {
+    flags.push('forecast has no observable condition');
+  }
   return { ok: flags.length === 0, flags };
 }
 

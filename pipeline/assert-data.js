@@ -13,7 +13,7 @@ import {
   isSafeHttpUrl, validPeriod,
 } from './lib/publication-contract.js';
 import { freshnessStatus } from './lib/freshness.js';
-import { lintReportText } from './lib/lint.js';
+import { lintReportText, lintAnalysisText } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import newsWindow from './lib/news-window.cjs';
 
@@ -133,6 +133,16 @@ try {
     if (event.publishedAt && editorialDay(event.publishedAt) !== event.date) fails.push(`happening: ${event.id || index} date does not match its Mexico City publication day`);
     for (const key of ['title', 'source', 'why']) checkText(`happening: ${event.id || index}.${key}`, event[key]);
     if (!isSafeHttpUrl(event.url)) fails.push(`happening: ${event.id || index} has invalid source URL`);
+    const analysisInputs = [event.date, event.title, event.context, event.why, event.background,
+      ...(event.coverage || []).flatMap((source) => [source.title, source.summary])];
+    if (event.view) {
+      const gate = lintAnalysisText({ text: event.view, inputs: analysisInputs, role: 'view', maxWords: 45, maxSentences: 3 });
+      if (!gate.ok) fails.push(`happening: ${event.id || index}.view fails the analysis voice gate (${gate.flags.join('; ')})`);
+    }
+    if (event.prediction) {
+      const gate = lintAnalysisText({ text: event.prediction, inputs: analysisInputs, role: 'prediction', maxWords: 40, maxSentences: 3 });
+      if (!gate.ok) fails.push(`happening: ${event.id || index}.prediction fails the analysis voice gate (${gate.flags.join('; ')})`);
+    }
   }
   if (happening.meta?.count !== events.length) fails.push(`happening: meta.count ${happening.meta?.count} does not match ${events.length}`);
   if (dayAge(happening.meta?.generatedAt) > 4) warns.push(`happening: generated ${Math.floor(dayAge(happening.meta.generatedAt))} days ago`);
