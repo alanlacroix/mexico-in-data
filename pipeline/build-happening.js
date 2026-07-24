@@ -26,7 +26,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
-import { REPORT, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
+import { REPORT, ANALYSIS_SHAPE, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
 import { lintReportText, slopFlags, isSlop } from './lib/lint.js';
 import { mexicoRelevant } from './lib/news-trust.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
@@ -338,6 +338,8 @@ Prefer one sentence per field and keep all three under 110 words. Each field mus
 ${TRUST}
 
 ${SEAM}
+
+${ANALYSIS_SHAPE}
 
 ${EARNED_LINE}
 

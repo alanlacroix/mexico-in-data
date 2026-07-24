@@ -12,6 +12,8 @@ const footerNav = text('_data/footernav.js');
 const topics = text('topic-pages.njk');
 const model = text('model.njk');
 const nowBoard = text('_data/nowBoard.js');
+const voice = text('pipeline/lib/voice.js');
+const happeningBuilder = text('pipeline/build-happening.js');
 const brief = json('data/brief.json');
 const homeEditorial = json('data/home-editorial.json');
 const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
@@ -34,6 +36,11 @@ assert.match(home, /aria-label="Briefly explained:/i, 'key developments must off
 assert.match(home, /<b>BE<\/b> Briefly explained/i, 'the homepage must explain the BE badge once');
 assert.match(home, />Our view</i, 'the analysis layer must label the Brief’s judgment');
 assert.match(home, />What we’re watching</i, 'the analysis layer must state what could confirm or weaken the view');
+assert.match(voice, /export const ANALYSIS_SHAPE/, 'all generated analysis must share Alan’s approved reasoning pattern');
+for (const requirement of ['State the view in the first sentence', 'State a base case', 'observable evidence would change the view', 'concrete implication for an investor or operator']) {
+  assert.ok(voice.includes(requirement), `analysis voice contract is missing: ${requirement}`);
+}
+assert.match(happeningBuilder, /ANALYSIS_SHAPE/, 'Briefly explained must use the shared analysis voice contract');
 assert.doesNotMatch(topics, /class="be-mark"|class="be-summary"|guideHTML\(/i, 'BE belongs on the main Brief, not quarterly topic pages');
 assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
 assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as a duplicate footer destination');

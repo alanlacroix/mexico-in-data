@@ -116,6 +116,29 @@ This is Alan's voice. It supersedes the old "plain-factual everywhere" default a
 >
 > Nearshoring is usually described as companies moving factories to Mexico. The more important change may be what follows. A factory needs suppliers, engineers, electricity, roads, housing, and eventually competitors. The factory is the announcement. The network around it is the story.
 
+### The approved analysis standard
+
+Alan approved the passage below on 2026-07-24 as the reference for any labeled
+analysis on the site. This is a reasoning pattern, not a paragraph template. Do not
+reuse its opening, rhythm, facts, or ending mechanically.
+
+> Mexico looks stable, but it is not growing much. Headline inflation is back inside Banxico's range, the peso ended June near 17.5, and GDP was only 0.4% higher than a year earlier in Q1 2026. My concern is that stability has not yet turned into enough investment or output. Fixed investment rebounded in April and foreign investment reached a record, but neither headline tells us whether Mexico is building more capacity. Machinery, construction and formal hiring do.
+>
+> My base case is more rate cuts and another weak quarter for national growth. I would change that view when machinery imports, private construction, credit and formal hiring rise together. Until then, I am more optimistic about established companies tied to U.S. trade, infrastructure and payments than about the economy as a whole.
+
+What makes it the standard:
+
+1. It gives the view in the first sentence, in ordinary language.
+2. It uses a few numbers to support the view, not to replace it.
+3. It identifies which attractive headline may be misleading and names the better evidence.
+4. It states a base case rather than pretending certainty.
+5. It says exactly what evidence would change the view.
+6. It ends with a practical implication for an investor or operator.
+
+Every substantial analysis should do these jobs when the evidence allows them. If
+the evidence cannot support a base case or a change-of-mind condition, say that
+plainly or do not publish the analysis. Never fill the shape with generic prose.
+
 ### The earned-line test (this replaces the old aphorism ban)
 
 A stylish sentence — an aphorism, a payoff line, a turn of phrase — ships only if it passes **both** gates.
