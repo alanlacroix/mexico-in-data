@@ -818,7 +818,7 @@ function render(topic){
   $('#topicApp').innerHTML=`
     <section class="topic-hero"><div><div class="edition-label">Quarterly review</div><h1>${t.title}</h1><div class="edition-meta">${EDITION.label} · Published ${EDITION.published} · Data through ${EDITION.dataThrough} · Next review ${EDITION.next}</div><div class="edition-contract">The figures are sourced. The argument and forecasts are mine.</div></div></section>
     <section class="now"><div class="mono-k">My view</div><p class="lead">${t.lead}</p></section>
-    <section class="section quarterly-start"><div class="mono-k">${EDITION.label} review</div><h2>What changed this quarter</h2><p class="quarterly-note">The figures below are fixed to this edition. Each section starts with what changed, then gives my read. Open any chart for newer observations.</p></section>
+    <section class="section quarterly-start"><div class="mono-k">${EDITION.label} review</div><h2>What changed this quarter</h2></section>
     ${t.sections.map((sec,i)=>`<section class="section story-sec"><h2>${String(sec.h2).replace(/\.\s*$/,'')}</h2>${sec.prose.map(p=>`<p class="story-p">${p}</p>`).join('')}${sec.chart?chartShell(sec.chart,'story-ev-'+i):''}</section>`).join('')}
     ${t.outlook?.length?`<section class="section"><div class="section-head"><div><div class="mono-k">My outlook</div><h2>What I expect by the next review</h2></div></div>${outlookList(t.outlook)}</section>`:''}
     <section class="section"><div class="section-head"><div><div class="mono-k">The calendar</div><h2>What to watch</h2></div><div class="section-note">Only dated releases, meetings and decisions that could change the view.</div></div>${upcomingList((t.upcoming||[]).slice(0,4))}</section>
