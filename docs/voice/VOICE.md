@@ -52,6 +52,18 @@ These are why a stranger believes a number on this site. They outrank voice, reg
 6. **Give scale with comparison, not adjectives.** "Down from 80% in 1990", "the lowest since the 1990s". Delete persuasion adjectives: staggering, impressive, remarkable, huge.
 7. **Numbers follow the formatting registry** (§5 and the `mexico-copy` skill): rate-level changes in percentage **points** (`-0.6 pp`, never `-14.5%`), currency/share/count formats fixed. A misformatted number is a wrong number.
 
+### The usefulness gate for analysis
+
+Analysis is the most valuable part of the site. It has a higher bar than factual copy.
+
+1. **Teach something the headline does not.** Paraphrase is not analysis. Every analysis must add a structural fact, mechanism, comparison, decision, or useful compression.
+2. **Give every announcement number a denominator.** `$1 billion`, `500 MW`, or `20,000 jobs` means nothing alone. Say what share of the relevant package or system it represents, how it compares with the status quo, or why that comparison is unavailable. No denominator means no judgment about the number.
+3. **Name the stage reached.** Signed, announced, financed, permitted, under construction, operating, and producing are different claims. Never let a pipeline number read like completed capacity.
+4. **Explain how it works.** Name who supplies capital or control, who benefits, what constraint changes, and how the effect would reach a company, household, investor, or the wider economy.
+5. **Take a falsifiable view.** State the base case and the observable evidence that would change it. “Watch permits” is not enough without a schedule, baseline, or consequence.
+6. **Use more room when the story earns it.** Briefly explained is collapsible. A complicated story may take 100 to 170 words. Do not force useful reasoning into a slogan, and do not make a simple story longer.
+7. **Delete empty evaluation.** “The number is nice,” “this is important,” “genuinely useful,” “good news,” and “worth watching” do not publish. State the comparison or consequence.
+
 ---
 
 ## 2. The register map — which voice each surface speaks

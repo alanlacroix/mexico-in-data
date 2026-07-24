@@ -31,6 +31,12 @@ const EDITORIALIZING = /\b(biggest overhang|sharpest escalation|story of the mom
 // copy that has actually failed review.
 const VAGUE_NEWSROOM = /\b(losing momentum|fiscal room|budgetary room|welfare commitments|signals? (?:a|the) broader shift|raises? (?:fresh )?questions|mounting pressure|evolving landscape)\b/i;
 const VAGUE_ANALYSIS = /\b(could have implications|could impact|important to watch|will be important to watch|suggests? that|indicates? that|underscores? (?:the|a)|highlights? (?:the|a)|reflects? (?:a|the) broader|may signal|broader trend|complex picture|key takeaway)\b/i;
+// These words evaluate an announcement without helping the reader understand it. They
+// are especially dangerous in labelled analysis because the polish can disguise the
+// absence of a denominator, mechanism, or decision. State the comparison instead.
+const EMPTY_EVALUATION = /(?:\bthe\b[^.]{0,40}\b(?:number|deal|announcement)\b is (?:nice|good|big)|\bgenuinely useful\b|\bgood news\b|\bbad news\b|\bworth watching\b|\bmeaningful development\b|\bimportant development\b)/i;
+const SCALE_ANCHOR = /(?:%|\bshare\b|\baccounts? for\b|\bout of\b|\bof (?:the|that) (?:total|package|market|system|capacity|budget|economy)\b|\bcompared (?:with|to)\b|\brelative to\b|\broughly (?:a|one|two|three|four|five|\d)|\bcovered\b|\bexcluded\b|\bapplies only\b|\bfirst (?:package|round|award|project|test)\b)/i;
+const ANNOUNCEMENT_NUMBER = /(?:[$€£]\s*\d|\b\d+(?:[.,]\d+)?\s*(?:billion|million|trillion|bn|mn|mw|mwh|gw|gwh)\b)/i;
 const numericTokens = (s) => (String(s || '').match(/\d+(?:[.,]\d+)*/g) || [])
   .map((x) => x.replace(/,/g, '').replace(/^0+(?=\d)/, ''));
 
@@ -59,16 +65,27 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
 // Analysis has a stricter job than report copy. A view must name a mechanism or
 // tradeoff; a forecast must name an observable condition. These checks are narrow
 // enough to run on generated Briefly explained fields without dictating the facts.
-export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWords = 45, maxSentences = 2 }) {
+export const analysisNeedsScale = (inputs = []) => ANNOUNCEMENT_NUMBER.test(inputs.join(' '));
+
+export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWords = 45, maxSentences = 2, requireScale = false, strictForecast = true }) {
   const report = lintReportText({ text, inputs, maxWords, maxSentences });
   const flags = [...report.flags];
   const clean = String(text || '').trim();
   const vague = clean.match(VAGUE_ANALYSIS); if (vague) flags.push(`vague analysis: "${vague[0]}"`);
+  const empty = clean.match(EMPTY_EVALUATION); if (empty) flags.push(`empty evaluation: "${empty[0]}"`);
   if (role === 'view' && !/\b(because|but|while|until|unless|if|when|means?|so|which|matters? more|depends? on|only if)\b/i.test(clean)) {
     flags.push('view has no concrete mechanism or tradeoff');
   }
-  if (role === 'prediction' && !/\b(watch|expect|base case|if|when|until|unless|next|would|should|confirm|weaken|appear|arrive|rise|fall|decline|increase|remain|begin|start)\b/i.test(clean)) {
-    flags.push('forecast has no observable condition');
+  if (role === 'view' && requireScale && !SCALE_ANCHOR.test(clean)) {
+    flags.push('announcement number has no denominator or useful comparison');
+  }
+  if (role === 'prediction') {
+    if (strictForecast) {
+      if (!/\b(base case|expect|likely|my guess|should|will)\b/i.test(clean)) flags.push('forecast states no base case');
+      if (!/\b(if|unless|until|would change|confirm|weaken)\b/i.test(clean)) flags.push('forecast has no change-of-mind condition');
+    } else if (!/\b(watch|expect|base case|if|when|until|unless|next|would|should|confirm|weaken|appear|arrive|rise|fall|decline|increase|remain|begin|start)\b/i.test(clean)) {
+      flags.push('forecast has no observable condition');
+    }
   }
   return { ok: flags.length === 0, flags };
 }

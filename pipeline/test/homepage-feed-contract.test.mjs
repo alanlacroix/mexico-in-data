@@ -120,7 +120,24 @@ assert.ok(lintAnalysisText({
   text: 'The outcome remains uncertain.',
   inputs: ['The outcome remains uncertain.'],
   role: 'prediction',
-}).flags.includes('forecast has no observable condition'), 'a forecast without a measurable condition must fail the analysis gate');
+}).flags.includes('forecast states no base case'), 'a forecast without a base case must fail the analysis gate');
+assert.ok(lintAnalysisText({
+  text: 'The $1 billion number is nice. Permits matter more.',
+  inputs: ['$1 billion investment in five projects.'],
+  role: 'view',
+  requireScale: true,
+}).flags.some((flag) => flag.startsWith('empty evaluation')), 'empty praise must never pass as analysis');
+assert.ok(lintAnalysisText({
+  text: 'The projects account for 7.8% of the first awarded package, so they are large enough to test the model.',
+  inputs: ['The projects account for 7.8% of the first awarded package.'],
+  role: 'view',
+  requireScale: true,
+}).ok, 'an announcement number with a denominator and mechanism should pass');
+assert.ok(lintAnalysisText({
+  text: 'My base case is that construction starts in December. I would change that view if the remaining projects reach construction on schedule.',
+  inputs: ['Construction starts in December. The remaining projects are scheduled to begin later.'],
+  role: 'prediction',
+}).ok, 'a base case with a change-of-mind condition should pass');
 assert.equal(domainTrusted('actionforex.com'), false, 'an unknown GDELT publisher must not enter the public wire');
 assert.equal(domainTrusted('graphics.reuters.com'), true, 'subdomains of an allowlisted publisher must remain eligible');
 assert.equal(publicHeadlineEligible('Ozempic study compares pérdida de peso'), false, 'the word peso as weight must not create a Mexico match');

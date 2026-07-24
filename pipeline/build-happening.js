@@ -27,7 +27,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
 import { REPORT, ANALYSIS_SHAPE, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
-import { lintReportText, lintAnalysisText, slopFlags, isSlop } from './lib/lint.js';
+import { lintReportText, lintAnalysisText, analysisNeedsScale, slopFlags, isSlop } from './lib/lint.js';
 import { mexicoRelevant } from './lib/news-trust.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
 import { fetchArticle } from './lib/fetch-article.js';
@@ -283,7 +283,7 @@ async function addBackgrounds(events, now) {
   const IMG_MAX_TRIES = 6;   // a few chances so a late og:image (or a now-unblocked fetch) is caught
   const CORE = ['background', 'view', 'prediction'];
   const coreComplete = (e) => CORE.every((f) => stripDashWs(e[f]));
-  const needsAnalysis = (e) => !coreComplete(e) || totalWords(e) > 120 || e.analysisV !== 6;
+  const needsAnalysis = (e) => !coreComplete(e) || totalWords(e) > 190 || e.analysisV !== 7;
   // A fresh article often loads BEFORE its og:image is set (or behind a first-hit consent
   // page), so "fetched, no image" is NOT final — retry up to a few times over later runs so
   // the picture is picked up once it appears (Audit 2026-07-18: an El País Ruffo story was
@@ -331,9 +331,9 @@ async function addBackgrounds(events, now) {
       i: { type: 'integer' }, background: FIELD, view: FIELD, prediction: FIELD } } } } };
   const system = `You are writing the optional BRIEFLY EXPLAINED layer for The Mexico Brief. The visible summary already reports what happened. Use the ARTICLE, any OTHER REPORTING, and the site's STANDING FACTS to add three distinct things:
 - background: one or two sentences explaining the institution, agreement, market, or structural fact a newcomer needs. Do not restate the event.
-- view: one or two sentences giving a narrow judgment about what matters most and why. This is explicitly labeled "Our view", so take a position. Tie it to a concrete mechanism or tradeoff in the supplied evidence. State uncertainty honestly. Do not write generic phrases such as "could have implications" or simply paraphrase a source.
-- prediction: one or two sentences saying what you expect next OR naming a measurable condition that would confirm or weaken the view. It must be specific enough to revisit. Do not invent a date, number, decision, or certainty.
-Prefer one sentence per field and keep all three under 110 words. Each field must add something new. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number that does not appear in the supplied material. Return "" rather than filler. Return JSON.
+- view: two or three sentences giving a narrow judgment about what changes in practice and why. This is explicitly labeled "Our view", so take a position. Explain the mechanism, the constraint, and who benefits. If the story leads with money, capacity, jobs, or another announcement number, give it a denominator or a useful comparison. If the supplied evidence has no comparison, return "" instead of calling the number large, nice, useful, or important.
+- prediction: state a base case AND the observable condition that would change it. Distinguish signing, financing, permits, construction and operation. Do not invent a date, number, decision, or certainty.
+Use the space the analysis earns, normally 100 to 170 words across all three fields. Each field must add something the visible summary does not. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number that does not appear in the supplied material. Return all three fields as "" rather than filler. Return JSON.
 
 ${TRUST}
 
@@ -347,7 +347,7 @@ ${BAN}`;
   const payload = { standingFacts: standingText, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
   const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000 });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
-  const CAPS = { background: [50, 2], view: [45, 3], prediction: [40, 3] };
+  const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
   let added = 0;
   for (const r of out.analyses) {
     const item = items.find((x) => x.i === r.i); if (!item) continue;
@@ -360,7 +360,8 @@ ${BAN}`;
         ...item.secondary.flatMap((source) => [source.title, source.summary, source.text])];
       const gate = field === 'background'
         ? lintReportText({ text, inputs, maxWords, maxSentences })
-        : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences });
+        : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
+          requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]) });
       const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
       if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
       // Anti-repetition (Audit 2026-07-17): drop a field that merely restates the one-line
@@ -369,9 +370,9 @@ ${BAN}`;
       if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
       item.e[field] = text; landed++;
     }
-    // v6: only a story whose CORE three landed counts as analysed. An incomplete one keeps
+    // v7: only a story whose CORE three landed counts as analysed. An incomplete one keeps
     // its old analysisV so a later run retries it, instead of being frozen half-written.
-    if (coreComplete(item.e)) { item.e.analysisV = 6; added++; }
+    if (coreComplete(item.e)) { item.e.analysisV = 7; added++; }
     else if (landed) console.warn(`  analysis incomplete ${item.e.id}: missing ${CORE.filter((f) => !stripDashWs(item.e[f])).join(', ')} — will retry, no BE shown`);
     if (!stripDashWs(r.background)) console.warn(`  standing-gap: no background written for "${item.e.title.slice(0, 60)}" — is a standing fact missing?`);
   }

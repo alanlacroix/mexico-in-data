@@ -13,7 +13,7 @@ import {
   isSafeHttpUrl, validPeriod,
 } from './lib/publication-contract.js';
 import { freshnessStatus } from './lib/freshness.js';
-import { lintReportText, lintAnalysisText } from './lib/lint.js';
+import { lintReportText, lintAnalysisText, analysisNeedsScale } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import newsWindow from './lib/news-window.cjs';
 
@@ -136,11 +136,13 @@ try {
     const analysisInputs = [event.date, event.title, event.context, event.why, event.background,
       ...(event.coverage || []).flatMap((source) => [source.title, source.summary])];
     if (event.view) {
-      const gate = lintAnalysisText({ text: event.view, inputs: analysisInputs, role: 'view', maxWords: 45, maxSentences: 3 });
+      const gate = lintAnalysisText({ text: event.view, inputs: analysisInputs, role: 'view', maxWords: 85, maxSentences: 5,
+        requireScale: event.analysisV >= 7 && analysisNeedsScale([event.title, event.context, event.why]) });
       if (!gate.ok) fails.push(`happening: ${event.id || index}.view fails the analysis voice gate (${gate.flags.join('; ')})`);
     }
     if (event.prediction) {
-      const gate = lintAnalysisText({ text: event.prediction, inputs: analysisInputs, role: 'prediction', maxWords: 40, maxSentences: 3 });
+      const gate = lintAnalysisText({ text: event.prediction, inputs: analysisInputs, role: 'prediction', maxWords: 65, maxSentences: 4,
+        strictForecast: event.analysisV >= 7 });
       if (!gate.ok) fails.push(`happening: ${event.id || index}.prediction fails the analysis voice gate (${gate.flags.join('; ')})`);
     }
   }
