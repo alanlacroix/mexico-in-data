@@ -8,10 +8,9 @@ module.exports = [
   { label: 'Brief', href: '/' },
   { label: 'Atlas', href: '/atlas.html' },
   { label: 'Quarterly review',
-    match: ['/overview.html', '/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html'],
+    match: ['/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html'],
     menu: [
       { group: 'By topic', links: [
-        { label: 'Mexico overview', href: '/overview.html' },
         { label: 'Economy & money', href: '/economy.html' },
         { label: 'Payments', href: '/payments.html' },
         { label: 'Trade', href: '/trade.html' },
