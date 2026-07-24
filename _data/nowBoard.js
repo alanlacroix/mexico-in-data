@@ -38,6 +38,7 @@ const relativeTo = (value, reference) => value === 0
   : `${number(Math.abs(value), 2)} pp ${value > 0 ? 'above' : 'below'} ${reference}`;
 const percentChange = (current, prior) => prior ? (current / prior - 1) * 100 : null;
 const link = (id) => `/chart.html?v=${id}`;
+const LIVE_PESO_URL = 'https://www.google.com/finance/quote/USD-MXN?hl=en';
 const observed = (date, cadence) => {
   const parsed = new Date(`${date}T12:00:00Z`);
   if (Number.isNaN(parsed.getTime())) return date;
@@ -64,14 +65,16 @@ module.exports = function () {
     const change = percentChange(current.value, priorYear?.value);
     cards.push({ id: peso.id, label: 'Peso', display: number(current.value), unit: 'MXN/US$',
       compare: change == null ? 'Latest official fixing' : percentVsYear(change, 'weaker', 'stronger'),
-      date: current.date, cadence: 'daily', source: 'Banco de México', href: link(peso.id) });
+      date: current.date, cadence: 'daily', dateLead: 'Official fixing', updateLabel: 'New fixing each trading day',
+      source: 'Banco de México', href: LIVE_PESO_URL, actionLabel: 'Open live quote', external: true });
   }
 
   if (inflation) {
     const current = latest(inflation), gap = current.value - 3;
     cards.push({ id: inflation.id, label: 'Inflation', display: number(current.value), unit: '% y/y',
       compare: `${number(Math.abs(gap), 2)} pp ${gap >= 0 ? 'above' : 'below'} the central bank’s 3% target`,
-      date: current.date, cadence: 'monthly', source: 'Mexico statistics agency · central bank target', href: link(inflation.id) });
+      date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
+      source: 'Mexico statistics agency · central bank target', href: link(inflation.id), actionLabel: 'View history' });
   }
 
   if (rate) {
@@ -79,14 +82,16 @@ module.exports = function () {
     const gap = inflationNow ? current.value - inflationNow.value : null;
     cards.push({ id: rate.id, label: 'Policy rate', display: number(current.value), unit: '%',
       compare: gap == null ? 'Latest policy setting' : relativeTo(gap, `${observed(inflationNow.date, 'monthly')} inflation`),
-      date: current.date, cadence: 'daily', source: 'Banco de México', href: link(rate.id) });
+      date: current.date, cadence: 'meeting', dateLead: 'Current setting', updateLabel: 'Can change at policy meetings',
+      source: 'Banco de México', href: link(rate.id), actionLabel: 'View history' });
   }
 
   if (activity) {
     const current = latest(activity), prior = previous(activity);
     cards.push({ id: activity.id, label: 'Economic activity', display: `${current.value >= 0 ? '+' : ''}${number(current.value)}`, unit: '% y/y',
       compare: prior ? movementFromPrior(current.value - prior.value) : 'Latest annual change',
-      date: current.date, cadence: 'monthly', source: 'Mexico statistics agency', href: link(activity.id) });
+      date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
+      source: 'Mexico statistics agency', href: link(activity.id), actionLabel: 'View history' });
   }
 
   if (exportsTotal) {
@@ -94,7 +99,8 @@ module.exports = function () {
     const change = percentChange(current.value, priorYear?.value);
     cards.push({ id: exportsTotal.id, label: 'Goods exports', display: `US$${number(current.value / 1_000_000, 1)}bn`, unit: '',
       compare: change == null ? 'Latest monthly total' : percentVsYear(change, 'higher', 'lower'),
-      date: current.date, cadence: 'monthly', source: 'Banco de México', href: link(exportsTotal.id) });
+      date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
+      source: 'Banco de México', href: link(exportsTotal.id), actionLabel: 'View history' });
   }
 
   if (remittances) {
@@ -102,7 +108,8 @@ module.exports = function () {
     const change = percentChange(current.value, priorYear?.value);
     cards.push({ id: remittances.id, label: 'Remittances', display: `US$${number(current.value / 1_000, 2)}bn`, unit: '',
       compare: change == null ? 'Latest monthly inflow' : percentVsYear(change, 'higher', 'lower'),
-      date: current.date, cadence: 'monthly', source: 'Banco de México', href: link(remittances.id) });
+      date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
+      source: 'Banco de México', href: link(remittances.id), actionLabel: 'View history' });
   }
 
   return addObservedLabels(cards);

@@ -80,15 +80,19 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .markets,.week,.subscribe-section{margin-top:54px}
   .markets{border-top:2px solid var(--green);padding-top:14px}
   .market-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
-  .market-card{min-width:0;padding:15px 16px 14px;border:1px solid var(--line);border-radius:5px;background:var(--paper)}
-  .market-link{display:block;color:inherit;text-decoration:none}
+  .market-card{min-width:0;padding:15px 16px 14px;border:1px solid var(--line);border-radius:5px;background:var(--paper);transition:border-color .15s ease,background .15s ease}
+  .market-card:hover{border-color:var(--green);background:#fcfdfb}
+  .market-link{display:flex;flex-direction:column;height:100%;color:inherit;text-decoration:none}
   .market-name{font-family:var(--mono);font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut)}
   .market-value{font-size:clamp(27px,3vw,38px);font-weight:650;line-height:1.04;letter-spacing:-.025em;margin-top:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
   .market-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);letter-spacing:0;margin-left:3px}
   .market-compare{font-size:12px;line-height:1.4;color:var(--ink-2);margin-top:8px;min-height:34px}
-  .market-date,.market-source{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut)}
-  .market-date{text-transform:uppercase;letter-spacing:.02em;margin-top:9px}
-  .market-source{margin-top:2px}
+  .market-date,.market-update,.market-source,.market-action{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4}
+  .market-date{color:var(--ink-2);margin-top:10px}
+  .market-update,.market-source{color:var(--mut);margin-top:2px}
+  .market-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:auto;padding-top:10px}
+  .market-footer .market-source{margin-top:0}
+  .market-action{flex:0 0 auto;color:var(--green-d);font-weight:650}
 
   .week{border-top:1px solid var(--line);padding-top:14px}
   .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:13px}
@@ -187,7 +191,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   <section class="markets" aria-labelledby="markets-title">
     <div class="section-top"><div><h2 class="section-title" id="markets-title">Latest numbers</h2></div><a class="text-link" href="/chart.html">Compare the numbers →</a></div>
     <div class="market-grid" id="market-grid">
-      {% for item in nowBoard %}<article class="market-card"><a class="market-link" href="{{ item.href }}"><div class="market-name">{{ item.label }}</div><div class="market-value">{{ item.display }}{% if item.unit %} <span class="market-unit">{{ item.unit }}</span>{% endif %}</div><div class="market-compare">{{ item.compare }}</div><div class="market-date">{{ item.observed }} · {{ item.cadence }}</div><div class="market-source">{{ item.source }}</div></a></article>{% endfor %}
+      {% for item in nowBoard %}<article class="market-card"><a class="market-link" href="{{ item.href }}" aria-label="{{ item.label }} — {{ item.actionLabel }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><div class="market-name">{{ item.label }}</div><div class="market-value">{{ item.display }}{% if item.unit %} <span class="market-unit">{{ item.unit }}</span>{% endif %}</div><div class="market-compare">{{ item.compare }}</div><div class="market-date">{{ item.dateLead }} · {{ item.observed }}</div><div class="market-update">{{ item.updateLabel }}</div><div class="market-footer"><div class="market-source">{{ item.source }}</div><div class="market-action">{{ item.actionLabel }} {{ '↗' if item.external else '→' }}</div></div></a></article>{% endfor %}
     </div>
   </section>
 
