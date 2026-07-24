@@ -24,7 +24,7 @@ footerBlurb: "The important numbers, the developments behind them, and the origi
 
   .topic-switch-wrap{border-bottom:1px solid var(--line);padding:17px 0 0}
   .topic-switch-label{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
-  .topic-switch{display:grid;grid-template-columns:1.22fr .8fr .72fr .78fr 1.24fr .95fr;gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-bottom:0;border-radius:4px 4px 0 0;overflow:hidden}
+  .topic-switch{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-bottom:0;border-radius:4px 4px 0 0;overflow:hidden}
   .topic-switch a{display:flex;align-items:center;justify-content:center;border:0;background:var(--paper);color:var(--ink-2);min-height:47px;padding:10px 12px;cursor:pointer;font-size:var(--fs-meta);line-height:1.2;text-align:center;text-decoration:none}
   .topic-switch a:hover{background:var(--paper-2)}
   .topic-switch a.active{background:var(--green-bg);color:var(--green-d);font-weight:600;box-shadow:inset 0 -2px var(--green)}
@@ -431,7 +431,7 @@ function watchFor(rx){const e=eventMatches(rx,1)[0];if(!e)return '';const d=date
 function topicSource(id,label){const sid=seriesId(id);return {label:(label||sourceName(id))+(sid?` · ${sid}`:''),href:sourceUrl(id),date:obs(id)};}
 
 const TOPIC_ORDER=['economy','payments','trade','politics','society','usmexico'];
-const LABELS={economy:'Economy & money',payments:'Payments',trade:'Trade',politics:'Politics',society:'Society & security',usmexico:'U.S.–Mexico'};
+const LABELS={economy:'Economy & money',payments:'Payments',trade:'Trade',politics:'Politics',society:'Society & security',usmexico:'U.S. and Mexico'};
 const ROUTES={economy:'/economy.html',payments:'/payments.html',trade:'/trade.html',politics:'/politics.html',society:'/society.html',usmexico:'/us-mexico.html'};
 
 function economyTopic(){
@@ -713,7 +713,7 @@ function usMexicoTopic(){
   if(!LR)throw new Error('U.S.-Mexico remittance input is incomplete');
   const line=(name,points,color,format)=>({name,points,color,format});
   return {
-    title:'U.S.–Mexico',
+    title:'U.S. and Mexico',
     lead:`Mexico's economic relationship with the United States is hard to replace and getting harder to plan around. The U.S. bought ${fmt(us.share,1)}% of Mexico's goods exports in ${partnerYear}, and two-way goods trade reached $${fmt(quarterlyTwoWay,1)} billion in ${dateLabel(tradeMonth)}. The United States–Mexico–Canada Agreement (USMCA) still governs that commerce, but the annual review gives Washington repeated chances to press Mexico on Chinese inputs, border enforcement and energy. Existing factories can keep shipping; a new project that needs a decade of stable rules has a harder call.<br><br>My base case is continued trade with more sector-by-sector friction. I would change that view if the three governments agree to a durable extension, or if the United States applies broad measures that interrupt trade which currently complies with USMCA. For investors, I prefer established exporters and suppliers that can document North American content to long-payback projects built on unchanged rules. Operators should put rules-of-origin records, customs delays and alternate suppliers into the operating plan.`,
     next:watchFor(/USMCA|tariff|trade talks/i)||'The next bilateral dates are on the calendar below.',
     readings:[

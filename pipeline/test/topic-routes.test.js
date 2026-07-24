@@ -15,12 +15,12 @@ if (routes.map((x) => x.key).join(',') !== expected.join(',')) fail('topic regis
 if (new Set(routes.map((x) => x.permalink)).size !== routes.length) fail('topic permalinks must be unique');
 
 // Nav contract updated 2026-07-20 (Alan: "any better way to access these pages" — supersedes
-// the 2026-07-16 prune): the masthead carries a Topics dropdown with ALL six story pages,
-// and Explore stays reachable inside it as the index.
-const topicsMenu = nav.find((x) => x.label === 'Topics');
+// the 2026-07-16 prune): the masthead carries a Quarterly review dropdown with every
+// quarterly topic page and the Mexico overview.
+const topicsMenu = nav.find((x) => x.label === 'Quarterly review');
 const menuLinks = (topicsMenu?.menu || []).flatMap((g) => g.links || []).map((x) => x.href);
 const routeLinks = routes.map((x) => x.permalink);
-if (!topicsMenu) fail('masthead must carry the Topics dropdown');
+if (!topicsMenu) fail('masthead must carry the Quarterly review dropdown');
 for (const href of routeLinks) if (!menuLinks.includes(href)) fail('Topics dropdown is missing ' + href);
 // 2026-07-20 Alan: "Remove index, what is that" — the six topics ARE the menu; Explore
 // stays reachable from the footer, not the dropdown.

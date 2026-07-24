@@ -2,22 +2,22 @@
 // page ("here") is DERIVED from the URL, never hand-set. Sources NEVER leaves the top level (a trust
 // product shows its receipts in the masthead). About stays top-level: the site is personal, and Alan
 // wants method and authorship visible. Subscribe remains the one call-to-action.
-// 2026-07-20 (Alan: "any better way to access these pages"): the six topic story pages come out from
-// behind Explore and live in a Topics dropdown — one click from anywhere. `match` lights it as active.
+// 2026-07-20 (Alan: "any better way to access these pages"): the six quarterly topic pages come out
+// from behind Explore and live in one dropdown — one click from anywhere. `match` lights it as active.
 module.exports = [
   { label: 'Brief', href: '/' },
   { label: 'Atlas', href: '/atlas.html' },
-  { label: 'Topics',
+  { label: 'Quarterly review',
     match: ['/overview.html', '/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html'],
     menu: [
-      { group: 'Quarterly analysis', links: [
+      { group: 'By topic', links: [
         { label: 'Mexico overview', href: '/overview.html' },
         { label: 'Economy & money', href: '/economy.html' },
         { label: 'Payments', href: '/payments.html' },
         { label: 'Trade', href: '/trade.html' },
         { label: 'Politics', href: '/politics.html' },
         { label: 'Society & security', href: '/society.html' },
-        { label: 'U.S.–Mexico', href: '/us-mexico.html' },
+        { label: 'U.S. and Mexico', href: '/us-mexico.html' },
       ] },
     ] },
   { label: 'Sources', href: '/sources.html' },

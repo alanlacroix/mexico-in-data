@@ -39,9 +39,9 @@ module.exports = [
   },
   {
     key: 'usmexico',
-    label: 'U.S.–Mexico',
+    label: 'U.S. and Mexico',
     permalink: '/us-mexico.html',
-    title: 'U.S.–Mexico · The Mexico Brief',
+    title: 'U.S. and Mexico · The Mexico Brief',
     description: 'A quarterly review of the U.S.–Mexico relationship: trade, investment, migration, energy and the official dates ahead.',
   },
 ];
