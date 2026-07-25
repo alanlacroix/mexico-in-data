@@ -808,7 +808,7 @@ function render(topic){
   catch(error){
     console.error(error);window.reportMexicoDataError?.(`topic:${topic}`);
     $('#topicApp').className='';
-    $('#topicApp').innerHTML=`<section class="topic-hero"><div><h1>${LABELS[topic]}</h1><p class="topic-scope">This page is waiting for its required source data.</p></div></section><section class="now"><div class="mono-k">Data check</div><div><h2>This page couldn't load its source data. Try again, or check feed status.</h2><p><a href="/sources.html#livenow">Open feed status →</a></p></div></section>`;
+    $('#topicApp').innerHTML=`<section class="topic-hero"><div><h1>${LABELS[topic]}</h1><p class="topic-scope">This page is waiting for its required source data.</p></div></section><section class="now"><div class="mono-k">Data check</div><div><h2>This page couldn't load its source data.</h2><p>Try again in a few minutes.</p></div></section>`;
     return;
   }
   $$('.topic-switch a').forEach(b=>b.classList.toggle('active',b.dataset.topic===topic));$('.topic-select').value=topic;

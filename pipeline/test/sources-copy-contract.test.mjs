@@ -27,9 +27,11 @@ for (const phrase of internalOrOverstatedCopy) {
   assert.doesNotMatch(source, phrase, `Sources page must not publish internal or overstated copy: ${phrase}`);
 }
 
-assert.match(source, /Last checked:/, 'feed health should use reader-facing check language');
-assert.match(source, /supporting signals, not substitutes for the official releases/i,
-  'alternative sources should be framed as supporting evidence');
+assert.match(source, /Where the information comes from/i,
+  'Sources page should state its purpose in plain language');
+for (const requiredSource of [/INEGI/, /Banco de México/, /Hacienda/, /U\.S\. Trade Representative/, /El Financiero/]) {
+  assert.match(source, requiredSource, `Sources page should include ${requiredSource}`);
+}
 
 // Public source links should open something a person can read. Raw endpoints
 // remain valid pipeline inputs, but must not be the link exposed in the UI.
@@ -60,14 +62,11 @@ for (const renderedData of [briefData, areasData, happeningData]) {
     'Google News and GDELT are discovery tools, not public source labels or links');
 }
 
-// The catalog-count header is a JS-computed number with a static SSR fallback. The
-// fallback must match the real number of source rows so no-JS readers and crawlers see
-// the truth (the investor persona is exactly who counts). Guard against silent drift.
-{
-  const claimed = Number((source.match(/id="catalogcount">(\d+)</) || [])[1]);
-  const rows = (source.match(/<td class="nm"/g) || []).length;
-  assert.equal(claimed, rows,
-    `Sources catalog-count header (${claimed}) must match the actual source-row count (${rows}); update the id="catalogcount" fallback`);
+assert.doesNotMatch(source, /r\.error\|\|r\.message|r\.gatedBy/,
+  'Sources page must not expose raw connector errors or environment flags');
+for (const privateDiagnostic of [/Feed status/i, /Review flag/i, /Fetch issue/i, /Update due/i, /health\.json/i]) {
+  assert.doesNotMatch(source, privateDiagnostic,
+    `Sources page must not expose pipeline diagnostics: ${privateDiagnostic}`);
 }
 
 console.log('sources-copy-contract: ok');
