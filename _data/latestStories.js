@@ -15,6 +15,10 @@ const SECTION = {
 };
 
 const clean = (value) => String(value || '').trim();
+const dayDistance = (from, to) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return Infinity;
+  return Math.round((Date.parse(`${to}T12:00:00Z`) - Date.parse(`${from}T12:00:00Z`)) / 86400000);
+};
 const read = (rel, fallback) => {
   try { return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', rel), 'utf8')); }
   catch { return fallback; }
@@ -32,8 +36,10 @@ module.exports = function (now = new Date()) {
   const brief = read('brief.json', {});
   const clock = now instanceof Date || typeof now === 'string' || typeof now === 'number' ? now : new Date();
   const editorialDate = editorialDay(clock);
+  const briefAgeDays = dayDistance(clean(brief.meta?.editorialDate), editorialDate);
+  const briefIsVisible = briefAgeDays >= 0 && briefAgeDays <= 3;
   const briefEntries = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])]
-    .filter((entry) => entry && clean(brief.meta?.editorialDate) === editorialDate);
+    .filter((entry) => entry && briefIsVisible);
   const briefUrls = new Set(briefEntries.flatMap((entry) => [clean(entry.href || entry.url), ...(entry.coverage || []).map((source) => clean(source.url))]).filter(Boolean));
   const briefTitles = new Set(briefEntries.map((entry) => normalize(entry.h1 || entry.headline || entry.title)).filter(Boolean));
   const interestRules = interests();

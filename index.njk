@@ -155,7 +155,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   </header>
 
   <section class="brief" aria-labelledby="brief-title">
-    <div class="section-top"><h2 class="kicker" id="brief-title">The brief</h2><div class="asof" id="brief-asof" data-date="{{ dailyBrief.newsThrough }}">Updated {{ dailyBrief.newsThrough }}</div></div>
+    <div class="section-top"><h2 class="kicker" id="brief-title">The brief</h2><div class="asof" id="brief-asof" data-date="{{ dailyBrief.newsThrough }}" data-prefix="{{ 'Latest brief ·' if dailyBrief.carryingLastBrief else 'Updated' }}">{{ 'Latest brief ·' if dailyBrief.carryingLastBrief else 'Updated' }} {{ dailyBrief.newsThrough }}</div></div>
     <p class="brief-copy">{{ dailyBrief.summaryLead }}</p>
     {% if homeEditorial and homeEditorial.myRead %}<div class="my-read"><p><strong>{{ homeEditorial.myRead.label or 'My read' }}:</strong> {{ homeEditorial.myRead.text }}</p><div class="read-evidence">{% for item in homeEditorial.myRead.numbers %}<a class="read-number" href="{{ item.href }}"><span>{{ item.label }}</span><b>{{ item.display }}{% if item.unit %} {{ item.unit }}{% endif %}</b><span>{{ item.observed }}</span></a>{% endfor %}<a class="read-story" href="{{ homeEditorial.myRead.storyUrl }}" target="_blank" rel="noopener">Related: {{ homeEditorial.myRead.storyLabel }} ↗</a></div></div>{% endif %}
     {% if homeEditorial and homeEditorial.sourceState %}<div class="source-state"><strong>Sources disagree:</strong> {{ homeEditorial.sourceState.note }}{% for source in homeEditorial.sourceState.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.label }} ↗</a>{% endfor %}</div>{% endif %}
@@ -272,7 +272,7 @@ document.querySelectorAll('.js-caldate').forEach((element)=>{element.textContent
 const weekStart=(d)=>{const x=new Date(d.getTime());x.setUTCHours(0,0,0,0);x.setUTCDate(x.getUTCDate()-((x.getUTCDay()+6)%7));return x;};
 const relDay=(iso,approx)=>{const d=new Date(iso+'T00:00:00Z'),t=new Date(editorialDate+'T00:00:00Z');if(isNaN(d)||isNaN(t))return'';const n=Math.round((d-t)/864e5);if(n<0)return'';if(approx){const w=Math.round((weekStart(d)-weekStart(t))/(7*864e5));return w<=0?'this week':w===1?'next week':'in '+w+' weeks';}if(n===0)return'today';if(n===1)return'tomorrow';return'in '+n+' days';};
 document.querySelectorAll('.js-rel').forEach((element)=>{element.textContent=relDay(element.dataset.date,element.dataset.approx==='y');});
-const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);asof.textContent=isNaN(d)?'':`Updated ${d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;}
+const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);const prefix=asof.dataset.prefix||'Updated';asof.textContent=isNaN(d)?'':`${prefix} ${d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;}
 
 const status=document.getElementById('status');
 if(status){const checked=Date.parse(status.dataset.checkedAt);const issues=Number(status.dataset.issues)||0;status.textContent=Number.isFinite(checked)?`Sources checked ${relTime(checked)}${issues?` · ${issues} ${issues===1?'issue':'issues'}`:''}`:'Open data sources';}

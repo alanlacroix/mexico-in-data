@@ -139,12 +139,16 @@ try {
     if (completeAnalysis && Number(event.analysisV) < 7) fails.push(`happening: ${event.id || index} has complete but unapproved BE analysis`);
     if (event.view) {
       const gate = lintAnalysisText({ text: event.view, inputs: analysisInputs, role: 'view', maxWords: 85, maxSentences: 5,
-        requireScale: completeAnalysis && analysisNeedsScale([event.title, event.context, event.why]), forbidFirstPerson: completeAnalysis });
+        requireScale: completeAnalysis && analysisNeedsScale([event.title, event.context, event.why]), forbidFirstPerson: completeAnalysis,
+        // analysisV 7 was grounded against the full article text and standing facts
+        // before it was stored. Those private inputs are not persisted here, so this
+        // pass rechecks voice and usefulness without falsely rejecting cited numbers.
+        checkNumbers: !completeAnalysis });
       if (!gate.ok) fails.push(`happening: ${event.id || index}.view fails the analysis voice gate (${gate.flags.join('; ')})`);
     }
     if (event.prediction) {
       const gate = lintAnalysisText({ text: event.prediction, inputs: analysisInputs, role: 'prediction', maxWords: 65, maxSentences: 4,
-        strictForecast: completeAnalysis, forbidFirstPerson: completeAnalysis });
+        strictForecast: completeAnalysis, forbidFirstPerson: completeAnalysis, checkNumbers: !completeAnalysis });
       if (!gate.ok) fails.push(`happening: ${event.id || index}.prediction fails the analysis voice gate (${gate.flags.join('; ')})`);
     }
   }

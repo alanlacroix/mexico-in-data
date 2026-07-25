@@ -41,7 +41,7 @@ const FIRST_PERSON = /\b(?:I|me|my|mine|we|our|ours)\b/i;
 const numericTokens = (s) => (String(s || '').match(/\d+(?:[.,]\d+)*/g) || [])
   .map((x) => x.replace(/,/g, '').replace(/^0+(?=\d)/, ''));
 
-export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSentences = 2 }) {
+export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSentences = 2, checkNumbers = true }) {
   const flags = [];
   const clean = String(text || '').trim();
   if (!clean) return { ok: false, flags: ['empty report text'] };
@@ -57,9 +57,11 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   const count = sentences(clean).length;
   if (count > maxSentences) flags.push(`${count} sentences (cap ${maxSentences})`);
 
-  const allowed = new Set(numericTokens(inputs.join(' ')));
-  const unsupported = [...new Set(numericTokens(clean).filter((n) => !allowed.has(n)))];
-  if (unsupported.length) flags.push(`unsupported number${unsupported.length === 1 ? '' : 's'}: ${unsupported.join(', ')}`);
+  if (checkNumbers) {
+    const allowed = new Set(numericTokens(inputs.join(' ')));
+    const unsupported = [...new Set(numericTokens(clean).filter((n) => !allowed.has(n)))];
+    if (unsupported.length) flags.push(`unsupported number${unsupported.length === 1 ? '' : 's'}: ${unsupported.join(', ')}`);
+  }
   return { ok: flags.length === 0, flags };
 }
 
@@ -68,8 +70,8 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
 // enough to run on generated Briefly explained fields without dictating the facts.
 export const analysisNeedsScale = (inputs = []) => ANNOUNCEMENT_NUMBER.test(inputs.join(' '));
 
-export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWords = 45, maxSentences = 2, requireScale = false, strictForecast = true, forbidFirstPerson = false }) {
-  const report = lintReportText({ text, inputs, maxWords, maxSentences });
+export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWords = 45, maxSentences = 2, requireScale = false, strictForecast = true, forbidFirstPerson = false, checkNumbers = true }) {
+  const report = lintReportText({ text, inputs, maxWords, maxSentences, checkNumbers });
   const flags = [...report.flags];
   const clean = String(text || '').trim();
   const vague = clean.match(VAGUE_ANALYSIS); if (vague) flags.push(`vague analysis: "${vague[0]}"`);

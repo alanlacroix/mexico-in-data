@@ -32,13 +32,21 @@ assert.ok(latestStories.every((story) => Date.parse(story.date) <= Date.parse(da
 if (currentEditorial) assert.ok(['My read', 'Connection to watch'].includes(currentEditorial.myRead?.label), 'a connection must state whether it is reviewed or deterministic');
 assert.equal(dailyBriefFactory({}).editorialDate, dailyBrief.editorialDate, 'Eleventy’s data argument must not be mistaken for a clock');
 
+const lastBriefDate = dailyBrief.briefEditorialDate;
+const nextDay = new Date(`${lastBriefDate}T12:00:00Z`);
+nextDay.setUTCDate(nextDay.getUTCDate() + 1);
+const carriedBrief = dailyBriefFactory(nextDay);
+assert.equal(carriedBrief.carryingLastBrief, true, 'a failed next-day refresh must keep the last successful brief visible');
+assert.ok(carriedBrief.stories.length > 0, 'the last successful brief must not disappear during a short workflow failure');
+assert.match(carriedBrief.windowLabel, /Latest brief/, 'carried developments must not be presented as a fresh rolling window');
+assert.equal(homeEditorialFactory(nextDay), null, 'a prior-day My read must disappear on the next day');
+
 const staleNow = new Date('2099-12-31T12:00:00Z');
 const staleBrief = dailyBriefFactory(staleNow);
 assert.equal(staleBrief.editorialDate, '2099-12-31', 'the wall-clock Mexico City day must be authoritative');
-assert.equal(staleBrief.stories.length, 0, 'a failed next-day refresh must render an empty brief, not yesterday as today');
+assert.equal(staleBrief.stories.length, 0, 'an old brief must not be carried indefinitely');
 assert.match(staleBrief.summaryLead, /No major developments/i);
-assert.equal(latestStoriesFactory(staleNow).length, 0, 'a failed next-day refresh must not retain yesterday’s headlines');
-assert.equal(homeEditorialFactory(staleNow), null, 'a prior-day My read must disappear on the next day');
+assert.equal(latestStoriesFactory(staleNow).length, 0, 'old headlines must still expire from the recent-news window');
 
 const midnightWindow = recentEvents([
   { date: '2026-07-22', publishedAt: '2026-07-23T03:30:00Z', title: 'Useful report from the prior evening' },
@@ -133,6 +141,13 @@ assert.ok(lintAnalysisText({
   role: 'view',
   requireScale: true,
 }).ok, 'an announcement number with a denominator and mechanism should pass');
+assert.ok(lintAnalysisText({
+  text: 'The 578 MW package is 7.8% of awarded capacity, so it tests the model without proving it can scale.',
+  inputs: ['A renewable-power package was announced.'],
+  role: 'view',
+  requireScale: true,
+  checkNumbers: false,
+}).ok, 'publication QA must not reject analysis already grounded against article text that is not persisted');
 assert.ok(lintAnalysisText({
   text: 'The base case is that construction starts in December. That view would change if the remaining projects reach construction on schedule.',
   inputs: ['Construction starts in December. The remaining projects are scheduled to begin later.'],

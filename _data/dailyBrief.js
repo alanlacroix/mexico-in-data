@@ -19,6 +19,14 @@ const SECTIONS = {
 };
 
 const clean = (value) => String(value || '').trim();
+const dayDistance = (from, to) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return Infinity;
+  return Math.round((Date.parse(`${to}T12:00:00Z`) - Date.parse(`${from}T12:00:00Z`)) / 86400000);
+};
+const shortDate = (value) => {
+  const date = new Date(`${value}T12:00:00Z`);
+  return Number.isFinite(date.getTime()) ? date.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }) : value;
+};
 const sentence = (value) => {
   const text = clean(value).replace(/\.\s*$/, '');
   return text ? `${text}.` : '';
@@ -60,8 +68,13 @@ module.exports = function (now = new Date()) {
   const clock = now instanceof Date || typeof now === 'string' || typeof now === 'number' ? now : new Date();
   const editorialDate = editorialDay(clock);
   const claims = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])].filter(Boolean);
-  const generatedForToday = clean(meta.editorialDate) === editorialDate;
-  const visibleClaims = generatedForToday ? claims : [];
+  const briefEditorialDate = clean(meta.editorialDate);
+  const briefAgeDays = dayDistance(briefEditorialDate, editorialDate);
+  const generatedForToday = briefEditorialDate === editorialDate;
+  // Keep the last successful edition visible through weekends and short workflow
+  // failures. Its actual date is exposed to the template; it is never called today's.
+  const carryingLastBrief = !generatedForToday && briefAgeDays > 0 && briefAgeDays <= 3;
+  const visibleClaims = generatedForToday || carryingLastBrief ? claims : [];
   const briefGroups = groupEvents(visibleClaims).map((group) => {
     const related = (happening.events || []).filter((event) => sameThread(group.event, event));
     return { ...group, coverage: mergeCoverage(group.coverage, related, related.flatMap((event) => event.coverage || [])) };
@@ -82,12 +95,14 @@ module.exports = function (now = new Date()) {
 
   return {
     editorialDate,
+    briefEditorialDate,
+    carryingLastBrief,
     newsThrough: clean(meta.reviewedAt || meta.generatedAt || happening.meta?.generatedAt),
     quiet: !stories.length || !!meta.quiet,
-    summaryLead: plainExplanation(generatedForToday && clean(brief.summary) ? clean(brief.summary) : (fallback || quietCopy)),
+    summaryLead: plainExplanation((generatedForToday || carryingLastBrief) && clean(brief.summary) ? clean(brief.summary) : (fallback || quietCopy)),
     stories,
     briefSources,
     windowHours: Number(meta.windowHours) || 36,
-    windowLabel: `Past ${Number(meta.windowHours) || 36} hours`,
+    windowLabel: carryingLastBrief ? `Latest brief · ${shortDate(briefEditorialDate)}` : `Past ${Number(meta.windowHours) || 36} hours`,
   };
 };
