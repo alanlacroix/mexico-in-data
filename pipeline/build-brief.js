@@ -80,6 +80,8 @@ const contextGate = (e) => lintReportText({
   maxSentences: 2,
 });
 const ctxOf = (e) => stripDash(contextGate(e).ok ? shippedContext(e) : '');
+const analysisReady = (e) => Number(e && e.analysisV) >= 7
+  && ['background', 'view', 'prediction'].every((field) => String(e && e[field] || '').trim());
 
 // Major investment commitments get a deterministic floor so an unusually large deal is not
 // buried by a conservative source score. Both a money signal and an investment term must match.
@@ -105,7 +107,11 @@ function select(events) {
   const eligible = events.filter((e) => {
     const gate = contextGate(e);
     if (!gate.ok && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: ${gate.flags.join('; ')}`);
-    return gate.ok && e.url && e.source;
+    if (gate.ok && !analysisReady(e) && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: Briefly Explained is not approved`);
+    // Key developments promise more than a headline. A fresh story remains available in
+    // All headlines until its full Briefly Explained unit passes review; it must never
+    // displace the last reviewed Brief with an empty BE control.
+    return gate.ok && analysisReady(e) && e.url && e.source;
   });
   const ranked = groupEvents(eligible).map((group) => ({
     ...group.event,
@@ -201,7 +207,18 @@ async function main() {
       windowHours = FALLBACK_WINDOW_HOURS;
     }
   }
+  const priorStories = [prev?.lead, ...arr(prev?.items)].filter(Boolean);
+  const priorApproved = Boolean(prev?.summary && priorStories.length)
+    && priorStories.every((story) => Number(story.analysisV) >= 7
+      && ['background', 'view', 'prediction'].every((field) => String(story[field] || '').trim()));
   if (!picked.length) {
+    // A quiet or incomplete refresh must not erase the last reviewed Brief. Fresh,
+    // unreviewed stories remain visible in All headlines until their complete BE unit
+    // clears review; the homepage keeps the last useful Brief in the meantime.
+    if (priorApproved) {
+      console.log('  no newly approved key developments; keeping the last reviewed brief');
+      return;
+    }
     const contentSig = fingerprint([]);
     const unchanged = prev?.meta?.contentSig === contentSig && prev?.meta?.editorialDate === editorialDate;
     const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();

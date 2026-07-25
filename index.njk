@@ -21,7 +21,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .section-note,.asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .text-link{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
 
-  .brief{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:16px 0 20px;margin-top:28px}
+  .brief{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:16px 0 20px;margin-top:28px;scroll-margin-top:72px}
   .brief-copy{font-size:clamp(18px,1.65vw,22px);line-height:1.58;color:var(--ink-2);max-width:78ch;margin-top:13px}
   .my-read{max-width:78ch;margin-top:17px;padding:13px 15px;border-left:2px solid var(--green);background:#f8f7f2}
   .my-read p{font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
@@ -154,7 +154,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
     <a class="home-status" id="status" href="/sources.html" data-checked-at="{{ homeHealth.checkedAt }}" data-issues="{{ homeHealth.issues }}">Source status{% if homeHealth.issues %} · {{ homeHealth.issues }} {{ 'issue' if homeHealth.issues == 1 else 'issues' }}{% endif %}</a>
   </header>
 
-  <section class="brief" aria-labelledby="brief-title">
+  <section class="brief" id="brief" aria-labelledby="brief-title">
     <div class="section-top"><h2 class="kicker" id="brief-title">The brief</h2><div class="asof" id="brief-asof" data-date="{{ dailyBrief.newsThrough }}" data-prefix="{{ 'Latest brief ·' if dailyBrief.carryingLastBrief else 'Updated' }}">{{ 'Latest brief ·' if dailyBrief.carryingLastBrief else 'Updated' }} {{ dailyBrief.newsThrough }}</div></div>
     <p class="brief-copy">{{ dailyBrief.summaryLead }}</p>
     {% if homeEditorial and homeEditorial.myRead %}<div class="my-read"><p><strong>{{ homeEditorial.myRead.label or 'My read' }}:</strong> {{ homeEditorial.myRead.text }}</p><div class="read-evidence">{% for item in homeEditorial.myRead.numbers %}<a class="read-number" href="{{ item.href }}"><span>{{ item.label }}</span><b>{{ item.display }}{% if item.unit %} {{ item.unit }}{% endif %}</b><span>{{ item.observed }}</span></a>{% endfor %}<a class="read-story" href="{{ homeEditorial.myRead.storyUrl }}" target="_blank" rel="noopener">Related: {{ homeEditorial.myRead.storyLabel }} ↗</a></div></div>{% endif %}

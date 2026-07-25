@@ -54,7 +54,7 @@ jobs:
 
       - name: Validate public claims and source references
         run: |
-          if node pipeline/assert-data.js; then
+          if node pipeline/assert-data.js && node pipeline/test/homepage-feed-contract.test.mjs; then
             exit 0
           fi
 
@@ -71,6 +71,7 @@ jobs:
             node build-companies.js || true
           )
           node pipeline/assert-data.js
+          node pipeline/test/homepage-feed-contract.test.mjs
 
       - name: Commit the event log + brief + areas
         run: |

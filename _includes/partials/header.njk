@@ -4,7 +4,7 @@
    page.url. On narrow screens the whole nav collapses behind the menu button (toggled by the small
    script in base.njk). -#}
 <header class="mast"><div class="wrap">
-  <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
+  <a class="brand" href="/#brief">THE MEXICO <span class="u">BRIEF</span></a>
   <button class="navtoggle" type="button" aria-label="Menu" aria-controls="sitenav" aria-expanded="false"><span></span><span></span><span></span></button>
   <nav class="mnav" id="sitenav" aria-label="Primary navigation">
     {%- for item in nav %}
@@ -22,7 +22,7 @@
     {%- elif item.cta %}
     <a href="{{ item.href }}" class="cta{% if page.url == item.href %} here{% endif %}"{% if page.url == item.href %} aria-current="page"{% endif %}>{{ item.label }}</a>
     {%- else %}
-    <a href="{{ item.href }}"{% if page.url == item.href %} class="here" aria-current="page"{% endif %}>{{ item.label }}</a>
+    <a href="{{ '/#brief' if item.href == '/' else item.href }}"{% if page.url == item.href %} class="here" aria-current="page"{% endif %}>{{ item.label }}</a>
     {%- endif %}
     {%- endfor %}
   </nav>

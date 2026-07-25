@@ -27,7 +27,8 @@ assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
 assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
-assert.ok(dailyBrief.stories.every((story) => !story.bg || (story.analysisV >= 7 && story.view && story.prediction)), 'a BE disclosure must be complete and approved as one unit');
+assert.ok(dailyBrief.stories.every((story) => story.analysisV >= 7 && story.bg && story.view && story.prediction), 'every key development must include a complete approved BE unit');
+assert.ok(dailyBrief.summaryLead && dailyBrief.summaryLead.trim().length >= 40, 'the homepage must always contain a substantive Brief');
 assert.ok(latestStories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'recent headlines must not contain future-dated stories');
 if (currentEditorial) assert.ok(['My read', 'Connection to watch'].includes(currentEditorial.myRead?.label), 'a connection must state whether it is reviewed or deterministic');
 assert.equal(dailyBriefFactory({}).editorialDate, dailyBrief.editorialDate, 'Eleventy’s data argument must not be mistaken for a clock');
@@ -183,6 +184,9 @@ assert.doesNotMatch(homepageTemplate, /from ['"]\/assets\/mb\.js/, 'the homepage
 assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepage source status must be embedded at build time');
 assert.match(homepageTemplate, /\(not isAll\).*story\.analysisV >= 7.*story\.bg and story\.view and story\.prediction/, 'only versioned, complete key-development analysis may expose the disclosure');
 assert.match(homepageTemplate, /storyCard\(story, true\)/, 'ordinary headlines must use the no-analysis card mode');
+assert.ok(homepageTemplate.indexOf('<section class="brief" id="brief"') < homepageTemplate.indexOf('<section class="news"'), 'the Brief must render before key developments');
+assert.match(briefBuilder, /return gate\.ok && analysisReady\(e\) && e\.url && e\.source/, 'an unreviewed story must not enter key developments');
+assert.match(briefBuilder, /if \(priorApproved\)[\s\S]*keeping the last reviewed brief/, 'an incomplete refresh must preserve the last reviewed Brief');
 assert.match(happeningBuilder, /strictForecast: field === 'prediction'/, 'every generated BE forecast must include a base case and a change-of-mind condition');
 assert.match(happeningBuilder, /CORE\.every\(\(field\) => proposed\[field\]\)/, 'the three BE fields must be approved together, never assembled across runs');
 assert.match(briefBuilder, /Number\(e\.analysisV\) >= 7/, 'the brief builder must withhold unapproved BE analysis');
