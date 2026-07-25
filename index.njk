@@ -11,10 +11,8 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .home a{text-underline-offset:3px}
   .home-head{padding:32px 0 15px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
   .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
-  .home-date,.home-status{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .home-date{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .home-date{margin-top:6px}
-  .home-status{text-decoration:none}
-  .home-status:hover{color:var(--green-d)}
   .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
   .section-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
   .section-title{font-size:var(--fs-h2);line-height:1.12;letter-spacing:-.018em;margin:5px 0 0}
@@ -151,7 +149,6 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 <div class="home" data-editorial-date="{{ dailyBrief.editorialDate }}">
   <header class="home-head">
     <div><h1 class="home-title">Mexico today</h1><div class="home-date" id="today">{{ dailyBrief.editorialDate }}</div></div>
-    <a class="home-status" id="status" href="/sources.html" data-checked-at="{{ homeHealth.checkedAt }}" data-issues="{{ homeHealth.issues }}">Source status{% if homeHealth.issues %} · {{ homeHealth.issues }} {{ 'issue' if homeHealth.issues == 1 else 'issues' }}{% endif %}</a>
   </header>
 
   <section class="brief" id="brief" aria-labelledby="brief-title">
@@ -210,7 +207,6 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 <script type="module">
 const editorialDate=document.querySelector('.home')?.dataset.editorialDate||'';
 const date=(iso,year=false)=>{if(!iso)return'';const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T12:00:00Z':iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric',...(year?{year:'numeric'}:{})});};
-const relTime=(ms)=>{const seconds=Math.max(0,(Date.now()-ms)/1000);if(seconds<5400)return Math.max(1,Math.round(seconds/60))+' min ago';if(seconds<86400)return Math.round(seconds/3600)+'h ago';return Math.round(seconds/86400)+'d ago';};
 
 function closeContext(except,restoreFocus=false){
   document.querySelectorAll('.context-btn[aria-expanded="true"]').forEach((button)=>{
@@ -273,9 +269,6 @@ const weekStart=(d)=>{const x=new Date(d.getTime());x.setUTCHours(0,0,0,0);x.set
 const relDay=(iso,approx)=>{const d=new Date(iso+'T00:00:00Z'),t=new Date(editorialDate+'T00:00:00Z');if(isNaN(d)||isNaN(t))return'';const n=Math.round((d-t)/864e5);if(n<0)return'';if(approx){const w=Math.round((weekStart(d)-weekStart(t))/(7*864e5));return w<=0?'this week':w===1?'next week':'in '+w+' weeks';}if(n===0)return'today';if(n===1)return'tomorrow';return'in '+n+' days';};
 document.querySelectorAll('.js-rel').forEach((element)=>{element.textContent=relDay(element.dataset.date,element.dataset.approx==='y');});
 const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);const prefix=asof.dataset.prefix||'Updated';asof.textContent=isNaN(d)?'':`${prefix} ${d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;}
-
-const status=document.getElementById('status');
-if(status){const checked=Date.parse(status.dataset.checkedAt);const issues=Number(status.dataset.issues)||0;status.textContent=Number.isFinite(checked)?`Sources checked ${relTime(checked)}${issues?` · ${issues} ${issues===1?'issue':'issues'}`:''}`:'Open data sources';}
 
 document.querySelectorAll('.story-thumb img').forEach((image)=>{const remove=()=>image.closest('.story-thumb')?.remove();if(image.complete&&image.naturalWidth===0)remove();else image.addEventListener('error',remove,{once:true});});
 </script>
