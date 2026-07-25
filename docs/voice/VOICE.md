@@ -60,7 +60,7 @@ Analysis is the most valuable part of the site. It has a higher bar than factual
 2. **Give every announcement number a denominator.** `$1 billion`, `500 MW`, or `20,000 jobs` means nothing alone. Say what share of the relevant package or system it represents, how it compares with the status quo, or why that comparison is unavailable. No denominator means no judgment about the number.
 3. **Name the stage reached.** Signed, announced, financed, permitted, under construction, operating, and producing are different claims. Never let a pipeline number read like completed capacity.
 4. **Explain how it works.** Name who supplies capital or control, who benefits, what constraint changes, and how the effect would reach a company, household, investor, or the wider economy.
-5. **Take a falsifiable view.** State the base case and the observable evidence that would change it. “Watch permits” is not enough without a schedule, baseline, or consequence.
+5. **Take a falsifiable view.** State the most likely outcome and the observable evidence that would change it. “Watch permits” is not enough without a schedule, baseline, or consequence.
 6. **Use more room when the story earns it.** Briefly explained is collapsible. A complicated story may take 100 to 170 words. Do not force useful reasoning into a slogan, and do not make a simple story longer.
 7. **Delete empty evaluation.** “The number is nice,” “this is important,” “genuinely useful,” “good news,” and “worth watching” do not publish. State the comparison or consequence.
 
@@ -157,8 +157,10 @@ only analysis surface that uses first person.
 
 Compact analysis, such as Briefly explained, keeps the same sequence in its labeled
 fields: Background, Our view, and What we're watching, but it never uses I, me, my,
-we, or our. Use "The base case is" and "That view would change if." If the evidence
-cannot support
+we, or our. State the likely outcome directly and then name the evidence that would
+prove it wrong. Start with the actual actor, event, or outcome. "The base case is" and
+"That view would change if" are allowed when they are the clearest wording, but they
+are not a template and must not repeat across the Brief. If the evidence cannot support
 a view, a mechanism, and a measurable change-of-mind condition, the analysis does not
 publish. Never fill the shape with generic prose.
 

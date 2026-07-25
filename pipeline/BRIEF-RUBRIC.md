@@ -28,7 +28,7 @@ The visible summary is factual and comes from the linked report. Only the three 
 - **Our view:** a narrow judgment tied to a concrete mechanism or tradeoff. This is analysis, not reported fact.
 - **What we're watching:** a specific expectation or observable condition that would confirm or weaken the view.
 
-Briefly Explained never uses first person. Write "The base case is" and "That view would change if." First-person analysis belongs only in the quarterly review.
+Briefly Explained never uses first person. State the likely next outcome directly, then name the evidence that would prove it wrong. Start with the actual actor, event, or outcome. Do not repeat "The base case is" or "That view would change if" as a template across stories. First-person analysis belongs only in the quarterly review.
 
 Each part must add something the visible summary did not already say. Keep the full layer under roughly 110 words. Ordinary headlines never get this layer.
 

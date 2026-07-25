@@ -85,7 +85,7 @@ export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWor
   }
   if (role === 'prediction') {
     if (strictForecast) {
-      if (!/\b(base case|expect|likely|my guess|should|will)\b/i.test(clean)) flags.push('forecast states no base case');
+      if (!/\b(base case|expect|likely|my guess|should|will|may)\b/i.test(clean)) flags.push('forecast states no likely outcome');
       if (!/\b(if|unless|until|would change|confirm|weaken)\b/i.test(clean)) flags.push('forecast has no change-of-mind condition');
     } else if (!/\b(watch|expect|base case|if|when|until|unless|next|would|should|confirm|weaken|appear|arrive|rise|fall|decline|increase|remain|begin|start)\b/i.test(clean)) {
       flags.push('forecast has no observable condition');

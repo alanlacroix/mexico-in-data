@@ -129,7 +129,7 @@ assert.ok(lintAnalysisText({
   text: 'The outcome remains uncertain.',
   inputs: ['The outcome remains uncertain.'],
   role: 'prediction',
-}).flags.includes('forecast states no base case'), 'a forecast without a base case must fail the analysis gate');
+}).flags.includes('forecast states no likely outcome'), 'a forecast without a likely outcome must fail the analysis gate');
 assert.ok(lintAnalysisText({
   text: 'The $1 billion number is nice. Permits matter more.',
   inputs: ['$1 billion investment in five projects.'],
@@ -154,7 +154,7 @@ assert.ok(lintAnalysisText({
   inputs: ['Construction starts in December. The remaining projects are scheduled to begin later.'],
   role: 'prediction',
   forbidFirstPerson: true,
-}).ok, 'a base case with a change-of-mind condition should pass');
+}).ok, 'a likely outcome with a change-of-mind condition should pass');
 assert.ok(lintAnalysisText({
   text: 'My base case is that construction starts in December. I would change that view if the schedule slips.',
   inputs: ['Construction starts in December. The schedule may slip.'],
@@ -187,6 +187,9 @@ assert.match(homepageTemplate, /storyCard\(story, true\)/, 'ordinary headlines m
 assert.ok(homepageTemplate.indexOf('<section class="brief" id="brief"') < homepageTemplate.indexOf('<section class="news"'), 'the Brief must render before key developments');
 assert.match(briefBuilder, /return gate\.ok && analysisReady\(e\) && e\.url && e\.source/, 'an unreviewed story must not enter key developments');
 assert.match(briefBuilder, /if \(priorApproved\)[\s\S]*keeping the last reviewed brief/, 'an incomplete refresh must preserve the last reviewed Brief');
+for (const phrase of [/\bThe base case is\b/i, /\bThat view would change if\b/i]) {
+  assert.ok(dailyBrief.stories.filter((story) => phrase.test(story.prediction || '')).length <= 1, 'BE predictions must not repeat a stock forecast phrase');
+}
 assert.match(happeningBuilder, /strictForecast: field === 'prediction'/, 'every generated BE forecast must include a base case and a change-of-mind condition');
 assert.match(happeningBuilder, /CORE\.every\(\(field\) => proposed\[field\]\)/, 'the three BE fields must be approved together, never assembled across runs');
 assert.match(briefBuilder, /Number\(e\.analysisV\) >= 7/, 'the brief builder must withhold unapproved BE analysis');

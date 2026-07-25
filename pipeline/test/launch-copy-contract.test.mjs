@@ -37,7 +37,7 @@ assert.match(home, /<b>BE<\/b> Briefly explained/i, 'the homepage must explain t
 assert.match(home, />Our view</i, 'the analysis layer must label the Brief’s judgment');
 assert.match(home, />What we’re watching</i, 'the analysis layer must state what could confirm or weaken the view');
 assert.match(voice, /export const ANALYSIS_SHAPE/, 'all generated analysis must share Alan’s approved reasoning pattern');
-for (const requirement of ['State the view in the first sentence', 'State a base case', 'observable evidence would change the view', 'concrete implication for an investor or operator']) {
+for (const requirement of ['State the view in the first sentence', 'State the most likely outcome or direction', 'observable evidence would change the view', 'concrete implication for an investor or operator']) {
   assert.ok(voice.includes(requirement), `analysis voice contract is missing: ${requirement}`);
 }
 assert.match(happeningBuilder, /ANALYSIS_SHAPE/, 'Briefly explained must use the shared analysis voice contract');
