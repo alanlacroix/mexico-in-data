@@ -12,8 +12,8 @@
 //
 // Fail-soft by design: with no ANTHROPIC_API_KEY it falls back to a deterministic pick
 // (top-tier, most-recent, spread across sections) so the log still refreshes — the model
-// only sharpens the selection and the "why". Within one editorial day, an event keeps one
-// stable id, moves to the newest curated report, and retains other reports as coverage.
+// only sharpens the selection and the "why". One event keeps one stable id, moves to the
+// newest curated report, and retains other outlets and adjacent-day reports as coverage.
 //
 //   node build-happening.js                    # update data/happening.json in place
 //   HAPPENING_OUT=/tmp/h.json node build-happening.js   # write elsewhere (dry test)
@@ -35,7 +35,7 @@ import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
 
 const { editorialDay } = newsDay;
-const { mergeCoverage } = newsThreads;
+const { groupEvents, mergeCoverage } = newsThreads;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -121,27 +121,14 @@ function candidates(now) {
     .filter((x) => !/^google news\b|^via gdelt$/i.test(String(x.sourceName || '')))
     .filter(publishableCandidate);
   pool.sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at));
-  const kept = [];
-  for (const x of pool) {
-    const n = normTitle(x.title);
-    const duplicate = kept.find((candidate) => editorialDay(candidate.published_at) === editorialDay(x.published_at)
-      && jaccard(candidate._n, n) >= 0.6);
-    const report = {
-      source: x.sourceName || x.source || '', url: x.url, publishedAt: x.published_at || '',
-      date: editorialDay(x.published_at), title: x.title || '', summary: x.dek || '',
-    };
-    if (duplicate) {
-      // Keep one candidate for selection, but retain every source. The public event can
-      // then show the current state once and still let a reader inspect the reporting.
-      duplicate._coverage = mergeCoverage(duplicate._coverage || [], report);
-      continue;
-    }
-    x._n = n;
-    x._coverage = mergeCoverage(report);
-    kept.push(x);
-    if (kept.length >= MAX_CANDIDATES) break;
-  }
-  return kept;
+  // Use the same transitive event clustering as storage and publication. A one-pass
+  // “compare with the kept headline” loop loses bridge reports and makes the result
+  // depend on source order.
+  return groupEvents(pool).slice(0, MAX_CANDIDATES).map((group) => ({
+    ...group.event,
+    _n: normTitle(group.event.title),
+    _coverage: group.coverage,
+  }));
 }
 
 // ---- shape an event-log entry from a news item ----
@@ -406,33 +393,38 @@ function mergeLog(existing, fresh, now) {
     if (flags.length) { quarantine(e, ['purged: ' + flags.join('; ')]); return false; }
     return true;
   });
-  const nn = (e) => normTitle(e.title || '');
-  for (const e of fresh) {
-    const dup = events.find((o) => o.date === e.date && (
-      (o.url && e.url && o.url === e.url) ||
-      (o.id && e.id && o.id === e.id) ||
-      jaccard(nn(o), nn(e)) >= 0.6));
-    if (dup) {
-      dup.coverage = mergeCoverage(dup, dup.coverage || [], e, e.coverage || []);
-      const freshTime = Date.parse(e.publishedAt) || 0;
-      const priorTime = Date.parse(dup.publishedAt) || Date.parse(dup.date) || 0;
-      if (freshTime > priorTime) {
-        // One editorial-day event keeps a stable id while its visible state moves to the
-        // latest report. A similar event tomorrow remains a separate dated record.
-        for (const key of ['date', 'section', 'title', 'why', 'company', 'source', 'url', 'publishedAt', 'sourceTier', 'image', 'imgTries']) {
-          if (e[key] !== undefined) dup[key] = e[key];
-        }
-        dup.importance = Math.max(dup.importance || 0, e.importance || 0);
-        for (const key of ['background', 'view', 'prediction', 'drivers', 'implications', 'next', 'analysisV']) delete dup[key];
+
+  // Cluster old and new reports together in one transitive pass. An existing event keeps
+  // its stable id; a newer report can update the visible facts and clears old analysis so
+  // Briefly Explained must be regenerated against the new state.
+  const existingIds = new Set(events.map((event) => event.id).filter(Boolean));
+  const groups = groupEvents([...events, ...fresh]);
+  const added = groups.filter((group) => !group.members.some((member) => existingIds.has(member.id))).length;
+  events = groups.map((group) => {
+    const existingMembers = group.members.filter((member) => existingIds.has(member.id));
+    const displayedExisting = existingMembers.find((member) => member.id === group.event.id);
+    const prior = displayedExisting || existingMembers[0] || null;
+    if (!prior) return { ...group.event, importance: group.importance, coverage: group.coverage };
+
+    const freshest = group.members.reduce((winner, member) =>
+      (Date.parse(member.publishedAt || member.published_at || member.date) || 0)
+        > (Date.parse(winner.publishedAt || winner.published_at || winner.date) || 0) ? member : winner, prior);
+    const priorTime = Date.parse(prior.publishedAt || prior.date) || 0;
+    const freshTime = Date.parse(freshest.publishedAt || freshest.published_at || freshest.date) || 0;
+    const merged = { ...prior, importance: group.importance, coverage: group.coverage };
+    if (freshTime > priorTime && !existingIds.has(freshest.id)) {
+      for (const key of ['date', 'section', 'title', 'why', 'company', 'source', 'url', 'publishedAt', 'sourceTier', 'image', 'imgTries']) {
+        if (freshest[key] !== undefined) merged[key] = freshest[key];
       }
-      continue;
+      if (!merged.image && group.event.image) merged.image = group.event.image;
+      for (const key of ['background', 'view', 'prediction', 'drivers', 'implications', 'next', 'analysisV']) delete merged[key];
     }
-    events.push(e);
-  }
+    return merged;
+  });
   const cutoff = now.getTime() - KEEP_DAYS * 864e5;
   const kept = events.filter((e) => { const t = Date.parse(e.date) || 0; return t >= cutoff || (e.importance || 0) >= 5; });
   kept.sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0));
-  return { events: kept.slice(0, MAX_STORE), added: kept.length - before > 0 ? kept.length - before : Math.max(0, events.length - before) };
+  return { events: kept.slice(0, MAX_STORE), added, removedDuplicates: Math.max(0, before + fresh.length - events.length) };
 }
 
 async function main() {

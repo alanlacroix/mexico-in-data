@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { editorialDay } = require('../pipeline/lib/news-day.cjs');
-const { coverageForDay, groupEvents, mergeCoverage, sameThread } = require('../pipeline/lib/news-threads.cjs');
+const { groupEvents, mergeCoverage, sameThread } = require('../pipeline/lib/news-threads.cjs');
 const { plainExplanation, plainHeadline, plainSourceName } = require('../pipeline/lib/plain-language.cjs');
 
 const read = (rel) => {
@@ -35,7 +35,7 @@ const sentence = (value) => {
 function toStory(group) {
   const event = group.event;
   const section = SECTIONS[event && event.section] || SECTIONS.economy;
-  const sources = coverageForDay(clean(event.date), event, event.coverage || [], group.coverage || [])
+  const sources = mergeCoverage(event, event.coverage || [], group.coverage || [])
     .map((source) => ({ ...source, source: plainSourceName(source.source) }));
   const latestSourceTime = sources.map((source) => clean(source.publishedAt)).find(Boolean);
   return {

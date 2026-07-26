@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { editorialDay } = require('../pipeline/lib/news-day.cjs');
-const { coverageForDay, groupEvents, normalize } = require('../pipeline/lib/news-threads.cjs');
+const { groupEvents, mergeCoverage, normalize } = require('../pipeline/lib/news-threads.cjs');
 const { DEFAULT_WINDOW_HOURS, recentEvents } = require('../pipeline/lib/news-window.cjs');
 const { plainExplanation, plainHeadline, plainSourceName } = require('../pipeline/lib/plain-language.cjs');
 
@@ -51,7 +51,7 @@ module.exports = function (now = new Date()) {
   return groupEvents(current).slice(0, 60).map((group) => {
     const event = group.event;
     const section = SECTION[event.section] || SECTION.economy;
-    const sources = coverageForDay(clean(event.date), event, event.coverage || [], group.coverage || [])
+    const sources = mergeCoverage(event, event.coverage || [], group.coverage || [])
       .map((source) => ({ ...source, source: plainSourceName(source.source) }));
     const latestSourceTime = sources.map((source) => clean(source.publishedAt)).find(Boolean);
     const haystack = `${event.title || ''} ${event.why || ''} ${event.section || ''}`;

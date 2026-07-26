@@ -16,7 +16,7 @@ import newsWindow from './lib/news-window.cjs';
 import plainLanguage from './lib/plain-language.cjs';
 
 const { editorialDay } = newsDay;
-const { groupEvents } = newsThreads;
+const { groupEvents, sameThread } = newsThreads;
 const { DEFAULT_WINDOW_HOURS, FALLBACK_WINDOW_HOURS, recentEvents } = newsWindow;
 const { plainExplanation, plainHeadline } = plainLanguage;
 
@@ -159,6 +159,16 @@ function select(events) {
   }
   return picked;
 }
+
+function assertUniqueEvents(events) {
+  for (let i = 0; i < events.length; i += 1) {
+    for (let j = i + 1; j < events.length; j += 1) {
+      if (sameThread(events[i], events[j])) {
+        throw new Error(`duplicate event reached publication: "${events[i].title || events[i].h1}" / "${events[j].title || events[j].headline}"`);
+      }
+    }
+  }
+}
 function buildStanding(nums) {
   const pick = nums.filter((n) => ['board-peso', 'board-inflation', 'board-rate'].includes(n.id));
   if (!pick.length) return null;
@@ -257,6 +267,9 @@ async function main() {
     href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0), ranking: rankOf(lead0, 0) };
   const items = picked.slice(1).map((e, i) => ({ headline: plainHeadline(stripDash(e.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(e)), ...pass4(e),
     refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', isNew: isNew(e), ranking: rankOf(e, i + 1) }));
+  // Last line of defense: a regression upstream must fail the build instead of putting
+  // two cards for the same event on the public Brief.
+  assertUniqueEvents([lead, ...items]);
   const standing = buildStanding(P.nums);
   const quiet = false;
   const newCount = [lead, ...items].filter((it) => it.isNew).length;

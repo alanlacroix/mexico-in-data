@@ -9,7 +9,7 @@ import { domainTrusted, publicHeadlineEligible } from '../lib/news-trust.js';
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const require = createRequire(import.meta.url);
 const { editorialDay } = require(path.join(root, 'pipeline/lib/news-day.cjs'));
-const { coverageForDay, groupEvents } = require(path.join(root, 'pipeline/lib/news-threads.cjs'));
+const { groupEvents, sameThread } = require(path.join(root, 'pipeline/lib/news-threads.cjs'));
 const { recentEvents } = require(path.join(root, 'pipeline/lib/news-window.cjs'));
 const dailyBriefFactory = require(path.join(root, '_data/dailyBrief.js'));
 const latestStoriesFactory = require(path.join(root, '_data/latestStories.js'));
@@ -20,6 +20,7 @@ const currentEditorial = homeEditorialFactory();
 const nowBoard = require(path.join(root, '_data/nowBoard.js'))();
 const registry = require(path.join(root, 'pipeline/news-sources.json'));
 const wire = require(path.join(root, 'data/news/wire.json'));
+const happening = require(path.join(root, 'data/happening.json'));
 
 assert.equal(editorialDay('2026-07-21T03:00:00Z'), '2026-07-20', 'the editorial day must not roll over at UTC midnight');
 assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial day must follow Mexico City');
@@ -28,8 +29,15 @@ assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
 assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
 assert.ok(dailyBrief.stories.every((story) => story.analysisV >= 7 && story.bg && story.view && story.prediction), 'every key development must include a complete approved BE unit');
+for (let i = 0; i < dailyBrief.stories.length; i += 1) {
+  for (let j = i + 1; j < dailyBrief.stories.length; j += 1) {
+    assert.equal(sameThread(dailyBrief.stories[i], dailyBrief.stories[j]), false, 'the rendered Brief must never repeat one event');
+  }
+}
 assert.ok(dailyBrief.summaryLead && dailyBrief.summaryLead.trim().length >= 40, 'the homepage must always contain a substantive Brief');
 assert.ok(latestStories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'recent headlines must not contain future-dated stories');
+assert.equal(groupEvents(happening.events || []).length, (happening.events || []).length, 'the stored event log must not contain two records for one development');
+assert.equal(happening.meta?.count, (happening.events || []).length, 'the event-log count must match its records');
 if (currentEditorial) assert.ok(['My read', 'Connection to watch'].includes(currentEditorial.myRead?.label), 'a connection must state whether it is reviewed or deterministic');
 assert.equal(dailyBriefFactory({}).editorialDate, dailyBrief.editorialDate, 'Eleventy’s data argument must not be mistaken for a clock');
 
@@ -83,10 +91,86 @@ const acrossDays = groupEvents([
   { date: '2026-07-20', title: 'Mexico and the US open the annual USMCA review', source: 'Yesterday', url: 'https://example.com/yesterday', publishedAt: '2026-07-21T03:00:00Z' },
   { date: '2026-07-21', title: 'USTR updates the USMCA review talks', source: 'Today', url: 'https://example.com/today', publishedAt: '2026-07-21T14:00:00Z' },
 ]);
-assert.equal(acrossDays.length, 2, 'a new editorial day must get its own event state');
-assert.deepEqual(coverageForDay('2026-07-21', acrossDays[1].event, acrossDays[1].event.coverage || [], acrossDays[0].event), [
-  { source: 'Today', url: 'https://example.com/today', publishedAt: '2026-07-21T14:00:00Z', date: '2026-07-21', title: 'USTR updates the USMCA review talks', summary: '' },
-], 'today’s card must not retain a prior-day report');
+assert.equal(acrossDays.length, 2, 'a later treaty update must remain separate from the meeting opening');
+
+const cattleAcrossDays = groupEvents([
+  {
+    date: '2026-07-24', publishedAt: '2026-07-25T02:57:51.000Z', source: 'El Financiero — Economía',
+    url: 'https://example.com/cattle-a', title: 'United States reopens border to Mexican cattle imports after year-long ban',
+  },
+  {
+    date: '2026-07-25', publishedAt: '2026-07-25T16:38:48.000Z', source: 'Expansión — Empresas',
+    url: 'https://example.com/cattle-b', title: 'US reopens border to Mexican cattle imports after screwworm-related suspension',
+  },
+]);
+assert.equal(cattleAcrossDays.length, 1, 'adjacent-day reports of the same cattle reopening must use one card');
+assert.equal(cattleAcrossDays[0].sourceCount, 2, 'one event must retain both reporting sources');
+assert.equal(cattleAcrossDays[0].event.source, 'Expansión — Empresas', 'the newer report must define the visible event state');
+assert.deepEqual(cattleAcrossDays[0].coverage.map((source) => source.url).sort(), [
+  'https://example.com/cattle-a', 'https://example.com/cattle-b',
+], 'cross-day event coverage must retain both source links');
+
+const reopeningThenClosure = groupEvents([
+  cattleAcrossDays[0].event,
+  {
+    date: '2026-07-26', publishedAt: '2026-07-26T15:00:00.000Z', source: 'Outlet C',
+    url: 'https://example.com/cattle-closed', title: 'United States closes border to Mexican cattle imports after a new screwworm case',
+  },
+]);
+assert.equal(reopeningThenClosure.length, 2, 'a later reversal must be published as a new event');
+
+const bilingualCattle = groupEvents([
+  {
+    date: '2026-07-24', publishedAt: '2026-07-25T02:57:51.000Z', source: 'Outlet A',
+    url: 'https://example.com/cattle-en', title: 'United States reopens border to Mexican cattle imports after year-long ban',
+  },
+  {
+    date: '2026-07-25', publishedAt: '2026-07-25T15:00:00.000Z', source: 'Outlet B',
+    url: 'https://example.com/cattle-es', title: 'EU reabre importación de ganado mexicano tras crisis',
+  },
+]);
+assert.equal(bilingualCattle.length, 1, 'English and Spanish reports of one event must cluster');
+
+const identityFixtures = [
+  {
+    expected: true,
+    label: 'a state-change paraphrase without the canonical reopening verb',
+    a: 'United States lifts restrictions on Mexican cattle imports',
+    b: 'United States reopens border to Mexican cattle imports',
+  },
+  {
+    expected: false,
+    label: 'two different investment announcements with similar generic wording',
+    a: 'Mexico announces $1 billion investment in rail network',
+    b: 'Mexico announces $7.9 billion investment in airport network',
+  },
+  {
+    expected: false,
+    label: 'two same-sized investments in different infrastructure',
+    a: 'Mexico announces $1 billion investment in electricity grid',
+    b: 'Mexico announces $1 billion investment in water infrastructure',
+  },
+  {
+    expected: false,
+    label: 'a later reversal of the same border policy',
+    a: 'United States reopens border to Mexican cattle imports',
+    b: 'United States closes border to Mexican cattle imports after a new case',
+  },
+];
+for (const fixture of identityFixtures) {
+  const a = { date: '2026-07-24', publishedAt: '2026-07-25T02:00:00Z', title: fixture.a, url: `https://example.com/${fixture.label}/a` };
+  const b = { date: '2026-07-25', publishedAt: '2026-07-25T16:00:00Z', title: fixture.b, url: `https://example.com/${fixture.label}/b` };
+  assert.equal(sameThread(a, b), fixture.expected, fixture.label);
+}
+
+const bridgeCluster = groupEvents([
+  { date: '2026-07-24', publishedAt: '2026-07-24T12:00:00Z', source: 'Outlet A', url: 'https://example.com/updated-url', title: 'US agriculture department publishes livestock notice' },
+  { date: '2026-07-25', publishedAt: '2026-07-25T12:00:00Z', source: 'Outlet C', url: 'https://example.com/cattle-followup', title: 'United States reopens border to Mexican cattle imports' },
+  { date: '2026-07-25', publishedAt: '2026-07-25T11:00:00Z', source: 'Outlet B', url: 'https://example.com/updated-url', title: 'United States lifts restrictions on Mexican cattle imports' },
+]);
+assert.equal(bridgeCluster.length, 1, 'a bridge report must join every matching member, regardless of input order');
+assert.equal(bridgeCluster[0].members.length, 3, 'a transitive event cluster must retain all member reports');
+assert.equal(bridgeCluster[0].sourceCount, 2, 'coverage must retain each unique reporting link once');
 
 const officialThenNewer = groupEvents([
   { date: '2026-07-21', title: 'USTR opens the USMCA review talks', source: 'USTR', url: 'https://ustr.gov/example', publishedAt: '2026-07-21T12:00:00Z' },
