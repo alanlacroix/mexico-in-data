@@ -143,16 +143,17 @@ What makes it the standard:
 1. It gives the view in the first sentence, in ordinary language.
 2. It uses a few numbers to support the view, not to replace it.
 3. It identifies which attractive headline may be misleading and names the better evidence.
-4. It states a base case rather than pretending certainty.
+4. It states the expected direction rather than pretending certainty.
 5. It says exactly what evidence would change the view.
 6. It ends with a practical implication for an investor or operator.
 
 This is a hard publication rule for the quarterly review. Every quarterly analysis uses two paragraphs.
 The first states the view, supports it with evidence, and names the better test when
-the obvious headline is incomplete. The second begins with the base case, says what
+the obvious headline is incomplete. The second gives the expected direction, says what
 would change the view, and ends with the practical implication. Use ordinary
-first-person language: "My concern is," "My base case is," and "I would change that view
-if" are house phrases there, not wording to polish away. The quarterly review is the
+first-person language, but vary it naturally. "My concern is," "I expect," and "I would
+revisit that view" are examples, not required phrases. Do not make every topic begin
+with "My base case" or repeat the same closing cadence. The quarterly review is the
 only analysis surface that uses first person.
 
 Compact analysis, such as Briefly explained, keeps the same sequence in its labeled
