@@ -6,18 +6,62 @@
 
 const clean = (value) => String(value || '').replace(/\s+/g, ' ').trim();
 
+const CFE_NAME = "Mexico's state-owned electricity utility";
+
+// Expand an institution only after collapsing phrases where the writer has already
+// explained it. Otherwise "state power utility CFE" becomes "state power utility
+// Mexico's state power company" when the acronym pass runs. Keep this transformation
+// idempotent because public copy can pass through this module more than once.
+function normalizeCfe(text) {
+  let value = text
+    // Repair copy produced by the pre-2026-07-27 expander before applying the
+    // canonical rule. This lets an old last-good brief render safely too.
+    .replace(/\b(?:the\s+)?(?:Mexican\s+utility|(?:state(?:-owned)?\s+)?(?:power|electric(?:ity)?)\s+(?:company|utility))\s+Mexico(?:'s|’s)\s+state\s+power\s+company\b/gi, CFE_NAME)
+    .replace(/\b(?:the\s+)?(?:Comisi[oó]n Federal de Electricidad|Federal Electricity Commission)\s*\(\s*CFE\s*\)/gi, CFE_NAME)
+    .replace(/\bCFE\s*,\s*(?:(?:Mexico(?:'s|’s)|Mexican)\s+)?(?:state(?:-owned)?\s+)?(?:power|electric(?:ity)?)\s+(?:company|utility)\b/gi, CFE_NAME)
+    .replace(/\b(?:the\s+)?(?:Mexican\s+utility|(?:(?:Mexico(?:'s|’s)|Mexican)\s+)?(?:state(?:-owned)?\s+)?(?:power|electric(?:ity)?)\s+(?:company|utility))(?:\s*\(\s*CFE\s*\)|\s+CFE\b)/gi, CFE_NAME)
+    .replace(/\bCFE['’]s\s+cost of borrowing\b/gi, `borrowing costs for ${CFE_NAME}`)
+    .replace(/\bCFE['’]s\s+borrowing costs\b/gi, `borrowing costs for ${CFE_NAME}`);
+
+  const escapedName = CFE_NAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const namedBefore = new RegExp(`(?:${escapedName}|Comisi[oó]n Federal de Electricidad)`, 'i');
+  const definitionAfter = new RegExp(`^\\s+is\\s+${escapedName}\\b`, 'i');
+  let named = false;
+  value = value.replace(/\bCFE\b/g, (match, offset, source) => {
+    // "CFE is Mexico's ..." defines the acronym in place. Keep that useful
+    // definition, then use "the utility" later in the same field.
+    if (definitionAfter.test(source.slice(offset + match.length))) {
+      named = true;
+      return match;
+    }
+    if (named || namedBefore.test(source.slice(0, offset))) return 'the utility';
+    named = true;
+    return CFE_NAME;
+  });
+  return value;
+}
+
 function removeAlreadyDefinedAcronyms(text) {
-  return text
+  return normalizeCfe(text)
+    .replace(/\bUSTR\s+([A-Z][A-Za-z'’.-]+\s+[A-Z][A-Za-z'’.-]+)\b/g, 'US Trade Representative $1')
     .replace(/\bOffice of the U\.?S\.? Trade Representative\s*\(USTR\)/gi, 'US trade office')
+    .replace(/\b(?:the\s+)?US trade office\s+USTR\b/gi, 'US trade office')
     .replace(/\bUS-Mexico-Canada (?:Agreement|trade agreement)\s*\((?:USMCA|T-?MEC)\)/gi,
       'US-Mexico-Canada Agreement')
     .replace(/\bNational Institute of Statistics and Geography\s*\(INEGI\)/gi,
       "Mexico's statistics agency")
-    .replace(/\bBanco de M[eé]xico\s*\(Banxico\)/gi, "Mexico's central bank");
+    .replace(/\b(?:(?:Mexico(?:'s|’s)|Mexican)\s+)?statistics agency\s+INEGI\b/gi,
+      "Mexico's statistics agency")
+    .replace(/\bBanco de M[eé]xico\s*\(Banxico\)/gi, "Mexico's central bank")
+    .replace(/\b(?:(?:Mexico(?:'s|’s)|Mexican)\s+)?central bank\s+Banxico\b/gi,
+      "Mexico's central bank")
+    .replace(/\bthe\s+CNBV\b/gi, "Mexico's banking regulator");
 }
 
 function tradeAgreementPhrases(text) {
   return text
+    .replace(/\b(?:USMCA|T-?MEC)\s+(?:trade\s+)?treaty\b/gi,
+      'US-Mexico-Canada trade agreement')
     .replace(/\bForced-labor complaint over Chinese camera imports tests (?:USMCA|T-?MEC) mechanism\b/gi,
       'Forced-labor complaint over Chinese camera imports tests labor rules in the US-Mexico-Canada trade agreement')
     .replace(/\b(?:USMCA|T-?MEC)\s+auto(?:motive)?\s+rules(?:\s+of\s+origin)?\b/gi,
@@ -36,12 +80,18 @@ function tradeAgreementPhrases(text) {
 
 function commonTerms(text) {
   return text
+    .replace(/\bMexico(?:'s|’s)\s+statistics agency(?:'s|’s)\b/gi, "the Mexican statistics agency's")
+    .replace(/\bMexico(?:'s|’s)\s+central bank(?:'s|’s)\b/gi, "the Mexican central bank's")
+    .replace(/\bthe\s+Mexico(?:'s|’s)\s+banking regulator\b/gi, "Mexico's banking regulator")
     .replace(/\bUS Fed\s*\(FOMC\)\s+monetary-policy decision\b/gi, 'US central bank policy decision')
+    .replace(/\bBanxico-Fed rate gap\b/gi, 'Mexico-US policy-rate gap')
     .replace(/\bMX\$\s*([\d,.]+)\s*(trillion|billion|million)\b/gi, '$1 $2 pesos')
     .replace(/\bUSTR\b/g, 'US trade office')
     .replace(/\b(?:USMCA|T-?MEC)\b/gi, 'US-Mexico-Canada trade agreement')
+    .replace(/\bINEGI['’]s\b/g, "the Mexican statistics agency's")
     .replace(/\bINEGI\b/g, "Mexico's statistics agency")
     .replace(/\bDOF\b/g, "Mexico's official gazette")
+    .replace(/\bBanxico['’]s\b/g, "the Mexican central bank's")
     .replace(/\bBanxico\b/g, "Mexico's central bank")
     .replace(/\bSHCP\b/g, "Mexico's Finance Ministry")
     .replace(/\bCNBV\b/g, "Mexico's banking regulator")
@@ -53,7 +103,6 @@ function commonTerms(text) {
     .replace(/\bIMSS\b/g, "Mexico's social security agency")
     .replace(/\bSRE\b/g, "Mexico's Foreign Ministry")
     .replace(/\bSAT\b/g, "Mexico's tax agency")
-    .replace(/\bCFE\b/g, "Mexico's state power company")
     .replace(/\bFDI\b/g, 'foreign direct investment')
     .replace(/\bGDP growth\b/gi, 'economic growth')
     .replace(/\bGDP\b/g, 'gross domestic product')
@@ -68,6 +117,7 @@ function tidy(text) {
   return text
     .replace(/\bthe\s+the\b/gi, 'the')
     .replace(/\bUS-Mexico-Canada trade agreement trade pact\b/gi, 'US-Mexico-Canada trade agreement')
+    .replace(/\bUS-Mexico-Canada trade agreement treaty\b/gi, 'US-Mexico-Canada trade agreement')
     .replace(/\s+([,.;:!?])/g, '$1')
     .replace(/\s+/g, ' ')
     .trim();
@@ -112,7 +162,7 @@ function plainExplanation(value) {
       "Mexico's statistics agency publishes an early estimate of economic activity before")
     .replace(/\bINEGI's\s+IOAE\b/g, "Mexico's early economic activity estimate")
     .replace(/\bINEGI's\s+formal\b/g, 'the formal')
-    .replace(/\bBanxico's\b/g, "Mexico's central bank's");
+    .replace(/\bBanxico['’]s\b/g, "the Mexican central bank's");
 
   text = tradeAgreementPhrases(text);
   text = commonTerms(text);

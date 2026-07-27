@@ -35,6 +35,11 @@ const VAGUE_ANALYSIS = /\b(could have implications|could impact|important to wat
 // are especially dangerous in labelled analysis because the polish can disguise the
 // absence of a denominator, mechanism, or decision. State the comparison instead.
 const EMPTY_EVALUATION = /(?:\bthe\b[^.]{0,40}\b(?:number|deal|announcement)\b is (?:nice|good|big)|\bgenuinely useful\b|\bgood news\b|\bbad news\b|\bworth watching\b|\bmeaningful development\b|\bimportant development\b)/i;
+// A deterministic acronym expander once turned "state power utility CFE" into
+// "state power utility Mexico's state power company". This is a grammar failure,
+// not a taste call, so transformed public copy must never pass with two adjacent
+// descriptions of the same institution.
+const ENTITY_ALIAS_COLLISION = /\b(?:Mexican\s+utility|(?:state(?:-owned)?\s+)?(?:power|electric(?:ity)?)\s+(?:company|utility)|central bank|statistics agency|trade office)\s+(?:Mexico(?:'s|’s)|the US)\s+(?:state(?:-owned)?\s+)?(?:power|electric(?:ity)?|central|statistics|trade)[^.]{0,35}\b(?:company|utility|bank|agency|office)\b/i;
 const SCALE_ANCHOR = /(?:%|\bshare\b|\baccounts? for\b|\bout of\b|\bof (?:the|that) (?:total|package|market|system|capacity|budget|economy)\b|\bcompared (?:with|to)\b|\brelative to\b|\broughly (?:a|one|two|three|four|five|\d)|\bcovered\b|\bexcluded\b|\bapplies only\b|\bfirst (?:package|round|award|project|test)\b)/i;
 const ANNOUNCEMENT_NUMBER = /(?:[$€£]\s*\d|\b\d+(?:[.,]\d+)?\s*(?:billion|million|trillion|bn|mn|mw|mwh|gw|gwh)\b)/i;
 const FIRST_PERSON = /\b(?:I|me|my|mine|we|our|ours)\b/i;
@@ -51,6 +56,7 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   const tic = clean.match(AI_TICS); if (tic) flags.push(`AI tic: "${tic[0]}"`);
   const editorial = clean.match(EDITORIALIZING); if (editorial) flags.push(`editorial shorthand: "${editorial[0]}"`);
   const vague = clean.match(VAGUE_NEWSROOM); if (vague) flags.push(`vague newsroom phrase: "${vague[0]}"`);
+  const collision = clean.match(ENTITY_ALIAS_COLLISION); if (collision) flags.push(`duplicated institutional label: "${collision[0]}"`);
   if (/\.{3}|…/.test(clean)) flags.push('ellipsis or truncated copy');
   const words = clean.split(/\s+/).filter(Boolean).length;
   if (words > maxWords) flags.push(`${words} words (cap ${maxWords})`);

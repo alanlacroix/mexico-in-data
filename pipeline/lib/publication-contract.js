@@ -150,6 +150,9 @@ export function validateNarrativeText(value) {
   const errors = [];
   if (/[<>]/.test(decoded)) errors.push('contains or decodes to markup');
   if (/[\u0000-\u001f\u007f-\u009f]/.test(decoded)) errors.push('contains or decodes to control characters');
+  if (/\b(?:Mexican\s+utility|(?:state(?:-owned)?\s+)?(?:power|electric(?:ity)?)\s+(?:company|utility)|central bank|statistics agency|trade office)\s+(?:Mexico(?:'s|’s)|the US)\s+(?:state(?:-owned)?\s+)?(?:power|electric(?:ity)?|central|statistics|trade)[^.]{0,35}\b(?:company|utility|bank|agency|office)\b/i.test(decoded)) {
+    errors.push('contains duplicated institutional label');
+  }
   return errors;
 }
 

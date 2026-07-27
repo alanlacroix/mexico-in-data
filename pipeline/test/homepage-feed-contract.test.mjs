@@ -35,6 +35,20 @@ for (let i = 0; i < dailyBrief.stories.length; i += 1) {
   }
 }
 assert.ok(dailyBrief.summaryLead && dailyBrief.summaryLead.trim().length >= 40, 'the homepage must always contain a substantive Brief');
+const renderedBriefCopy = [
+  dailyBrief.summaryLead,
+  ...dailyBrief.stories.flatMap((story) => [story.title, story.summary, story.bg, story.view, story.prediction]),
+].filter(Boolean).join(' ');
+assert.doesNotMatch(
+  renderedBriefCopy,
+  /state power utility Mexico|Mexican utility Mexico|agreement treaty|utilityat|the Mexico's/i,
+  'the render pass must not create duplicated or broken institutional names',
+);
+assert.doesNotMatch(
+  renderedBriefCopy,
+  /(?:^|[.!?]\s+)Mexico's state-owned electricity utility\.(?:\s|$)/,
+  'institution normalization must not leave a sentence fragment',
+);
 assert.ok(latestStories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'recent headlines must not contain future-dated stories');
 assert.equal(groupEvents(happening.events || []).length, (happening.events || []).length, 'the stored event log must not contain two records for one development');
 assert.equal(happening.meta?.count, (happening.events || []).length, 'the event-log count must match its records');

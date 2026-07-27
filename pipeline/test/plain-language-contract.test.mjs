@@ -12,6 +12,10 @@ assert.equal(
   'Mexico and the US launch the first annual review of the US-Mexico-Canada trade agreement',
 );
 assert.equal(
+  plainExplanation('The US declined to extend the USMCA treaty.'),
+  'The US declined to extend the US-Mexico-Canada trade agreement.',
+);
+assert.equal(
   plainHeadline('INEGI estimates GDP growth at 1.7%'),
   "Mexico's statistics agency estimates economic growth at 1.7%",
 );
@@ -49,5 +53,54 @@ assert.equal(
   plainHeadline('US Fed (FOMC) monetary-policy decision'),
   'US central bank policy decision',
 );
+
+assert.equal(
+  plainHeadline("Moody's affirms Mexican utility CFE at top domestic rating"),
+  "Moody's affirms Mexico's state-owned electricity utility at top domestic rating",
+);
+assert.equal(
+  plainExplanation("Moody's affirmed the state power utility CFE at its top domestic rating."),
+  "Moody's affirmed Mexico's state-owned electricity utility at its top domestic rating.",
+);
+assert.equal(
+  plainExplanation("Moody's affirmed the state power utility Mexico's state power company at its top domestic rating."),
+  "Moody's affirmed Mexico's state-owned electricity utility at its top domestic rating.",
+);
+assert.equal(
+  plainExplanation("The Comisión Federal de Electricidad is Mexico's state-owned electric utility. Moody's compares CFE with Mexican borrowers."),
+  "The Comisión Federal de Electricidad is Mexico's state-owned electric utility. Moody's compares the utility with Mexican borrowers.",
+);
+assert.equal(
+  plainExplanation("CFE is Mexico's state-owned electricity utility. Moody's compares CFE with Mexican borrowers."),
+  "CFE is Mexico's state-owned electricity utility. Moody's compares the utility with Mexican borrowers.",
+);
+assert.equal(
+  plainExplanation("The rating should lower CFE's borrowing costs. CFE still needs faster grid connections."),
+  "The rating should lower borrowing costs for Mexico's state-owned electricity utility. The utility still needs faster grid connections.",
+);
+assert.equal(
+  plainExplanation('USTR Jamieson Greer opened the meeting.'),
+  'US Trade Representative Jamieson Greer opened the meeting.',
+);
+assert.equal(
+  plainExplanation('Banxico, the CNBV and the finance ministry oversee the process.'),
+  "Mexico's central bank, Mexico's banking regulator and the finance ministry oversee the process.",
+);
+assert.equal(
+  plainHeadline("Banxico's decision followed INEGI's inflation report"),
+  "The Mexican central bank's decision followed the Mexican statistics agency's inflation report",
+);
+assert.equal(
+  plainExplanation("Mexico's statistics agency's survey followed the Mexico's banking regulator review."),
+  "The Mexican statistics agency's survey followed Mexico's banking regulator review.",
+);
+
+for (const value of [
+  "Moody's affirms Mexican utility CFE at top domestic rating",
+  "Moody's affirmed the state power utility CFE at its top domestic rating.",
+]) {
+  const once = plainExplanation(value);
+  assert.equal(plainExplanation(once), once, 'plain-language normalization must be idempotent');
+}
 
 console.log('plain-language contract: ok');

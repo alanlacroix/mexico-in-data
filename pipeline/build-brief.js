@@ -186,7 +186,8 @@ async function writeSummary(picked) {
   const schema = { type: 'object', additionalProperties: false, required: ['summary'], properties: { summary: { type: 'string' } } };
   const system = `Write THE BRIEF: the 2-4 sentence paragraph that opens The Mexico Brief, explaining the latest key developments for someone tracking Mexico. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Use named actors and concrete verbs. State what happened before explaining the consequence. Connect stories only when the items support the connection. Never make the reader decode an acronym: write the institution, agreement or indicator in plain English on first mention (for example, "US trade office", "US-Mexico-Canada Agreement", and "Mexico's statistics agency"). "US" is fine. Do not use vague phrases such as "losing momentum", "fiscal room", "welfare commitments", "signals a broader shift", or "raises questions". No opinion, forecasts, em-dash, semicolon, "meanwhile", or marketing language. Maximum 80 words. Return JSON: {summary}.`;
   const out = await askJSON({ system, user: JSON.stringify(items), schema, maxTokens: 2500 });
-  const text = String(out && out.summary || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
+  const raw = String(out && out.summary || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
+  const text = plainExplanation(raw);
   if (!text) return '';
   // Headroom over the ~80-word target: the model routinely overshoots by a few words, and
   // a 2-word overage must not throw away the whole paragraph (Alan 2026-07-17: the brief
@@ -194,7 +195,7 @@ async function writeSummary(picked) {
   // still keeps it a paragraph, not an essay.
   const gate = lintReportText({ text, inputs: items.flatMap((i) => [i.title, i.context]), maxWords: 105, maxSentences: 5 });
   if (!gate.ok) { console.warn(`  summary rejected: ${gate.flags.join('; ')}`); return ''; }
-  return plainExplanation(text);
+  return text;
 }
 
 async function main() {

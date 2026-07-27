@@ -79,6 +79,9 @@ assert(validateNarrativeText('&lt;img src=x onerror=alert(1)&gt;').some((error) 
 assert(validateNarrativeText('&amp;lt;img src=x onerror=alert(1)&amp;gt;').some((error) => /markup/.test(error)));
 assert(validateNarrativeText('Normal source name').length === 0);
 assert(validateNarrativeText('Line%0Abreak').some((error) => /control/.test(error)));
+assert(validateNarrativeText("Moody's affirmed the state power utility Mexico's state power company.")
+  .some((error) => /duplicated institutional label/.test(error)));
+assert.equal(validateNarrativeText("Moody's affirmed Mexico's state-owned electricity utility." ).length, 0);
 assert.equal(isSafeHttpUrl('javascript:alert(1)'), false);
 assert.equal(isSafeHttpUrl('https://example.com/story'), true);
 
