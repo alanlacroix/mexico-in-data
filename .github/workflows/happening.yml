@@ -2,14 +2,20 @@ name: happening
 # The radar. Turns the committed news wire into data/happening.json — "What's happening",
 # the homepage lead — using the model to SELECT, rank, and write cross-domain events
 # (economy, money, politics, security, U.S.-Mexico). Separate from refresh-data (the
-# deterministic number path) because this one uses the LLM. Runs ~40 min after each
-# refresh so it reads a fresh wire. Fail-soft: with no ANTHROPIC_API_KEY it falls back to
-# a deterministic pick and still refreshes the log; existing entries always win a dedup,
-# so the hand-seeded events are never lost.
+# deterministic number path) because this one uses the LLM. It runs twice: an early
+# morning edition and an after-market check. Each pass fetches the latest headlines
+# first, then uses the same editorial bar; an unchanged story set keeps the existing
+# brief and its visible update time. Fail-soft: with no ANTHROPIC_API_KEY it falls back
+# to a deterministic pick and still refreshes the log; existing entries always win a
+# dedup, so the hand-seeded events are never lost.
 
 on:
   schedule:
-    - cron: '57 0,6,12,18 * * *'   # 40 min after each refresh-data run (:17 every 6h)
+    # GitHub cron is UTC. Each pair covers EST and EDT; the gate below keeps only the
+    # matching Eastern-time run. The morning pass starts after the 8:17 AM data refresh,
+    # avoiding a deployment race; the page is normally ready shortly after 9 AM / 5:15 PM.
+    - cron: '0 13,14 * * *'
+    - cron: '15 21,22 * * *'
   workflow_dispatch: {}
 
 permissions:
@@ -23,36 +29,73 @@ jobs:
   happening:
     runs-on: ubuntu-latest
     steps:
+      - name: Choose the Eastern-time editorial window
+        id: timing
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          run=true
+          slot=manual
+          hour="$(TZ=America/New_York date +%H)"
+          if [ "$SCHEDULE" = "0 13,14 * * *" ]; then
+            slot=morning
+            [ "$hour" = "09" ] || run=false
+          elif [ "$SCHEDULE" = "15 21,22 * * *" ]; then
+            slot=afternoon
+            [ "$hour" = "17" ] || run=false
+          fi
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+          echo "slot=$slot" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v4
+        if: steps.timing.outputs.run == 'true'
 
       - uses: actions/setup-node@v4
+        if: steps.timing.outputs.run == 'true'
         with:
           node-version: '20'
 
+      - name: Check the latest trusted headlines
+        if: steps.timing.outputs.run == 'true'
+        working-directory: pipeline
+        continue-on-error: true   # GDELT is discovery-only; RSS collection still runs next
+        run: node build-news.js
+
+      - name: Refresh the news ledger
+        if: steps.timing.outputs.run == 'true'
+        working-directory: pipeline
+        continue-on-error: true   # a dead feed keeps its last-good records
+        run: node collect-news.js
+
       - name: Build the event log (What's happening)
+        if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-happening.js
 
       - name: Build the homepage brief (reads the fresh event log + board + standing)
+        if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-brief.js
 
       - name: Build the topic areas (event store projected by topic)
+        if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-areas.js
 
       - name: Build the companies tracker (deterministic; dark until verified)
+        if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         continue-on-error: true   # reads the committed log; a miss never fails the run
         run: node build-companies.js
 
       - name: Validate public claims and source references
+        if: steps.timing.outputs.run == 'true'
         run: |
           if node pipeline/assert-data.js && node pipeline/test/homepage-feed-contract.test.mjs; then
             exit 0
@@ -74,10 +117,11 @@ jobs:
           node pipeline/test/homepage-feed-contract.test.mjs
 
       - name: Commit the event log + brief + areas
+        if: steps.timing.outputs.run == 'true'
         run: |
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/happening.json data/brief.json data/areas.json data/companies.json
+          git add data/news.json data/news/ data/happening.json data/brief.json data/areas.json data/companies.json
           if git diff --cached --quiet; then
             echo "no change to the event log or brief"
           else

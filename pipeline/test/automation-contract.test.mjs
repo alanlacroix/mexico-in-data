@@ -19,8 +19,23 @@ assert.match(run, /if \(only && records\.some\(\(record\) => record\.status === 
 
 assert.match(
   happening,
-  /cron:\s*'57 0,6,12,18 \* \* \*'/,
-  'the happening job must run 40 minutes after the six-hour refresh slots',
+  /cron:\s*'0 13,14 \* \* \*'[\s\S]*cron:\s*'15 21,22 \* \* \*'/,
+  'the editorial workflow must have deliberate morning and afternoon schedules',
+);
+assert.match(
+  happening,
+  /TZ=America\/New_York date \+%H[\s\S]*slot=morning[\s\S]*"09"[\s\S]*slot=afternoon[\s\S]*"17"/,
+  'the editorial windows must remain 9 AM and 5 PM Eastern across daylight-saving changes',
+);
+assert.match(
+  happening,
+  /node build-news\.js[\s\S]*node collect-news\.js[\s\S]*node build-happening\.js[\s\S]*node build-brief\.js/,
+  'each editorial pass must refresh the news wire before reconsidering the brief',
+);
+assert.match(
+  happening,
+  /git add data\/news\.json data\/news\/ data\/happening\.json data\/brief\.json/,
+  'an afternoon news check must commit its refreshed wire with the brief',
 );
 assert.match(
   refresh,
