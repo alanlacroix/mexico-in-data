@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const run = fs.readFileSync(path.join(root, 'pipeline', 'run.js'), 'utf8');
+const refresh = fs.readFileSync(path.join(root, '.github', 'workflows', 'refresh.yml'), 'utf8');
 const happening = fs.readFileSync(path.join(root, '.github', 'workflows', 'happening.yml'), 'utf8');
 const sesnsp = fs.readFileSync(path.join(root, '.github', 'workflows', 'refresh-sesnsp.yml'), 'utf8');
 
@@ -20,6 +21,11 @@ assert.match(
   happening,
   /cron:\s*'57 0,6,12,18 \* \* \*'/,
   'the happening job must run 40 minutes after the six-hour refresh slots',
+);
+assert.match(
+  refresh,
+  /node pipeline\/sync-brief-standing\.js[\s\S]*node pipeline\/assert-data\.js/,
+  'a data refresh must synchronize the brief fallback readings before publication validation',
 );
 
 assert.match(sesnsp, /cron:\s*'35 15 21 \* \*'/, 'SESNSP must refresh after the stated day-20 publication deadline');

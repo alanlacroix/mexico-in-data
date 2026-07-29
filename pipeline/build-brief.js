@@ -9,6 +9,7 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM } from './lib/anthropic.js';
+import briefStanding from './lib/brief-standing.cjs';
 import { lintReportText } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
@@ -16,6 +17,7 @@ import newsWindow from './lib/news-window.cjs';
 import plainLanguage from './lib/plain-language.cjs';
 
 const { editorialDay } = newsDay;
+const { board, buildStanding } = briefStanding;
 const { groupEvents, sameThread } = newsThreads;
 const { DEFAULT_WINDOW_HOURS, FALLBACK_WINDOW_HOURS, recentEvents } = newsWindow;
 const { plainExplanation, plainHeadline } = plainLanguage;
@@ -28,25 +30,6 @@ const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8'))
 const arr = (v) => (Array.isArray(v) ? v : []);
 const fingerprint = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
-// ---- the board (a few live numbers, each a referenceable item) ----
-function series(id) {
-  const j = readJson(D('series', id + '.json'), null);
-  return (j?.data || []).filter((x) => x && x.value != null)
-    .map((x) => ({ t: Date.parse(x.date), v: +x.value, date: x.date }))
-    .filter((x) => Number.isFinite(x.t)).sort((a, b) => a.t - b.t);
-}
-function board() {
-  const items = [];
-  // Each board item carries its series id + a {v} template, so the PAGE re-renders the number live
-  // from the same series the board reads, formatted the same way — the prose can never drift from
-  // the board (the 17.60-vs-17.48 bug). The baked text stays as the no-JS/fetch-fail fallback.
-  const peso = series('banxico-usdmxn-fix'); if (peso.length) items.push({ id: 'board-peso', label: 'the peso', text: `the peso trades at ${peso.at(-1).v.toFixed(2)} pesos to the dollar`, source: 'Banco de México', url: '/economy.html', series: 'banxico-usdmxn-fix', tmpl: 'the peso trades at {v} pesos to the dollar' });
-  const inf = series('banxico-inflacion'); if (inf.length) items.push({ id: 'board-inflation', label: 'inflation', text: `inflation is ${inf.at(-1).v.toFixed(2)}%`, source: 'INEGI', url: '/economy.html', series: 'banxico-inflacion', tmpl: 'inflation is {v}%' });
-  const rate = series('banxico-tasa-objetivo'); if (rate.length) items.push({ id: 'board-rate', label: 'the policy rate', text: `the policy rate is ${rate.at(-1).v.toFixed(2)}%`, source: 'Banco de México', url: '/economy.html', series: 'banxico-tasa-objetivo', tmpl: 'the policy rate is {v}%' });
-  const gdp = series('banxico-pib-crecimiento'); if (gdp.length) { const v = gdp.at(-1).v; items.push({ id: 'board-growth', label: 'growth', text: `growth is running near ${(v >= 0 ? '+' : '') + v.toFixed(1)}%`, source: 'INEGI', url: '/economy.html' }); }
-  return items;
-}
-
 // ---- the referenceable pool: recent events + standing facts + board numbers ----
 function pool(now = new Date()) {
   const events = arr(readJson(D('happening.json'), { events: [] }).events);
@@ -58,7 +41,6 @@ function pool(now = new Date()) {
 }
 
 const endPunct = (t) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t && !/[.!?]$/.test(t) ? t + '.' : t; };
-const capitalize = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
 const fallbackSummary = (picked) => picked.slice(0, 3)
   .map((event) => endPunct(plainExplanation(ctxOf(event)) || plainHeadline(stripDash(event.title))))
   .join(' ');
@@ -169,13 +151,6 @@ function assertUniqueEvents(events) {
     }
   }
 }
-function buildStanding(nums) {
-  const pick = nums.filter((n) => ['board-peso', 'board-inflation', 'board-rate'].includes(n.id));
-  if (!pick.length) return null;
-  return { text: capitalize(pick.map((n) => n.text).join('; ')) + '.', live: pick.map((n) => ({ series: n.series, tmpl: n.tmpl })),
-    refs: pick.map((n) => n.id), href: '/economy.html', source: 'Banco de México / INEGI' };
-}
-
 // THE BRIEF summary (Alan 2026-07-16: "too short — it should summarize all key news
 // stories"). A 2-4 sentence synthesis of the picked stories, closed-world: written ONLY
 // from their titles + shipped context, every number verbatim, gated by the report lint.

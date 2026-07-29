@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { editorialDay } = require('../pipeline/lib/news-day.cjs');
+const { currentHomeEditorial } = require('../pipeline/lib/home-editorial.cjs');
 const { plainExplanation, plainHeadline } = require('../pipeline/lib/plain-language.cjs');
 const nowBoard = require('./nowBoard.js');
 
@@ -24,7 +25,7 @@ module.exports = function (now = new Date()) {
     storyLabel: plainHeadline(entry.storyLabel),
     numbers: (entry.seriesIds || []).map((id) => numbersById.get(id)).filter(Boolean),
   });
-  const reviewed = editorial?.forDate === forDate ? editorial : null;
+  const reviewed = currentHomeEditorial(editorial, forDate);
   let myRead = reviewed?.myRead ? withNumbers({ label: 'My read', ...reviewed.myRead }) : null;
 
   if (!myRead) {

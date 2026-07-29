@@ -15,9 +15,11 @@ import {
 import { freshnessStatus } from './lib/freshness.js';
 import { lintReportText, lintAnalysisText, analysisNeedsScale } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
+import homeEditorialDate from './lib/home-editorial.cjs';
 import newsWindow from './lib/news-window.cjs';
 
 const { editorialDay } = newsDay;
+const { currentHomeEditorial } = homeEditorialDate;
 const { eventTimestamp } = newsWindow;
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -208,20 +210,26 @@ try {
   if (exists('data/home-editorial.json')) {
     const editorial = read('data/home-editorial.json');
     if (!validPeriod(editorial.forDate || '')) fails.push('home editorial: forDate is missing or invalid');
-    if (editorial.myRead) {
-      checkText('home editorial: myRead.text', editorial.myRead.text);
-      if (!editorial.myRead.text) fails.push('home editorial: myRead.text is required');
-      if (!String(editorial.myRead.storyLabel || '').trim()) fails.push('home editorial: myRead.storyLabel is required');
-      if (!isSafeHttpUrl(editorial.myRead.storyUrl)) fails.push('home editorial: myRead.storyUrl must be a source URL');
-      if (!events.some((event) => event.date === editorial.forDate && event.url === editorial.myRead.storyUrl)) fails.push('home editorial: myRead.storyUrl must point to a story from that editorial day');
-      if (!Array.isArray(editorial.myRead.seriesIds) || !editorial.myRead.seriesIds.length) fails.push('home editorial: myRead needs at least one related series');
-      for (const id of editorial.myRead.seriesIds || []) if (!servedById.has(id)) fails.push(`home editorial: related series ${id} is missing`);
+    // homeEditorial.js deliberately ignores a hand-reviewed overlay after `forDate` and
+    // falls back to a current deterministic connection. Validate the overlay only while
+    // it can actually render. Otherwise an expired note eventually loses its backing
+    // event when happening.json rolls forward and blocks every daily refresh even though
+    // the public page no longer uses it.
+    const currentEditorial = currentHomeEditorial(editorial, brief.meta?.editorialDate);
+    if (currentEditorial?.myRead) {
+      checkText('home editorial: myRead.text', currentEditorial.myRead.text);
+      if (!currentEditorial.myRead.text) fails.push('home editorial: myRead.text is required');
+      if (!String(currentEditorial.myRead.storyLabel || '').trim()) fails.push('home editorial: myRead.storyLabel is required');
+      if (!isSafeHttpUrl(currentEditorial.myRead.storyUrl)) fails.push('home editorial: myRead.storyUrl must be a source URL');
+      if (!events.some((event) => event.date === currentEditorial.forDate && event.url === currentEditorial.myRead.storyUrl)) fails.push('home editorial: myRead.storyUrl must point to a story from that editorial day');
+      if (!Array.isArray(currentEditorial.myRead.seriesIds) || !currentEditorial.myRead.seriesIds.length) fails.push('home editorial: myRead needs at least one related series');
+      for (const id of currentEditorial.myRead.seriesIds || []) if (!servedById.has(id)) fails.push(`home editorial: related series ${id} is missing`);
     }
-    if (editorial.sourceState) {
-      checkText('home editorial: sourceState.note', editorial.sourceState.note);
-      if (!editorial.sourceState.note) fails.push('home editorial: sourceState.note is required');
-      if (!Array.isArray(editorial.sourceState.sources) || editorial.sourceState.sources.length < 2) fails.push('home editorial: a disagreement needs at least two sources');
-      for (const source of editorial.sourceState.sources || []) if (!isSafeHttpUrl(source.url)) fails.push('home editorial: disagreement source URL is invalid');
+    if (currentEditorial?.sourceState) {
+      checkText('home editorial: sourceState.note', currentEditorial.sourceState.note);
+      if (!currentEditorial.sourceState.note) fails.push('home editorial: sourceState.note is required');
+      if (!Array.isArray(currentEditorial.sourceState.sources) || currentEditorial.sourceState.sources.length < 2) fails.push('home editorial: a disagreement needs at least two sources');
+      for (const source of currentEditorial.sourceState.sources || []) if (!isSafeHttpUrl(source.url)) fails.push('home editorial: disagreement source URL is invalid');
     }
   }
 

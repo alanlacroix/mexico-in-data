@@ -9,6 +9,7 @@ import { domainTrusted, publicHeadlineEligible } from '../lib/news-trust.js';
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const require = createRequire(import.meta.url);
 const { editorialDay } = require(path.join(root, 'pipeline/lib/news-day.cjs'));
+const { currentHomeEditorial } = require(path.join(root, 'pipeline/lib/home-editorial.cjs'));
 const { groupEvents, sameThread } = require(path.join(root, 'pipeline/lib/news-threads.cjs'));
 const { recentEvents } = require(path.join(root, 'pipeline/lib/news-window.cjs'));
 const dailyBriefFactory = require(path.join(root, '_data/dailyBrief.js'));
@@ -63,6 +64,11 @@ assert.equal(carriedBrief.carryingLastBrief, true, 'a failed next-day refresh mu
 assert.ok(carriedBrief.stories.length > 0, 'the last successful brief must not disappear during a short workflow failure');
 assert.match(carriedBrief.windowLabel, /Latest brief/, 'carried developments must not be presented as a fresh rolling window');
 assert.equal(homeEditorialFactory(nextDay), null, 'a prior-day My read must disappear on the next day');
+assert.equal(
+  currentHomeEditorial({ forDate: lastBriefDate, myRead: { text: 'Old note' } }, editorialDay(nextDay)),
+  null,
+  'an expired reviewed note must not be validated as current publication content',
+);
 
 const staleNow = new Date('2099-12-31T12:00:00Z');
 const staleBrief = dailyBriefFactory(staleNow);
