@@ -19,13 +19,18 @@ assert.match(run, /if \(only && records\.some\(\(record\) => record\.status === 
 
 assert.match(
   happening,
-  /cron:\s*'0 13,14 \* \* \*'[\s\S]*cron:\s*'15 21,22 \* \* \*'/,
+  /cron:\s*'0 13 \* \* \*'[\s\S]*cron:\s*'0 14 \* \* \*'[\s\S]*cron:\s*'15 21 \* \* \*'[\s\S]*cron:\s*'15 22 \* \* \*'/,
   'the editorial workflow must have deliberate morning and afternoon schedules',
 );
 assert.match(
   happening,
-  /TZ=America\/New_York date \+%H[\s\S]*slot=morning[\s\S]*"09"[\s\S]*slot=afternoon[\s\S]*"17"/,
-  'the editorial windows must remain 9 AM and 5 PM Eastern across daylight-saving changes',
+  /TZ=America\/New_York date \+%z[\s\S]*"0 13 \* \* \*"[\s\S]*"-0400"[\s\S]*"0 14 \* \* \*"[\s\S]*"-0500"[\s\S]*"15 21 \* \* \*"[\s\S]*"-0400"[\s\S]*"15 22 \* \* \*"[\s\S]*"-0500"/,
+  'the editorial windows must remain 9 AM and 5:15 PM Eastern across daylight-saving changes',
+);
+assert.doesNotMatch(
+  happening,
+  /date \+%H/,
+  'a delayed GitHub runner must not skip an editorial pass because its actual start hour changed',
 );
 assert.match(
   happening,

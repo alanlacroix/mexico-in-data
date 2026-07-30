@@ -11,11 +11,14 @@ name: happening
 
 on:
   schedule:
-    # GitHub cron is UTC. Each pair covers EST and EDT; the gate below keeps only the
-    # matching Eastern-time run. The morning pass starts after the 8:17 AM data refresh,
-    # avoiding a deployment race; the page is normally ready shortly after 9 AM / 5:15 PM.
-    - cron: '0 13,14 * * *'
-    - cron: '15 21,22 * * *'
+    # GitHub cron is UTC and scheduled jobs can start late. Keep each UTC occurrence
+    # separate so the gate below can select EST/EDT from the schedule that fired; never
+    # use the delayed runner's wall-clock hour to decide whether the brief should run.
+    # The morning pass follows the data refresh; the second pass checks the late day.
+    - cron: '0 13 * * *'  # 9:00 AM EDT
+    - cron: '0 14 * * *'  # 9:00 AM EST
+    - cron: '15 21 * * *' # 5:15 PM EDT
+    - cron: '15 22 * * *' # 5:15 PM EST
   workflow_dispatch: {}
 
 permissions:
@@ -36,14 +39,13 @@ jobs:
         run: |
           run=true
           slot=manual
-          hour="$(TZ=America/New_York date +%H)"
-          if [ "$SCHEDULE" = "0 13,14 * * *" ]; then
-            slot=morning
-            [ "$hour" = "09" ] || run=false
-          elif [ "$SCHEDULE" = "15 21,22 * * *" ]; then
-            slot=afternoon
-            [ "$hour" = "17" ] || run=false
-          fi
+          offset="$(TZ=America/New_York date +%z)"
+          case "$SCHEDULE" in
+            "0 13 * * *")  slot=morning;   [ "$offset" = "-0400" ] || run=false ;;
+            "0 14 * * *")  slot=morning;   [ "$offset" = "-0500" ] || run=false ;;
+            "15 21 * * *") slot=afternoon; [ "$offset" = "-0400" ] || run=false ;;
+            "15 22 * * *") slot=afternoon; [ "$offset" = "-0500" ] || run=false ;;
+          esac
           echo "run=$run" >> "$GITHUB_OUTPUT"
           echo "slot=$slot" >> "$GITHUB_OUTPUT"
 
