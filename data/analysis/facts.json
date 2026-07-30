@@ -1,8 +1,22 @@
 {
-  "generatedAt": "2026-07-30T14:29:31.603Z",
+  "generatedAt": "2026-07-30T19:50:40.043Z",
   "whatMoved": {
     "quiet": false,
     "items": [
+      {
+        "id": "banxico-usdmxn-fix",
+        "label": "Peso (MXN/USD)",
+        "value": 17.3562,
+        "units": "MXN per USD",
+        "change": -0.1571,
+        "changePct": -0.9,
+        "z": -2.27,
+        "dir": -1,
+        "cadence": "business-daily",
+        "date": "2026-07-30",
+        "flags": [],
+        "underReview": false
+      },
       {
         "id": "banxico-inflacion",
         "label": "Headline inflation",
@@ -947,19 +961,19 @@
       "sid": "SF43718",
       "cadence": "business-daily",
       "units": "MXN per USD",
-      "vintage": "2026-07-29",
-      "date": "2026-07-29",
-      "value": 17.5133,
-      "prev": 17.4312,
-      "change": 0.0821,
-      "changePct": 0.47,
-      "dir": 1,
-      "z": 1.37,
+      "vintage": "2026-07-30",
+      "date": "2026-07-30",
+      "value": 17.3562,
+      "prev": 17.5133,
+      "change": -0.1571,
+      "changePct": -0.9,
+      "dir": -1,
+      "z": -2.27,
       "streak": 1,
       "isRecordHigh": false,
       "isRecordLow": false,
-      "trend3": 0.3,
-      "trend12": 0.1,
+      "trend3": -0.5,
+      "trend12": -0.4,
       "underReview": false
     },
     "cre-diesel": {
@@ -2766,7 +2780,7 @@
     },
     "pesoVol": {
       "label": "Peso 90-day realized volatility (annualized)",
-      "value": 7.7,
+      "value": 7.8,
       "unit": "%",
       "from": [
         "banxico-usdmxn-fix"
