@@ -200,9 +200,28 @@ async function main() {
   if (!picked.length) {
     // A quiet or incomplete refresh must not erase the last reviewed Brief. Fresh,
     // unreviewed stories remain visible in All headlines until their complete BE unit
-    // clears review; the homepage keeps the last useful Brief in the meantime.
+    // clears review. Record that today's edition was actually checked while keeping
+    // the last approved story set; otherwise a successful quiet-day run looks exactly
+    // like a broken scheduler and cannot receive today's publication receipt.
     if (priorApproved) {
-      console.log('  no newly approved key developments; keeping the last reviewed brief');
+      const carried = {
+        ...prev,
+        meta: {
+          ...prev.meta,
+          editorialDate,
+          updated: editorialDate,
+          asOf: editorialDate,
+          reviewedAt: now.toISOString(),
+          generatedAt: now.toISOString(),
+          newCount: 0,
+          carriedForward: true,
+          windowHours,
+        },
+        lead: prev.lead ? { ...prev.lead, isNew: false } : null,
+        items: arr(prev.items).map((item) => ({ ...item, isNew: false })),
+      };
+      fs.writeFileSync(OUT, JSON.stringify(carried, null, 2));
+      console.log('  no newly approved key developments; published today with the last approved story set');
       return;
     }
     const contentSig = fingerprint([]);

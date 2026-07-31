@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: refresh-sesnsp
+  group: mexico-brief-production-write
   cancel-in-progress: false
 
 jobs:
@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -44,6 +46,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "no SESNSP data changes"
           else
-            git commit -m "data: SESNSP monthly refresh $(date -u +%Y-%m)"
+            git commit -m "[CF-Pages-Skip] data: SESNSP monthly refresh $(date -u +%Y-%m)"
             git push
           fi

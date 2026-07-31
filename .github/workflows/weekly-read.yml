@@ -11,11 +11,17 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: mexico-brief-production-write
+  cancel-in-progress: false
+
 jobs:
   read:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -40,6 +46,8 @@ jobs:
           if git diff --cached --quiet; then
             echo "no draft change"
           else
-            git commit -m "read: weekly draft $(date -u +%Y-%m-%d)"
+            # This is collected state. The next morning/afternoon publication
+            # includes it in the one validated production artifact.
+            git commit -m "[CF-Pages-Skip] data: weekly facts $(date -u +%Y-%m-%d)"
             git push
           fi

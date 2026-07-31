@@ -290,7 +290,11 @@ assert.match(homepageTemplate, /\(not isAll\).*story\.analysisV >= 7.*story\.bg 
 assert.match(homepageTemplate, /storyCard\(story, true\)/, 'ordinary headlines must use the no-analysis card mode');
 assert.ok(homepageTemplate.indexOf('<section class="brief" id="brief"') < homepageTemplate.indexOf('<section class="news"'), 'the Brief must render before key developments');
 assert.match(briefBuilder, /return gate\.ok && analysisReady\(e\) && e\.url && e\.source/, 'an unreviewed story must not enter key developments');
-assert.match(briefBuilder, /if \(priorApproved\)[\s\S]*keeping the last reviewed brief/, 'an incomplete refresh must preserve the last reviewed Brief');
+assert.match(
+  briefBuilder,
+  /if \(priorApproved\)[\s\S]*editorialDate[\s\S]*carriedForward:\s*true[\s\S]*fs\.writeFileSync\(OUT/,
+  'a completed quiet-day review must preserve the approved story set while recording today\'s edition'
+);
 for (const phrase of [/\bThe base case is\b/i, /\bThat view would change if\b/i]) {
   assert.ok(dailyBrief.stories.filter((story) => phrase.test(story.prediction || '')).length <= 1, 'BE predictions must not repeat a stock forecast phrase');
 }

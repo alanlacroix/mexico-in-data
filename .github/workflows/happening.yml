@@ -1,109 +1,117 @@
 name: happening
-# The radar. Turns the committed news wire into data/happening.json — "What's happening",
-# the homepage lead — using the model to SELECT, rank, and write cross-domain events
-# (economy, money, politics, security, U.S.-Mexico). Separate from refresh-data (the
-# deterministic number path) because this one uses the LLM. It runs twice: an early
-# morning edition and an after-market check. Each pass fetches the latest headlines
-# first, then uses the same editorial bar; an unchanged story set keeps the existing
-# brief and its visible update time. Fail-soft: with no ANTHROPIC_API_KEY it falls back
-# to a deterministic pick and still refreshes the log; existing entries always win a
-# dedup, so the hand-seeded events are never lost.
+# The only workflow that publishes the homepage brief. It gets several chances to
+# run in each editorial window, but the committed publication receipt makes each
+# window idempotent. Every workflow that writes to main shares the concurrency
+# group below, so a data refresh cannot race this commit again.
 
 on:
   schedule:
-    # GitHub cron is UTC and scheduled jobs can start late. Keep each UTC occurrence
-    # separate so the gate below can select EST/EDT from the schedule that fired; never
-    # use the delayed runner's wall-clock hour to decide whether the brief should run.
-    # The morning pass follows the data refresh; the second pass checks the late day.
-    - cron: '0 13 * * *'  # 9:00 AM EDT
-    - cron: '0 14 * * *'  # 9:00 AM EST
-    - cron: '15 21 * * *' # 5:15 PM EDT
-    - cron: '15 22 * * *' # 5:15 PM EST
-  workflow_dispatch: {}
+    # Two non-top-of-hour chances in both possible UTC hours. The gate resolves
+    # Eastern time, skips the pre-window occurrence, and skips later occurrences
+    # after the edition's publication receipt is committed.
+    - cron: '7,37 13,14 * * *'  # 9 AM Eastern, EST or EDT
+    - cron: '22,52 21,22 * * *' # 5 PM Eastern, EST or EDT
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: Edition to publish
+        required: true
+        default: auto
+        type: choice
+        options:
+          - auto
+          - morning
+          - afternoon
+      reason:
+        description: Why this run was requested
+        required: false
+        type: string
+      force:
+        description: Republish even if the repository receipt is current
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
 
 concurrency:
-  group: happening
+  group: mexico-brief-production-write
   cancel-in-progress: false
 
 jobs:
   happening:
     runs-on: ubuntu-latest
     steps:
-      - name: Choose the Eastern-time editorial window
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Decide whether this edition is still due
         id: timing
         env:
+          REQUESTED_SLOT: ${{ github.event.inputs.slot || 'auto' }}
           SCHEDULE: ${{ github.event.schedule }}
-        run: |
-          run=true
-          slot=manual
-          offset="$(TZ=America/New_York date +%z)"
-          case "$SCHEDULE" in
-            "0 13 * * *")  slot=morning;   [ "$offset" = "-0400" ] || run=false ;;
-            "0 14 * * *")  slot=morning;   [ "$offset" = "-0500" ] || run=false ;;
-            "15 21 * * *") slot=afternoon; [ "$offset" = "-0400" ] || run=false ;;
-            "15 22 * * *") slot=afternoon; [ "$offset" = "-0500" ] || run=false ;;
-          esac
-          echo "run=$run" >> "$GITHUB_OUTPUT"
-          echo "slot=$slot" >> "$GITHUB_OUTPUT"
+          FORCE_PUBLICATION: ${{ github.event.inputs.force || 'false' }}
+        run: node pipeline/editorial-gate.mjs
 
-      - uses: actions/checkout@v4
+      - name: Install exact dependencies
         if: steps.timing.outputs.run == 'true'
-
-      - uses: actions/setup-node@v4
-        if: steps.timing.outputs.run == 'true'
-        with:
-          node-version: '20'
+        run: npm ci
 
       - name: Check the latest trusted headlines
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
-        continue-on-error: true   # GDELT is discovery-only; RSS collection still runs next
+        continue-on-error: true
         run: node build-news.js
 
       - name: Refresh the news ledger
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
-        continue-on-error: true   # a dead feed keeps its last-good records
+        continue-on-error: true
         run: node collect-news.js
 
-      - name: Build the event log (What's happening)
+      - name: Build the event log
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-happening.js
 
-      - name: Build the homepage brief (reads the fresh event log + board + standing)
+      - name: Build the homepage brief
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-brief.js
 
-      - name: Build the topic areas (event store projected by topic)
+      - name: Build the topic areas
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-areas.js
 
-      - name: Build the companies tracker (deterministic; dark until verified)
+      - name: Build the companies tracker
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
-        continue-on-error: true   # reads the committed log; a miss never fails the run
+        continue-on-error: true
         run: node build-companies.js
 
-      - name: Validate public claims and source references
+      - name: Validate generated editorial claims
         if: steps.timing.outputs.run == 'true'
         run: |
           if node pipeline/assert-data.js && node pipeline/test/homepage-feed-contract.test.mjs; then
             exit 0
           fi
 
-          echo "::warning::Generated editorial copy failed validation; rebuilding from the last approved event log."
+          echo "::warning::Generated copy failed validation; rebuilding from the last approved event log."
           git show HEAD:data/happening.json > data/happening.json
           git show HEAD:data/brief.json > data/brief.json
           git show HEAD:data/areas.json > data/areas.json
@@ -118,16 +126,50 @@ jobs:
           node pipeline/assert-data.js
           node pipeline/test/homepage-feed-contract.test.mjs
 
-      - name: Commit the event log + brief + areas
+      - name: Write this edition's publication receipt
         if: steps.timing.outputs.run == 'true'
+        env:
+          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
+          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
+          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: node pipeline/write-publication-status.mjs
+
+      - name: Build and validate the exact production artifact
+        if: steps.timing.outputs.run == 'true'
+        run: npm run release
+
+      - name: Commit and push the edition once
+        if: steps.timing.outputs.run == 'true'
+        env:
+          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
+          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
         run: |
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/news.json data/news/ data/happening.json data/brief.json data/areas.json data/companies.json
-          if git diff --cached --quiet; then
-            echo "no change to the event log or brief"
-          else
-            git commit -m "happening: event log + brief refresh $(date -u +%Y-%m-%dT%H:%MZ)"
-            git pull --rebase --autostash 2>/dev/null || true
-            git push
-          fi
+          git add data/news.json data/news/ data/happening.json data/brief.json data/areas.json data/companies.json data/publication-status.json
+          git commit -m "publication: ${PUBLICATION_DATE} ${PUBLICATION_SLOT} edition"
+          git push origin HEAD:main
+
+      - name: Require the exact edition to be live
+        if: steps.timing.outputs.run == 'true'
+        id: live
+        continue-on-error: true
+        env:
+          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
+          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
+          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: node pipeline/verify-production.mjs
+
+      - name: Retrigger deployment once if production is stale
+        if: steps.timing.outputs.run == 'true' && steps.live.outcome == 'failure'
+        env:
+          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
+          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
+          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+          DEPLOY_ATTEMPT: '2'
+        run: |
+          node pipeline/write-publication-status.mjs
+          git add data/publication-status.json
+          git commit -m "publication: retry ${PUBLICATION_DATE} ${PUBLICATION_SLOT} deployment"
+          git push origin HEAD:main
+          node pipeline/verify-production.mjs

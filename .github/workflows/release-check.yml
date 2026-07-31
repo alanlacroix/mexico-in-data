@@ -15,6 +15,10 @@ concurrency:
 
 jobs:
   release:
+    # Background data commits are validated before they are written and deliberately
+    # do not deploy. Editorial commits also live under data/, so a blanket path ignore
+    # would incorrectly skip their release check; use the explicit commit marker.
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[CF-Pages-Skip]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
