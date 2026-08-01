@@ -20,6 +20,9 @@ description: "The official institutions, newsrooms, and research groups used by 
   .source-panel[hidden]{display:none}
   .source-group-head{border-top:2px solid var(--green);padding:15px 0 13px}
   .source-group-head h2{font-family:var(--sans);font-size:var(--fs-h2);line-height:1.15;letter-spacing:-.02em;margin:0;color:var(--ink)}
+  .source-category{margin-top:26px}
+  .source-category:first-of-type{margin-top:8px}
+  .source-category h3{margin:0 0 9px;font-family:var(--mono);font-size:var(--fs-label);font-weight:650;line-height:1.35;letter-spacing:.07em;text-transform:uppercase;color:var(--green-d)}
   .source-list{border-bottom:1px solid var(--line)}
   .source-row{display:grid;grid-template-columns:minmax(180px,.75fr) minmax(0,1.6fr) 20px;gap:22px;align-items:baseline;padding:15px 0;border-top:1px solid var(--line);color:var(--ink);text-decoration:none}
   .source-row:hover .source-name,.source-row:focus-visible .source-name{color:var(--green-d)}
@@ -33,6 +36,7 @@ description: "The official institutions, newsrooms, and research groups used by 
     .source-tabs{margin-top:26px;max-width:none}
     .source-tab{padding:13px 9px;font-size:15px}
     .source-group{margin-top:32px}
+    .source-category{margin-top:24px}
     .source-row{grid-template-columns:minmax(0,1fr) 18px;gap:5px 12px;padding:14px 0}
     .source-name{grid-column:1}
     .source-desc{grid-column:1}
@@ -54,73 +58,100 @@ description: "The official institutions, newsrooms, and research groups used by 
 
   <section class="source-group source-panel" id="data-panel" role="tabpanel" aria-labelledby="data-tab">
     <div class="source-group-head"><h2 id="data-sources">Data sources</h2></div>
-    <div class="source-list">
-      <a class="source-row" href="https://www.inegi.org.mx/" target="_blank" rel="noopener">
-        <span class="source-name">INEGI</span><span class="source-desc">Economy, prices, jobs, population, businesses, and public-safety surveys.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">
-        <span class="source-name">Banco de México</span><span class="source-desc">Peso, interest rates, reserves, remittances, payments, and financial data.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.finanzaspublicas.hacienda.gob.mx/" target="_blank" rel="noopener">
-        <span class="source-name">Hacienda</span><span class="source-desc">Federal revenue, spending, debt, the budget, and public finances.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.gob.mx/se" target="_blank" rel="noopener">
-        <span class="source-name">Secretaría de Economía</span><span class="source-desc">Trade, foreign investment, industry, and company announcements.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://datos.imss.gob.mx/" target="_blank" rel="noopener">
-        <span class="source-name">IMSS</span><span class="source-desc">Registered employment and wages.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.dof.gob.mx/" target="_blank" rel="noopener">
-        <span class="source-name">Diario Oficial de la Federación</span><span class="source-desc">Laws, decrees, regulations, and other official acts.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.ine.mx/" target="_blank" rel="noopener">
-        <span class="source-name">INE</span><span class="source-desc">Elections, results, political parties, and the electoral calendar.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.gob.mx/sesnsp" target="_blank" rel="noopener">
-        <span class="source-name">SESNSP</span><span class="source-desc">Crime and public-security data reported by state authorities.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.cnbv.gob.mx/" target="_blank" rel="noopener">
-        <span class="source-name">CNBV</span><span class="source-desc">Banks, credit, financial inclusion, and regulated financial institutions.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.cenace.gob.mx/" target="_blank" rel="noopener">
-        <span class="source-name">CENACE</span><span class="source-desc">Electricity demand, generation, and grid conditions.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.cfe.mx/" target="_blank" rel="noopener">
-        <span class="source-name">CFE</span><span class="source-desc">Mexico's state electricity company and its power projects.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://ustr.gov/countries-regions/americas/mexico" target="_blank" rel="noopener">
-        <span class="source-name">U.S. Trade Representative</span><span class="source-desc">USMCA, tariffs, negotiations, and U.S. trade policy toward Mexico.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.census.gov/foreign-trade/balance/c2010.html" target="_blank" rel="noopener">
-        <span class="source-name">U.S. Census Bureau</span><span class="source-desc">Trade between Mexico and the United States.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.bea.gov/" target="_blank" rel="noopener">
-        <span class="source-name">U.S. Bureau of Economic Analysis</span><span class="source-desc">Investment and economic ties with the United States.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">
-        <span class="source-name">Federal Reserve</span><span class="source-desc">U.S. rates, the dollar, industrial production, and demand indicators.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://data.worldbank.org/country/mexico" target="_blank" rel="noopener">
-        <span class="source-name">World Bank</span><span class="source-desc">Comparable economic, social, and development data.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.imf.org/en/Countries/MEX" target="_blank" rel="noopener">
-        <span class="source-name">International Monetary Fund</span><span class="source-desc">Economic forecasts, public finances, and country reviews.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.oecd.org/en/countries/mexico.html" target="_blank" rel="noopener">
-        <span class="source-name">OECD</span><span class="source-desc">Comparable economic, labor, tax, and public-policy data.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://comtradeplus.un.org/" target="_blank" rel="noopener">
-        <span class="source-name">UN Comtrade</span><span class="source-desc">Trade by country, product, and partner.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.cbp.gov/newsroom/stats" target="_blank" rel="noopener">
-        <span class="source-name">U.S. Customs and Border Protection</span><span class="source-desc">Border crossings and encounters.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.iom.int/countries/mexico" target="_blank" rel="noopener">
-        <span class="source-name">International Organization for Migration</span><span class="source-desc">Migration and displacement.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
-      <a class="source-row" href="https://www.unhcr.org/countries/mexico" target="_blank" rel="noopener">
-        <span class="source-name">UNHCR</span><span class="source-desc">Refugees, asylum, and displacement.</span><span class="source-arrow" aria-hidden="true">↗</span>
-      </a>
+    <div class="source-category">
+      <h3>Economy, money and jobs</h3>
+      <div class="source-list">
+        <a class="source-row" href="https://www.inegi.org.mx/" target="_blank" rel="noopener">
+          <span class="source-name">INEGI</span><span class="source-desc">Economy, prices, jobs, population, businesses, and public-safety surveys.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.banxico.org.mx/SieInternet/" target="_blank" rel="noopener">
+          <span class="source-name">Banco de México</span><span class="source-desc">Peso, interest rates, reserves, remittances, payments, and financial data.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.finanzaspublicas.hacienda.gob.mx/" target="_blank" rel="noopener">
+          <span class="source-name">Hacienda</span><span class="source-desc">Federal revenue, spending, debt, the budget, and public finances.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://datos.imss.gob.mx/" target="_blank" rel="noopener">
+          <span class="source-name">IMSS</span><span class="source-desc">Registered employment and wages.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.cnbv.gob.mx/" target="_blank" rel="noopener">
+          <span class="source-name">CNBV</span><span class="source-desc">Banks, credit, financial inclusion, and regulated financial institutions.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">
+          <span class="source-name">Federal Reserve</span><span class="source-desc">U.S. rates, the dollar, industrial production, and demand indicators.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="source-category">
+      <h3>Trade and investment</h3>
+      <div class="source-list">
+        <a class="source-row" href="https://www.gob.mx/se" target="_blank" rel="noopener">
+          <span class="source-name">Secretaría de Economía</span><span class="source-desc">Trade, foreign investment, industry, and company announcements.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://ustr.gov/countries-regions/americas/mexico" target="_blank" rel="noopener">
+          <span class="source-name">U.S. Trade Representative</span><span class="source-desc">USMCA, tariffs, negotiations, and U.S. trade policy toward Mexico.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.census.gov/foreign-trade/balance/c2010.html" target="_blank" rel="noopener">
+          <span class="source-name">U.S. Census Bureau</span><span class="source-desc">Trade between Mexico and the United States.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.bea.gov/" target="_blank" rel="noopener">
+          <span class="source-name">U.S. Bureau of Economic Analysis</span><span class="source-desc">Investment and economic ties with the United States.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://comtradeplus.un.org/" target="_blank" rel="noopener">
+          <span class="source-name">UN Comtrade</span><span class="source-desc">Trade by country, product, and partner.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="source-category">
+      <h3>Government, elections and security</h3>
+      <div class="source-list">
+        <a class="source-row" href="https://www.dof.gob.mx/" target="_blank" rel="noopener">
+          <span class="source-name">Diario Oficial de la Federación</span><span class="source-desc">Laws, decrees, regulations, and other official acts.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.ine.mx/" target="_blank" rel="noopener">
+          <span class="source-name">INE</span><span class="source-desc">Elections, results, political parties, and the electoral calendar.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.gob.mx/sesnsp" target="_blank" rel="noopener">
+          <span class="source-name">SESNSP</span><span class="source-desc">Crime and public-security data reported by state authorities.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="source-category">
+      <h3>Energy</h3>
+      <div class="source-list">
+        <a class="source-row" href="https://www.cenace.gob.mx/" target="_blank" rel="noopener">
+          <span class="source-name">CENACE</span><span class="source-desc">Electricity demand, generation, and grid conditions.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.cfe.mx/" target="_blank" rel="noopener">
+          <span class="source-name">CFE</span><span class="source-desc">Mexico's state electricity company and its power projects.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="source-category">
+      <h3>International comparisons and migration</h3>
+      <div class="source-list">
+        <a class="source-row" href="https://data.worldbank.org/country/mexico" target="_blank" rel="noopener">
+          <span class="source-name">World Bank</span><span class="source-desc">Comparable economic, social, and development data.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.imf.org/en/Countries/MEX" target="_blank" rel="noopener">
+          <span class="source-name">International Monetary Fund</span><span class="source-desc">Economic forecasts, public finances, and country reviews.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.oecd.org/en/countries/mexico.html" target="_blank" rel="noopener">
+          <span class="source-name">OECD</span><span class="source-desc">Comparable economic, labor, tax, and public-policy data.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.cbp.gov/newsroom/stats" target="_blank" rel="noopener">
+          <span class="source-name">U.S. Customs and Border Protection</span><span class="source-desc">Border crossings and encounters.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.iom.int/countries/mexico" target="_blank" rel="noopener">
+          <span class="source-name">International Organization for Migration</span><span class="source-desc">Migration and displacement.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="source-row" href="https://www.unhcr.org/countries/mexico" target="_blank" rel="noopener">
+          <span class="source-name">UNHCR</span><span class="source-desc">Refugees, asylum, and displacement.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
     </div>
   </section>
 
