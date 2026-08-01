@@ -7,11 +7,17 @@ description: "The official institutions, newsrooms, and research groups used by 
 {% raw %}
 <style>
   body{background:#fff}
-  .sources-page{padding:46px 0 72px}
+  .sources-page{padding-top:46px;padding-bottom:72px}
   .sources-intro{max-width:720px}
   .sources-intro h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1;letter-spacing:-.025em;margin:8px 0 0;color:var(--ink)}
   .sources-intro p{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);margin:16px 0 0;max-width:66ch}
   .source-group{margin-top:48px}
+  .source-tabs{display:grid;grid-template-columns:1fr 1fr;margin-top:34px;border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:620px}
+  .source-tab{appearance:none;border:0;border-right:1px solid var(--line);background:#fff;color:var(--ink-2);padding:14px 18px;font-family:var(--sans);font-size:var(--fs-small);font-weight:600;line-height:1.2;cursor:pointer}
+  .source-tab:last-child{border-right:0}
+  .source-tab[aria-selected="true"]{background:var(--green-pale);color:var(--green-d);box-shadow:inset 0 -2px 0 var(--green)}
+  .source-tab:focus-visible{outline:2px solid var(--green);outline-offset:-3px}
+  .source-panel[hidden]{display:none}
   .source-group-head{border-top:2px solid var(--green);padding:15px 0 13px}
   .source-group-head h2{font-family:var(--sans);font-size:var(--fs-h2);line-height:1.15;letter-spacing:-.02em;margin:0;color:var(--ink)}
   .source-list{border-bottom:1px solid var(--line)}
@@ -22,9 +28,11 @@ description: "The official institutions, newsrooms, and research groups used by 
   .source-arrow{font-family:var(--mono);font-size:var(--fs-meta);color:var(--green-d);text-align:right}
   .source-note{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:var(--fs-label);line-height:1.55;color:var(--mut);max-width:76ch}
   @media(max-width:640px){
-    .sources-page{padding:30px 0 54px}
-    .sources-intro h1{font-size:42px}
-    .source-group{margin-top:38px}
+    .sources-page{padding-top:30px;padding-bottom:54px}
+    .sources-intro h1{font-size:clamp(38px,12vw,48px);line-height:1.02;overflow-wrap:normal}
+    .source-tabs{margin-top:26px;max-width:none}
+    .source-tab{padding:13px 9px;font-size:15px}
+    .source-group{margin-top:32px}
     .source-row{grid-template-columns:minmax(0,1fr) 18px;gap:5px 12px;padding:14px 0}
     .source-name{grid-column:1}
     .source-desc{grid-column:1}
@@ -37,11 +45,16 @@ description: "The official institutions, newsrooms, and research groups used by 
   <header class="sources-intro">
     <div class="eyebrow">Sources</div>
     <h1>Where the information comes from</h1>
-    <p>Official Mexican institutions are used for the numbers. Newsrooms and research groups are used for reporting and context. Figures link to the original source where they appear on the site.</p>
+    <p>Data sources provide the numbers. News sources provide the headlines and reporting used for context. Every figure and story links to the original source.</p>
   </header>
 
-  <section class="source-group" aria-labelledby="mexican-sources">
-    <div class="source-group-head"><h2 id="mexican-sources">Mexican institutions</h2></div>
+  <div class="source-tabs" role="tablist" aria-label="Source type">
+    <button class="source-tab" id="data-tab" type="button" role="tab" aria-selected="true" aria-controls="data-panel">Data sources</button>
+    <button class="source-tab" id="news-tab" type="button" role="tab" aria-selected="false" aria-controls="news-panel" tabindex="-1">News sources</button>
+  </div>
+
+  <section class="source-group source-panel" id="data-panel" role="tabpanel" aria-labelledby="data-tab">
+    <div class="source-group-head"><h2 id="data-sources">Data sources</h2></div>
     <div class="source-list">
       <a class="source-row" href="https://www.inegi.org.mx/" target="_blank" rel="noopener">
         <span class="source-name">INEGI</span><span class="source-desc">Economy, prices, jobs, population, businesses, and public-safety surveys.</span><span class="source-arrow" aria-hidden="true">↗</span>
@@ -71,37 +84,49 @@ description: "The official institutions, newsrooms, and research groups used by 
         <span class="source-name">CNBV</span><span class="source-desc">Banks, credit, financial inclusion, and regulated financial institutions.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://www.cenace.gob.mx/" target="_blank" rel="noopener">
-        <span class="source-name">CENACE and CFE</span><span class="source-desc">Electricity demand, generation, grid conditions, and state power projects.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        <span class="source-name">CENACE</span><span class="source-desc">Electricity demand, generation, and grid conditions.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
-    </div>
-  </section>
-
-  <section class="source-group" aria-labelledby="international-sources">
-    <div class="source-group-head"><h2 id="international-sources">U.S. and international sources</h2></div>
-    <div class="source-list">
+      <a class="source-row" href="https://www.cfe.mx/" target="_blank" rel="noopener">
+        <span class="source-name">CFE</span><span class="source-desc">Mexico's state electricity company and its power projects.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
       <a class="source-row" href="https://ustr.gov/countries-regions/americas/mexico" target="_blank" rel="noopener">
         <span class="source-name">U.S. Trade Representative</span><span class="source-desc">USMCA, tariffs, negotiations, and U.S. trade policy toward Mexico.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://www.census.gov/foreign-trade/balance/c2010.html" target="_blank" rel="noopener">
-        <span class="source-name">U.S. Census Bureau and BEA</span><span class="source-desc">Bilateral trade, investment, and economic ties with the United States.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        <span class="source-name">U.S. Census Bureau</span><span class="source-desc">Trade between Mexico and the United States.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://www.bea.gov/" target="_blank" rel="noopener">
+        <span class="source-name">U.S. Bureau of Economic Analysis</span><span class="source-desc">Investment and economic ties with the United States.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">
         <span class="source-name">Federal Reserve</span><span class="source-desc">U.S. rates, the dollar, industrial production, and demand indicators.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://data.worldbank.org/country/mexico" target="_blank" rel="noopener">
-        <span class="source-name">World Bank, IMF, and OECD</span><span class="source-desc">Comparable economic, social, fiscal, and development data.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        <span class="source-name">World Bank</span><span class="source-desc">Comparable economic, social, and development data.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://www.imf.org/en/Countries/MEX" target="_blank" rel="noopener">
+        <span class="source-name">International Monetary Fund</span><span class="source-desc">Economic forecasts, public finances, and country reviews.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://www.oecd.org/en/countries/mexico.html" target="_blank" rel="noopener">
+        <span class="source-name">OECD</span><span class="source-desc">Comparable economic, labor, tax, and public-policy data.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://comtradeplus.un.org/" target="_blank" rel="noopener">
         <span class="source-name">UN Comtrade</span><span class="source-desc">Trade by country, product, and partner.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://www.cbp.gov/newsroom/stats" target="_blank" rel="noopener">
-        <span class="source-name">CBP, IOM, and UNHCR</span><span class="source-desc">Border crossings, migration, asylum, and displacement.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        <span class="source-name">U.S. Customs and Border Protection</span><span class="source-desc">Border crossings and encounters.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://www.iom.int/countries/mexico" target="_blank" rel="noopener">
+        <span class="source-name">International Organization for Migration</span><span class="source-desc">Migration and displacement.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://www.unhcr.org/countries/mexico" target="_blank" rel="noopener">
+        <span class="source-name">UNHCR</span><span class="source-desc">Refugees, asylum, and displacement.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
     </div>
   </section>
 
-  <section class="source-group" aria-labelledby="reporting-sources">
-    <div class="source-group-head"><h2 id="reporting-sources">Reporting and research</h2></div>
+  <section class="source-group source-panel" id="news-panel" role="tabpanel" aria-labelledby="news-tab" hidden>
+    <div class="source-group-head"><h2 id="news-sources">News sources</h2></div>
     <div class="source-list">
       <a class="source-row" href="https://www.elfinanciero.com.mx/" target="_blank" rel="noopener">
         <span class="source-name">El Financiero</span><span class="source-desc">Mexican business, markets, politics, and companies.</span><span class="source-arrow" aria-hidden="true">↗</span>
@@ -109,26 +134,93 @@ description: "The official institutions, newsrooms, and research groups used by 
       <a class="source-row" href="https://www.eleconomista.com.mx/" target="_blank" rel="noopener">
         <span class="source-name">El Economista</span><span class="source-desc">Economy, trade, markets, labor, and industry.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
+      <a class="source-row" href="https://expansion.mx/" target="_blank" rel="noopener">
+        <span class="source-name">Expansión</span><span class="source-desc">Companies, markets, technology, and the economy.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://elceo.com/" target="_blank" rel="noopener">
+        <span class="source-name">El CEO</span><span class="source-desc">Companies, finance, markets, and public policy.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
       <a class="source-row" href="https://mexicobusiness.news/" target="_blank" rel="noopener">
         <span class="source-name">Mexico Business News</span><span class="source-desc">Automotive, energy, infrastructure, finance, technology, and investment.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://www.bloomberglinea.com/latinoamerica/mexico/" target="_blank" rel="noopener">
         <span class="source-name">Bloomberg Línea</span><span class="source-desc">Mexican and Latin American business and markets.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
+      <a class="source-row" href="https://www.bloomberg.com/latam" target="_blank" rel="noopener">
+        <span class="source-name">Bloomberg</span><span class="source-desc">Markets, companies, investment, and the economy.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
       <a class="source-row" href="https://www.reuters.com/world/americas/" target="_blank" rel="noopener">
-        <span class="source-name">Reuters and Associated Press</span><span class="source-desc">English-language reporting on Mexico and the region.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        <span class="source-name">Reuters</span><span class="source-desc">Reporting on Mexico, markets, companies, and the region.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://apnews.com/hub/mexico" target="_blank" rel="noopener">
+        <span class="source-name">Associated Press</span><span class="source-desc">Reporting on Mexico and the region.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://elpais.com/mexico/" target="_blank" rel="noopener">
-        <span class="source-name">El País México and Animal Político</span><span class="source-desc">Politics, institutions, public policy, and social issues.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        <span class="source-name">El País México</span><span class="source-desc">Politics, institutions, public policy, and social issues.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://ciep.mx/investigaciones/" target="_blank" rel="noopener">
-        <span class="source-name">CIEP and CEEY</span><span class="source-desc">Public finances, pensions, poverty, work, and social mobility.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        <span class="source-name">CIEP</span><span class="source-desc">Public finances, pensions, taxes, and the federal budget.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://ceey.org.mx/" target="_blank" rel="noopener">
+        <span class="source-name">CEEY</span><span class="source-desc">Poverty, work, inequality, and social mobility.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://iupana.com/" target="_blank" rel="noopener">
+        <span class="source-name">iupana</span><span class="source-desc">Banking, payments, fintech, and financial technology.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://contxto.com/" target="_blank" rel="noopener">
+        <span class="source-name">Contxto</span><span class="source-desc">Startups, venture capital, and technology in Latin America.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://latamlist.com/" target="_blank" rel="noopener">
+        <span class="source-name">LatamList</span><span class="source-desc">Startups, funding, and technology in Latin America.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://news.crunchbase.com/" target="_blank" rel="noopener">
+        <span class="source-name">Crunchbase News</span><span class="source-desc">Venture capital, private markets, and company funding.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://techcrunch.com/tag/mexico/" target="_blank" rel="noopener">
+        <span class="source-name">TechCrunch</span><span class="source-desc">Technology companies, startups, and venture capital.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://www.theguardian.com/world/mexico" target="_blank" rel="noopener">
+        <span class="source-name">The Guardian</span><span class="source-desc">Politics, society, climate, migration, and security.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
       <a class="source-row" href="https://www.as-coa.org/region/mexico" target="_blank" rel="noopener">
-        <span class="source-name">AS/COA and Wilson Center</span><span class="source-desc">U.S.–Mexico trade, migration, security, and bilateral policy.</span><span class="source-arrow" aria-hidden="true">↗</span>
+        <span class="source-name">AS/COA</span><span class="source-desc">U.S.–Mexico trade, migration, politics, and bilateral policy.</span><span class="source-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="source-row" href="https://www.wilsoncenter.org/program/mexico-institute" target="_blank" rel="noopener">
+        <span class="source-name">Wilson Center Mexico Institute</span><span class="source-desc">U.S.–Mexico trade, migration, security, and bilateral policy.</span><span class="source-arrow" aria-hidden="true">↗</span>
       </a>
     </div>
   </section>
 
-  <p class="source-note">The list changes as better sources become available. A link here means the source is used somewhere on the site; it does not mean every item it publishes is included.</p>
+  <p class="source-note">Google News and GDELT help find reporting, but they are not shown as sources. Headlines link to the publication that did the reporting. The list changes as better sources become available.</p>
 </main>
+
+<script>
+  (() => {
+    const tabs = [...document.querySelectorAll('.source-tab')];
+    const panels = [...document.querySelectorAll('.source-panel')];
+
+    function selectTab(tab) {
+      tabs.forEach((item) => {
+        const selected = item === tab;
+        item.setAttribute('aria-selected', String(selected));
+        item.tabIndex = selected ? 0 : -1;
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.id !== tab.getAttribute('aria-controls');
+      });
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => selectTab(tab));
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        event.preventDefault();
+        const next = event.key === 'ArrowRight'
+          ? (index + 1) % tabs.length
+          : (index - 1 + tabs.length) % tabs.length;
+        selectTab(tabs[next]);
+        tabs[next].focus();
+      });
+    });
+  })();
+</script>
