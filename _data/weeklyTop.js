@@ -166,42 +166,83 @@ module.exports = function () {
     else clusters.push({ w, domains: new Set([x.source]), rep: x, beat: x.beat });
   }
   const secForBeat = (beat) => SECTIONS.find((s) => s.beats.includes(beat));
-  // Design QA #10: the five promise IMPORTANCE. Official-comms feeds (the
-  // gazette, Pemex's own press office, association blogs) are records, not
-  // stories — they stay in the section lists but never lead the week. Weight:
-  // cross-outlet corroboration first, then established press over niche
-  // (tier 1 > 2 > specialist), never raw recency.
+
+  // THE WEEK'S FIVE.
+  //
+  // This used to rank the raw wire by cross-outlet corroboration. Measured 2026-08-02,
+  // that signal does not exist here: of 490 stories collected in a week, exactly 2 were
+  // carried by more than one named outlet, because 50 mostly non-overlapping trade and
+  // regional feeds rarely cover the same event. Ranking on a signal that is almost always
+  // zero is how a nostalgia piece from a big outlet ended up leading the week.
+  //
+  // The site already scores importance: every event in the curated log carries one, set
+  // by the pipeline that writes the brief. That is the honest ranking, so the five come
+  // from there. Official-comms records still never lead. If fewer than five clear the
+  // bar, the page shows fewer and says so rather than padding.
+  const IMPORTANCE_BAR = 5;
   const OFFICIAL = /(^|\.)gob\.mx$|^pemex\.com$|^diariooficial\.gob\.mx$|^blog\.amvo\.org\.mx$/;
-  const PRESS_W = { 1: 4, 2: 3, specialist: 2 };
-  const weighted = clusters
-    .filter((c) => secForBeat(c.beat) && !OFFICIAL.test(String(c.rep.source || '')))
-    .map((c) => ({
-      item: ledgerItem(c.rep), beat: c.beat, section: secForBeat(c.beat).label,
-      day: dayLabel(c.rep.published_at),
-      weight: (c.domains.size >= 2 ? 3 + c.domains.size : 0) + (PRESS_W[c.rep.tier] || 1) + (c.rep.dek ? 0.5 : 0),
-    }))
-    .filter((c) => !shownToday(c.item))
-    .sort((a, b) => b.weight - a.weight || String(b.item.date).localeCompare(String(a.item.date)));
-  const weekFive = []; const usedSections = new Set(); const usedDays = new Set();
-  for (const c of weighted) { // spread pass: distinct section AND distinct day
-    if (usedSections.has(c.section) || usedDays.has(c.day)) continue;
-    weekFive.push(c); usedSections.add(c.section); usedDays.add(c.day);
-    if (weekFive.length >= 5) break;
+  const CURATED_SECTION = {
+    economy: 'economy', money: 'economy', 'us-mexico': 'usmexico',
+    politics: 'politics', society: 'society', security: 'society',
+  };
+  let happening = { events: [] };
+  try { happening = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'happening.json'), 'utf8')); }
+  catch { happening = { events: [] }; }
+
+  const fiveCandidates = (happening.events || [])
+    .filter((e) => e && e.title && e.url && fresh(e.date, 7))
+    .filter((e) => Number(e.importance) >= IMPORTANCE_BAR)
+    .filter((e) => !OFFICIAL.test(String(e.source || '')))
+    .map((e) => {
+      const key = CURATED_SECTION[e.section] || 'economy';
+      const sec = SECTIONS.find((s) => s.key === key) || SECTIONS[2];
+      return {
+        title: trim(e.title, 90), url: e.url, sourceName: e.source, domain: e.source,
+        dek: trim(e.why, 200), date: String(e.date).slice(0, 10),
+        dateLabel: dateLabel(e.date), dayLabel: dayLabel(e.date),
+        curated: true, importance: Number(e.importance),
+        bg: e.background || '', view: e.view || '', next: e.prediction || '',
+        be: Boolean(e.background && e.view && e.prediction),
+        section: sec.label, sectionKey: sec.key, href: sec.href,
+        china: CHINA.test(`${e.title} ${e.why || ''}`),
+      };
+    })
+    .filter((item) => !shownToday(item))
+    .sort((a, b) => b.importance - a.importance || String(b.date).localeCompare(String(a.date)));
+
+  // Spread across sections first so the five are not five economy stories, then fill.
+  const weekFive = []; const usedSections = new Set();
+  for (const c of fiveCandidates) {
+    if (weekFive.length >= 5 || usedSections.has(c.sectionKey)) continue;
+    if (weekFive.some((k) => jaccard(words(k.title), words(c.title)) >= 0.5)) continue;
+    weekFive.push(c); usedSections.add(c.sectionKey);
   }
-  for (const c of weighted) { // second pass: distinct section only
-    if (weekFive.length >= 5) break;
-    if (weekFive.includes(c) || usedSections.has(c.section)) continue;
-    weekFive.push(c); usedSections.add(c.section);
-  }
-  for (const c of weighted) { // fill pass if the week was narrow
+  for (const c of fiveCandidates) {
     if (weekFive.length >= 5) break;
     if (weekFive.includes(c)) continue;
+    if (weekFive.some((k) => jaccard(words(k.title), words(c.title)) >= 0.5)) continue;
     weekFive.push(c);
   }
-  const week5 = weekFive.map((c) => ({
-    ...c.item, title: trim(c.item.title, 90), section: c.section, dayLabel: c.day,
-    china: CHINA.test(c.item.title + ' ' + (c.item.dek || '')),
-  }));
+
+  const week5 = weekFive;
+
+  // The five are the "All" view on the homepage. A story can be both one of the five and
+  // a member of its section list, so it is flagged in place rather than rendered twice;
+  // if the curated log surfaced something the section lists did not, it is added there.
+  for (const five of weekFive) {
+    const group = groups.find((g) => g.key === five.sectionKey);
+    if (!group) continue;
+    const existing = group.items.find((item) => item.url === five.url);
+    if (existing) { existing.inFive = true; continue; }
+    group.items.unshift({
+      ...five,
+      inFive: true,
+      shownToday: false,
+      interestTags: tagsFor(five),
+      topic: group.key, topicLabel: group.label, topicUrl: group.href,
+      source: five.sourceName, summary: five.dek,
+    });
+  }
 
   const china = merge([], themePool.filter((x) => CHINA.test(x.title + ' ' + (x.dek || ''))).map(ledgerItem), 3);
 

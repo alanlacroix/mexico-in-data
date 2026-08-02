@@ -307,7 +307,9 @@ const briefBuilder = fs.readFileSync(path.join(root, 'pipeline/build-brief.js'),
 assert.doesNotMatch(homepageTemplate, /from ['"]\/assets\/mb\.js/, 'the homepage must not download the full render toolkit for one time helper');
 assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepage source status must be embedded at build time');
 assert.match(homepageTemplate, /\(not isAll\).*story\.analysisV >= 7.*story\.bg and story\.view and story\.prediction/, 'only versioned, complete key-development analysis may expose the disclosure');
-assert.match(homepageTemplate, /storyCard\(story, true\)/, 'ordinary headlines must use the no-analysis card mode');
+// The call now carries a third argument marking the week's five; the second argument,
+// which is what turns off the analysis disclosure, is what this guards.
+assert.match(homepageTemplate, /storyCard\(story, true[,)]/, 'ordinary headlines must use the no-analysis card mode');
 assert.ok(homepageTemplate.indexOf('<section class="brief" id="brief"') < homepageTemplate.indexOf('<section class="news"'), 'the Brief must render before key developments');
 assert.match(briefBuilder, /return gate\.ok && analysisReady\(e\) && e\.url && e\.source/, 'an unreviewed story must not enter key developments');
 assert.match(

@@ -66,6 +66,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .all-news>summary::after{content:'+';font-size:17px;line-height:1}
   .all-news[open]>summary::after{content:'–'}
   .all-news-body{padding:2px 0 12px}
+  .week-note-five{font-size:var(--fs-meta);line-height:1.5;color:var(--mut);padding:14px 0 2px;max-width:70ch}
   .week-span{font-weight:400;letter-spacing:.02em;color:var(--mut);text-transform:none;margin-left:9px}
   .filters{display:flex;flex-wrap:wrap;gap:7px;padding:2px 0 13px;border-bottom:1px solid var(--line)}
   .filter{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink-2);padding:8px 13px;font-size:var(--fs-meta);cursor:pointer}
@@ -163,11 +164,11 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   }
 </style>
 
-{% macro storyCard(story, isAll=false) %}
+{% macro storyCard(story, isAll=false, inFive=false) %}
 {% set topicHref = story.topicUrl if story.topicUrl else ('/us-mexico.html' if story.topic == 'us-mexico' else '/' + story.topic + '.html') %}
 {% set hasContext = (not isAll) and story.analysisV >= 7 and story.bg and story.view and story.prediction %}
 {% set contextId = 'story-context-' + story.id %}
-<article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}" data-interests="{{ story.interestTags | join(',') if story.interestTags else '' }}"{% endif %}>
+<article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}"{% if inFive %} data-five="y"{% endif %}{% endif %}>
   <div class="story-meta"><a class="story-topic" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span>{{ story.sourceCount }} reports</span>{% endif %}</div>
   <div class="story-title-row">
     <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="210" height="140" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}{% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}" aria-label="Briefly explained: {{ story.title }}" title="Briefly explained">BE</button>{% endif %}</div>
@@ -203,19 +204,19 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
     </div>
 
     {% if weeklyTop.groups.length %}<details class="all-news" id="all-news" open>
-      <summary>All headlines <span class="week-span">{{ weeklyTop.weekLabel }}</span></summary>
+      <summary>The week <span class="week-span">{{ weeklyTop.weekLabel }}</span></summary>
       <div class="all-news-body">
         <nav class="filters" aria-label="Filter headlines by section">
           <button class="filter active" type="button" data-topic="all" aria-pressed="true">All</button>
-          <button class="filter" type="button" data-topic="mine" aria-pressed="false">My topics</button>
           {%- for group in weeklyTop.groups %}
           <button class="filter" type="button" data-topic="{{ group.key }}" aria-pressed="false">{{ group.label }}</button>
           {%- endfor %}
         </nav>
         <div class="story-list" id="all-news-list">
-          {%- for group in weeklyTop.groups %}{% for story in group.items %}{% if not story.shownToday %}{{ storyCard(story, true) }}{% endif %}{% endfor %}{% endfor %}
+          {%- for group in weeklyTop.groups %}{% for story in group.items %}{% if not story.shownToday %}{{ storyCard(story, true, story.inFive) }}{% endif %}{% endfor %}{% endfor %}
         </div>
         <p class="empty" id="news-empty" hidden>Nothing from this section in the last seven days.</p>
+        <p class="week-note-five">The five are the week's most important stories by the same ranking the Brief uses. Pick a section to see everything it carried.</p>
         <button class="show-more" id="news-more" type="button" hidden>Show more</button>
       </div>
     </details>{% endif %}
@@ -270,13 +271,14 @@ const newsMore=document.getElementById('news-more');
 const NEWS_LIMIT=4;
 const FILTER_KEY='mexico-brief-headline-filter';
 let newsTopic='all',newsExpanded=false;
-function matchesTopic(story){if(newsTopic==='all')return true;if(newsTopic==='mine')return Boolean(story.dataset.interests);return story.dataset.topic===newsTopic;}
+function matchesTopic(story){if(newsTopic==='all')return story.dataset.five==='y';return story.dataset.topic===newsTopic;}
 function renderNews(){
   newsFilters.forEach((button)=>{const active=button.dataset.topic===newsTopic;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
   let matched=0,shown=0;
-  allStories.forEach((story)=>{const match=matchesTopic(story);if(!match){story.hidden=true;return;}matched++;const within=newsExpanded||shown<NEWS_LIMIT;story.hidden=!within;if(within)shown++;});
+  const limit=newsTopic==='all'?Infinity:NEWS_LIMIT;
+  allStories.forEach((story)=>{const match=matchesTopic(story);if(!match){story.hidden=true;return;}matched++;const within=newsExpanded||shown<limit;story.hidden=!within;if(within)shown++;});
   if(newsEmpty)newsEmpty.hidden=matched>0;
-  if(newsMore){const rest=matched-Math.min(matched,NEWS_LIMIT);newsMore.hidden=newsExpanded||rest<=0;newsMore.textContent='Show '+rest+' more';}
+  if(newsMore){const rest=matched-Math.min(matched,limit);newsMore.hidden=newsExpanded||rest<=0;newsMore.textContent='Show '+rest+' more';}
 }
 function showNews(topic,push=false){
   newsTopic=topic;newsExpanded=false;renderNews();

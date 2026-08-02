@@ -30,8 +30,15 @@ assert.match(home, /id="pulse-title">Today</i, 'homepage must lead with the read
 assert.match(home, /id="markets-title">The economy</i, 'the slower official readings must keep their own room below the news');
 assert.match(home, /Key developments/i, 'homepage must lead readers through the major stories');
 assert.match(home, /dailyBrief\.windowLabel/i, 'homepage must state the rolling news window plainly');
-assert.match(home, /All headlines/i, 'homepage must retain a deeper chronological feed');
-assert.match(home, /My topics/i, 'homepage must expose Alan’s declared interests');
+// The block is now labelled "The week" and its All view is the week's five (Alan,
+// 2026-08-02). What must not regress is that the deeper per-section feed still exists
+// on the homepage rather than moving to a separate page.
+assert.match(home, /id="all-news"/, 'homepage must retain a deeper chronological feed');
+assert.match(home, /data-topic="\{\{ group\.key \}\}"/, 'the deeper feed must keep a filter per section');
+// "My topics" was removed on 2026-08-02 (Alan): with the All view curated down to the
+// week's five, a second personalised view of the same list was furniture. The interest
+// rules still rank the Brief; they no longer get their own filter.
+assert.doesNotMatch(home, /data-topic="mine"/, 'the retired My topics filter must not come back');
 assert.match(home, /homeEditorial\.myRead\.label/, 'homepage must render the reviewed or deterministic connection label');
 assert.ok(homeEditorial.myRead?.text, 'a reviewed prediction must remain explicitly separate from reported facts');
 assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
