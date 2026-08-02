@@ -23,8 +23,35 @@ const ECONOMY = [
   'banxico-remesas',
 ];
 
+// A strip headed "Today" has to say when its readings are actually from. Markets close
+// on different days and the fuel average refreshes through the day, so these five rarely
+// share one vintage. The block states the newest date it holds, and any reading older
+// than that carries its own date, so the shared line can never paper over a mixed set.
+const dayLabel = (iso) => {
+  const parsed = new Date(`${iso}T12:00:00Z`);
+  return Number.isNaN(parsed.getTime()) ? iso
+    : parsed.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
+};
+
 module.exports = function () {
   const byId = new Map(nowBoard().map((card) => [card.id, card]));
   const pick = (ids) => ids.map((id) => byId.get(id)).filter(Boolean);
-  return { today: pick(TODAY), economy: pick(ECONOMY) };
+
+  const today = pick(TODAY);
+  const dates = today.map((card) => card.date).filter(Boolean).sort();
+  const newest = dates.at(-1) || null;
+  const oldest = dates[0] || null;
+  const mixed = Boolean(newest && oldest && newest !== oldest);
+
+  return {
+    today: today.map((card) => ({ ...card, olderThanBlock: Boolean(newest && card.date !== newest) })),
+    todayVintage: newest && {
+      asOf: dayLabel(newest),
+      mixed,
+      label: mixed
+        ? `Latest reading ${dayLabel(newest)}; earlier ones dated`
+        : `All readings ${dayLabel(newest)}`,
+    },
+    economy: pick(ECONOMY),
+  };
 };

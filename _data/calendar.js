@@ -36,5 +36,11 @@ module.exports = function () {
         source: plainSourceName(e.source),
         sourceUrl: String(e.sourceUrl || '').trim(),
       };
-    });
+    })
+    // If two events fall on the same date, print the date once. Two identical
+    // "Week of Aug 3 / next week" stamps stacked on each other read as a fault.
+    .map((event, index, all) => ({
+      ...event,
+      repeatsDate: index > 0 && all[index - 1].date === event.date && all[index - 1].approx === event.approx,
+    }));
 };

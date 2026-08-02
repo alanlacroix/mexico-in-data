@@ -11,7 +11,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .home a{text-underline-offset:3px}
   .home-head{padding:32px 0 15px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
   .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
-  .home-date{margin:0;font-family:var(--mono);font-size:clamp(21px,2.3vw,29px);font-weight:650;line-height:1.12;letter-spacing:-.012em;color:var(--ink)}
+  .home-date{margin:0;font-family:var(--mono);font-size:clamp(22px,2.3vw,28px);font-weight:650;line-height:1.12;letter-spacing:-.012em;color:var(--ink)}
   .home-strap{margin:9px 0 0;font-size:var(--fs-small);line-height:1.45;color:var(--mut);max-width:52ch}
   .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
   .section-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
@@ -20,8 +20,8 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .text-link{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
 
   .brief{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:16px 0 20px;margin-top:28px;scroll-margin-top:72px}
-  .brief-copy{font-size:clamp(18px,1.65vw,22px);line-height:1.58;color:var(--ink-2);max-width:78ch;margin-top:13px}
-  .my-read{max-width:78ch;margin-top:17px;padding:13px 15px;border-left:2px solid var(--green);background:#f8f7f2}
+  .brief-copy{font-size:clamp(18px,1.65vw,22px);line-height:1.58;color:var(--ink-2);max-width:70ch;margin-top:13px}
+  .my-read{max-width:70ch;margin-top:17px;padding:13px 15px;border-left:2px solid var(--green);background:#f8f7f2}
   .my-read p{font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
   .my-read strong{color:var(--ink)}
   .read-evidence{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -31,28 +31,29 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .source-state{margin-top:13px;padding:11px 13px;border-left:2px solid var(--red);background:#fff7f7;font-size:var(--fs-small);line-height:1.5;color:var(--ink-2)}
   .source-state strong{color:var(--ink)}
   .source-state a{margin-left:8px;color:var(--green-d)}
-  .brief-sources{display:flex;align-items:center;gap:5px 14px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--mut)}
+  .brief-sources{display:flex;align-items:center;gap:5px 14px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .brief-sources a{color:var(--green-d)}
 
   .news{margin-top:46px;max-width:920px}
   .story-list{border-top:1px solid var(--line);margin-top:12px}
   .brief-story{padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
   .story-meta{display:flex;align-items:center;gap:5px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
+  .story-meta>*{white-space:nowrap}
   .story-topic{font-weight:650;color:var(--green-d);text-decoration:none}
   .story-title-row{display:block}
   .story-copy{display:flow-root;min-width:0}
-  .story-thumb{float:right;width:132px;height:88px;margin:4px 0 10px 14px;border-radius:4px;overflow:hidden;background:var(--paper-2)}
+  .story-thumb{float:right;width:210px;height:140px;margin:4px 0 12px 20px;border-radius:4px;overflow:hidden;background:var(--paper-2)}
   .story-thumb img{width:100%;height:100%;object-fit:cover;display:block}
   .story-link{color:var(--ink);text-decoration:none}
   .story-link:hover{color:var(--green-d)}
-  .brief-story h3{font-size:clamp(19px,1.55vw,23px);line-height:1.32;letter-spacing:-.008em;font-weight:600;margin:0;max-width:60ch}
-  .story-summary{font-size:15.5px;line-height:1.5;color:var(--ink-2);max-width:72ch;margin:7px 0 0}
+  .brief-story h3{font-size:clamp(18px,1.55vw,22px);line-height:1.32;letter-spacing:-.008em;font-weight:600;margin:0;max-width:60ch}
+  .story-summary{font-size:var(--fs-small);line-height:1.5;color:var(--ink-2);max-width:70ch;margin:7px 0 0}
   .context-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;min-height:36px;border:1px solid var(--green);border-radius:3px;background:#fff;color:var(--green-d);padding:0;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
   .story-copy .context-btn{margin-top:11px}
   .context-btn:hover,.context-btn[aria-expanded="true"]{border-color:var(--green);background:var(--green);color:#fff}
   .be-key{display:inline-flex;align-items:center;gap:7px}
   .be-key b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:23px;border:1px solid var(--green);border-radius:3px;color:var(--green-d);font-size:9px;letter-spacing:.04em}
-  .story-context{margin:13px 0 2px;padding:13px 16px;background:#f8f7f2;border-left:2px solid var(--green);font-size:14px;line-height:1.56;color:var(--ink-2)}
+  .story-context{margin:13px 0 2px;padding:13px 16px;background:#f8f7f2;border-left:2px solid var(--green);font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
   .story-context[hidden]{display:none}
   .story-context p+p,.story-context .coverage{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
   .context-label{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-right:7px}
@@ -67,7 +68,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .all-news-body{padding:2px 0 12px}
   .week-span{font-weight:400;letter-spacing:.02em;color:var(--mut);text-transform:none;margin-left:9px}
   .filters{display:flex;flex-wrap:wrap;gap:7px;padding:2px 0 13px;border-bottom:1px solid var(--line)}
-  .filter{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink-2);padding:8px 13px;font-size:12px;cursor:pointer}
+  .filter{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink-2);padding:8px 13px;font-size:var(--fs-meta);cursor:pointer}
   .filter:hover,.filter.active{border-color:var(--green);color:var(--green-d);background:#f2f8f5}
   .all-story[hidden]{display:none}
   .empty{font-size:var(--fs-small);color:var(--mut);padding:24px 0}
@@ -81,12 +82,12 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .market-card{min-width:0;padding:15px 16px 14px;border:1px solid var(--line);border-radius:5px;background:var(--paper);transition:border-color .15s ease,background .15s ease}
   .market-card:hover{border-color:var(--green);background:#fcfdfb}
   .market-link{display:flex;flex-direction:column;height:100%;color:inherit;text-decoration:none}
-  .market-name{font-family:var(--mono);font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut)}
-  .market-value{font-size:clamp(27px,3vw,38px);font-weight:650;line-height:1.04;letter-spacing:-.025em;margin-top:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .market-name{font-family:var(--mono);font-size:var(--fs-label);line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut)}
+  .market-value{font-size:clamp(28px,3vw,44px);font-weight:650;line-height:1.04;letter-spacing:-.025em;margin-top:10px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
   .market-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);letter-spacing:0;margin-left:3px}
-  .market-compare{font-size:12px;line-height:1.4;color:var(--ink-2);margin-top:8px;min-height:34px}
+  .market-compare{font-size:var(--fs-meta);line-height:1.4;color:var(--ink-2);margin-top:8px;min-height:34px}
   .market-date,.market-update,.market-source,.market-action{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4}
-  .market-date{color:var(--ink-2);margin-top:10px}
+  .market-date{color:var(--mut);margin-top:10px;white-space:nowrap}
   .market-update,.market-source{color:var(--mut);margin-top:2px}
   .market-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:auto;padding-top:10px}
   .market-footer .market-source{margin-top:0}
@@ -101,11 +102,12 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .pulse-item+.pulse-item{border-left:1px solid var(--line);padding-left:16px}
   .pulse-link{display:block;color:inherit;text-decoration:none}
   .pulse-link:hover .pulse-value{color:var(--green-d)}
-  .pulse-name{font-family:var(--mono);font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut)}
-  .pulse-value{font-size:clamp(19px,2.1vw,26px);font-weight:650;line-height:1.06;letter-spacing:-.025em;margin-top:8px;font-variant-numeric:tabular-nums;white-space:nowrap;transition:color .15s ease}
+  .pulse-name{font-family:var(--mono);font-size:var(--fs-label);line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut)}
+  .pulse-asof{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px;white-space:nowrap}
+  .pulse-value{font-size:clamp(22px,2.1vw,28px);font-weight:650;line-height:1.06;letter-spacing:-.025em;margin-top:8px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink);transition:color .15s ease}
   .pulse-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);letter-spacing:0;margin-left:3px}
-  .pulse-move{font-size:12px;line-height:1.4;color:var(--ink-2);margin-top:7px;min-height:34px}
-  .pulse-date{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px}
+  .pulse-move{font-family:var(--mono);font-size:var(--fs-meta);line-height:1.4;color:var(--mut);margin-top:7px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .pulse-date{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px;white-space:nowrap}
 
   .week{border-top:1px solid var(--line);padding-top:14px}
   .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:13px}
@@ -137,12 +139,24 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   @media(max-width:650px){
     .home-head{padding-top:24px;align-items:flex-start}
     .brief{margin-top:22px}
-    .brief-copy{font-size:18px;line-height:1.52}
+    /* One step down on a phone. At 18px the brief ran ~35 characters a line over ten
+       lines; a step lifts the measure toward the low 40s and takes several lines off
+       every dek on the page. Desktop was too long, mobile was too short: same fix,
+       opposite direction. */
+    .brief-copy{font-size:var(--fs-small);line-height:1.55}
+    .story-summary{font-size:var(--fs-meta);line-height:1.5}
     .news{margin-top:38px}
     .brief-story{padding:17px 0}
-    .brief-story h3{font-size:20px;line-height:1.32}
+    .brief-story h3{font-size:var(--fs-h3);line-height:1.32}
     .context-btn{width:44px;min-height:44px}
-    .story-thumb{width:112px;height:74px;margin:3px 0 8px 12px}
+    /* The filter wrapped to four rows, about 330px of furniture between the reader and
+       the headlines. One scrolling row with the selected chip brought into view costs
+       roughly 60px instead. */
+    .filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-padding-left:2px}
+    .filters::-webkit-scrollbar{display:none}
+    .filter{flex:0 0 auto}
+    .show-more{min-height:44px}
+    .story-thumb{width:124px;height:83px;margin:3px 0 8px 12px}
     .market-grid{grid-template-columns:1fr}
     .market-compare,.pulse-move{min-height:0}
     .timeline{grid-template-columns:1fr}
@@ -158,7 +172,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 <article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}" data-interests="{{ story.interestTags | join(',') if story.interestTags else '' }}"{% endif %}>
   <div class="story-meta"><a class="story-topic" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.reportTime %}<span class="js-storytime" data-date="{{ story.reportTime }}" data-label="{{ 'Latest report' if story.sourceCount > 1 else 'Published' }}"></span>{% endif %}{% if story.source %}<span>{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span>{{ story.sourceCount }} reports</span>{% endif %}</div>
   <div class="story-title-row">
-    <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="132" height="88" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}{% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}" aria-label="Briefly explained: {{ story.title }}" title="Briefly explained">BE</button>{% endif %}</div>
+    <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="210" height="140" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}{% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}" aria-label="Briefly explained: {{ story.title }}" title="Briefly explained">BE</button>{% endif %}</div>
   </div>
   {% if hasContext %}<div class="story-context" id="{{ contextId }}" hidden><p><span class="context-label">Background</span>{{ story.bg }}</p><p><span class="context-label">Our view</span>{{ story.view }}</p><p><span class="context-label">What we’re watching</span>{{ story.prediction }}</p>{% if story.sources.length %}<div class="coverage"><span>Sources:</span><div class="coverage-links">{% for source in story.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source or 'Source' }} ↗</a>{% endfor %}</div></div>{% endif %}</div>{% endif %}
 </article>
@@ -178,9 +192,9 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   </section>
 
   <section class="pulse" aria-labelledby="pulse-title">
-    <div class="section-top"><div><h2 class="section-title" id="pulse-title">Today</h2></div><span class="section-note">Moves on a trading day</span></div>
+    <div class="section-top"><div><h2 class="section-title" id="pulse-title">Today</h2>{% if boards.todayVintage %}<div class="pulse-asof">{{ boards.todayVintage.label }}</div>{% endif %}</div></div>
     <div class="pulse-grid" id="pulse-grid">
-      {% for item in boards.today %}<article class="pulse-item"><a class="pulse-link" href="{{ item.href }}" aria-label="{{ item.label }} · {{ item.actionLabel }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><div class="pulse-name">{{ item.label }}</div><div class="pulse-value">{{ item.display }}{% if item.unit %} <span class="pulse-unit">{{ item.unit }}</span>{% endif %}</div><div class="pulse-move">{{ item.move }}</div><div class="pulse-date">{{ item.dateLead }} · {{ item.observed }}</div></a></article>{% endfor %}
+      {% for item in boards.today %}<article class="pulse-item"><a class="pulse-link" href="{{ item.href }}" aria-label="{{ item.label }} · {{ item.actionLabel }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><div class="pulse-name">{{ item.label }}</div><div class="pulse-value">{{ item.display }}{% if item.unit %} <span class="pulse-unit">{{ item.unit }}</span>{% endif %}</div><div class="pulse-move">{{ item.delta if item.delta else item.move }}</div>{% if item.olderThanBlock %}<div class="pulse-date">{{ item.observed }}</div>{% endif %}</a></article>{% endfor %}
     </div>
   </section>
 
@@ -219,7 +233,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   <section class="week" aria-labelledby="week-title">
     <div class="section-top"><div><h2 class="section-title" id="week-title">Coming up</h2></div><span class="section-note">Known next</span></div>
     <div class="timeline">
-      {% for event in calendar %}<article class="timeline-item"><div class="timeline-date">{% if event.approx %}Week of <span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span>{% else %}<span class="js-caldate" data-date="{{ event.date }}">{{ event.date }}</span>{% endif %}</div><div class="timeline-rel js-rel" data-date="{{ event.date }}" data-approx="{{ 'y' if event.approx else '' }}"></div><div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
+      {% for event in calendar %}<article class="timeline-item">{% if not event.repeatsDate %}<div class="timeline-date">{% if event.approx %}Week of <span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span>{% else %}<span class="js-caldate" data-date="{{ event.date }}">{{ event.date }}</span>{% endif %}</div><div class="timeline-rel js-rel" data-date="{{ event.date }}" data-approx="{{ 'y' if event.approx else '' }}"></div>{% endif %}<div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
     </div>
   </section>
 
@@ -276,6 +290,10 @@ let initialTopic=new URLSearchParams(location.search).get('topic');
 if(!initialTopic){try{initialTopic=localStorage.getItem(FILTER_KEY);}catch{}}
 if(!newsFilters.some((button)=>button.dataset.topic===initialTopic))initialTopic='all';
 showNews(initialTopic);
+// On a phone the chips are one scrolling row, so the active one has to be brought into
+// view or the reader cannot tell what is selected.
+const activeChip=newsFilters.find((button)=>button.classList.contains('active'));
+if(activeChip&&activeChip.scrollIntoView)activeChip.scrollIntoView({block:'nearest',inline:'center'});
 
 const headerDay=new Date((editorialDate||new Date().toISOString().slice(0,10))+'T12:00:00Z');
 document.getElementById('today').textContent=headerDay.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',weekday:'long',month:'long',day:'numeric',year:'numeric'});

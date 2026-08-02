@@ -39,6 +39,14 @@ const percentFromPrior = (value) => value === 0
 const relativeTo = (value, reference) => value === 0
   ? `In line with ${reference}`
   : `${number(Math.abs(value), 2)} pp ${value > 0 ? 'above' : 'below'} ${reference}`;
+// The daily strip prints the change as a signed figure rather than a sentence: the
+// sentences there were pure comparison, and a seven-character delta cannot wrap on a
+// phone the way "0.16% lower than the prior reading" does. The sign carries direction;
+// no colour and no arrow, because valence belongs to the reader (a falling MXN/US$ is
+// the peso strengthening). Where a line carries a driver rather than a comparison it
+// keeps its words: `move` and `compare` are untouched.
+const signedPercent = (value) => value === 0 ? 'No change' : `${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)}%`;
+const signedPoints = (value) => value === 0 ? 'No change' : `${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)} pp`;
 const percentChange = (current, prior) => prior ? (current / prior - 1) * 100 : null;
 const link = (id) => `/chart.html?v=${id}`;
 const LIVE_PESO_URL = 'https://www.google.com/finance/quote/USD-MXN?hl=en';
@@ -77,6 +85,7 @@ module.exports = function () {
     cards.push({ id: peso.id, label: 'Peso', display: number(current.value), unit: 'MXN/US$',
       compare: change == null ? 'Latest official fixing' : percentVsYear(change, 'weaker', 'stronger'),
       move: dayChange == null ? 'Latest official fixing' : percentFromPrior(dayChange),
+      delta: dayChange == null ? null : signedPercent(dayChange),
       date: current.date, cadence: 'daily', dateLead: 'Official fixing', updateLabel: 'New fixing each trading day',
       source: 'Banco de México', href: LIVE_PESO_URL, actionLabel: 'Open live quote', external: true });
   }
@@ -87,6 +96,7 @@ module.exports = function () {
     const dayChange = percentChange(current.value, prior?.value);
     cards.push({ id: fuel.id, label: 'Gasoline', display: number(current.value), unit: 'MXN/L',
       compare: dayChange == null ? 'Latest national average' : percentFromPrior(dayChange),
+      delta: dayChange == null ? null : signedPercent(dayChange),
       date: current.date, cadence: 'daily', dateLead: 'National average', updateLabel: 'Refreshed through the day',
       source: 'Mexico energy regulator', href: link(fuel.id), actionLabel: 'View history' });
   }
@@ -97,6 +107,7 @@ module.exports = function () {
     cards.push({ id: cetes.id, label: 'Cetes 28-day', display: number(current.value), unit: '%',
       compare: gap == null ? 'Latest yield' : relativeTo(gap, 'the policy rate'),
       move: prior ? movementFromPrior(current.value - prior.value) : 'Latest yield',
+      delta: prior ? signedPoints(current.value - prior.value) : null,
       date: current.date, cadence: 'daily', dateLead: 'Latest yield', updateLabel: 'New reading each trading day',
       source: 'Banco de México', href: link(cetes.id), actionLabel: 'View history' });
   }
@@ -107,6 +118,7 @@ module.exports = function () {
     cards.push({ id: ust10.id, label: 'US 10-year', display: number(current.value), unit: '%',
       compare: priorYear ? relativeTo(current.value - priorYear.value, 'a year ago') : 'Latest close',
       move: prior ? movementFromPrior(current.value - prior.value) : 'Latest close',
+      delta: prior ? signedPoints(current.value - prior.value) : null,
       date: current.date, cadence: 'daily', dateLead: 'Latest close', updateLabel: 'New close each trading day',
       source: 'US Federal Reserve', href: link(ust10.id), actionLabel: 'View history' });
   }
@@ -118,6 +130,7 @@ module.exports = function () {
     cards.push({ id: ipc.id, label: 'Stock market', display: number(current.value, 0), unit: 'IPC',
       compare: change == null ? 'Latest close' : percentVsYear(change, 'higher', 'lower'),
       move: dayChange == null ? 'Latest close' : percentFromPrior(dayChange),
+      delta: dayChange == null ? null : signedPercent(dayChange),
       date: current.date, cadence: 'daily', dateLead: 'Latest close', updateLabel: 'New close each trading day',
       source: 'Banco de México', href: link(ipc.id), actionLabel: 'View history' });
   }
