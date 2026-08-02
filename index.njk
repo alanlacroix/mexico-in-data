@@ -47,32 +47,34 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .tile-unit{font-family:var(--mono);font-size:10px;color:#86888E}
   .tile-change{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
   .tile-delta{font-family:var(--mono);font-weight:500;font-size:12px;color:#1A1B1D;white-space:nowrap}
-  .verdict{font-family:var(--mono);font-weight:600;font-size:9.5px;letter-spacing:.09em;padding:4px 6px;border-radius:2px;white-space:nowrap}
-  .m-good{background:#EAF3EF;color:#0B6E4F}
-  .m-bad{background:#FAEEEC;color:#B4483A}
-  .m-flat{background:#F1F1F1;color:#6B6D73}
+  .verdict{font-family:var(--mono);font-weight:600;font-size:9.5px;letter-spacing:.09em;white-space:nowrap}
+  .m-good{color:#0B6E4F}
+  .m-bad{color:#B4483A}
+  .m-flat{color:#6B6D73}
   .tile-more{text-align:right;font-family:var(--mono);font-weight:500;font-size:9.5px;letter-spacing:.09em;color:#86888E}
   .tile-why{border-top:1px solid #EBEBEB;margin:0 14px 12px;padding-top:10px;font-family:var(--serif);font-size:15px;line-height:1.45;color:#3C3D40;animation:panel .28s ease}
 
   .cards{display:grid;grid-template-columns:1fr;border-bottom:1px solid #E2E2E2}
   .cards-wk{grid-template-columns:1fr}
-  .card{border-top:1px solid #E2E2E2;padding:20px 0;display:flex;flex-direction:column;gap:12px}
-  .card-wk{padding:18px 0}
+  .card{border-top:1px solid #E2E2E2;padding:24px 0 26px;display:flex;flex-wrap:wrap;gap:14px 44px}
+  .card-rail{flex:1 1 300px;max-width:430px;min-width:0}
+  .card-body{flex:3 1 380px;min-width:0;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+  .card-wk{padding:20px 0 22px}
   .card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.06em}
   .card-meta .d{color:#5C5E63}
   .card-meta .c{color:#1A1B1D;display:inline-flex;align-items:center;gap:6px}
   .dot{width:7px;height:7px;border-radius:999px;flex:none}
   .card-meta .s{color:#86888E}
-  .es{border:1px solid #D9D9DB;border-radius:2px;padding:2px 5px;font-size:9px;color:#96989E;font-style:normal}
-  .card h3{font-family:var(--sans);font-weight:700;font-size:25px;line-height:1.14;letter-spacing:-.02em;color:#111214;margin:0;max-width:32ch;text-wrap:pretty}
-  .card-wk h3{font-size:20px;line-height:1.2;letter-spacing:-.015em;max-width:40ch}
+  .es{border:1px solid #D9D9DB;padding:2px 5px;font-size:9px;color:#96989E;font-style:normal}
+  .card h3{font-family:var(--sans);font-weight:700;font-size:27px;line-height:1.1;letter-spacing:-.025em;color:#111214;margin:13px 0 0;text-wrap:pretty}
+  .card-wk h3{font-size:21px;line-height:1.18;letter-spacing:-.02em}
   .card h3 a{color:inherit}
   .card h3 a:hover{color:#0B6E4F;text-decoration:none}
   .orig{font-family:var(--mono);font-size:12px;line-height:1.4;color:#96989E;max-width:58ch;text-wrap:pretty}
-  .dek{font-family:var(--sans);font-size:16px;line-height:1.5;color:#5C5E63;max-width:58ch;text-wrap:pretty}
+  .dek{font-family:var(--sans);font-size:16px;line-height:1.5;color:#5C5E63;max-width:60ch;margin:0;text-wrap:pretty}
   .card-wk .dek{font-size:15px}
 
-  .be-btn{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;background:transparent;border:1px solid #D4D4D6;border-radius:2px;padding:6px 11px 6px 6px;cursor:pointer;font:inherit}
+  .be-btn{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;background:transparent;border:1px solid #D4D4D6;padding:6px 11px 6px 6px;cursor:pointer;font:inherit}
   .be-btn:hover{border-color:#0B6E4F}
   .be-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:20px;background:#0B6E4F;color:#fff;font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.04em}
   .card-wk .be-badge{width:21px;height:19px}
@@ -89,21 +91,22 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .bd-src a{color:#0B6E4F;font-family:var(--mono);font-size:12px}
 
   .chips{display:flex;flex-wrap:wrap;gap:7px;padding-bottom:18px}
-  .chip{border:1px solid #E2E2E2;border-radius:999px;padding:7px 13px;background:#fff;color:#1A1B1D;font-family:var(--mono);font-weight:500;font-size:12px;cursor:pointer}
+  .chip{border:1px solid #E2E2E2;padding:7px 12px;background:#fff;color:#1A1B1D;font-family:var(--mono);font-weight:500;font-size:12px;cursor:pointer}
   .chip span{opacity:.55;margin-left:5px}
   .chip:hover{border-color:#0B6E4F}
   .chip.on{background:#111214;color:#fff;border-color:#111214}
   .more{display:block;width:100%;margin-top:18px;background:#F5F5F5;border:1px solid #E2E2E2;padding:13px;font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#1A1B1D;cursor:pointer}
   .more:hover{background:#EBEBEB;color:#0B6E4F}
 
-  .cal{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
-  .cal-g{display:flex;gap:14px}
-  .cal-rail{flex:0 0 74px;border-top:2px solid #111214;padding-top:9px}
+  .cal{display:grid;gap:28px}
+  .cal-g{display:block}
+  .cal-rail{display:flex;align-items:baseline;gap:12px;border-top:2px solid #111214;padding:9px 0 14px}
   .cal-g.soon .cal-rail{border-top-color:#0B6E4F}
-  .cal-when{font-family:var(--mono);font-weight:600;font-size:14px;color:#111214}
-  .cal-rel{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:2px}
+  .cal-when{font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#111214}
+  .cal-rel{font-family:var(--mono);font-size:11px;color:#96989E}
   .cal-g.soon .cal-rel{color:#0B6E4F}
-  .cal-body{flex:1;border-top:1px solid #E2E2E2;padding-top:9px;display:grid;gap:20px;min-width:0}
+  .cal-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:22px 44px}
+  .cal-body>div{max-width:46ch}
   .cal-t{font-family:var(--sans);font-weight:600;font-size:17px;line-height:1.25;color:#111214;text-wrap:pretty}
   .cal-w{font-family:var(--sans);font-size:14px;line-height:1.45;color:#5C5E63;margin-top:4px;text-wrap:pretty}
   .cal-why{font-family:var(--serif);font-size:15px;line-height:1.5;color:#1A1B1D;margin-top:6px;text-wrap:pretty}
@@ -130,15 +133,15 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .econ-note{font-family:var(--serif);font-size:16px;line-height:1.5;color:#1A1B1D;max-width:62ch;text-wrap:pretty}
   .econ-src{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:12px}
 
-  .mail{background:#111214;padding:26px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;align-items:center}
-  .mail-k{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#16A06C}
-  .mail-c{font-family:var(--serif);font-size:20px;line-height:1.4;color:#F2F2F2;max-width:34ch;margin-top:10px}
-  .mail-c a{color:#16A06C}
+  .mail{background:#F4F4F2;border-top:2px solid #111214;padding:26px 24px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;align-items:center}
+  .mail-k{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#0B6E4F}
+  .mail-c{font-family:var(--serif);font-size:20px;line-height:1.45;color:#1A1B1D;max-width:36ch;margin-top:10px}
+  .mail-c a{color:#0B6E4F}
   .mail-f{display:flex;flex-wrap:wrap;gap:10px}
-  .mail-f input{flex:1 1 190px;background:#1B1C1E;border:1px solid #313337;color:#fff;padding:13px 14px;font-family:var(--sans);font-size:15px}
-  .mail-f button{background:#0B6E4F;color:#fff;border:0;padding:13px 22px;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.12em;cursor:pointer}
-  .mail-f button:hover{background:#16A06C}
-  .mail-fine{font-family:var(--mono);font-size:11px;line-height:1.5;color:#7A7C82;margin-top:9px}
+  .mail-f input{flex:1 1 190px;background:#fff;border:1px solid #D4D4D6;color:#111214;padding:13px 14px;font-family:var(--sans);font-size:15px}
+  .mail-f button{background:#111214;color:#fff;border:0;padding:13px 22px;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.12em;cursor:pointer}
+  .mail-f button:hover{background:#0B6E4F}
+  .mail-fine{font-family:var(--mono);font-size:11px;line-height:1.5;color:#86888E;margin-top:9px}
 
   @keyframes panel{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
   @keyframes draw{to{stroke-dashoffset:0}}
@@ -186,8 +189,11 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
     <div class="cards">
       {%- for story in feed.stories %}
       <article class="card">
-        <div class="card-meta"><span class="d">{{ story.date }}</span><span class="c"><i class="dot" style="background:{{ story.catKey | catColor }}"></i>{{ story.cat }}</span><span class="s">{{ story.source }}</span></div>
-        <h3><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.title }}</a></h3>
+        <div class="card-rail">
+          <div class="card-meta"><span class="d">{{ story.date }}</span><span class="c"><i class="dot" style="background:{{ story.catKey | catColor }}"></i>{{ story.cat }}</span><span class="s">{{ story.source }}</span></div>
+          <h3><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.title }}</a></h3>
+        </div>
+        <div class="card-body">
         {%- if story.dek %}<p class="dek">{{ story.dek }}</p>{% endif %}
         {%- if story.why %}
         <button class="be-btn" type="button" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="be-{{ story.id }}" data-toggle="be-{{ story.id }}"><span class="be-badge">BE</span><span class="be-label">{{ 'Hide' if loop.first else 'Briefly explained' }}</span></button>
@@ -198,6 +204,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
           <div class="be-part bd-src"><span class="lb-src">Source</span><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
         </div>
         {%- endif %}
+        </div>
       </article>
       {%- endfor %}
     </div>
@@ -210,9 +217,12 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
     <div class="cards cards-wk" id="wk-list">
       {%- for item in feed.week %}
       <article class="card card-wk" data-cat="{{ item.cat }}">
-        <div class="card-meta"><span class="d">{{ item.date }}</span><span class="c"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</span><span class="s">{{ item.source }}{% if item.lang %} <i class="es">{{ item.lang }}</i>{% endif %}</span></div>
-        <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
-        {%- if item.orig %}<p class="orig">{{ item.orig }}</p>{% endif %}
+        <div class="card-rail">
+          <div class="card-meta"><span class="d">{{ item.date }}</span><span class="c"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</span><span class="s">{{ item.source }}{% if item.lang %} <i class="es">{{ item.lang }}</i>{% endif %}</span></div>
+          <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
+          {%- if item.orig %}<p class="orig">{{ item.orig }}</p>{% endif %}
+        </div>
+        <div class="card-body">
         {%- if item.dek %}<p class="dek">{{ item.dek }}</p>{% endif %}
         {%- if item.why %}
         <button class="be-btn" type="button" aria-expanded="false" aria-controls="bw-{{ item.id }}" data-toggle="bw-{{ item.id }}"><span class="be-badge">BE</span><span class="be-label">Briefly explained</span></button>
@@ -223,6 +233,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
           <div class="be-part bd-src"><span class="lb-src">Source</span><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a></div>
         </div>
         {%- endif %}
+        </div>
       </article>
       {%- endfor %}
     </div>
