@@ -1,4 +1,5 @@
-// The six production topic rooms. This registry owns route names and metadata;
+// The production topic rooms. Trade folded into U.S.–Mexico on 2026-08-01 (Fable):
+// its export composition became a slot there and /trade.html now 301s to it. This registry owns route names and metadata;
 // the page renderer owns the data. Keeping the list here prevents the masthead,
 // topic switcher and generated pages from quietly drifting apart.
 module.exports = [
@@ -7,41 +8,34 @@ module.exports = [
     label: 'Economy & money',
     permalink: '/economy.html',
     title: 'Economy and money · The Mexico Brief',
-    description: 'A quarterly review of Mexico’s growth, inflation, interest rates, peso and investment, supported by dated original sources.',
+    description: 'Mexico’s growth, inflation, interest rates and peso, with dated official readings and the underlying data.',
   },
   {
     key: 'payments',
-    label: 'Payments',
+    label: 'Payments & fintech',
     permalink: '/payments.html',
-    title: 'Payments · The Mexico Brief',
-    description: 'A quarterly review of Mexico’s payment rails, cards, e-commerce and cash, using dated Banco de México and INEGI data.',
-  },
-  {
-    key: 'trade',
-    label: 'Trade',
-    permalink: '/trade.html',
-    title: 'Trade · The Mexico Brief',
-    description: 'A quarterly review of what Mexico sells and buys, where it goes and what could change its North American manufacturing model.',
+    title: 'Payments and fintech · The Mexico Brief',
+    description: 'Mexico’s payment rails, cards, fintech regulation, e-commerce and cash, using dated Banco de México data.',
   },
   {
     key: 'politics',
     label: 'Politics',
     permalink: '/politics.html',
     title: 'Politics · The Mexico Brief',
-    description: 'A quarterly review of Mexico’s political capacity, institutions, budget choices and the official calendar ahead.',
+    description: 'The dated political decisions and official calendar that matter for Mexico.',
   },
   {
     key: 'society',
-    label: 'Society & security',
+    label: 'Security & society',
     permalink: '/society.html',
-    title: 'Society and security · The Mexico Brief',
-    description: 'A quarterly review of Mexico’s population, work, household finances and security, with each measure kept on its own clock.',
+    title: 'Security and society · The Mexico Brief',
+    description: 'Mexico’s official security data, population, wages and household flows, with each measure kept on its own clock.',
   },
   {
     key: 'usmexico',
-    label: 'U.S. and Mexico',
+    label: 'US & Mexico',
     permalink: '/us-mexico.html',
-    title: 'U.S. and Mexico · The Mexico Brief',
-    description: 'A quarterly review of the U.S.–Mexico relationship: trade, investment, migration, energy and the official dates ahead.',
+    title: 'US and Mexico · The Mexico Brief',
+    description: 'The bilateral goods ledger, Mexico’s export exposure, and the dates that reprice the relationship.',
   },
 ];

@@ -15,7 +15,7 @@ const SECTIONS = {
   politics:    { beat: 'Politics',        room: 'Politics',            url: '/politics.html' },
   security:    { beat: 'Security',        room: 'Society & security',  url: '/society.html' },
   society:     { beat: 'Society',         room: 'Society & security',  url: '/society.html' },
-  'us-mexico': { beat: 'US–Mexico',       room: 'US–Mexico',           url: '/us-mexico.html' },
+  'us-mexico': { beat: 'US & Mexico',     room: 'US & Mexico',           url: '/us-mexico.html' },
 };
 
 const clean = (value) => String(value || '').trim();

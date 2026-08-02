@@ -13,6 +13,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
   .home-date{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .home-date{margin-top:6px}
+  .home-strap{margin:9px 0 0;font-size:var(--fs-body);line-height:1.45;color:var(--mut);max-width:56ch}
   .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
   .section-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
   .section-title{font-size:var(--fs-h2);line-height:1.12;letter-spacing:-.018em;margin:5px 0 0}
@@ -148,7 +149,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 
 <div class="home" data-editorial-date="{{ dailyBrief.editorialDate }}">
   <header class="home-head">
-    <div><h1 class="home-title">Mexico today</h1><div class="home-date" id="today">{{ dailyBrief.editorialDate }}</div></div>
+    <div><h1 class="home-title">Mexico today</h1><p class="home-strap">Mexico in one page: what happened, what is behind it, and the numbers I am watching.</p><div class="home-date" id="today">{{ dailyBrief.editorialDate }}</div></div>
   </header>
 
   <section class="brief" id="brief" aria-labelledby="brief-title">
@@ -174,7 +175,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
           <button class="filter" type="button" data-topic="economy" aria-pressed="false">Economy</button>
           <button class="filter" type="button" data-topic="politics" aria-pressed="false">Politics</button>
           <button class="filter" type="button" data-topic="society" aria-pressed="false">Society &amp; security</button>
-          <button class="filter" type="button" data-topic="us-mexico" aria-pressed="false">US–Mexico</button>
+          <button class="filter" type="button" data-topic="us-mexico" aria-pressed="false">US &amp; Mexico</button>
         </nav>
         <div class="story-list" id="all-news-list">
           {% for story in latestStories %}{{ storyCard(story, true) }}{% endfor %}

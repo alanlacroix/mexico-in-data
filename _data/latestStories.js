@@ -11,7 +11,7 @@ const SECTION = {
   politics: { key: 'politics', label: 'Politics' },
   security: { key: 'society', label: 'Society & security' },
   society: { key: 'society', label: 'Society & security' },
-  'us-mexico': { key: 'us-mexico', label: 'US–Mexico' },
+  'us-mexico': { key: 'us-mexico', label: 'US & Mexico' },
 };
 
 const clean = (value) => String(value || '').trim();
