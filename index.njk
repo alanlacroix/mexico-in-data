@@ -24,9 +24,9 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .section-title{font-size:var(--fs-h2);line-height:1.12;letter-spacing:-.018em;margin:5px 0 0}
   .section-note,.asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .section-sub{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px}
-  .block-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;margin-top:34px}
+  .block-head{margin-top:34px}
   .block-title{font-size:var(--fs-h3);line-height:1.2;letter-spacing:-.012em;margin:0}
-  .block-note{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .block-note{display:block;font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px}
   .today{border-top:2px solid var(--green);padding-top:14px;margin-top:var(--gap-section);scroll-margin-top:72px}
   .text-link{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
 
@@ -49,7 +49,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .brief-story{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:22px;align-items:start;padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
   .story-meta{grid-column:1 / span 2;display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:var(--fs-label);line-height:1.35;color:var(--mut)}
   .story-meta .js-storydate{color:var(--ink-2);font-weight:650}
-  .story-outlet{color:#9aa0a6}
+  .story-outlet{color:var(--mut)}
   .story-meta>*{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .story-outlet{color:var(--mut)}
   .story-topic{font-weight:650;color:var(--ink);text-decoration:none}
@@ -74,11 +74,11 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .story-link{color:var(--ink);text-decoration:none}
   .story-link:hover{color:var(--green-d)}
   .brief-story h3{font-size:clamp(20px,1.75vw,25px);line-height:1.28;letter-spacing:-.012em;font-weight:650;margin:0;max-width:60ch}
-  .story-summary{font-size:var(--fs-small);line-height:1.55;color:#6e757b;max-width:70ch;margin:8px 0 0}
+  .story-summary{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:70ch;margin:8px 0 0}
   .context-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;min-height:36px;border:1px solid var(--line-2);border-radius:3px;background:#fff;color:var(--ink-2);padding:0;font-family:var(--mono);font-size:var(--fs-label);font-weight:700;cursor:pointer}
   .story-copy .context-btn{margin-top:11px}
   .context-btn:hover,.context-btn[aria-expanded="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
-  .be-key{display:inline-flex;align-items:center;gap:7px}
+  .be-key{display:inline-flex;align-items:center;gap:6px;margin:0}
   .be-key b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:23px;border:1px solid var(--line-2);border-radius:3px;color:var(--ink-2);font-size:var(--fs-label);}
   .story-context{grid-column:3 / -1;margin:13px 0 2px;padding:13px 16px;background:var(--panel);border-left:2px solid var(--green);font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
   .story-context[hidden]{display:none}
@@ -108,15 +108,14 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .markets,.week,.subscribe-section{margin-top:var(--gap-section)}
   .markets{border-top:2px solid var(--green);padding-top:14px}
   .market-rows{border-top:1px solid var(--line);margin-top:13px}
-  .market-row{display:grid;grid-template-columns:200px 130px 116px minmax(0,1fr);align-items:baseline;gap:6px 26px;padding:15px 0;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
+  .market-row{display:grid;grid-template-columns:200px 96px 62px 116px minmax(0,1fr);align-items:baseline;gap:6px 18px;padding:15px 0;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
   .market-head{display:flex;flex-direction:column;gap:3px}
   .market-row:hover .market-value{color:var(--green-d)}
   .market-name{font-family:var(--mono);font-size:var(--fs-meta);line-height:1.3;color:var(--ink);font-weight:650}
-  .market-figure{display:inline-flex;align-items:baseline;gap:5px;justify-self:end;white-space:nowrap}
-  .market-value{font-size:var(--fs-h2);font-weight:650;line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);transition:color .15s ease}
-  .market-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .market-value{font-size:var(--fs-h2);font-weight:650;line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);justify-self:end;transition:color .15s ease}
+  .market-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);white-space:nowrap}
   .market-move{font-family:var(--mono);font-size:var(--fs-meta);font-weight:650;line-height:1.4;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
-  .market-compare{font-size:var(--fs-small);line-height:1.45;color:#6e757b}
+  .market-compare{font-size:var(--fs-small);line-height:1.45;color:var(--ink-2)}
   .market-date{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);white-space:nowrap}
   .market-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.5;color:var(--mut);margin-top:11px}
 
@@ -268,7 +267,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   <section class="markets" aria-labelledby="markets-title">
     <div class="section-top"><div><h2 class="section-title" id="markets-title">Where the economy stands</h2><div class="section-sub">The slower official readings, latest release for each</div></div><a class="text-link" href="/chart.html">Compare the numbers →</a></div>
     <div class="market-rows" id="market-grid">
-      {% for item in boards.economy %}<a class="market-row" href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><span class="market-head"><span class="market-name">{{ item.label }}</span><span class="market-date">{{ item.observed }}</span></span><span class="market-figure"><span class="market-value">{{ item.display }}</span>{% if item.unit %}<span class="market-unit">{{ item.unit }}</span>{% endif %}</span><span class="market-move">{{ item.delta }}</span><span class="market-compare">{{ item.compare }}</span></a>{% endfor %}
+      {% for item in boards.economy %}<a class="market-row" href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><span class="market-head"><span class="market-name">{{ item.label }}</span><span class="market-date">{{ item.observed }}</span></span><span class="market-value">{{ item.display }}</span><span class="market-unit">{{ item.unit }}</span><span class="market-move">{{ item.delta }}</span><span class="market-compare">{{ item.compare }}</span></a>{% endfor %}
     </div>
     <p class="market-note">Banco de México · INEGI</p>
   </section>
