@@ -26,9 +26,16 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
 // still stamps itself with the current editorial day rather than an undated edition.
 assert.match(home, /id="today"[^>]*>\{\{ dailyBrief\.editorialDate \}\}/, 'homepage must remain a daily starting point without expiring after noon');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
-assert.match(home, /id="pulse-title">Today</i, 'homepage must lead with the readings that move on a trading day');
-assert.match(home, /id="markets-title">The economy</i, 'the slower official readings must keep their own room below the news');
-assert.match(home, /Key developments/i, 'homepage must lead readers through the major stories');
+// The page is now grouped by timeframe (Alan, 2026-08-02): the brief, the numbers and
+// the day's headlines are one "Today" section, because they all describe today. The
+// guarantee is unchanged: the daily readings lead, and the slower official ones keep a
+// separate room further down.
+assert.match(home, /id="today-title">Today</i, 'homepage must lead with the readings that move on a trading day');
+assert.match(home, /class="block-title">The numbers</i, 'the daily readings must sit inside the day, not in a room of their own');
+assert.match(home, /id="markets-title">Where the economy stands</i, 'the slower official readings must keep their own room below the news');
+// "Key developments" became "The headlines" inside the Today section (Alan, 2026-08-02:
+// the name did not say what period it covered). The window label beside it still does.
+assert.match(home, /class="block-title">The headlines</i, 'homepage must lead readers through the major stories');
 assert.match(home, /dailyBrief\.windowLabel/i, 'homepage must state the rolling news window plainly');
 // The block is now labelled "The week" and its All view is the week's five (Alan,
 // 2026-08-02). What must not regress is that the deeper per-section feed still exists

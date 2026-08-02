@@ -312,7 +312,10 @@ assert.match(homepageTemplate, /\(not isAll or inFive\).*story\.analysisV >= 7.*
 // The call now carries a third argument marking the week's five; the second argument,
 // which is what turns off the analysis disclosure, is what this guards.
 assert.match(homepageTemplate, /storyCard\(story, true[,)]/, 'ordinary headlines must use the no-analysis card mode');
-assert.ok(homepageTemplate.indexOf('<section class="brief" id="brief"') < homepageTemplate.indexOf('<section class="news"'), 'the Brief must render before key developments');
+// The brief and the headlines are now blocks inside one Today section rather than two
+// sections (Alan, 2026-08-02). The order they must hold is unchanged: the summary of the
+// day comes before the stories it summarises.
+assert.ok(homepageTemplate.indexOf('class="brief-copy"') < homepageTemplate.indexOf('class="block-title">The headlines'), 'the Brief must render before key developments');
 assert.match(briefBuilder, /return gate\.ok && analysisReady\(e\) && e\.url && e\.source/, 'an unreviewed story must not enter key developments');
 assert.match(
   briefBuilder,

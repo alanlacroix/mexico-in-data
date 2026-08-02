@@ -10,12 +10,12 @@ const read = (rel) => {
 };
 
 const SECTIONS = {
-  economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/economy.html' },
-  money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/economy.html' },
-  politics:    { beat: 'Politics',        room: 'Politics',            url: '/politics.html' },
-  security:    { beat: 'Security',        room: 'Security & society',  url: '/society.html' },
-  society:     { beat: 'Society',         room: 'Security & society',  url: '/society.html' },
-  'us-mexico': { beat: 'US & Mexico',     room: 'US & Mexico',           url: '/us-mexico.html' },
+  economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/economy.html',   key: 'economy' },
+  money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/economy.html',   key: 'economy' },
+  politics:    { beat: 'Politics',        room: 'Politics',            url: '/politics.html',  key: 'politics' },
+  security:    { beat: 'Security',        room: 'Security & society',  url: '/society.html',   key: 'society' },
+  society:     { beat: 'Society',         room: 'Security & society',  url: '/society.html',   key: 'society' },
+  'us-mexico': { beat: 'US & Mexico',     room: 'US & Mexico',           url: '/us-mexico.html', key: 'usmexico' },
 };
 
 const clean = (value) => String(value || '').trim();
@@ -57,6 +57,7 @@ function toStory(group) {
     sources,
     sourceCount: sources.length || 1,
     topic: section.room,
+    topicKey: section.key,
     topicUrl: section.url,
   };
 }
