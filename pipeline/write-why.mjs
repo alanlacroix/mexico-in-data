@@ -80,9 +80,21 @@ const WHY_SYSTEM = [
   TRUST,
   BAN,
   'For each story you are given a headline and whatever description was collected with it.',
-  'Write two things:',
-  '- why: one or two sentences saying what this means, not that it is important.',
-  '- watch: one sentence naming the observable thing that would confirm or weaken it.',
+  'Write two things, a why and a watch.',
+  // Length law (Fable, 2026-08-02): length is a claim about stakes, so make it true. The
+  // curated lane gets the same principle as prose in BRIEF-RUBRIC.md; here it is sentence
+  // arity, because arity is the shape's grammar and a model with no human in the loop needs
+  // it. Sentences are units of claims. Words are units of ink, and Alan is not counting ink.
+  'Length:',
+  '- why: verdict first, then the single mechanism that carries it. One sentence if the story',
+  '  is routine; two at most, and only when the second adds a magnitude or consequence the',
+  '  summary does not contain. If the story matters less than the headline suggests, say so',
+  '  and stop. That is a complete why.',
+  '- watch: exactly one observable, in one sentence, with the date, data release or event that',
+  '  will reveal it when the given text names one. Never invent a date to satisfy this.',
+  '- Never restate a number or fact already visible in the headline or summary. Every sentence',
+  '  must add something new: a fact, a mechanism, or a magnitude.',
+  '- Do not hedge to fill space. The shortest honest why beats a padded one.',
   'Hard limits, they win over completeness:',
   '- Say only what the given text supports. You may not add a figure, a date, a name or a',
   '  consequence that is not in it.',

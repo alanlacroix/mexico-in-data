@@ -30,9 +30,26 @@ The visible summary is factual and comes from the linked report. Only the three 
 
 Briefly Explained never uses first person. State the likely next outcome directly, then name the evidence that would prove it wrong. Start with the actual actor, event, or outcome. Do not repeat "The base case is" or "That view would change if" as a template across stories. First-person analysis belongs only in the quarterly review.
 
-Each part must add something the visible summary did not already say. Ordinary headlines never get this layer.
+Ordinary headlines never get this layer.
 
-**Length.** Aim for roughly 30 words of Background, 35 of Our view, 25 of What we're watching, so about 90 for the layer. These are targets to write toward, not a gate: nothing fails a build for missing them. The reason to hold them is that the layer shipped at 140 to 160 words through July, and a reader who opens Briefly explained and meets three dense paragraphs closes it and stops opening it. Budgeting each part separately is what keeps Our view from absorbing the other two, which is where the overrun came from. If a story genuinely needs more room, spend it in Our view and cut Background to the one structural fact a newcomer cannot do without.
+### Briefly explained: the length law
+
+*(Fable, 2026-08-02, replacing the per-part word budgets. The July layer ran 140 to 160 words and the least consequential story on the page carried the longest view, so the page was telling the reader that a technical MOU mattered more than the USMCA review. Under accuracy-is-law, misallocated length is a form of inaccuracy.)*
+
+Length is a claim about stakes. The room a story gets tells the reader how much it matters; make that claim true. Effort-to-explain is not consequence: the reader gets the conclusion of your work, not the work.
+
+Three checks enforce it:
+
+1. **Shape.** Each part has one job; doing the job ends the part.
+   - *Background*: the one structural fact a newcomer needs to follow the story. Usually one sentence; two if the fact needs a number.
+   - *Our view*: verdict first, then only the mechanism and magnitude that carry it. A "this matters less than it looks" verdict is nearly done when stated. A "this changes the rules" verdict earns its mechanism spelled out.
+   - *What we're watching*: one observable, plus the date, release, or event that will reveal it.
+2. **The dek test.** Every sentence must add a fact, mechanism, or magnitude the visible summary did not contain. Restating the dek's figure is a cut, not a warm-up.
+3. **The rank check** (run once before publish): the longest "Our view" on the page must belong to the day's biggest story. Fix a violation by cutting the smaller story's view. Never pad the bigger one.
+
+Calibration, not a target: recent BEs that read well land roughly 60 to 120 words; deflations run shortest. No length fails a build.
+
+Nothing here caps depth on a story that earns it. If the view needs 90 words of mechanism, it gets them.
 
 An LLM may pre-draft context into **`context_draft`** from a pasted `excerpt`, but **the build refuses to render `context_draft`** — nothing ships until it's promoted by hand to `context`/`why`. Draft text may never strengthen a claim beyond its source (no "proposed" → "passed").
 
