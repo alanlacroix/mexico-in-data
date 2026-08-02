@@ -18,6 +18,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
        today's two stories or five numbers, and a block with no items does not render at
        all rather than printing a heading over nothing. -#}
 <style>
+  .feed [hidden]{display:none!important}
   .feed{max-width:1120px;margin:0 auto;padding:0 20px}
   .feed-sec{padding-bottom:46px}
   .sec-rule{border-top:2px solid #0B6E4F}
@@ -31,9 +32,6 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
 
   .brief-p{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.55;color:#1A1B1D;max-width:62ch;text-wrap:pretty}
   .brief-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:20px}
-  .jump{border:1px solid #E2E2E2;border-radius:999px;padding:7px 14px;background:#fff;font-family:var(--mono);font-weight:500;font-size:12px;color:#1A1B1D;cursor:pointer}
-  .jump span{color:#86888E;margin-left:5px}
-  .jump:hover{border-color:#0B6E4F;color:#0B6E4F}
   .brief-src{font-family:var(--mono);font-size:12px;color:#86888E;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
   .brief-src a{color:#0B6E4F}
 
@@ -57,7 +55,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .tile-why{border-top:1px solid #EBEBEB;margin:0 14px 12px;padding-top:10px;font-family:var(--serif);font-size:15px;line-height:1.45;color:#3C3D40;animation:panel .28s ease}
 
   .cards{display:grid;grid-template-columns:1fr;border-bottom:1px solid #E2E2E2}
-  .cards-wk{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));column-gap:30px}
+  .cards-wk{grid-template-columns:1fr}
   .card{border-top:1px solid #E2E2E2;padding:20px 0;display:flex;flex-direction:column;gap:12px}
   .card-wk{padding:18px 0}
   .card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.06em}
@@ -66,11 +64,11 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .dot{width:7px;height:7px;border-radius:999px;flex:none}
   .card-meta .s{color:#86888E}
   .es{border:1px solid #D9D9DB;border-radius:2px;padding:2px 5px;font-size:9px;color:#96989E;font-style:normal}
-  .card h3{font-family:var(--sans);font-weight:700;font-size:25px;line-height:1.14;letter-spacing:-.02em;color:#111214;margin:0;text-wrap:pretty}
-  .card-wk h3{font-size:20px;line-height:1.2;letter-spacing:-.015em}
+  .card h3{font-family:var(--sans);font-weight:700;font-size:25px;line-height:1.14;letter-spacing:-.02em;color:#111214;margin:0;max-width:32ch;text-wrap:pretty}
+  .card-wk h3{font-size:20px;line-height:1.2;letter-spacing:-.015em;max-width:40ch}
   .card h3 a{color:inherit}
   .card h3 a:hover{color:#0B6E4F;text-decoration:none}
-  .orig{font-family:var(--mono);font-size:12px;line-height:1.4;color:#96989E;text-wrap:pretty}
+  .orig{font-family:var(--mono);font-size:12px;line-height:1.4;color:#96989E;max-width:58ch;text-wrap:pretty}
   .dek{font-family:var(--sans);font-size:16px;line-height:1.5;color:#5C5E63;max-width:58ch;text-wrap:pretty}
   .card-wk .dek{font-size:15px}
 
@@ -87,7 +85,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .lb-src{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#86888E}
   .bd-why{font-family:var(--serif);font-size:18px;line-height:1.5;color:#1A1B1D;max-width:58ch;text-wrap:pretty}
   .card-wk .bd-why{max-width:56ch}
-  .bd-watch{font-family:var(--serif);font-size:16px;line-height:1.5;color:#3C3D40;text-wrap:pretty}
+  .bd-watch{font-family:var(--serif);font-size:16px;line-height:1.5;color:#3C3D40;max-width:58ch;text-wrap:pretty}
   .bd-src a{color:#0B6E4F;font-family:var(--mono);font-size:12px}
 
   .chips{display:flex;flex-wrap:wrap;gap:7px;padding-bottom:18px}
@@ -159,7 +157,6 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
     <div class="sec-head"><h2>The brief</h2><div class="sec-meta" id="brief-asof" data-date="{{ feed.updated }}" data-prefix="{{ 'Latest brief' if feed.carrying else 'Updated' }}">{{ 'Latest brief' if feed.carrying else 'Updated' }}</div></div>
     <p class="brief-p">{{ feed.brief }}</p>
     <div class="brief-row">
-      {%- for story in feed.stories %}<button class="jump" type="button" data-jump="sec-stories">{{ story.chip }}<span>↓</span></button>{% endfor %}
       {%- if feed.briefSources.length %}<div class="brief-src"><span>Sources</span>{% for item in feed.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
     </div>
   </section>
@@ -352,15 +349,6 @@ if (list && chipRow && moreBtn) {
   moreBtn.addEventListener('click', () => { expanded = true; render(); });
   render();
 }
-
-// Jump chips land the section top 58px below the viewport top.
-$$('[data-jump]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const target = document.getElementById(button.dataset.jump);
-    if (!target) return;
-    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 58, behavior: still ? 'auto' : 'smooth' });
-  });
-});
 
 // Section reveal. The hidden state is set from JS, never CSS, and a safety timer reveals
 // everything if the observer never fires, so a failed observer cannot leave a blank page.
