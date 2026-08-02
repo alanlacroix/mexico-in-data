@@ -61,7 +61,20 @@ export function usage() {
 // Ask the model for a JSON answer. With `schema`, structured outputs guarantee the
 // first content block is valid JSON. Returns the parsed object, or null on any
 // failure (no key, HTTP error, unparseable) so callers degrade instead of crash.
-export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL }) {
+// Effort, which is the whole ballgame on cost here. Sonnet 5 runs ADAPTIVE THINKING
+// BY DEFAULT and bills that reasoning as output tokens, and output is priced 5x input.
+// Measured 2026-08-02 on the curation pass: 26,038 input against 15,519 output for two
+// calls — roughly $0.23 of a $0.31 run was the model thinking, on a job that picks
+// items from a list against a written rubric. Nobody asked for it; the client simply
+// never set `effort` and inherited the `high` default.
+//
+//   'low'  — mechanical: select from a list, rank, translate, classify.
+//   default — anything carrying the site's voice or judgment.
+//
+// This is not a quality knob turned down to save money. Extraction against an explicit
+// rubric is the case where low effort costs nothing real, and Sonnet 5 respects the
+// level strictly, which is exactly what a deterministic pass wants.
+export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL, effort }) {
   if (!KEY) return null;
   const body = {
     model: modelId,
@@ -69,7 +82,8 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
     system,
     messages: [{ role: 'user', content: user }],
   };
-  if (schema) body.output_config = { format: { type: 'json_schema', schema } };
+  if (effort) body.output_config = { ...(body.output_config || {}), effort };
+  if (schema) body.output_config = { ...(body.output_config || {}), format: { type: 'json_schema', schema } };
   let r;
   try {
     r = await fetch(ENDPOINT, {

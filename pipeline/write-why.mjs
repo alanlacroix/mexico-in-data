@@ -195,6 +195,7 @@ async function main() {
           ranked.map((item) => ({ id: item.url, title: item.title, dek: item.dek.slice(0, 200) })), null, 1)}`,
         schema: RANK_SCHEMA,
         maxTokens: 1200,
+        effort: 'low',        // ordering ids by consequence; no voice in the output
       });
       // Fall back to tier-then-recency if the ranking pass errors, so this never blocks.
       if (answer?.order?.length) order = answer.order.filter((id) => ranked.some((item) => item.url === id));

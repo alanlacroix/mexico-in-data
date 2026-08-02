@@ -124,6 +124,7 @@ async function main() {
       // the page sends this job back to Sonnet permanently — accuracy outranks the
       // saving, and the wire is the surface where a bad translation is most visible.
       model: models.HAIKU,
+      effort: 'low',           // literal translation; there is nothing to deliberate about
     });
     if (!answer || !Array.isArray(answer.items)) {
       console.warn(`  batch ${start / BATCH + 1}: no usable answer, leaving these as collected`);

@@ -222,7 +222,7 @@ ${BAN}`;
   // silently drops the ENTIRE clean batch to the raw-source fallback (the real "slop"
   // engine). Budget generously so reasoning + a full MAX_NEW batch both fit; the gate
   // still caps event count and why length, so the committed output stays small.
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 16000 });
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 16000, effort: 'low' });
   if (!out || !Array.isArray(out.events)) { console.warn('  curate: no model result — deterministic fallback'); return curateFallback(cands, now); }
   const events = [];
   for (const r of out.events) {
@@ -333,7 +333,7 @@ ${EARNED_LINE}
 
 ${BAN}`;
   const payload = { standingFacts: standingText, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000 });
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000, effort: 'low' });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
   const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
   let added = 0;
