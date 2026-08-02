@@ -311,6 +311,24 @@ try {
   addErrors('trade HS4 hierarchy', validateHs4Hierarchy(read('data/trade/exports-hs4.json'), read('data/trade/exports-by-product.json')));
 } catch (error) { fails.push(`trade hierarchy: ${error.message}`); }
 
+// No figure reaches a reader without an as-of. This was editorial discipline until
+// 2026-08-02, which is how a block headed "Today" came to carry a three-day-old close
+// under a note describing cadence. It is now a build guarantee: a homepage figure with
+// no observation date, no reader-visible as-of, or a date in the future blocks release.
+try {
+  const { createRequire } = await import('node:module');
+  const nowBoard = createRequire(import.meta.url)(path.join(ROOT, '_data', 'nowBoard.js'));
+  const todayISO = new Date().toISOString().slice(0, 10);
+  for (const card of nowBoard()) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(card.date || '')) {
+      fails.push(`homepage figure "${card.label}" is served without an observation date`);
+    } else if (card.date > todayISO) {
+      fails.push(`homepage figure "${card.label}" is dated ${card.date}, in the future`);
+    }
+    if (!card.observed) fails.push(`homepage figure "${card.label}" carries no reader-visible as-of`);
+  }
+} catch (error) { fails.push(`homepage figures: ${error.message}`); }
+
 warns.forEach((warning) => console.log(`  WARN ${warning}`));
 if (fails.length) {
   fails.forEach((failure) => console.error(`  FAIL ${failure}`));

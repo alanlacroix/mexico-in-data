@@ -163,7 +163,7 @@ module.exports = function () {
   if (exportsTotal) {
     const current = latest(exportsTotal), priorYear = yearAgo(exportsTotal);
     const change = percentChange(current.value, priorYear?.value);
-    cards.push({ id: exportsTotal.id, label: 'Goods exports', display: `US$${number(current.value / 1_000_000, 1)}bn`, unit: '',
+    cards.push({ id: exportsTotal.id, label: 'Goods exports', display: number(current.value / 1_000_000, 1), unit: 'US$ bn',
       compare: change == null ? 'Latest monthly total' : percentVsYear(change, 'higher', 'lower'),
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
       source: 'Banco de México', href: link(exportsTotal.id), actionLabel: 'View history' });
@@ -172,7 +172,7 @@ module.exports = function () {
   if (remittances) {
     const current = latest(remittances), priorYear = yearAgo(remittances);
     const change = percentChange(current.value, priorYear?.value);
-    cards.push({ id: remittances.id, label: 'Remittances', display: `US$${number(current.value / 1_000, 2)}bn`, unit: '',
+    cards.push({ id: remittances.id, label: 'Remittances', display: number(current.value / 1_000, 2), unit: 'US$ bn',
       compare: change == null ? 'Latest monthly inflow' : percentVsYear(change, 'higher', 'lower'),
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
       source: 'Banco de México', href: link(remittances.id), actionLabel: 'View history' });

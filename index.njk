@@ -7,7 +7,7 @@ ogTitle: "The Mexico Brief"
 ogDescription: "Today’s Mexico headlines, official numbers, and the connections worth watching."
 ---
 <style>
-  .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,3vw,40px)}
+  .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,3vw,40px);--gap-section:56px;--gap-item:18px}
   .home a{text-underline-offset:3px}
   .home-head{padding:32px 0 15px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
   .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
@@ -19,7 +19,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .section-note,.asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .text-link{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
 
-  .brief{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:16px 0 20px;margin-top:28px;scroll-margin-top:72px}
+  .brief{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:16px 0 20px;margin-top:var(--gap-section);scroll-margin-top:72px}
   .brief-copy{font-size:clamp(18px,1.65vw,22px);line-height:1.58;color:var(--ink-2);max-width:70ch;margin-top:13px}
   .my-read{max-width:70ch;margin-top:17px;padding:13px 15px;border-left:2px solid var(--green);background:#f8f7f2}
   .my-read p{font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
@@ -34,12 +34,12 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .brief-sources{display:flex;align-items:center;gap:5px 14px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .brief-sources a{color:var(--green-d)}
 
-  .news{margin-top:46px;max-width:920px}
-  .story-list{border-top:1px solid var(--line);margin-top:12px}
+  .news{margin-top:var(--gap-section);max-width:920px}
+  .story-list{border-top:1px solid var(--line);margin-top:var(--gap-item)}
   .brief-story{padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
-  .story-meta{display:flex;align-items:center;gap:5px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.025em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
+  .story-meta{display:flex;align-items:center;gap:5px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-bottom:7px}
   .story-meta>*{white-space:nowrap}
-  .story-topic{font-weight:650;color:var(--green-d);text-decoration:none}
+  .story-topic{font-weight:650;color:var(--ink);text-decoration:none}
   .story-title-row{display:block}
   .story-copy{display:flow-root;min-width:0}
   .story-thumb{float:right;width:210px;height:140px;margin:4px 0 12px 20px;border-radius:4px;overflow:hidden;background:var(--paper-2)}
@@ -48,20 +48,20 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .story-link:hover{color:var(--green-d)}
   .brief-story h3{font-size:clamp(18px,1.55vw,22px);line-height:1.32;letter-spacing:-.008em;font-weight:600;margin:0;max-width:60ch}
   .story-summary{font-size:var(--fs-small);line-height:1.5;color:var(--ink-2);max-width:70ch;margin:7px 0 0}
-  .context-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;min-height:36px;border:1px solid var(--green);border-radius:3px;background:#fff;color:var(--green-d);padding:0;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+  .context-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;min-height:36px;border:1px solid var(--line-2);border-radius:3px;background:#fff;color:var(--ink-2);padding:0;font-family:var(--mono);font-size:var(--fs-label);font-weight:700;cursor:pointer}
   .story-copy .context-btn{margin-top:11px}
-  .context-btn:hover,.context-btn[aria-expanded="true"]{border-color:var(--green);background:var(--green);color:#fff}
+  .context-btn:hover,.context-btn[aria-expanded="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
   .be-key{display:inline-flex;align-items:center;gap:7px}
-  .be-key b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:23px;border:1px solid var(--green);border-radius:3px;color:var(--green-d);font-size:9px;letter-spacing:.04em}
+  .be-key b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:23px;border:1px solid var(--line-2);border-radius:3px;color:var(--ink-2);font-size:var(--fs-label);}
   .story-context{margin:13px 0 2px;padding:13px 16px;background:#f8f7f2;border-left:2px solid var(--green);font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
   .story-context[hidden]{display:none}
   .story-context p+p,.story-context .coverage{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
-  .context-label{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);margin-right:7px}
+  .context-label{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;color:var(--ink);margin-right:7px}
   .coverage-links{display:flex;gap:6px 12px;flex-wrap:wrap;margin-top:5px;font-family:var(--mono);font-size:var(--fs-label)}
   .coverage-links a{color:var(--green-d)}
 
-  .all-news{margin-top:24px;border-bottom:1px solid var(--line)}
-  .all-news>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.035em;text-transform:uppercase;cursor:pointer}
+  .all-news{margin-top:var(--gap-item);border-bottom:1px solid var(--line)}
+  .all-news>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;color:var(--ink);font-family:var(--mono);font-size:var(--fs-meta);font-weight:650;cursor:pointer}
   .all-news>summary::-webkit-details-marker{display:none}
   .all-news>summary::after{content:'+';font-size:17px;line-height:1}
   .all-news[open]>summary::after{content:'–'}
@@ -69,40 +69,37 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .week-span{font-weight:400;letter-spacing:.02em;color:var(--mut);text-transform:none;margin-left:9px}
   .filters{display:flex;flex-wrap:wrap;gap:7px;padding:2px 0 13px;border-bottom:1px solid var(--line)}
   .filter{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink-2);padding:8px 13px;font-size:var(--fs-meta);cursor:pointer}
-  .filter:hover,.filter.active{border-color:var(--green);color:var(--green-d);background:#f2f8f5}
+  .filter:hover{border-color:var(--ink-2);color:var(--ink)}
+  .filter.active{border-color:var(--ink);color:#fff;background:var(--ink)}
   .all-story[hidden]{display:none}
   .empty{font-size:var(--fs-small);color:var(--mut);padding:24px 0}
-  .show-more{display:block;width:100%;margin-top:2px;padding:13px 0;background:none;border:0;border-top:1px solid var(--line);color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.035em;text-transform:uppercase;cursor:pointer}
-  .show-more:hover{color:var(--green)}
+  .show-more{display:block;width:100%;margin-top:2px;padding:13px 0;background:none;border:0;border-top:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:var(--fs-meta);font-weight:650;cursor:pointer}
+  .show-more:hover{color:var(--green-d)}
   .show-more[hidden]{display:none}
 
-  .markets,.week,.subscribe-section{margin-top:54px}
+  .markets,.week,.subscribe-section{margin-top:var(--gap-section)}
   .markets{border-top:2px solid var(--green);padding-top:14px}
-  .market-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
-  .market-card{min-width:0;padding:15px 16px 14px;border:1px solid var(--line);border-radius:5px;background:var(--paper);transition:border-color .15s ease,background .15s ease}
-  .market-card:hover{border-color:var(--green);background:#fcfdfb}
-  .market-link{display:flex;flex-direction:column;height:100%;color:inherit;text-decoration:none}
-  .market-name{font-family:var(--mono);font-size:var(--fs-label);line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut)}
-  .market-value{font-size:clamp(28px,3vw,44px);font-weight:650;line-height:1.04;letter-spacing:-.025em;margin-top:10px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
-  .market-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);letter-spacing:0;margin-left:3px}
-  .market-compare{font-size:var(--fs-meta);line-height:1.4;color:var(--ink-2);margin-top:8px;min-height:34px}
-  .market-date,.market-update,.market-source,.market-action{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4}
-  .market-date{color:var(--mut);margin-top:10px;white-space:nowrap}
-  .market-update,.market-source{color:var(--mut);margin-top:2px}
-  .market-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:auto;padding-top:10px}
-  .market-footer .market-source{margin-top:0}
-  .market-action{flex:0 0 auto;color:var(--green-d);font-weight:650}
+  .market-rows{border-top:1px solid var(--line);margin-top:13px}
+  .market-row{display:grid;grid-template-columns:minmax(0,1.05fr) auto minmax(0,1.5fr) auto;align-items:baseline;gap:6px 22px;padding:14px 0;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
+  .market-row:hover .market-value{color:var(--green-d)}
+  .market-name{font-family:var(--mono);font-size:var(--fs-label);line-height:1.3;color:var(--mut)}
+  .market-figure{display:inline-flex;align-items:baseline;gap:6px;justify-self:end;white-space:nowrap}
+  .market-value{font-size:var(--fs-h2);font-weight:650;line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);transition:color .15s ease}
+  .market-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .market-compare{font-size:var(--fs-small);line-height:1.45;color:var(--ink-2)}
+  .market-date{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);white-space:nowrap;justify-self:end}
+  .market-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.5;color:var(--mut);margin-top:11px}
 
   /* The daily strip. Deliberately thinner than .market-card: three lines, no source
      row, no action row. It sits between the brief and the news, so it has to cost
      one band of screen, not a full one. */
-  .pulse{margin-top:30px}
+  .pulse{margin-top:var(--gap-section)}
   .pulse-grid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:13px}
   .pulse-item{min-width:0;padding:14px 16px 15px 0}
   .pulse-item+.pulse-item{border-left:1px solid var(--line);padding-left:16px}
   .pulse-link{display:block;color:inherit;text-decoration:none}
   .pulse-link:hover .pulse-value{color:var(--green-d)}
-  .pulse-name{font-family:var(--mono);font-size:var(--fs-label);line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut)}
+  .pulse-name{font-family:var(--mono);font-size:var(--fs-label);line-height:1.3;color:var(--mut)}
   .pulse-asof{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px;white-space:nowrap}
   .pulse-value{font-size:clamp(22px,2.1vw,28px);font-weight:650;line-height:1.06;letter-spacing:-.025em;margin-top:8px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink);transition:color .15s ease}
   .pulse-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);letter-spacing:0;margin-left:3px}
@@ -128,7 +125,6 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:10px}
 
   @media(max-width:900px){
-    .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .pulse-grid{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
     .pulse-item,.pulse-item+.pulse-item{border-left:0;border-top:1px solid var(--line);padding:13px 14px 14px 0}
     .pulse-item:first-child,.pulse-item:nth-child(2){border-top:0}
@@ -157,7 +153,9 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
     .filter{flex:0 0 auto}
     .show-more{min-height:44px}
     .story-thumb{width:124px;height:83px;margin:3px 0 8px 12px}
-    .market-grid{grid-template-columns:1fr}
+    .market-row{grid-template-columns:minmax(0,1fr) auto;gap:4px 14px}
+    .market-row .market-compare{grid-column:1 / -1}
+    .market-row .market-date{grid-column:2;justify-self:end;margin-top:2px}
     .market-compare,.pulse-move{min-height:0}
     .timeline{grid-template-columns:1fr}
     .timeline-item,.timeline-item+.timeline-item,.timeline-item:nth-child(3),.timeline-item:nth-child(4){padding:14px 0 15px;border-left:0;border-top:1px solid var(--line)}
@@ -170,7 +168,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 {% set hasContext = (not isAll) and story.analysisV >= 7 and story.bg and story.view and story.prediction %}
 {% set contextId = 'story-context-' + story.id %}
 <article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}" data-interests="{{ story.interestTags | join(',') if story.interestTags else '' }}"{% endif %}>
-  <div class="story-meta"><a class="story-topic" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.reportTime %}<span class="js-storytime" data-date="{{ story.reportTime }}" data-label="{{ 'Latest report' if story.sourceCount > 1 else 'Published' }}"></span>{% endif %}{% if story.source %}<span>{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span>{{ story.sourceCount }} reports</span>{% endif %}</div>
+  <div class="story-meta"><a class="story-topic" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span>{{ story.sourceCount }} reports</span>{% endif %}</div>
   <div class="story-title-row">
     <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="210" height="140" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}{% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}" aria-label="Briefly explained: {{ story.title }}" title="Briefly explained">BE</button>{% endif %}</div>
   </div>
@@ -225,9 +223,10 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 
   <section class="markets" aria-labelledby="markets-title">
     <div class="section-top"><div><h2 class="section-title" id="markets-title">The economy</h2></div><a class="text-link" href="/chart.html">Compare the numbers →</a></div>
-    <div class="market-grid" id="market-grid">
-      {% for item in boards.economy %}<article class="market-card"><a class="market-link" href="{{ item.href }}" aria-label="{{ item.label }} — {{ item.actionLabel }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><div class="market-name">{{ item.label }}</div><div class="market-value">{{ item.display }}{% if item.unit %} <span class="market-unit">{{ item.unit }}</span>{% endif %}</div><div class="market-compare">{{ item.compare }}</div><div class="market-date">{{ item.dateLead }} · {{ item.observed }}</div><div class="market-update">{{ item.updateLabel }}</div><div class="market-footer"><div class="market-source">{{ item.source }}</div><div class="market-action">{{ item.actionLabel }} {{ '↗' if item.external else '→' }}</div></div></a></article>{% endfor %}
+    <div class="market-rows" id="market-grid">
+      {% for item in boards.economy %}<a class="market-row" href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><span class="market-name">{{ item.label }}</span><span class="market-figure"><span class="market-value">{{ item.display }}</span>{% if item.unit %}<span class="market-unit">{{ item.unit }}</span>{% endif %}</span><span class="market-compare">{{ item.compare }}</span><span class="market-date">{{ item.observed }}</span></a>{% endfor %}
     </div>
+    <p class="market-note">Monthly releases except the policy rate, which changes at policy meetings. Sources: Banco de México, Mexico statistics agency.</p>
   </section>
 
   <section class="week" aria-labelledby="week-title">
@@ -302,10 +301,9 @@ document.querySelectorAll('.js-storydate').forEach((element)=>{
   if(element.dataset.date===editorialDate){element.textContent='Today';return;}
   const storyDay=new Date(element.dataset.date+'T12:00:00Z');
   const priorDay=new Date((editorialDate||new Date().toISOString().slice(0,10))+'T12:00:00Z');priorDay.setUTCDate(priorDay.getUTCDate()-1);
-  element.textContent=!isNaN(storyDay)&&storyDay.toISOString().slice(0,10)===priorDay.toISOString().slice(0,10)?'Yesterday':date(element.dataset.date,true);
+  element.textContent=!isNaN(storyDay)&&storyDay.toISOString().slice(0,10)===priorDay.toISOString().slice(0,10)?'Yesterday':date(element.dataset.date);
 });
-document.querySelectorAll('.js-storytime').forEach((element)=>{const d=new Date(element.dataset.date);element.textContent=isNaN(d)?'':`${element.dataset.label||'Published'} ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;});
-const calDate=(iso)=>{const d=new Date(iso+'T12:00:00Z');return isNaN(d)?iso:d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',weekday:'short',month:'short',day:'numeric'});};
+const calDate=(iso)=>{const d=new Date(iso+'T12:00:00Z');return isNaN(d)?iso:d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric'});};
 document.querySelectorAll('.js-caldate').forEach((element)=>{element.textContent=calDate(element.dataset.date);});
 const weekStart=(d)=>{const x=new Date(d.getTime());x.setUTCHours(0,0,0,0);x.setUTCDate(x.getUTCDate()-((x.getUTCDay()+6)%7));return x;};
 const relDay=(iso,approx)=>{const d=new Date(iso+'T00:00:00Z'),t=new Date(editorialDate+'T00:00:00Z');if(isNaN(d)||isNaN(t))return'';const n=Math.round((d-t)/864e5);if(n<0)return'';if(approx){const w=Math.round((weekStart(d)-weekStart(t))/(7*864e5));return w<=0?'this week':w===1?'next week':'in '+w+' weeks';}if(n===0)return'today';if(n===1)return'tomorrow';return'in '+n+' days';};
