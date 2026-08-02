@@ -12,10 +12,9 @@ import path from 'node:path';
 export const PUBLIC_TOPIC_AREAS = Object.freeze([
   Object.freeze({ key: 'economy', label: 'Economy & money', href: '/economy.html' }),
   Object.freeze({ key: 'payments', label: 'Payments', href: '/payments.html' }),
-  Object.freeze({ key: 'trade', label: 'Trade', href: '/trade.html' }),
   Object.freeze({ key: 'politics', label: 'Politics', href: '/politics.html' }),
-  Object.freeze({ key: 'society', label: 'Society & security', href: '/society.html' }),
-  Object.freeze({ key: 'usmexico', label: 'U.S.–Mexico', href: '/us-mexico.html' }),
+  Object.freeze({ key: 'society', label: 'Security & society', href: '/society.html' }),
+  Object.freeze({ key: 'usmexico', label: 'US & Mexico', href: '/us-mexico.html' }),
 ]);
 
 const SERIES = (id) => `data/series/${id}.json`;
@@ -79,13 +78,13 @@ export const PAGE_DATA_CONTRACTS = {
     'data/trade/exports-hs4.json', 'data/trade/regional.json',
   ],
   'Politics': CONTEXT,
-  'Society & security': [
+  'Security & society': [
     ...CONTEXT, SERIES('banxico-salario-minimo'), SERIES('banxico-remesas'),
     SERIES('cre-gasolina-regular'), SERIES('wb-unemployment'),
     SERIES('wb-gdp-per-capita'), SERIES('wb-population'),
     'data/demographics.json', 'data/vitals.json',
   ],
-  'U.S.–Mexico': [...CONTEXT, ...MONEY, 'data/trade-us.json', 'data/trade/exports-by-partner.json'],
+  'US & Mexico': [...CONTEXT, ...MONEY, 'data/trade-us.json', 'data/trade/exports-by-partner.json'],
   'Atlas': [
     'data/geo/estados.geojson', 'data/atlas-states.json',
     'data/meta/municipios.json', 'data/geo/municipios.topojson',

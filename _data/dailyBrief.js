@@ -13,8 +13,8 @@ const SECTIONS = {
   economy:     { beat: 'Economy',         room: 'Economy & money',     url: '/economy.html' },
   money:       { beat: 'Markets & money', room: 'Economy & money',     url: '/economy.html' },
   politics:    { beat: 'Politics',        room: 'Politics',            url: '/politics.html' },
-  security:    { beat: 'Security',        room: 'Society & security',  url: '/society.html' },
-  society:     { beat: 'Society',         room: 'Society & security',  url: '/society.html' },
+  security:    { beat: 'Security',        room: 'Security & society',  url: '/society.html' },
+  society:     { beat: 'Society',         room: 'Security & society',  url: '/society.html' },
   'us-mexico': { beat: 'US & Mexico',     room: 'US & Mexico',           url: '/us-mexico.html' },
 };
 

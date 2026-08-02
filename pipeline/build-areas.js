@@ -36,7 +36,6 @@ const TRADE_RX = /\bexports?\b|\bimports?\b|\btrade\b|comercio|exportaci|importa
 const AREA_ROUTING = {
   economy: { sections: ['economy', 'money'], beats: ['economy', 'money'], exclude: new RegExp(`${PAYMENTS_RX.source}|${TRADE_RX.source}`, 'i') },
   payments: { sections: [], beats: [], match: PAYMENTS_RX },
-  trade: { sections: [], beats: [], match: TRADE_RX },
   politics: { sections: ['politics'], beats: ['politics'] },
   society: { sections: ['society', 'security'], beats: ['society', 'security'] },
   usmexico: { sections: ['us-mexico'], beats: ['us-mexico'] },

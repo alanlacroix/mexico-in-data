@@ -9,8 +9,8 @@ const SECTION = {
   economy: { key: 'economy', label: 'Economy' },
   money: { key: 'economy', label: 'Economy' },
   politics: { key: 'politics', label: 'Politics' },
-  security: { key: 'society', label: 'Society & security' },
-  society: { key: 'society', label: 'Society & security' },
+  security: { key: 'society', label: 'Security & society' },
+  society: { key: 'society', label: 'Security & society' },
   'us-mexico': { key: 'us-mexico', label: 'US & Mexico' },
 };
 
