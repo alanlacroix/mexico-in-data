@@ -176,41 +176,39 @@ table.mck td.k{font-weight:600;color:var(--ink);white-space:nowrap}
    the body on every page.
    ============================================================ */
 /* masthead — identical on every page; solid white, fixed height, nothing animated */
-/* Masthead: a black bar with the wordmark reversed out of it (Alan, 2026-08-02, after
-   Bloomberg). The bar is the only dark surface on the site, so the accents inside it get
-   lighter values than the on-white palette; everything below the bar is unchanged. */
-header.mast{position:sticky;top:0;z-index:50;background:var(--ink);border-bottom:0}
-/* Tagline band — the masthead's continuation, outside the sticky element so it scrolls
-   away (design handoff, 2026-08-02). The footer prints the same string. */
-.tagline-band{background:var(--ink);padding:0 20px 20px}
-.tagline-band p{max-width:1120px;margin:0 auto;font-family:var(--mono);font-size:13.5px;line-height:1.6;color:#86888E}
-.tagline-band p{max-width:min(1120px,100%)}
-header.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:58px;padding-top:0;padding-bottom:0}
-.brand{font-family:var(--sans);font-weight:600;font-size:calc(var(--fs-body) + 1px);color:#fff;letter-spacing:-.01em;white-space:nowrap;text-decoration:none}
+/* Masthead + menu + footer, to the design handoff of 2026-08-02. One dark bar, one row:
+   wordmark, the section indicator the homepage scroll spy writes into, and the menu
+   button. No breakpoints anywhere; the panel grid reflows on auto-fit like the feed. */
+header.mast{position:sticky;top:0;z-index:60;background:#111214}
+.mast-row{max-width:1120px;margin:0 auto;padding:13px 20px;display:flex;align-items:center;gap:16px}
+.brand{font-family:var(--sans);font-weight:800;font-size:17px;letter-spacing:-.01em;color:#fff;white-space:nowrap;text-decoration:none}
 .brand:hover{text-decoration:none;color:#fff}
-.brand .u{border-bottom:2px solid var(--green-on-dark);padding-bottom:1px}
-.mnav{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:var(--fs-label)}
-.mnav a{color:rgba(255,255,255,.66);text-decoration:none;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
-.mnav a:hover{color:#fff}
-.mnav a.here{color:#fff;font-weight:600;text-decoration:underline;text-decoration-color:var(--green-on-dark);text-decoration-thickness:2px;text-underline-offset:7px}
-.mnav a.cta{color:var(--green-on-dark);border:0;border-radius:0;padding:5px 2px}
-.mnav a.cta:hover{background:none;color:#fff;text-decoration:underline;text-underline-offset:3px}
-.mnav a.cta.here{background:none;color:#fff;text-decoration:underline;text-underline-offset:3px}
-/* menu button — shown only on narrow screens, where the links collapse into a drop panel */
-.navtoggle{display:none;flex-direction:column;justify-content:center;align-items:center;gap:4px;width:44px;height:44px;margin-right:-10px;padding:0;background:none;border:0;cursor:pointer}
-.navtoggle span{display:block;width:20px;height:2px;background:#fff;border-radius:2px}
-@media(max-width:1000px){
-  .navtoggle{display:flex}
-  /* the collapsed panel is an extension of the black bar, so it carries the bar's palette */
-  .mnav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--ink);border-bottom:0;padding:2px clamp(18px,3vw,40px) 10px}
-  .navtoggle[aria-expanded="true"] ~ .mnav{display:flex}
-  .mnav a{padding:12px 2px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.13)}
-  .mnav a:last-child{border-bottom:0}
-  .mnav a.here{text-decoration:none;color:var(--green-on-dark)}
-  .mnav a.cta{border:0;border-radius:0;padding:12px 2px;color:var(--green-on-dark);font-weight:600}
-  .mnav a.cta:hover,.mnav a.cta.here{background:none;color:var(--green-on-dark)}
-  .navdrop.here-sec>.navdrop-t{color:#fff}
-}
+.brand .u{border-bottom:3px solid #16A06C;padding-bottom:2px}
+.mast-sec{flex:1;min-width:0;text-align:right;font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#86888E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu-btn{width:34px;height:28px;display:flex;flex-direction:column;justify-content:center;gap:5px;background:none;border:0;padding:0;cursor:pointer;flex:none}
+.menu-btn span{display:block;height:1.5px;background:#fff;border-radius:1px}
+.menu-btn:hover{opacity:.7}
+.menu-panel{position:absolute;top:100%;left:0;right:0;background:#111214;border-top:1px solid #2A2B2E;animation:panel .28s ease}
+.menu-grid{max-width:1120px;margin:0 auto;padding:22px 20px 26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:22px}
+.menu-col{display:flex;flex-direction:column;gap:9px;min-width:0}
+.menu-h{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D73}
+.menu-col a{font-family:var(--sans);font-weight:600;font-size:16px;color:#fff;text-decoration:none}
+.menu-col a:hover{color:#16A06C;text-decoration:none}
+.menu-col-quiet a{font-family:var(--mono);font-weight:400;font-size:15px;color:#C6C8CD}
+
+/* Tagline band — the masthead's continuation, outside the sticky element so it scrolls
+   away. The footer prints the same string. */
+.tagline-band{background:#111214;padding:0 20px 20px}
+.tagline-in{max-width:1120px;margin:0 auto}
+.tagline-band p{max-width:54ch;font-family:var(--mono);font-size:13.5px;line-height:1.6;color:#86888E}
+
+footer.foot{background:#111214;padding:28px 20px 36px;margin-top:56px;border-top:0}
+.foot-row{max-width:1120px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:22px 40px}
+.foot .fblurb{font-family:var(--mono);font-size:13.5px;line-height:1.6;color:#86888E;max-width:54ch;margin-top:18px}
+.foot .fnav{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:flex-start}
+.foot .fnav a{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#C6C8CD;text-decoration:none}
+.foot .fnav a:hover{color:#16A06C;text-decoration:none}
+
 /* the live "dateline" — the freshness stamp, now homepage CONTENT (a hero element),
    never chrome. Chrome never animates; the pulse lives on the page. */
 .dateline{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);text-decoration:none}

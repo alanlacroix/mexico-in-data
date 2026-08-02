@@ -310,7 +310,7 @@ assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepa
 // The disclosure moved into the feed's BE panel. The bar is unchanged and now lives in
 // _data/feed.js: a story only carries a `why` when the pipeline wrote a complete,
 // versioned analysis for it, and the panel does not render without one.
-assert.match(feedData, /story\.bg && story\.view/, 'only versioned, complete analysis may expose the disclosure');
+assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, complete analysis may expose the disclosure');
 // Ordinary week headlines never open the analysis layer unless the log carries one.
 assert.match(homepageTemplate, /\{%- if item\.why %\}/, 'ordinary headlines must use the no-analysis card mode');
 // The brief still comes before the stories it summarises.

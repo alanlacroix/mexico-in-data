@@ -194,8 +194,9 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
         {%- if story.why %}
         <button class="be-btn" type="button" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="be-{{ story.id }}" data-toggle="be-{{ story.id }}"><span class="be-badge">BE</span><span class="be-label">{{ 'Hide' if loop.first else 'Briefly explained' }}</span></button>
         <div class="be-panel" id="be-{{ story.id }}"{% if not loop.first %} hidden{% endif %}>
-          <div class="be-part"><span class="lb-why">Why it matters</span><p class="bd-why">{{ story.why }}</p></div>
-          {%- if story.watch %}<div class="be-part"><span class="lb-watch">Watch for</span><p class="bd-watch">{{ story.watch }}</p></div>{% endif %}
+          {%- if story.bg %}<div class="be-part"><span class="lb-watch">Background</span><p class="bd-watch">{{ story.bg }}</p></div>{% endif %}
+          {%- if story.view %}<div class="be-part"><span class="lb-why">Our view</span><p class="bd-why">{{ story.view }}</p></div>{% endif %}
+          {%- if story.watch %}<div class="be-part"><span class="lb-watch">What we’re watching</span><p class="bd-watch">{{ story.watch }}</p></div>{% endif %}
           <div class="be-part bd-src"><span class="lb-src">Source</span><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
         </div>
         {%- endif %}
@@ -218,8 +219,9 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
         {%- if item.why %}
         <button class="be-btn" type="button" aria-expanded="false" aria-controls="bw-{{ item.id }}" data-toggle="bw-{{ item.id }}"><span class="be-badge">BE</span><span class="be-label">Briefly explained</span></button>
         <div class="be-panel" id="bw-{{ item.id }}" hidden>
-          <div class="be-part"><span class="lb-why">Why it matters</span><p class="bd-why">{{ item.why }}</p></div>
-          {%- if item.watch %}<div class="be-part"><span class="lb-watch">Watch for</span><p class="bd-watch">{{ item.watch }}</p></div>{% endif %}
+          {%- if item.bg %}<div class="be-part"><span class="lb-watch">Background</span><p class="bd-watch">{{ item.bg }}</p></div>{% endif %}
+          {%- if item.view %}<div class="be-part"><span class="lb-why">Our view</span><p class="bd-why">{{ item.view }}</p></div>{% endif %}
+          {%- if item.watch %}<div class="be-part"><span class="lb-watch">What we’re watching</span><p class="bd-watch">{{ item.watch }}</p></div>{% endif %}
           <div class="be-part bd-src"><span class="lb-src">Source</span><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a></div>
         </div>
         {%- endif %}

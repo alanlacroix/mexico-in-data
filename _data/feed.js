@@ -128,8 +128,13 @@ module.exports = function () {
     url: story.url,
     title: story.title,
     dek: story.summary,
-    why: story.bg && story.view ? `${story.bg} ${story.view}` : (story.view || story.bg || ''),
+    // The three-part shape Alan asked to keep: what the background is, what the view is,
+    // and what would confirm or weaken it. Merging the first two into one "why" lost the
+    // line between the reported context and the judgment.
+    bg: story.bg || '',
+    view: story.view || '',
     watch: story.prediction || '',
+    why: story.view || story.bg || '',
   }));
 
   // ---- This week -----------------------------------------------------------
@@ -148,8 +153,10 @@ module.exports = function () {
         url: item.url,
         title: item.title,
         dek: item.dek || '',
-        why: item.bg || '',
+        bg: item.bg || '',
+        view: item.view || '',
         watch: item.next || '',
+        why: item.view || item.bg || '',
       });
     }
   }

@@ -1,7 +1,12 @@
-{#- The footer. Same one nav as the header, so the two can never diverge again
-   (the old hand-copied footers dropped Economy + About on some pages). Each page
-   may override the blurb via `footerBlurb`. -#}
-<footer class="foot"><div class="wrap">
-  <nav class="fnav" aria-label="Footer navigation">{% for item in footernav %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}</nav>
-  <p class="fblurb">{{ footerBlurb or "Mexico’s economic, political, security and business news, all in one place." }}</p>
-</div></footer>
+{#- The footer, to the design handoff of 2026-08-02: the wordmark in identical markup to
+   the masthead, the tagline string verbatim below it, and the same five links the menu
+   prints, from _data/footernav.js, so the two lists can never diverge. -#}
+<footer class="foot">
+  <div class="foot-row">
+    <div class="foot-brand">
+      <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
+      <p class="fblurb">{{ footerBlurb or "Mexico’s economic, political, security and business news, all in one place." }}</p>
+    </div>
+    <nav class="fnav" aria-label="Footer navigation">{% for item in footernav %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}</nav>
+  </div>
+</footer>

@@ -75,7 +75,7 @@
 {% include "partials/header.njk" %}
 {#- The tagline band sits under the masthead but outside the sticky element, so it
     scrolls away with the page. The footer repeats this string verbatim. -#}
-<div class="tagline-band"><p>Mexico’s economic, political, security and business news, all in one place.</p></div>
+<div class="tagline-band"><div class="tagline-in"><p>Mexico’s economic, political, security and business news, all in one place.</p></div></div>
 <div class="data-alert" id="data-alert" role="status" hidden>
   <b>Some data did not load.</b> The rest of the page is still available. Try again in a few minutes.
 </div>
@@ -90,19 +90,30 @@
   };
   window.addEventListener('mb:data-error',function(e){window.reportMexicoDataError(e.detail&&e.detail.resource);});
 })();
-document.addEventListener('click',function(e){
-  var b=e.target.closest('.navtoggle');
-  if(b){b.setAttribute('aria-expanded',b.getAttribute('aria-expanded')==='true'?'false':'true');return;}
-  // Topics dropdown: click to open/close (a reliable backstop to hover). Clicking outside closes it.
-  var inDrop=e.target.closest('.navdrop');
-  document.querySelectorAll('.navdrop.open').forEach(function(o){if(o!==inDrop){o.classList.remove('open');var ob=o.querySelector('.navdrop-t');if(ob)ob.setAttribute('aria-expanded','false');}});
-  var t=e.target.closest('.navdrop-t');
-  if(t){var d=t.closest('.navdrop');var on=d.classList.toggle('open');t.setAttribute('aria-expanded',on?'true':'false');}
-});
-document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;
-  document.querySelectorAll('.navdrop.open').forEach(function(d){d.classList.remove('open');var b=d.querySelector('.navdrop-t');if(b){b.setAttribute('aria-expanded','false');b.focus();}});
-  var menu=document.querySelector('.navtoggle[aria-expanded="true"]');if(menu){menu.setAttribute('aria-expanded','false');menu.focus();}
-});
+/* Masthead menu: one button, one panel, closed by any link inside it, by a click
+   outside it, or by Escape. */
+(function(){
+  var btn=document.querySelector('.menu-btn'),panel=document.getElementById('menu-panel');
+  if(!btn||!panel)return;
+  var set=function(open){btn.setAttribute('aria-expanded',open?'true':'false');panel.hidden=!open;};
+  document.addEventListener('click',function(e){
+    if(e.target.closest('.menu-btn')){set(panel.hidden);return;}
+    if(e.target.closest('#menu-panel a')){set(false);return;}
+    if(!e.target.closest('#menu-panel'))set(false);
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!panel.hidden){set(false);btn.focus();}});
+})();
+/* Scroll spy: the masthead says which section is in view. Pages without [data-sec]
+   simply leave the indicator empty. */
+(function(){
+  var out=document.getElementById('mast-sec');
+  var secs=[].slice.call(document.querySelectorAll('[data-sec]'));
+  if(!out||!secs.length||!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){if(entry.isIntersecting)out.textContent=entry.target.dataset.sec;});
+  },{rootMargin:'-60px 0px -72% 0px'});
+  secs.forEach(function(sec){io.observe(sec);});
+})();
 /* Our own subscribe form -> /api/subscribe (a Cloudflare function that calls beehiiv server-side).
    Any form.subform on any page: inline result, no popup, no third-party UI. */
 document.addEventListener('submit',function(e){var f=e.target;if(!f.classList||!f.classList.contains('subform'))return;e.preventDefault();
