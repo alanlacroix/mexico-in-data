@@ -58,7 +58,10 @@ assert.doesNotMatch(topics, /class="be-mark"|class="be-summary"|guideHTML\(/i, '
 assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
 assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as a duplicate footer destination');
 assert.match(home, /id="week-title">Coming up</i, 'homepage must show the next official dates');
-assert.match(home, /Known next/i, 'homepage must distinguish scheduled events from a forecast');
+// "Known next" became "Scheduled releases and decisions" (Alan, 2026-08-02) when every
+// section header was given a plain statement of the period it covers. Same guarantee:
+// this block is a calendar of things already on the record, never a prediction.
+assert.match(home, /Scheduled releases and decisions/i, 'homepage must distinguish scheduled events from a forecast');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
 assert.doesNotMatch(home, /% today|points today/i, 'an older observation must never be described as moving today');
 for (const id of [
