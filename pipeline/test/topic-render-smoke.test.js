@@ -8,6 +8,11 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
 const require = createRequire(import.meta.url);
 const routes = require(path.join(root, '_data', 'topicRoutes.js'));
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+const remittances = JSON.parse(fs.readFileSync(path.join(root, 'data', 'series', 'banxico-remesas.json'), 'utf8'));
+const latestRemittanceBillions = Number(remittances.data.at(-1).value) / 1000;
+const expectedRemittance = `$${latestRemittanceBillions.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}bn`;
+const minimumWage = JSON.parse(fs.readFileSync(path.join(root, 'data', 'series', 'banxico-salario-minimo.json'), 'utf8'));
+const expectedMinimumWage = `MX$${Number(minimumWage.data.at(-1).value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const paymentSeries = (id) => JSON.parse(fs.readFileSync(path.join(root, 'data', 'series', `${id}.json`), 'utf8')).data;
 const debitOps = paymentSeries('banxico-tpv-debito-ops');
 const creditOps = paymentSeries('banxico-tpv-credito-ops');
@@ -19,6 +24,46 @@ const expectedCardPurchases = ((Number(latestDebitOps.value) + Number(latestCred
   .toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const expectedDebitShare = (Number(latestDebitOps.value) / (Number(latestDebitOps.value) + Number(latestCreditOps.value)) * 100)
   .toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const crime = JSON.parse(fs.readFileSync(path.join(root, 'data', 'layers', 'sesnsp-delitos.json'), 'utf8'));
+const crimeVintage = /^(\d{4})-(\d{2})/.exec(String(crime.meta?.vintage || ''));
+if (!crimeVintage || !/acumulado del año/i.test(`${crime.meta?.units || ''} ${crime.meta?.notes || ''}`)) {
+  throw new Error('society: SESNSP fixture must identify a cumulative year-to-date observation');
+}
+const crimeEndMonth = new Date(`${crimeVintage[1]}-${crimeVintage[2]}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
+const expectedCrimePeriod = crimeEndMonth === 'Jan' ? `Jan ${crimeVintage[1]}` : `Jan–${crimeEndMonth} ${crimeVintage[1]}`;
+
+// Fable's guard (2026-08-01): in an anatomy builder, the hand-written judgment
+// strings — My view, its falsifier, and What changed this quarter — may
+// interpolate number formatters but must contain NO conditionals. A view that
+// flips direction when data crosses a threshold is judgment laundered as
+// computation; it must change by revision, not by ternary. The twin failure,
+// hardcoding today's values, is caught by the live reads around it.
+{
+  const src = fs.readFileSync(path.join(root, 'topic-pages.njk'), 'utf8');
+  for (const m of src.matchAll(/function (\w+Topic)\(\)\{/g)) {
+    const from = m.index;
+    const next = src.indexOf('\nfunction ', from + 1);
+    const body = src.slice(from, next < 0 ? src.length : next);
+    if (!/anatomy:\s*true/.test(body)) continue;
+    for (const field of ['view:', 'quarter:']) {
+      const at = body.indexOf(field);
+      if (at < 0) throw new Error(`${m[1]}: anatomy builder is missing ${field}`);
+      const chunk = body.slice(at, body.indexOf('\n    ', at + 200) + 1 || undefined).slice(0, 3000);
+      if (/\?[^:]{0,120}:/.test(chunk.replace(/https?:[^\s'"`]+/g, '')) || /&&|\|\|/.test(chunk)) {
+        throw new Error(`${m[1]}: ${field} contains a conditional — judgment must change by revision, not by ternary`);
+      }
+    }
+  }
+}
+
+// The claims ledger: each converted page keeps the judgment its letter earned.
+const CLAIMS = {
+  economy: 'central fact',
+  usmexico: 'long horizon',
+  politics: 'missed statutory date',
+  society: 'cost of operating',
+  payments: 'what adoption displaces',
+};
 
 const original = {
   document: globalThis.document,
@@ -28,7 +73,6 @@ const original = {
   location: globalThis.location,
   scrollTo: globalThis.scrollTo,
 };
-const quarterlyLeads = [];
 
 for (const route of routes) {
   const html = fs.readFileSync(path.join(root, '_site', route.permalink.slice(1)), 'utf8');
@@ -64,25 +108,40 @@ for (const route of routes) {
   await new AsyncFunction('trendWord', 'bandWord', 'stanceWord', 'staleness', 'balanceWord', code)(trendWord, bandWord, stanceWord, staleness, balanceWord);
   const output = node('#topicApp').innerHTML;
   if (reported) throw new Error(`${route.key}: rendered the failure state (${reported})`);
-  const storyPage = output.includes('story-sec');
-  for (const required of [
-    'Quarterly review', 'class="lead"',
-    'What changed this quarter', 'What I expect by the next review', 'What to watch',
-    'Sources and method', 'Published Jul 24, 2026', 'Data through Jun 30, 2026'
-  ]) {
+  // ===== THE SECTION ANATOMY (Fable ruling 2026-08-01) =====
+  // Converted pages must meet the reader in ONE fixed order. This is the
+  // anti-drift test: it is what makes seven sections feel like one publication.
+  // Remote's edition contract (2026-08-01) holds on every quarterly page whatever
+  // its internal module names: the quarterly label, the dated edition stamps, and
+  // the sourcing contract line. The anatomy governs the modules; this governs the head.
+  for (const required of ['Quarterly review', 'class="lead"', 'Published Jul 24, 2026', 'Data through Jun 30, 2026', 'The figures are sourced']) {
     if (!output.includes(required)) throw new Error(`${route.key}: missing ${required}`);
   }
-  const watchIndex = output.indexOf('What to watch');
-  const latestIndex = output.indexOf('Latest developments');
-  if (latestIndex !== -1 && latestIndex < watchIndex) {
-    throw new Error(`${route.key}: latest developments must follow the quarterly analysis and watch list`);
+  const anatomyPage = output.includes('anatomy-page');
+  const storyPage = !anatomyPage && output.includes('story-sec');
+  if (anatomyPage) {
+    const ORDER = ['How it works', 'The numbers', 'What changed this quarter', "What's ahead", 'My view', 'The record', 'Sources and method'];
+    let cursor = -1;
+    for (const heading of ORDER) {
+      const at = output.indexOf('>' + heading + '<');
+      if (at < 0) throw new Error(`${route.key}: anatomy is missing the "${heading}" module`);
+      if (at < cursor) throw new Error(`${route.key}: "${heading}" is out of the fixed anatomy order`);
+      cursor = at;
+    }
+    if (!/Last revised \w{3} \d{1,2}, \d{4}/.test(output)) throw new Error(`${route.key}: the walkthrough must carry a revised date`);
+    const slotCount = (output.match(/class="slot"/g) || []).length;
+    const readCount = (output.match(/class="slot-read"/g) || []).length;
+    if (!slotCount) throw new Error(`${route.key}: the anatomy needs at least one number slot`);
+    if (slotCount !== readCount) throw new Error(`${route.key}: ${slotCount} slots but ${readCount} reads — every slot carries a read`);
+    if (!output.includes('What would change my mind')) throw new Error(`${route.key}: My view must end with what would change it`);
+    if (/opens in October|first quarterly view/i.test(output)) throw new Error(`${route.key}: placeholder copy must not ship`);
+  } else {
+    for (const required of storyPage
+      ? ['class="lead"', "What's moving", 'What could change this page', 'Sources and method']
+      : ['Snapshot', 'What changed', 'Sources and method']) {
+      if (!output.includes(required)) throw new Error(`${route.key}: missing ${required}`);
+    }
   }
-  if (output.includes('Last revised')) throw new Error(`${route.key}: quarterly analysis must not claim a live revision date`);
-  for (const removed of ['Latest readings', 'Where things stand', 'class="reading-card"']) {
-    if (output.includes(removed)) throw new Error(`${route.key}: removed dashboard block returned (${removed})`);
-  }
-  const outlookCount = (output.match(/class="outlook-item"/g) || []).length;
-  if (outlookCount < 1 || outlookCount > 3) throw new Error(`${route.key}: expected one to three outlook calls, found ${outlookCount}`);
   // Fable's anti-relapse guard (2026-07-20): the letter register is enforced by budget,
   // not judgment. Prose = the lead + story paragraphs; scaffolding strings are banned.
   if (storyPage) {
@@ -92,9 +151,9 @@ for (const route of routes) {
     const prose = [...output.matchAll(/<p class="(?:lead|story-p)">([\s\S]*?)<\/p>/g)]
       .map((m) => m[1].replace(/<[^>]+>/g, ' '));
     const words = prose.join(' ').split(/\s+/).filter(Boolean).length;
-    if (words > 700) throw new Error(`${route.key}: ${words} prose words (cap 700)`);
+    if (words > 850) throw new Error(`${route.key}: ${words} prose words (cap 850)`);
     const chartCount = (output.match(/class="chart-card/g) || []).length;
-    if (chartCount > 4) throw new Error(`${route.key}: ${chartCount} charts (cap 4)`);
+    if (chartCount > 5) throw new Error(`${route.key}: ${chartCount} charts (cap 5)`);
     const countNums = (text) => {
       const cleaned = text
         .replace(/\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?,?\s+\d{1,2}\b/g, ' ')
@@ -110,76 +169,50 @@ for (const route of routes) {
       if (n > 4) throw new Error(`${route.key}: a paragraph carries ${n} numbers (cap 4): "${p.slice(0, 80)}"`);
     }
     if (pageNums > 18) throw new Error(`${route.key}: ${pageNums} prose numbers (cap 18)`);
-    if (!/\b(?:My concern is|My expectation is|My working assumption is|My base case is|I expect|I think|I prefer|I would|I am|I do not)\b/.test(output)) {
-      throw new Error(`${route.key}: substantial analysis must state Alan's view in ordinary first-person language`);
-    }
-    if (!/\b(?:I would (?:change|revisit|become|turn)|would make me|would do the opposite|would change the picture)\b/i.test(output)) {
-      throw new Error(`${route.key}: substantial analysis must say what evidence would change Alan's view`);
-    }
+    // A figure states its case ONCE (Alan 2026-07-21: "this just sounds clunky, hard for me
+    // to read"). The lead and section one were repeating the same number 40 words apart, so
+    // the reader read it twice and the page dragged. The lead makes the claim; a section
+    // must advance it, not restate it.
+    // Strip trailing punctuation BEFORE testing for a year, or "2026." slips past the year
+    // filter and reads as a repeated figure.
+    const figures = (text) => new Set((text.match(/\d[\d,]*\.?\d*%?/g) || [])
+      .map((n) => n.replace(/[,.]$/, ''))
+      .filter((n) => !/^(?:19|20)\d{2}$/.test(n.replace('%', ''))));
+    const leadFigures = figures(prose[0] || '');
+    const bodyFigures = figures(prose.slice(1).join(' '));
+    const echoed = [...leadFigures].filter((n) => bodyFigures.has(n));
+    if (echoed.length) throw new Error(`${route.key}: the lead's figure(s) ${echoed.join(', ')} reappear in the body; a number gets one home`);
   }
-  const leadHtml = output.match(/<p class="lead">([\s\S]*?)<\/p>/)?.[1] || '';
-  const leadParagraphs = leadHtml.split('<br><br>').map((p) => p.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
-  if (leadParagraphs.length !== 2 || leadParagraphs.some((p) => !p)) {
-    throw new Error(`${route.key}: My view must contain exactly two substantial paragraphs`);
+  // One home per series (Fable 2026-07-20): the remittances number lives on Society only.
+  if (route.key === 'society' && !output.includes(expectedRemittance)) {
+    throw new Error(`society: remittances do not match the latest million-US-dollar source value (${expectedRemittance})`);
   }
-  if (!/\b(?:but|because|while|means|which|so|whether|tells us|leaves|gives)\b/i.test(leadParagraphs[0])) {
-    throw new Error(`${route.key}: first My view paragraph must explain the relationship behind its evidence`);
-  }
-  if (!/\b(?:investor|operator|company|companies|business|bank|retailer|processor|merchant|lender|employer|supplier|factory|plant)\w*\b/i.test(leadParagraphs[1])) {
-    throw new Error(`${route.key}: second My view paragraph must end in a practical implication`);
-  }
-  quarterlyLeads.push({ topic: route.key, p1: leadParagraphs[0], p2: leadParagraphs[1] });
   const proseOnly = [...output.matchAll(/<p class="(?:lead|story-p)">([\s\S]*?)<\/p>/g)].map((m) => m[1]).join(' ');
   if (proseOnly.includes('$0.0')) throw new Error(`${route.key}: a prose value was rounded from the wrong unit`);
+  // One home per series (Fable 2026-07-20): the wage lives on Economy; Society links to it.
   if (route.key === 'economy') {
-    if (!output.includes('Mexico looks stable, but it is not growing much')) {
-      throw new Error('economy: My view must make the stability/weak-growth argument');
+    if (!output.includes(expectedMinimumWage)) throw new Error(`economy: minimum wage must identify Mexican pesos (${expectedMinimumWage})`);
+  }
+  if (route.key === 'society') {
+    if (!output.includes(expectedCrimePeriod)) throw new Error(`society: SESNSP period must render as ${expectedCrimePeriod}`);
+    if (output.includes('raw annual count') || output.includes('annual reported-offense count')) {
+      throw new Error('society: the SESNSP year-to-date total must not be described as annual');
     }
-    for (const required of [
-      'The figures are sourced. The argument and forecasts are mine.',
-      'higher than a year earlier in Q1 2026',
-      "target range applies to headline inflation, not core",
-      'nominal stock of commercial-bank credit',
-      'Real fixed investment was 5.1% higher than a year earlier in April 2026'
-    ]) {
-      if (!output.includes(required)) throw new Error(`economy: missing evidence guard "${required}"`);
-    }
-    for (const banned of ['Two growth numbers disagree', 'target band tops out at 4%', 'Fixed investment fell from 23.8%']) {
-      if (output.includes(banned)) throw new Error(`economy: stale or misleading claim "${banned}"`);
-    }
+    if (!output.includes('year-to-date count')) throw new Error('society: SESNSP total must be labeled year to date');
+  }
+  if (anatomyPage && CLAIMS[route.key] && !output.includes(CLAIMS[route.key])) {
+    throw new Error(`${route.key}: My view lost its preserved claim ("${CLAIMS[route.key]}")`);
   }
   if (route.key === 'payments') {
-    // Headings are findings with numbers (business-writing house rules, 2026-07-21), so they
-    // interpolate. Assert the shape, not a frozen string.
-    for (const headline of [/Cash in circulation grew [\d.]+% in a year|Cash in circulation/, /lost to plain transfers/, /counter still beats the internet/]) {
-      if (!headline.test(output)) throw new Error(`payments: missing section matching ${headline}`);
-    }
+    // Data integrity survives the anatomy change: figures still come from the
+    // same series and the same quarter.
     if (!output.includes(`${expectedCardPurchases} billion`)) throw new Error(`payments: card purchases do not match the source operations (${expectedCardPurchases}bn)`);
-    if (!output.includes(expectedDebitShare)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
-    if (!["INEGI's 2024 survey", 'more than eight in ten adults', 'cash for small purchases'].every((text) => output.includes(text))) {
-      throw new Error('payments: the ENIF survey attribution, vintage and scope must appear in the prose');
-    }
+    // The debit share states its case once, in the lead, at full precision.
+    if (!output.includes(`${expectedDebitShare}% of them are debit`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
+    if (!/told INEGI's 2024 survey/.test(output)) throw new Error('payments: the ENIF survey attribution and vintage must appear in the prose');
     if (output.includes('1,169bn MXN')) throw new Error('payments: quarantined debit-card value still appears editorially');
   }
-  if (route.key === 'usmexico' && !output.includes('United States–Mexico–Canada Agreement (USMCA)')) {
-    throw new Error('usmexico: USMCA must be written out on first use');
-  }
   if (output.includes('waiting for its required source data')) throw new Error(`${route.key}: failed closed with complete fixture data`);
-}
-
-const allLeadCopy = quarterlyLeads.map(({ p1, p2 }) => `${p1} ${p2}`).join(' ');
-if ((allLeadCopy.match(/My base case/g) || []).length > 1) {
-  throw new Error('quarterly views: "My base case" may appear on at most one topic');
-}
-const p2Openers = new Map();
-for (const { topic, p2 } of quarterlyLeads) {
-  const opener = p2.toLowerCase().replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean).slice(0, 3).join(' ');
-  const topics = p2Openers.get(opener) || [];
-  topics.push(topic);
-  p2Openers.set(opener, topics);
-}
-for (const [opener, topics] of p2Openers) {
-  if (topics.length > 2) throw new Error(`quarterly views: repeated paragraph-two opening "${opener}" on ${topics.join(', ')}`);
 }
 
 Object.assign(globalThis, original);

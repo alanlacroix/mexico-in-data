@@ -22,26 +22,29 @@ const SOURCE_BY_NAME = new Map(REG.sources.map((source) => [source.name, source]
 const UA = 'Mozilla/5.0 (compatible; mexico-brief news collector; +https://mexicobrief.com)';
 
 // ---- tiny fetch (node fetch, curl fallback) ----
-async function fetchText(url) {
+async function fetchText(url, charset) {
+  const decode = (buf) => (charset ? new TextDecoder(charset === 'latin1' ? 'iso-8859-1' : charset) : new TextDecoder()).decode(buf);
   try {
     const r = await fetch(url, {
       headers: { 'User-Agent': UA, 'Accept': 'application/rss+xml,application/atom+xml,application/xml,text/xml,*/*' },
       redirect: 'follow', signal: AbortSignal.timeout(20000),
     });
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    return await r.text();
+    return decode(await r.arrayBuffer());
   } catch (e) {
     const { execFileSync } = await import('node:child_process');
-    return execFileSync('curl', ['-sL', '--compressed', '--max-time', '25', '-A', UA, url], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+    return decode(execFileSync('curl', ['-sL', '--compressed', '--max-time', '25', '-A', UA, url], { maxBuffer: 32 * 1024 * 1024 }));
   }
 }
 
 // ---- minimal RSS/Atom parsing (zero-dep) ----
 const stripCdata = (s) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1');
 const stripTags = (s) => s.replace(/<[^>]+>/g, ' ');
+const NAMED_ENTITIES = { aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', uuml: 'ü', Aacute: 'Á', Eacute: 'É', Iacute: 'Í', Oacute: 'Ó', Uacute: 'Ú', Ntilde: 'Ñ', iquest: '¿', iexcl: '¡', laquo: '«', raquo: '»', deg: '°', ordm: 'º', ordf: 'ª', ldquo: '“', rdquo: '”', lsquo: '‘', rsquo: '’', ndash: '–', mdash: '—', hellip: '…' };
 const decodeOnce = (s) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
   .replace(/&quot;/g, '"').replace(/&#0?39;|&apos;/g, "'").replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
-  .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/&nbsp;/g, ' ');
+  .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/&nbsp;/g, ' ')
+  .replace(/&([A-Za-z]+);/g, (m, name) => NAMED_ENTITIES[name] || m);
 // Decode before stripping tags. Otherwise an encoded `<img onerror=...>` survives
 // the tag pass and becomes markup later when a page renders the headline.
 const decodeAll = (s) => {
@@ -54,6 +57,9 @@ const decodeAll = (s) => {
   return value;
 };
 const clean = (s) => stripTags(decodeAll(stripCdata(s || ''))).replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim();
+// WordPress feeds append "The post X appeared first on Y" / "El artículo X apareció
+// primero en Y" to descriptions; that is feed plumbing, not a dek.
+const stripFeedBoilerplate = (s) => String(s || '').replace(/\s*(The post |El art[ií]culo |La entrada ).*$/i, '').trim();
 function pick(block, tag) {
   const m = block.match(new RegExp('<' + tag + '\\b[^>]*>([\\s\\S]*?)<\\/' + tag + '>', 'i'));
   return m ? m[1] : '';
@@ -65,7 +71,7 @@ function parseFeed(xml) {
     const title = clean(pick(b, 'title'));
     let link = clean(pick(b, 'link'));
     if (!link) { const m = b.match(/<link[^>]*href=["']([^"']+)["']/i); if (m) link = m[1]; }
-    const dek = clean(pick(b, 'description') || pick(b, 'summary') || pick(b, 'content')).slice(0, 320);
+    const dek = stripFeedBoilerplate(clean(pick(b, 'description') || pick(b, 'summary') || pick(b, 'content'))).slice(0, 320);
     const date = clean(pick(b, 'pubDate') || pick(b, 'published') || pick(b, 'updated') || pick(b, 'dc:date'));
     if (title && link) items.push({ title, link, dek, date });
   }
@@ -97,6 +103,37 @@ function parseJsonApi(text, baseUrl) {
     const dek = clean((a.body && (a.body.summary || a.body.value)) || '').slice(0, 320);
     return [{ title: clean(a.title), link, dek, date: a.created || a.changed || '' }];
   });
+}
+
+// DOF sumario.xml — the official gazette's own feed, shaped like no other: <title>
+// is the issuing department in caps, the act lives in <description>, there is no
+// pubDate (the date rides in the link), and the charset is ISO-8859-1. The gazette
+// prints every convenio and aviso, so a documented allowlist keeps acts that change
+// rules or money and drops the routine administrative prints.
+const DOF_SIGNIFICANT = /\bdecretos?\b|\bley(es)?\b|reforma|arancel|\bcupos?\b|circular\s*(n[uú]m\.?\s*)?\d|disposiciones de car[aá]cter general|comisi[oó]n nacional bancaria|\bcnbv\b|comercio exterior|inversi[oó]n extranjera|salarios? m[ií]nimos?/i;
+const DOF_ROUTINE = /tipo de cambio para solventar|tasas? de inter[eé]s interbancari|unidad(es)? de inversi[oó]n|se comunica a las dependencias|desincorpora del r[eé]gimen|veda temporal|ingresos, egresos, saldos/i;
+function parseDof(xml) {
+  const items = [];
+  for (const b of xml.match(/<item\b[\s\S]*?<\/item>/gi) || []) {
+    const dept = clean(pick(b, 'title'));
+    const desc = clean(pick(b, 'description'));
+    const link = clean(pick(b, 'link'));
+    if (!desc || !link) continue;
+    if (DOF_ROUTINE.test(desc) || !DOF_SIGNIFICANT.test(dept + ' ' + desc)) continue;
+    const m = link.match(/fecha=(\d{2})\/(\d{2})\/(\d{4})/);
+    const date = m ? `${m[3]}-${m[2]}-${m[1]}T12:00:00Z` : '';
+    const cut = desc.length > 200 ? desc.slice(0, 200).replace(/\s+\S*$/, '') + '…' : desc;
+    items.push({ title: cut, link, dek: 'DOF · ' + dept, date });
+  }
+  return items;
+}
+
+// Pemex's SharePoint feed titles items with an internal slug ("2026_69_nacional");
+// the real headline rides in the description as "Title: … Article Date: …".
+function fixPemex(it) {
+  if (!/^\d{4}_\d+_/.test(it.title)) return it;
+  const m = it.dek.match(/Title:\s*(.+?)\s*(Article Date:|$)/i);
+  return m ? { ...it, title: m[1], dek: '' } : it;
 }
 
 function beatFor(s, url) {
@@ -148,8 +185,11 @@ async function main() {
   for (const s of REG.sources) {
     let n = 0, ok = false;
     try {
-      const xml = await fetchText(s.url);
-      const items = s.format === 'jsonapi' ? parseJsonApi(xml, s.baseUrl || s.url) : parseFeed(xml);
+      const xml = await fetchText(s.url, s.charset);
+      let items = s.format === 'jsonapi' ? parseJsonApi(xml, s.baseUrl || s.url)
+        : s.format === 'dof' ? parseDof(xml)
+        : parseFeed(xml);
+      if (s.id === 'pemex-nacionales') items = items.map(fixPemex);
       ok = items.length > 0;
       for (const it of items) {
         const url = canonical(it.link);
