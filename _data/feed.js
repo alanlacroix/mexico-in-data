@@ -31,9 +31,14 @@ const VERDICT = {
   'banxico-bmv-ipc':      { up: ['HIGHER', 'good'],    down: ['LOWER', 'bad'] },
 };
 const FLAT = ['BARELY MOVED', 'flat'];
-// Below this, a move is noise rather than news, and the tile says so instead of dressing
-// a rounding difference as direction.
-const FLAT_BAND = 0.1;
+// Smallest move, in each series' own units, that is worth calling a direction.
+const FLAT_BAND = {
+  'banxico-usdmxn-fix': 0.005,    // half a centavo on the peso quote
+  'cre-gasolina-regular': 0.005,  // half a centavo a litre
+  'banxico-cetes-28d': 0.03,      // three hundredths of a point of yield
+  'fred-ust10': 0.03,
+  'banxico-bmv-ipc': 50,          // index points
+};
 
 const TONE = { good: '#0B6E4F', bad: '#B4483A', flat: '#6B6D73' };
 
@@ -98,8 +103,9 @@ module.exports = function () {
     const pct = latest && prior && Number(prior.value) !== 0
       ? (Number(latest.value) / Number(prior.value) - 1) * 100 : null;
     const rule = VERDICT[card.id];
+    const band = FLAT_BAND[card.id];
     let tag = FLAT[0], mood = FLAT[1];
-    if (rule && change != null && pct != null && Math.abs(pct) >= FLAT_BAND) {
+    if (rule && change != null && band != null && Math.abs(change) >= band) {
       [tag, mood] = change > 0 ? rule.up : rule.down;
     }
     return {
@@ -142,6 +148,7 @@ module.exports = function () {
   for (const group of week.groups) {
     for (const item of group.items) {
       if (item.shownToday) continue;
+      if (!item.bg && !item.view) continue;
       weekItems.push({
         id: `${group.key}-${weekItems.length}`,
         date: item.dayLabel || monthDay(item.date),

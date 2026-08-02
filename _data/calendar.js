@@ -27,7 +27,7 @@ module.exports = function () {
         : plainHeadline(rawTitle);
       const why = /USMCA talks/i.test(rawTitle)
         ? 'The US-Mexico-Canada trade agreement stays in force. Mexico and the United States return to the table after the US declined a 16-year extension.'
-        : plainExplanation(e.mechanism).replace(/\s*[—–]\s*/g, '. ');
+        : plainExplanation(e.mechanism).replace(/\s*[—–]\s*/g, ', ');
       return {
         date: e.date,
         approx: !!e.approx,

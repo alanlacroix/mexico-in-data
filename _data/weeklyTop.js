@@ -79,10 +79,8 @@ module.exports = function () {
     return { ...item, title: hit.title, dek: hit.dek || item.dek, originalTitle: hit.originalTitle || item.title };
   };
 
-  const trim = (s, n) => {
-    s = String(s || '').replace(/\s*(The post |El art[ií]culo |La entrada ).*$/i, '').trim();
-    return s.length <= n ? s : s.slice(0, n).replace(/\s+\S*$/, '') + '…';
-  };
+  // Boilerplate is stripped; nothing is cut. A card never ends in an ellipsis.
+  const trim = (s) => String(s || '').replace(/\s*(The post |El art[ií]culo |La entrada ).*$/i, '').trim();
 
   // Today's digest — chapter two must never reprint it ("not already shown above").
   // The rendered key developments are the ones a reader has already passed on the way
@@ -96,7 +94,7 @@ module.exports = function () {
   // Curated lane (≤7 days, real publisher).
   const curatedAll = latestStories().filter((s) => fresh(s.date, 7) && s.source && !/google news/i.test(s.source));
   const curatedItem = (s) => ({
-    title: s.title, url: s.url, sourceName: s.source, domain: s.source, dek: trim(s.summary, 200),
+    title: s.title, url: s.url, sourceName: s.source, domain: s.source, dek: trim(s.summary),
     date: s.date, dateLabel: dateLabel(s.date), dayLabel: dayLabel(s.date), curated: true,
     bg: s.bg || '', drivers: s.drivers || '', implications: s.implications || '', next: s.next || '',
     be: Boolean(s.bg && s.drivers && s.implications),
@@ -110,7 +108,7 @@ module.exports = function () {
   const ledgerItem = (raw) => {
     const x = englished(raw);
     return {
-    title: x.title, url: x.url, sourceName: x.sourceName || x.source, domain: x.source, dek: trim(x.dek, 200),
+    title: x.title, url: x.url, sourceName: x.sourceName || x.source, domain: x.source, dek: trim(x.dek),
     date: x.published_at, dateLabel: dateLabel(x.published_at), dayLabel: dayLabel(x.published_at),
     curated: false, bg: '', drivers: '', implications: '', next: '', be: false,
     };
@@ -212,8 +210,8 @@ module.exports = function () {
       const key = CURATED_SECTION[e.section] || 'economy';
       const sec = SECTIONS.find((s) => s.key === key) || SECTIONS[2];
       return {
-        title: trim(e.title, 90), url: e.url, sourceName: e.source, domain: e.source,
-        dek: trim(e.why, 200), date: String(e.date).slice(0, 10),
+        title: trim(e.title), url: e.url, sourceName: e.source, domain: e.source,
+        dek: trim(e.why), date: String(e.date).slice(0, 10),
         dateLabel: dateLabel(e.date), dayLabel: dayLabel(e.date),
         curated: true, importance: Number(e.importance),
         bg: e.background || '', view: e.view || '', next: e.prediction || '',
@@ -252,7 +250,7 @@ module.exports = function () {
     .filter((e) => e.url !== item.url && String(e.date) < String(item.date))
     .filter((e) => jaccard(words(e.title), words(item.title)) >= 0.28)
     .slice(0, 3)
-    .map((e) => ({ title: trim(e.title, 80), url: e.url, date: e.date, dateLabel: dateLabel(e.date), source: e.source }));
+    .map((e) => ({ title: trim(e.title), url: e.url, date: e.date, dateLabel: dateLabel(e.date), source: e.source }));
   for (const item of weekFive) item.prior = priorFor(item);
 
   // The five are the "All" view on the homepage. A story can be both one of the five and
