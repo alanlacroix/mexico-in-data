@@ -12,8 +12,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .home-head{padding:32px 0 15px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
   .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
   .home-date{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
-  .home-date{margin-top:6px}
-  .home-strap{margin:9px 0 0;font-size:var(--fs-body);line-height:1.45;color:var(--mut);max-width:56ch}
+  .home-strap{margin:7px 0 0;font-size:clamp(19px,2vw,26px);font-weight:600;line-height:1.24;letter-spacing:-.018em;color:var(--ink);max-width:34ch}
   .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
   .section-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
   .section-title{font-size:var(--fs-h2);line-height:1.12;letter-spacing:-.018em;margin:5px 0 0}
@@ -66,8 +65,8 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .all-news>summary::after{content:'+';font-size:17px;line-height:1}
   .all-news[open]>summary::after{content:'–'}
   .all-news-body{padding:2px 0 12px}
-  .filters{display:flex;gap:7px;overflow-x:auto;padding:2px 0 13px;border-bottom:1px solid var(--line);scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
-  .filters::-webkit-scrollbar{height:4px}.filters::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+  .week-span{font-weight:400;letter-spacing:.02em;color:var(--mut);text-transform:none;margin-left:9px}
+  .filters{display:flex;flex-wrap:wrap;gap:7px;padding:2px 0 13px;border-bottom:1px solid var(--line)}
   .filter{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink-2);padding:8px 13px;font-size:12px;cursor:pointer}
   .filter:hover,.filter.active{border-color:var(--green);color:var(--green-d);background:#f2f8f5}
   .all-story[hidden]{display:none}
@@ -149,7 +148,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 
 <div class="home" data-editorial-date="{{ dailyBrief.editorialDate }}">
   <header class="home-head">
-    <div><h1 class="home-title">Mexico today</h1><p class="home-strap">Mexico in one page: what happened, what is behind it, and the numbers I am watching.</p><div class="home-date" id="today">{{ dailyBrief.editorialDate }}</div></div>
+    <div><div class="home-date" id="today">{{ dailyBrief.editorialDate }}</div><h1 class="home-strap">Mexico’s economic, political, security and business news, all in one place.</h1></div>
   </header>
 
   <section class="brief" id="brief" aria-labelledby="brief-title">
@@ -166,21 +165,20 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
       {% for story in dailyBrief.stories %}{{ storyCard(story) }}{% else %}<p class="empty">No major stories have cleared the brief yet.</p>{% endfor %}
     </div>
 
-    {% if latestStories.length %}<details class="all-news" id="all-news" open>
-      <summary>All headlines</summary>
+    {% if weeklyTop.groups.length %}<details class="all-news" id="all-news" open>
+      <summary>All headlines <span class="week-span">{{ weeklyTop.weekLabel }}</span></summary>
       <div class="all-news-body">
-        <nav class="filters" aria-label="Filter recent headlines">
+        <nav class="filters" aria-label="Filter headlines by section">
           <button class="filter active" type="button" data-topic="all" aria-pressed="true">All</button>
           <button class="filter" type="button" data-topic="mine" aria-pressed="false">My topics</button>
-          <button class="filter" type="button" data-topic="economy" aria-pressed="false">Economy</button>
-          <button class="filter" type="button" data-topic="politics" aria-pressed="false">Politics</button>
-          <button class="filter" type="button" data-topic="society" aria-pressed="false">Security &amp; society</button>
-          <button class="filter" type="button" data-topic="us-mexico" aria-pressed="false">US &amp; Mexico</button>
+          {%- for group in weeklyTop.groups %}
+          <button class="filter" type="button" data-topic="{{ group.key }}" aria-pressed="false">{{ group.label }}</button>
+          {%- endfor %}
         </nav>
         <div class="story-list" id="all-news-list">
-          {% for story in latestStories %}{{ storyCard(story, true) }}{% endfor %}
+          {%- for group in weeklyTop.groups %}{% for story in group.items %}{% if not story.shownToday %}{{ storyCard(story, true) }}{% endif %}{% endfor %}{% endfor %}
         </div>
-        <p class="empty" id="news-empty" hidden>No recent stories in this section.</p>
+        <p class="empty" id="news-empty" hidden>Nothing from this section in the last seven days.</p>
         <button class="show-more" id="news-more" type="button" hidden>Show more</button>
       </div>
     </details>{% endif %}

@@ -21,7 +21,10 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
   .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
   .at(-1).value;
 
-assert.match(home, /Mexico today/i, 'homepage must remain a daily starting point without expiring after noon');
+// The "Mexico today" headline was retired on 2026-08-02 (Alan): the dateline carries
+// that promise without a second title above it. What must not regress is that the page
+// still stamps itself with the current editorial day rather than an undated edition.
+assert.match(home, /id="today"[^>]*>\{\{ dailyBrief\.editorialDate \}\}/, 'homepage must remain a daily starting point without expiring after noon');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
 assert.match(home, /Latest numbers/i, 'homepage must place official readings beside the news');
 assert.match(home, /Key developments/i, 'homepage must lead readers through the major stories');
@@ -31,7 +34,9 @@ assert.match(home, /My topics/i, 'homepage must expose Alan’s declared interes
 assert.match(home, /homeEditorial\.myRead\.label/, 'homepage must render the reviewed or deterministic connection label');
 assert.ok(homeEditorial.myRead?.text, 'a reviewed prediction must remain explicitly separate from reported facts');
 assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
-assert.match(home, /for story in latestStories/, 'the full news feed must live on the Brief instead of a separate Latest page');
+// The feed moved from the curated-only lane to the weekly lane on 2026-08-02 so every
+// section has headlines behind its toggle. It still lives here, on the Brief.
+assert.match(home, /for story in group\.items/, 'the full news feed must live on the Brief instead of a separate Latest page');
 assert.match(home, /aria-label="Briefly explained:/i, 'key developments must offer the optional analysis layer');
 assert.match(home, /<b>BE<\/b> Briefly explained/i, 'the homepage must explain the BE badge once');
 assert.match(home, />Our view</i, 'the analysis layer must label the Brief’s judgment');

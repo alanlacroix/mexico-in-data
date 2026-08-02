@@ -19,9 +19,15 @@ const SECTIONS = [
   { key: 'payments', label: 'Payments & fintech', href: '/payments.html', beats: ['fintech'], curated: [] },
   { key: 'deals', label: 'Deals & investment', href: '/deals.html', beats: ['deals'], curated: [] },
   { key: 'economy', label: 'Economy & money', href: '/economy.html', beats: ['economy', 'companies'], curated: ['economy'] },
-  { key: 'usmexico', label: 'US & Mexico', href: '/us-mexico.html', beats: ['us-mexico'], curated: ['us-mexico'] },
+  {
+    key: 'usmexico', label: 'US & Mexico', href: '/us-mexico.html', beats: ['us-mexico'], curated: ['us-mexico'],
+    match: /\bt-?mec\b|\busmca\b|arancel|tariff|washington|casa blanca|white house|frontera con estados unidos|comercio bilateral|secci[oó]n 301|\bustr\b|deportaci|remesas hacia m[eé]xico/i,
+  },
   { key: 'politics', label: 'Politics', href: '/politics.html', beats: ['politics'], curated: ['politics'] },
-  { key: 'society', label: 'Security & society', href: '/society.html', beats: ['society', 'security'], curated: ['society'] },
+  {
+    key: 'society', label: 'Security & society', href: '/society.html', beats: ['society', 'security'], curated: ['society'],
+    match: /\bc[aá]rtel\b|crimen organizado|narcotr[aá]fico|homicid|violencia|extorsi[oó]n|secuestr|desaparecid|fentanil|huachicol|seguridad p[uú]blica|guardia nacional/i,
+  },
   { key: 'energy', label: 'Energy & infrastructure', href: '/energy.html', beats: ['energy'], curated: [] },
 ];
 const TIER_W = { 1: 3, specialist: 3, 2: 2 };
@@ -46,13 +52,31 @@ module.exports = function () {
   const ledger = [...read(isoWeek(now)), ...read(isoWeek(new Date(now.getTime() - 7 * 864e5)))];
   const fresh = (iso, days) => { const t = parseWhen(iso); return Number.isFinite(t) && t >= now.getTime() - days * 864e5; };
 
+  // Alan's declared reading interests, the same rules the brief ranks with, so the
+  // "My topics" filter means one thing on both homepage lanes.
+  const interestRules = (() => {
+    try {
+      const doc = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'interests.json'), 'utf8'));
+      return (doc.interests || []).flatMap((interest) => {
+        try { return [{ tag: interest.tag, pattern: new RegExp(interest.pattern, 'i') }]; }
+        catch { return []; }
+      });
+    } catch { return []; }
+  })();
+  const tagsFor = (item) => interestRules
+    .filter((rule) => rule.pattern.test(`${item.title} ${item.dek || ''}`))
+    .map((rule) => rule.tag);
+
   const trim = (s, n) => {
     s = String(s || '').replace(/\s*(The post |El art[ií]culo |La entrada ).*$/i, '').trim();
     return s.length <= n ? s : s.slice(0, n).replace(/\s+\S*$/, '') + '…';
   };
 
   // Today's digest — chapter two must never reprint it ("not already shown above").
-  const today = dailyBrief().todayStories || [];
+  // The rendered key developments are the ones a reader has already passed on the way
+  // down, so those are what this must be measured against.
+  const brief = dailyBrief();
+  const today = brief.stories || brief.todayStories || [];
   const todayUrls = new Set(today.map((s) => s.url));
   const todayWords = today.map((s) => words(s.title));
   const shownToday = (item) => todayUrls.has(item.url) || todayWords.some((w) => jaccard(w, words(item.title)) >= 0.5);
@@ -91,11 +115,42 @@ module.exports = function () {
   // Per-section rooms (section pages + homepage By-section chips).
   const rooms = {}; const groups = [];
   const sectionOf = new Map();
+  // Two lanes are fed mostly by search queries we never publish, so their beat is
+  // almost always empty while the stories themselves arrive tagged as economy or
+  // politics. Route on subject first, beat second, the way build-areas.js does, and
+  // give every item exactly one home so a toggle never shows the same headline twice.
+  const claimed = new Set();
+  // A story the curation pass already resolved keeps its curated card, with the BE
+  // context attached, instead of appearing a second time as a raw wire item.
+  const curatedUrls = new Set(curatedAll.map((s) => s.url));
+  const sectionFor = (x) => {
+    const text = `${x.title} ${x.dek || ''}`;
+    const bySubject = SECTIONS.find((sec) => sec.match && sec.match.test(text));
+    if (bySubject) return bySubject.key;
+    const byBeat = SECTIONS.find((sec) => sec.beats.includes(x.beat));
+    return byBeat ? byBeat.key : null;
+  };
+
   for (const sec of SECTIONS) {
-    const curated = curatedAll.filter((s) => sec.curated.includes(s.topic === 'us-mexico' ? 'us-mexico' : s.topic)).map(curatedItem);
-    const mech = pool.filter((x) => sec.beats.includes(x.beat)).map(ledgerItem);
-    const items = merge(curated, mech, 10).map((it) => ({ ...it, shownToday: shownToday(it) }));
-    items.forEach((it) => sectionOf.set(it.url, sec.label));
+    const curated = curatedAll
+      .filter((s) => sec.curated.includes(s.topic === 'us-mexico' ? 'us-mexico' : s.topic) && !claimed.has(s.url))
+      .map(curatedItem);
+    const mech = pool.filter((x) => !claimed.has(x.url) && !curatedUrls.has(x.url) && sectionFor(x) === sec.key)
+      .map((x) => { claimed.add(x.url); return ledgerItem(x); });
+    // Shaped for the homepage storyCard macro as well as the section rooms, so both
+    // surfaces render one card definition instead of two that can drift apart.
+    const items = merge(curated, mech, 10).map((it) => ({
+      ...it,
+      shownToday: shownToday(it),
+      interestTags: tagsFor(it),
+      topic: sec.key,
+      topicLabel: sec.label,
+      topicUrl: sec.href,
+      source: it.sourceName,
+      summary: it.dek,
+      date: String(it.date || '').slice(0, 10),
+    }));
+    items.forEach((it) => { sectionOf.set(it.url, sec.label); claimed.add(it.url); });
     rooms[sec.key] = { items, summary: null, curatedCount: curated.length };
     groups.push({ key: sec.key, label: sec.label, href: sec.href, items, curatedCount: curated.length });
   }
