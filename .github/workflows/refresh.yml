@@ -134,10 +134,23 @@ jobs:
           git add data/
           if git diff --cached --quiet; then
             echo "no data changes"
-          else
-            git commit -m "[CF-Pages-Skip] data: scheduled refresh $(date -u +%Y-%m-%dT%H:%MZ)"
-            git push
+            exit 0
           fi
+          git commit -m "[CF-Pages-Skip] data: scheduled refresh $(date -u +%Y-%m-%dT%H:%MZ)"
+          # An editorial session pushing while this runs used to fail the whole refresh on a
+          # non-fast-forward (it did, 2026-08-02 19:31). The machine owns data/, so rebasing
+          # onto whatever landed and trying again is always the right move.
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              echo "pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "push rejected, rebasing onto origin/main (attempt $attempt)"
+            git pull --rebase --autostash origin main || exit 1
+            sleep 5
+          done
+          echo "could not push refreshed data after 5 attempts"
+          exit 1
 
       - name: Open issue on connector failures
         if: always()
