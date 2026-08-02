@@ -29,6 +29,20 @@
   /* Mexican flag accents — the only color on the page */
   --green:#0a7d4d;         /* primary accent: links, exhibit numbers, positive */
   --green-on-dark:#4ec98a; /* the same green lifted to read on the black masthead only */
+
+  /* Section identity (Fable 2026-08-02, after The Guardian). The site has exactly two
+     colour encodings: the link green above, and these seven. Colour answers WHAT KIND,
+     never how good or which direction, so no delta, indicator or number is ever coloured
+     (a falling MXN/US$ is the peso strengthening; colour would lie). One lightness band,
+     nothing near the link green, and colour only ever duplicates a word already printed:
+     greyscale the page and nothing is lost. */
+  --sec-payments:#1f6feb;
+  --sec-deals:#7b4fc9;
+  --sec-economy:#0b6b7a;
+  --sec-usmexico:#a8500f;
+  --sec-politics:#8a1c46;
+  --sec-society:#7a5c11;
+  --sec-energy:#2c6e3f;
   --green-d:#0a7d4d;       /* one green, aliased so every green on the site is THE green */
   --green-bg:#e7f2ec;
   --red:#b3261e;           /* staleness and negative moves — nothing else */

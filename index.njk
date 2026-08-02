@@ -9,19 +9,27 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 <style>
   .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,3vw,40px);--gap-section:56px;--gap-item:18px}
   .home a{text-underline-offset:3px}
-  .home-head{padding:32px 0 15px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  /* THE GRID (Fable, 2026-08-02). Twelve columns, one spine. Rails live left of the
+     prose; the prose column never reflows, so the measure is identical on every row
+     whether or not a story came with art. Where there is no image, columns 10-12 hold
+     whitespace: reserved alignment, never a drawn placeholder. Rules span all twelve. */
+  .row12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:22px}
+  .home-head{padding:32px 0 15px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:22px;border-bottom:1px solid var(--line)}
+  .home-head>div{grid-column:1 / span 6}
   .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
   .home-date{margin:0;font-family:var(--mono);font-size:clamp(22px,2.3vw,28px);font-weight:650;line-height:1.12;letter-spacing:-.012em;color:var(--ink)}
-  .home-strap{margin:9px 0 0;font-size:var(--fs-small);line-height:1.45;color:var(--mut);max-width:52ch}
+  .home-strap{margin:9px 0 0;font-size:var(--fs-small);line-height:1.45;color:var(--mut)}
   .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
   .section-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
   .section-title{font-size:var(--fs-h2);line-height:1.12;letter-spacing:-.018em;margin:5px 0 0}
   .section-note,.asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .text-link{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
 
-  .brief{border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:16px 0 20px;margin-top:var(--gap-section);scroll-margin-top:72px}
-  .brief-copy{font-size:clamp(18px,1.65vw,22px);line-height:1.58;color:var(--ink-2);max-width:70ch;margin-top:13px}
-  .my-read{max-width:70ch;margin-top:17px;padding:13px 15px;border-left:2px solid var(--green);background:#f8f7f2}
+  .brief{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:22px;border-top:2px solid var(--green);border-bottom:1px solid var(--line);padding:16px 0 20px;margin-top:var(--gap-section);scroll-margin-top:72px}
+  .brief>.section-top{grid-column:1 / -1}
+  .brief>.brief-copy,.brief>.my-read,.brief>.source-state,.brief>.brief-sources{grid-column:3 / span 7}
+  .brief-copy{font-size:clamp(18px,1.65vw,22px);line-height:1.58;color:var(--ink-2);margin-top:13px}
+  .my-read{margin-top:17px;padding:13px 15px;border-left:2px solid var(--green);background:#f8f7f2}
   .my-read p{font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
   .my-read strong{color:var(--ink)}
   .read-evidence{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -34,15 +42,30 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .brief-sources{display:flex;align-items:center;gap:5px 14px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
   .brief-sources a{color:var(--green-d)}
 
-  .news{margin-top:var(--gap-section);max-width:920px}
+  .news{margin-top:var(--gap-section)}
   .story-list{border-top:1px solid var(--line);margin-top:var(--gap-item)}
-  .brief-story{padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
-  .story-meta{display:flex;align-items:center;gap:5px 10px;flex-wrap:wrap;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-bottom:7px}
-  .story-meta>*{white-space:nowrap}
+  .brief-story{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:22px;align-items:start;padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
+  .story-meta{grid-column:1 / span 2;display:flex;flex-direction:column;gap:3px;font-family:var(--mono);font-size:var(--fs-label);line-height:1.35;color:var(--mut)}
+  .story-meta>*{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .story-outlet{color:var(--mut)}
   .story-topic{font-weight:650;color:var(--ink);text-decoration:none}
-  .story-title-row{display:block}
+  .sec-payments{color:var(--sec-payments)}
+  .sec-deals{color:var(--sec-deals)}
+  .sec-economy{color:var(--sec-economy)}
+  .sec-usmexico{color:var(--sec-usmexico)}
+  .sec-politics{color:var(--sec-politics)}
+  .sec-society{color:var(--sec-society)}
+  .sec-energy{color:var(--sec-energy)}
+  .filter[data-topic="payments"].active{background:var(--sec-payments);border-color:var(--sec-payments)}
+  .filter[data-topic="deals"].active{background:var(--sec-deals);border-color:var(--sec-deals)}
+  .filter[data-topic="economy"].active{background:var(--sec-economy);border-color:var(--sec-economy)}
+  .filter[data-topic="usmexico"].active{background:var(--sec-usmexico);border-color:var(--sec-usmexico)}
+  .filter[data-topic="politics"].active{background:var(--sec-politics);border-color:var(--sec-politics)}
+  .filter[data-topic="society"].active{background:var(--sec-society);border-color:var(--sec-society)}
+  .filter[data-topic="energy"].active{background:var(--sec-energy);border-color:var(--sec-energy)}
+  .story-title-row{grid-column:3 / span 7;min-width:0}
   .story-copy{display:flow-root;min-width:0}
-  .story-thumb{float:right;width:210px;height:140px;margin:4px 0 12px 20px;border-radius:4px;overflow:hidden;background:var(--paper-2)}
+  .story-thumb{grid-column:10 / span 3;display:block;aspect-ratio:300/190;border-radius:4px;overflow:hidden;background:var(--paper-2)}
   .story-thumb img{width:100%;height:100%;object-fit:cover;display:block}
   .story-link{color:var(--ink);text-decoration:none}
   .story-link:hover{color:var(--green-d)}
@@ -53,7 +76,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .context-btn:hover,.context-btn[aria-expanded="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
   .be-key{display:inline-flex;align-items:center;gap:7px}
   .be-key b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:23px;border:1px solid var(--line-2);border-radius:3px;color:var(--ink-2);font-size:var(--fs-label);}
-  .story-context{margin:13px 0 2px;padding:13px 16px;background:#f8f7f2;border-left:2px solid var(--green);font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
+  .story-context{grid-column:3 / -1;margin:13px 0 2px;padding:13px 16px;background:#f8f7f2;border-left:2px solid var(--green);font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
   .story-context[hidden]{display:none}
   .story-context p+p,.story-context .coverage{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
   .context-label{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;color:var(--ink);margin-right:7px}
@@ -66,7 +89,6 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .all-news>summary::after{content:'+';font-size:17px;line-height:1}
   .all-news[open]>summary::after{content:'–'}
   .all-news-body{padding:2px 0 12px}
-  .week-note-five{font-size:var(--fs-meta);line-height:1.5;color:var(--mut);padding:14px 0 2px;max-width:70ch}
   .week-span{font-weight:400;letter-spacing:.02em;color:var(--mut);text-transform:none;margin-left:9px}
   .filters{display:flex;flex-wrap:wrap;gap:7px;padding:2px 0 13px;border-bottom:1px solid var(--line)}
   .filter{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink-2);padding:8px 13px;font-size:var(--fs-meta);cursor:pointer}
@@ -133,8 +155,15 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
     .timeline-item:nth-child(3){border-left:0;border-top:1px solid var(--line);padding-left:0}
     .timeline-item:nth-child(4){border-top:1px solid var(--line)}
   }
+  @media(max-width:900px){
+    .brief-story{display:block}
+    .story-meta{flex-direction:row;flex-wrap:wrap;gap:4px 10px;margin-bottom:7px}
+    .story-thumb{width:124px;aspect-ratio:300/190;float:right;margin:4px 0 8px 14px}
+    .brief{display:block}
+    .home-head>div{grid-column:1 / -1}
+  }
   @media(max-width:650px){
-    .home-head{padding-top:24px;align-items:flex-start}
+    .home-head{padding-top:24px}
     .brief{margin-top:22px}
     /* One step down on a phone. At 18px the brief ran ~35 characters a line over ten
        lines; a step lifts the measure toward the low 40s and takes several lines off
@@ -169,10 +198,11 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 {% set hasContext = (not isAll) and story.analysisV >= 7 and story.bg and story.view and story.prediction %}
 {% set contextId = 'story-context-' + story.id %}
 <article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}"{% if inFive %} data-five="y"{% endif %}{% endif %}>
-  <div class="story-meta"><a class="story-topic" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span>{% if story.source %}<span>{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span>{{ story.sourceCount }} reports</span>{% endif %}</div>
+  <div class="story-meta"><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span><a class="story-topic{% if isAll %} sec-{{ story.topic }}{% endif %}" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a>{% if story.source %}<span class="story-outlet">{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span class="story-outlet">{{ story.sourceCount }} reports</span>{% endif %}</div>
   <div class="story-title-row">
-    <div class="story-copy">{% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="210" height="140" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}<a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}{% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}" aria-label="Briefly explained: {{ story.title }}" title="Briefly explained">BE</button>{% endif %}</div>
+    <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}{% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}" aria-label="Briefly explained: {{ story.title }}" title="Briefly explained">BE</button>{% endif %}</div>
   </div>
+  {% if story.image %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="300" height="190" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}
   {% if hasContext %}<div class="story-context" id="{{ contextId }}" hidden><p><span class="context-label">Background</span>{{ story.bg }}</p><p><span class="context-label">Our view</span>{{ story.view }}</p><p><span class="context-label">What we’re watching</span>{{ story.prediction }}</p>{% if story.sources.length %}<div class="coverage"><span>Sources:</span><div class="coverage-links">{% for source in story.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source or 'Source' }} ↗</a>{% endfor %}</div></div>{% endif %}</div>{% endif %}
 </article>
 {% endmacro %}
@@ -216,7 +246,6 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
           {%- for group in weeklyTop.groups %}{% for story in group.items %}{% if not story.shownToday %}{{ storyCard(story, true, story.inFive) }}{% endif %}{% endfor %}{% endfor %}
         </div>
         <p class="empty" id="news-empty" hidden>Nothing from this section in the last seven days.</p>
-        <p class="week-note-five">The five are the week's most important stories by the same ranking the Brief uses. Pick a section to see everything it carried.</p>
         <button class="show-more" id="news-more" type="button" hidden>Show more</button>
       </div>
     </details>{% endif %}
@@ -227,7 +256,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
     <div class="market-rows" id="market-grid">
       {% for item in boards.economy %}<a class="market-row" href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><span class="market-name">{{ item.label }}</span><span class="market-figure"><span class="market-value">{{ item.display }}</span>{% if item.unit %}<span class="market-unit">{{ item.unit }}</span>{% endif %}</span><span class="market-compare">{{ item.compare }}</span><span class="market-date">{{ item.observed }}</span></a>{% endfor %}
     </div>
-    <p class="market-note">Monthly releases except the policy rate, which changes at policy meetings. Sources: Banco de México, Mexico statistics agency.</p>
+    <p class="market-note">Banco de México · INEGI</p>
   </section>
 
   <section class="week" aria-labelledby="week-title">

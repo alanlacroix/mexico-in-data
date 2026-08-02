@@ -48,9 +48,9 @@ module.exports = function () {
     todayVintage: newest && {
       asOf: dayLabel(newest),
       mixed,
-      label: mixed
-        ? `Latest reading ${dayLabel(newest)}; earlier ones dated`
-        : `All readings ${dayLabel(newest)}`,
+      // A stamp, not a sentence. The visible per-item dates already say that some
+      // readings are older; a clause explaining that is the page apologising.
+      label: `As of ${dayLabel(newest)}`,
     },
     economy: pick(ECONOMY),
   };
