@@ -19,34 +19,39 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM, usage } from './lib/anthropic.js';
 import { TRUST, BAN } from './lib/voice.js';
+
+// The work list comes from the page itself. This file used to run its own scan of the
+// ledger with its own routing, dedup and ordering, which quietly disagreed with the one
+// _data/weeklyTop.js runs to build "This week": on 2026-08-02 it wrote 33 explanations,
+// 19 of them for stories the page never lists, while 23 listed stories got none. Asking
+// weeklyTop which stories it is about to render is the only way the join can hold.
+const requireCJS = createRequire(import.meta.url);
+const weeklyTop = requireCJS('../_data/weeklyTop.js');
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const NEWS = path.join(ROOT, 'data', 'news');
 const CACHE = path.join(NEWS, 'why.json');
 
-const PER_SECTION = 5;      // author this many; the page renders 3 to 5
+const PER_SECTION = 6;      // a full section's worth; This week is written to carry 3 to 6
 const POOL = 12;            // candidates offered to the ranking pass per section
 const WINDOW_DAYS = 7;
 const MIN_INPUT = 90;       // characters of real text below which we do not even ask
 
-// The same seven rooms and the same routing the homepage uses.
+// The seven rooms, for labelling the ranking prompt only. Routing an item into a room is
+// weeklyTop's job now; keeping a second copy of the match rules here is what let the two
+// disagree in the first place.
 const SECTIONS = [
-  { key: 'payments', label: 'Payments & fintech', beats: ['fintech'] },
-  { key: 'deals', label: 'Deals & investment', beats: ['deals'] },
-  { key: 'economy', label: 'Economy & money', beats: ['economy', 'companies'] },
-  {
-    key: 'usmexico', label: 'US & Mexico', beats: ['us-mexico'],
-    match: /\bt-?mec\b|\busmca\b|arancel|tariff|washington|casa blanca|white house|secci[oó]n 301|\bustr\b|deportaci/i,
-  },
-  { key: 'politics', label: 'Politics', beats: ['politics'] },
-  {
-    key: 'society', label: 'Security & society', beats: ['society', 'security'],
-    match: /\bc[aá]rtel\b|crimen organizado|narcotr[aá]fico|homicid|violencia|extorsi[oó]n|secuestr|fentanil|huachicol|seguridad p[uú]blica/i,
-  },
-  { key: 'energy', label: 'Energy & infrastructure', beats: ['energy'] },
+  { key: 'payments', label: 'Payments & fintech' },
+  { key: 'deals', label: 'Deals & investment' },
+  { key: 'economy', label: 'Economy & money' },
+  { key: 'usmexico', label: 'US & Mexico' },
+  { key: 'politics', label: 'Politics' },
+  { key: 'society', label: 'Security & society' },
+  { key: 'energy', label: 'Energy & infrastructure' },
 ];
 const OFFICIAL = /(^|\.)gob\.mx$|^pemex\.com$|^diariooficial\.gob\.mx$|^blog\.amvo\.org\.mx$/;
 const TIER_W = { 1: 3, specialist: 3, 2: 2 };
@@ -116,37 +121,49 @@ async function main() {
   const cache = readJSON(CACHE, {});
   const cutoff = now.getTime() - WINDOW_DAYS * 864e5;
 
-  const sectionFor = (item) => {
-    const text = `${item.title} ${item.dek || ''}`;
-    const bySubject = SECTIONS.find((s) => s.match && s.match.test(text));
-    if (bySubject) return bySubject;
-    return SECTIONS.find((s) => s.beats.includes(item.beat)) || null;
-  };
-
-  // Deterministic eligibility, then one ranking pass per section.
-  const bySection = new Map();
-  const seen = [];
+  // The ledger is still the source of the fullest text we hold for a story: weeklyTop
+  // trims its dek for display, and the guard rail is that an explanation is written from
+  // the fullest collected text, never from a headline alone.
+  const fullest = new Map();
   for (const raw of ledger) {
     if (!raw || !raw.url || !raw.title) continue;
-    if (raw.source === 'news.google.com' || raw.tier === 'aggregator') continue;
-    if (OFFICIAL.test(String(raw.source || ''))) continue;
     const when = Date.parse(raw.published_at);
     if (!Number.isFinite(when) || when < cutoff) continue;
     const english = translations[raw.url];
-    const item = {
+    const text = english?.dek || raw.dek || '';
+    const prior = fullest.get(raw.url);
+    if (prior && String(prior.dek).length >= String(text).length) continue;
+    fullest.set(raw.url, {
       url: raw.url,
       title: english?.title || raw.title,
-      dek: english?.dek || raw.dek || '',
+      dek: text,
       source: raw.sourceName || raw.source,
       tier: raw.tier,
       published: raw.published_at,
-    };
-    if (seen.some((k) => jaccard(words(k), words(item.title)) >= 0.5)) continue;
-    seen.push(item.title);
-    const section = sectionFor(raw);
-    if (!section) continue;
-    if (!bySection.has(section.key)) bySection.set(section.key, []);
-    bySection.get(section.key).push(item);
+    });
+  }
+
+  // Which stories the page is about to render, in the sections it will render them under.
+  const bySection = new Map();
+  const seen = [];
+  for (const group of weeklyTop().groups) {
+    for (const listed of group.items) {
+      if (!listed || !listed.url || listed.shownToday) continue;
+      if (listed.view || listed.bg) continue;              // already explained, curated or cached
+      if (OFFICIAL.test(String(listed.sourceName || ''))) continue;
+      const item = fullest.get(listed.url) || {
+        url: listed.url,
+        title: listed.title,
+        dek: listed.dek || '',
+        source: listed.sourceName,
+        tier: listed.tier,
+        published: listed.date,
+      };
+      if (seen.some((k) => jaccard(words(k), words(item.title)) >= 0.5)) continue;
+      seen.push(item.title);
+      if (!bySection.has(group.key)) bySection.set(group.key, []);
+      bySection.get(group.key).push(item);
+    }
   }
 
   const pending = [];
@@ -161,7 +178,7 @@ async function main() {
     if (hasLLM() && ranked.length > PER_SECTION) {
       const answer = await askJSON({
         system: RANK_SYSTEM,
-        user: `Section: ${SECTIONS.find((s) => s.key === key).label}\n\n${JSON.stringify(
+        user: `Section: ${(SECTIONS.find((s) => s.key === key) || { label: key }).label}\n\n${JSON.stringify(
           ranked.map((item) => ({ id: item.url, title: item.title, dek: item.dek.slice(0, 200) })), null, 1)}`,
         schema: RANK_SCHEMA,
         maxTokens: 1200,

@@ -20,17 +20,22 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
 <style>
   .feed [hidden]{display:none!important}
   .feed{max-width:1120px;margin:0 auto;padding:0 20px}
-  .feed-sec{padding-bottom:46px}
+  .feed-sec{padding-bottom:54px}
   .sec-rule{border-top:2px solid #0B6E4F}
-  .sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;padding:14px 0 18px}
-  .sec-head h2{font-family:var(--sans);font-weight:800;font-size:32px;line-height:1;letter-spacing:-.025em;color:#111214;margin:0}
+  .sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;padding:18px 0 24px}
+  /* A section head is a signpost, not the loudest voice on the page. It used to be 800/32,
+     heavier than both the dateline above it and the headlines below it, so the page shouted
+     its own furniture. The headline inside each card is now the loudest thing in its block. */
+  .sec-head h2{font-family:var(--sans);font-weight:500;font-size:24px;line-height:1.15;letter-spacing:-.014em;color:#111214;margin:0}
   .sec-meta{font-family:var(--mono);font-weight:400;font-size:11px;line-height:1;letter-spacing:.1em;text-transform:uppercase;color:#86888E}
   .sec-meta a{color:#0B6E4F;font-weight:500;font-size:12px}
 
-  .dateline{padding:32px 0 0}
-  .dateline h1{font-family:var(--sans);font-weight:600;font-size:30px;line-height:1.05;letter-spacing:-.015em;text-transform:none;color:#111214;margin:0}
+  .dateline{padding:34px 0 22px}
+  /* The date is a dateline, the way a newspaper sets it: it tells you which edition you are
+     reading, it does not compete with the reporting. It was 30px/600, louder than any story. */
+  .dateline h1{font-family:var(--sans);font-weight:500;font-size:20px;line-height:1.2;letter-spacing:-.005em;text-transform:none;color:#3C3D40;margin:0}
 
-  .brief-p{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.55;color:#1A1B1D;max-width:62ch;text-wrap:pretty}
+  .brief-p{font-family:var(--serif);font-weight:400;font-size:19px;line-height:1.62;color:#1A1B1D;max-width:62ch;text-wrap:pretty}
   .brief-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:20px}
   .brief-src{font-family:var(--mono);font-size:12px;color:#86888E;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
   .brief-src a{color:#0B6E4F}
@@ -43,7 +48,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .tile-label{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5C5E63}
   .tile-date{font-family:var(--mono);font-size:11px;color:#B0B2B8;white-space:nowrap}
   .tile-val{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
-  .tile-val b{font-family:var(--sans);font-weight:700;font-size:27px;letter-spacing:-.03em;color:#111214}
+  .tile-val b{font-family:var(--sans);font-weight:600;font-size:27px;letter-spacing:-.025em;color:#111214}
   .tile-unit{font-family:var(--mono);font-size:10px;color:#86888E}
   .tile-change{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
   .tile-delta{font-family:var(--mono);font-weight:500;font-size:12px;color:#1A1B1D;white-space:nowrap}
@@ -56,18 +61,18 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
 
   .cards{display:grid;grid-template-columns:1fr;border-bottom:1px solid #E2E2E2}
   .cards-wk{grid-template-columns:1fr}
-  .card{border-top:1px solid #E2E2E2;padding:24px 0 26px;display:flex;flex-wrap:wrap;gap:14px 44px}
+  .card{border-top:1px solid #E2E2E2;padding:28px 0 30px;display:flex;flex-wrap:wrap;gap:16px 44px}
   .card-rail{flex:1 1 300px;max-width:430px;min-width:0}
   .card-body{flex:3 1 380px;min-width:0;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
-  .card-wk{padding:20px 0 22px}
+  .card-wk{padding:22px 0 24px}
   .card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.06em}
   .card-meta .d{color:#5C5E63}
   .card-meta .c{color:#1A1B1D;display:inline-flex;align-items:center;gap:6px}
   .dot{width:7px;height:7px;border-radius:999px;flex:none}
   .card-meta .s{color:#86888E}
   .es{border:1px solid #D9D9DB;padding:2px 5px;font-size:9px;color:#96989E;font-style:normal}
-  .card h3{font-family:var(--sans);font-weight:700;font-size:27px;line-height:1.1;letter-spacing:-.025em;color:#111214;margin:13px 0 0;text-wrap:pretty}
-  .card-wk h3{font-size:21px;line-height:1.18;letter-spacing:-.02em}
+  .card h3{font-family:var(--sans);font-weight:600;font-size:24px;line-height:1.18;letter-spacing:-.018em;color:#111214;margin:10px 0 0;text-wrap:pretty}
+  .card-wk h3{font-size:20px;line-height:1.25;letter-spacing:-.013em}
   .card h3 a{color:inherit}
   .card h3 a:hover{color:#0B6E4F;text-decoration:none}
   .orig{font-family:var(--mono);font-size:12px;line-height:1.4;color:#96989E;max-width:58ch;text-wrap:pretty}
@@ -79,15 +84,15 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .be-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:20px;background:#0B6E4F;color:#fff;font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.04em}
   .card-wk .be-badge{width:21px;height:19px}
   .be-label{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#1A1B1D}
-  .be-panel{border-left:2px solid #0B6E4F;padding:2px 0 2px 16px;display:grid;gap:14px;animation:panel .28s ease}
+  .be-panel{border-left:2px solid #0B6E4F;padding:2px 0 2px 16px;display:grid;gap:16px;animation:panel .28s ease}
   .card-wk .be-panel{padding-left:14px}
-  .be-part>span{display:block;margin-bottom:6px}
+  .be-part>span{display:block;margin-bottom:5px}
   .lb-why{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#0B6E4F}
   .lb-watch{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#86888E}
   .lb-src{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#86888E}
-  .bd-why{font-family:var(--serif);font-size:18px;line-height:1.5;color:#1A1B1D;max-width:58ch;text-wrap:pretty}
+  .bd-why{font-family:var(--serif);font-size:17px;line-height:1.55;color:#1A1B1D;max-width:58ch;text-wrap:pretty}
   .card-wk .bd-why{max-width:56ch}
-  .bd-watch{font-family:var(--serif);font-size:16px;line-height:1.5;color:#3C3D40;max-width:58ch;text-wrap:pretty}
+  .bd-watch{font-family:var(--serif);font-size:16px;line-height:1.55;color:#3C3D40;max-width:58ch;text-wrap:pretty}
   .bd-src a{color:#0B6E4F;font-family:var(--mono);font-size:12px}
 
   .chips{display:flex;flex-wrap:wrap;gap:7px;padding-bottom:18px}
@@ -119,7 +124,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .econ-name{font-family:var(--mono);font-weight:600;font-size:14px;letter-spacing:.02em;color:#111214}
   .econ-period{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:4px}
   .econ-val{display:flex;align-items:baseline;gap:5px}
-  .econ-val b{font-family:var(--sans);font-weight:700;font-size:30px;letter-spacing:-.03em;color:#111214}
+  .econ-val b{font-family:var(--sans);font-weight:600;font-size:30px;letter-spacing:-.025em;color:#111214}
   .econ-unit{font-family:var(--mono);font-size:10px;color:#86888E}
   .bars{display:grid;gap:5px}
   .bar{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:10px;align-items:center}
@@ -196,8 +201,8 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
         <div class="card-body">
         {%- if story.dek %}<p class="dek">{{ story.dek }}</p>{% endif %}
         {%- if story.why %}
-        <button class="be-btn" type="button" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="be-{{ story.id }}" data-toggle="be-{{ story.id }}"><span class="be-badge">BE</span><span class="be-label">{{ 'Hide' if loop.first else 'Briefly explained' }}</span></button>
-        <div class="be-panel" id="be-{{ story.id }}"{% if not loop.first %} hidden{% endif %}>
+        <button class="be-btn" type="button" aria-expanded="false" aria-controls="be-{{ story.id }}" data-toggle="be-{{ story.id }}"><span class="be-badge">BE</span><span class="be-label">Briefly explained</span></button>
+        <div class="be-panel" id="be-{{ story.id }}" hidden>
           {%- if story.bg %}<div class="be-part"><span class="lb-watch">Background</span><p class="bd-watch">{{ story.bg }}</p></div>{% endif %}
           {%- if story.view %}<div class="be-part"><span class="lb-why">Our view</span><p class="bd-why">{{ story.view }}</p></div>{% endif %}
           {%- if story.watch %}<div class="be-part"><span class="lb-watch">What we’re watching</span><p class="bd-watch">{{ story.watch }}</p></div>{% endif %}
@@ -330,7 +335,7 @@ if (asof) {
 const list = $('#wk-list'), chipRow = $('#wk-chips'), moreBtn = $('#wk-more');
 if (list && chipRow && moreBtn) {
   const cards = $$('.card', list);
-  const VISIBLE = 3;
+  const VISIBLE = 6;               // "All" opens with a readable handful, not the whole week
   let filter = 'All', expanded = false;
 
   const counts = new Map();
@@ -343,7 +348,8 @@ if (list && chipRow && moreBtn) {
   const render = () => {
     const matching = cards.filter((card) => filter === 'All' || card.dataset.cat === filter);
     cards.forEach((card) => { card.hidden = true; });
-    const shown = expanded ? matching : matching.slice(0, VISIBLE);
+    const cap = filter === 'All' ? VISIBLE : matching.length;
+    const shown = expanded ? matching : matching.slice(0, cap);
     shown.forEach((card) => { card.hidden = false; });
     const rest = matching.length - shown.length;
     moreBtn.hidden = rest <= 0;

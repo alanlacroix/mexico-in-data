@@ -30,7 +30,9 @@ The visible summary is factual and comes from the linked report. Only the three 
 
 Briefly Explained never uses first person. State the likely next outcome directly, then name the evidence that would prove it wrong. Start with the actual actor, event, or outcome. Do not repeat "The base case is" or "That view would change if" as a template across stories. First-person analysis belongs only in the quarterly review.
 
-Each part must add something the visible summary did not already say. Keep the full layer under roughly 110 words. Ordinary headlines never get this layer.
+Each part must add something the visible summary did not already say. Ordinary headlines never get this layer.
+
+**Length.** Aim for roughly 30 words of Background, 35 of Our view, 25 of What we're watching, so about 90 for the layer. These are targets to write toward, not a gate: nothing fails a build for missing them. The reason to hold them is that the layer shipped at 140 to 160 words through July, and a reader who opens Briefly explained and meets three dense paragraphs closes it and stops opening it. Budgeting each part separately is what keeps Our view from absorbing the other two, which is where the overrun came from. If a story genuinely needs more room, spend it in Our view and cut Background to the one structural fact a newcomer cannot do without.
 
 An LLM may pre-draft context into **`context_draft`** from a pasted `excerpt`, but **the build refuses to render `context_draft`** — nothing ships until it's promoted by hand to `context`/`why`. Draft text may never strengthen a claim beyond its source (no "proposed" → "passed").
 
