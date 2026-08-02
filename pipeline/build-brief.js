@@ -282,7 +282,10 @@ async function writeSummary(picked) {
   if (!hasLLM()) return '';
   const items = picked.map((e) => ({ section: e.section, title: e.title, context: shippedContext(e) }));
   const schema = { type: 'object', additionalProperties: false, required: ['summary'], properties: { summary: { type: 'string' } } };
-  const system = `Write THE BRIEF: the 2-4 sentence paragraph that opens The Mexico Brief, synthesizing today's key developments for someone tracking Mexico. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Connect the stories where they genuinely connect (do not enumerate mechanically); lead with the most consequential. Plain, calm, concrete English. No opinion, no forecasts, no em-dash, no "meanwhile". Maximum 80 words. Return JSON: {summary}.`;
+  // 2026-08-01 design QA: the brief is ONE argument (~60 words), never a digest
+  // with the line breaks removed. Stories that don't connect belong to the
+  // digest below, not to this paragraph.
+  const system = `Write THE BRIEF: the short paragraph that opens The Mexico Brief. It makes ONE argument about what today's developments mean together, for someone tracking Mexico. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Do NOT enumerate the items: pick the thread that genuinely connects the most consequential ones and argue it; anything that does not fit that thread stays out (the digest below carries it). Plain, calm, concrete English. No opinion, no forecasts, no em-dash, no "meanwhile". Target 60 words, never more than 75. Return JSON: {summary}.`;
   const out = await askJSON({ system, user: JSON.stringify(items), schema, maxTokens: 2500 });
   const text = String(out && out.summary || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
   if (!text) return '';
@@ -290,7 +293,7 @@ async function writeSummary(picked) {
   // a 2-word overage must not throw away the whole paragraph (Alan 2026-07-17: the brief
   // collapsed to a one-line headline because a 92-word summary hit a 90 cap). maxSentences
   // still keeps it a paragraph, not an essay.
-  const gate = lintReportText({ text, inputs: items.flatMap((i) => [i.title, i.context]), maxWords: 105, maxSentences: 5 });
+  const gate = lintReportText({ text, inputs: items.flatMap((i) => [i.title, i.context]), maxWords: 90, maxSentences: 4 });
   if (!gate.ok) { console.warn(`  summary rejected: ${gate.flags.join('; ')}`); return ''; }
   return text;
 }

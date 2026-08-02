@@ -1,4 +1,5 @@
-// The six production topic rooms. This registry owns route names and metadata;
+// The production topic rooms. Trade folded into U.S.–Mexico on 2026-08-01 (Fable):
+// its export composition became a slot there and /trade.html now 301s to it. This registry owns route names and metadata;
 // the page renderer owns the data. Keeping the list here prevents the masthead,
 // topic switcher and generated pages from quietly drifting apart.
 module.exports = [
@@ -11,17 +12,10 @@ module.exports = [
   },
   {
     key: 'payments',
-    label: 'Payments',
+    label: 'Payments & fintech',
     permalink: '/payments.html',
-    title: 'Payments · The Mexico Brief',
-    description: 'Mexico’s payment rails, cards, e-commerce and cash, using dated Banco de México data.',
-  },
-  {
-    key: 'trade',
-    label: 'Trade',
-    permalink: '/trade.html',
-    title: 'Trade · The Mexico Brief',
-    description: 'What Mexico sells and buys, where it goes and how the trade balance is changing.',
+    title: 'Payments and fintech · The Mexico Brief',
+    description: 'Mexico’s payment rails, cards, fintech regulation, e-commerce and cash, using dated Banco de México data.',
   },
   {
     key: 'politics',
@@ -32,16 +26,16 @@ module.exports = [
   },
   {
     key: 'society',
-    label: 'Society & security',
+    label: 'Security & society',
     permalink: '/society.html',
-    title: 'Society and security · The Mexico Brief',
-    description: 'Mexico’s population, wages, household flows and official security data, with each measure kept on its own clock.',
+    title: 'Security and society · The Mexico Brief',
+    description: 'Mexico’s official security data, population, wages and household flows, with each measure kept on its own clock.',
   },
   {
     key: 'usmexico',
-    label: 'U.S.–Mexico',
+    label: 'US & Mexico',
     permalink: '/us-mexico.html',
-    title: 'U.S.–Mexico · The Mexico Brief',
-    description: 'The bilateral goods ledger, Mexico’s export exposure and the next official U.S.–Mexico dates.',
+    title: 'US and Mexico · The Mexico Brief',
+    description: 'The bilateral goods ledger, Mexico’s export exposure, and the dates that reprice the relationship.',
   },
 ];

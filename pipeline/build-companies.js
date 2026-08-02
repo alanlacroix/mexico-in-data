@@ -27,7 +27,7 @@ const arr = (v) => (Array.isArray(v) ? v : []);
 const DAY = 864e5;
 const MAX = 6;   // the watchlist stays a glance, never a directory
 
-const SECTOR = { economy: 'Economy', money: 'Markets & money', politics: 'Politics', security: 'Security', society: 'Society', 'us-mexico': 'U.S.–Mexico' };
+const SECTOR = { economy: 'Economy', money: 'Markets & money', politics: 'Politics', security: 'Security', society: 'Society', 'us-mexico': 'US & Mexico' };
 
 // Normalize a company name for grouping: drop legal suffixes + punctuation, lowercase.
 const norm = (s) => String(s || '').trim().toLowerCase()

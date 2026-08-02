@@ -4,20 +4,24 @@
 // wants method and authorship visible. Subscribe remains the one call-to-action.
 // 2026-07-20 (Alan: "any better way to access these pages"): the six topic story pages come out from
 // behind Explore and live in a Topics dropdown — one click from anywhere. `match` lights it as active.
+// 2026-08-01 (Alan landed the seven-section structure): Topics becomes Sections; Payments & fintech
+// leads (his lane), Deals and Energy & infrastructure join as new pages, Trade folds into U.S.–Mexico
+// (trade.html stays live and reachable from that room, just off the menu).
 module.exports = [
   { label: 'Brief', href: '/' },
   { label: 'Numbers', href: '/chart.html' },
   { label: 'Atlas', href: '/atlas.html' },
-  { label: 'Topics',
-    match: ['/economy.html', '/payments.html', '/trade.html', '/politics.html', '/society.html', '/us-mexico.html'],
+  { label: 'Quarterly review',
+    match: ['/economy.html', '/payments.html', '/deals.html', '/politics.html', '/society.html', '/us-mexico.html', '/energy.html'],
     menu: [
       { group: 'Mexico by topic', links: [
+        { label: 'Payments & fintech', href: '/payments.html' },
+        { label: 'Deals & investment', href: '/deals.html' },
         { label: 'Economy & money', href: '/economy.html' },
-        { label: 'Payments', href: '/payments.html' },
-        { label: 'Trade', href: '/trade.html' },
+        { label: 'US & Mexico', href: '/us-mexico.html' },
         { label: 'Politics', href: '/politics.html' },
-        { label: 'Society & security', href: '/society.html' },
-        { label: 'U.S.–Mexico', href: '/us-mexico.html' },
+        { label: 'Security & society', href: '/society.html' },
+        { label: 'Energy & infrastructure', href: '/energy.html' },
       ] },
     ] },
   { label: 'Sources', href: '/sources.html' },

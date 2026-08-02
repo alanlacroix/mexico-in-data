@@ -26,7 +26,7 @@ const SECTIONS = {
   politics:    { beat: 'Politics',        room: 'Politics',            url: '/politics.html' },
   security:    { beat: 'Security',        room: 'Society & security',  url: '/society.html' },
   society:     { beat: 'Society',         room: 'Society & security',  url: '/society.html' },
-  'us-mexico': { beat: 'US–Mexico',       room: 'US–Mexico',           url: '/us-mexico.html' },
+  'us-mexico': { beat: 'US & Mexico',       room: 'US & Mexico',           url: '/us-mexico.html' },
 };
 
 // The auto companies tracker (pipeline/build-companies.js → data/companies.json) runs DARK
@@ -80,7 +80,10 @@ module.exports = function () {
   const brief = read('brief.json') || {};
   const lead = brief.lead || null;
   const items = Array.isArray(brief.items) ? brief.items : [];
-  const stories = dedupe([lead, ...items]).map(toStory).filter((x) => x.title).slice(0, 5);
+  // §6 (spec 2026-08-01): new items sort above carried-over ones; the pipeline's
+  // own order holds within each half.
+  const stories = dedupe([lead, ...items]).map(toStory).filter((x) => x.title).slice(0, 5)
+    .sort((a, b) => (b.isNew === true) - (a.isNew === true));
   const briefSources = [];
   for (const story of stories) {
     if (!story.source || !story.url || briefSources.some((x) => x.source === story.source)) continue;
@@ -91,7 +94,25 @@ module.exports = function () {
   const meta = brief.meta || {};
   const co = COMPANIES_LIVE ? (read('companies.json') || {}) : {};
   const companies = Array.isArray(co.companies) ? co.companies : [];
+
+  // Alan's clock contract (2026-08-01): everything above "The last 7 days" is
+  // TODAY. Key developments therefore carries only stories from the last 48
+  // hours (a brief built at 8am legitimately leads with last evening's news);
+  // older importance picks stay out. When the pipeline itself is stale the
+  // block says so instead of passing off old stories as today's.
+  const DAY_MS = 864e5;
+  const storyTime = (s) => Date.parse(/^\d{4}-\d{2}-\d{2}$/.test(s.date) ? s.date + 'T12:00:00Z' : s.date);
+  // NEW stories sort above carried-over ones (2026-08-01 design: the digest's
+  // hierarchy is newness first, then the pipeline's own order within each half).
+  const todayStories = stories
+    .filter((s) => { const t = storyTime(s); return Number.isFinite(t) && Date.now() - t <= 2 * DAY_MS; })
+    .sort((a, b) => (b.isNew === true) - (a.isNew === true));
+  const reviewedTime = Date.parse(meta.reviewedAt || meta.generatedAt || '');
+  const isStale = !Number.isFinite(reviewedTime) || Date.now() - reviewedTime > 2 * DAY_MS;
+
   return {
+    todayStories,
+    isStale,
     // Editorial clock: when the pipeline last rebuilt the brief (real, not hand-typed).
     // Distinct from the data clock (the "N feeds checked" line, from health.json).
     newsThrough: meta.reviewedAt || meta.generatedAt || (stories[0] && stories[0].date) || '',

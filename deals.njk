@@ -1,0 +1,143 @@
+---
+layout: base.njk
+permalink: /deals.html
+title: "Deals and investment · The Mexico Brief"
+description: "How capital reaches Mexico: foreign direct investment, private equity and M&A, venture rounds, and the industrial real estate that shows whether any of it landed."
+bodyClass: topic-page
+footerBlurb: "The important numbers, the developments behind them, and the original sources when you want to go deeper. Built by Alan Lacroix."
+---
+{#- Deals & investment on the section anatomy (Fable ruling 2026-08-01). This is the
+    data-poor pole: no funding series is wired yet, so "The numbers" is a dated,
+    sourced table rather than a chart. Never a fake chart to fill the slot. -#}
+<style>
+  .sl{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+  .sl-switch-wrap{border-bottom:1px solid var(--line);padding:16px 0 14px}
+  .sl-switch-label{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+  .sl-switch{display:flex;flex-wrap:wrap;gap:8px}
+  .sl-switch a{display:inline-flex;align-items:center;border:1px solid var(--line-2);border-radius:999px;background:var(--paper);color:var(--ink-2);padding:8px 14px;min-height:34px;font-size:13px;line-height:1;white-space:nowrap;text-decoration:none}
+  .sl-switch a:hover{color:var(--ink);border-color:var(--ink)}
+  .sl-switch a.active{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+  .sl-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:baseline;padding:26px 0 0}
+  .sl-hero h1{font-size:var(--fs-display);line-height:1.02;letter-spacing:-.025em;margin:0}
+  .sl-stamp{font-family:var(--mono);font-size:var(--fs-label);line-height:1.5;color:var(--mut);text-align:right}
+  .sl-lede{font-size:clamp(17.5px,1.7vw,20px);line-height:1.6;color:var(--ink);max-width:70ch;margin:16px 0 0}
+  .sec{margin-top:38px;border-top:2px solid var(--green);padding-top:12px}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .sec h2{font-size:var(--fs-h2);line-height:1.2;margin:2px 0 0}
+  .sec-note{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .p{font-size:var(--fs-body);line-height:1.62;color:var(--ink);max-width:72ch;margin:13px 0 0}
+  .slot{margin-top:16px}
+  .slot-read{font-size:var(--fs-small);line-height:1.6;color:var(--ink-2);max-width:74ch;margin:11px 0 0}
+  .slot-table{border:1px solid var(--line-2);border-radius:4px;overflow-x:auto}
+  .slot-table table{width:100%;border-collapse:collapse;font-size:var(--fs-meta)}
+  .slot-table th{text-align:left;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .slot-table td{padding:10px 14px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+  .slot-table tr:last-child td{border-bottom:0}
+  .slot-table .d{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .slot-table .t a{color:var(--ink);text-decoration:none}
+  .slot-table .t a:hover{color:var(--green-d);text-decoration:underline;text-underline-offset:3px}
+  .ahead-row{display:flex;gap:18px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line)}
+  .ahead-row:first-of-type{border-top:0}
+  .ahead-when{width:110px;flex:none;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+  .ahead-what{font-size:var(--fs-small);line-height:1.45;color:var(--ink)}
+  .ahead-src{margin-left:auto;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
+  .change-mind{border-left:2px solid var(--green);padding-left:14px;margin-top:16px}
+  .record-empty{font-size:var(--fs-small);line-height:1.6;color:var(--mut);max-width:70ch;margin-top:12px}
+  .sources{margin-top:34px;border-top:1px solid var(--line);padding-top:14px}
+  .sources summary{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--green-d);cursor:pointer}
+  .sources-body{font-size:var(--fs-meta);line-height:1.6;color:var(--ink-2);padding-top:12px;max-width:76ch}
+  .sources-body a{color:var(--green-d)}
+  .sources-body p{margin-top:10px}
+  .daily-link-row{padding-top:24px;font-family:var(--mono);font-size:var(--fs-label)}
+  @media(max-width:700px){
+    .sl-hero{grid-template-columns:1fr;gap:8px}
+    .sl-stamp{text-align:left}
+    .ahead-row{flex-wrap:wrap;gap:4px 14px}
+    .ahead-src{margin-left:0;width:100%}
+  }
+</style>
+<div class="sl">
+  <div class="sl-switch-wrap">
+    <div class="sl-switch-label">Topics</div>
+    <nav class="sl-switch" aria-label="Topics">
+      <a href="/payments.html">Payments &amp; fintech</a>
+      <a href="/deals.html" class="active" aria-current="page">Deals &amp; investment</a>
+      <a href="/economy.html">Economy &amp; money</a>
+      <a href="/us-mexico.html">US &amp; Mexico</a>
+      <a href="/politics.html">Politics</a>
+      <a href="/society.html">Security &amp; society</a>
+      <a href="/energy.html">Energy &amp; infrastructure</a>
+    </nav>
+  </div>
+
+  <section class="sl-hero">
+    <h1>Deals &amp; investment</h1>
+    <div class="sl-stamp">Q3 2026 · next review October 2026</div>
+  </section>
+  <p class="sl-lede">Capital reaches Mexico through three doors that behave differently: factories built by companies already here, funds buying into existing businesses, and venture money chasing new ones. The first is large and slow. The last is small and loud.</p>
+
+  <section class="sec">
+    <div class="sec-head"><h2>How it works</h2><div class="sec-note">Last revised Aug 1, 2026</div></div>
+    <p class="p">Foreign direct investment is the big number and the slowest one. Most of it is not a new arrival: it is companies expanding plants they already own, which is why reinvested earnings carry most quarters rather than fresh capital. The Secretaría de Economía publishes it quarterly through the RNIE registry, and the headline figure keeps being revised for several quarters after it first appears, so the first print is the least reliable one.</p>
+    <p class="p">Private equity and mergers sit in the middle. The buyers repeat: a handful of regional funds, family holding companies, and strategic acquirers from the United States and Spain. Announced values are usually enterprise value rather than cash paid, and they arrive in pesos or dollars depending on who is telling the story, so two reports of the same deal rarely carry the same number.</p>
+    <p class="p">Venture capital is the smallest pool and the noisiest. Mexico is the second market in the region behind Brazil, concentrated in fintech, logistics and business-to-business commerce. Rounds are announced by the company being funded, so the flow of news tracks fundraising cycles more closely than it tracks the economy.</p>
+    <p class="p">The most reliable read on whether any of it landed is industrial real estate. A plant announcement is a press release. A signed lease, and a vacancy rate that moves in Monterrey, Saltillo or Guadalajara, is the same decision six months later with money behind it.</p>
+    <p class="p">So treat announced totals as intentions. Follow the things that recur instead: whether reinvestment holds, whether industrial space keeps getting absorbed, and whether the same funds keep appearing on the buy side.</p>
+  </section>
+
+  <section class="sec">
+    <h2>The numbers</h2>
+    <div class="slot">
+      {% if weeklyTop.rooms.deals.items.length %}
+      <div class="slot-table"><table>
+        <thead><tr><th>Date</th><th>Deal or signal</th><th>Outlet</th></tr></thead>
+        <tbody>
+          {% for it in weeklyTop.rooms.deals.items %}
+          <tr><td class="d">{{ it.dayLabel }}</td><td class="t"><a href="{{ it.url }}" target="_blank" rel="noopener">{{ it.title }}</a></td><td class="d">{{ it.sourceName }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table></div>
+      <p class="slot-read">This is what the feeds surfaced in the last seven days, not a market total: {{ weeklyTop.rooms.deals.items.length }} items from named outlets, each linked to the outlet that reported it. No funding or foreign-investment series is wired behind this section yet, so a dated table is the honest unit here and a chart would be an invention.</p>
+      {% else %}
+      <p class="slot-read">Nothing from the named outlets cleared the bar in the last seven days. The table returns when deals do; it is not padded in the meantime.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>What changed this quarter</h2>
+    <p class="p">This section opened on August 1, 2026, so this is its first quarter under observation and the record starts empty rather than backfilled. What the feeds have shown so far is the pattern the walkthrough describes: venture activity clustered in business-to-business fintech and supply-chain software at single-digit-million rounds, alongside a steadier stream of industrial commitments, distribution centres and mixed-use projects from the listed property trusts.</p>
+    <p class="p">The number that would actually settle the quarter, foreign direct investment from the RNIE registry, is not wired into the site yet. Until it is, this section reports what named outlets reported and says so, rather than implying a total it cannot source.</p>
+  </section>
+
+  <section class="sec">
+    <h2>What's ahead</h2>
+    <div class="ahead-row"><div class="ahead-when">Quarterly</div><div class="ahead-what">Foreign direct investment, RNIE registry</div><div class="ahead-src">Secretaría de Economía</div></div>
+    <div class="ahead-row"><div class="ahead-when">Quarterly</div><div class="ahead-what">Industrial market: absorption and vacancy by corridor</div><div class="ahead-src">Datoz · Inmobiliare</div></div>
+    <div class="ahead-row"><div class="ahead-when">Continuous</div><div class="ahead-what">Funding rounds and acquisitions from named outlets</div><div class="ahead-src">Startups Latam · Bloomberg Línea</div></div>
+    <div class="ahead-row"><div class="ahead-when">Oct 2026</div><div class="ahead-what">Next full review of this section</div><div class="ahead-src">The Mexico Brief</div></div>
+  </section>
+
+  <section class="sec">
+    <h2>My view</h2>
+    <p class="p">Mexico's investment story is told almost entirely in announcements, and announcements are the least reliable part of it. A nearshoring headline is a decision someone hopes to make. A lease in Saltillo is one they already made. That gap is why I would rather track industrial absorption and reinvested earnings than the announced totals that get quoted in both directions.</p>
+    <p class="p">The venture side matters to me for a narrower reason than its size suggests. It is where the buyers of financial infrastructure get funded, so the round that looks small on a national scale is often the one that changes who is selling payments to a merchant next year.</p>
+    <p class="p change-mind"><b>What would change my mind:</b> two consecutive quarters where investment growth is carried by new arrivals rather than reinvested earnings, with industrial absorption rising alongside it. That would mean the announcements are converting, and this section should start leading with them.</p>
+  </section>
+
+  <section class="sec">
+    <h2>The record</h2>
+    <p class="record-empty">No calls on the record yet. This section opened in August 2026; the first entries land with the October review, and they will be scored the same way as everywhere else on the site: right, wrong, or overtaken by events.</p>
+  </section>
+
+  <details class="sources">
+    <summary>Sources and method</summary>
+    <div class="sources-body">
+      <div><a href="https://www.gob.mx/se" target="_blank" rel="noopener">Secretaría de Economía · RNIE foreign direct investment ↗</a></div>
+      <div><a href="https://startupslatam.com" target="_blank" rel="noopener">Startups Latam ↗</a> · <a href="https://www.datoz.com" target="_blank" rel="noopener">Datoz ↗</a> · <a href="https://www.inmobiliare.com" target="_blank" rel="noopener">Inmobiliare ↗</a> · <a href="https://www.bloomberglinea.com" target="_blank" rel="noopener">Bloomberg Línea ↗</a></div>
+      <p>No funding, foreign-investment or industrial-vacancy series is wired into the site yet, so this section carries a dated table of what named outlets reported instead of a chart. Announced deal values are reproduced as the outlet reported them and are never converted, netted or summed, because announced values mix enterprise value with cash paid and mix currencies. The walkthrough above is re-read and re-stamped every quarter; its revision date is on the page.</p>
+    </div>
+  </details>
+
+  <p class="daily-link-row"><a href="/?topic=deals#all-news">Daily coverage of this section lives on the homepage →</a></p>
+</div>

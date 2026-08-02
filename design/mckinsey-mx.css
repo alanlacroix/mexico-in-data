@@ -22,22 +22,22 @@
   --paper:#ffffff;
   --paper-2:#f5f4ef;       /* faint warm gray — table headers, strips */
   --paper-3:#eceae4;
-  --ink:#141414;           /* headings */
-  --ink-2:#2f2f2f;         /* body */
-  --mut:#4d4d4d;           /* captions, labels — darkened so the mono layer is readable, not decorative */
+  --ink:#101214;           /* headlines, big numbers, section heads, nav */
+  --ink-2:#565c62;         /* body: story summaries, standfirsts */
+  --mut:#6e757b;           /* meta floor: dates, outlets, clock lines, helper text */
 
   /* Mexican flag accents — the only color on the page */
   --green:#0a7d4d;         /* primary accent: links, exhibit numbers, positive */
-  --green-d:#075b38;
+  --green-d:#0a7d4d;       /* one green, aliased so every green on the site is THE green */
   --green-bg:#e7f2ec;
-  --red:#c8102e;           /* emphasis, negative, alert */
+  --red:#b3261e;           /* staleness and negative moves — nothing else */
   --red-bg:#f8e8ea;
   --amber:#a6791a;         /* neutral / watch (use sparingly) */
   --amber-bg:#f5eeda;
 
   /* rules */
-  --line:#e6e6e2;
-  --line-2:#ccccc6;
+  --line:#ededeb;   /* rule: hairline between stories */
+  --line-2:#e4e4e1; /* frame: card borders */
 
   /* Type — two families, fixed roles (Fable 2026-07-12). Inter for anything a reader
      reads (headings, prose, links); IBM Plex Mono for the label layer (eyebrows, meta,
@@ -166,9 +166,9 @@ header.mast .wrap{display:flex;align-items:center;justify-content:space-between;
 .mnav a{color:var(--mut);text-decoration:none;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
 .mnav a:hover{color:var(--ink)}
 .mnav a.here{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--green);text-decoration-thickness:2px;text-underline-offset:7px}
-.mnav a.cta{color:var(--green-d);border:1px solid var(--green-d);border-radius:8px;padding:5px 10px}
-.mnav a.cta:hover{background:var(--green-d);color:#fff}
-.mnav a.cta.here{background:var(--green-d);color:#fff;text-decoration:none}
+.mnav a.cta{color:var(--green-d);border:0;border-radius:0;padding:5px 2px}
+.mnav a.cta:hover{background:none;color:var(--green-d);text-decoration:underline;text-underline-offset:3px}
+.mnav a.cta.here{background:none;color:var(--green-d);text-decoration:underline;text-underline-offset:3px}
 /* menu button — shown only on narrow screens, where the links collapse into a drop panel */
 .navtoggle{display:none;flex-direction:column;justify-content:center;align-items:center;gap:4px;width:44px;height:44px;margin-right:-10px;padding:0;background:none;border:0;cursor:pointer}
 .navtoggle span{display:block;width:20px;height:2px;background:var(--ink);border-radius:2px}

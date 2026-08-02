@@ -248,6 +248,14 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   .honesty a{color:var(--green-d);font-weight:500}
 
   /* cadence note under the access legend */
+  .lane{margin-top:56px}
+  .lane-head{border-top:2px solid var(--green);padding-top:14px;margin-bottom:10px}
+  .lane-kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.09em;text-transform:uppercase;color:var(--green-d)}
+  .lane-head h2{font-size:var(--fs-h2);line-height:1.15;margin:7px 0 0}
+  .lane-dek{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:78ch;margin-top:9px}
+  .lane .grp{margin-top:30px}
+  .lane .grp .section-head{border-top:1px solid var(--line);padding-top:12px}
+  .lane .grp h3{font-size:var(--fs-h3);line-height:1.2;margin:5px 0 0}
   .cadnote{margin:12px 0 0;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2);line-height:1.6;max-width:820px}
   .cadnote b{color:var(--ink);font-weight:600}
   .cadnote a{color:var(--green-d);font-weight:500}
@@ -279,8 +287,8 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
     <p class="dek">You should not have to take my word for a figure. The source and date sit next to it, and this page shows what is behind the site: which feeds are current, which need attention, and where to go if you want the original file.</p>
     <p class="live"><a href="#livenow">Check the feeds &rarr;</a></p>
     <div class="metastrip">
-      <span><b id="catalogcount">102</b> catalog entries</span>
-      <span><b>7</b> groups</span>
+      <span><b id="catalogcount">109</b> catalog entries</span>
+      <span><b>2</b> lanes · data and news</span>
       <span>Mexican official sources come first</span>
       <span>Dates and links stay with the figure</span>
     </div>
@@ -365,10 +373,17 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
     <p class="catalog-empty" id="catalog-empty">No sources match that search.</p>
   </div>
 
+  <!-- ============ LANE: Data sources ============ -->
+  <div class="lane">
+    <div class="lane-head">
+      <div class="lane-kicker">Data sources</div>
+      <h2>Numbers, from the institution that publishes them</h2>
+      <p class="lane-dek">Official statistics, the agencies behind them, and what each one actually gives you. Mexican institutions come first; U.S., partner-country and multilateral files follow, then market estimates and the high-frequency signals I use as supporting evidence.</p>
+    </div>
   <!-- ============ GROUP A ============ -->
   <div class="grp">
     <div class="section-head">
-      <h2>Mexican official, the core</h2>
+      <h3>Mexican official, the core</h3>
       <p class="dek">Banxico, INEGI, Hacienda, and the financial regulators publish Mexico's own numbers. This is the primary record. The other six groups cross-check it.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
@@ -556,7 +571,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   <!-- ============ GROUP B ============ -->
   <div class="grp">
     <div class="section-head">
-      <h2>US official data on Mexico</h2>
+      <h3>US official data on Mexico</h3>
       <p class="dek">Mexico is the United States' number one goods partner, so US agencies publish machine-readable data on it, often more current than Mexico's own.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
@@ -737,7 +752,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   <!-- ============ GROUP C ============ -->
   <div class="grp">
     <div class="section-head">
-      <h2>Partner-country customs and statistics</h2>
+      <h3>Partner-country customs and statistics</h3>
       <p class="dek">Partner customs and statistics offices report their own trade with Mexico. That cross-checks the Mexican figures and captures flows Mexico does not publish, above all the surge from China.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
@@ -792,7 +807,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   <!-- ============ GROUP D ============ -->
   <div class="grp">
     <div class="section-head">
-      <h2>Multilateral and cross-country official</h2>
+      <h3>Multilateral and cross-country official</h3>
       <p class="dek">The IMF, World Bank, OECD, and BIS put Mexico on a comparable footing with other countries. They add independent diagnosis and forecasts.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
@@ -854,7 +869,7 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
   <!-- ============ GROUP E ============ -->
   <div class="grp">
     <div class="section-head">
-      <h2>Market and proprietary estimates</h2>
+      <h3>Market and proprietary estimates</h3>
       <p class="dek">These prices move intraday. Domestic rates, FX, and the mezcla come through Banxico's API. The country-risk gauges are proprietary, each tagged NO FREE API or PROPRIETARY in the table below.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
@@ -913,128 +928,10 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
     </table></div>
   </div>
 
-  <!-- ============ GROUP F ============ -->
-  <div class="grp">
-    <div class="section-head">
-      <h2>Reporting and analysis</h2>
-      <p class="dek">Reporting adds the context and quotes the numbers cannot. We poll these feeds for headlines and reaction. The figures themselves come from the official sources above.</p>
-    </div>
-    <div class="tblwrap"><table class="mck src">
-      <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
-      <tbody>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.gob.mx/presidencia" target="_blank" rel="noopener">Presidencia, versiones estenográficas</a></span><span class="bo">Presidencia · la mañanera</span><span class="etag p">primary source</span></td>
-          <td class="gives">Full daily presidential press-conference transcripts</td>
-          <td class="cad">Daily</td>
-          <td class="acc"><span class="chip n">WEB</span><span class="note">daily transcripts</span></td>
-          <td class="why">Primary-source policy signaling, verbatim.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.inegi.org.mx/app/saladeprensa" target="_blank" rel="noopener">INEGI sala de prensa</a></span><span class="bo">INEGI</span><span class="etag p">primary source</span></td>
-          <td class="gives">Release calendar and headline communiqués</td>
-          <td class="cad">On schedule</td>
-          <td class="acc"><span class="chip n">RSS</span></td>
-          <td class="why">Know the number the moment it drops.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banxico boletines</a></span><span class="bo">Banco de México</span><span class="etag p">primary source</span></td>
-          <td class="gives">Policy decisions, minutes, reports</td>
-          <td class="cad">Scheduled</td>
-          <td class="acc"><span class="chip n">RSS</span><span class="note">calendar</span></td>
-          <td class="why">Monetary-policy signals at source.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.eleconomista.com.mx" target="_blank" rel="noopener">El Economista</a></span><span class="bo">El Economista</span><span class="etag r">reporting</span></td>
-          <td class="gives">Business, finance, and economy, daily</td>
-          <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">WEB</span><span class="note">feed availability varies</span></td>
-          <td class="why">Daily business coverage.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.elfinanciero.com.mx" target="_blank" rel="noopener">El Financiero</a></span><span class="bo">El Financiero</span><span class="etag r">reporting</span></td>
-          <td class="gives">Finance / economy / politics, markets, mezcla</td>
-          <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">RSS</span></td>
-          <td class="why">Markets and macro daily.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://expansion.mx/canales-rss" target="_blank" rel="noopener">Expansión</a></span><span class="bo">Grupo Expansión</span><span class="etag r">reporting</span></td>
-          <td class="gives">Business and economy</td>
-          <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">RSS</span><span class="note">official channels</span></td>
-          <td class="why">Business coverage with published feeds.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.bloomberglinea.com" target="_blank" rel="noopener">Bloomberg Línea</a></span><span class="bo">Bloomberg Línea</span><span class="etag r">reporting</span></td>
-          <td class="gives">LatAm / Mexico markets and business (Spanish)</td>
-          <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">RSS</span></td>
-          <td class="why">Markets desk view, in Spanish.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://mexicobusiness.news" target="_blank" rel="noopener">Mexico Business News</a></span><span class="bo">Mexico Business News</span><span class="etag r">specialist reporting</span></td>
-          <td class="gives">Automotive, investment, energy, fintech, technology, and infrastructure</td>
-          <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">API</span><span class="note">reported news only</span></td>
-          <td class="why">Specialist company and industry coverage in English.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://elpais.com/mexico/" target="_blank" rel="noopener">El País México</a></span><span class="bo">El País</span><span class="etag r">reporting</span></td>
-          <td class="gives">Mexican politics, institutions, and social issues</td>
-          <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">RSS</span></td>
-          <td class="why">A broad Mexico desk alongside the specialist business feeds.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://ciep.mx/investigaciones/" target="_blank" rel="noopener">CIEP</a> / <a href="https://ceey.org.mx/" target="_blank" rel="noopener">CEEY</a></span><span class="bo">CIEP · CEEY</span><span class="etag r">research</span></td>
-          <td class="gives">Public finances, pensions, poverty, work, and social mobility</td>
-          <td class="cad">Irregular</td>
-          <td class="acc"><span class="chip n">RSS</span><span class="note">research publications</span></td>
-          <td class="why">Context for the official numbers, not breaking news.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.as-coa.org/region/mexico" target="_blank" rel="noopener">AS/COA</a> / <a href="https://www.wilsoncenter.org/about-21" target="_blank" rel="noopener">Mexico Institute</a></span><span class="bo">AS/COA · Wilson Center</span><span class="etag r">analysis</span></td>
-          <td class="gives">US–Mexico trade, migration, and bilateral policy</td>
-          <td class="cad">Irregular</td>
-          <td class="acc"><span class="chip n">RSS / WEB</span></td>
-          <td class="why">Specialist context for the bilateral relationship.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.eluniversal.com.mx" target="_blank" rel="noopener">National dailies</a></span><span class="bo">El Universal · Milenio · Excélsior · La Jornada</span><span class="etag r">reporting</span></td>
-          <td class="gives">General and political news</td>
-          <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">WEB / RSS</span><span class="note">varies by outlet</span></td>
-          <td class="why">The general-news baseline.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.animalpolitico.com" target="_blank" rel="noopener">Investigative outlets</a></span><span class="bo">Animal Político · Proceso · Aristegui</span><span class="etag r">reporting</span></td>
-          <td class="gives">Corruption, security, politics</td>
-          <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip n">RSS</span><span class="note">partial coverage</span></td>
-          <td class="why">Where accountability stories break.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://www.reuters.com/world/americas" target="_blank" rel="noopener">Reuters / AP Mexico</a></span><span class="bo">Reuters · Associated Press</span><span class="etag r">reporting</span></td>
-          <td class="gives">English breaking news</td>
-          <td class="cad">Continuous</td>
-          <td class="acc"><span class="chip a">SCRAPE</span><span class="note v">Reuters RSS deprecated</span></td>
-          <td class="why">English-language breaking coverage.</td>
-        </tr>
-        <tr>
-          <td class="nm"><span class="n"><a href="https://mexiconewsdaily.com/feed" target="_blank" rel="noopener">Mexico News Daily</a></span><span class="bo">Mexico News Daily</span><span class="etag r">reporting</span></td>
-          <td class="gives">English-language Mexico news</td>
-          <td class="cad">Daily</td>
-          <td class="acc"><span class="chip n">RSS</span></td>
-          <td class="why">Daily Mexico coverage in English.</td>
-        </tr>
-      </tbody>
-    </table></div>
-  </div>
-
   <!-- ============ GROUP G ============ -->
   <div class="grp">
     <div class="section-head">
-      <h2>Alternative and high-frequency signals</h2>
+      <h3>Alternative and high-frequency signals</h3>
       <p class="dek">These sources cover things the standard monthly releases miss or report later: grid load, night lights, border wait times, flights, fires, and disappearances. I use them as supporting signals, not substitutes for the official releases.</p>
     </div>
     <div class="tblwrap"><table class="mck src">
@@ -1168,6 +1065,184 @@ description: "Every source behind The Mexico Brief: official Mexican data, US an
         </tr>
       </tbody>
     </table></div>
+  </div>
+
+  </div>
+
+  <!-- ============ LANE: News sources ============ -->
+  <div class="lane">
+    <div class="lane-head">
+      <div class="lane-kicker">News sources</div>
+      <h2>Reporting and analysis, by named outlet</h2>
+      <p class="lane-dek">Every story on the site links to the outlet that reported it. These are the feeds that surface them, grouped by what each one covers rather than by how loud it is.</p>
+    </div>
+  <!-- ============ GROUP F ============ -->
+  <div class="grp">
+    <div class="section-head">
+      <h3>Reporting and analysis</h3>
+      <p class="dek">Reporting adds the context and quotes the numbers cannot. We poll these feeds for headlines and reaction. The figures themselves come from the official sources above.</p>
+    </div>
+    <div class="tblwrap"><table class="mck src">
+      <thead><tr><th>Source</th><th>What it gives</th><th>Cadence</th><th>Access</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.gob.mx/presidencia" target="_blank" rel="noopener">Presidencia, versiones estenográficas</a></span><span class="bo">Presidencia · la mañanera</span><span class="etag p">primary source</span></td>
+          <td class="gives">Full daily presidential press-conference transcripts</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">WEB</span><span class="note">daily transcripts</span></td>
+          <td class="why">Primary-source policy signaling, verbatim.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.inegi.org.mx/app/saladeprensa" target="_blank" rel="noopener">INEGI sala de prensa</a></span><span class="bo">INEGI</span><span class="etag p">primary source</span></td>
+          <td class="gives">Release calendar and headline communiqués</td>
+          <td class="cad">On schedule</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Know the number the moment it drops.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.banxico.org.mx" target="_blank" rel="noopener">Banxico boletines</a></span><span class="bo">Banco de México</span><span class="etag p">primary source</span></td>
+          <td class="gives">Policy decisions, minutes, reports</td>
+          <td class="cad">Scheduled</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">calendar</span></td>
+          <td class="why">Monetary-policy signals at source.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.eleconomista.com.mx" target="_blank" rel="noopener">El Economista</a></span><span class="bo">El Economista</span><span class="etag r">reporting</span></td>
+          <td class="gives">Business, finance, and economy, daily</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">WEB</span><span class="note">feed availability varies</span></td>
+          <td class="why">Daily business coverage.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.elfinanciero.com.mx" target="_blank" rel="noopener">El Financiero</a></span><span class="bo">El Financiero</span><span class="etag r">reporting</span></td>
+          <td class="gives">Finance / economy / politics, markets, mezcla</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Markets and macro daily.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://expansion.mx/canales-rss" target="_blank" rel="noopener">Expansión</a></span><span class="bo">Grupo Expansión</span><span class="etag r">reporting</span></td>
+          <td class="gives">Business and economy</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">official channels</span></td>
+          <td class="why">Business coverage with published feeds.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.bloomberglinea.com" target="_blank" rel="noopener">Bloomberg Línea</a></span><span class="bo">Bloomberg Línea</span><span class="etag r">reporting</span></td>
+          <td class="gives">LatAm / Mexico markets and business (Spanish)</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Markets desk view, in Spanish.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://mexicobusiness.news" target="_blank" rel="noopener">Mexico Business News</a></span><span class="bo">Mexico Business News</span><span class="etag r">specialist reporting</span></td>
+          <td class="gives">Automotive, investment, energy, fintech, technology, and infrastructure</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">API</span><span class="note">reported news only</span></td>
+          <td class="why">Specialist company and industry coverage in English.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.fintechexpert.mx" target="_blank" rel="noopener">FintechExpert.mx</a> / <a href="https://iupana.com" target="_blank" rel="noopener">iupana</a></span><span class="bo">FintechExpert · iupana</span><span class="etag r">specialist reporting</span></td>
+          <td class="gives">Mexican and LatAm fintech: licences, rails, funding, regulation</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">The payments and fintech beat, followed daily rather than in passing.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://blog.amvo.org.mx" target="_blank" rel="noopener">AMVO</a> / <a href="https://retailers.mx" target="_blank" rel="noopener">Retailers.mx</a> / <a href="https://marketing4ecommerce.mx" target="_blank" rel="noopener">Marketing4eCommerce</a></span><span class="bo">AMVO · Retailers.mx · M4C</span><span class="etag r">industry</span></td>
+          <td class="gives">E-commerce and retail: online spending, channel studies, store results</td>
+          <td class="cad">Daily to weekly</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Where the demand side of payments actually shows up.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://startupslatam.com" target="_blank" rel="noopener">Startups Latam</a> / <a href="https://www.datoz.com" target="_blank" rel="noopener">Datoz</a> / <a href="https://www.inmobiliare.com" target="_blank" rel="noopener">Inmobiliare</a></span><span class="bo">Startups Latam · Datoz · Inmobiliare</span><span class="etag r">specialist reporting</span></td>
+          <td class="gives">Funding rounds with amounts; industrial real estate, vacancy and plant investment</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Deal flow and the physical side of nearshoring, which general business pages miss.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.energiaadebate.com" target="_blank" rel="noopener">Energía a Debate</a> / <a href="https://t21.com.mx" target="_blank" rel="noopener">T21</a> / <a href="https://www.pemex.com/saladeprensa" target="_blank" rel="noopener">Pemex press office</a></span><span class="bo">Energía a Debate · T21 · Pemex</span><span class="etag r">specialist reporting</span></td>
+          <td class="gives">Pemex and CFE finances, the grid, rail, ports and logistics</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">Pemex is first-party</span></td>
+          <td class="why">Whether the country can physically carry the growth it reports.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.mexicodecoded.com" target="_blank" rel="noopener">Mexico Decoded</a> / <a href="https://www.mxpe.org" target="_blank" rel="noopener">Mexico Political Economist</a> / <a href="https://ceesp.org.mx" target="_blank" rel="noopener">CEESP</a></span><span class="bo">Mexico Decoded · MXPE · CEESP</span><span class="etag r">analysis</span></td>
+          <td class="gives">Mechanisms behind the headlines: policy, political economy, private-sector reads</td>
+          <td class="cad">Weekly</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Explains why a number moved, which the wire never does.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://insightcrime.org/mexico-organized-crime-news/" target="_blank" rel="noopener">InSight Crime</a> / <a href="https://www.mexcham.org" target="_blank" rel="noopener">MEXCHAM</a></span><span class="bo">InSight Crime · MEXCHAM</span><span class="etag r">analysis</span></td>
+          <td class="gives">Criminal-group territory and business risk; Chinese investment and trade with Mexico</td>
+          <td class="cad">Weekly</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Security as an operating cost, and the Mexico–China thread inside the U.S. relationship.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.diariooficial.gob.mx" target="_blank" rel="noopener">Diario Oficial de la Federación</a></span><span class="bo">Segob</span><span class="etag p">primary source</span></td>
+          <td class="gives">Decrees, laws, reforms, tariffs and financial-regulator acts, as published</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">filtered to acts that change rules or money</span></td>
+          <td class="why">The official record, before anyone reports on it.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://elpais.com/mexico/" target="_blank" rel="noopener">El País México</a></span><span class="bo">El País</span><span class="etag r">reporting</span></td>
+          <td class="gives">Mexican politics, institutions, and social issues</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">A broad Mexico desk alongside the specialist business feeds.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://ciep.mx/investigaciones/" target="_blank" rel="noopener">CIEP</a> / <a href="https://ceey.org.mx/" target="_blank" rel="noopener">CEEY</a></span><span class="bo">CIEP · CEEY</span><span class="etag r">research</span></td>
+          <td class="gives">Public finances, pensions, poverty, work, and social mobility</td>
+          <td class="cad">Irregular</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">research publications</span></td>
+          <td class="why">Context for the official numbers, not breaking news.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.as-coa.org/region/mexico" target="_blank" rel="noopener">AS/COA</a> / <a href="https://www.wilsoncenter.org/about-21" target="_blank" rel="noopener">Mexico Institute</a></span><span class="bo">AS/COA · Wilson Center</span><span class="etag r">analysis</span></td>
+          <td class="gives">US–Mexico trade, migration, and bilateral policy</td>
+          <td class="cad">Irregular</td>
+          <td class="acc"><span class="chip n">RSS / WEB</span></td>
+          <td class="why">Specialist context for the bilateral relationship.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.eluniversal.com.mx" target="_blank" rel="noopener">National dailies</a></span><span class="bo">El Universal · Milenio · Excélsior · La Jornada</span><span class="etag r">reporting</span></td>
+          <td class="gives">General and political news</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">WEB / RSS</span><span class="note">varies by outlet</span></td>
+          <td class="why">The general-news baseline.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.animalpolitico.com" target="_blank" rel="noopener">Investigative outlets</a></span><span class="bo">Animal Político · Proceso · Aristegui</span><span class="etag r">reporting</span></td>
+          <td class="gives">Corruption, security, politics</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip n">RSS</span><span class="note">partial coverage</span></td>
+          <td class="why">Where accountability stories break.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://www.reuters.com/world/americas" target="_blank" rel="noopener">Reuters / AP Mexico</a></span><span class="bo">Reuters · Associated Press</span><span class="etag r">reporting</span></td>
+          <td class="gives">English breaking news</td>
+          <td class="cad">Continuous</td>
+          <td class="acc"><span class="chip a">SCRAPE</span><span class="note v">Reuters RSS deprecated</span></td>
+          <td class="why">English-language breaking coverage.</td>
+        </tr>
+        <tr>
+          <td class="nm"><span class="n"><a href="https://mexiconewsdaily.com/feed" target="_blank" rel="noopener">Mexico News Daily</a></span><span class="bo">Mexico News Daily</span><span class="etag r">reporting</span></td>
+          <td class="gives">English-language Mexico news</td>
+          <td class="cad">Daily</td>
+          <td class="acc"><span class="chip n">RSS</span></td>
+          <td class="why">Daily Mexico coverage in English.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
   </div>
 
   <!-- INSTITUTION GLOSSARY -->

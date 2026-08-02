@@ -17,12 +17,26 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
   .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
   .at(-1).value;
 
-assert.match(home, /Mexico this morning/i, 'homepage must remain a daily starting point');
+// 2026-08-01 (Alan, final): the name lives in the masthead ONLY — never twice on
+// one page. The page head says what day it is and when the page refreshed, and
+// that is the page's single clock. The data-checked line is gone as noise.
+assert.doesNotMatch(home, /home-name/, 'the page must not repeat the masthead name');
+assert.doesNotMatch(home, /Data checked/, 'the data-checked line must not return');
+assert.match(home, /id="updated"/, 'the head must carry the one refresh stamp');
+assert.match(home, /Refreshed \$\{when\}/, 'the refresh stamp must say when in plain words');
+// §3: exactly one filled green button on the page — the Subscribe form.
+assert.doesNotMatch(nav, /cta.*border:1px solid/, 'the nav Subscribe must not be a second button');
+// §9: no up/down arrows; sign and colour carry direction.
+assert.doesNotMatch(home, /[↑↓]/, 'arrows must not return to the market cards');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
 assert.match(home, /Markets today/i, 'homepage must separate fast-moving readings');
 assert.match(home, /Top stories/i, 'homepage must lead readers through the major stories');
 assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
-assert.match(home, /for story in latestStories/, 'the full news feed must live on the Brief instead of a separate Latest page');
+// 2026-08-01: the homepage's second layer is now the SEVEN-SECTION last-7-days
+// flow (weeklyTop), chosen by the same pills — not the old 5-topic latestStories
+// filter. The daily digest above it is unchanged.
+assert.match(home, /for group in weeklyTop\.groups/, 'the week layer must come from the seven-section weekly lane');
+assert.match(home, /The last 7 days/, 'the second layer must be labeled as the week');
 assert.match(home, /The context behind the headline\./i, 'the homepage must explain the BE mark once in plain language');
 assert.match(home, /class="be-mark"[^>]*>BE</i, 'stories must use the BE house mark for optional context');
 assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
@@ -30,8 +44,9 @@ assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as 
 assert.match(home, /id="week-title">The week ahead</i, 'homepage must show the week-ahead calendar section');
 assert.match(home, /Official releases and meetings/i, 'homepage must show Alan’s next official releases and meetings');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
-assert.match(home, /today ·.*stronger|today.*stronger/i,
-  'homepage peso reading should include a short-term comparison');
+// §3: the peso keeps its plain word ("stronger"/"weaker") beside the signed move.
+assert.match(home, /\['stronger','weaker'\]/, 'the peso move must keep the plain word');
+assert.match(home, /unchanged/, 'a zero move must print "unchanged" rather than a signed zero');
 assert.match(home, /banxico-bmv-ipc/i,
   'homepage markets should include the Mexican equity market');
 assert.match(home, /banxico-cetes-28d/i,

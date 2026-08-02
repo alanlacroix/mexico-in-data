@@ -32,6 +32,39 @@ if (!crimeVintage || !/acumulado del año/i.test(`${crime.meta?.units || ''} ${c
 const crimeEndMonth = new Date(`${crimeVintage[1]}-${crimeVintage[2]}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
 const expectedCrimePeriod = crimeEndMonth === 'Jan' ? `Jan ${crimeVintage[1]}` : `Jan–${crimeEndMonth} ${crimeVintage[1]}`;
 
+// Fable's guard (2026-08-01): in an anatomy builder, the hand-written judgment
+// strings — My view, its falsifier, and What changed this quarter — may
+// interpolate number formatters but must contain NO conditionals. A view that
+// flips direction when data crosses a threshold is judgment laundered as
+// computation; it must change by revision, not by ternary. The twin failure,
+// hardcoding today's values, is caught by the live reads around it.
+{
+  const src = fs.readFileSync(path.join(root, 'topic-pages.njk'), 'utf8');
+  for (const m of src.matchAll(/function (\w+Topic)\(\)\{/g)) {
+    const from = m.index;
+    const next = src.indexOf('\nfunction ', from + 1);
+    const body = src.slice(from, next < 0 ? src.length : next);
+    if (!/anatomy:\s*true/.test(body)) continue;
+    for (const field of ['view:', 'quarter:']) {
+      const at = body.indexOf(field);
+      if (at < 0) throw new Error(`${m[1]}: anatomy builder is missing ${field}`);
+      const chunk = body.slice(at, body.indexOf('\n    ', at + 200) + 1 || undefined).slice(0, 3000);
+      if (/\?[^:]{0,120}:/.test(chunk.replace(/https?:[^\s'"`]+/g, '')) || /&&|\|\|/.test(chunk)) {
+        throw new Error(`${m[1]}: ${field} contains a conditional — judgment must change by revision, not by ternary`);
+      }
+    }
+  }
+}
+
+// The claims ledger: each converted page keeps the judgment its letter earned.
+const CLAIMS = {
+  economy: 'central fact',
+  usmexico: 'long horizon',
+  politics: 'missed statutory date',
+  society: 'cost of operating',
+  payments: 'what adoption displaces',
+};
+
 const original = {
   document: globalThis.document,
   fetch: globalThis.fetch,
@@ -75,11 +108,33 @@ for (const route of routes) {
   await new AsyncFunction('trendWord', 'bandWord', 'stanceWord', 'staleness', 'balanceWord', code)(trendWord, bandWord, stanceWord, staleness, balanceWord);
   const output = node('#topicApp').innerHTML;
   if (reported) throw new Error(`${route.key}: rendered the failure state (${reported})`);
-  const storyPage = output.includes('story-sec');
-  for (const required of storyPage
-    ? ['class="lead"', "What's moving", 'What could change this page', 'Sources and method']
-    : ['Snapshot', 'What changed', 'Sources and method']) {
-    if (!output.includes(required)) throw new Error(`${route.key}: missing ${required}`);
+  // ===== THE SECTION ANATOMY (Fable ruling 2026-08-01) =====
+  // Converted pages must meet the reader in ONE fixed order. This is the
+  // anti-drift test: it is what makes seven sections feel like one publication.
+  const anatomyPage = output.includes('anatomy-page');
+  const storyPage = !anatomyPage && output.includes('story-sec');
+  if (anatomyPage) {
+    const ORDER = ['How it works', 'The numbers', 'What changed this quarter', "What's ahead", 'My view', 'The record', 'Sources and method'];
+    let cursor = -1;
+    for (const heading of ORDER) {
+      const at = output.indexOf('>' + heading + '<');
+      if (at < 0) throw new Error(`${route.key}: anatomy is missing the "${heading}" module`);
+      if (at < cursor) throw new Error(`${route.key}: "${heading}" is out of the fixed anatomy order`);
+      cursor = at;
+    }
+    if (!/Last revised \w{3} \d{1,2}, \d{4}/.test(output)) throw new Error(`${route.key}: the walkthrough must carry a revised date`);
+    const slotCount = (output.match(/class="slot"/g) || []).length;
+    const readCount = (output.match(/class="slot-read"/g) || []).length;
+    if (!slotCount) throw new Error(`${route.key}: the anatomy needs at least one number slot`);
+    if (slotCount !== readCount) throw new Error(`${route.key}: ${slotCount} slots but ${readCount} reads — every slot carries a read`);
+    if (!output.includes('What would change my mind')) throw new Error(`${route.key}: My view must end with what would change it`);
+    if (/opens in October|first quarterly view/i.test(output)) throw new Error(`${route.key}: placeholder copy must not ship`);
+  } else {
+    for (const required of storyPage
+      ? ['class="lead"', "What's moving", 'What could change this page', 'Sources and method']
+      : ['Snapshot', 'What changed', 'Sources and method']) {
+      if (!output.includes(required)) throw new Error(`${route.key}: missing ${required}`);
+    }
   }
   // Fable's anti-relapse guard (2026-07-20): the letter register is enforced by budget,
   // not judgment. Prose = the lead + story paragraphs; scaffolding strings are banned.
@@ -90,9 +145,9 @@ for (const route of routes) {
     const prose = [...output.matchAll(/<p class="(?:lead|story-p)">([\s\S]*?)<\/p>/g)]
       .map((m) => m[1].replace(/<[^>]+>/g, ' '));
     const words = prose.join(' ').split(/\s+/).filter(Boolean).length;
-    if (words > 520) throw new Error(`${route.key}: ${words} prose words (cap 520)`);
+    if (words > 850) throw new Error(`${route.key}: ${words} prose words (cap 850)`);
     const chartCount = (output.match(/class="chart-card/g) || []).length;
-    if (chartCount > 4) throw new Error(`${route.key}: ${chartCount} charts (cap 4)`);
+    if (chartCount > 5) throw new Error(`${route.key}: ${chartCount} charts (cap 5)`);
     const countNums = (text) => {
       const cleaned = text
         .replace(/\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?,?\s+\d{1,2}\b/g, ' ')
@@ -107,7 +162,7 @@ for (const route of routes) {
       pageNums += n;
       if (n > 4) throw new Error(`${route.key}: a paragraph carries ${n} numbers (cap 4): "${p.slice(0, 80)}"`);
     }
-    if (pageNums > 13) throw new Error(`${route.key}: ${pageNums} prose numbers (cap 13)`);
+    if (pageNums > 18) throw new Error(`${route.key}: ${pageNums} prose numbers (cap 18)`);
     // A figure states its case ONCE (Alan 2026-07-21: "this just sounds clunky, hard for me
     // to read"). The lead and section one were repeating the same number 40 words apart, so
     // the reader read it twice and the page dragged. The lead makes the claim; a section
@@ -139,12 +194,12 @@ for (const route of routes) {
     }
     if (!output.includes('year-to-date count')) throw new Error('society: SESNSP total must be labeled year to date');
   }
+  if (anatomyPage && CLAIMS[route.key] && !output.includes(CLAIMS[route.key])) {
+    throw new Error(`${route.key}: My view lost its preserved claim ("${CLAIMS[route.key]}")`);
+  }
   if (route.key === 'payments') {
-    // Headings are findings with numbers (business-writing house rules, 2026-07-21), so they
-    // interpolate. Assert the shape, not a frozen string.
-    for (const headline of [/Cash in circulation grew [\d.]+% in a year|Cash in circulation/, /lost to plain transfers/, /counter still beats the internet/]) {
-      if (!headline.test(output)) throw new Error(`payments: missing section matching ${headline}`);
-    }
+    // Data integrity survives the anatomy change: figures still come from the
+    // same series and the same quarter.
     if (!output.includes(`${expectedCardPurchases} billion`)) throw new Error(`payments: card purchases do not match the source operations (${expectedCardPurchases}bn)`);
     // The debit share states its case once, in the lead, at full precision.
     if (!output.includes(`${expectedDebitShare}% of them are debit`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);

@@ -2,49 +2,192 @@
   "siteUrl": "https://mexicobrief.com",
   "outputDir": "_site",
   "publicRoutes": [
-    { "route": "/", "file": "index.html", "canonical": "/" },
-    { "route": "/explore.html", "file": "explore.html", "canonical": "/explore" },
-    { "route": "/reports/mexico-overview-2026.html", "file": "reports/mexico-overview-2026.html", "canonical": "/reports/mexico-overview-2026" },
-    { "route": "/chart.html", "file": "chart.html", "canonical": "/chart" },
-    { "route": "/economy.html", "file": "economy.html", "canonical": "/economy" },
-    { "route": "/payments.html", "file": "payments.html", "canonical": "/payments" },
-    { "route": "/trade.html", "file": "trade.html", "canonical": "/trade" },
-    { "route": "/politics.html", "file": "politics.html", "canonical": "/politics" },
-    { "route": "/society.html", "file": "society.html", "canonical": "/society" },
-    { "route": "/us-mexico.html", "file": "us-mexico.html", "canonical": "/us-mexico" },
-    { "route": "/atlas.html", "file": "atlas.html", "canonical": "/atlas" },
-    { "route": "/sources.html", "file": "sources.html", "canonical": "/sources" },
-    { "route": "/about.html", "file": "about.html", "canonical": "/about" },
-    { "route": "/weekly.html", "file": "weekly.html", "canonical": "/weekly" },
-    { "route": "/privacy.html", "file": "privacy.html", "canonical": "/privacy" }
+    {
+      "route": "/",
+      "file": "index.html",
+      "canonical": "/"
+    },
+    {
+      "route": "/explore.html",
+      "file": "explore.html",
+      "canonical": "/explore"
+    },
+    {
+      "route": "/reports/mexico-overview-2026.html",
+      "file": "reports/mexico-overview-2026.html",
+      "canonical": "/reports/mexico-overview-2026"
+    },
+    {
+      "route": "/chart.html",
+      "file": "chart.html",
+      "canonical": "/chart"
+    },
+    {
+      "route": "/economy.html",
+      "file": "economy.html",
+      "canonical": "/economy"
+    },
+    {
+      "route": "/payments.html",
+      "file": "payments.html",
+      "canonical": "/payments"
+    },
+    {
+      "route": "/deals.html",
+      "file": "deals.html",
+      "canonical": "/deals"
+    },
+    {
+      "route": "/energy.html",
+      "file": "energy.html",
+      "canonical": "/energy"
+    },
+    {
+      "route": "/politics.html",
+      "file": "politics.html",
+      "canonical": "/politics"
+    },
+    {
+      "route": "/society.html",
+      "file": "society.html",
+      "canonical": "/society"
+    },
+    {
+      "route": "/us-mexico.html",
+      "file": "us-mexico.html",
+      "canonical": "/us-mexico"
+    },
+    {
+      "route": "/atlas.html",
+      "file": "atlas.html",
+      "canonical": "/atlas"
+    },
+    {
+      "route": "/sources.html",
+      "file": "sources.html",
+      "canonical": "/sources"
+    },
+    {
+      "route": "/about.html",
+      "file": "about.html",
+      "canonical": "/about"
+    },
+    {
+      "route": "/weekly.html",
+      "file": "weekly.html",
+      "canonical": "/weekly"
+    },
+    {
+      "route": "/privacy.html",
+      "file": "privacy.html",
+      "canonical": "/privacy"
+    }
   ],
   "compatibilityRoutes": [
-    { "route": "/404.html", "file": "404.html", "canonical": "/404" },
-    { "route": "/latest-edition.html", "file": "latest-edition.html", "canonical": "/latest-edition" }
+    {
+      "route": "/404.html",
+      "file": "404.html",
+      "canonical": "/404"
+    },
+    {
+      "route": "/latest-edition.html",
+      "file": "latest-edition.html",
+      "canonical": "/latest-edition"
+    }
   ],
   "redirectRoutes": [
-    { "route": "/latest", "target": "/" },
-    { "route": "/latest.html", "target": "/" },
-    { "route": "/the-read", "target": "/" },
-    { "route": "/the-read.html", "target": "/" },
-    { "route": "/journal", "target": "/" },
-    { "route": "/journal.html", "target": "/" },
-    { "route": "/data", "target": "/sources" },
-    { "route": "/data.html", "target": "/sources" },
-    { "route": "/money", "target": "/economy" },
-    { "route": "/money.html", "target": "/economy" },
-    { "route": "/security", "target": "/society" },
-    { "route": "/security.html", "target": "/society" },
-    { "route": "/topics-start-mockup", "target": "/economy" },
-    { "route": "/topics-start-mockup.html", "target": "/economy" },
-    { "route": "/overview", "target": "/" },
-    { "route": "/overview.html", "target": "/" },
-    { "route": "/model", "target": "/chart" },
-    { "route": "/model.html", "target": "/chart" },
-    { "route": "/mockup", "target": "/" },
-    { "route": "/mockup.html", "target": "/" },
-    { "route": "/daily-start-mockup.html", "target": "/" },
-    { "route": "/charts-start-mockup.html", "target": "/" }
+    {
+      "route": "/latest",
+      "target": "/"
+    },
+    {
+      "route": "/latest.html",
+      "target": "/"
+    },
+    {
+      "route": "/the-read",
+      "target": "/"
+    },
+    {
+      "route": "/the-read.html",
+      "target": "/"
+    },
+    {
+      "route": "/journal",
+      "target": "/"
+    },
+    {
+      "route": "/journal.html",
+      "target": "/"
+    },
+    {
+      "route": "/data",
+      "target": "/sources"
+    },
+    {
+      "route": "/data.html",
+      "target": "/sources"
+    },
+    {
+      "route": "/money",
+      "target": "/economy"
+    },
+    {
+      "route": "/money.html",
+      "target": "/economy"
+    },
+    {
+      "route": "/security",
+      "target": "/society"
+    },
+    {
+      "route": "/security.html",
+      "target": "/society"
+    },
+    {
+      "route": "/topics-start-mockup",
+      "target": "/economy"
+    },
+    {
+      "route": "/topics-start-mockup.html",
+      "target": "/economy"
+    },
+    {
+      "route": "/overview",
+      "target": "/"
+    },
+    {
+      "route": "/overview.html",
+      "target": "/"
+    },
+    {
+      "route": "/model",
+      "target": "/chart"
+    },
+    {
+      "route": "/model.html",
+      "target": "/chart"
+    },
+    {
+      "route": "/mockup",
+      "target": "/"
+    },
+    {
+      "route": "/mockup.html",
+      "target": "/"
+    },
+    {
+      "route": "/daily-start-mockup.html",
+      "target": "/"
+    },
+    {
+      "route": "/charts-start-mockup.html",
+      "target": "/"
+    },
+    {
+      "route": "/trade.html",
+      "target": "/us-mexico.html"
+    }
   ],
   "previewRoutes": [],
   "requiredFiles": [
@@ -61,7 +204,10 @@
     {
       "route": "/api/subscribe",
       "source": "functions/api/subscribe.js",
-      "methods": ["GET", "POST"]
+      "methods": [
+        "GET",
+        "POST"
+      ]
     }
   ],
   "sourceExclusions": [
