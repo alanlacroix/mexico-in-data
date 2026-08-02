@@ -75,6 +75,13 @@ jobs:
         continue-on-error: true   # any dead feed is skipped; never fails the run
         run: node collect-news.js
 
+      - name: Write the lines the feed cannot compute
+        working-directory: pipeline
+        continue-on-error: true   # a missing sentence never fails a refresh; the feed keeps its factual fallback
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node write-context.mjs
+
       - name: Put the wire into English
         working-directory: pipeline
         continue-on-error: true   # a translation miss never fails a refresh; the wire is publishable as collected

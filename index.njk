@@ -108,6 +108,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .cal-body{flex:1;border-top:1px solid #E2E2E2;padding-top:9px;display:grid;gap:20px;min-width:0}
   .cal-t{font-family:var(--sans);font-weight:600;font-size:17px;line-height:1.25;color:#111214;text-wrap:pretty}
   .cal-w{font-family:var(--sans);font-size:14px;line-height:1.45;color:#5C5E63;margin-top:4px;text-wrap:pretty}
+  .cal-why{font-family:var(--serif);font-size:15px;line-height:1.5;color:#1A1B1D;margin-top:6px;text-wrap:pretty}
   .cal-s{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:6px;display:block}
   .cal-s a{color:inherit}
 
@@ -240,7 +241,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
         <div class="cal-rail"><div class="cal-when">{{ group.when }}</div><div class="cal-rel">{{ group.rel }}</div></div>
         <div class="cal-body">
           {%- for event in group.items %}
-          <div><div class="cal-t">{{ event.title }}</div>{% if event.what %}<div class="cal-w">{{ event.what }}</div>{% endif %}{% if event.url %}<span class="cal-s"><a href="{{ event.url }}" target="_blank" rel="noopener">{{ event.source }} ↗</a></span>{% else %}<span class="cal-s">{{ event.source }}</span>{% endif %}</div>
+          <div><div class="cal-t">{{ event.title }}</div>{% if event.what %}<div class="cal-w">{{ event.what }}</div>{% endif %}{% if event.why %}<div class="cal-why">{{ event.why }}</div>{% endif %}{% if event.url %}<span class="cal-s"><a href="{{ event.url }}" target="_blank" rel="noopener">{{ event.source }} ↗</a></span>{% else %}<span class="cal-s">{{ event.source }}</span>{% endif %}</div>
           {%- endfor %}
         </div>
       </div>

@@ -31,6 +31,7 @@ module.exports = function () {
       return {
         date: e.date,
         approx: !!e.approx,
+        rawLabel: e.label || '',
         title,
         why,
         source: plainSourceName(e.source),

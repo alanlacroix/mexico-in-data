@@ -15,6 +15,12 @@ const weeklyTop = require('./weeklyTop.js');
 const calendar = require('./calendar.js');
 
 const DATA = path.join(__dirname, '..', 'data');
+// Written by pipeline/write-context.mjs: the economy notes and the calendar's title,
+// what and why. Authored copy always wins over the deterministic fallback below.
+const context = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(DATA, 'context.json'), 'utf8')); }
+  catch { return { econ: {}, events: {} }; }
+})();
 const read = (rel, fallback) => {
   try { return JSON.parse(fs.readFileSync(path.join(DATA, rel), 'utf8')); }
   catch { return fallback; }
@@ -175,8 +181,13 @@ module.exports = function () {
     if (!groupsByWhen.has(when)) {
       groupsByWhen.set(when, { when, date: event.date, approx: Boolean(event.approx), items: [] });
     }
+    const authored = (context.events || {})[`${event.date}:${String(event.rawLabel || event.title).slice(0, 60)}`] || {};
     groupsByWhen.get(when).items.push({
-      title: event.title, what: event.why || '', source: event.source, url: event.sourceUrl,
+      title: authored.title || event.title,
+      what: authored.what || event.why || '',
+      why: authored.why || '',            // the serif line; absent until it is written
+      source: event.source,
+      url: event.sourceUrl,
     });
   }
   const today = brief.editorialDate;
@@ -237,7 +248,10 @@ module.exports = function () {
       refLabel: reference ? reference.label : '',
       refText: reference ? reference.text : '',
       refPct: reference && scale ? Math.min(100, (Math.abs(reference.value) / scale) * 100) : 0,
-      note: NOTE[card.id] ? NOTE[card.id](card) : card.compare,
+      // Authored per release; the composed factual line is the fallback until one exists.
+      note: ((context.econ || {})[`${card.id}:${card.date}`] || {}).note
+        || (NOTE[card.id] ? NOTE[card.id](card) : card.compare),
+      authoredNote: Boolean((context.econ || {})[`${card.id}:${card.date}`]),
       href: card.href,
     };
   }).filter((row) => row.refLabel);
