@@ -39,14 +39,16 @@ const percentFromPrior = (value) => value === 0
 const relativeTo = (value, reference) => value === 0
   ? `In line with ${reference}`
   : `${number(Math.abs(value), 2)} pp ${value > 0 ? 'above' : 'below'} ${reference}`;
-// The daily strip prints the change as a signed figure rather than a sentence: the
-// sentences there were pure comparison, and a seven-character delta cannot wrap on a
-// phone the way "0.16% lower than the prior reading" does. The sign carries direction;
-// no colour and no arrow, because valence belongs to the reader (a falling MXN/US$ is
-// the peso strengthening). Where a line carries a driver rather than a comparison it
-// keeps its words: `move` and `compare` are untouched.
-const signedPercent = (value) => value === 0 ? 'No change' : `${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)}%`;
-const signedPoints = (value) => value === 0 ? 'No change' : `${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)} pp`;
+// The daily strip prints the change as a short signed figure rather than a sentence:
+// the sentences there were pure comparison, and a delta cannot wrap on a phone the way
+// "0.16% lower than the prior reading" does. Where a line carries a driver rather than a
+// comparison it keeps its words: `move` and `compare` are untouched.
+// Direction is stated three ways that all say the same thing: an arrow, a sign, and the
+// word in the comparison line. None of them is colour, because colour on these would be
+// read as good and bad, and a falling MXN/US$ is the peso getting stronger.
+const arrow = (value) => value > 0 ? '↑' : value < 0 ? '↓' : '→';
+const signedPercent = (value) => value === 0 ? 'No change' : `${arrow(value)} ${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)}%`;
+const signedPoints = (value) => value === 0 ? 'No change' : `${arrow(value)} ${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)} pp`;
 const percentChange = (current, prior) => prior ? (current / prior - 1) * 100 : null;
 const link = (id) => `/chart.html?v=${id}`;
 const LIVE_PESO_URL = 'https://www.google.com/finance/quote/USD-MXN?hl=en';
@@ -136,18 +138,20 @@ module.exports = function () {
   }
 
   if (inflation) {
-    const current = latest(inflation), gap = current.value - 3;
+    const current = latest(inflation), priorInflation = previous(inflation), gap = current.value - 3;
     cards.push({ id: inflation.id, label: 'Inflation', display: number(current.value), unit: '% y/y',
       compare: `${number(Math.abs(gap), 2)} pp ${gap >= 0 ? 'above' : 'below'} the central bank’s 3% target`,
+      delta: priorInflation ? signedPoints(current.value - priorInflation.value) : null,
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
       source: 'Mexico statistics agency · central bank target', href: link(inflation.id), actionLabel: 'View history' });
   }
 
   if (rate) {
-    const current = latest(rate), inflationNow = latest(inflation);
+    const current = latest(rate), priorRate = previous(rate), inflationNow = latest(inflation);
     const gap = inflationNow ? current.value - inflationNow.value : null;
     cards.push({ id: rate.id, label: 'Policy rate', display: number(current.value), unit: '%',
       compare: gap == null ? 'Latest policy setting' : relativeTo(gap, `${observed(inflationNow.date, 'monthly')} inflation`),
+      delta: priorRate ? signedPoints(current.value - priorRate.value) : null,
       date: current.date, cadence: 'meeting', dateLead: 'Current setting', updateLabel: 'Can change at policy meetings',
       source: 'Banco de México', href: link(rate.id), actionLabel: 'View history' });
   }
@@ -156,24 +160,29 @@ module.exports = function () {
     const current = latest(activity), prior = previous(activity);
     cards.push({ id: activity.id, label: 'Economic activity', display: `${current.value >= 0 ? '+' : ''}${number(current.value)}`, unit: '% y/y',
       compare: prior ? movementFromPrior(current.value - prior.value) : 'Latest annual change',
+      delta: prior ? signedPoints(current.value - prior.value) : null,
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
       source: 'Mexico statistics agency', href: link(activity.id), actionLabel: 'View history' });
   }
 
   if (exportsTotal) {
-    const current = latest(exportsTotal), priorYear = yearAgo(exportsTotal);
+    const current = latest(exportsTotal), priorMonth = previous(exportsTotal), priorYear = yearAgo(exportsTotal);
     const change = percentChange(current.value, priorYear?.value);
+    const monthChange = percentChange(current.value, priorMonth?.value);
     cards.push({ id: exportsTotal.id, label: 'Goods exports', display: number(current.value / 1_000_000, 1), unit: 'US$ bn',
       compare: change == null ? 'Latest monthly total' : percentVsYear(change, 'higher', 'lower'),
+      delta: monthChange == null ? null : signedPercent(monthChange),
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
       source: 'Banco de México', href: link(exportsTotal.id), actionLabel: 'View history' });
   }
 
   if (remittances) {
-    const current = latest(remittances), priorYear = yearAgo(remittances);
+    const current = latest(remittances), priorMonth = previous(remittances), priorYear = yearAgo(remittances);
     const change = percentChange(current.value, priorYear?.value);
+    const monthChange = percentChange(current.value, priorMonth?.value);
     cards.push({ id: remittances.id, label: 'Remittances', display: number(current.value / 1_000, 2), unit: 'US$ bn',
       compare: change == null ? 'Latest monthly inflow' : percentVsYear(change, 'higher', 'lower'),
+      delta: monthChange == null ? null : signedPercent(monthChange),
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
       source: 'Banco de México', href: link(remittances.id), actionLabel: 'View history' });
   }
