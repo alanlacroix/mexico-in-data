@@ -101,6 +101,7 @@ const WHY_SYSTEM = [
   '- If the input is too thin to support a real explanation, set skip to true and leave',
   '  why and watch empty. A missing card is fine. A confident invention is not.',
   '- Plain newspaper English. No headline capitalisation, no questions, no hype.',
+  '- Never first person. No "my read", no "I expect", no "we think". First person is\n  reserved for the quarterly review. State the judgment directly instead.',
 ].join('\n\n');
 
 const RANK_SCHEMA = {
