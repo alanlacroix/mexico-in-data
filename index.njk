@@ -82,6 +82,11 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .context-label{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;color:var(--ink);margin-right:7px}
   .coverage-links{display:flex;gap:6px 12px;flex-wrap:wrap;margin-top:5px;font-family:var(--mono);font-size:var(--fs-label)}
   .coverage-links a{color:var(--green-d)}
+  .thread{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+  .thread-list{display:flex;flex-direction:column;gap:5px;margin-top:5px}
+  .thread-item{display:flex;gap:10px;color:var(--ink-2);text-decoration:none;font-size:var(--fs-small);line-height:1.4}
+  .thread-item:hover{color:var(--green-d)}
+  .thread-date{flex:0 0 auto;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap;padding-top:2px}
 
   .all-news{margin-top:var(--gap-item);border-bottom:1px solid var(--line)}
   .all-news>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;color:var(--ink);font-family:var(--mono);font-size:var(--fs-meta);font-weight:650;cursor:pointer}
@@ -195,7 +200,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 
 {% macro storyCard(story, isAll=false, inFive=false) %}
 {% set topicHref = story.topicUrl if story.topicUrl else ('/us-mexico.html' if story.topic == 'us-mexico' else '/' + story.topic + '.html') %}
-{% set hasContext = (not isAll) and story.analysisV >= 7 and story.bg and story.view and story.prediction %}
+{% set hasContext = (not isAll or inFive) and story.analysisV >= 7 and story.bg and story.view and story.prediction %}
 {% set contextId = 'story-context-' + story.id %}
 <article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}"{% if inFive %} data-five="y"{% endif %}{% endif %}>
   <div class="story-meta"><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span><a class="story-topic{% if isAll %} sec-{{ story.topic }}{% endif %}" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.beat }}</a>{% if story.source %}<span class="story-outlet">{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span class="story-outlet">{{ story.sourceCount }} reports</span>{% endif %}</div>
@@ -203,7 +208,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
     <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}{% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}" aria-label="Briefly explained: {{ story.title }}" title="Briefly explained">BE</button>{% endif %}</div>
   </div>
   {% if story.image and not isAll %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="300" height="190" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}
-  {% if hasContext %}<div class="story-context" id="{{ contextId }}" hidden><p><span class="context-label">Background</span>{{ story.bg }}</p><p><span class="context-label">Our view</span>{{ story.view }}</p><p><span class="context-label">What we’re watching</span>{{ story.prediction }}</p>{% if story.sources.length %}<div class="coverage"><span>Sources:</span><div class="coverage-links">{% for source in story.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source or 'Source' }} ↗</a>{% endfor %}</div></div>{% endif %}</div>{% endif %}
+  {% if hasContext %}<div class="story-context" id="{{ contextId }}" hidden><p><span class="context-label">Background</span>{{ story.bg }}</p><p><span class="context-label">Our view</span>{{ story.view }}</p><p><span class="context-label">What we’re watching</span>{{ story.prediction }}</p>{% if story.prior.length %}<div class="thread"><span class="context-label">Earlier</span><div class="thread-list">{% for earlier in story.prior %}<a class="thread-item" href="{{ earlier.url }}" target="_blank" rel="noopener"><span class="thread-date">{{ earlier.dateLabel }}</span><span>{{ earlier.title }}</span></a>{% endfor %}</div></div>{% endif %}{% if story.sources.length %}<div class="coverage"><span>Sources:</span><div class="coverage-links">{% for source in story.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source or 'Source' }} ↗</a>{% endfor %}</div></div>{% endif %}</div>{% endif %}
 </article>
 {% endmacro %}
 

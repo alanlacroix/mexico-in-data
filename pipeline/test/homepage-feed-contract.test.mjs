@@ -306,7 +306,9 @@ const happeningBuilder = fs.readFileSync(path.join(root, 'pipeline/build-happeni
 const briefBuilder = fs.readFileSync(path.join(root, 'pipeline/build-brief.js'), 'utf8');
 assert.doesNotMatch(homepageTemplate, /from ['"]\/assets\/mb\.js/, 'the homepage must not download the full render toolkit for one time helper');
 assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepage source status must be embedded at build time');
-assert.match(homepageTemplate, /\(not isAll\).*story\.analysisV >= 7.*story\.bg and story\.view and story\.prediction/, 'only versioned, complete key-development analysis may expose the disclosure');
+// The week's five open the same disclosure (Fable, 2026-08-02: the log is the moat, so
+// it has to be reachable). The bar is unchanged: versioned, complete analysis only.
+assert.match(homepageTemplate, /\(not isAll or inFive\).*story\.analysisV >= 7.*story\.bg and story\.view and story\.prediction/, 'only versioned, complete analysis may expose the disclosure');
 // The call now carries a third argument marking the week's five; the second argument,
 // which is what turns off the analysis disclosure, is what this guards.
 assert.match(homepageTemplate, /storyCard\(story, true[,)]/, 'ordinary headlines must use the no-analysis card mode');

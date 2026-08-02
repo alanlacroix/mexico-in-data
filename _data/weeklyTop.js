@@ -226,6 +226,20 @@ module.exports = function () {
 
   const week5 = weekFive;
 
+  // DEPTH (Fable, 2026-08-02): "the feed is replaceable; the model plus the log is not."
+  // Each of the five opens onto what the log already knows: the analysis the pipeline
+  // wrote, and the earlier events in the same thread. The log is young, so most threads
+  // start with one entry and thicken as it fills.
+  const allLogged = (happening.events || [])
+    .filter((e) => e && e.title && e.date)
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  const priorFor = (item) => allLogged
+    .filter((e) => e.url !== item.url && String(e.date) < String(item.date))
+    .filter((e) => jaccard(words(e.title), words(item.title)) >= 0.28)
+    .slice(0, 3)
+    .map((e) => ({ title: trim(e.title, 80), url: e.url, date: e.date, dateLabel: dateLabel(e.date), source: e.source }));
+  for (const item of weekFive) item.prior = priorFor(item);
+
   // The five are the "All" view on the homepage. A story can be both one of the five and
   // a member of its section list, so it is flagged in place rather than rendered twice;
   // if the curated log surfaced something the section lists did not, it is added there.
@@ -233,10 +247,16 @@ module.exports = function () {
     const group = groups.find((g) => g.key === five.sectionKey);
     if (!group) continue;
     const existing = group.items.find((item) => item.url === five.url);
-    if (existing) { existing.inFive = true; continue; }
+    if (existing) {
+      Object.assign(existing, {
+        inFive: true, prior: five.prior,
+        bg: five.bg, view: five.view, prediction: five.next, analysisV: five.be ? 7 : 0,
+      });
+      continue;
+    }
     group.items.unshift({
       ...five,
-      inFive: true,
+      inFive: true, prediction: five.next, analysisV: five.be ? 7 : 0,
       shownToday: false,
       interestTags: tagsFor(five),
       topic: group.key, topicLabel: group.label, topicUrl: group.href,
