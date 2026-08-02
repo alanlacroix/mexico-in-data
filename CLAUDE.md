@@ -24,6 +24,33 @@ The rules that prevent a repeat:
 - **Push work in progress every session.** An unpushed day of work is the only thing
   that makes divergence expensive.
 
+## The design is LOCKED (2026-08-02)
+
+Two "this supersedes everything" critiques landed in one day and both were executed
+in full. Fable's call: further critique loops are a treadmill that always finds a next
+defect. **Design changes now need a reader-evidence trigger, not a critique.** Park new
+critiques until something observed says the page failed a reader.
+
+The laws that came out of it, in case a future change tempts you:
+
+- **Twelve columns, one spine.** Meta rail 1-2, text 3-9, art 10-12, rules span all
+  twelve. The text column never reflows: art drops in or it doesn't, and where it
+  doesn't the columns hold whitespace, never a drawn placeholder. No edge that is not
+  a column edge. Every prose block shares one left edge; rails live left of it.
+- **Art appears in Key developments only** (Alan, 2026-08-02). The week's list never
+  carries images, so its rows are uniform.
+- **Two colour encodings, ever.** The link green, one job. Section identity, seven
+  muted hues, only on the section word in the rail and the active chip. Colour answers
+  what kind, never how good or which direction, so no delta, indicator or number is
+  coloured. The test: greyscale the page and nothing is lost. The peso trap is why —
+  a falling MXN/US$ is the peso strengthening.
+- **Caps on the section kicker and the nav only.** The meta layer keeps mono, in
+  sentence case, with no added tracking.
+- **Honesty marks take the smallest form that prevents a false belief** — a date, a
+  label, a noun. Never a sentence. A sentence explaining the page is the page
+  apologising. One exception: the data-versus-argument line, once, where argument
+  begins.
+
 ## What the gates protect
 
 Nineteen checks run under `npm run check`. The ones that fail most often, and why
