@@ -20,8 +20,11 @@ pageStyle: |
       <script>(function(){var a=document.getElementById('latest-edition-link');if(a&&a.href)window.location.replace(a.href);}());</script>
     {% else %}
       <span class="eyebrow">The Mexico Brief</span>
+      {#- No promised date here. "Coming on Monday" was hardcoded and had been
+          promising the same Monday for three weeks. On a site whose product is
+          being trustworthy, a small broken promise is the expensive kind. -#}
       <h1>No edition has been sent yet.</h1>
-      <p>The first one is coming on Monday. <a href="/weekly.html">See what is in the email</a>.</p>
+      <p>The weekly email has not gone out yet. <a href="/weekly.html">See what is in it</a>, and subscribe on the <a href="/">front page</a> to get the first one.</p>
     {% endif %}
   </section>
 </div>

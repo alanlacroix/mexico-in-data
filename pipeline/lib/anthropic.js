@@ -7,34 +7,64 @@
 // the caller falls back to a deterministic heuristic. The email still builds; the
 // model only sharpens it.
 //
-// Model: Sonnet 5 for ALL jobs (rank + write), per Fable's Fork 1 ruling. Tiering
-// to Haiku saved nothing here (one Saturday batch over ~70 headline-length items,
-// cents either way) and put the most damaging judgment — significance ranking, i.e.
-// what leads the email — on the weakest model. One model, one voice. Still a few
-// dollars a month at most.
+// Model tier, per Fable 2026-08-02, amending the earlier one-model ruling. That
+// ruling's premise ("one Saturday batch, cents either way") expired: the pipeline
+// now runs ~11 model-calling jobs a day across six scripts. The principle it was
+// really protecting was one VOICE, and that survives.
+//
+//   Sonnet where the site has a view; Haiku where it has a task.
+//   If a wrong output would embarrass the analyst, Sonnet.
+//   If it would only embarrass the translator, Haiku.
+//
+// So ranking, "our view", the brief and the email stay on Sonnet. Literal
+// translation of a headline is mechanical and checkable, and is the single most
+// expensive line measured ($0.44 in one refresh), so it drops to Haiku.
+//
+// Not doing prompt caching. Fable proposed it, but the minimum cacheable prefix is
+// 1024 tokens on Sonnet 5 and 4096 on Haiku 4.5, and the largest system prompt here
+// is ~713 tokens. It would silently never engage — cache_creation_input_tokens: 0,
+// no error. The input tokens are content anyway (22,715 in vs 14,593 out on a real
+// run), not a repeated prompt, so there was little to cache even in principle.
 
-const MODEL = 'claude-sonnet-5';         // $3/M in · $15/M out — one weekly batch, still cents/issue
+const SONNET = 'claude-sonnet-5';        // $3/M in · $15/M out (intro $2/$10 to 2026-08-31)
+const HAIKU = 'claude-haiku-4-5';        // $1/M in · $5/M out — mechanical, checkable jobs
+const DEFAULT_MODEL = SONNET;
 const KEY = process.env.ANTHROPIC_API_KEY || '';
 const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 
-let _in = 0, _out = 0, _calls = 0;
+// Per-model rates, so a mixed-tier run reports what it actually cost rather than
+// pricing a Haiku call as if it were Sonnet.
+const RATES = {
+  [SONNET]: { in: 3, out: 15 },
+  [HAIKU]: { in: 1, out: 5 },
+};
+
+let _calls = 0;
+const _tok = {};                         // model -> { in, out }
 
 export const hasLLM = () => !!KEY;
-export const model = MODEL;
+export const model = DEFAULT_MODEL;
+export const models = { SONNET, HAIKU };
 
-// Cumulative token usage + Sonnet-5-priced cost estimate for the run.
+// Cumulative token usage and cost for the run, priced per model.
 export function usage() {
-  const costUSD = (_in / 1e6) * 3 + (_out / 1e6) * 15;
-  return { calls: _calls, input: _in, output: _out, costUSD };
+  let input = 0, output = 0, costUSD = 0;
+  for (const [m, t] of Object.entries(_tok)) {
+    const rate = RATES[m] || RATES[SONNET];
+    input += t.in;
+    output += t.out;
+    costUSD += (t.in / 1e6) * rate.in + (t.out / 1e6) * rate.out;
+  }
+  return { calls: _calls, input, output, costUSD, byModel: { ..._tok } };
 }
 
 // Ask the model for a JSON answer. With `schema`, structured outputs guarantee the
 // first content block is valid JSON. Returns the parsed object, or null on any
 // failure (no key, HTTP error, unparseable) so callers degrade instead of crash.
-export async function askJSON({ system, user, schema, maxTokens = 1500 }) {
+export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL }) {
   if (!KEY) return null;
   const body = {
-    model: MODEL,
+    model: modelId,
     max_tokens: maxTokens,
     system,
     messages: [{ role: 'user', content: user }],
@@ -63,8 +93,9 @@ export async function askJSON({ system, user, schema, maxTokens = 1500 }) {
   const j = await r.json().catch(() => null);
   if (!j) return null;
   _calls++;
-  _in += j.usage?.input_tokens || 0;
-  _out += j.usage?.output_tokens || 0;
+  const bucket = (_tok[modelId] ||= { in: 0, out: 0 });
+  bucket.in += j.usage?.input_tokens || 0;
+  bucket.out += j.usage?.output_tokens || 0;
   if (j.stop_reason === 'refusal') { console.warn('  llm: refusal'); return null; }
   const txt = (j.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');
   try { return JSON.parse(txt); }

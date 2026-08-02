@@ -17,7 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { askJSON, hasLLM, usage } from './lib/anthropic.js';
+import { askJSON, hasLLM, usage, models } from './lib/anthropic.js';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const NEWS = path.join(ROOT, 'data', 'news');
@@ -117,6 +117,13 @@ async function main() {
       user: `Translate each item into English. Return one object per input index.\n\n${JSON.stringify(payload)}`,
       schema: SCHEMA,
       maxTokens: 4000,
+      // Haiku, per the tier rule in lib/anthropic.js: this is literal translation of
+      // a headline, it is mechanical, and a wrong one is visible on the page rather
+      // than buried in a judgment. It was also the most expensive line in the
+      // pipeline ($0.44 in a single refresh). A meaning-changing translation reaching
+      // the page sends this job back to Sonnet permanently — accuracy outranks the
+      // saving, and the wire is the surface where a bad translation is most visible.
+      model: models.HAIKU,
     });
     if (!answer || !Array.isArray(answer.items)) {
       console.warn(`  batch ${start / BATCH + 1}: no usable answer, leaving these as collected`);
@@ -136,8 +143,9 @@ async function main() {
   }
 
   fs.writeFileSync(CACHE, `${JSON.stringify(cache, null, 1)}\n`);
-  const { calls, costUSD } = usage();
-  console.log(`translate-wire: ${done} translated · ${Object.keys(cache).length} cached · ${calls} calls · ~$${costUSD.toFixed(4)}`);
+  const { calls, costUSD, byModel } = usage();
+  const tiers = Object.keys(byModel).join(', ') || 'none';
+  console.log(`translate-wire: ${done} translated · ${Object.keys(cache).length} cached · ${calls} calls · ${tiers} · ~$${costUSD.toFixed(4)}`);
 }
 
 main().catch((error) => {
