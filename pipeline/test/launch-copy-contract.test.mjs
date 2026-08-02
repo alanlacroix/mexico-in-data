@@ -26,7 +26,8 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
 // still stamps itself with the current editorial day rather than an undated edition.
 assert.match(home, /id="today"[^>]*>\{\{ dailyBrief\.editorialDate \}\}/, 'homepage must remain a daily starting point without expiring after noon');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
-assert.match(home, /Latest numbers/i, 'homepage must place official readings beside the news');
+assert.match(home, /id="pulse-title">Today</i, 'homepage must lead with the readings that move on a trading day');
+assert.match(home, /id="markets-title">The economy</i, 'the slower official readings must keep their own room below the news');
 assert.match(home, /Key developments/i, 'homepage must lead readers through the major stories');
 assert.match(home, /dailyBrief\.windowLabel/i, 'homepage must state the rolling news window plainly');
 assert.match(home, /All headlines/i, 'homepage must retain a deeper chronological feed');
@@ -53,8 +54,11 @@ assert.match(home, /id="week-title">Coming up</i, 'homepage must show the next o
 assert.match(home, /Known next/i, 'homepage must distinguish scheduled events from a forecast');
 assert.doesNotMatch(home, /the real policy rate/i, 'current inflation subtraction must not be labeled a real policy rate');
 assert.doesNotMatch(home, /% today|points today/i, 'an older observation must never be described as moving today');
-for (const id of ['banxico-usdmxn-fix', 'banxico-inflacion', 'banxico-tasa-objetivo', 'banxico-igae', 'banxico-exports-total', 'banxico-remesas']) {
-  assert.match(nowBoard, new RegExp(id), `latest numbers must include ${id}`);
+for (const id of [
+  'banxico-usdmxn-fix', 'cre-gasolina-regular', 'banxico-cetes-28d', 'fred-ust10', 'banxico-bmv-ipc',
+  'banxico-inflacion', 'banxico-tasa-objetivo', 'banxico-igae', 'banxico-exports-total', 'banxico-remesas',
+]) {
+  assert.match(nowBoard, new RegExp(id), `the number set must include ${id}`);
 }
 
 assert.doesNotMatch(topics, /minimum wage is (?:<b>)?\$(?!\$\{)/i,

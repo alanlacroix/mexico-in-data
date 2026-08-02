@@ -7,7 +7,7 @@ ogTitle: "The Mexico Brief"
 ogDescription: "Today’s Mexico headlines, official numbers, and the connections worth watching."
 ---
 <style>
-  .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,4vw,44px)}
+  .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,3vw,40px)}
   .home a{text-underline-offset:3px}
   .home-head{padding:32px 0 15px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
   .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
@@ -92,6 +92,21 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .market-footer .market-source{margin-top:0}
   .market-action{flex:0 0 auto;color:var(--green-d);font-weight:650}
 
+  /* The daily strip. Deliberately thinner than .market-card: three lines, no source
+     row, no action row. It sits between the brief and the news, so it has to cost
+     one band of screen, not a full one. */
+  .pulse{margin-top:30px}
+  .pulse-grid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:13px}
+  .pulse-item{min-width:0;padding:14px 16px 15px 0}
+  .pulse-item+.pulse-item{border-left:1px solid var(--line);padding-left:16px}
+  .pulse-link{display:block;color:inherit;text-decoration:none}
+  .pulse-link:hover .pulse-value{color:var(--green-d)}
+  .pulse-name{font-family:var(--mono);font-size:11px;line-height:1.3;text-transform:uppercase;letter-spacing:.035em;color:var(--mut)}
+  .pulse-value{font-size:clamp(19px,2.1vw,26px);font-weight:650;line-height:1.06;letter-spacing:-.025em;margin-top:8px;font-variant-numeric:tabular-nums;white-space:nowrap;transition:color .15s ease}
+  .pulse-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);letter-spacing:0;margin-left:3px}
+  .pulse-move{font-size:12px;line-height:1.4;color:var(--ink-2);margin-top:7px;min-height:34px}
+  .pulse-date{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px}
+
   .week{border-top:1px solid var(--line);padding-top:14px}
   .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:13px}
   .timeline-item{padding:17px 18px 18px 0}
@@ -112,6 +127,9 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 
   @media(max-width:900px){
     .market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .pulse-grid{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
+    .pulse-item,.pulse-item+.pulse-item{border-left:0;border-top:1px solid var(--line);padding:13px 14px 14px 0}
+    .pulse-item:first-child,.pulse-item:nth-child(2){border-top:0}
     .timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
     .timeline-item:nth-child(3){border-left:0;border-top:1px solid var(--line);padding-left:0}
     .timeline-item:nth-child(4){border-top:1px solid var(--line)}
@@ -126,7 +144,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
     .context-btn{width:44px;min-height:44px}
     .story-thumb{width:112px;height:74px;margin:3px 0 8px 12px}
     .market-grid{grid-template-columns:1fr}
-    .market-compare{min-height:0}
+    .market-compare,.pulse-move{min-height:0}
     .timeline{grid-template-columns:1fr}
     .timeline-item,.timeline-item+.timeline-item,.timeline-item:nth-child(3),.timeline-item:nth-child(4){padding:14px 0 15px;border-left:0;border-top:1px solid var(--line)}
     .timeline-item:first-child{border-top:0}
@@ -159,6 +177,13 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
     {% if dailyBrief.briefSources.length %}<div class="brief-sources"><span>Sources:</span>{% for item in dailyBrief.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
   </section>
 
+  <section class="pulse" aria-labelledby="pulse-title">
+    <div class="section-top"><div><h2 class="section-title" id="pulse-title">Today</h2></div><span class="section-note">Moves on a trading day</span></div>
+    <div class="pulse-grid" id="pulse-grid">
+      {% for item in boards.today %}<article class="pulse-item"><a class="pulse-link" href="{{ item.href }}" aria-label="{{ item.label }} · {{ item.actionLabel }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><div class="pulse-name">{{ item.label }}</div><div class="pulse-value">{{ item.display }}{% if item.unit %} <span class="pulse-unit">{{ item.unit }}</span>{% endif %}</div><div class="pulse-move">{{ item.move }}</div><div class="pulse-date">{{ item.dateLead }} · {{ item.observed }}</div></a></article>{% endfor %}
+    </div>
+  </section>
+
   <section class="news" aria-labelledby="news-title">
     <div class="section-top"><div><h2 class="section-title" id="news-title">Key developments</h2></div><span class="section-note">{{ dailyBrief.windowLabel }} · <span class="be-key"><b>BE</b> Briefly explained</span></span></div>
     <div class="story-list major-list">
@@ -185,9 +210,9 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   </section>
 
   <section class="markets" aria-labelledby="markets-title">
-    <div class="section-top"><div><h2 class="section-title" id="markets-title">Latest numbers</h2></div><a class="text-link" href="/chart.html">Compare the numbers →</a></div>
+    <div class="section-top"><div><h2 class="section-title" id="markets-title">The economy</h2></div><a class="text-link" href="/chart.html">Compare the numbers →</a></div>
     <div class="market-grid" id="market-grid">
-      {% for item in nowBoard %}<article class="market-card"><a class="market-link" href="{{ item.href }}" aria-label="{{ item.label }} — {{ item.actionLabel }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><div class="market-name">{{ item.label }}</div><div class="market-value">{{ item.display }}{% if item.unit %} <span class="market-unit">{{ item.unit }}</span>{% endif %}</div><div class="market-compare">{{ item.compare }}</div><div class="market-date">{{ item.dateLead }} · {{ item.observed }}</div><div class="market-update">{{ item.updateLabel }}</div><div class="market-footer"><div class="market-source">{{ item.source }}</div><div class="market-action">{{ item.actionLabel }} {{ '↗' if item.external else '→' }}</div></div></a></article>{% endfor %}
+      {% for item in boards.economy %}<article class="market-card"><a class="market-link" href="{{ item.href }}" aria-label="{{ item.label }} — {{ item.actionLabel }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><div class="market-name">{{ item.label }}</div><div class="market-value">{{ item.display }}{% if item.unit %} <span class="market-unit">{{ item.unit }}</span>{% endif %}</div><div class="market-compare">{{ item.compare }}</div><div class="market-date">{{ item.dateLead }} · {{ item.observed }}</div><div class="market-update">{{ item.updateLabel }}</div><div class="market-footer"><div class="market-source">{{ item.source }}</div><div class="market-action">{{ item.actionLabel }} {{ '↗' if item.external else '→' }}</div></div></a></article>{% endfor %}
     </div>
   </section>
 

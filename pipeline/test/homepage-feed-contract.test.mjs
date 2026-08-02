@@ -19,6 +19,7 @@ const dailyBrief = dailyBriefFactory();
 const latestStories = latestStoriesFactory();
 const currentEditorial = homeEditorialFactory();
 const nowBoard = require(path.join(root, '_data/nowBoard.js'))();
+const boards = require(path.join(root, '_data/boards.js'))();
 const registry = require(path.join(root, 'pipeline/news-sources.json'));
 const wire = require(path.join(root, 'data/news/wire.json'));
 const happening = require(path.join(root, 'data/happening.json'));
@@ -198,12 +199,31 @@ const officialThenNewer = groupEvents([
 ]);
 assert.equal(officialThenNewer[0].event.source, 'Outlet C', 'a newer report must define the current state even when an older source is first-party');
 
-const requiredNumbers = new Set(['banxico-usdmxn-fix', 'banxico-inflacion', 'banxico-tasa-objetivo', 'banxico-igae', 'banxico-exports-total', 'banxico-remesas']);
-assert.deepEqual(new Set(nowBoard.map((item) => item.id)), requiredNumbers, 'Latest numbers must remain a finite first-party set');
+const requiredNumbers = new Set([
+  'banxico-usdmxn-fix', 'cre-gasolina-regular', 'banxico-cetes-28d', 'fred-ust10', 'banxico-bmv-ipc',
+  'banxico-inflacion', 'banxico-tasa-objetivo', 'banxico-igae', 'banxico-exports-total', 'banxico-remesas',
+]);
+assert.deepEqual(new Set(nowBoard.map((item) => item.id)), requiredNumbers, 'the number set must remain a finite first-party set');
 assert.ok(nowBoard.every((item) => item.date && item.source && item.compare && !/\btoday\b/i.test(item.compare)), 'every number needs its own date, source, and honest comparison');
+assert.ok(nowBoard.every((item) => item.move && !/\btoday\b/i.test(item.move)), 'every number needs a short move line that does not claim to have moved today');
 assert.ok(nowBoard.every((item) => item.dateLead && item.updateLabel && item.actionLabel), 'every number must explain its observation date, update schedule, and destination');
 assert.equal(nowBoard.find((item) => item.id === 'banxico-usdmxn-fix')?.href, 'https://www.google.com/finance/quote/USD-MXN?hl=en', 'the peso card must open a clearly labeled live quote');
 assert.equal(nowBoard.find((item) => item.id === 'banxico-tasa-objetivo')?.updateLabel, 'Can change at policy meetings', 'the policy rate must not imply that it changes daily');
+
+// The homepage has two rooms: what changed since yesterday, and what is true. A number
+// belongs to exactly one of them, and the daily strip may only carry series that a
+// trading day actually moves. A monthly reading up there would be a lie of placement.
+assert.ok(boards.today.length >= 4, 'the daily strip needs enough numbers to read as a strip');
+assert.ok(boards.today.every((item) => item.cadence === 'daily'), 'the daily strip must only carry series that move on a trading day');
+assert.ok(boards.economy.every((item) => item.cadence !== 'daily'), 'the economy board must not repeat a daily series');
+assert.equal(
+  boards.today.filter((item) => boards.economy.some((other) => other.id === item.id)).length, 0,
+  'a number appears in exactly one room',
+);
+assert.deepEqual(
+  new Set([...boards.today, ...boards.economy].map((item) => item.id)), requiredNumbers,
+  'every number in the set must be placed in a room, so none can go missing from the page',
+);
 
 assert.ok(lintReportText({ text: 'One claim; another claim.', inputs: ['One claim', 'another claim'] }).flags.includes('semicolon'), 'public model copy must reject semicolons');
 assert.ok(lintReportText({

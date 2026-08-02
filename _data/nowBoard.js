@@ -33,6 +33,9 @@ const movementFromPrior = (value) => value === 0
 const percentVsYear = (value, higher, lower) => value === 0
   ? 'Unchanged from a year ago'
   : `${number(Math.abs(value), 1)}% ${value > 0 ? higher : lower} than a year ago`;
+const percentFromPrior = (value) => value === 0
+  ? 'Unchanged from the prior reading'
+  : `${number(Math.abs(value), 2)}% ${value > 0 ? 'higher' : 'lower'} than the prior reading`;
 const relativeTo = (value, reference) => value === 0
   ? `In line with ${reference}`
   : `${number(Math.abs(value), 2)} pp ${value > 0 ? 'above' : 'below'} ${reference}`;
@@ -46,8 +49,11 @@ const observed = (date, cadence) => {
     ? { timeZone: 'UTC', month: 'short', year: 'numeric' }
     : { timeZone: 'UTC', month: 'short', day: 'numeric' });
 };
+// `compare` is the full read that the economy cards print. `move` is the short
+// line the daily strip prints instead, so a tile stays three lines tall.
 const addObservedLabels = (cards) => cards.map((card) => ({
   ...card,
+  move: card.move || card.compare,
   observed: observed(card.date, card.cadence),
 }));
 
@@ -58,15 +64,62 @@ module.exports = function () {
   const activity = readSeries('banxico-igae');
   const exportsTotal = readSeries('banxico-exports-total');
   const remittances = readSeries('banxico-remesas');
+  const fuel = readSeries('cre-gasolina-regular');
+  const cetes = readSeries('banxico-cetes-28d');
+  const ust10 = readSeries('fred-ust10');
+  const ipc = readSeries('banxico-bmv-ipc');
   const cards = [];
 
   if (peso) {
-    const current = latest(peso), priorYear = yearAgo(peso);
+    const current = latest(peso), prior = previous(peso), priorYear = yearAgo(peso);
     const change = percentChange(current.value, priorYear?.value);
+    const dayChange = percentChange(current.value, prior?.value);
     cards.push({ id: peso.id, label: 'Peso', display: number(current.value), unit: 'MXN/US$',
       compare: change == null ? 'Latest official fixing' : percentVsYear(change, 'weaker', 'stronger'),
+      move: dayChange == null ? 'Latest official fixing' : percentFromPrior(dayChange),
       date: current.date, cadence: 'daily', dateLead: 'Official fixing', updateLabel: 'New fixing each trading day',
       source: 'Banco de México', href: LIVE_PESO_URL, actionLabel: 'Open live quote', external: true });
+  }
+
+  // Station-level national average, refreshed every four hours. The most felt number here.
+  if (fuel) {
+    const current = latest(fuel), prior = previous(fuel);
+    const dayChange = percentChange(current.value, prior?.value);
+    cards.push({ id: fuel.id, label: 'Gasoline', display: number(current.value), unit: 'MXN/L',
+      compare: dayChange == null ? 'Latest national average' : percentFromPrior(dayChange),
+      date: current.date, cadence: 'daily', dateLead: 'National average', updateLabel: 'Refreshed through the day',
+      source: 'Mexico energy regulator', href: link(fuel.id), actionLabel: 'View history' });
+  }
+
+  if (cetes) {
+    const current = latest(cetes), prior = previous(cetes), rateNow = latest(rate);
+    const gap = rateNow ? current.value - rateNow.value : null;
+    cards.push({ id: cetes.id, label: 'Cetes 28-day', display: number(current.value), unit: '%',
+      compare: gap == null ? 'Latest yield' : relativeTo(gap, 'the policy rate'),
+      move: prior ? movementFromPrior(current.value - prior.value) : 'Latest yield',
+      date: current.date, cadence: 'daily', dateLead: 'Latest yield', updateLabel: 'New reading each trading day',
+      source: 'Banco de México', href: link(cetes.id), actionLabel: 'View history' });
+  }
+
+  // Not a Mexican number, but on most days it is why the peso moved.
+  if (ust10) {
+    const current = latest(ust10), prior = previous(ust10), priorYear = yearAgo(ust10);
+    cards.push({ id: ust10.id, label: 'US 10-year', display: number(current.value), unit: '%',
+      compare: priorYear ? relativeTo(current.value - priorYear.value, 'a year ago') : 'Latest close',
+      move: prior ? movementFromPrior(current.value - prior.value) : 'Latest close',
+      date: current.date, cadence: 'daily', dateLead: 'Latest close', updateLabel: 'New close each trading day',
+      source: 'US Federal Reserve', href: link(ust10.id), actionLabel: 'View history' });
+  }
+
+  if (ipc) {
+    const current = latest(ipc), prior = previous(ipc), priorYear = yearAgo(ipc);
+    const change = percentChange(current.value, priorYear?.value);
+    const dayChange = percentChange(current.value, prior?.value);
+    cards.push({ id: ipc.id, label: 'Stock market', display: number(current.value, 0), unit: 'IPC',
+      compare: change == null ? 'Latest close' : percentVsYear(change, 'higher', 'lower'),
+      move: dayChange == null ? 'Latest close' : percentFromPrior(dayChange),
+      date: current.date, cadence: 'daily', dateLead: 'Latest close', updateLabel: 'New close each trading day',
+      source: 'Banco de México', href: link(ipc.id), actionLabel: 'View history' });
   }
 
   if (inflation) {
