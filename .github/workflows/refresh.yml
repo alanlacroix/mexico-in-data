@@ -75,6 +75,13 @@ jobs:
         continue-on-error: true   # any dead feed is skipped; never fails the run
         run: node collect-news.js
 
+      - name: Put the wire into English
+        working-directory: pipeline
+        continue-on-error: true   # a translation miss never fails a refresh; the wire is publishable as collected
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node translate-wire.mjs
+
       - name: Capture article bodies into the store (before links rot)
         working-directory: pipeline
         continue-on-error: true   # best-effort; a miss never fails the data run. No-op without the SUPABASE secrets.

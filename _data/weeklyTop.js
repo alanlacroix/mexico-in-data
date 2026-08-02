@@ -31,6 +31,8 @@ const SECTIONS = [
   { key: 'energy', label: 'Energy & infrastructure', href: '/energy.html', beats: ['energy'], curated: [] },
 ];
 const TIER_W = { 1: 3, specialist: 3, 2: 2 };
+// Roughly five a section. A soft rule: the point of the week is a read, not the archive.
+const SECTION_CAP = 5;
 const CHINA = /\bchinas?\b|\bchinos?\b|\bchina\b|beijing|\bbyd\b|transbordo|triangulaci[oó]n/i;
 
 const isoWeek = (dt) => {
@@ -67,6 +69,16 @@ module.exports = function () {
     .filter((rule) => rule.pattern.test(`${item.title} ${item.dek || ''}`))
     .map((rule) => rule.tag);
 
+  const translations = (() => {
+    try { return JSON.parse(fs.readFileSync(path.join(dir, 'translations.json'), 'utf8')); }
+    catch { return {}; }
+  })();
+  const englished = (item) => {
+    const hit = translations[item.url];
+    if (!hit || !hit.title) return item;
+    return { ...item, title: hit.title, dek: hit.dek || item.dek, originalTitle: hit.originalTitle || item.title };
+  };
+
   const trim = (s, n) => {
     s = String(s || '').replace(/\s*(The post |El art[ií]culo |La entrada ).*$/i, '').trim();
     return s.length <= n ? s : s.slice(0, n).replace(/\s+\S*$/, '') + '…';
@@ -95,11 +107,14 @@ module.exports = function () {
   const rank = (xs) => xs.sort((a, b) => (TIER_W[b.tier] || 1) - (TIER_W[a.tier] || 1) || String(b.published_at).localeCompare(String(a.published_at)));
   const pool = rank(showable.filter((x) => fresh(x.published_at, 7)));
   const themePool = rank(showable.filter((x) => fresh(x.published_at, 14)));
-  const ledgerItem = (x) => ({
+  const ledgerItem = (raw) => {
+    const x = englished(raw);
+    return {
     title: x.title, url: x.url, sourceName: x.sourceName || x.source, domain: x.source, dek: trim(x.dek, 200),
     date: x.published_at, dateLabel: dateLabel(x.published_at), dayLabel: dayLabel(x.published_at),
     curated: false, bg: '', drivers: '', implications: '', next: '', be: false,
-  });
+    };
+  };
 
   const merge = (curated, ledgerItems, cap) => {
     const kept = [], perDom = {};
@@ -139,7 +154,7 @@ module.exports = function () {
       .map((x) => { claimed.add(x.url); return ledgerItem(x); });
     // Shaped for the homepage storyCard macro as well as the section rooms, so both
     // surfaces render one card definition instead of two that can drift apart.
-    const items = merge(curated, mech, 10).map((it) => ({
+    const items = merge(curated, mech, SECTION_CAP).map((it) => ({
       ...it,
       shownToday: shownToday(it),
       interestTags: tagsFor(it),
