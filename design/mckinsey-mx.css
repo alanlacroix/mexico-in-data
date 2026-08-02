@@ -58,8 +58,11 @@
   /* Type — two families, fixed roles (Fable 2026-07-12). Inter for anything a reader
      reads (headings, prose, links); IBM Plex Mono for the label layer (eyebrows, meta,
      source tags, nav, datelines) + data figures. No serif — the old --serif was Inter. */
-  --sans:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
-  --serif:"Newsreader",Georgia,"Times New Roman",serif;   /* one meaning only: this explains why the thing above matters */
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
+  /* Alan, 2026-08-02: keep the type we had. The handoff asked for Archivo + Newsreader;
+     the site stays on Inter, and --serif is an alias rather than a second family, so the
+     explanation voice is carried by size and colour instead of by a serif. */
+  --serif:var(--sans);
   --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,Consolas,monospace;
 
   /* The scale — the ONLY seven sizes on the site. Every font-size resolves to one of these. */
