@@ -75,6 +75,13 @@ jobs:
         continue-on-error: true   # any dead feed is skipped; never fails the run
         run: node collect-news.js
 
+      - name: Explain the week's wire stories
+        working-directory: pipeline
+        continue-on-error: true   # an unexplained story is simply cut from the page
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node write-why.mjs
+
       - name: Write the lines the feed cannot compute
         working-directory: pipeline
         continue-on-error: true   # a missing sentence never fails a refresh; the feed keeps its factual fallback
