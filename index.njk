@@ -11,8 +11,8 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
   .home a{text-underline-offset:3px}
   .home-head{padding:32px 0 15px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
   .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
-  .home-date{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
-  .home-strap{margin:7px 0 0;font-size:clamp(19px,2vw,26px);font-weight:600;line-height:1.24;letter-spacing:-.018em;color:var(--ink);max-width:34ch}
+  .home-date{margin:0;font-family:var(--mono);font-size:clamp(21px,2.3vw,29px);font-weight:650;line-height:1.12;letter-spacing:-.012em;color:var(--ink)}
+  .home-strap{margin:9px 0 0;font-size:var(--fs-small);line-height:1.45;color:var(--mut);max-width:52ch}
   .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
   .section-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
   .section-title{font-size:var(--fs-h2);line-height:1.12;letter-spacing:-.018em;margin:5px 0 0}
@@ -148,7 +148,7 @@ ogDescription: "Today’s Mexico headlines, official numbers, and the connection
 
 <div class="home" data-editorial-date="{{ dailyBrief.editorialDate }}">
   <header class="home-head">
-    <div><div class="home-date" id="today">{{ dailyBrief.editorialDate }}</div><h1 class="home-strap">Mexico’s economic, political, security and business news, all in one place.</h1></div>
+    <div><h1 class="home-date" id="today">{{ dailyBrief.editorialDate }}</h1><p class="home-strap">Mexico’s economic, political, security and business news, all in one place.</p></div>
   </header>
 
   <section class="brief" id="brief" aria-labelledby="brief-title">
