@@ -24,38 +24,41 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
 // The "Mexico today" headline was retired on 2026-08-02 (Alan): the dateline carries
 // that promise without a second title above it. What must not regress is that the page
 // still stamps itself with the current editorial day rather than an undated edition.
-assert.match(home, /id="today"[^>]*>\{\{ dailyBrief\.editorialDate \}\}/, 'homepage must remain a daily starting point without expiring after noon');
+assert.match(home, /class="dateline"><h1>\{\{ feed\.date \| longDate \}\}/, 'homepage must remain a daily starting point without expiring after noon');
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
 // The page is now grouped by timeframe (Alan, 2026-08-02): the brief, the numbers and
 // the day's headlines are one "Today" section, because they all describe today. The
 // guarantee is unchanged: the daily readings lead, and the slower official ones keep a
 // separate room further down.
-assert.match(home, /id="today-title">Today</i, 'homepage must lead with the readings that move on a trading day');
-assert.match(home, /class="block-title">The numbers</i, 'the daily readings must sit inside the day, not in a room of their own');
-assert.match(home, /id="markets-title">Where the economy stands</i, 'the slower official readings must keep their own room below the news');
+assert.match(home, /data-sec="What moved"/, 'homepage must lead with the readings that move on a trading day');
+assert.match(home, /What moved since the day before/, 'the comparison window belongs in the title, not a legend');
+assert.match(home, /Where the economy stands/, 'the slower official readings must keep their own room below the news');
 // "Key developments" became "The headlines" inside the Today section (Alan, 2026-08-02:
 // the name did not say what period it covered). The window label beside it still does.
-assert.match(home, /class="block-title">The headlines</i, 'homepage must lead readers through the major stories');
-assert.match(home, /dailyBrief\.windowLabel/i, 'homepage must state the rolling news window plainly');
+assert.match(home, /Today\u2019s stories/, 'homepage must lead readers through the major stories');
+assert.match(home, /\{\{ feed\.stories\.length \}\}/, 'the story count must be derived from the data, never written in');
 // The block is now labelled "The week" and its All view is the week's five (Alan,
 // 2026-08-02). What must not regress is that the deeper per-section feed still exists
 // on the homepage rather than moving to a separate page.
-assert.match(home, /id="all-news"/, 'homepage must retain a deeper chronological feed');
-assert.match(home, /data-topic="\{\{ group\.key \}\}"/, 'the deeper feed must keep a filter per section');
+assert.match(home, /id="sec-week"/, 'homepage must retain a deeper chronological feed');
+assert.match(home, /id="wk-chips"/, 'the deeper feed must keep a filter per section');
 // "My topics" was removed on 2026-08-02 (Alan): with the All view curated down to the
 // week's five, a second personalised view of the same list was furniture. The interest
 // rules still rank the Brief; they no longer get their own filter.
-assert.doesNotMatch(home, /data-topic="mine"/, 'the retired My topics filter must not come back');
-assert.match(home, /homeEditorial\.myRead\.label/, 'homepage must render the reviewed or deterministic connection label');
+assert.doesNotMatch(home, /My topics/, 'the retired My topics filter must not come back');
+// The homepage "My read" connection is not one of the blocks in the 2026-08-02 design
+// handoff, so the feed no longer renders it. Labelled opinion did not disappear with it:
+// every story's BE panel still separates WHY IT MATTERS from the reported facts, and the
+// reviewed note itself is still written and still gates the email.
 assert.ok(homeEditorial.myRead?.text, 'a reviewed prediction must remain explicitly separate from reported facts');
-assert.match(home, /class="story-summary"/, 'homepage stories must show a short summary without requiring a click');
+assert.match(home, /class="dek"/, 'homepage stories must show a short summary without requiring a click');
 // The feed moved from the curated-only lane to the weekly lane on 2026-08-02 so every
 // section has headlines behind its toggle. It still lives here, on the Brief.
-assert.match(home, /for story in group\.items/, 'the full news feed must live on the Brief instead of a separate Latest page');
-assert.match(home, /aria-label="Briefly explained:/i, 'key developments must offer the optional analysis layer');
-assert.match(home, /<b>BE<\/b> Briefly explained/i, 'the homepage must explain the BE badge once');
-assert.match(home, />Our view</i, 'the analysis layer must label the Brief’s judgment');
-assert.match(home, />What we’re watching</i, 'the analysis layer must state what could confirm or weaken the view');
+assert.match(home, /for item in feed\.week/, 'the full news feed must live on the Brief instead of a separate Latest page');
+assert.match(home, /class="be-btn"/, 'key developments must offer the optional analysis layer');
+assert.match(home, /class="be-badge">BE</, 'the homepage must explain the BE badge once');
+assert.match(home, /Why it matters/, 'the analysis layer must label the Brief’s judgment');
+assert.match(home, /Watch for/, 'the analysis layer must state what could confirm or weaken the view');
 assert.match(voice, /export const ANALYSIS_SHAPE/, 'all generated analysis must share Alan’s approved reasoning pattern');
 for (const requirement of ['State the view in the first sentence', 'State the most likely outcome or direction', 'observable evidence would change the view', 'concrete implication for an investor or operator']) {
   assert.ok(voice.includes(requirement), `analysis voice contract is missing: ${requirement}`);
@@ -64,7 +67,7 @@ assert.match(happeningBuilder, /ANALYSIS_SHAPE/, 'Briefly explained must use the
 assert.doesNotMatch(topics, /class="be-mark"|class="be-summary"|guideHTML\(/i, 'BE belongs on the main Brief, not quarterly topic pages');
 assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
 assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as a duplicate footer destination');
-assert.match(home, /id="week-title">Coming up</i, 'homepage must show the next official dates');
+assert.match(home, /id="sec-coming"/, 'homepage must show the next official dates');
 // "Known next" became "Scheduled releases and decisions" (Alan, 2026-08-02) when every
 // section header was given a plain statement of the period it covers. Same guarantee:
 // this block is a calendar of things already on the record, never a prediction.

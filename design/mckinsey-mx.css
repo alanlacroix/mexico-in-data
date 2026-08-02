@@ -58,7 +58,8 @@
   /* Type — two families, fixed roles (Fable 2026-07-12). Inter for anything a reader
      reads (headings, prose, links); IBM Plex Mono for the label layer (eyebrows, meta,
      source tags, nav, datelines) + data figures. No serif — the old --serif was Inter. */
-  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
+  --sans:"Archivo",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;   /* one meaning only: this explains why the thing above matters */
   --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,Consolas,monospace;
 
   /* The scale — the ONLY seven sizes on the site. Every font-size resolves to one of these. */
@@ -179,6 +180,11 @@ table.mck td.k{font-weight:600;color:var(--ink);white-space:nowrap}
    Bloomberg). The bar is the only dark surface on the site, so the accents inside it get
    lighter values than the on-white palette; everything below the bar is unchanged. */
 header.mast{position:sticky;top:0;z-index:50;background:var(--ink);border-bottom:0}
+/* Tagline band — the masthead's continuation, outside the sticky element so it scrolls
+   away (design handoff, 2026-08-02). The footer prints the same string. */
+.tagline-band{background:var(--ink);padding:0 20px 20px}
+.tagline-band p{max-width:1120px;margin:0 auto;font-family:var(--mono);font-size:13.5px;line-height:1.6;color:#86888E}
+.tagline-band p{max-width:min(1120px,100%)}
 header.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:58px;padding-top:0;padding-bottom:0}
 .brand{font-family:var(--sans);font-weight:600;font-size:calc(var(--fs-body) + 1px);color:#fff;letter-spacing:-.01em;white-space:nowrap;text-decoration:none}
 .brand:hover{text-decoration:none;color:#fff}

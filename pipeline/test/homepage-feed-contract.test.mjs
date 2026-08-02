@@ -301,21 +301,20 @@ for (const article of wire.articles) {
   assert.ok(publicHeadlineEligible(article.title), `${article.sourceName} item fails the public headline gate`);
 }
 
+const feedData = fs.readFileSync(path.join(root, '_data/feed.js'), 'utf8');
 const homepageTemplate = fs.readFileSync(path.join(root, 'index.njk'), 'utf8');
 const happeningBuilder = fs.readFileSync(path.join(root, 'pipeline/build-happening.js'), 'utf8');
 const briefBuilder = fs.readFileSync(path.join(root, 'pipeline/build-brief.js'), 'utf8');
 assert.doesNotMatch(homepageTemplate, /from ['"]\/assets\/mb\.js/, 'the homepage must not download the full render toolkit for one time helper');
 assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepage source status must be embedded at build time');
-// The week's five open the same disclosure (Fable, 2026-08-02: the log is the moat, so
-// it has to be reachable). The bar is unchanged: versioned, complete analysis only.
-assert.match(homepageTemplate, /\(not isAll or inFive\).*story\.analysisV >= 7.*story\.bg and story\.view and story\.prediction/, 'only versioned, complete analysis may expose the disclosure');
-// The call now carries a third argument marking the week's five; the second argument,
-// which is what turns off the analysis disclosure, is what this guards.
-assert.match(homepageTemplate, /storyCard\(story, true[,)]/, 'ordinary headlines must use the no-analysis card mode');
-// The brief and the headlines are now blocks inside one Today section rather than two
-// sections (Alan, 2026-08-02). The order they must hold is unchanged: the summary of the
-// day comes before the stories it summarises.
-assert.ok(homepageTemplate.indexOf('class="brief-copy"') < homepageTemplate.indexOf('class="block-title">The headlines'), 'the Brief must render before key developments');
+// The disclosure moved into the feed's BE panel. The bar is unchanged and now lives in
+// _data/feed.js: a story only carries a `why` when the pipeline wrote a complete,
+// versioned analysis for it, and the panel does not render without one.
+assert.match(feedData, /story\.bg && story\.view/, 'only versioned, complete analysis may expose the disclosure');
+// Ordinary week headlines never open the analysis layer unless the log carries one.
+assert.match(homepageTemplate, /\{%- if item\.why %\}/, 'ordinary headlines must use the no-analysis card mode');
+// The brief still comes before the stories it summarises.
+assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf('id="sec-stories"'), 'the Brief must render before key developments');
 assert.match(briefBuilder, /return gate\.ok && analysisReady\(e\) && e\.url && e\.source/, 'an unreviewed story must not enter key developments');
 assert.match(
   briefBuilder,

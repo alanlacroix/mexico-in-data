@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;family=Newsreader:opsz,wght@6..72,400&amp;display=swap" />
 <title>{{ title }}</title>
 <meta name="description" content="{{ description }}" />
 <meta name="author" content="Alan Lacroix" />
@@ -73,6 +73,9 @@
 <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
 <a class="skip-link" href="#main">Skip to content</a>
 {% include "partials/header.njk" %}
+{#- The tagline band sits under the masthead but outside the sticky element, so it
+    scrolls away with the page. The footer repeats this string verbatim. -#}
+<div class="tagline-band"><p>Mexico’s economic, political, security and business news, all in one place.</p></div>
 <div class="data-alert" id="data-alert" role="status" hidden>
   <b>Some data did not load.</b> The rest of the page is still available. Try again in a few minutes.
 </div>

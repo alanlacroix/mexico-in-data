@@ -2,350 +2,381 @@
 layout: base.njk
 permalink: /
 title: "The Mexico Brief"
-description: "Today’s important Mexico headlines, the latest official numbers, and the connections between them, with links to the original sources."
+description: "Mexico’s economic, political, security and business news, all in one place."
 ogTitle: "The Mexico Brief"
-ogDescription: "Today’s Mexico headlines, official numbers, and the connections worth watching."
+ogDescription: "Mexico’s economic, political, security and business news, all in one place."
+bodyClass: feed-page
+footerBlurb: "Mexico’s economic, political, security and business news, all in one place."
 ---
+{#- The feed, built to the design handoff of 2026-08-02.
+
+    Two rules from that handoff that are easy to break by accident:
+    1. There are no media queries. One layout reflows, driven by auto-fit + minmax().
+       Any minmax floor above ~300px is wrapped in min(Xpx, 100%), or the page scrolls
+       sideways on a phone with the text clipped off the right edge.
+    2. Every count, label and chip is derived from the data. Nothing here is hardcoded to
+       today's two stories or five numbers, and a block with no items does not render at
+       all rather than printing a heading over nothing. -#}
 <style>
-  .home{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,3vw,40px);--gap-section:56px;--gap-item:18px}
-  .home a{text-underline-offset:3px}
-  /* THE GRID (Fable, 2026-08-02). Twelve columns, one spine. Rails live left of the
-     prose; the prose column never reflows, so the measure is identical on every row
-     whether or not a story came with art. Where there is no image, columns 10-12 hold
-     whitespace: reserved alignment, never a drawn placeholder. Rules span all twelve. */
-  .row12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:22px}
-  .home-head{padding:32px 0 15px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:22px;border-bottom:1px solid var(--line)}
-  .home-head>div{grid-column:1 / span 6}
-  .home-title{font-size:clamp(25px,2.8vw,36px);font-weight:650;line-height:1.1;letter-spacing:-.025em;margin:0}
-  .home-date{margin:0;font-family:var(--mono);font-size:clamp(22px,2.3vw,28px);font-weight:650;line-height:1.12;letter-spacing:-.012em;color:var(--ink)}
-  .home-strap{margin:9px 0 0;font-size:var(--fs-small);line-height:1.45;color:var(--mut)}
-  .kicker{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d)}
-  .section-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px 20px;flex-wrap:wrap}
-  .section-title{font-size:var(--fs-h2);line-height:1.12;letter-spacing:-.018em;margin:5px 0 0}
-  .section-note,.asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
-  .section-sub{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px}
-  .block-head{margin-top:34px}
-  .block-title{font-size:var(--fs-h3);line-height:1.2;letter-spacing:-.012em;margin:0}
-  .block-note{display:block;font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px}
-  .today{border-top:2px solid var(--green);padding-top:14px;margin-top:var(--gap-section);scroll-margin-top:72px}
-  .text-link{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d)}
+  .feed{max-width:1120px;margin:0 auto;padding:0 20px}
+  .feed-sec{padding-bottom:46px}
+  .sec-rule{border-top:2px solid #0B6E4F}
+  .sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;padding:14px 0 18px}
+  .sec-head h2{font-family:var(--sans);font-weight:800;font-size:32px;line-height:1;letter-spacing:-.025em;color:#111214;margin:0}
+  .sec-meta{font-family:var(--mono);font-weight:400;font-size:11px;line-height:1;letter-spacing:.1em;text-transform:uppercase;color:#86888E}
+  .sec-meta a{color:#0B6E4F;font-weight:500;font-size:12px}
 
-  
-  .brief-copy{font-size:clamp(18px,1.65vw,22px);line-height:1.58;color:var(--ink-2);max-width:68ch;margin-top:13px}
-  .my-read{max-width:68ch;margin-top:17px;padding:13px 15px;border-left:2px solid var(--green);background:var(--panel)}
-  .my-read p{font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
-  .my-read strong{color:var(--ink)}
-  .read-evidence{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .read-number{display:inline-flex;gap:6px;align-items:baseline;padding:6px 9px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:var(--fs-label)}
-  .read-number b{font-size:var(--fs-label)}
-  .read-story{display:inline-flex;align-items:center;padding:6px 9px;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);text-decoration:none}
-  .source-state{margin-top:13px;padding:11px 13px;border-left:2px solid var(--red);background:#fff7f7;font-size:var(--fs-small);line-height:1.5;color:var(--ink-2)}
-  .source-state strong{color:var(--ink)}
-  .source-state a{margin-left:8px;color:var(--green-d)}
-  .brief-sources{display:flex;align-items:center;gap:5px 14px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
-  .brief-sources a{color:var(--green-d)}
+  .dateline{padding:32px 0 0}
+  .dateline h1{font-family:var(--sans);font-weight:600;font-size:30px;line-height:1.05;letter-spacing:-.015em;text-transform:none;color:#111214;margin:0}
 
-  .story-list{border-top:1px solid var(--line);margin-top:12px}
-  .brief-story{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:22px;align-items:start;padding:20px 0;border-bottom:1px solid var(--line);background:transparent}
-  .story-meta{grid-column:1 / span 2;display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:var(--fs-label);line-height:1.35;color:var(--mut)}
-  .story-meta .js-storydate{color:var(--ink-2);font-weight:650}
-  .story-outlet{color:var(--mut)}
-  .story-meta>*{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .story-outlet{color:var(--mut)}
-  .story-topic{font-weight:650;color:var(--ink);text-decoration:none}
-  .sec-payments{color:var(--sec-payments)}
-  .sec-deals{color:var(--sec-deals)}
-  .sec-economy{color:var(--sec-economy)}
-  .sec-usmexico{color:var(--sec-usmexico)}
-  .sec-politics{color:var(--sec-politics)}
-  .sec-society{color:var(--sec-society)}
-  .sec-energy{color:var(--sec-energy)}
-  .filter[data-topic="payments"].active{background:var(--sec-payments);border-color:var(--sec-payments)}
-  .filter[data-topic="deals"].active{background:var(--sec-deals);border-color:var(--sec-deals)}
-  .filter[data-topic="economy"].active{background:var(--sec-economy);border-color:var(--sec-economy)}
-  .filter[data-topic="usmexico"].active{background:var(--sec-usmexico);border-color:var(--sec-usmexico)}
-  .filter[data-topic="politics"].active{background:var(--sec-politics);border-color:var(--sec-politics)}
-  .filter[data-topic="society"].active{background:var(--sec-society);border-color:var(--sec-society)}
-  .filter[data-topic="energy"].active{background:var(--sec-energy);border-color:var(--sec-energy)}
-  .story-title-row{grid-column:3 / span 7;min-width:0}
-  .story-copy{display:flow-root;min-width:0}
-  .story-thumb{grid-column:11 / span 2;justify-self:end;display:block;width:100%;max-width:168px;aspect-ratio:3/2;border-radius:4px;overflow:hidden;background:var(--panel)}
-  .story-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-  .story-link{color:var(--ink);text-decoration:none}
-  .story-link:hover{color:var(--green-d)}
-  .brief-story h3{font-size:clamp(20px,1.75vw,25px);line-height:1.28;letter-spacing:-.012em;font-weight:650;margin:0;max-width:60ch}
-  .story-summary{font-size:var(--fs-small);line-height:1.55;color:var(--ink-2);max-width:70ch;margin:8px 0 0}
-  .context-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;min-height:36px;border:1px solid var(--line-2);border-radius:3px;background:#fff;color:var(--ink-2);padding:0;font-family:var(--mono);font-size:var(--fs-label);font-weight:700;cursor:pointer}
-  .story-copy .context-btn{margin-top:11px}
-  .context-btn:hover,.context-btn[aria-expanded="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
-  .be-key{display:inline-flex;align-items:center;gap:6px;margin:0}
-  .be-key b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:23px;border:1px solid var(--line-2);border-radius:3px;color:var(--ink-2);font-size:var(--fs-label);}
-  .story-context{grid-column:3 / -1;margin:13px 0 2px;padding:13px 16px;background:var(--panel);border-left:2px solid var(--green);font-size:var(--fs-small);line-height:1.56;color:var(--ink-2)}
-  .story-context[hidden]{display:none}
-  .story-context p+p,.story-context .coverage{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
-  .context-label{font-family:var(--mono);font-size:var(--fs-label);font-weight:650;color:var(--ink);margin-right:7px}
-  .coverage-links{display:flex;gap:6px 12px;flex-wrap:wrap;margin-top:5px;font-family:var(--mono);font-size:var(--fs-label)}
-  .coverage-links a{color:var(--green-d)}
-  .thread{margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
-  .thread-list{display:flex;flex-direction:column;gap:5px;margin-top:5px}
-  .thread-item{display:flex;gap:10px;color:var(--ink-2);text-decoration:none;font-size:var(--fs-small);line-height:1.4}
-  .thread-item:hover{color:var(--green-d)}
-  .thread-date{flex:0 0 auto;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap;padding-top:2px}
+  .brief-p{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.55;color:#1A1B1D;max-width:62ch;text-wrap:pretty}
+  .brief-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:20px}
+  .jump{border:1px solid #E2E2E2;border-radius:999px;padding:7px 14px;background:#fff;font-family:var(--mono);font-weight:500;font-size:12px;color:#1A1B1D;cursor:pointer}
+  .jump span{color:#86888E;margin-left:5px}
+  .jump:hover{border-color:#0B6E4F;color:#0B6E4F}
+  .brief-src{font-family:var(--mono);font-size:12px;color:#86888E;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+  .brief-src a{color:#0B6E4F}
 
-  .all-news{margin-top:var(--gap-section);border-top:2px solid var(--green);padding-top:14px}
-  .markets{border-top:2px solid var(--green);padding-top:14px}
-  .all-news-body{padding:2px 0 12px}
-  .filters{display:flex;flex-wrap:wrap;gap:7px;padding:2px 0 13px;border-bottom:1px solid var(--line)}
-  .filter{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink-2);padding:8px 13px;font-size:var(--fs-meta);cursor:pointer}
-  .filter:hover{border-color:var(--ink-2);color:var(--ink)}
-  .filter.active{border-color:var(--ink);color:#fff;background:var(--ink)}
-  .all-story[hidden]{display:none}
-  .empty{font-size:var(--fs-small);color:var(--mut);padding:24px 0}
-  .show-more{display:block;width:100%;margin-top:2px;padding:13px 0;background:none;border:0;border-top:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:var(--fs-meta);font-weight:650;cursor:pointer}
-  .show-more:hover{color:var(--green-d)}
-  .show-more[hidden]{display:none}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(166px,1fr));gap:1px;background:#E2E2E2;border:1px solid #E2E2E2}
+  .tile-cell{background:#fff;display:flex;flex-direction:column}
+  .tile{background:#fff;padding:14px 14px 12px;display:flex;flex-direction:column;gap:9px;text-align:left;border:0;cursor:pointer;font:inherit;width:100%}
+  .tile:hover{background:#F7F7F7}
+  .tile-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .tile-label{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5C5E63}
+  .tile-date{font-family:var(--mono);font-size:11px;color:#B0B2B8;white-space:nowrap}
+  .tile-val{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
+  .tile-val b{font-family:var(--sans);font-weight:700;font-size:27px;letter-spacing:-.03em;color:#111214}
+  .tile-unit{font-family:var(--mono);font-size:10px;color:#86888E}
+  .tile-change{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+  .tile-delta{font-family:var(--mono);font-weight:500;font-size:12px;color:#1A1B1D;white-space:nowrap}
+  .verdict{font-family:var(--mono);font-weight:600;font-size:9.5px;letter-spacing:.09em;padding:4px 6px;border-radius:2px;white-space:nowrap}
+  .m-good{background:#EAF3EF;color:#0B6E4F}
+  .m-bad{background:#FAEEEC;color:#B4483A}
+  .m-flat{background:#F1F1F1;color:#6B6D73}
+  .tile-more{text-align:right;font-family:var(--mono);font-weight:500;font-size:9.5px;letter-spacing:.09em;color:#86888E}
+  .tile-why{border-top:1px solid #EBEBEB;margin:0 14px 12px;padding-top:10px;font-family:var(--serif);font-size:15px;line-height:1.45;color:#3C3D40;animation:panel .28s ease}
 
-  .markets,.week,.subscribe-section{margin-top:var(--gap-section)}
-  .markets{border-top:2px solid var(--green);padding-top:14px}
-  .market-rows{border-top:1px solid var(--line);margin-top:13px}
-  .market-row{display:grid;grid-template-columns:200px 96px 62px 116px minmax(0,1fr);align-items:baseline;gap:6px 18px;padding:15px 0;border-bottom:1px solid var(--line);color:inherit;text-decoration:none}
-  .market-head{display:flex;flex-direction:column;gap:3px}
-  .market-row:hover .market-value{color:var(--green-d)}
-  .market-name{font-family:var(--mono);font-size:var(--fs-meta);line-height:1.3;color:var(--ink);font-weight:650}
-  .market-value{font-size:var(--fs-h2);font-weight:650;line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink);justify-self:end;transition:color .15s ease}
-  .market-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);white-space:nowrap}
-  .market-move{font-family:var(--mono);font-size:var(--fs-meta);font-weight:650;line-height:1.4;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
-  .market-compare{font-size:var(--fs-small);line-height:1.45;color:var(--ink-2)}
-  .market-date{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);white-space:nowrap}
-  .market-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.5;color:var(--mut);margin-top:11px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:0 30px;border-bottom:1px solid #E2E2E2}
+  .cards-wk{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))}
+  .card{border-top:1px solid #E2E2E2;padding:20px 0;display:flex;flex-direction:column;gap:12px}
+  .card-wk{padding:18px 0}
+  .card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.06em}
+  .card-meta .d{color:#5C5E63}
+  .card-meta .c{color:#1A1B1D;display:inline-flex;align-items:center;gap:6px}
+  .dot{width:7px;height:7px;border-radius:999px;flex:none}
+  .card-meta .s{color:#86888E}
+  .es{border:1px solid #D9D9DB;border-radius:2px;padding:2px 5px;font-size:9px;color:#96989E;font-style:normal}
+  .card h3{font-family:var(--sans);font-weight:700;font-size:25px;line-height:1.14;letter-spacing:-.02em;color:#111214;margin:0;text-wrap:pretty}
+  .card-wk h3{font-size:20px;line-height:1.2;letter-spacing:-.015em}
+  .card h3 a{color:inherit}
+  .card h3 a:hover{color:#0B6E4F;text-decoration:none}
+  .orig{font-family:var(--mono);font-size:12px;line-height:1.4;color:#96989E;text-wrap:pretty}
+  .dek{font-family:var(--sans);font-size:16px;line-height:1.5;color:#5C5E63;max-width:58ch;text-wrap:pretty}
+  .card-wk .dek{font-size:15px}
 
-  /* The daily strip. Deliberately thinner than .market-card: three lines, no source
-     row, no action row. It sits between the brief and the news, so it has to cost
-     one band of screen, not a full one. */
-  .pulse-panel{background:var(--panel);border-radius:6px;padding:4px 20px 6px;margin-top:12px}
-  .pulse-grid{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
-  .pulse-item{min-width:0;padding:14px 16px 15px 0}
-  .pulse-item+.pulse-item{border-left:1px solid var(--line-2);padding-left:18px}
-  .pulse-link{display:block;color:inherit;text-decoration:none}
-  .pulse-link:hover .pulse-value{color:var(--green-d)}
-  .pulse-name{font-family:var(--mono);font-size:var(--fs-meta);line-height:1.3;color:var(--ink-2)}
-  .pulse-asof{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px;white-space:nowrap}
-  .pulse-value{font-size:clamp(22px,2.1vw,28px);font-weight:650;line-height:1.06;letter-spacing:-.025em;margin-top:8px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink);transition:color .15s ease}
-  .pulse-unit{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);letter-spacing:0;margin-left:3px}
-  .pulse-move{font-family:var(--mono);font-size:var(--fs-small);font-weight:650;line-height:1.4;color:var(--ink);margin-top:8px;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .pulse-date{font-family:var(--mono);font-size:var(--fs-label);line-height:1.4;color:var(--mut);margin-top:5px;white-space:nowrap}
+  .be-btn{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;background:transparent;border:1px solid #D4D4D6;border-radius:2px;padding:6px 11px 6px 6px;cursor:pointer;font:inherit}
+  .be-btn:hover{border-color:#0B6E4F}
+  .be-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:20px;background:#0B6E4F;color:#fff;font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.04em}
+  .card-wk .be-badge{width:21px;height:19px}
+  .be-label{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#1A1B1D}
+  .be-panel{border-left:2px solid #0B6E4F;padding:2px 0 2px 16px;display:grid;gap:14px;animation:panel .28s ease}
+  .card-wk .be-panel{padding-left:14px}
+  .be-part>span{display:block;margin-bottom:6px}
+  .lb-why{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#0B6E4F}
+  .lb-watch{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#86888E}
+  .lb-src{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#86888E}
+  .bd-why{font-family:var(--serif);font-size:18px;line-height:1.5;color:#1A1B1D;max-width:58ch;text-wrap:pretty}
+  .card-wk .bd-why{max-width:56ch}
+  .bd-watch{font-family:var(--serif);font-size:16px;line-height:1.5;color:#3C3D40;text-wrap:pretty}
+  .bd-src a{color:#0B6E4F;font-family:var(--mono);font-size:12px}
 
-  .week{border-top:1px solid var(--line);padding-top:14px}
-  .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:13px}
-  .timeline-item{padding:17px 18px 18px 0}
-  .timeline-item+.timeline-item{border-left:1px solid var(--line);padding-left:18px}
-  .timeline-date{font-size:var(--fs-body);font-weight:700;letter-spacing:-.01em;color:var(--ink)}
-  .timeline-rel{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:2px}
-  .timeline-rel:empty{display:none}
-  .timeline-title{font-size:var(--fs-small);line-height:1.35;font-weight:650;margin-top:6px}
-  .timeline-why{font-size:var(--fs-meta);line-height:1.48;color:var(--ink-2);margin-top:5px}
-  .timeline-source{display:inline-block;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;padding-bottom:18px}
+  .chip{border:1px solid #E2E2E2;border-radius:999px;padding:7px 13px;background:#fff;color:#1A1B1D;font-family:var(--mono);font-weight:500;font-size:12px;cursor:pointer}
+  .chip span{opacity:.55;margin-left:5px}
+  .chip:hover{border-color:#0B6E4F}
+  .chip.on{background:#111214;color:#fff;border-color:#111214}
+  .more{display:block;width:100%;margin-top:18px;background:#F5F5F5;border:1px solid #E2E2E2;padding:13px;font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#1A1B1D;cursor:pointer}
+  .more:hover{background:#EBEBEB;color:#0B6E4F}
 
-  .sub{border:1px solid var(--line-2);border-radius:7px;padding:20px 22px 17px;background:var(--panel)}
-  .sub .line{font-size:var(--fs-small);color:var(--ink-2);margin-top:7px;line-height:1.5;max-width:74ch}
-  .sub form{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px}
-  .sub input[type=email]{flex:1;min-width:220px;font-family:var(--sans);font-size:var(--fs-small);padding:12px 14px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
-  .sub button{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--green);border:0;border-radius:7px;padding:12px 24px;cursor:pointer}
-  .sub .fine{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:10px}
+  .cal{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
+  .cal-g{display:flex;gap:14px}
+  .cal-rail{flex:0 0 74px;border-top:2px solid #111214;padding-top:9px}
+  .cal-g.soon .cal-rail{border-top-color:#0B6E4F}
+  .cal-when{font-family:var(--mono);font-weight:600;font-size:14px;color:#111214}
+  .cal-rel{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:2px}
+  .cal-g.soon .cal-rel{color:#0B6E4F}
+  .cal-body{flex:1;border-top:1px solid #E2E2E2;padding-top:9px;display:grid;gap:20px;min-width:0}
+  .cal-t{font-family:var(--sans);font-weight:600;font-size:17px;line-height:1.25;color:#111214;text-wrap:pretty}
+  .cal-w{font-family:var(--sans);font-size:14px;line-height:1.45;color:#5C5E63;margin-top:4px;text-wrap:pretty}
+  .cal-s{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:6px;display:block}
+  .cal-s a{color:inherit}
 
-  @media(max-width:900px){
-    .pulse-grid{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
-    .pulse-item,.pulse-item+.pulse-item{border-left:0;border-top:1px solid var(--line);padding:13px 14px 14px 0}
-    .pulse-item:first-child,.pulse-item:nth-child(2){border-top:0}
-    .timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .timeline-item:nth-child(3){border-left:0;border-top:1px solid var(--line);padding-left:0}
-    .timeline-item:nth-child(4){border-top:1px solid var(--line)}
-  }
-  @media(max-width:900px){
-    .brief-story{display:block}
-    .story-meta{flex-direction:row;flex-wrap:wrap;gap:4px 10px;margin-bottom:7px}
-    .story-thumb{width:124px;aspect-ratio:300/190;float:right;margin:4px 0 8px 14px}
-    .brief{display:block}
-    .home-head>div{grid-column:1 / -1}
-  }
-  @media(max-width:650px){
-    .home-head{padding-top:24px}
-    .brief{margin-top:22px}
-    /* One step down on a phone. At 18px the brief ran ~35 characters a line over ten
-       lines; a step lifts the measure toward the low 40s and takes several lines off
-       every dek on the page. Desktop was too long, mobile was too short: same fix,
-       opposite direction. */
-    .brief-copy{font-size:var(--fs-small);line-height:1.55}
-    .story-summary{font-size:var(--fs-meta);line-height:1.5}
-    .news{margin-top:38px}
-    .brief-story{padding:17px 0}
-    .brief-story h3{font-size:var(--fs-h3);line-height:1.32}
-    .context-btn{width:44px;min-height:44px}
-    /* The filter wrapped to four rows, about 330px of furniture between the reader and
-       the headlines. One scrolling row with the selected chip brought into view costs
-       roughly 60px instead. */
-    .filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-padding-left:2px}
-    .filters::-webkit-scrollbar{display:none}
-    .filter{flex:0 0 auto}
-    .show-more{min-height:44px}
-    .story-thumb{width:124px;height:83px;margin:3px 0 8px 12px}
-    .market-row{grid-template-columns:minmax(0,1fr) auto;gap:6px 14px}
-    .market-row .market-figure{justify-self:end}
-    .market-row .market-move{grid-column:1}
-    .market-row .market-compare{grid-column:1 / -1}
-    .market-compare,.pulse-move{min-height:0}
-    .timeline{grid-template-columns:1fr}
-    .timeline-item,.timeline-item+.timeline-item,.timeline-item:nth-child(3),.timeline-item:nth-child(4){padding:14px 0 15px;border-left:0;border-top:1px solid var(--line)}
-    .timeline-item:first-child{border-top:0}
+  .econ{border-top:1px solid #E2E2E2}
+  .econ-row{border-bottom:1px solid #E2E2E2;padding:18px 0;display:grid;gap:13px}
+  .econ-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px}
+  .econ-name{font-family:var(--mono);font-weight:600;font-size:14px;letter-spacing:.02em;color:#111214}
+  .econ-period{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:4px}
+  .econ-val{display:flex;align-items:baseline;gap:5px}
+  .econ-val b{font-family:var(--sans);font-weight:700;font-size:30px;letter-spacing:-.03em;color:#111214}
+  .econ-unit{font-family:var(--mono);font-size:10px;color:#86888E}
+  .bars{display:grid;gap:5px}
+  .bar{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:10px;align-items:center}
+  .bar-l{font-family:var(--mono);font-weight:500;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#111214}
+  .bar-l.ref{font-weight:400;color:#86888E}
+  .track{height:10px;background:#F0F0F0;display:block}
+  .fill{height:100%;background:#111214;display:block}
+  .fill.ref{background:#D4D4D6}
+  .bar-v{font-family:var(--mono);font-weight:500;font-size:11px;color:#111214;white-space:nowrap}
+  .bar-v.ref{font-weight:400;color:#5C5E63}
+  .econ-note{font-family:var(--serif);font-size:16px;line-height:1.5;color:#1A1B1D;max-width:62ch;text-wrap:pretty}
+  .econ-src{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:12px}
+
+  .mail{background:#111214;padding:26px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;align-items:center}
+  .mail-k{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#16A06C}
+  .mail-c{font-family:var(--serif);font-size:20px;line-height:1.4;color:#F2F2F2;max-width:34ch;margin-top:10px}
+  .mail-c a{color:#16A06C}
+  .mail-f{display:flex;flex-wrap:wrap;gap:10px}
+  .mail-f input{flex:1 1 190px;background:#1B1C1E;border:1px solid #313337;color:#fff;padding:13px 14px;font-family:var(--sans);font-size:15px}
+  .mail-f button{background:#0B6E4F;color:#fff;border:0;padding:13px 22px;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.12em;cursor:pointer}
+  .mail-f button:hover{background:#16A06C}
+  .mail-fine{font-family:var(--mono);font-size:11px;line-height:1.5;color:#7A7C82;margin-top:9px}
+
+  @keyframes panel{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .spark{width:100%;height:24px;display:block}
+  .spark polyline{stroke-dasharray:240;stroke-dashoffset:240;animation:draw 1.2s ease forwards}
+  @media(prefers-reduced-motion:reduce){
+    .spark polyline{animation:none;stroke-dashoffset:0}
+    .tile-why,.be-panel{animation:none}
   }
 </style>
 
-{% macro storyCard(story, isAll=false, inFive=false) %}
-{% set topicHref = story.topicUrl if story.topicUrl else ('/us-mexico.html' if story.topic == 'us-mexico' else '/' + story.topic + '.html') %}
-{% set hasContext = (not isAll or inFive) and story.analysisV >= 7 and story.bg and story.view and story.prediction %}
-{% set contextId = 'story-context-' + story.id %}
-<article class="brief-story{% if isAll %} all-story{% endif %}"{% if isAll %} data-topic="{{ story.topic }}"{% if inFive %} data-five="y"{% endif %}{% endif %}>
-  <div class="story-meta"><span class="js-storydate" data-date="{{ story.date }}">{{ story.date }}</span><a class="story-topic sec-{{ story.topic if isAll else story.topicKey }}" href="{{ topicHref }}">{{ story.topicLabel if isAll else story.topic }}</a>{% if story.source %}<span class="story-outlet">{{ story.source }}</span>{% endif %}{% if story.sourceCount > 1 %}<span class="story-outlet">{{ story.sourceCount }} reports</span>{% endif %}</div>
-  <div class="story-title-row">
-    <div class="story-copy"><a class="story-link" href="{{ story.url }}" target="_blank" rel="noopener"><h3>{{ story.title }}</h3></a>{% if story.summary %}<p class="story-summary">{{ story.summary }}</p>{% endif %}{% if hasContext %}<button class="context-btn" type="button" aria-expanded="false" aria-controls="{{ contextId }}" aria-label="Briefly explained: {{ story.title }}" title="Briefly explained">BE</button>{% endif %}</div>
-  </div>
-  {% if story.image and not isAll %}<a class="story-thumb" href="{{ story.url }}" target="_blank" rel="noopener" title="Image: {{ story.source }}" aria-hidden="true" tabindex="-1"><img src="{{ story.image }}" alt="" width="300" height="190" loading="lazy" decoding="async" referrerpolicy="no-referrer" /></a>{% endif %}
-  {% if hasContext %}<div class="story-context" id="{{ contextId }}" hidden><p><span class="context-label">Background</span>{{ story.bg }}</p><p><span class="context-label">Our view</span>{{ story.view }}</p><p><span class="context-label">What we’re watching</span>{{ story.prediction }}</p>{% if story.prior.length %}<div class="thread"><span class="context-label">Earlier</span><div class="thread-list">{% for earlier in story.prior %}<a class="thread-item" href="{{ earlier.url }}" target="_blank" rel="noopener"><span class="thread-date">{{ earlier.dateLabel }}</span><span>{{ earlier.title }}</span></a>{% endfor %}</div></div>{% endif %}{% if story.sources.length %}<div class="coverage"><span>Sources:</span><div class="coverage-links">{% for source in story.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source or 'Source' }} ↗</a>{% endfor %}</div></div>{% endif %}</div>{% endif %}
-</article>
-{% endmacro %}
-
-<div class="home" data-editorial-date="{{ dailyBrief.editorialDate }}">
-  <header class="home-head">
-    <div><h1 class="home-date" id="today">{{ dailyBrief.editorialDate }}</h1><p class="home-strap">Mexico’s economic, political, security and business news, all in one place.</p></div>
-  </header>
-
-  {#- One section per timeframe. The brief, the numbers and the day's headlines all
-      describe today, so they live under one heading instead of three (Alan, 2026-08-02). -#}
-  <section class="today" id="brief" aria-labelledby="today-title">
-    <div class="section-top"><div><h2 class="section-title" id="today-title">Today</h2><div class="section-sub" id="brief-asof" data-date="{{ dailyBrief.newsThrough }}" data-prefix="{{ 'Latest brief ·' if dailyBrief.carryingLastBrief else 'Updated' }}">{{ 'Latest brief ·' if dailyBrief.carryingLastBrief else 'Updated' }} {{ dailyBrief.newsThrough }}</div></div></div>
-
-    <p class="brief-copy">{{ dailyBrief.summaryLead }}</p>
-    {% if homeEditorial and homeEditorial.myRead %}<div class="my-read"><p><strong>{{ homeEditorial.myRead.label or 'My read' }}:</strong> {{ homeEditorial.myRead.text }}</p><div class="read-evidence">{% for item in homeEditorial.myRead.numbers %}<a class="read-number" href="{{ item.href }}"><span>{{ item.label }}</span><b>{{ item.display }}{% if item.unit %} {{ item.unit }}{% endif %}</b><span>{{ item.observed }}</span></a>{% endfor %}<a class="read-story" href="{{ homeEditorial.myRead.storyUrl }}" target="_blank" rel="noopener">Related: {{ homeEditorial.myRead.storyLabel }} ↗</a></div></div>{% endif %}
-    {% if homeEditorial and homeEditorial.sourceState %}<div class="source-state"><strong>Sources disagree:</strong> {{ homeEditorial.sourceState.note }}{% for source in homeEditorial.sourceState.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.label }} ↗</a>{% endfor %}</div>{% endif %}
-    {% if dailyBrief.briefSources.length %}<div class="brief-sources"><span>Sources:</span>{% for item in dailyBrief.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
-
-    <div class="block-head"><h3 class="block-title">The numbers</h3>{% if boards.todayVintage %}<span class="block-note">{{ boards.todayVintage.label }}</span>{% endif %}</div>
-    <div class="pulse-panel"><div class="pulse-grid" id="pulse-grid">
-      {% for item in boards.today %}<article class="pulse-item"><a class="pulse-link" href="{{ item.href }}" aria-label="{{ item.label }} · {{ item.actionLabel }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><div class="pulse-name">{{ item.label }}</div><div class="pulse-value">{{ item.display }}{% if item.unit %} <span class="pulse-unit">{{ item.unit }}</span>{% endif %}</div><div class="pulse-move">{{ item.delta if item.delta else item.move }}</div>{% if item.olderThanBlock %}<div class="pulse-date">{{ item.observed }}</div>{% endif %}</a></article>{% endfor %}
-    </div></div>
-
-    <div class="block-head" id="news-title"><h3 class="block-title">The headlines</h3><span class="block-note">{{ dailyBrief.windowLabel }} · <span class="be-key"><b>BE</b> Briefly explained</span></span></div>
-    <div class="story-list major-list">
-      {% for story in dailyBrief.stories %}{{ storyCard(story) }}{% else %}<p class="empty">No major stories have cleared the brief yet.</p>{% endfor %}
+<div class="feed">
+  <div class="dateline"><h1>{{ feed.date | longDate }}</h1></div>
+  <section class="feed-sec" id="sec-brief" data-sec="The brief">
+    <div class="sec-rule"></div>
+    <div class="sec-head"><h2>The brief</h2><div class="sec-meta" id="brief-asof" data-date="{{ feed.updated }}" data-prefix="{{ 'Latest brief' if feed.carrying else 'Updated' }}">{{ 'Latest brief' if feed.carrying else 'Updated' }}</div></div>
+    <p class="brief-p">{{ feed.brief }}</p>
+    <div class="brief-row">
+      {%- for story in feed.stories %}<button class="jump" type="button" data-jump="sec-stories">{{ story.chip }}<span>↓</span></button>{% endfor %}
+      {%- if feed.briefSources.length %}<div class="brief-src"><span>Sources</span>{% for item in feed.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
     </div>
   </section>
 
-  {% if weeklyTop.groups.length %}<section class="all-news" id="all-news" aria-labelledby="week-heading">
-    <div class="section-top"><div><h2 class="section-title" id="week-heading">This week</h2><div class="section-sub">{{ weeklyTop.weekLabel }}</div></div></div>
-    <div class="all-news-body">
-      <nav class="filters" aria-label="Filter headlines by section">
-        <button class="filter active" type="button" data-topic="all" aria-pressed="true">All</button>
-        {%- for group in weeklyTop.groups %}
-        <button class="filter" type="button" data-topic="{{ group.key }}" aria-pressed="false">{{ group.label }}</button>
-        {%- endfor %}
-      </nav>
-      <div class="story-list" id="all-news-list">
-        {%- for group in weeklyTop.groups %}{% for story in group.items %}{% if not story.shownToday %}{{ storyCard(story, true, story.inFive) }}{% endif %}{% endfor %}{% endfor %}
+  {% if feed.numbers.length %}<section class="feed-sec" id="sec-numbers" data-sec="What moved">
+    <div class="sec-rule"></div>
+    <div class="sec-head"><h2>What moved since the day before</h2><div class="sec-meta">Line: 30 days</div></div>
+    <div class="tiles">
+      {%- for n in feed.numbers %}
+      <div class="tile-cell">
+        <button class="tile" type="button" aria-expanded="false" aria-controls="why-{{ n.id }}" data-toggle="why-{{ n.id }}">
+          <span class="tile-top"><span class="tile-label">{{ n.label }}</span><span class="tile-date">{{ n.asOf }}</span></span>
+          <span class="tile-val"><b>{{ n.value }}</b>{% if n.unit %}<span class="tile-unit">{{ n.unit }}</span>{% endif %}</span>
+          <span class="tile-change"><span class="tile-delta">{{ n.delta }}</span><span class="verdict m-{{ n.mood }}">{{ n.tag }}</span></span>
+          {%- if n.points %}<svg class="spark" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true"><polyline points="{{ n.points }}" fill="none" stroke="{{ n.tone }}" stroke-width="1.5" vector-effect="non-scaling-stroke" style="animation-delay:{{ 0.15 + loop.index0 * 0.10 }}s"/></svg>{% endif %}
+          {%- if n.why %}<span class="tile-more" data-more>WHY +</span>{% endif %}
+        </button>
+        {%- if n.why %}<div class="tile-why" id="why-{{ n.id }}" hidden>{{ n.why }}</div>{% endif %}
       </div>
-      <p class="empty" id="news-empty" hidden>Nothing from this section in the last seven days.</p>
-      <button class="show-more" id="news-more" type="button" hidden>Show more</button>
+      {%- endfor %}
     </div>
   </section>{% endif %}
 
-  <section class="week" aria-labelledby="week-title">
-    <div class="section-top"><div><h2 class="section-title" id="week-title">Coming up</h2><div class="section-sub">Scheduled releases and decisions</div></div></div>
-    <div class="timeline">
-      {% for event in calendar %}<article class="timeline-item"><div class="timeline-date">{% if event.approx %}Week of <span class="js-date" data-date="{{ event.date }}">{{ event.date }}</span>{% else %}<span class="js-caldate" data-date="{{ event.date }}">{{ event.date }}</span>{% endif %}</div><div class="timeline-rel js-rel" data-date="{{ event.date }}" data-approx="{{ 'y' if event.approx else '' }}"></div><div class="timeline-title">{{ event.title }}</div>{% if event.why %}<div class="timeline-why">{{ event.why }}</div>{% endif %}{% if event.sourceUrl %}<a class="timeline-source" href="{{ event.sourceUrl }}" target="_blank" rel="noopener">{{ event.source }} ↗</a>{% else %}<div class="timeline-source">{{ event.source }}</div>{% endif %}</article>{% endfor %}
+  {% if feed.stories.length %}<section class="feed-sec" id="sec-stories" data-sec="Today's stories">
+    <div class="sec-rule"></div>
+    <div class="sec-head"><h2>Today’s stories</h2><div class="sec-meta">{{ feed.stories.length }} {{ 'story' if feed.stories.length == 1 else 'stories' }} today</div></div>
+    <div class="cards">
+      {%- for story in feed.stories %}
+      <article class="card">
+        <div class="card-meta"><span class="d">{{ story.date }}</span><span class="c"><i class="dot" style="background:{{ story.catKey | catColor }}"></i>{{ story.cat }}</span><span class="s">{{ story.source }}</span></div>
+        <h3><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.title }}</a></h3>
+        {%- if story.dek %}<p class="dek">{{ story.dek }}</p>{% endif %}
+        {%- if story.why %}
+        <button class="be-btn" type="button" aria-expanded="{{ 'true' if loop.first else 'false' }}" aria-controls="be-{{ story.id }}" data-toggle="be-{{ story.id }}"><span class="be-badge">BE</span><span class="be-label">{{ 'Hide' if loop.first else 'Briefly explained' }}</span></button>
+        <div class="be-panel" id="be-{{ story.id }}"{% if not loop.first %} hidden{% endif %}>
+          <div class="be-part"><span class="lb-why">Why it matters</span><p class="bd-why">{{ story.why }}</p></div>
+          {%- if story.watch %}<div class="be-part"><span class="lb-watch">Watch for</span><p class="bd-watch">{{ story.watch }}</p></div>{% endif %}
+          <div class="be-part bd-src"><span class="lb-src">Source</span><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
+        </div>
+        {%- endif %}
+      </article>
+      {%- endfor %}
     </div>
-  </section>
+  </section>{% endif %}
 
-  <section class="markets" aria-labelledby="markets-title">
-    <div class="section-top"><div><h2 class="section-title" id="markets-title">Where the economy stands</h2><div class="section-sub">The slower official readings, latest release for each</div></div><a class="text-link" href="/chart.html">Compare the numbers →</a></div>
-    <div class="market-rows" id="market-grid">
-      {% for item in boards.economy %}<a class="market-row" href="{{ item.href }}"{% if item.external %} target="_blank" rel="noopener"{% endif %}><span class="market-head"><span class="market-name">{{ item.label }}</span><span class="market-date">{{ item.observed }}</span></span><span class="market-value">{{ item.display }}</span><span class="market-unit">{{ item.unit }}</span><span class="market-move">{{ item.delta }}</span><span class="market-compare">{{ item.compare }}</span></a>{% endfor %}
+  {% if feed.week.length %}<section class="feed-sec" id="sec-week" data-sec="This week">
+    <div class="sec-rule"></div>
+    <div class="sec-head"><h2>This week</h2><div class="sec-meta">{{ feed.weekLabel }} · if you missed the week</div></div>
+    <div class="chips" id="wk-chips"></div>
+    <div class="cards cards-wk" id="wk-list">
+      {%- for item in feed.week %}
+      <article class="card card-wk" data-cat="{{ item.cat }}">
+        <div class="card-meta"><span class="d">{{ item.date }}</span><span class="c"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</span><span class="s">{{ item.source }}{% if item.lang %} <i class="es">{{ item.lang }}</i>{% endif %}</span></div>
+        <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
+        {%- if item.orig %}<p class="orig">{{ item.orig }}</p>{% endif %}
+        {%- if item.dek %}<p class="dek">{{ item.dek }}</p>{% endif %}
+        {%- if item.why %}
+        <button class="be-btn" type="button" aria-expanded="false" aria-controls="bw-{{ item.id }}" data-toggle="bw-{{ item.id }}"><span class="be-badge">BE</span><span class="be-label">Briefly explained</span></button>
+        <div class="be-panel" id="bw-{{ item.id }}" hidden>
+          <div class="be-part"><span class="lb-why">Why it matters</span><p class="bd-why">{{ item.why }}</p></div>
+          {%- if item.watch %}<div class="be-part"><span class="lb-watch">Watch for</span><p class="bd-watch">{{ item.watch }}</p></div>{% endif %}
+          <div class="be-part bd-src"><span class="lb-src">Source</span><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a></div>
+        </div>
+        {%- endif %}
+      </article>
+      {%- endfor %}
     </div>
-    <p class="market-note">Banco de México · INEGI</p>
-  </section>
+    <button class="more" id="wk-more" type="button" hidden></button>
+  </section>{% endif %}
 
-  <section class="subscribe-section" aria-labelledby="subscribe-title">
-    <div class="sub"><h2 class="kicker" id="subscribe-title">Weekly email</h2><p class="line">One email a week: what changed in Mexico, why it changed, and the sources behind it. <a href="/weekly.html">See an example →</a></p><form class="subform" method="post" action="/api/subscribe" novalidate><input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required /><label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label><button type="submit">Subscribe</button></form><div class="fine submsg" aria-live="polite">One email a week. Unsubscribe whenever you want.</div></div>
+  {% if feed.upcoming.length %}<section class="feed-sec" id="sec-coming" data-sec="Coming up">
+    <div class="sec-rule"></div>
+    <div class="sec-head"><h2>Coming up</h2><div class="sec-meta">Scheduled releases and decisions</div></div>
+    <div class="cal">
+      {%- for group in feed.upcoming %}
+      <div class="cal-g{% if group.soon %} soon{% endif %}">
+        <div class="cal-rail"><div class="cal-when">{{ group.when }}</div><div class="cal-rel">{{ group.rel }}</div></div>
+        <div class="cal-body">
+          {%- for event in group.items %}
+          <div><div class="cal-t">{{ event.title }}</div>{% if event.what %}<div class="cal-w">{{ event.what }}</div>{% endif %}{% if event.url %}<span class="cal-s"><a href="{{ event.url }}" target="_blank" rel="noopener">{{ event.source }} ↗</a></span>{% else %}<span class="cal-s">{{ event.source }}</span>{% endif %}</div>
+          {%- endfor %}
+        </div>
+      </div>
+      {%- endfor %}
+    </div>
+  </section>{% endif %}
+
+  {% if feed.econ.length %}<section class="feed-sec" id="sec-econ" data-sec="The economy">
+    <div class="sec-rule"></div>
+    <div class="sec-head"><h2>Where the economy stands</h2><div class="sec-meta"><a href="/chart.html">Compare the numbers →</a></div></div>
+    <div class="econ">
+      {%- for row in feed.econ %}
+      <div class="econ-row">
+        <div class="econ-head">
+          <div><div class="econ-name">{{ row.name }}</div><div class="econ-period">{{ row.period }}</div></div>
+          <div class="econ-val"><b>{{ row.value }}</b>{% if row.unit %}<span class="econ-unit">{{ row.unit }}</span>{% endif %}</div>
+        </div>
+        <div class="bars">
+          <div class="bar"><span class="bar-l">Now</span><span class="track"><span class="fill" style="width:{{ row.nowPct }}%"></span></span><span class="bar-v">{{ row.nowText }}</span></div>
+          <div class="bar"><span class="bar-l ref">{{ row.refLabel }}</span><span class="track"><span class="fill ref" style="width:{{ row.refPct }}%"></span></span><span class="bar-v ref">{{ row.refText }}</span></div>
+        </div>
+        {%- if row.note %}<p class="econ-note">{{ row.note }}</p>{% endif %}
+      </div>
+      {%- endfor %}
+    </div>
+    <p class="econ-src">Banco de México · INEGI</p>
+  </section>{% endif %}
+
+  <section class="feed-sec" id="sec-mail" data-sec="Weekly email">
+    <div class="mail">
+      <div>
+        <div class="mail-k">Weekly email</div>
+        <p class="mail-c">One email a week: what changed in Mexico, why it changed, and the sources behind it. <a href="/weekly.html">See an example →</a></p>
+      </div>
+      <div>
+        <form class="mail-f" method="post" action="/api/subscribe" novalidate>
+          <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required />
+          <label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+          <button type="submit">Subscribe</button>
+        </form>
+        <div class="mail-fine submsg" aria-live="polite">One email a week. Unsubscribe whenever you want.</div>
+      </div>
+    </div>
   </section>
 </div>
 
 <script type="module">
-const editorialDate=document.querySelector('.home')?.dataset.editorialDate||'';
-const date=(iso,year=false)=>{if(!iso)return'';const d=new Date(/^\d{4}-\d{2}-\d{2}$/.test(iso)?iso+'T12:00:00Z':iso);return isNaN(d)?iso:d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric',...(year?{year:'numeric'}:{})});};
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function closeContext(except,restoreFocus=false){
-  document.querySelectorAll('.context-btn[aria-expanded="true"]').forEach((button)=>{
-    if(button===except)return;
-    const panel=button.closest('.brief-story')?.querySelector(':scope > .story-context');
-    const focusWasInside=panel?.contains(document.activeElement);
-    button.setAttribute('aria-expanded','false');
-    if(panel)panel.hidden=true;
-    if(restoreFocus&&focusWasInside)button.focus();
+// Every panel on the page is the same contract: a button with aria-expanded and the
+// hidden element it controls.
+$$('[data-toggle]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const panel = document.getElementById(button.dataset.toggle);
+    if (!panel) return;
+    const open = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', String(!open));
+    panel.hidden = open;
+    const label = $('.be-label', button);
+    if (label) label.textContent = open ? 'Briefly explained' : 'Hide';
+    const more = $('[data-more]', button);
+    if (more) more.textContent = open ? 'WHY +' : 'HIDE −';
   });
-}
-document.querySelectorAll('.context-btn').forEach((button)=>{
-  const panel=button.closest('.brief-story')?.querySelector(':scope > .story-context');
-  if(!panel)return;
-  button.addEventListener('click',(event)=>{event.stopPropagation();const open=button.getAttribute('aria-expanded')==='true';closeContext(open?null:button);button.setAttribute('aria-expanded',String(!open));panel.hidden=open;});
 });
-document.addEventListener('pointerdown',(event)=>{if(!event.target.closest?.('.context-btn,.story-context'))closeContext(null);});
-document.addEventListener('keydown',(event)=>{if(event.key==='Escape')closeContext(null,true);});
 
-const newsFilters=[...document.querySelectorAll('.filter')];
-const allStories=[...document.querySelectorAll('.all-story')];
-const newsEmpty=document.getElementById('news-empty');
-const newsMore=document.getElementById('news-more');
-const NEWS_LIMIT=4;
-const FILTER_KEY='mexico-brief-headline-filter';
-let newsTopic='all',newsExpanded=false;
-function matchesTopic(story){if(newsTopic==='all')return story.dataset.five==='y';return story.dataset.topic===newsTopic;}
-function renderNews(){
-  newsFilters.forEach((button)=>{const active=button.dataset.topic===newsTopic;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
-  let matched=0,shown=0;
-  const limit=newsTopic==='all'?Infinity:NEWS_LIMIT;
-  allStories.forEach((story)=>{const match=matchesTopic(story);if(!match){story.hidden=true;return;}matched++;const within=newsExpanded||shown<limit;story.hidden=!within;if(within)shown++;});
-  if(newsEmpty)newsEmpty.hidden=matched>0;
-  if(newsMore){const rest=matched-Math.min(matched,limit);newsMore.hidden=newsExpanded||rest<=0;newsMore.textContent='Show '+rest+' more';}
+// The freshness stamp is the one value the build cannot format: it is a clock time and
+// belongs in the reader's Mexico City day. Everything else is formatted at build time.
+const asof = $('#brief-asof');
+if (asof) {
+  const when = new Date(asof.dataset.date);
+  asof.textContent = Number.isNaN(when.getTime()) ? asof.dataset.prefix
+    : `${asof.dataset.prefix} ${when.toLocaleTimeString('en-US', { timeZone: 'America/Mexico_City', hour: 'numeric', minute: '2-digit' })}`;
 }
-function showNews(topic,push=false){
-  newsTopic=topic;newsExpanded=false;renderNews();
-  try{localStorage.setItem(FILTER_KEY,topic);}catch{}
-  if(push){const url=new URL(location.href);if(topic==='all')url.searchParams.delete('topic');else url.searchParams.set('topic',topic);url.hash='all-news';history.replaceState({},'',url);}
-}
-newsFilters.forEach((button)=>button.addEventListener('click',()=>showNews(button.dataset.topic,true)));
-if(newsMore)newsMore.addEventListener('click',()=>{newsExpanded=true;renderNews();});
-let initialTopic=new URLSearchParams(location.search).get('topic');
-if(!initialTopic){try{initialTopic=localStorage.getItem(FILTER_KEY);}catch{}}
-if(!newsFilters.some((button)=>button.dataset.topic===initialTopic))initialTopic='all';
-showNews(initialTopic);
-// On a phone the chips are one scrolling row, so the active one has to be brought into
-// view or the reader cannot tell what is selected.
-const activeChip=newsFilters.find((button)=>button.classList.contains('active'));
-if(activeChip&&activeChip.scrollIntoView)activeChip.scrollIntoView({block:'nearest',inline:'center'});
 
-const headerDay=new Date((editorialDate||new Date().toISOString().slice(0,10))+'T12:00:00Z');
-document.getElementById('today').textContent=headerDay.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',weekday:'long',month:'long',day:'numeric',year:'numeric'});
-document.querySelectorAll('.js-date').forEach((element)=>{element.textContent=date(element.dataset.date);});
-document.querySelectorAll('.js-storydate').forEach((element)=>{
-  if(element.dataset.date===editorialDate){element.textContent='Today';return;}
-  const storyDay=new Date(element.dataset.date+'T12:00:00Z');
-  const priorDay=new Date((editorialDate||new Date().toISOString().slice(0,10))+'T12:00:00Z');priorDay.setUTCDate(priorDay.getUTCDate()-1);
-  element.textContent=!isNaN(storyDay)&&storyDay.toISOString().slice(0,10)===priorDay.toISOString().slice(0,10)?'Yesterday':date(element.dataset.date);
+// This week: chips derived from the categories actually present, with live counts.
+const list = $('#wk-list'), chipRow = $('#wk-chips'), moreBtn = $('#wk-more');
+if (list && chipRow && moreBtn) {
+  const cards = $$('.card', list);
+  const VISIBLE = 3;
+  let filter = 'All', expanded = false;
+
+  const counts = new Map();
+  cards.forEach((card) => counts.set(card.dataset.cat, (counts.get(card.dataset.cat) || 0) + 1));
+  chipRow.innerHTML = ['All', ...counts.keys()].map((cat) => {
+    const n = cat === 'All' ? cards.length : counts.get(cat);
+    return `<button class="chip${cat === 'All' ? ' on' : ''}" type="button" data-cat="${cat}">${cat}<span>${n}</span></button>`;
+  }).join('');
+
+  const render = () => {
+    const matching = cards.filter((card) => filter === 'All' || card.dataset.cat === filter);
+    cards.forEach((card) => { card.hidden = true; });
+    const shown = expanded ? matching : matching.slice(0, VISIBLE);
+    shown.forEach((card) => { card.hidden = false; });
+    const rest = matching.length - shown.length;
+    moreBtn.hidden = rest <= 0;
+    moreBtn.textContent = `Show ${rest} more`;
+    $$('.chip', chipRow).forEach((chip) => chip.classList.toggle('on', chip.dataset.cat === filter));
+  };
+  chipRow.addEventListener('click', (event) => {
+    const chip = event.target.closest('.chip');
+    if (!chip) return;
+    filter = chip.dataset.cat;
+    expanded = false;                       // a new filter starts from the top
+    render();
+  });
+  moreBtn.addEventListener('click', () => { expanded = true; render(); });
+  render();
+}
+
+// Jump chips land the section top 58px below the viewport top.
+$$('[data-jump]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const target = document.getElementById(button.dataset.jump);
+    if (!target) return;
+    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 58, behavior: still ? 'auto' : 'smooth' });
+  });
 });
-const calDate=(iso)=>{const d=new Date(iso+'T12:00:00Z');return isNaN(d)?iso:d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric'});};
-document.querySelectorAll('.js-caldate').forEach((element)=>{element.textContent=calDate(element.dataset.date);});
-const weekStart=(d)=>{const x=new Date(d.getTime());x.setUTCHours(0,0,0,0);x.setUTCDate(x.getUTCDate()-((x.getUTCDay()+6)%7));return x;};
-const relDay=(iso,approx)=>{const d=new Date(iso+'T00:00:00Z'),t=new Date(editorialDate+'T00:00:00Z');if(isNaN(d)||isNaN(t))return'';const n=Math.round((d-t)/864e5);if(n<0)return'';if(approx){const w=Math.round((weekStart(d)-weekStart(t))/(7*864e5));return w<=0?'this week':w===1?'next week':'in '+w+' weeks';}if(n===0)return'today';if(n===1)return'tomorrow';return'in '+n+' days';};
-document.querySelectorAll('.js-rel').forEach((element)=>{element.textContent=relDay(element.dataset.date,element.dataset.approx==='y');});
-const asof=document.getElementById('brief-asof');if(asof){const d=new Date(asof.dataset.date);const prefix=asof.dataset.prefix||'Updated';asof.textContent=isNaN(d)?'':`${prefix} ${d.toLocaleDateString('en-US',{timeZone:'America/Mexico_City',month:'short',day:'numeric'})} · ${d.toLocaleTimeString('en-US',{timeZone:'America/Mexico_City',hour:'numeric',minute:'2-digit'})}`;}
 
-document.querySelectorAll('.story-thumb img').forEach((image)=>{const remove=()=>image.closest('.story-thumb')?.remove();if(image.complete&&image.naturalWidth===0)remove();else image.addEventListener('error',remove,{once:true});});
+// Section reveal. The hidden state is set from JS, never CSS, and a safety timer reveals
+// everything if the observer never fires, so a failed observer cannot leave a blank page.
+const sections = $$('[data-sec]');
+if (!still && 'IntersectionObserver' in window) {
+  const reveal = (section) => { section.style.opacity = '1'; section.style.transform = 'none'; };
+  sections.forEach((section) => {
+    section.style.opacity = '0';
+    section.style.transform = 'translateY(16px)';
+    section.style.transition = 'opacity .55s cubic-bezier(.2,.7,.3,1), transform .55s cubic-bezier(.2,.7,.3,1)';
+  });
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      reveal(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.05 });
+  sections.forEach((section) => observer.observe(section));
+  setTimeout(() => sections.forEach(reveal), 1400);
+}
 </script>

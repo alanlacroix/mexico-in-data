@@ -29,6 +29,28 @@ module.exports = function (ec) {
     return value === '/' ? '/' : value.replace(/\.html$/, '');
   });
 
+  // The dateline, formatted at build time so it is in the HTML rather than painted in
+  // after the page loads.
+  ec.addFilter('longDate', (iso) => {
+    const parsed = new Date(`${String(iso).slice(0, 10)}T12:00:00Z`);
+    return Number.isNaN(parsed.getTime()) ? iso
+      : parsed.toLocaleDateString('en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  });
+
+  // Category dots, from the design handoff. Equal lightness and chroma, hue varies, so
+  // no dot reads as louder than another. An unknown category falls back to grey rather
+  // than inventing a colour.
+  const CATEGORY_DOTS = {
+    usmexico: 'oklch(0.55 0.12 255)',
+    economy: 'oklch(0.52 0.10 165)',
+    payments: 'oklch(0.55 0.12 305)',
+    society: 'oklch(0.58 0.11 60)',
+    deals: 'oklch(0.55 0.11 200)',
+    politics: 'oklch(0.55 0.12 15)',
+    energy: 'oklch(0.55 0.11 140)',
+  };
+  ec.addFilter('catColor', (key) => CATEGORY_DOTS[String(key || '')] || '#86888E');
+
   // Cache-busting: a short content hash of the stylesheet. base.njk appends it to
   // the CSS URL (?v=hash), so the URL changes whenever the CSS changes and a browser
   // can never serve a stale stylesheet against fresh HTML (the bug that made the nav
