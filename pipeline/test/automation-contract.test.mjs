@@ -71,9 +71,13 @@ assert.match(
   /status\.publicationId !== EXPECTED_ID[\s\S]*status\.editorialDate !== EXPECTED_DATE[\s\S]*SLOT_RANK\[status\.slot\]/,
   'production verification must match the exact receipt id, date, and edition rank',
 );
+// The homepage stopped carrying a data-editorial-date attribute in the 2026-08-02
+// rebuild; the edition's date is now rendered in the dateline. The guarantee is the same:
+// the verifier must confirm the date in the served brief AND in the page a reader sees,
+// not just in the receipt.
 assert.match(
   productionVerifier,
-  /brief\.meta\?\.editorialDate !== EXPECTED_DATE[\s\S]*get\('\/', 'text'\)[\s\S]*data-editorial-date/,
+  /brief\.meta\?\.editorialDate !== EXPECTED_DATE[\s\S]*get\('\/', 'text'\)[\s\S]*homepage\.includes\(longDate\)/,
   'production verification must match the edition date in both the live brief and rendered homepage',
 );
 assert.match(
