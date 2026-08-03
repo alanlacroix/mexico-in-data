@@ -32,10 +32,19 @@ export async function checkProduction() {
   if (brief.meta?.editorialDate !== EXPECTED_DATE) throw new Error(`live brief date is ${brief.meta?.editorialDate || 'missing'}`);
   if (!Array.isArray(brief.items) || brief.items.length > 5) throw new Error('live brief has an invalid story set');
 
+  // These assertions have to track the page. They were still looking for the "Mexico
+  // today" headline and a data-editorial-date attribute, both of which the 2026-08-02
+  // rebuild removed, so every publication since has been marked failed after it had
+  // already published correctly. Assert what the feed actually renders: the wordmark, the
+  // brief itself, and the edition's own date in the dateline.
   const homepage = await get('/', 'text');
-  if (!/THE MEXICO BRIEF/i.test(homepage) || !/Mexico today/i.test(homepage)) throw new Error('live homepage contract failed');
-  const escapedDate = EXPECTED_DATE.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  if (!new RegExp(`data-editorial-date=["']${escapedDate}["']`).test(homepage)) {
+  if (!/THE MEXICO BRIEF/i.test(homepage) || !/id="sec-brief"/.test(homepage)) {
+    throw new Error('live homepage contract failed');
+  }
+  const longDate = new Date(`${EXPECTED_DATE}T12:00:00Z`).toLocaleDateString('en-US', {
+    timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+  });
+  if (!homepage.includes(longDate)) {
     throw new Error(`live homepage does not render the ${EXPECTED_DATE} edition`);
   }
   return status;
