@@ -212,7 +212,17 @@ header.mast{position:sticky;top:0;z-index:60;background:#111214}
    The tagline and the scroll-spy section label are both secondary context, and a label
    clipped to "THE B…" tells a reader less than no label at all, so both come off rather
    than competing for room that is not there. */
-@media (max-width:760px){.mast-tag,.mast-sec{display:none}}
+@media (max-width:760px){
+  .mast-tag,.mast-sec{display:none}
+  /* .mast-tag carried flex:1 and was what pushed the trailing controls to the right
+     edge. With it hidden there is nothing left to expand, so the controls bunched up
+     against the wordmark. Give the first of them the auto margin instead. The language
+     toggle only exists on the homepage pair, so the button takes the job everywhere
+     else, and sits tight against the toggle where there is one. */
+  .menu-btn{margin-left:auto}
+  .lang-link{margin-left:auto}
+  .lang-link~.menu-btn{margin-left:14px}
+}
 
 footer.foot{background:#111214;padding:28px 0 36px;margin-top:56px;border-top:0}
 .foot-row{max-width:var(--page);margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:22px 40px}
