@@ -189,7 +189,7 @@ header.mast{position:sticky;top:0;z-index:60;background:#111214}
 .brand .u{border-bottom:3px solid #16A06C;padding-bottom:2px}
 .lang-link{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.1em;color:#C6C8CD;text-decoration:none;border:1px solid #3A3C42;padding:3px 8px;margin-left:14px;white-space:nowrap}
 .lang-link:hover{color:#fff;border-color:#6B6D73;text-decoration:none}
-.mast-sec{flex:1;min-width:0;text-align:right;font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#86888E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mast-sec{flex:0 1 auto;min-width:0;text-align:right;font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#86888E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .menu-btn{width:34px;height:28px;display:flex;flex-direction:column;justify-content:center;gap:5px;background:none;border:0;padding:0;cursor:pointer;flex:none}
 .menu-btn span{display:block;height:1.5px;background:#fff;border-radius:1px}
 .menu-btn:hover{opacity:.7}
@@ -204,9 +204,10 @@ header.mast{position:sticky;top:0;z-index:60;background:#111214}
 
 /* Tagline band — the masthead's continuation, outside the sticky element so it scrolls
    away. The footer prints the same string. */
-.tagline-band{background:#111214;padding:0 0 20px}
-.tagline-in{max-width:1120px;margin:0 auto;padding:0 20px}
-.tagline-band p{max-width:54ch;font-family:var(--mono);font-size:13.5px;line-height:1.6;color:#86888E}
+/* Tagline moved inline into the masthead row (2026-08-03) — the band it replaced
+   spent ~70px of the first screen restating what the wordmark already says. */
+.mast-tag{flex:1;min-width:0;margin-left:18px;font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:#6B6D73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:760px){.mast-tag{display:none}}
 
 footer.foot{background:#111214;padding:28px 0 36px;margin-top:56px;border-top:0}
 .foot-row{max-width:1120px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:22px 40px}

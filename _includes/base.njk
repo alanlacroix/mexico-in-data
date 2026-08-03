@@ -78,9 +78,8 @@
 <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
 <a class="skip-link" href="#main">Skip to content</a>
 {% include "partials/header.njk" %}
-{#- The tagline band sits under the masthead but outside the sticky element, so it
-    scrolls away with the page. The footer repeats this string verbatim. -#}
-<div class="tagline-band"><div class="tagline-in"><p>Mexico’s economic, political, security and business news, all in one place.</p></div></div>
+{#- Tagline band removed (Alan, 2026-08-03: "takes up a lot of space"). The line
+    now rides inside the masthead row; the footer still carries it in full. -#}
 <div class="data-alert" id="data-alert" role="status" hidden>
   <b>Some data did not load.</b> The rest of the page is still available. Try again in a few minutes.
 </div>

@@ -9,6 +9,7 @@
 module.exports = {
   en: {
     lang: 'en', htmlLang: 'en', otherUrl: '/es/', otherLabel: 'ES',
+    tagline: 'Mexico’s economic, political, security and business news, all in one place.',
     brief: 'The brief', updated: 'Updated', latestBrief: 'Latest brief',
     moved: 'What moved since the day before', line30: 'Line: 30 days', why: 'WHY +', hide: 'HIDE −',
     stories: 'Today’s stories', storyCount: (n) => `${n} ${n === 1 ? 'story' : 'stories'} today`,
@@ -25,6 +26,7 @@ module.exports = {
   },
   es: {
     lang: 'es', htmlLang: 'es-MX', otherUrl: '/', otherLabel: 'EN',
+    tagline: 'La economía, la política y la seguridad de México, en un solo lugar.',
     brief: 'El resumen', updated: 'Actualizado', latestBrief: 'Último resumen',
     moved: 'Qué se movió desde el día anterior', line30: 'Línea: 30 días', why: 'POR QUÉ +', hide: 'OCULTAR −',
     stories: 'Las historias de hoy', storyCount: (n) => `${n} ${n === 1 ? 'historia' : 'historias'} hoy`,

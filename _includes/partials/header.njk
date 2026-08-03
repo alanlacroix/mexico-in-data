@@ -11,6 +11,8 @@
 <header class="mast">
   <div class="mast-row">
     <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
+    {%- set Lh = uiStrings[locale] if locale else uiStrings.en %}
+    <span class="mast-tag">{{ Lh.tagline }}</span>
     <div class="mast-sec" id="mast-sec" aria-live="polite"></div>
     {#- Language toggle, homepage pair only. A plain link: no JS, no cookie, no
         redirect guessing — the reader chooses, the URL says so, done. -#}
