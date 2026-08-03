@@ -155,6 +155,16 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .source-list div+div{margin-top:4px}
   .topic-foot{font-family:var(--mono);font-size:var(--fs-label);line-height:1.55;color:var(--mut);margin:23px 0 4px}
   .loading{padding:45px 0;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  /* The server-rendered core: real content in the HTML before any script runs,
+     replaced by the interactive page for readers who have JavaScript. */
+  .tp-core__readings{list-style:none;margin:19px 0 0;padding:0;border-top:1px solid var(--rule);max-width:66ch}
+  .tp-core__readings li{display:flex;flex-wrap:wrap;gap:3px 14px;align-items:baseline;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--rule)}
+  .tp-core__name{font-size:var(--fs-small);color:var(--ink)}
+  .tp-core__val{font-family:var(--mono);font-size:var(--fs-small);color:var(--ink);font-variant-numeric:tabular-nums}
+  .tp-core__val span{color:var(--mut)}
+  .tp-core__asof{flex-basis:100%;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}
+  .tp-core__note{margin:19px 0 0;font-size:var(--fs-label);line-height:1.55;color:var(--mut);max-width:66ch}
+  .tp-core__note a{color:var(--green-d)}
 
   /* Story pages (Fable plan 2026-07-20): the page IS a readable walkthrough. Each section
      is a sentence-headline, 80-150 words of prose with live numbers woven in, and at most
@@ -243,7 +253,33 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
     <select class="topic-select" aria-label="Choose a topic"></select>
   </div>
 
-  <div id="topicApp" class="loading">Loading the latest data…</div>
+  {% endraw %}
+  {%- set core = topicStatic[topicRoute.key] -%}
+  <div id="topicApp">
+    <section class="topic-hero">
+      <div>
+        <h1>{{ topicRoute.label }}</h1>
+        <p class="topic-scope">{{ core.scope }}</p>
+      </div>
+    </section>
+    {%- if core.readings.length %}
+    <ul class="tp-core__readings">
+      {%- for r in core.readings %}
+      <li>
+        <span class="tp-core__name">{{ r.label }}</span>
+        <span class="tp-core__val">{{ r.value }} <span>{{ r.unit }}</span></span>
+        <span class="tp-core__asof">as of {{ r.asOf }}</span>
+      </li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+    {%- if core.readings.length %}
+    <p class="tp-core__note">Each figure is the latest observation of a published series, carrying its own observation date. The full page, with the series behind every reading, loads next. <a href="/sources.html">See where the data comes from</a>.</p>
+    {%- else %}
+    <p class="tp-core__note">The full page, with the dated decision log, loads next. <a href="/sources.html">See where the data comes from</a>.</p>
+    {%- endif %}
+  </div>
+  {% raw %}
 </div>
 
 <script type="module">
