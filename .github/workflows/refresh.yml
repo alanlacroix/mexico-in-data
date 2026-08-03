@@ -75,8 +75,24 @@ jobs:
         continue-on-error: true   # any dead feed is skipped; never fails the run
         run: node collect-news.js
 
+      - name: Decide whether the model runs this refresh
+        id: modelgate
+        # The data connectors run every 6 hours; the model jobs do not need to. The wire,
+        # the economy notes and the calendar lines change on a daily rhythm at most, so
+        # paying for a model pass on all ~6.7 daily refreshes bought nothing. One window a
+        # day (the 12:17 UTC run), plus any manual dispatch.
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "manual dispatch — model jobs on"
+          elif [ "$(date -u +%H)" = "12" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "daily model window — model jobs on"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside the daily model window — skipping model jobs"
+          fi
+
       - name: Explain the week's wire stories
         working-directory: pipeline
+        if: steps.modelgate.outputs.run == 'true'
         continue-on-error: true   # an unexplained story is simply cut from the page
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -84,6 +100,7 @@ jobs:
 
       - name: Write the lines the feed cannot compute
         working-directory: pipeline
+        if: steps.modelgate.outputs.run == 'true'
         continue-on-error: true   # a missing sentence never fails a refresh; the feed keeps its factual fallback
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -91,6 +108,7 @@ jobs:
 
       - name: Put the wire into English
         working-directory: pipeline
+        if: steps.modelgate.outputs.run == 'true'
         continue-on-error: true   # a translation miss never fails a refresh; the wire is publishable as collected
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

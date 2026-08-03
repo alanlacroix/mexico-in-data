@@ -25,7 +25,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
+import { askJSON, hasLLM, usage, model, models } from './lib/anthropic.js';
 import { REPORT, ANALYSIS_SHAPE, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
 import { lintReportText, lintAnalysisText, analysisNeedsScale, slopFlags, isSlop } from './lib/lint.js';
 import { mexicoRelevant } from './lib/news-trust.js';
@@ -64,7 +64,7 @@ const WINDOW_DAYS = 30;      // consider news from the last 30 days
 const KEEP_DAYS = 60;        // the stored log holds a rolling ~60-day window (older ages out, unless imp 5)
 const MAX_STORE = 60;        // hard cap on stored entries
 const MAX_NEW = 16;          // model returns at most this many new events per run
-const MAX_CANDIDATES = 90;
+const MAX_CANDIDATES = 50;   // was 90. Biggest input line in the pipeline; 50 still leaves 3x the breadth needed to pick 16.
 
 const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
 
@@ -222,7 +222,7 @@ ${BAN}`;
   // silently drops the ENTIRE clean batch to the raw-source fallback (the real "slop"
   // engine). Budget generously so reasoning + a full MAX_NEW batch both fit; the gate
   // still caps event count and why length, so the committed output stays small.
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 16000, effort: 'low' });
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 16000, effort: 'low', model: models.HAIKU });
   if (!out || !Array.isArray(out.events)) { console.warn('  curate: no model result — deterministic fallback'); return curateFallback(cands, now); }
   const events = [];
   for (const r of out.events) {
@@ -333,7 +333,10 @@ ${EARNED_LINE}
 
 ${BAN}`;
   const payload = { standingFacts: standingText, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000, effort: 'low' });
+  // Default effort on purpose: this is the Briefly Explained writer, the one place
+  // on the site carrying a judgment. Everything mechanical around it runs at 'low';
+  // this does not.
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000 });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
   const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
   let added = 0;
