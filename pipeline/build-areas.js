@@ -14,7 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { askJSON, hasLLM, usage, model } from './lib/anthropic.js';
+import { askJSON, models, hasLLM, usage, model } from './lib/anthropic.js';
 import { lintReportText } from './lib/lint.js';
 import { PUBLIC_TOPIC_AREAS } from './lib/publication-contract.js';
 
@@ -101,7 +101,7 @@ async function synthesize(areasWithItems) {
   const schema = { type: 'object', additionalProperties: false, required: ['syntheses'], properties: { syntheses: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['key', 'text'], properties: { key: { type: 'string' }, text: { type: 'string' } } } } } };
   const payload = areasWithItems.filter((a) => a.items.length).map((a) => ({ key: a.key, area: a.label, items: a.items.map((i) => `${i.title}${i.context ? ': ' + i.context : ''}`) }));
   const system = `You write the one- to two-sentence synthesis that opens each topic area of a personal Mexico brief. For each area, read its items and write the READ: what's the through-line and why it matters — built ONLY from the items given, no new facts, no forecasts, no adjectives standing in for an argument. Plain and calm. Max 40 words per area. Return JSON: syntheses = [{key, text}].`;
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 1200, effort: 'low' });
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 1200, effort: 'low', model: models.HAIKU });
   const byKey = new Map((out && arr(out.syntheses) || []).map((s) => [s.key, s.text]));
   return areasWithItems.map((a) => {
     const generated = String(byKey.get(a.key) || '').trim();

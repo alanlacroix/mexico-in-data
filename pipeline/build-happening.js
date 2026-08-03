@@ -258,7 +258,7 @@ ${BAN}`;
 //   prediction  — what we expect or the measurable condition that would change the view
 // All three are grounded in the article, same-thread reporting when available, and the
 // site's standing facts. A thin source yields no analysis, never filler. ----
-const BG_MAX = 8;             // fewer analyses, done properly
+const BG_MAX = 5;             // fewer analyses, done properly. Today's stories renders 3; 5 covers that with headroom.
 const BG_DAYS = 14;           // recent events earn the analysis fetch
 const BG_MIN_IMP = 5;         // ordinary headlines do not need an analysis layer
 const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
@@ -281,7 +281,7 @@ async function addBackgrounds(events, now) {
   const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
   const fetched = await Promise.all(want.map(async (e) => {
     const r = await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '', fetched: false }));
-    const related = arr(e.coverage).filter((source) => source.url && source.url !== e.url).slice(0, 2);
+    const related = arr(e.coverage).filter((source) => source.url && source.url !== e.url).slice(0, 1);
     const secondary = await Promise.all(related.map(async (source) => ({
       source: source.source || '',
       title: source.title || '',
@@ -306,7 +306,7 @@ async function addBackgrounds(events, now) {
       source: source.source,
       title: source.title,
       summary: source.summary,
-      text: source.result.text.slice(0, 1200),
+      text: source.result.text.slice(0, 900),
     })),
   }));
   const imgGot = fetched.filter((x) => x.r.image).length;
@@ -321,7 +321,7 @@ async function addBackgrounds(events, now) {
 - view: two or three sentences giving a narrow judgment about what changes in practice and why. This is explicitly labeled "Our view", so take a position. Explain the mechanism, the constraint, and who benefits. If the story leads with money, capacity, jobs, or another announcement number, give it a denominator or a useful comparison. If the supplied evidence has no comparison, return "" instead of calling the number large, nice, useful, or important.
 - prediction: state the most likely next outcome in ordinary language AND the observable condition that would prove it wrong. Distinguish signing, financing, permits, construction and operation. Do not invent a date, number, decision, or certainty.
 Briefly Explained is not written in the first person. Do not use I, me, my, we, or our. Start with the actual actor, event, or outcome. Do not mechanically begin predictions with "The base case is" or follow with "That view would change if". Those phrases may appear once in a batch if they are genuinely the clearest wording, but repeated openers are a publication failure. First-person analysis is reserved for the quarterly review.
-Use the space the analysis earns, normally 100 to 170 words across all three fields. Each field must add something the visible summary does not. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number that does not appear in the supplied material. Return all three fields as "" rather than filler. Return JSON.
+Length is a claim about stakes, so make it true: the room a story gets tells the reader how much it matters. Lead Our view with the verdict, because the verdict is what buys the words. A "this matters less than it looks" verdict is nearly done when stated. Recent analyses that read well land roughly 60 to 120 words across all three fields; that is what normal looks like, not a target. Each field must add something the visible summary does not. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number that does not appear in the supplied material. Return all three fields as "" rather than filler. Return JSON.
 
 ${TRUST}
 
@@ -333,10 +333,13 @@ ${EARNED_LINE}
 
 ${BAN}`;
   const payload = { standingFacts: standingText, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
-  // Default effort on purpose: this is the Briefly Explained writer, the one place
-  // on the site carrying a judgment. Everything mechanical around it runs at 'low';
-  // this does not.
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000 });
+  // This is the Briefly Explained writer, the one place on the site carrying a
+  // judgment, so it does not run at 'low' like the mechanical passes around it.
+  // 'medium' rather than the 'high' default: Sonnet 5 at medium is comparable to
+  // Sonnet 4.6 at high, which is the level this prompt was written and tuned
+  // against. Holding the bar, not lowering it — and thinking is what dominates
+  // output tokens, which are priced 5x input.
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000, effort: 'medium' });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
   const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
   let added = 0;

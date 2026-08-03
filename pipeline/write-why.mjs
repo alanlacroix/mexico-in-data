@@ -221,6 +221,7 @@ async function main() {
         batch.map((item) => ({ id: item.url, title: item.title, text: item.dek.slice(0, 700), source: item.source })), null, 1)}`,
       schema: WHY_SCHEMA,
       maxTokens: 3000,
+      effort: 'medium',     // ~50 words from a supplied dek under hard accuracy limits
     });
     for (const row of answer?.items || []) {
       const item = batch.find((candidate) => candidate.url === row.id);
