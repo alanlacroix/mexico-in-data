@@ -350,11 +350,12 @@ ${EARNED_LINE}
 
 ${BAN}`;
   const payload = { standingFacts: standingText, siteNumbers, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
-  // The Briefly Explained writer — now the ONLY analysis the model writes anywhere
-  // on the site, for at most four items, so this is where the quality budget goes:
-  // full effort, insight test enforced, site numbers supplied. Funded by deleting
-  // the wire lane's write-why entirely (Alan, 2026-08-02).
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000, effort: 'high' });
+  // The Briefly Explained writer — the ONLY analysis the model writes anywhere on
+  // the site, at most four items once a day. 'medium' by Alan's budget call
+  // (2026-08-03): on Sonnet 5 it is comparable to Sonnet 4.6 at 'high', the level
+  // this prompt was written and tuned against. The insight test and the site
+  // numbers are what carry the quality; effort was the cost dial.
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000, effort: 'medium' });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
   const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
   let added = 0;

@@ -23,8 +23,16 @@ assert.match(run, /if \(only && records\.some\(\(record\) => record\.status === 
 
 assert.match(
   happening,
-  /cron:\s*'7,37 13,14 \* \* \*'[\s\S]*cron:\s*'22,52 21,22 \* \* \*'/,
-  'the editorial workflow must get two chances in both possible UTC hours for each edition',
+  // One edition a day (Alan, 2026-08-03, the budget call): the morning window
+  // must exist and the evening cron must NOT come back silently — restoring it
+  // doubles the model bill, so it has to be a deliberate, tested change.
+  /cron:\s*'7,37 13,14 \* \* \*'/,
+  'the morning edition must get two chances in both possible UTC hours',
+);
+assert.doesNotMatch(
+  happening,
+  /cron:\s*'22,52 21,22 \* \* \*'/,
+  'the evening cron must not return silently — it doubles the model bill (Alan, 2026-08-03)',
 );
 assert.match(
   happening,

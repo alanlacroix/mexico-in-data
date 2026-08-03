@@ -6,11 +6,13 @@ name: happening
 
 on:
   schedule:
-    # Two non-top-of-hour chances in both possible UTC hours. The gate resolves
-    # Eastern time, skips the pre-window occurrence, and skips later occurrences
-    # after the edition's publication receipt is committed.
+    # One edition a day (Alan, 2026-08-03, the $2/month budget call): the morning
+    # window only. Two non-top-of-hour chances in both possible UTC hours; the gate
+    # resolves Eastern time and skips duplicates after the publication receipt.
+    # The evening cron came off — the wire and the number tiles keep refreshing on
+    # their own deterministic schedule, and a breaking evening story can still be
+    # published by manual dispatch.
     - cron: '7,37 13,14 * * *'  # 9 AM Eastern, EST or EDT
-    - cron: '22,52 21,22 * * *' # 5 PM Eastern, EST or EDT
     # Catch-up. GitHub's scheduler is best-effort and dropped all four morning
     # occurrences on 2026-08-03, so the site sat on the previous day's edition. The
     # publication receipt makes these no-ops once the window has published.
