@@ -1,7 +1,7 @@
 // The header navigation — rendered identically on every page (see partials/header.njk). The current
 // page ("here") is DERIVED from the URL, never hand-set. Sources NEVER leaves the top level (a trust
 // product shows its receipts in the masthead). About stays top-level: the site is personal, and Alan
-// wants method and authorship visible. Subscribe remains the one call-to-action.
+// wants method and authorship visible. The Subscribe call-to-action is withdrawn with the weekly email (2026-08-03).
 // 2026-07-20 (Alan: "any better way to access these pages"): the six topic story pages come out from
 // behind Explore and live in a Topics dropdown — one click from anywhere. `match` lights it as active.
 // 2026-08-01 (Alan landed the seven-section structure): Topics becomes Sections; Payments & fintech
@@ -25,5 +25,4 @@ module.exports = [
     ] },
   { label: 'Sources', href: '/sources.html' },
   { label: 'About', href: '/about.html' },
-  { label: 'Subscribe', href: '/weekly.html', cta: true },
 ];

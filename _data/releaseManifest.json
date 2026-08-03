@@ -68,11 +68,6 @@
       "canonical": "/about"
     },
     {
-      "route": "/weekly.html",
-      "file": "weekly.html",
-      "canonical": "/weekly"
-    },
-    {
       "route": "/privacy.html",
       "file": "privacy.html",
       "canonical": "/privacy"
@@ -83,11 +78,6 @@
       "route": "/404.html",
       "file": "404.html",
       "canonical": "/404"
-    },
-    {
-      "route": "/latest-edition.html",
-      "file": "latest-edition.html",
-      "canonical": "/latest-edition"
     }
   ],
   "redirectRoutes": [
@@ -198,6 +188,22 @@
     {
       "route": "/chart.html",
       "target": "/atlas"
+    },
+    {
+      "route": "/weekly",
+      "target": "/"
+    },
+    {
+      "route": "/weekly.html",
+      "target": "/"
+    },
+    {
+      "route": "/latest-edition",
+      "target": "/"
+    },
+    {
+      "route": "/latest-edition.html",
+      "target": "/"
     }
   ],
   "previewRoutes": [],

@@ -291,22 +291,11 @@ bodyClass: feed-page
     <p class="econ-src">Banco de México · INEGI</p>
   </section>{% endif %}
 
-  <section class="feed-sec" id="sec-mail" data-sec="Weekly email">
-    <div class="mail">
-      <div>
-        <div class="mail-k">{{ L.mail }}</div>
-        <p class="mail-c">{{ L.mailCopy }} <a href="/weekly.html">{{ L.mailExample }}</a></p>
-      </div>
-      <div>
-        <form class="mail-f" method="post" action="/api/subscribe" novalidate>
-          <input type="email" name="email" placeholder="{{ L.mailPlaceholder }}" aria-label="Email address" autocomplete="email" inputmode="email" required />
-          <label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
-          <button type="submit">{{ L.mailButton }}</button>
-        </form>
-        <div class="mail-fine submsg" aria-live="polite">{{ L.mailFine }}</div>
-      </div>
-    </div>
-  </section>
+  {#- The weekly email is withdrawn for now (Alan, 2026-08-03). Capturing addresses
+      for a newsletter that has never been sent was the largest unkept promise on
+      the site; not-promising beats not-sending. The pipeline (build-email.js,
+      email.yml) and the Beehiiv Function stay in place, dormant, so this returns
+      as one commit the day an edition actually ships. -#}
 </div>
 
 <script type="module">

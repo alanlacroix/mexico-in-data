@@ -7,6 +7,5 @@
 // prompted the change.
 module.exports = [
   { label: 'Sources', href: '/sources.html' },
-  { label: 'Weekly',  href: '/weekly.html' },
   { label: 'Privacy', href: '/privacy.html' },
 ];
