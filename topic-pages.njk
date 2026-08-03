@@ -476,7 +476,7 @@ function economyTopic(){
     },
     record:changedMatches('economy',3),
     sources:[topicSource('banxico-inflacion'),topicSource('banxico-inflacion-subyacente'),topicSource('banxico-tasa-objetivo'),topicSource('banxico-igae'),topicSource('banxico-pib-crecimiento'),topicSource('banxico-usdmxn-fix'),topicSource('banxico-salario-minimo'),topicSource('banxico-inpc')],
-    method:`Every reading keeps its own observation date, and they are not the same date. Core inflation is charted on the Numbers page; here it appears once, inside the first read, as a check on the headline. The real minimum wage is the decreed daily wage deflated by the consumer price index and indexed to ${baseYear}. The walkthrough above is re-read and re-stamped every quarter; its revision date is on the page.`
+    method:`Every reading keeps its own observation date, and they are not the same date. Core inflation is charted on the Numbers page; here it appears once, inside the first read, as a check on the headline. The real minimum wage is the decreed daily wage deflated by the consumer price index and indexed to ${baseYear}. The walkthrough above carries its revision date on the page.`
   };
 }
 
@@ -547,7 +547,7 @@ function paymentsTopic(){
     },
     record:changedMatches('payments',3),
     sources:[topicSource('banxico-spei-operaciones'),topicSource('banxico-codi-operaciones'),topicSource('banxico-tpv-debito-ops'),topicSource('banxico-tpv-credito-ops'),topicSource('banxico-ecommerce-ops'),topicSource('banxico-circulante'),{label:'INEGI · ENIF 2024',href:FACTS.enifUrl,date:'2024'},{label:'CNBV · financial inclusion database 2024',href:'https://pnif.cnbv.gob.mx/dnoticia/basededatosinclusionfinanciera2024',date:'2024'}],
-    method:`Counts lead this page because peso totals are dominated by large transfers. Each slot keeps its own observation date. ${debitReview?'Banxico is reviewing its series for the peso value of debit-card purchases after a jump far outside its history; those pesos are excluded until the review ends.':''} The in-store-to-online ratio compares the same quarter for both series. The walkthrough above is re-read and re-stamped every quarter; its revision date is on the page.`
+    method:`Counts lead this page because peso totals are dominated by large transfers. Each slot keeps its own observation date. ${debitReview?'Banxico is reviewing its series for the peso value of debit-card purchases after a jump far outside its history; those pesos are excluded until the review ends.':''} The in-store-to-online ratio compares the same quarter for both series. The walkthrough above carries its revision date on the page.`
   };
 }
 
@@ -603,7 +603,7 @@ function politicsTopic(){
     },
     record:changedMatches('politics',3),
     sources:[{label:CHAMBER.label,href:CHAMBER.url,date:CHAMBER.year},...new Map(official.slice(0,8).map(e=>[e.source,{label:e.source,href:e.sourceUrl,date:e.date}])).values()],
-    method:`Only dates tied to an original source appear here. No polling averages, no seat projections, no outcome inference: certified results from the electoral authority are data and are shown, while anything about future voter behaviour is not. The minimum wage is set by decree and belongs to the Economy page, which is where it is charted. The walkthrough above is re-read and re-stamped every quarter; its revision date is on the page.`
+    method:`Only dates tied to an original source appear here. No polling averages, no seat projections, no outcome inference: certified results from the electoral authority are data and are shown, while anything about future voter behaviour is not. The minimum wage is set by decree and belongs to the Economy page, which is where it is charted. The walkthrough above carries its revision date on the page.`
   };
 }
 
@@ -732,7 +732,7 @@ function usMexicoTopic(){
     },
     record:changedMatches('usmexico',3),
     sources:[{label:'U.S. Census · trade with Mexico',href:censusMexicoUrl,date:tu.meta?.latestMonth},{label:'UN COMTRADE · export exposure and composition',href:comtradeUrl,date:String(partnerYear)}],
-    method:`The bilateral ledger uses U.S. Census throughout; Banxico owns Mexico's national accounts and the two are never spliced. The export-share and composition figures come from the reconciled COMTRADE partner file for ${partnerYear}. Goods only: services, profit and the share of value actually created in Mexico are not in these numbers. The walkthrough above is re-read and re-stamped every quarter; its revision date is on the page.`
+    method:`The bilateral ledger uses U.S. Census throughout; Banxico owns Mexico's national accounts and the two are never spliced. The export-share and composition figures come from the reconciled COMTRADE partner file for ${partnerYear}. Goods only: services, profit and the share of value actually created in Mexico are not in these numbers. The walkthrough above carries its revision date on the page.`
   };
 }
 
