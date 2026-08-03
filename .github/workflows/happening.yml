@@ -11,6 +11,11 @@ on:
     # after the edition's publication receipt is committed.
     - cron: '7,37 13,14 * * *'  # 9 AM Eastern, EST or EDT
     - cron: '22,52 21,22 * * *' # 5 PM Eastern, EST or EDT
+    # Catch-up. GitHub's scheduler is best-effort and dropped all four morning
+    # occurrences on 2026-08-03, so the site sat on the previous day's edition. The
+    # publication receipt makes these no-ops once the window has published.
+    - cron: '11,41 15,16,17 * * *' # late morning Eastern, catch-up only
+    - cron: '26,56 23,0 * * *'     # late evening Eastern, catch-up only
   workflow_dispatch:
     inputs:
       slot:
@@ -156,7 +161,21 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add data/news.json data/news/ data/happening.json data/brief.json data/areas.json data/companies.json data/publication-status.json data/llm-spend.json data/es/
           git commit -m "publication: ${PUBLICATION_DATE} ${PUBLICATION_SLOT} edition"
-          git push origin HEAD:main
+          # A single push attempt used to lose the whole publication to a non-fast-forward
+          # whenever anything else landed on main mid-run (2026-08-02 22:14: the edition
+          # published, then the run died here). The machine owns these paths, so rebasing
+          # onto whatever arrived and trying again is always right.
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "push rejected, rebasing onto origin/main (attempt $attempt)"
+            git pull --rebase --autostash origin main || exit 1
+            sleep 5
+          done
+          echo "could not push the edition after 5 attempts"
+          exit 1
 
       - name: Require the exact edition to be live
         if: steps.timing.outputs.run == 'true'
