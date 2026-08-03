@@ -314,6 +314,7 @@ const I18N = {
   be: {{ L.be | dump | safe }}, beHide: {{ L.beHide | dump | safe }},
   why: {{ L.why | dump | safe }}, hide: {{ L.hide | dump | safe }},
   all: {{ L.all | dump | safe }}, showMoreTpl: {{ L.showMoreTpl | dump | safe }},
+  showLess: {{ L.showLess | dump | safe }},
 };
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -365,8 +366,9 @@ if (list && chipRow && moreBtn) {
     const shown = expanded ? matching : matching.slice(0, cap);
     shown.forEach((card) => { card.hidden = false; });
     const rest = matching.length - shown.length;
-    moreBtn.hidden = rest <= 0;
-    moreBtn.textContent = I18N.showMoreTpl.replace('{n}', rest);
+    // A toggle, not a one-way door (Alan, 2026-08-03): expanded shows "Show less".
+    moreBtn.hidden = rest <= 0 && !expanded;
+    moreBtn.textContent = expanded ? I18N.showLess : I18N.showMoreTpl.replace('{n}', rest);
     $$('.chip', chipRow).forEach((chip) => chip.classList.toggle('on', chip.dataset.cat === filter));
   };
   chipRow.addEventListener('click', (event) => {
@@ -376,7 +378,11 @@ if (list && chipRow && moreBtn) {
     expanded = false;                       // a new filter starts from the top
     render();
   });
-  moreBtn.addEventListener('click', () => { expanded = true; render(); });
+  moreBtn.addEventListener('click', () => {
+    expanded = !expanded;
+    render();
+    if (!expanded) document.getElementById('sec-week').scrollIntoView({ block: 'start' });
+  });
   render();
 }
 
