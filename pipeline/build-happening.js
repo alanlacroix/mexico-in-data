@@ -258,7 +258,7 @@ ${BAN}`;
 //   prediction  — what we expect or the measurable condition that would change the view
 // All three are grounded in the article, same-thread reporting when available, and the
 // site's standing facts. A thin source yields no analysis, never filler. ----
-const BG_MAX = 5;             // fewer analyses, done properly. Today's stories renders 3; 5 covers that with headroom.
+const BG_MAX = 4;             // Briefly explained exists ONLY for Today's stories (3 render); one spare covers a review rejection.
 const BG_DAYS = 14;           // recent events earn the analysis fetch
 const BG_MIN_IMP = 5;         // ordinary headlines do not need an analysis layer
 const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
@@ -279,6 +279,22 @@ async function addBackgrounds(events, now) {
   const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (needsAnalysis(e) || needsImage(e)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
   if (!want.length) return 0;
   const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
+  // The site's own numbers, handed to the writer so "connect the dots" has dots to
+  // connect while staying inside the closed world: these are the figures the
+  // homepage already publishes, so citing one can never introduce a new claim.
+  const siteNumbers = [
+    ['banxico-usdmxn-fix', 'peso, MXN per US$'],
+    ['banxico-cetes-28d', 'Cetes 28-day rate, %'],
+    ['banxico-bmv-ipc', 'IPC stock index'],
+    ['fred-ust10', 'US 10-year Treasury, %'],
+    ['banxico-exports-total', 'monthly goods exports, US$M'],
+    ['banxico-inflacion', 'headline inflation, % y/y'],
+    ['banxico-tasa-objetivo', 'Banxico policy rate, %'],
+  ].map(([id, label]) => {
+    const rows = arr(readJson(D(`series/${id}.json`), {}).data).filter((r) => Number.isFinite(Number(r?.value)));
+    const last = rows[rows.length - 1];
+    return last ? `${label}: ${last.value} (as of ${String(last.date).slice(0, 10)})` : '';
+  }).filter(Boolean).join('; ');
   const fetched = await Promise.all(want.map(async (e) => {
     const r = await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '', fetched: false }));
     const related = arr(e.coverage).filter((source) => source.url && source.url !== e.url).slice(0, 1);
@@ -317,6 +333,7 @@ async function addBackgrounds(events, now) {
     type: 'object', additionalProperties: false, required: ['i', 'background', 'view', 'prediction'], properties: {
       i: { type: 'integer' }, background: FIELD, view: FIELD, prediction: FIELD } } } } };
   const system = `You are writing the optional BRIEFLY EXPLAINED layer for The Mexico Brief. The visible summary already reports what happened. Use the ARTICLE, any OTHER REPORTING, and the site's STANDING FACTS to add three distinct things:
+THE INSIGHT TEST (hard requirement): every field must contain at least one true thing that is NOT in the article — a connection to a standing fact, one of the site numbers below, the second source, or an earlier event in the log. Summarizing the article in different words is a publication failure; the reader already has the summary one line up. If you cannot add anything true beyond the article, return "" for that field — an empty panel is honest, a paraphrase is not.
 - background: one or two sentences explaining the institution, agreement, market, or structural fact a newcomer needs. Do not restate the event.
 - view: two or three sentences giving a narrow judgment about what changes in practice and why. This is explicitly labeled "Our view", so take a position. Explain the mechanism, the constraint, and who benefits. If the story leads with money, capacity, jobs, or another announcement number, give it a denominator or a useful comparison. If the supplied evidence has no comparison, return "" instead of calling the number large, nice, useful, or important.
 - prediction: state the most likely next outcome in ordinary language AND the observable condition that would prove it wrong. Distinguish signing, financing, permits, construction and operation. Do not invent a date, number, decision, or certainty.
@@ -332,14 +349,12 @@ ${ANALYSIS_SHAPE}
 ${EARNED_LINE}
 
 ${BAN}`;
-  const payload = { standingFacts: standingText, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
-  // This is the Briefly Explained writer, the one place on the site carrying a
-  // judgment, so it does not run at 'low' like the mechanical passes around it.
-  // 'medium' rather than the 'high' default: Sonnet 5 at medium is comparable to
-  // Sonnet 4.6 at high, which is the level this prompt was written and tuned
-  // against. Holding the bar, not lowering it — and thinking is what dominates
-  // output tokens, which are priced 5x input.
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000, effort: 'medium' });
+  const payload = { standingFacts: standingText, siteNumbers, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
+  // The Briefly Explained writer — now the ONLY analysis the model writes anywhere
+  // on the site, for at most four items, so this is where the quality budget goes:
+  // full effort, insight test enforced, site numbers supplied. Funded by deleting
+  // the wire lane's write-why entirely (Alan, 2026-08-02).
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000, effort: 'high' });
   if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
   const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
   let added = 0;

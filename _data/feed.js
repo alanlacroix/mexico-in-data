@@ -36,6 +36,16 @@ const VERDICT = {
   'fred-ust10':           { up: ['COSTLIER', 'bad'],   down: ['CHEAPER', 'good'] },
   'banxico-bmv-ipc':      { up: ['HIGHER', 'good'],    down: ['LOWER', 'bad'] },
 };
+// What each number means for the reader, in one hand-written sentence, composed
+// into the tile's "why" ahead of the computed comparison.
+const MEANING = {
+  'banxico-usdmxn-fix':   'A stronger peso makes imports, dollar debts and foreign travel cheaper for Mexico; a weaker one feeds inflation.',
+  'cre-gasolina-regular': 'Gasoline feeds straight into headline inflation and into what every commute and delivery costs.',
+  'banxico-cetes-28d':    'Cetes are what the government pays for 28-day money: higher pays savers more and signals tighter credit.',
+  'fred-ust10':           'The US 10-year sets the global price of money; when it rises, peso assets must pay more to compete.',
+  'banxico-bmv-ipc':      "The IPC tracks Mexico's biggest listed companies — it moves on profits and on investors' appetite for risk.",
+};
+
 const FLAT = ['BARELY MOVED', 'flat'];
 // Smallest move, in each series' own units, that is worth calling a direction.
 const FLAT_BAND = {
@@ -123,7 +133,12 @@ module.exports = function () {
       delta: card.delta || card.move,
       tag, mood, tone: TONE[mood],
       points: sparkline(rows),
-      why: card.compare || card.move || '',
+      // Meaning first, arithmetic second. The meaning line is hand-written once
+      // per series — deterministic and always true, the only kind of daily
+      // market commentary accuracy-is-law allows without a source. The computed
+      // comparison alone ("8.2% stronger than a year ago") told the reader
+      // nothing about their world (Alan, 2026-08-02).
+      why: [MEANING[card.id], card.compare || card.move || ''].filter(Boolean).join(' '),
       href: card.href,
       external: Boolean(card.external),
     };
@@ -150,11 +165,14 @@ module.exports = function () {
   }));
 
   // ---- This week -----------------------------------------------------------
+  // This week is a curated reading list, not an analysis surface (Alan,
+  // 2026-08-02). The old "no explanation, no card" gate protected an analysis
+  // surface that no longer exists here; Briefly explained lives only under
+  // Today's stories now. Ranking, dedup and the slop gate still decide entry;
+  // four per topic keeps it a scan, not a feed.
   const weekItems = [];
   for (const group of week.groups) {
-    for (const item of group.items) {
-      if (item.shownToday) continue;
-      if (!item.bg && !item.view) continue;
+    for (const item of group.items.filter((x) => !x.shownToday).slice(0, 4)) {
       weekItems.push({
         id: `${group.key}-${weekItems.length}`,
         date: item.dayLabel || monthDay(item.date),
@@ -166,10 +184,6 @@ module.exports = function () {
         url: item.url,
         title: item.title,
         dek: item.dek || '',
-        bg: item.bg || '',
-        view: item.view || '',
-        watch: item.next || '',
-        why: item.view || item.bg || '',
       });
     }
   }

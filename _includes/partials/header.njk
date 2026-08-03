@@ -27,7 +27,6 @@
       </div>
       <div class="menu-col">
         <span class="menu-h">Go deeper</span>
-        <a href="/chart.html">Numbers</a>
         <a href="/atlas.html">Atlas</a>
         {%- for group in nav %}{% if group.menu %}{% for block in group.menu %}{% for link in block.links %}
         <a href="{{ link.href }}">{{ link.label }}</a>{% endfor %}{% endfor %}{% endif %}{% endfor %}

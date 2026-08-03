@@ -90,14 +90,6 @@ jobs:
             echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside the daily model window — skipping model jobs"
           fi
 
-      - name: Explain the week's wire stories
-        working-directory: pipeline
-        if: steps.modelgate.outputs.run == 'true'
-        continue-on-error: true   # an unexplained story is simply cut from the page
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node write-why.mjs
-
       - name: Write the lines the feed cannot compute
         working-directory: pipeline
         if: steps.modelgate.outputs.run == 'true'

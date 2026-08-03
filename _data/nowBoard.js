@@ -50,7 +50,7 @@ const arrow = (value) => value > 0 ? '↑' : value < 0 ? '↓' : '→';
 const signedPercent = (value) => value === 0 ? 'No change' : `${arrow(value)} ${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)}%`;
 const signedPoints = (value) => value === 0 ? 'No change' : `${arrow(value)} ${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)} pp`;
 const percentChange = (current, prior) => prior ? (current / prior - 1) * 100 : null;
-const link = (id) => `/chart.html?v=${id}`;
+const link = (id) => `/atlas.html`;  // charts folded into Atlas (Fable 2026-08-02)
 const LIVE_PESO_URL = 'https://www.google.com/finance/quote/USD-MXN?hl=en';
 const observed = (date, cadence) => {
   const parsed = new Date(`${date}T12:00:00Z`);

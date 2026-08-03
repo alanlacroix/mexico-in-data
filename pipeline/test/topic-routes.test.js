@@ -56,9 +56,8 @@ for (const page of ['deals.html', 'energy.html']) {
   if (!html.includes('What would change my mind')) fail(`${page}: My view must end with what would change it`);
   if (/opens in October|first quarterly view|New section, opened/i.test(html)) fail(`${page}: placeholder copy must not ship`);
 }
-const explore = fs.readFileSync(path.join(root, 'explore.njk'), 'utf8');
-for (const href of routeLinks) if (!explore.includes('href="' + href + '"')) fail('Explore is missing topic route ' + href);
-
+// Explore was folded into Atlas (Alan cleanup, 2026-08-02); its route-link
+// assertions went with it. The routes themselves are still checked below.
 const redirects = fs.readFileSync(path.join(root, '_redirects'), 'utf8');
 for (const retired of ['/money.html', '/security.html', '/topics-start-mockup.html']) {
   if (!redirects.includes(retired)) fail(`missing redirect for ${retired}`);

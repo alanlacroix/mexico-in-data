@@ -311,8 +311,14 @@ assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepa
 // _data/feed.js: a story only carries a `why` when the pipeline wrote a complete,
 // versioned analysis for it, and the panel does not render without one.
 assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, complete analysis may expose the disclosure');
-// Ordinary week headlines never open the analysis layer unless the log carries one.
-assert.match(homepageTemplate, /\{%- if item\.why %\}/, 'ordinary headlines must use the no-analysis card mode');
+// This week is a reading list (Alan, 2026-08-02): wire cards must never render a
+// Briefly explained panel. The analysis layer exists only under Today's stories,
+// so the week loop must not reference item.why / item.bg / item.view at all.
+{
+  const weekBlock = homepageTemplate.slice(homepageTemplate.indexOf('id="sec-week"'), homepageTemplate.indexOf('id="sec-coming"'));
+  assert.doesNotMatch(weekBlock, /item\.(why|bg|view|watch)/, 'week cards must not carry an analysis panel');
+  assert.doesNotMatch(weekBlock, /be-btn|be-panel/, 'week cards must not render BE controls');
+}
 // The brief still comes before the stories it summarises.
 assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf('id="sec-stories"'), 'the Brief must render before key developments');
 assert.match(briefBuilder, /return gate\.ok && analysisReady\(e\) && e\.url && e\.source/, 'an unreviewed story must not enter key developments');

@@ -10,7 +10,6 @@ const home = text('index.njk');
 const nav = text('_data/nav.js');
 const footerNav = text('_data/footernav.js');
 const topics = text('topic-pages.njk');
-const model = text('model.njk');
 const nowBoard = text('_data/nowBoard.js');
 const voice = text('pipeline/lib/voice.js');
 const happeningBuilder = text('pipeline/build-happening.js');
@@ -93,9 +92,7 @@ for (const phrase of [/local source registry/i, /event registry/i, /local feed/i
   assert.doesNotMatch(topics, phrase, `topic pages must not expose internal QA language: ${phrase}`);
 }
 
-assert.doesNotMatch(model, /causal map/i, 'directional rules must not be presented as identified causality');
-assert.match(model, /directional scenario map, not a forecast/i,
-  'model must state what the tool actually does');
+// model.njk deleted in the 2026-08-02 cleanup; its honesty assertions went with the page.
 
 const expectedStanding = `The peso trades at ${Number(latestSeriesValue('banxico-usdmxn-fix')).toFixed(2)} pesos to the dollar; inflation is ${Number(latestSeriesValue('banxico-inflacion')).toFixed(2)}%; the policy rate is ${Number(latestSeriesValue('banxico-tasa-objetivo')).toFixed(2)}%.`;
 assert.equal(brief.standing.text, expectedStanding,

@@ -69,12 +69,9 @@ module.exports = function () {
     .filter((rule) => rule.pattern.test(`${item.title} ${item.dek || ''}`))
     .map((rule) => rule.tag);
 
-  // Written by pipeline/write-why.mjs: the explanation that lets a wire story onto the
-  // page at all. Without one the item is cut, which is the contract the redesign runs on.
-  const whys = (() => {
-    try { return JSON.parse(fs.readFileSync(path.join(dir, 'why.json'), 'utf8')); }
-    catch { return {}; }
-  })();
+  // write-why.mjs is gone (Alan, 2026-08-02): This week is a reading list, and
+  // Briefly explained lives only under Today's stories. Wire items carry no
+  // authored analysis anymore.
 
   const translations = (() => {
     try { return JSON.parse(fs.readFileSync(path.join(dir, 'translations.json'), 'utf8')); }
@@ -114,15 +111,14 @@ module.exports = function () {
   const themePool = rank(showable.filter((x) => fresh(x.published_at, 14)));
   const ledgerItem = (raw) => {
     const x = englished(raw);
-    const authored = whys[x.url] || {};
     return {
     title: x.title,
     // Kept so the card can show the original headline under the translation and tag it ES.
     originalTitle: x.originalTitle || '', url: x.url, sourceName: x.sourceName || x.source, domain: x.source, dek: trim(x.dek),
     date: x.published_at, dateLabel: dateLabel(x.published_at), dayLabel: dayLabel(x.published_at),
     curated: false, bg: '', drivers: '', implications: '',
-    view: authored.why || '', next: authored.watch || '',
-    be: Boolean(authored.why),
+    view: '', next: '',
+    be: false,
     };
   };
 

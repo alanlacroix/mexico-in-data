@@ -227,17 +227,11 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
           <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
           {%- if item.orig %}<p class="orig">{{ item.orig }}</p>{% endif %}
         </div>
+        {#- Reading list only. Briefly explained lives under Today's stories and
+            nowhere else (Alan, 2026-08-02): analysis concentrated in one place,
+            done properly, instead of spread thin across forty wire cards. -#}
         <div class="card-body">
         {%- if item.dek %}<p class="dek">{{ item.dek }}</p>{% endif %}
-        {%- if item.why %}
-        <button class="be-btn" type="button" aria-expanded="false" aria-controls="bw-{{ item.id }}" data-toggle="bw-{{ item.id }}"><span class="be-badge">BE</span><span class="be-label">Briefly explained</span></button>
-        <div class="be-panel" id="bw-{{ item.id }}" hidden>
-          {%- if item.bg %}<div class="be-part"><span class="lb-watch">Background</span><p class="bd-watch">{{ item.bg }}</p></div>{% endif %}
-          {%- if item.view %}<div class="be-part"><span class="lb-why">Our view</span><p class="bd-why">{{ item.view }}</p></div>{% endif %}
-          {%- if item.watch %}<div class="be-part"><span class="lb-watch">What we’re watching</span><p class="bd-watch">{{ item.watch }}</p></div>{% endif %}
-          <div class="be-part bd-src"><span class="lb-src">Source</span><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a></div>
-        </div>
-        {%- endif %}
         </div>
       </article>
       {%- endfor %}
@@ -264,7 +258,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
 
   {% if feed.econ.length %}<section class="feed-sec" id="sec-econ" data-sec="The economy">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>Where the economy stands</h2><div class="sec-meta"><a href="/chart.html">Compare the numbers →</a></div></div>
+    <div class="sec-head"><h2>Where the economy stands</h2><div class="sec-meta"><a href="/atlas.html">Mexico, state by state →</a></div></div>
     <div class="econ">
       {%- for row in feed.econ %}
       <div class="econ-row">
