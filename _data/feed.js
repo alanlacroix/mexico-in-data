@@ -139,6 +139,7 @@ module.exports = function () {
       // comparison alone ("8.2% stronger than a year ago") told the reader
       // nothing about their world (Alan, 2026-08-02).
       why: [MEANING[card.id], card.compare || card.move || ''].filter(Boolean).join(' '),
+      compare: card.compare || card.move || '',   // raw computed line, for the /es/ build
       href: card.href,
       external: Boolean(card.external),
     };

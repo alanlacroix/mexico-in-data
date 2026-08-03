@@ -98,6 +98,14 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node write-context.mjs
 
+      - name: Fill the Spanish edition's translation cache
+        working-directory: pipeline
+        if: steps.modelgate.outputs.run == 'true'
+        continue-on-error: true   # a missing translation shows English on /es/, never breaks it
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node translate-es.mjs
+
       - name: Put the wire into English
         working-directory: pipeline
         if: steps.modelgate.outputs.run == 'true'

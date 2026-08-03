@@ -5,7 +5,7 @@
    pageStyle (page-specific CSS), headExtra, pageScript, wire, status, footerBlurb,
    noindex. -#}
 <!doctype html>
-<html lang="en">
+<html lang="{{ uiStrings[locale].htmlLang if locale else 'en' }}">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -17,6 +17,11 @@
 <meta name="author" content="Alan Lacroix" />
 {% if noindex %}<meta name="robots" content="noindex, nofollow" />{% else %}<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />{% endif %}
 <link rel="canonical" href="https://mexicobrief.com{{ page.url | canonicalPath }}" />
+{%- if page.url == '/' or page.url == '/es/' %}
+<link rel="alternate" hreflang="en" href="{{ releaseManifest.siteUrl }}/" />
+<link rel="alternate" hreflang="es-MX" href="{{ releaseManifest.siteUrl }}/es/" />
+<link rel="alternate" hreflang="x-default" href="{{ releaseManifest.siteUrl }}/" />
+{%- endif %}
 <meta name="theme-color" content="#ffffff" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="{{ ogTitle or title }}" />

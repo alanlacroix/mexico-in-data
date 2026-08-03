@@ -1,13 +1,27 @@
 ---
 layout: base.njk
-permalink: /
-title: "The Mexico Brief"
-description: "Mexico’s economic, political, security and business news, all in one place."
-ogTitle: "The Mexico Brief"
-ogDescription: "Mexico’s economic, political, security and business news, all in one place."
+pagination:
+  data: locales
+  size: 1
+  alias: locale
+locales: ["en", "es"]
+permalink: "{% if locale == 'es' %}/es/{% else %}/{% endif %}"
+eleventyComputed:
+  title: "{% if locale == 'es' %}The Mexico Brief — en español{% else %}The Mexico Brief{% endif %}"
+  description: "{% if locale == 'es' %}La economía, la política y la seguridad de México, en un solo lugar.{% else %}Mexico’s economic, political, security and business news, all in one place.{% endif %}"
+  ogTitle: "{% if locale == 'es' %}The Mexico Brief — en español{% else %}The Mexico Brief{% endif %}"
+  ogDescription: "{% if locale == 'es' %}La economía, la política y la seguridad de México, en un solo lugar.{% else %}Mexico’s economic, political, security and business news, all in one place.{% endif %}"
 bodyClass: feed-page
 footerBlurb: "Mexico’s economic, political, security and business news, all in one place."
 ---
+{#- One template, two pages (Alan, 2026-08-03: the site also ships in Spanish —
+    reaffirmed over the no-toggle ruling, so built without slop instead of not at
+    all). `f` is the locale's feed: feedEs routes every string through hand-written
+    vocabulary, native wire headlines, or the reviewed translation cache, falling
+    back to English rather than showing machine mush. `L` is the hand-written UI
+    dictionary. The markup below never branches on language. -#}
+{% set f = feedEs if locale == 'es' else feed %}
+{% set L = uiStrings[locale] %}
 {#- The feed, built to the design handoff of 2026-08-02.
 
     Two rules from that handoff that are easy to break by accident:
@@ -159,28 +173,28 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
 </style>
 
 <div class="feed">
-  <div class="dateline"><h1>{{ feed.date | longDate }}</h1></div>
+  <div class="dateline"><h1>{{ f.date | longDate(locale) }}</h1></div>
   <section class="feed-sec" id="sec-brief" data-sec="The brief">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>The brief</h2><div class="sec-meta" id="brief-asof" data-date="{{ feed.updated }}" data-prefix="{{ 'Latest brief' if feed.carrying else 'Updated' }}">{{ 'Latest brief' if feed.carrying else 'Updated' }}</div></div>
-    <p class="brief-p">{{ feed.brief }}</p>
+    <div class="sec-head"><h2>{{ L.brief }}</h2><div class="sec-meta" id="brief-asof" data-date="{{ f.updated }}" data-prefix="{{ L.latestBrief if f.carrying else L.updated }}">{{ L.latestBrief if f.carrying else L.updated }}</div></div>
+    <p class="brief-p">{{ f.brief }}</p>
     <div class="brief-row">
-      {%- if feed.briefSources.length %}<div class="brief-src"><span>Sources</span>{% for item in feed.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
+      {%- if f.briefSources.length %}<div class="brief-src"><span>{{ L.sources }}</span>{% for item in f.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
     </div>
   </section>
 
-  {% if feed.numbers.length %}<section class="feed-sec" id="sec-numbers" data-sec="What moved">
+  {% if f.numbers.length %}<section class="feed-sec" id="sec-numbers" data-sec="What moved">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>What moved since the day before</h2><div class="sec-meta">Line: 30 days</div></div>
+    <div class="sec-head"><h2>{{ L.moved }}</h2><div class="sec-meta">{{ L.line30 }}</div></div>
     <div class="tiles">
-      {%- for n in feed.numbers %}
+      {%- for n in f.numbers %}
       <div class="tile-cell">
         <button class="tile" type="button" aria-expanded="false" aria-controls="why-{{ n.id }}" data-toggle="why-{{ n.id }}">
           <span class="tile-top"><span class="tile-label">{{ n.label }}</span><span class="tile-date">{{ n.asOf }}</span></span>
           <span class="tile-val"><b>{{ n.value }}</b>{% if n.unit %}<span class="tile-unit">{{ n.unit }}</span>{% endif %}</span>
           <span class="tile-change"><span class="tile-delta">{{ n.delta }}</span><span class="verdict m-{{ n.mood }}">{{ n.tag }}</span></span>
           {%- if n.points %}<svg class="spark" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true"><polyline points="{{ n.points }}" fill="none" stroke="{{ n.tone }}" stroke-width="1.5" vector-effect="non-scaling-stroke" style="animation-delay:{{ 0.15 + loop.index0 * 0.10 }}s"/></svg>{% endif %}
-          {%- if n.why %}<span class="tile-more" data-more>WHY +</span>{% endif %}
+          {%- if n.why %}<span class="tile-more" data-more>{{ L.why }}</span>{% endif %}
         </button>
         {%- if n.why %}<div class="tile-why" id="why-{{ n.id }}" hidden>{{ n.why }}</div>{% endif %}
       </div>
@@ -188,11 +202,11 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
     </div>
   </section>{% endif %}
 
-  {% if feed.stories.length %}<section class="feed-sec" id="sec-stories" data-sec="Today's stories">
+  {% if f.stories.length %}<section class="feed-sec" id="sec-stories" data-sec="Today's stories">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>Today’s stories</h2><div class="sec-meta">{{ feed.stories.length }} {{ 'story' if feed.stories.length == 1 else 'stories' }} today</div></div>
+    <div class="sec-head"><h2>{{ L.stories }}</h2><div class="sec-meta">{{ L.storyCount(f.stories.length) }}</div></div>
     <div class="cards">
-      {%- for story in feed.stories %}
+      {%- for story in f.stories %}
       <article class="card">
         <div class="card-rail">
           <div class="card-meta"><span class="d">{{ story.date }}</span><span class="c"><i class="dot" style="background:{{ story.catKey | catColor }}"></i>{{ story.cat }}</span><span class="s">{{ story.source }}</span></div>
@@ -201,12 +215,12 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
         <div class="card-body">
         {%- if story.dek %}<p class="dek">{{ story.dek }}</p>{% endif %}
         {%- if story.why %}
-        <button class="be-btn" type="button" aria-expanded="false" aria-controls="be-{{ story.id }}" data-toggle="be-{{ story.id }}"><span class="be-badge">BE</span><span class="be-label">Briefly explained</span></button>
+        <button class="be-btn" type="button" aria-expanded="false" aria-controls="be-{{ story.id }}" data-toggle="be-{{ story.id }}"><span class="be-badge">BE</span><span class="be-label">{{ L.be }}</span></button>
         <div class="be-panel" id="be-{{ story.id }}" hidden>
-          {%- if story.bg %}<div class="be-part"><span class="lb-watch">Background</span><p class="bd-watch">{{ story.bg }}</p></div>{% endif %}
-          {%- if story.view %}<div class="be-part"><span class="lb-why">Our view</span><p class="bd-why">{{ story.view }}</p></div>{% endif %}
-          {%- if story.watch %}<div class="be-part"><span class="lb-watch">What we’re watching</span><p class="bd-watch">{{ story.watch }}</p></div>{% endif %}
-          <div class="be-part bd-src"><span class="lb-src">Source</span><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
+          {%- if story.bg %}<div class="be-part"><span class="lb-watch">{{ L.background }}</span><p class="bd-watch">{{ story.bg }}</p></div>{% endif %}
+          {%- if story.view %}<div class="be-part"><span class="lb-why">{{ L.ourView }}</span><p class="bd-why">{{ story.view }}</p></div>{% endif %}
+          {%- if story.watch %}<div class="be-part"><span class="lb-watch">{{ L.watching }}</span><p class="bd-watch">{{ story.watch }}</p></div>{% endif %}
+          <div class="be-part bd-src"><span class="lb-src">{{ L.source }}</span><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
         </div>
         {%- endif %}
         </div>
@@ -215,12 +229,12 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
     </div>
   </section>{% endif %}
 
-  {% if feed.week.length %}<section class="feed-sec" id="sec-week" data-sec="This week">
+  {% if f.week.length %}<section class="feed-sec" id="sec-week" data-sec="This week">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>This week</h2><div class="sec-meta">{{ feed.weekLabel }} · if you missed the week</div></div>
+    <div class="sec-head"><h2>{{ L.week }}</h2><div class="sec-meta">{{ f.weekLabel }} · {{ L.weekSub }}</div></div>
     <div class="chips" id="wk-chips"></div>
     <div class="cards cards-wk" id="wk-list">
-      {%- for item in feed.week %}
+      {%- for item in f.week %}
       <article class="card card-wk" data-cat="{{ item.cat }}">
         <div class="card-rail">
           <div class="card-meta"><span class="d">{{ item.date }}</span><span class="c"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</span><span class="s">{{ item.source }}{% if item.lang %} <i class="es">{{ item.lang }}</i>{% endif %}</span></div>
@@ -239,11 +253,11 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
     <button class="more" id="wk-more" type="button" hidden></button>
   </section>{% endif %}
 
-  {% if feed.upcoming.length %}<section class="feed-sec" id="sec-coming" data-sec="Coming up">
+  {% if f.upcoming.length %}<section class="feed-sec" id="sec-coming" data-sec="Coming up">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>Coming up</h2><div class="sec-meta">Scheduled releases and decisions</div></div>
+    <div class="sec-head"><h2>{{ L.coming }}</h2><div class="sec-meta">{{ L.comingSub }}</div></div>
     <div class="cal">
-      {%- for group in feed.upcoming %}
+      {%- for group in f.upcoming %}
       <div class="cal-g{% if group.soon %} soon{% endif %}">
         <div class="cal-rail"><div class="cal-when">{{ group.when }}</div><div class="cal-rel">{{ group.rel }}</div></div>
         <div class="cal-body">
@@ -256,11 +270,11 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
     </div>
   </section>{% endif %}
 
-  {% if feed.econ.length %}<section class="feed-sec" id="sec-econ" data-sec="The economy">
+  {% if f.econ.length %}<section class="feed-sec" id="sec-econ" data-sec="The economy">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>Where the economy stands</h2><div class="sec-meta"><a href="/atlas.html">Mexico, state by state →</a></div></div>
+    <div class="sec-head"><h2>{{ L.econ }}</h2><div class="sec-meta"><a href="/atlas.html">{{ L.econLink }}</a></div></div>
     <div class="econ">
-      {%- for row in feed.econ %}
+      {%- for row in f.econ %}
       <div class="econ-row">
         <div class="econ-head">
           <div><div class="econ-name">{{ row.name }}</div><div class="econ-period">{{ row.period }}</div></div>
@@ -280,22 +294,27 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   <section class="feed-sec" id="sec-mail" data-sec="Weekly email">
     <div class="mail">
       <div>
-        <div class="mail-k">Weekly email</div>
-        <p class="mail-c">One email a week: what changed in Mexico, why it changed, and the sources behind it. <a href="/weekly.html">See an example →</a></p>
+        <div class="mail-k">{{ L.mail }}</div>
+        <p class="mail-c">{{ L.mailCopy }} <a href="/weekly.html">{{ L.mailExample }}</a></p>
       </div>
       <div>
         <form class="mail-f" method="post" action="/api/subscribe" novalidate>
-          <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" autocomplete="email" inputmode="email" required />
+          <input type="email" name="email" placeholder="{{ L.mailPlaceholder }}" aria-label="Email address" autocomplete="email" inputmode="email" required />
           <label class="hp-field" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
-          <button type="submit">Subscribe</button>
+          <button type="submit">{{ L.mailButton }}</button>
         </form>
-        <div class="mail-fine submsg" aria-live="polite">One email a week. Unsubscribe whenever you want.</div>
+        <div class="mail-fine submsg" aria-live="polite">{{ L.mailFine }}</div>
       </div>
     </div>
   </section>
 </div>
 
 <script type="module">
+const I18N = {
+  be: {{ L.be | dump | safe }}, beHide: {{ L.beHide | dump | safe }},
+  why: {{ L.why | dump | safe }}, hide: {{ L.hide | dump | safe }},
+  all: {{ L.all | dump | safe }}, showMoreTpl: {{ L.showMoreTpl | dump | safe }},
+};
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -310,9 +329,9 @@ $$('[data-toggle]').forEach((button) => {
     button.setAttribute('aria-expanded', String(!open));
     panel.hidden = open;
     const label = $('.be-label', button);
-    if (label) label.textContent = open ? 'Briefly explained' : 'Hide';
+    if (label) label.textContent = open ? I18N.be : I18N.beHide;
     const more = $('[data-more]', button);
-    if (more) more.textContent = open ? 'WHY +' : 'HIDE −';
+    if (more) more.textContent = open ? I18N.why : I18N.hide;
   });
 });
 
@@ -336,7 +355,7 @@ if (list && chipRow && moreBtn) {
   cards.forEach((card) => counts.set(card.dataset.cat, (counts.get(card.dataset.cat) || 0) + 1));
   chipRow.innerHTML = ['All', ...counts.keys()].map((cat) => {
     const n = cat === 'All' ? cards.length : counts.get(cat);
-    return `<button class="chip${cat === 'All' ? ' on' : ''}" type="button" data-cat="${cat}">${cat}<span>${n}</span></button>`;
+    return `<button class="chip${cat === 'All' ? ' on' : ''}" type="button" data-cat="${cat}">${cat === 'All' ? I18N.all : cat}<span>${n}</span></button>`;
   }).join('');
 
   const render = () => {
@@ -347,7 +366,7 @@ if (list && chipRow && moreBtn) {
     shown.forEach((card) => { card.hidden = false; });
     const rest = matching.length - shown.length;
     moreBtn.hidden = rest <= 0;
-    moreBtn.textContent = `Show ${rest} more`;
+    moreBtn.textContent = I18N.showMoreTpl.replace('{n}', rest);
     $$('.chip', chipRow).forEach((chip) => chip.classList.toggle('on', chip.dataset.cat === filter));
   };
   chipRow.addEventListener('click', (event) => {

@@ -31,10 +31,13 @@ module.exports = function (ec) {
 
   // The dateline, formatted at build time so it is in the HTML rather than painted in
   // after the page loads.
-  ec.addFilter('longDate', (iso) => {
+  ec.addFilter('longDate', (iso, locale) => {
     const parsed = new Date(`${String(iso).slice(0, 10)}T12:00:00Z`);
-    return Number.isNaN(parsed.getTime()) ? iso
-      : parsed.toLocaleDateString('en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    if (Number.isNaN(parsed.getTime())) return iso;
+    // es-MX for the Spanish edition; capitalized to sit as the page's dateline.
+    const text = parsed.toLocaleDateString(locale === 'es' ? 'es-MX' : 'en-US',
+      { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    return locale === 'es' ? text.charAt(0).toUpperCase() + text.slice(1) : text;
   });
 
   // Category dots, from the design handoff. Equal lightness and chroma, hue varies, so

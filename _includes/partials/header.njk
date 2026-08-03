@@ -10,8 +10,12 @@
    menu and the footer cannot drift apart. -#}
 <header class="mast">
   <div class="mast-row">
-    <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
+    <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
     <div class="mast-sec" id="mast-sec" aria-live="polite"></div>
+    {#- Language toggle, homepage pair only. A plain link: no JS, no cookie, no
+        redirect guessing — the reader chooses, the URL says so, done. -#}
+    {%- if page.url == '/' %}<a class="lang-link" href="/es/" lang="es" hreflang="es">ES</a>
+    {%- elif page.url == '/es/' %}<a class="lang-link" href="/" lang="en" hreflang="en">EN</a>{% endif %}
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Menu"><span></span><span></span></button>
   </div>
   <div class="menu-panel" id="menu-panel" hidden>
