@@ -12,7 +12,6 @@ eleventyComputed:
   ogTitle: "{% if locale == 'es' %}The Mexico Brief — en español{% else %}The Mexico Brief{% endif %}"
   ogDescription: "{% if locale == 'es' %}La economía, la política y la seguridad de México, en un solo lugar.{% else %}Mexico’s economic, political, security and business news, all in one place.{% endif %}"
 bodyClass: feed-page
-footerBlurb: "Mexico’s economic, political, security and business news, all in one place."
 ---
 {#- One template, two pages (Alan, 2026-08-03: the site also ships in Spanish —
     reaffirmed over the no-toggle ruling, so built without slop instead of not at
@@ -145,7 +144,8 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
   .bar-l{font-family:var(--mono);font-weight:500;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#111214}
   .bar-l.ref{font-weight:400;color:#86888E}
   .track{height:10px;background:#F0F0F0;display:block}
-  .fill{height:100%;background:#111214;display:block}
+  /* Green = today's reading (the site's accent, not a verdict); gray = the reference. */
+  .fill{height:100%;background:#0B6E4F;display:block}
   .fill.ref{background:#D4D4D6}
   .bar-v{font-family:var(--mono);font-weight:500;font-size:11px;color:#111214;white-space:nowrap}
   .bar-v.ref{font-weight:400;color:#5C5E63}

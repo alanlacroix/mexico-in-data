@@ -1,12 +1,23 @@
-{#- The footer, to the design handoff of 2026-08-02: the wordmark in identical markup to
-   the masthead, the tagline string verbatim below it, and the same five links the menu
-   prints, from _data/footernav.js, so the two lists can never diverge. -#}
+{#- The footer, kept in lockstep with the masthead (Alan, 2026-08-03: "make sure it
+   is up to date with our header"). The quarterly rooms render from the SAME
+   _data/nav.js entry the header menu prints, so the two can never diverge again —
+   the old hand-kept list had drifted to a single stray room. Utility links stay in
+   _data/footernav.js. Room labels and the blurb localize on /es/ through the same
+   dictionaries as everything else. -#}
+{%- set Lf = uiStrings[locale] if locale else uiStrings.en %}
 <footer class="foot">
   <div class="foot-row">
     <div class="foot-brand">
-      <a class="brand" href="/">THE MEXICO <span class="u">BRIEF</span></a>
-      <p class="fblurb">{{ footerBlurb or "Mexico’s economic, political, security and business news, all in one place." }}</p>
+      <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
+      <p class="fblurb">{{ Lf.tagline }}</p>
     </div>
-    <nav class="fnav" aria-label="Footer navigation">{% for item in footernav %}<a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}</nav>
+    <nav class="fnav" aria-label="Footer navigation">
+      <a href="/atlas.html">Atlas</a>
+      {%- for group in nav %}{% if group.menu %}{% for block in group.menu %}{% for link in block.links %}
+      <a href="{{ link.href }}">{{ uiStrings.maps.cats[link.label] if locale == 'es' else link.label }}</a>{% endfor %}{% endfor %}{% endif %}{% endfor %}
+      <a href="/about.html">About</a>
+      {%- for item in footernav %}
+      <a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}
+    </nav>
   </div>
 </footer>
