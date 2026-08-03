@@ -206,7 +206,8 @@ header.mast{position:sticky;top:0;z-index:60;background:#111214}
    away. The footer prints the same string. */
 /* Tagline moved inline into the masthead row (2026-08-03) — the band it replaced
    spent ~70px of the first screen restating what the wordmark already says. */
-.mast-tag{flex:1;min-width:0;margin-left:18px;font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:#6B6D73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Readable, not decorative: 12.5px and a color that actually clears the dark band. */
+.mast-tag{flex:1;min-width:0;margin-left:18px;font-family:var(--mono);font-size:12.5px;letter-spacing:.01em;color:#B9BBC1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:760px){.mast-tag{display:none}}
 
 footer.foot{background:#111214;padding:28px 0 36px;margin-top:56px;border-top:0}
