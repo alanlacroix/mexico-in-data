@@ -236,7 +236,7 @@ footer.foot{background:#111214;padding:28px 0 36px;margin-top:56px;border-top:0}
 footer.foot{border-top:1px solid var(--line);margin-top:56px}
 footer.foot .wrap{padding-top:18px;padding-bottom:54px}
 .foot .fnav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:12px}
-.foot .fnav a{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--green);display:inline-flex;align-items:center;min-height:36px}
+/* (duplicate .fnav a rule removed 2026-08-03 — it re-capitalized and re-greened the calm footer from further down the cascade, and its 36px min-height caused the sprawling gaps) */
 .foot .fblurb{font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.7;max-width:66ch;margin:0}
 
 /* Source-class badge — the honest-source policy made visible (Fable 2026-07-11): every figure
