@@ -208,7 +208,11 @@ header.mast{position:sticky;top:0;z-index:60;background:#111214}
    spent ~70px of the first screen restating what the wordmark already says. */
 /* Readable, not decorative: 12.5px and a color that actually clears the dark band. */
 .mast-tag{flex:1;min-width:0;margin-left:18px;font-family:var(--mono);font-size:12.5px;letter-spacing:.01em;color:#B9BBC1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media (max-width:760px){.mast-tag{display:none}}
+/* Below 760px the wordmark, the language toggle and the menu button already fill the row.
+   The tagline and the scroll-spy section label are both secondary context, and a label
+   clipped to "THE B…" tells a reader less than no label at all, so both come off rather
+   than competing for room that is not there. */
+@media (max-width:760px){.mast-tag,.mast-sec{display:none}}
 
 footer.foot{background:#111214;padding:28px 0 36px;margin-top:56px;border-top:0}
 .foot-row{max-width:var(--page);margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:22px 40px}
