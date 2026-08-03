@@ -31,6 +31,15 @@ const HAIKU = 'claude-haiku-4-5';        // $1/M in · $5/M out — mechanical, 
 const DEFAULT_MODEL = SONNET;
 const KEY = process.env.ANTHROPIC_API_KEY || '';
 
+// output_config.effort is a Sonnet 5 / Opus feature. Haiku 4.5 rejects it outright with
+// "This model does not support the effort parameter" — an HTTP 400, not a warning. When
+// the cost pass added effort:'low' to the three Haiku call sites (the wire translator,
+// the topic areas and the story selection), all three began failing every call and
+// falling back silently: fail-soft did its job so nothing broke visibly, but Spanish
+// headlines published untranslated on the English page for days. Stripping the parameter
+// here rather than at each call site means a future caller cannot reintroduce it.
+const EFFORT_MODELS = new Set([SONNET]);
+
 // ---- The budget, enforced rather than hoped for -----------------------------
 // Alan's ceiling is $2/month, hard. Estimates have been wrong twice this session,
 // so the ceiling is code: every call settles into a committed ledger
@@ -75,6 +84,7 @@ const RATES = {
 };
 
 let _calls = 0;
+let _badRequests = 0;               // permanent request bugs (HTTP 400), reported by usage()
 const _tok = {};                         // model -> { in, out }
 
 export const hasLLM = () => !!KEY;
@@ -90,7 +100,7 @@ export function usage() {
     output += t.out;
     costUSD += (t.in / 1e6) * rate.in + (t.out / 1e6) * rate.out;
   }
-  return { calls: _calls, input, output, costUSD, byModel: { ..._tok } };
+  return { calls: _calls, badRequests: _badRequests, input, output, costUSD, byModel: { ..._tok } };
 }
 
 // Ask the model for a JSON answer. With `schema`, structured outputs guarantee the
@@ -121,7 +131,7 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
     system,
     messages: [{ role: 'user', content: user }],
   };
-  if (effort) body.output_config = { ...(body.output_config || {}), effort };
+  if (effort && EFFORT_MODELS.has(modelId)) body.output_config = { ...(body.output_config || {}), effort };
   if (schema) body.output_config = { ...(body.output_config || {}), format: { type: 'json_schema', schema } };
   let r;
   try {
@@ -140,7 +150,14 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
     return null;
   }
   if (!r.ok) {
-    console.warn('  llm: HTTP', r.status, (await r.text().catch(() => '')).slice(0, 180));
+    const detail = (await r.text().catch(() => '')).slice(0, 180);
+    // A 400 is a malformed request: it will fail identically on every retry and every
+    // future run. Fail-soft is right for a timeout or a 429, but treating a permanent
+    // request bug the same way is how three call sites 400'd on every call for days
+    // without anyone noticing. Say plainly which kind this is.
+    if (r.status === 400) _badRequests++;
+    console.warn('  llm: HTTP', r.status, detail,
+      r.status === 400 ? '\n  ^ REQUEST BUG, not a transient failure: this will fail every run until the code changes.' : '');
     return null;
   }
   const j = await r.json().catch(() => null);
