@@ -3,6 +3,9 @@
 // every one of them 400'd on every call for days. Fail-soft hid it — the site kept
 // publishing, just with untranslated headlines and deterministic fallbacks.
 import assert from 'node:assert/strict';
+import path from 'node:path';
+import os from 'node:os';
+import fs from 'node:fs';
 
 const sent = [];
 globalThis.fetch = async (_url, init) => {
@@ -11,6 +14,10 @@ globalThis.fetch = async (_url, init) => {
 };
 process.env.ANTHROPIC_API_KEY = 'test-key';
 process.env.LLM_BUDGET_OVERRIDE = '1';
+// Never settle fake usage into the real ledger: that ledger is the enforcement mechanism
+// for Alan's $2/month cap, and a test that runs on every CI push would spend it down with
+// numbers nobody was billed for.
+process.env.LLM_LEDGER_PATH = path.join(os.tmpdir(), 'mb-test-ledger.json');
 
 const { askJSON, models } = await import('../lib/anthropic.js');
 
@@ -27,5 +34,12 @@ assert.equal(sent.at(-1).output_config?.effort, 'low',
 await askJSON({ system: 's', user: 'u', effort: 'low', model: models.HAIKU, schema: { type: 'object' } });
 assert.equal(sent.at(-1).output_config?.format?.type, 'json_schema');
 assert.equal(sent.at(-1).output_config?.effort, undefined);
+
+// The production ledger must be untouched by this run.
+const prodLedger = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'data', 'llm-spend.json');
+const before = fs.readFileSync(prodLedger, 'utf8');
+await askJSON({ system: 's', user: 'u', model: models.SONNET });
+assert.equal(fs.readFileSync(prodLedger, 'utf8'), before,
+  'the test must never write spend into the production budget ledger');
 
 console.log('llm-request-contract: ok');

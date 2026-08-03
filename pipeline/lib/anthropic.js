@@ -54,7 +54,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const MONTHLY_CAP_USD = 2.0;
-const LEDGER = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'data', 'llm-spend.json');
+// LLM_LEDGER_PATH redirects the ledger so a test can exercise the real settle path
+// without spending against Alan's actual monthly cap. Only tests set it.
+const LEDGER = process.env.LLM_LEDGER_PATH
+  || path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'data', 'llm-spend.json');
 
 const monthKey = () => new Date().toISOString().slice(0, 7);   // "2026-08"
 function readLedger() {
