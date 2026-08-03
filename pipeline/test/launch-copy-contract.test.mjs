@@ -104,8 +104,13 @@ assert.doesNotMatch(topics, /minimum wage is (?:<b>)?\$(?!\$\{)/i,
 // imports are A reason exports and imports co-move, never the whole reason.
 assert.doesNotMatch(topics, /(?:that is|thats|this is) why exports and imports rise and fall/i,
   'trade copy must not claim one complete cause for co-movement');
-assert.match(topics, /exports and imports (?:therefore )?rise and fall together/i,
-  'trade copy should still explain the co-movement');
+// Re-pointed 2026-08-03 for the plain-language rewrite. The old anchor was the phrase
+// "exports and imports rise and fall together", which stated the co-movement without
+// explaining it. The new copy explains the mechanism instead: the same product families
+// crossing twice because much of Mexican manufacturing is assembly. Anchor the mechanism,
+// which is what a reader actually needs, and keep the overclaim guard above intact.
+assert.match(topics, /both directions[\s\S]{0,120}assembly/i,
+  'trade copy should still explain WHY exports and imports co-move, not just assert it');
 for (const phrase of [/local source registry/i, /event registry/i, /local feed/i, /fails closed/i, /automatically colored as good/i]) {
   assert.doesNotMatch(topics, phrase, `topic pages must not expose internal QA language: ${phrase}`);
 }

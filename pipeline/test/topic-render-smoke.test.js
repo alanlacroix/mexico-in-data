@@ -57,12 +57,21 @@ const expectedCrimePeriod = crimeEndMonth === 'Jan' ? `Jan ${crimeVintage[1]}` :
 }
 
 // The claims ledger: each converted page keeps the judgment its letter earned.
+// Re-pointed 2026-08-03 after the plain-language rewrite. The ledger protects the
+// JUDGMENT, not the wording, and every one of these judgments survived the rewrite
+// stated more concretely. Each anchor below was checked against the new prose:
+//   economy   'central fact'          -> 'one number explains most of this page'
+//   usmexico  'long horizon'          -> 'the horizon is the more expensive loss'
+//   politics  'missed statutory date' -> 'slips past its constitutional date'
+//   payments  'what adoption displaces' -> 'adding occasions to pay rather than taking'
+// If a rewrite ever drops the judgment rather than rephrasing it, restore the sentence.
+// Do not weaken an anchor to make a test pass.
 const CLAIMS = {
-  economy: 'central fact',
-  usmexico: 'long horizon',
-  politics: 'missed statutory date',
+  economy: 'one number explains most of this page',
+  usmexico: 'the horizon is the more expensive loss',
+  politics: 'slips past its constitutional date',
   society: 'cost of operating',
-  payments: 'what adoption displaces',
+  payments: 'adding occasions to pay rather than taking',
 };
 
 const original = {
@@ -208,7 +217,10 @@ for (const route of routes) {
     // same series and the same quarter.
     if (!output.includes(`${expectedCardPurchases} billion`)) throw new Error(`payments: card purchases do not match the source operations (${expectedCardPurchases}bn)`);
     // The debit share states its case once, in the lead, at full precision.
-    if (!output.includes(`${expectedDebitShare}% of them are debit`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
+    // Wording re-pointed 2026-08-03 for the plain-language rewrite ("are debit" became
+    // "were on debit cards"). The check itself is unchanged and is the point: the share
+    // must still be computed from the same quarter as the card count, at full precision.
+    if (!output.includes(`${expectedDebitShare}% of them were on debit cards`)) throw new Error(`payments: debit share is not computed from the same quarter (${expectedDebitShare}%)`);
     if (!/told INEGI's 2024 survey/.test(output)) throw new Error('payments: the ENIF survey attribution and vintage must appear in the prose');
     if (output.includes('1,169bn MXN')) throw new Error('payments: quarantined debit-card value still appears editorially');
   }
