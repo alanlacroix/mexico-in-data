@@ -66,6 +66,21 @@ const monthDay = (iso) => {
   return Number.isNaN(d.getTime()) ? iso
     : d.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
 };
+// Did the wire actually translate this item, or does the "original" differ only in
+// punctuation and spacing? Curly quotes, dashes and stray whitespace are normalised away
+// before comparing, so only a real change of words counts as a translation.
+const translated = (item) => {
+  if (!item.originalTitle) return false;
+  const plain = (s) => String(s)
+    .replace(/[‘’‛]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/[‐-―]/g, '-')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+  return plain(item.originalTitle) !== plain(item.title);
+};
+
 const monthName = (iso) => {
   const d = new Date(`${String(iso).slice(0, 10)}T12:00:00Z`);
   return Number.isNaN(d.getTime()) ? iso
@@ -180,8 +195,13 @@ module.exports = function () {
         cat: group.label,
         catKey: group.key,
         source: item.sourceName,
-        lang: item.originalTitle && item.originalTitle !== item.title ? 'ES' : '',
-        orig: item.originalTitle && item.originalTitle !== item.title ? item.originalTitle : '',
+        // "The wire translated this" is inferred from the original differing from the
+        // published title, so the comparison has to ignore differences that are not a
+        // translation. A trailing space and a curly-vs-straight apostrophe were enough to
+        // mark three English headlines as Spanish originals, and the Spanish edition then
+        // skipped them as already-Spanish and printed English (2026-08-03).
+        lang: translated(item) ? 'ES' : '',
+        orig: translated(item) ? item.originalTitle : '',
         url: item.url,
         title: item.title,
         dek: item.dek || '',

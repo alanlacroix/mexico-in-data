@@ -98,9 +98,18 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node write-context.mjs
 
+      # Deliberately NOT behind modelgate. The gate exists for jobs that regenerate the
+      # same content on a daily rhythm, where extra runs buy nothing. These two are
+      # different in kind: they are incremental caches whose work is proportional to what
+      # collect-news just brought in, and collect-news runs on all four daily refreshes.
+      # Gating them meant anything collected at 18:17, 00:17 or 06:17 UTC sat untranslated
+      # for up to 18 hours — English headlines on the Spanish edition, which is what Alan
+      # saw on 2026-08-03. Cost of ungating is the system prompt three more times a day
+      # (~$0.06/month): the strings translated per day are the same either way, only split
+      # into smaller batches. When the cache is current both scripts exit without an API
+      # call, so a quiet refresh still costs nothing.
       - name: Fill the Spanish edition's translation cache
         working-directory: pipeline
-        if: steps.modelgate.outputs.run == 'true'
         continue-on-error: true   # a missing translation shows English on /es/, never breaks it
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -108,7 +117,6 @@ jobs:
 
       - name: Put the wire into English
         working-directory: pipeline
-        if: steps.modelgate.outputs.run == 'true'
         continue-on-error: true   # a translation miss never fails a refresh; the wire is publishable as collected
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

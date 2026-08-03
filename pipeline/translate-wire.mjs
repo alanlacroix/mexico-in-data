@@ -27,9 +27,24 @@ const BATCH = 20;          // headlines per call
 const MAX_ITEMS = 200;     // ceiling per run, so a backlog cannot become a surprise bill
 const WINDOW_DAYS = 8;
 
-// Spanish function words that essentially never appear in an English headline. Cheap and
-// good enough: a false positive costs one translation that returns the text unchanged.
+// Spanish function words that essentially never appear in an English headline. This is
+// the fallback for a source with no registered language, NOT the primary test: the
+// comment used to say a false positive was free ("returns the text unchanged"), and that
+// was wrong. A false positive rewrites an English headline, which makes originalTitle
+// differ from title, which makes _data/feed.js label the item lang:'ES' — and the Spanish
+// edition then skips it as already-Spanish and prints English. One Spanish word in an
+// English dek was enough to do it (InSight Crime, seen live 2026-08-03).
 const SPANISH = /\b(de|del|la|las|el|los|una|para|con|por|que|su|sus|más|año|años|millones|desde|entre|sobre|tras|ante|hacia|según|mientras|pesos)\b/i;
+
+// pipeline/news-sources.json declares a language for every registered source, and
+// collect-news.js stamps it onto each ledger item. That declaration beats any guess made
+// from the text, so an English source is never sent to the English translator.
+const isSpanish = (item) => {
+  const declared = String(item.lang || '').toLowerCase();
+  if (declared === 'en') return false;
+  if (declared === 'es') return true;
+  return SPANISH.test(`${item.title} ${item.dek || ''}`);
+};
 
 const isoWeek = (dt) => {
   const d = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate()));
@@ -93,7 +108,7 @@ async function main() {
     if (item.source === 'news.google.com' || item.tier === 'aggregator') continue;
     const when = Date.parse(item.published_at);
     if (!Number.isFinite(when) || when < cutoff) continue;
-    if (!SPANISH.test(`${item.title} ${item.dek || ''}`)) continue;
+    if (!isSpanish(item)) continue;
     seen.add(item.url);
     pending.push(item);
     if (pending.length >= MAX_ITEMS) break;
