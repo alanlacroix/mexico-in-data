@@ -30,6 +30,41 @@ const SONNET = 'claude-sonnet-5';        // $3/M in · $15/M out (intro $2/$10 t
 const HAIKU = 'claude-haiku-4-5';        // $1/M in · $5/M out — mechanical, checkable jobs
 const DEFAULT_MODEL = SONNET;
 const KEY = process.env.ANTHROPIC_API_KEY || '';
+
+// ---- The budget, enforced rather than hoped for -----------------------------
+// Alan's ceiling is $2/month, hard. Estimates have been wrong twice this session,
+// so the ceiling is code: every call settles into a committed ledger
+// (data/llm-spend.json, pushed by the same CI steps that commit data/), and once
+// the month's total crosses the cap, askJSON returns null. Every caller already
+// treats null as "keep last-good content" — the pipeline was built fail-soft, so
+// a capped month degrades to a slightly staler site, never a broken one.
+// The guard opens again on the 1st. Manual override for debugging:
+// LLM_BUDGET_OVERRIDE=1.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const MONTHLY_CAP_USD = 2.0;
+const LEDGER = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'data', 'llm-spend.json');
+
+const monthKey = () => new Date().toISOString().slice(0, 7);   // "2026-08"
+function readLedger() {
+  try { return JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch { return {}; }
+}
+function spentThisMonth() {
+  return Number(readLedger()[monthKey()]) || 0;
+}
+function settle(costUSD) {
+  const ledger = readLedger();
+  ledger[monthKey()] = Math.round(((Number(ledger[monthKey()]) || 0) + costUSD) * 1e6) / 1e6;
+  // keep only the last 3 months so the file never grows
+  for (const k of Object.keys(ledger)) if (k < monthKey() && Object.keys(ledger).length > 3) delete ledger[k];
+  try { fs.writeFileSync(LEDGER, `${JSON.stringify(ledger, null, 1)}\n`); } catch { /* read-only fs: skip */ }
+}
+function overBudget() {
+  if (process.env.LLM_BUDGET_OVERRIDE) return false;
+  return spentThisMonth() >= MONTHLY_CAP_USD;
+}
 const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 
 // Per-model rates, so a mixed-tier run reports what it actually cost rather than
@@ -76,6 +111,10 @@ export function usage() {
 // level strictly, which is exactly what a deterministic pass wants.
 export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL, effort }) {
   if (!KEY) return null;
+  if (overBudget()) {
+    console.warn(`  llm: monthly cap reached ($${spentThisMonth().toFixed(2)} of $${MONTHLY_CAP_USD}) — skipping call; site keeps last-good content until the 1st`);
+    return null;
+  }
   const body = {
     model: modelId,
     max_tokens: maxTokens,
@@ -110,6 +149,10 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
   const bucket = (_tok[modelId] ||= { in: 0, out: 0 });
   bucket.in += j.usage?.input_tokens || 0;
   bucket.out += j.usage?.output_tokens || 0;
+  {
+    const rate = RATES[modelId] || RATES[SONNET];
+    settle(((j.usage?.input_tokens || 0) / 1e6) * rate.in + ((j.usage?.output_tokens || 0) / 1e6) * rate.out);
+  }
   if (j.stop_reason === 'refusal') { console.warn('  llm: refusal'); return null; }
   const txt = (j.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');
   try { return JSON.parse(txt); }
