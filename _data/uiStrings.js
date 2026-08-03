@@ -22,7 +22,7 @@ module.exports = {
     mailCopy: 'One email a week: what changed in Mexico, why it changed, and the sources behind it.',
     mailExample: 'See an example →', mailPlaceholder: 'you@email.com', mailButton: 'Subscribe',
     mailFine: 'One email a week. Unsubscribe whenever you want.',
-    esNote: '',
+    esNote: '', footSections: 'Sections', footSite: 'Site',
   },
   es: {
     lang: 'es', htmlLang: 'es-MX', otherUrl: '/', otherLabel: 'EN',
@@ -39,7 +39,7 @@ module.exports = {
     mailCopy: 'Un correo a la semana: qué cambió en México, por qué cambió y las fuentes detrás.',
     mailExample: 'Ver un ejemplo →', mailPlaceholder: 'tu@correo.com', mailButton: 'Suscribirme',
     mailFine: 'Un correo a la semana. Cancela cuando quieras.',
-    esNote: 'Las secciones de datos (Atlas, Fuentes) están en inglés por ahora.',
+    esNote: 'Las secciones de datos (Atlas, Fuentes) están en inglés por ahora.', footSections: 'Secciones', footSite: 'Sitio',
   },
   maps: {
     cats: {

@@ -11,13 +11,22 @@
       <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
       <p class="fblurb">{{ Lf.tagline }}</p>
     </div>
+    {#- Twelve shouting caps links became "overwhelming" (Alan, 2026-08-03). Same
+        parity with the header, presented the way the header menu itself does it:
+        a quiet group label, sentence-case links, two tidy columns. -#}
     <nav class="fnav" aria-label="Footer navigation">
-      <a href="/atlas.html">Atlas</a>
-      {%- for group in nav %}{% if group.menu %}{% for block in group.menu %}{% for link in block.links %}
-      <a href="{{ link.href }}">{{ uiStrings.maps.cats[link.label] if locale == 'es' else link.label }}</a>{% endfor %}{% endfor %}{% endif %}{% endfor %}
-      <a href="/about.html">About</a>
-      {%- for item in footernav %}
-      <a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}
+      <div class="fnav-col">
+        <span class="fnav-h">{{ Lf.footSections }}</span>
+        <a href="/atlas.html">Atlas</a>
+        {%- for group in nav %}{% if group.menu %}{% for block in group.menu %}{% for link in block.links %}
+        <a href="{{ link.href }}">{{ uiStrings.maps.cats[link.label] if locale == 'es' else link.label }}</a>{% endfor %}{% endfor %}{% endif %}{% endfor %}
+      </div>
+      <div class="fnav-col">
+        <span class="fnav-h">{{ Lf.footSite }}</span>
+        <a href="/about.html">About</a>
+        {%- for item in footernav %}
+        <a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}
+      </div>
     </nav>
   </div>
 </footer>
