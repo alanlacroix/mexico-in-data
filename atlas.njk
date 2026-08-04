@@ -8,25 +8,14 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
 <style>
   :root{--ink-3:#555}
   body{font-size:var(--fs-small)}
-  button,input{font:inherit}
-  .hero{padding:20px 0 0}
+  button,input,select{font:inherit}
+  .hero{padding:24px 0 0}
   .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.02;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
-  .hero .dek{font-size:15px;color:var(--ink-2);margin-top:9px;max-width:52ch;line-height:1.45}
-  .storyblock{margin-top:16px;padding:13px 0 0;border-top:1px solid var(--line)}
-  .storyhead{margin-bottom:8px}
-  .storyhead h2{font-family:var(--sans);font-size:18px;line-height:1.15;color:var(--ink)}
-  .storygrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-  .storycard{min-height:112px;padding:11px 13px 10px;border:1px solid var(--line-2);border-radius:8px;background:var(--paper);color:var(--ink);text-align:left;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start}
-  .storycard:hover,.storycard:focus-visible,.storycard.on{border-color:var(--green);background:var(--green-bg)}
-  .storycard:focus-visible{outline:2px solid var(--green);outline-offset:2px}
-  .story-k{font-family:var(--mono);font-size:10px;line-height:1.2;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d)}
-  .story-t{display:block;font-family:var(--sans);font-size:16px;line-height:1.2;font-weight:650;margin-top:5px;color:var(--ink)}
-  .story-c{display:block;font-size:12px;line-height:1.35;color:var(--ink-2);margin-top:4px}
-  .story-a{display:block;font-family:var(--mono);font-size:9px;color:var(--green-d);text-transform:uppercase;letter-spacing:.04em;margin-top:auto;padding-top:6px}
-  .controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:flex-end;margin-top:14px}
-  .searchcol{flex:1;min-width:280px}
+  .hero .dek{font-size:15px;color:var(--ink-2);margin-top:10px;max-width:62ch;line-height:1.5}
+  .controls{margin-top:22px}
+  .searchcol{max-width:560px}
   .control-label{display:block;font-family:var(--mono);font-size:11px;color:var(--mut);margin-bottom:7px;letter-spacing:.03em;text-transform:uppercase}
-  .searchbox{position:relative;max-width:430px}
+  .searchbox{position:relative;max-width:560px}
   .searchbox .mag{position:absolute;left:15px;top:22px;transform:translateY(-50%);width:16px;height:16px;color:var(--mut);pointer-events:none}
   .searchbox input{width:100%;min-height:44px;padding:11px 15px 11px 43px;border:1.5px solid var(--line-2);border-radius:9px;font-family:var(--sans);font-size:15px;background:var(--paper);color:var(--ink)}
   .searchbox input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-bg)}
@@ -34,16 +23,10 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   .sugg button{display:block;width:100%;min-height:44px;padding:10px 14px;text-align:left;border:0;border-bottom:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
   .sugg button:last-child{border-bottom:0}.sugg button.hi,.sugg button:hover{background:var(--green-bg)}
   .sugg .s-ent{color:var(--mut);font-family:var(--mono);font-size:var(--fs-label)}
-  .metriccol{max-width:100%}
-  .metricsel{display:flex;flex-wrap:wrap;border:1px solid var(--line-2);border-radius:9px;overflow:hidden}
-  .metricsel button{min-height:44px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:10px 14px;border:0;background:var(--paper);color:var(--ink-2);cursor:pointer;border-right:1px solid var(--line-2)}
-  .metricsel button:last-child{border-right:0}.metricsel button.on{background:var(--ink);color:#fff}.metricsel button:disabled{cursor:not-allowed;opacity:.48}
-  .metricmeta{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.5}
-  .crumb{display:flex;align-items:center;gap:8px;margin:14px 0 6px;flex-wrap:wrap;min-height:22px}
+  .crumb{display:flex;align-items:center;gap:8px;margin:16px 0 6px;flex-wrap:wrap;min-height:22px}
   .bc{font-family:var(--mono);font-size:11px;color:var(--green-d);text-transform:uppercase;letter-spacing:.03em;border:0;background:transparent;padding:4px 0;cursor:pointer}.bc.plain{color:var(--mut);cursor:default}.sep{color:var(--line-2)}
   .statesum{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin:0 0 8px;line-height:1.55;scroll-margin-top:76px}.statesum:focus{outline:none}.statesum b{color:var(--ink)}
-  .mapgrid{display:block}
-  .mapstage{position:relative;touch-action:pan-y;margin-top:6px}
+  .mapstage{position:relative;touch-action:pan-y;margin-top:20px}
   #map{width:100%;height:clamp(280px,46vw,470px);background:linear-gradient(180deg,#fbfbfb,var(--panel));border:1px solid var(--line);border-radius:8px;display:block}
   #map path{cursor:pointer}.stlayer path{stroke:#fff;stroke-width:.8;transition:fill .2s,opacity .2s}.stlayer path:hover,.stlayer path:focus,.stlayer path.sel{stroke:var(--ink);stroke-width:2;paint-order:stroke;outline:none}.stlayer path.dim{opacity:.14}
   .munilayer path{stroke:#fff;stroke-width:.18}.munilayer path:hover,.munilayer path:focus{stroke:var(--ink);stroke-width:.8;outline:none}.munilayer path.sel{stroke:var(--green);stroke-width:1.5;paint-order:stroke}
@@ -51,86 +34,61 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   .stlabel{font-family:var(--sans);font-size:11px;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:2.4px;stroke-linejoin:round;pointer-events:none;font-weight:500}
   .zoomctl{position:absolute;bottom:10px;right:10px;display:flex;flex-direction:column;gap:6px;z-index:4}.zbtn{width:44px;height:44px;border:1px solid var(--line-2);background:rgba(255,255,255,.96);border-radius:8px;color:var(--ink);font-size:20px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}.zbtn:hover{border-color:var(--green)}.zbtn:disabled{opacity:.38;cursor:default}
   .maptip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:8px 11px;border-radius:6px;opacity:0;z-index:50;max-width:240px}.maptip b{font-family:var(--sans);font-size:13px}.maptip .n{color:#9fd9bd}.maptip .r{color:#cfcfc9}
-  .legend{margin-top:12px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}.legend .lt{color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}.legend-bins{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;max-width:760px}.legend-bin{min-width:0}.legend-bin i{display:block;width:100%;height:12px}.legend-bin b{display:block;margin-top:5px;font-weight:400;font-size:10px;line-height:1.25;color:var(--ink-2);font-variant-numeric:tabular-nums}.legend .nd{display:inline-flex;align-items:center;gap:5px;margin-top:8px}.legend .nd i{width:14px;height:12px;background:#eee;display:inline-block;border:1px solid var(--line-2)}
+  .legend{margin-top:11px;max-width:760px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}.legend .lt{color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}.legend-scale{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;gap:9px;align-items:center}.legend-scale b{font-weight:400;font-size:10px;color:var(--ink-2);font-variant-numeric:tabular-nums}.legend-swatches{display:grid;grid-template-columns:repeat(5,1fr);gap:2px}.legend-swatches i{height:11px}.legend-note{margin-top:6px}
   .sourcestrip{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);line-height:1.55;margin-top:10px}.sourcestrip a{color:var(--green-d)}
-  .ficha{margin:18px 0 0;border:1px solid var(--line-2);border-radius:9px;overflow:hidden}.fhead{padding:15px 17px 13px;border-bottom:1px solid var(--line);background:var(--panel)}.fh-name{font-family:var(--sans);font-size:var(--fs-h3);font-weight:650;color:var(--ink);line-height:1.1;padding-right:68px}.fh-ent{font-size:var(--fs-meta);color:var(--ink-2);margin-top:3px}.fh-pob{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px}.fh-pob a{color:var(--green-d)}.fh-x{float:right;min-height:44px;border:0;background:transparent;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);cursor:pointer;padding:0}.fstand{padding:13px 17px;border-bottom:1px solid var(--line);background:var(--green-bg);font-size:13px;line-height:1.5;color:var(--ink-2)}.fstand-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);margin-bottom:5px}.fstand b{color:var(--ink)}.fmetric{padding:13px 17px;border-bottom:1px solid var(--line)}.fm-l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut)}.fm-v{font-family:var(--sans);font-size:26px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05;margin-top:4px}.fm-v small{font-size:12px;color:var(--mut)}.fm-verdict{font-size:13px;color:var(--ink-2);margin-top:7px;line-height:1.45}.fm-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px;line-height:1.45}.fm-src a{color:var(--green-d)}.fclose{padding:12px 17px;font-size:var(--fs-meta);color:var(--mut);background:var(--panel);line-height:1.5}.drillbtn{display:block;width:100%;min-height:46px;margin-top:10px;border:1px solid var(--green);border-radius:7px;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer}.drillbtn:hover{background:var(--green-bg)}.drillbtn:disabled{cursor:wait;opacity:.65}
-  .fmetric.primary{background:#fff;border-left:3px solid var(--green);padding-left:14px}.fmetric.primary .fm-v{font-size:31px}
-  .fwatch{margin-top:9px;padding-top:8px;border-top:1px solid rgba(10,125,77,.18);font-size:12px;color:var(--ink-2)}
-  .fmore{border-bottom:1px solid var(--line);background:var(--paper)}.fmore summary{min-height:44px;display:flex;align-items:center;padding:0 17px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--green-d);cursor:pointer;list-style:none}.fmore summary::-webkit-details-marker{display:none}.fmore summary::after{content:'+';margin-left:auto;font-size:16px}.fmore[open] summary::after{content:'−'}.fmore .fmetric:last-child{border-bottom:0}
-  .ranksec{border-top:2px solid var(--green);margin:34px 0 4px;padding-top:18px}.rankhead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}.rankhead h2{font-family:var(--sans);font-size:var(--fs-h2);line-height:1.1;color:var(--ink)}.ranknote{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:5px}.ranktoggle{min-height:44px;border:1px solid var(--line-2);border-radius:7px;background:var(--paper);color:var(--ink-2);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:8px 12px;cursor:pointer}.ranklist{margin-top:14px;border-top:1px solid var(--line)}.rankrow{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;min-height:45px;padding:8px 6px;border:0;border-bottom:1px solid var(--line);background:var(--paper);text-align:left;color:var(--ink);cursor:pointer}.rankrow:hover,.rankrow.sel{background:var(--green-bg)}.ranknum{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}.rankname{font-size:14px}.rankval{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;color:var(--ink-2);text-align:right}.rankbreak{padding:8px 6px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
-  .miniback{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:10px clamp(16px,5vw,32px);display:none;align-items:center;justify-content:space-between;z-index:45}.miniback.show{display:flex}.mb-n{font-family:var(--sans);font-size:14px}.mb-a{min-height:44px;border:0;background:transparent;color:#9fd9bd;font-family:var(--mono);font-size:11px;cursor:pointer}
+  .ficha{max-width:900px;margin:18px 0 0;border:1px solid var(--line-2);border-radius:9px;overflow:hidden;scroll-margin-top:72px}.fhead{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--panel)}.fh-name{font-family:var(--sans);font-size:var(--fs-h3);font-weight:650;color:var(--ink);line-height:1.1}.fh-ent{font-size:var(--fs-meta);color:var(--ink-2);margin-top:3px}.fh-pob{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:6px}.fh-pob a{color:var(--green-d)}.factions{display:flex;align-items:flex-end;gap:10px}.fh-x{min-height:42px;border:0;background:transparent;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);cursor:pointer;padding:0 2px}.fmeasure{font-family:var(--mono);font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}.fmeasure select{display:block;min-width:190px;min-height:42px;margin-top:5px;padding:8px 30px 8px 10px;border:1px solid var(--line-2);border-radius:7px;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:13px}.fanswer{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.fprimary,.fcontext{padding:16px}.fprimary{border-right:1px solid var(--line)}.fm-l,.fcontext-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}.fm-v{font-family:var(--sans);font-size:34px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.04;margin-top:6px}.fm-compare{font-size:13px;color:var(--ink-2);margin-top:8px;line-height:1.45}.fm-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:9px;line-height:1.45}.fm-src a{color:var(--green-d)}.fcontext{background:var(--green-bg);font-size:13px;color:var(--ink-2);line-height:1.5}.fcontext-label{color:var(--green-d);margin-bottom:7px}.fcontext b{color:var(--ink)}.fmore{border-top:1px solid var(--line);background:var(--paper)}.fmore summary{min-height:44px;display:flex;align-items:center;padding:0 16px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--green-d);cursor:pointer;list-style:none}.fmore summary::-webkit-details-marker{display:none}.fmore summary::after{content:'+';margin-left:auto;font-size:16px}.fmore[open] summary::after{content:'−'}.fmetric{display:grid;grid-template-columns:minmax(130px,1fr) auto;gap:12px;padding:10px 16px;border-top:1px solid var(--line)}.fmetric .fm-v{font-size:18px;margin:0;text-align:right}.fm-verdict{grid-column:1/-1;font-size:12px;color:var(--ink-2);line-height:1.4}.fclose{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;font-size:var(--fs-meta);color:var(--mut);background:var(--panel);line-height:1.5}.drillbtn{min-height:40px;padding:0 12px;border:1px solid var(--green);border-radius:7px;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;white-space:nowrap}.drillbtn:hover{background:var(--green-bg)}.drillbtn:disabled{cursor:wait;opacity:.65}
+  .ranksec{border-top:1px solid var(--line);margin:28px 0 4px}.ranksummary{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:58px;cursor:pointer;list-style:none}.ranksummary::-webkit-details-marker{display:none}.ranksummary span:first-child{font-family:var(--sans);font-size:18px;font-weight:650;color:var(--ink)}.ranksummary span:last-child{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--green-d)}.ranksec[open] .ranksummary span:last-child{font-size:0}.ranksec[open] .ranksummary span:last-child::after{content:'Close';font-size:10px}.rankbody{padding-bottom:10px}.rankhead{display:flex;align-items:center;justify-content:space-between;gap:16px}.ranknote{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}.ranktoggle{min-height:40px;border:1px solid var(--line-2);border-radius:7px;background:var(--paper);color:var(--ink-2);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.03em;padding:7px 11px;cursor:pointer}.ranklist{margin-top:10px;border-top:1px solid var(--line)}.rankrow{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;min-height:45px;padding:8px 6px;border:0;border-bottom:1px solid var(--line);background:var(--paper);text-align:left;color:var(--ink);cursor:pointer}.rankrow:hover,.rankrow.sel{background:var(--green-bg)}.ranknum{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}.rankname{font-size:14px}.rankval{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;color:var(--ink-2);text-align:right}.rankbreak{padding:8px 6px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
   .atlaserr{border:1px solid var(--line-2);border-left:3px solid var(--red);padding:14px 16px;margin:12px 0;font-size:var(--fs-small);line-height:1.5;color:var(--ink-2)}.atlaserr button{display:block;min-height:44px;margin-top:10px;padding:0 14px;border:1px solid var(--green-d);border-radius:7px;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);cursor:pointer}
-  @media(min-width:1000px){.mapgrid{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:24px;align-items:start}.mapgrid #ficha-wrap{position:sticky;top:68px}.ficha{margin:0}}
-  @media(max-width:900px){.storygrid{grid-template-columns:1fr}.storycard{min-height:0}}
-  @media(max-width:720px){.hero{padding-top:18px}.storygrid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(280px,86%);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}.storycard{scroll-snap-align:start}.controls{display:block}.metriccol{margin-top:14px}.metricsel{display:grid;grid-template-columns:1fr 1fr}.metricsel button:nth-child(2){border-right:0}.metricsel button:nth-child(-n+2){border-bottom:1px solid var(--line-2)}.searchcol{min-width:0}.stlabel{font-size:26px;stroke-width:4px;font-weight:650}.legend-bins{display:flex;overflow-x:auto;padding-bottom:3px}.legend-bin{min-width:104px}.rankhead{align-items:flex-start}.rankname{font-size:13px}.rankrow{grid-template-columns:34px minmax(0,1fr) auto}.rankval{font-size:11px}}
+  @media(max-width:720px){.hero{padding-top:18px}.searchcol{min-width:0}.fhead{display:block}.factions{margin-top:12px;justify-content:space-between}.fmeasure{flex:1}.fmeasure select{width:100%;min-width:0}.fanswer{display:block}.fprimary{border-right:0;border-bottom:1px solid var(--line)}.fm-v{font-size:31px}.fclose{display:block}.drillbtn{width:100%;margin-top:9px}.stlabel{font-size:26px;stroke-width:4px;font-weight:650}.rankhead{align-items:flex-start}.rankname{font-size:13px}.rankrow{grid-template-columns:34px minmax(0,1fr) auto}.rankval{font-size:11px}}
 </style>
 <div class="wrap">
   <section class="hero">
     <span class="eyebrow">Atlas · 32 states</span>
-    <h1>Mexico, state by state</h1>
-    <p class="dek">Compare Mexico's states. See what each ranking leaves out.</p>
-
-    <section class="storyblock" aria-labelledby="story-title">
-      <div class="storyhead">
-        <h2 id="story-title">Three useful comparisons</h2>
-      </div>
-      <div class="storygrid" id="context-stories"></div>
-    </section>
+    <h1>Compare a Mexican state</h1>
+    <p class="dek">Choose a state to see how it compares with Mexico—and what the headline number may hide.</p>
 
     <div class="controls">
       <div class="searchcol">
-        <label class="control-label" for="q">Find a place</label>
+        <label class="control-label" for="q">Choose a state</label>
         <div class="searchbox">
           <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <input id="q" type="text" inputmode="search" placeholder="State or municipality…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="sugg" aria-expanded="false">
+          <input id="q" type="text" inputmode="search" placeholder="Start typing a state…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="sugg" aria-expanded="false">
           <div class="sugg" id="sugg" role="listbox" hidden></div>
         </div>
       </div>
-      <div class="metriccol">
-        <span class="control-label">Color states by</span>
-        <div class="metricsel" id="metricsel" role="group" aria-label="Map metric">
-          <button type="button" data-m="gdppc" class="on" aria-pressed="true">GDP / person</button>
-          <button type="button" data-m="gdp" aria-pressed="false">Total GDP</button>
-          <button type="button" data-m="pop" aria-pressed="false">Population</button>
-          <button type="button" data-m="pov" aria-pressed="false">Poverty</button>
-          <button type="button" data-m="inf" aria-pressed="false">Informality</button>
-          <button type="button" data-m="unemp" aria-pressed="false">Unemployment</button>
-        </div>
-      </div>
     </div>
-    <div class="metricmeta" id="metricmeta"></div>
   </section>
 
   <div class="crumb" id="crumb" hidden></div>
   <div class="statesum" id="statesum" aria-live="polite" tabindex="-1" hidden></div>
+  <section id="ficha-wrap" aria-live="polite" hidden></section>
 
-  <div class="mapgrid">
-    <div class="mapcol">
-      <div class="mapstage">
-        <svg id="map" viewBox="0 0 800 560" role="img" aria-labelledby="map-title map-desc"></svg>
-        <div class="zoomctl" id="zoomctl">
-          <button class="zbtn zsq" id="zin" type="button" aria-label="Zoom in">+</button>
-          <button class="zbtn zsq" id="zout" type="button" aria-label="Zoom out">&minus;</button>
-        </div>
+  <div class="mapcol">
+    <div class="mapstage">
+      <svg id="map" viewBox="0 0 800 560" role="img" aria-labelledby="map-title map-desc"></svg>
+      <div class="zoomctl" id="zoomctl">
+        <button class="zbtn zsq" id="zin" type="button" aria-label="Zoom in">+</button>
+        <button class="zbtn zsq" id="zout" type="button" aria-label="Zoom out">&minus;</button>
       </div>
-      <div class="legend" id="legend"></div>
-      <div class="sourcestrip" id="source-strip"></div>
     </div>
-    <section id="ficha-wrap" aria-live="polite" hidden></section>
+    <div class="legend" id="legend"></div>
+    <div class="sourcestrip" id="source-strip"></div>
   </div>
 
-  <section class="ranksec" aria-labelledby="rank-title">
-    <div class="rankhead">
-      <div><h2 id="rank-title">All 32 states</h2><div class="ranknote" id="rank-note"></div></div>
-      <button class="ranktoggle" id="rank-toggle" type="button">Show all 32</button>
+  <details class="ranksec">
+    <summary class="ranksummary"><span id="rank-title">GDP per person by state</span><span>View ranking</span></summary>
+    <div class="rankbody">
+      <div class="rankhead">
+        <div class="ranknote" id="rank-note"></div>
+        <button class="ranktoggle" id="rank-toggle" type="button">Show all 32</button>
+      </div>
+      <div class="ranklist" id="rank-list"></div>
     </div>
-    <div class="ranklist" id="rank-list"></div>
-  </section>
+  </details>
 
 </div>
 
 <div class="maptip" id="maptip"></div>
-<div class="miniback" id="miniback"><span class="mb-n" id="mb-name"></span><button class="mb-a" id="mb-act" type="button">See profile ↑</button></div>
 
-<script src="/design/atlas.js?v=20260804-compact" defer></script>
+<script src="/design/atlas.js?v=20260804-state-first" defer></script>
 {% endraw %}

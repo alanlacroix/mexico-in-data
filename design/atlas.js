@@ -172,34 +172,20 @@ function activeSource() {
 }
 
 function setMetricControls(municipalMode = false) {
-  $('#metricsel').querySelectorAll('button').forEach((button) => {
-    const active = municipalMode ? button.dataset.m === 'pov' : button.dataset.m === METRIC;
-    button.classList.toggle('on', active);
-    button.setAttribute('aria-pressed', String(active));
-    button.disabled = municipalMode;
-  });
-  if (municipalMode) {
-    $('#metricmeta').textContent = 'Municipal poverty · 2020 · latest official municipal release';
-  } else {
-    const metric = METRICS[METRIC];
-    const source = activeSource();
-    $('#metricmeta').textContent = METRIC === 'gdppc'
-      ? `${metric.label} · 2024 · derived output per resident, not income or wealth`
-      : `${metric.label} · ${source.period} · ${source.unit}`;
-  }
+  const select = $('#metric-select');
+  if (!select) return;
+  select.value = municipalMode ? 'pov' : METRIC;
+  select.disabled = municipalMode;
 }
 
 function renderLegend(values, breaks, municipalMode = false) {
   const metric = municipalMode ? METRICS.pov : METRICS[METRIC];
   const finite = values.filter(Number.isFinite).sort((a, b) => a - b);
   const minimum = finite[0], maximum = finite[finite.length - 1];
-  const ranges = metric.ramp.map((color, index) => {
-    const low = index === 0 ? minimum : breaks[index - 1];
-    const high = index === metric.ramp.length - 1 ? maximum : breaks[index];
-    return `<span class="legend-bin"><i style="background:${color}"></i><b>${metric.fmt(low)}–${metric.fmt(high)}</b></span>`;
-  }).join('');
-  const scope = municipalMode ? `quantiles within ${ST[CURSTATE].name}` : 'quantiles across 32 states';
-  $('#legend').innerHTML = `<div class="lt">${metric.label} · darker = ${metric.direction} · ${scope}</div><div class="legend-bins">${ranges}</div><span class="nd"><i></i>No data</span>`;
+  const swatches = metric.ramp.map((color) => `<i style="background:${color}"></i>`).join('');
+  const scope = municipalMode ? `five equal-size groups within ${ST[CURSTATE].name}` : 'five equal-size groups of states';
+  const missing = values.some((value) => !Number.isFinite(value)) ? ' · gray = no data' : '';
+  $('#legend').innerHTML = `<div class="lt">${metric.label}</div><div class="legend-scale"><b>${metric.fmt(minimum)}</b><span class="legend-swatches">${swatches}</span><b>${metric.fmt(maximum)}</b></div><div class="legend-note">Darker = ${metric.direction} · ${scope}${missing}</div>`;
 }
 
 function renderSourceStrip(municipalMode = false) {
@@ -269,11 +255,11 @@ function wireStateMap() {
   layer.addEventListener('pointerleave', () => { tip.style.opacity = 0; });
   layer.addEventListener('click', (event) => {
     const path = event.target.closest('path[data-code]');
-    if (path) selectState(path.dataset.code);
+    if (path) selectState(path.dataset.code, { scroll: innerWidth < 1000 });
   });
   layer.addEventListener('keydown', (event) => {
     const path = event.target.closest('path[data-code]');
-    if (path && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); selectState(path.dataset.code); }
+    if (path && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); selectState(path.dataset.code, { scroll: innerWidth < 1000 }); }
   });
 }
 
@@ -283,12 +269,9 @@ function markState(code) {
 
 function renderCrumb() {
   const crumb = $('#crumb');
-  if (LEVEL === 'states' && !SELSTATE) {
+  if (LEVEL === 'states') {
     crumb.hidden = true;
     crumb.innerHTML = '';
-  } else if (LEVEL === 'states') {
-    crumb.hidden = false;
-    crumb.innerHTML = `<button class="bc" type="button" data-back="all">← All states</button><span class="sep">/</span><span class="bc plain">${ST[SELSTATE].name}</span>`;
   } else {
     crumb.hidden = false;
     const municipality = SEL && REG[SEL] ? `<span class="sep">/</span><span class="bc plain">${REG[SEL].nom}</span>` : '';
@@ -305,16 +288,8 @@ function renderSummary() {
     summary.innerHTML = `<b>Municipal poverty: 2020.</b> State poverty: 2024. Do not compare directly.`;
     return;
   }
-  if (!SELSTATE) {
-    summary.hidden = true;
-    summary.textContent = '';
-    return;
-  }
-  summary.hidden = false;
-  const metric = METRICS[METRIC], value = STVAL[METRIC][SELSTATE];
-  const { rank } = rankAmong(Object.values(STVAL[METRIC]), value);
-  const standing = rankPhrase(rank);
-  $('#statesum').innerHTML = `<b>${ST[SELSTATE].name}: ${metric.fmt(value)}.</b> ${standing.charAt(0).toUpperCase()}${standing.slice(1)}.`;
+  summary.hidden = true;
+  summary.textContent = '';
 }
 
 function ppGap(value, national) {
@@ -336,97 +311,46 @@ function rankPhrase(rank, total = 32) {
   return `${ordinal(total - rank + 1)}-lowest of ${total}`;
 }
 
-function shortRankPhrase(rank, total = 32) {
-  if (rank === 1) return 'highest';
-  if (rank === total) return 'lowest';
-  if (rank <= total / 2) return `${ordinal(rank)}-highest`;
-  return `${ordinal(total - rank + 1)}-lowest`;
-}
-
 function metricRank(code, metricKey) {
   return rankAmong(Object.values(STVAL[metricKey]), STVAL[metricKey][code]).rank;
 }
 
-function clearStorySelection() {
-  $('#context-stories')?.querySelectorAll('.storycard').forEach((card) => {
-    card.classList.remove('on');
-    card.setAttribute('aria-pressed', 'false');
-  });
-}
-
-function renderContextStories() {
-  const wrap = $('#context-stories');
-  if (!wrap) return;
-  const stories = [
-    {
-      key: 'scale', code: '15', metric: 'gdp', kicker: 'State of Mexico',
-      title: `${shortRankPhrase(metricRank('15', 'gdp'))} GDP. ${shortRankPhrase(metricRank('15', 'gdppc'))} GDP per person.`,
-      copy: `${METRICS.pop.fmt(STVAL.pop['15'])} residents change the ranking.`
-    },
-    {
-      key: 'work', code: '20', metric: 'unemp', kicker: 'Oaxaca',
-      title: `${shortRankPhrase(metricRank('20', 'unemp'))} unemployment. ${shortRankPhrase(metricRank('20', 'inf'))} informality.`,
-      copy: 'Low unemployment can coexist with informal work.'
-    },
-    {
-      key: 'oil', code: '04', metric: 'gdppc', kicker: 'Campeche',
-      title: `${shortRankPhrase(metricRank('04', 'gdppc'))} output per person. ${shortRankPhrase(metricRank('04', 'pov'))} poverty.`,
-      copy: 'Output is not resident income.'
-    }
-  ];
-  wrap.innerHTML = stories.map((story) => `<button class="storycard" type="button" data-story="${story.key}" aria-pressed="false"><span class="story-k">${story.kicker}</span><span class="story-t">${story.title}</span><span class="story-c">${story.copy}</span><span class="story-a">Open →</span></button>`).join('');
-  wrap.querySelectorAll('.storycard').forEach((button) => button.addEventListener('click', () => {
-    const story = stories.find((candidate) => candidate.key === button.dataset.story);
-    if (!story) return;
-    if (LEVEL === 'muni') allStates({ history: false });
-    METRIC = story.metric; SHOWALL = false;
-    setMetricControls(false); paintStates();
-    selectState(story.code, { preserveStory: true });
-    clearStorySelection();
-    button.classList.add('on');
-    button.setAttribute('aria-pressed', 'true');
-    const summary = $('#statesum');
-    summary.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' });
-    summary.focus({ preventScroll: true });
-  }));
-}
-
-function metricInsight(code, metricKey) {
-  const state = ST[code];
-  const value = STVAL[metricKey][code], metric = METRICS[metricKey], rank = metricRank(code, metricKey);
-  const gdppcRank = metricRank(code, 'gdppc'), gdpRank = metricRank(code, 'gdp');
-  const povertyRank = metricRank(code, 'pov'), informalityRank = metricRank(code, 'inf'), unemploymentRank = metricRank(code, 'unemp');
-  let context, watch;
+function nationalComparison(code, metricKey) {
+  const value = STVAL[metricKey][code], metric = METRICS[metricKey];
   if (metricKey === 'gdppc') {
-    const oilNote = code === '04' || code === '27'
-      ? 'Oil production can make this measure unusually high here; it is not what the typical resident earns.'
-      : 'This is output per resident, not personal income or wealth.';
-    context = `Mexico is ${METRICS.gdppc.fmt(NAT.gdppc_mxn)}. ${oilNote} Poverty is ${METRICS.pov.fmt(state.poverty)}, ${rankPhrase(povertyRank)}.`;
-    watch = 'At the next annual PIBE release, compare real state output with population; this 2024 current-peso figure can also rise with prices.';
-  } else if (metricKey === 'gdp') {
-    const share = state.gdp_mxn_m / NAT.gdp_mxn_m * 100;
-    const gap = Math.abs(gdpRank - gdppcRank);
-    context = `${share.toFixed(1)}% of Mexico's output. Output per person ranks ${rankPhrase(gdppcRank)}${gap >= 6 ? '; a materially different picture once population enters the comparison' : ', close to its total-output rank'}.`;
-    watch = 'At the next annual PIBE release, check real growth, not only the total measured in current pesos.';
-  } else if (metricKey === 'pop') {
-    const share = state.pop / NAT.population * 100;
-    context = `${share.toFixed(1)}% of Mexico's population. Total GDP ranks ${rankPhrase(gdpRank)} and output per person ranks ${rankPhrase(gdppcRank)}.`;
-    watch = 'When CONAPO updates its projection, check whether output and formal employment have kept pace with population.';
-  } else if (metricKey === 'pov') {
-    context = `${ppGap(state.poverty, NAT.poverty)}. Informal employment is ${METRICS.inf.fmt(state.informality)}, ${rankPhrase(informalityRank)}.`;
-    watch = 'At the next state poverty release, compare the statewide rate with the latest municipal spread; they currently refer to 2024 and 2020.';
-  } else if (metricKey === 'inf') {
-    context = `${ppGap(state.informality, NAT.informality)}. Unemployment is ${METRICS.unemp.fmt(state.unemployment)}, ${rankPhrase(unemploymentRank)}. Low unemployment can coexist with informal work.`;
-    watch = 'In the next quarterly ENOE release, check whether informality falls without unemployment rising.';
-  } else {
-    context = `Informal employment is ${METRICS.inf.fmt(state.informality)}, ${rankPhrase(informalityRank)}. A low unemployment rate does not, by itself, mean work is formal or well paid.`;
-    watch = 'In the next quarterly ENOE release, read unemployment and informality together.';
+    const difference = value - NAT.gdppc_mxn;
+    return `Mexico: ${metric.fmt(NAT.gdppc_mxn)} · ${metric.fmt(Math.abs(difference))} ${difference >= 0 ? 'above' : 'below'} Mexico.`;
   }
-  return `<div class="fstand"><div class="fstand-label">The state signature</div><div><b>${metric.label}</b> is ${metric.fmt(value)}, ${rankPhrase(rank)}. ${context}</div><div class="fwatch"><b>Next check:</b> ${watch}</div></div>`;
+  if (metricKey === 'gdp') return `Mexico: ${fmtGDP(NAT.gdp_mxn_m)} · this state produces ${(value / NAT.gdp_mxn_m * 100).toFixed(1)}% of the total.`;
+  if (metricKey === 'pop') return `Mexico: ${METRICS.pop.fmt(NAT.population)} · ${(value / NAT.population * 100).toFixed(1)}% lives in this state.`;
+  const national = NAT[metric.field === 'poverty' ? 'poverty' : metric.field === 'informality' ? 'informality' : 'unemployment'];
+  const difference = value - national;
+  if (Math.abs(difference) < .05) return `Matches Mexico at ${metric.fmt(national)}.`;
+  return `Mexico: ${metric.fmt(national)} · this state is ${Math.abs(difference).toFixed(1)} points ${difference > 0 ? 'above' : 'below'}.`;
 }
 
-function profileRow({ label, stamp, value, context, source, primary = false }) {
-  return `<div class="fmetric${primary ? ' primary' : ''}"><div class="fm-l">${label} · ${stamp}</div><div class="fm-v">${value}</div><div class="fm-verdict">${context}</div><div class="fm-src">${source}</div></div>`;
+function metricContext(code, metricKey) {
+  const state = ST[code];
+  const ranks = Object.fromEntries(Object.keys(METRICS).map((key) => [key, metricRank(code, key)]));
+  if (metricKey === 'gdppc') {
+    const caveat = code === '04' || code === '27'
+      ? 'Oil output can push this measure up; it is not personal income.'
+      : 'Output per person is not personal income.';
+    return `<div class="fcontext"><div class="fcontext-label">What it may hide</div><b>Poverty is ${METRICS.pov.fmt(state.poverty)}, ${rankPhrase(ranks.pov)}.</b> ${caveat}</div>`;
+  }
+  if (metricKey === 'gdp') return `<div class="fcontext"><div class="fcontext-label">What it may hide</div><b>GDP per person is ${METRICS.gdppc.fmt(state.gdppc_mxn)}, ${rankPhrase(ranks.gdppc)}.</b> A large economy may simply have more people.</div>`;
+  if (metricKey === 'pop') return `<div class="fcontext"><div class="fcontext-label">What it may hide</div><b>GDP per person is ${METRICS.gdppc.fmt(state.gdppc_mxn)}, ${rankPhrase(ranks.gdppc)}.</b> Population shows scale, not prosperity.</div>`;
+  if (metricKey === 'pov') return `<div class="fcontext"><div class="fcontext-label">What it may hide</div><b>Informal employment is ${METRICS.inf.fmt(state.informality)}, ${rankPhrase(ranks.inf)}.</b> This 2024 state average can hide large local differences; municipal poverty is from 2020.</div>`;
+  if (metricKey === 'inf') return `<div class="fcontext"><div class="fcontext-label">What it may hide</div><b>Unemployment is ${METRICS.unemp.fmt(state.unemployment)}, ${rankPhrase(ranks.unemp)}.</b> Low unemployment can coexist with informal work.</div>`;
+  return `<div class="fcontext"><div class="fcontext-label">What it may hide</div><b>Informal employment is ${METRICS.inf.fmt(state.informality)}, ${rankPhrase(ranks.inf)}.</b> Low unemployment does not mean work is formal or well paid.</div>`;
+}
+
+function metricOptions(selected) {
+  return Object.entries(METRICS).map(([key, metric]) => `<option value="${key}"${key === selected ? ' selected' : ''}>${metric.label}</option>`).join('');
+}
+
+function profileRow({ label, stamp, value, context, source }) {
+  return `<div class="fmetric"><div class="fm-l">${label} · ${stamp}</div><div class="fm-v">${value}</div><div class="fm-verdict">${context} ${source}</div></div>`;
 }
 
 function renderStateProfile(code, municipalMode = false) {
@@ -459,23 +383,31 @@ function renderStateProfile(code, municipalMode = false) {
     },
     unemp: {
       label: 'Unemployment', stamp: sources.unemployment.period, value: METRICS.unemp.fmt(state.unemployment),
-      context: `${rankPhrase(ranks.unemp)} by rate. Read alongside informality, which is ${METRICS.inf.fmt(state.informality)}.`, source: sourceLink(sources.unemployment)
+      context: `${rankPhrase(ranks.unemp)} by rate. ${nationalComparison(code, 'unemp')}`, source: sourceLink(sources.unemployment)
     }
   };
   const order = ['gdppc', 'gdp', 'pop', 'pov', 'inf', 'unemp'];
-  const primaryRow = profileRow({ ...specs[primaryKey], primary: true });
   const secondaryRows = order.filter((key) => key !== primaryKey).map((key) => profileRow(specs[key])).join('');
   const municipalityCount = (MBY[code] || []).length;
   const drillLabel = municipalityCount ? `See ${municipalityCount} municipalities →` : 'See municipalities →';
   const footer = municipalMode
-    ? `Select a municipality on the map or in the list. The municipal layer shows poverty only.`
-    : `Municipal poverty is available one level deeper.<button class="drillbtn" id="drill" type="button">${drillLabel}</button>`;
+    ? `Select a municipality below. The municipal layer shows poverty only.`
+    : `Want local detail?<button class="drillbtn" id="drill" type="button">${drillLabel}</button>`;
+  const metric = METRICS[primaryKey];
+  const source = specs[primaryKey].source;
+  const period = specs[primaryKey].stamp;
+  const rank = rankPhrase(ranks[primaryKey]);
+  const measure = municipalMode ? '' : `<label class="fmeasure" for="metric-select">Change measure<select id="metric-select">${metricOptions(primaryKey)}</select></label>`;
   wrap.hidden = false;
   wrap.className = 'ficha';
-  wrap.innerHTML = `<div class="fhead"><button class="fh-x" id="fx" type="button">Clear</button><div class="fh-name">${state.name}</div><div class="fh-ent">State brief</div><div class="fh-pob">${enNum(state.pop)} people · ${sourceLink(sources.population, 'CONAPO 2024 mid-year projection')}</div></div>${metricInsight(code, primaryKey)}${primaryRow}<details class="fmore"><summary>See the other five measures</summary>${secondaryRows}</details><div class="fclose">${footer}</div>`;
+  wrap.innerHTML = `<div class="fhead"><div><div class="fh-name">${state.name}</div><div class="fh-ent">State comparison</div><div class="fh-pob">${enNum(state.pop)} people</div></div><div class="factions">${measure}<button class="fh-x" id="fx" type="button">Clear</button></div></div><div class="fanswer"><div class="fprimary"><div class="fm-l">${metric.label} · ${period}</div><div class="fm-v">${metric.fmt(STVAL[primaryKey][code])}</div><div class="fm-compare"><b>${rank.charAt(0).toUpperCase()}${rank.slice(1)}.</b> ${nationalComparison(code, primaryKey)}</div><div class="fm-src">Source: ${source}</div></div>${metricContext(code, primaryKey)}</div><details class="fmore"><summary>Other measures</summary>${secondaryRows}</details><div class="fclose">${footer}</div>`;
   $('#fx').addEventListener('click', () => allStates());
   $('#drill')?.addEventListener('click', () => enterMunicipalities(code));
-  updateMini();
+  $('#metric-select')?.addEventListener('change', (event) => {
+    if (LEVEL === 'muni' || !METRICS[event.target.value]) return;
+    METRIC = event.target.value; SHOWALL = false;
+    paintStates(); renderSummary(); renderStateProfile(code); renderRankings();
+  });
 }
 
 function renderMunicipalityProfile(id) {
@@ -507,28 +439,15 @@ function renderMunicipalityProfile(id) {
   });
   wrap.hidden = false;
   wrap.className = 'ficha';
-  wrap.innerHTML = `<div class="fhead"><button class="fh-x" id="fx" type="button">Clear</button><div class="fh-name">${info.nom}</div><div class="fh-ent">${info.ent}</div><div class="fh-pob">${info.pob ? `${enNum(info.pob)} people · ` : ''}INEGI Census 2020</div></div>${rows}<div class="fclose">Municipal poverty is 2020. The state-level figures use their own listed periods.</div>`;
+  wrap.innerHTML = `<div class="fhead"><div><div class="fh-name">${info.nom}</div><div class="fh-ent">${info.ent}</div><div class="fh-pob">${info.pob ? `${enNum(info.pob)} people · ` : ''}INEGI Census 2020</div></div><div class="factions"><button class="fh-x" id="fx" type="button">Clear</button></div></div>${rows}<div class="fclose">Municipal poverty is 2020. The state-level figures use their own listed periods.</div>`;
   $('#fx').addEventListener('click', () => { SEL = null; markMunicipality(null); renderStateProfile(CURSTATE, true); renderCrumb(); renderRankings(); });
   markMunicipality(id);
   history.replaceState(null, '', `#m/${id}`);
-  renderCrumb(); renderRankings(); updateMini();
+  renderCrumb(); renderRankings();
 }
 
-function renderNationalProfile() {
-  const sources = ATLAS.meta.sources, wrap = $('#ficha-wrap');
-  const rows = [
-    profileRow({ label: 'GDP per person', stamp: '2024 · derived', value: METRICS.gdppc.fmt(NAT.gdppc_mxn), context: 'Nominal output divided by the 2024 mid-year population.', source: `${sourceLink(sources.gdp, 'INEGI PIBE')} ÷ ${sourceLink(sources.population, 'CONAPO population')}` }),
-    profileRow({ label: 'Total GDP', stamp: sources.gdp.period, value: fmtGDP(NAT.gdp_mxn_m), context: 'Current Mexican pesos.', source: sourceLink(sources.gdp) }),
-    profileRow({ label: 'Poverty', stamp: sources.poverty.period, value: METRICS.pov.fmt(NAT.poverty), context: 'Share of people in multidimensional poverty.', source: sourceLink(sources.poverty) }),
-    profileRow({ label: 'Informal employment', stamp: sources.informality.period, value: METRICS.inf.fmt(NAT.informality), context: 'Share of employed people in all forms of informal employment, not only the informal sector.', source: sourceLink(sources.informality) })
-  ].join('');
-  wrap.hidden = false; wrap.className = 'ficha';
-  wrap.innerHTML = `<div class="fhead"><div class="fh-name">Mexico</div><div class="fh-ent">National reference</div><div class="fh-pob">The latest period differs by source</div></div>${rows}<div class="fclose">Pick a state to compare it with these national figures.</div>`;
-}
-
-function selectState(code, { scroll = false, preserveStory = false } = {}) {
+function selectState(code, { scroll = false } = {}) {
   if (!ST[code]) return;
-  if (!preserveStory) clearStorySelection();
   if (LEVEL === 'muni') allStates({ history: false });
   SELSTATE = code; SEL = null; SHOWALL = false;
   markState(code); renderCrumb(); renderSummary(); renderStateProfile(code); renderRankings();
@@ -554,6 +473,7 @@ async function enterMunicipalities(code) {
       drill.disabled = false;
       drill.textContent = 'Try loading municipalities again';
     }
+    $('#statesum').hidden = false;
     $('#statesum').innerHTML = '<b>Municipal data could not load.</b> The state Atlas is still available.';
     $('#map').setAttribute('aria-busy', 'false');
     console.error('Municipal Atlas could not load', error);
@@ -616,12 +536,11 @@ function markMunicipality(id) {
 
 function allStates({ history = true } = {}) {
   LEVEL = 'states'; CURSTATE = null; SELSTATE = null; SEL = null; SHOWALL = false;
-  clearStorySelection();
   fitViewBox(0, 0, 800, 560); setMetricControls(false); paintStates(); renderCrumb(); renderSummary(); renderRankings();
   $('#maptip').style.opacity = 0; $('#q').value = '';
-  if (innerWidth >= 1000) renderNationalProfile(); else $('#ficha-wrap').hidden = true;
+  $('#ficha-wrap').hidden = true;
+  $('#ficha-wrap').innerHTML = '';
   if (history) history.replaceState(null, '', location.pathname);
-  updateMini();
 }
 
 function rankingRows() {
@@ -675,7 +594,6 @@ function renderRankings() {
 function wireSearch() {
   const input = $('#q'), suggestions = $('#sugg');
   const stateIndex = Object.entries(ST).map(([id, state]) => ({ id, type: 'state', name: state.name, sub: 'State', key: norm(state.name) }));
-  let municipalityIndex = [];
   let cursor = -1, current = [];
   const close = () => { suggestions.hidden = true; input.setAttribute('aria-expanded', 'false'); };
   const paint = () => {
@@ -686,35 +604,19 @@ function wireSearch() {
   const choose = (result) => {
     if (!result) return;
     input.value = result.name; close();
-    if (result.type === 'state') selectState(result.id, { scroll: innerWidth < 1000 });
-    else chooseMunicipality(result.id, { scroll: innerWidth < 1000 });
+    selectState(result.id, { scroll: innerWidth < 1000 });
   };
-  const search = (query) => [...stateIndex, ...municipalityIndex].filter((result) => result.key.includes(query)).sort((a, b) => {
+  const search = (query) => stateIndex.filter((result) => result.key.includes(query)).sort((a, b) => {
     const start = a.key.indexOf(query) - b.key.indexOf(query);
     if (start) return start;
-    if (a.type !== b.type) return a.type === 'state' ? -1 : 1;
     return a.name.localeCompare(b.name);
   }).slice(0, 9);
-  const ensureMunicipalityIndex = async () => {
-    if (municipalityIndex.length) return;
-    await loadRegistry();
-    municipalityIndex = Object.entries(REG).map(([id, municipality]) => ({ id, type: 'muni', name: municipality.nom, sub: municipality.ent, key: norm(municipality.nom) }));
-  };
   const update = () => {
     const query = norm(input.value.trim());
     if (query.length < 2) { current = []; close(); return; }
     current = search(query);
     cursor = -1; paint();
-    if (!municipalityIndex.length) {
-      ensureMunicipalityIndex().then(() => {
-        if (norm(input.value.trim()) === query) {
-          current = search(query);
-          paint();
-        }
-      }).catch((error) => console.error('Municipality search could not load', error));
-    }
   };
-  input.addEventListener('focus', () => ensureMunicipalityIndex().catch((error) => console.error('Municipality search could not load', error)), { once: true });
   input.addEventListener('input', update);
   input.addEventListener('keydown', (event) => {
     if (suggestions.hidden) return;
@@ -725,19 +627,9 @@ function wireSearch() {
   });
   suggestions.addEventListener('click', (event) => {
     const button = event.target.closest('[data-id]');
-    if (button) choose(current.find((result) => result.id === button.dataset.id && result.type === button.dataset.type));
+    if (button) choose(current.find((result) => result.id === button.dataset.id));
   });
   document.addEventListener('click', (event) => { if (!event.target.closest('.searchbox')) close(); });
-}
-
-function wireMetrics() {
-  $('#metricsel').querySelectorAll('button').forEach((button) => button.addEventListener('click', () => {
-    if (LEVEL === 'muni') return;
-    clearStorySelection();
-    METRIC = button.dataset.m; SHOWALL = false; setMetricControls(false); paintStates();
-    if (SELSTATE) renderStateProfile(SELSTATE); else if (innerWidth >= 1000) renderNationalProfile();
-    renderSummary(); renderRankings();
-  }));
 }
 
 let BASE = { x: 0, y: 0, w: 800, h: 560 }, ZOOM = 1, CENTER_X = 400, CENTER_Y = 280, POINTER_X = 400, POINTER_Y = 280;
@@ -773,21 +665,6 @@ function wireZoom() {
   });
 }
 
-function updateMini() {
-  const mini = $('#miniback');
-  if (innerWidth >= 1000 || $('#ficha-wrap').hidden || (!SELSTATE && !SEL)) { mini.classList.remove('show'); return; }
-  $('#mb-name').textContent = SEL && REG[SEL] ? REG[SEL].nom : ST[SELSTATE]?.name || '';
-}
-function wireMini() {
-  const mini = $('#miniback');
-  const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
-    const shouldShow = innerWidth < 1000 && !entry.isIntersecting && !$('#ficha-wrap').hidden && Boolean(SELSTATE || SEL);
-    mini.classList.toggle('show', shouldShow); updateMini();
-  }), { threshold: 0 });
-  observer.observe($('#ficha-wrap'));
-  $('#mb-act').addEventListener('click', () => $('#ficha-wrap').scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' }));
-}
-
 async function boot() {
   $('#map')?.setAttribute('aria-busy', 'true');
   const [states, atlas] = await Promise.all([
@@ -806,7 +683,7 @@ async function boot() {
     const code = String(feature.properties.cve).padStart(2, '0');
     return { code, name: ST[code]?.name || feature.properties.name, d: ringsPath(polygons), bounds: boundsOf(polygons) };
   });
-  renderContextStories(); wireSearch(); wireMetrics(); wireZoom(); wireMini();
+  wireSearch(); wireZoom();
   allStates({ history: false });
   $('#map')?.setAttribute('aria-busy', 'false');
   const initialHash = location.hash;

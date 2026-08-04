@@ -99,7 +99,8 @@ const result = {
       gdppc_mxn: Math.round(gdpOfficialTotal * 1_000_000 / populationTotal),
       population: populationTotal,
       poverty: 29.5585,
-      informality: 54.8
+      informality: 54.8,
+      unemployment: 2.6
     }
   },
   states

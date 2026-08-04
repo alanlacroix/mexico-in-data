@@ -35,7 +35,7 @@ const PAGES = {
   '/us-mexico': { revised: '2026-08-03', source: 'topic-pages.njk' },
   '/deals': { revised: '2026-08-03', source: 'deals.njk' },
   '/energy': { revised: '2026-08-03', source: 'energy.njk' },
-  '/atlas': { revised: '2026-08-03', source: 'atlas.njk' },
+  '/atlas': { revised: '2026-08-04', source: 'atlas.njk' },
   '/sources': { revised: '2026-08-04', source: 'sources.njk' },
   '/about': { revised: '2026-08-03', source: 'about.njk' },
   '/reports/mexico-overview-2026': { revised: '2026-07-15', source: 'reports/mexico-overview-2026.html' },
