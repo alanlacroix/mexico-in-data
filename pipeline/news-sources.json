@@ -1,6 +1,6 @@
 {
  "meta": {
-  "note": "News source registry for The Mexico Brief. All RSS/API, no scrapes. Google News and GDELT are discovery backstops only and are never shown as publishers. Pan-LatAm/global feeds set mx:true and get a Mexico keyword filter; Mexico-native feeds set mx:false and pass through. Original set verified 2026-07-16; waves 1-2 (fintech/deals/insight/security/energy/e-commerce/Mexico-China per docs/strategy/source-gap-research-2026-08.md) verified end-to-end 2026-08-01 — every feed below returned HTTP 200 with parseable items and a fresh pubDate from this machine on that date. Removed same day: animalpolitico (RSS discontinued, 404 on all known paths; replaced by Aristegui as the accountability anchor), techcrunch-mx (feed alive but newest item Jun 2025 — dead tag). El Economista direct feeds stay OUT: real (declared in their own <head>) but their bot wall blocks non-browser TLS fingerprints even with a browser UA; the gnews-eleconomista backstop carries the outlet instead. Added 2026-08-03 after finding the ledger held zero items from the international majors: ft-mexico (a real Mexico-only feed, every item on topic) and nyt-americas (regional, a few Mexico items a day). Reuters has no public feed since 2020 and is reachable only through an aggregator redirect, so it stays out rather than break the click-through-to-source promise. WSJ and Bloomberg global feeds verified working but carried no Mexico items on the day, so they were not worth the noise.",
+  "note": "News source registry for The Mexico Brief. All RSS/API, no scrapes. Google News and GDELT are discovery backstops only and are never shown as publishers. Pan-LatAm/global feeds set mx:true and get a Mexico keyword filter; Mexico-native feeds set mx:false and pass through. Original set verified 2026-07-16; waves 1-2 (fintech/deals/insight/security/energy/e-commerce/Mexico-China per docs/strategy/source-gap-research-2026-08.md) verified end-to-end 2026-08-01 — every feed below returned HTTP 200 with parseable items and a fresh pubDate from this machine on that date. Removed same day: animalpolitico (RSS discontinued, 404 on all known paths; replaced by Aristegui as the accountability anchor), techcrunch-mx (feed alive but newest item Jun 2025 — dead tag). El Economista direct feeds stay OUT: real (declared in their own <head>) but their bot wall blocks non-browser TLS fingerprints even with a browser UA; the gnews-eleconomista backstop carries the outlet instead. Added 2026-08-03 after finding the ledger held zero items from the international majors: ft-mexico (a real Mexico-only feed, every item on topic) and nyt-americas (regional, a few Mexico items a day). Reuters has no public feed since 2020 and is reachable only through an aggregator redirect, so it stays out rather than break the click-through-to-source promise. WSJ and Bloomberg global feeds verified working but carried no Mexico items on the day, so they were not worth the noise. Seven English-language desks added 2026-08-03 to close the same gap: Mexico News Daily, The Economist (The Americas), LA Times, Justice in Mexico, Border Report, Inter-American Dialogue and BBC Latin America. Every one was checked for FRESHNESS, not just HTTP 200: Americas Quarterly was rejected because its feed answers 200 with eleven items whose newest is from October 2019, which is the failure mode a status check cannot see.",
   "beatToTag": {
    "politics": "politics",
    "economy": "economy",
@@ -11,7 +11,25 @@
    "society": "society",
    "security": "security",
    "energy": "energy"
-  }
+  },
+  "rejectedZombieFeeds": {
+   "why": "These answer HTTP 200 with a parseable feed, so a status check calls them healthy, but their newest item is old. Verified 2026-08-03; do not re-add without re-checking the newest item date, not the status code.",
+   "feeds": {
+    "americasquarterly.org/feed/": "newest Oct 2019",
+    "csis.org/rss.xml": "newest Mar 2016",
+    "mexicoviolence.org/blog-feed.xml": "newest Mar 2023",
+    "mexicoinstitute.wordpress.com/feed/": "newest May 2023",
+    "petroquimex": "newest May 2024",
+    "manufactura.mx": "newest May 2021",
+    "mexicotoday": "newest Mar 2024",
+    "noriaresearch": "newest Jul 2025",
+    "latinometrics.substack.com/feed": "newest Oct 2025",
+    "mexicolisto": "newest Sep 2025",
+    "lse latin america blog": "newest Oct 2023",
+    "amexcap.com/feed/": "org PR, ten weeks stale at check"
+   }
+  },
+  "egressRisk": "mexicocomovamos.mx, mexicoevalua.org and dallasfed.org answer 200 from a laptop and 403 to some datacenter ranges. They are wired anyway; if they fail from the runner, health.json will show it as consecutive failures rather than silently returning nothing."
  },
  "sources": [
   {
@@ -475,7 +493,7 @@
    "beat": "economy",
    "tier": "1",
    "lang": "en",
-   "mx": true
+   "mx": false
   },
   {
    "id": "nyt-americas",
@@ -484,7 +502,196 @@
    "beat": "politics",
    "tier": "1",
    "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "mexico-news-daily",
+   "name": "Mexico News Daily",
+   "url": "https://mexiconewsdaily.com/feed/",
+   "beat": "economy",
+   "tier": "2",
+   "lang": "en",
    "mx": false
+  },
+  {
+   "id": "economist-americas",
+   "name": "The Economist — The Americas",
+   "url": "https://www.economist.com/the-americas/rss.xml",
+   "beat": "politics",
+   "tier": "1",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "latimes-world",
+   "name": "Los Angeles Times — World",
+   "url": "https://www.latimes.com/world-nation/rss2.0.xml",
+   "beat": "security",
+   "tier": "1",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "justice-in-mexico",
+   "name": "Justice in Mexico",
+   "url": "https://justiceinmexico.org/feed/",
+   "beat": "security",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "border-report",
+   "name": "Border Report",
+   "url": "https://borderreport.com/feed/",
+   "beat": "us-mexico",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "iad-dialogue",
+   "name": "Inter-American Dialogue",
+   "url": "https://www.thedialogue.org/feed/",
+   "beat": "economy",
+   "tier": "2",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "bbc-latam",
+   "name": "BBC News — Latin America",
+   "url": "https://feeds.bbci.co.uk/news/world/latin_america/rss.xml",
+   "beat": "security",
+   "tier": "1",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "el-economista",
+   "name": "El Economista",
+   "url": "https://www.eleconomista.com.mx/rss/ultimas-noticias",
+   "beat": "economy",
+   "tier": "1",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "boz-larr",
+   "name": "Latin America Risk Report",
+   "url": "https://boz.substack.com/feed",
+   "beat": "politics",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "ioan-grillo",
+   "name": "CrashOut by Ioan Grillo",
+   "url": "https://ioangrillo.substack.com/feed",
+   "beat": "security",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "mexico-como-vamos",
+   "name": "México ¿cómo vamos?",
+   "url": "https://mexicocomovamos.mx/feed/",
+   "beat": "economy",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "mexico-evalua",
+   "name": "México Evalúa",
+   "url": "https://mexicoevalua.org/feed/",
+   "beat": "politics",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "mcci",
+   "name": "Mexicanos Contra la Corrupción",
+   "url": "https://contralacorrupcion.mx/feed/",
+   "beat": "politics",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "nexos",
+   "name": "Nexos",
+   "url": "https://www.nexos.com.mx/feed/",
+   "beat": "politics",
+   "tier": "2",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "csis-mexico-matters",
+   "name": "CSIS — Mexico Matters",
+   "url": "https://feeds.megaphone.fm/mexicomatters",
+   "beat": "us-mexico",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "dallasfed",
+   "name": "Dallas Fed — Research",
+   "url": "https://www.dallasfed.org/rss/updates.xml",
+   "beat": "economy",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "mexiconow",
+   "name": "MEXICONOW",
+   "url": "https://mexico-now.com/feed/",
+   "beat": "economy",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "dpl-news",
+   "name": "DPL News",
+   "url": "https://dplnews.com/feed/",
+   "beat": "companies",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": true
+  },
+  {
+   "id": "gcma",
+   "name": "Grupo Consultor de Mercados Agrícolas",
+   "url": "https://www.gcma.com.mx/feed/",
+   "beat": "economy",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "energia-hoy",
+   "name": "Energía Hoy",
+   "url": "https://energiahoy.com/feed/",
+   "beat": "energy",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "lavca",
+   "name": "LAVCA",
+   "url": "https://www.lavca.org/feed/",
+   "beat": "deals",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": true
   }
  ]
 }
