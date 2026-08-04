@@ -95,18 +95,26 @@ jobs:
             echo "run=true" >> "$GITHUB_OUTPUT"; echo "manual dispatch — model jobs on"
           elif [ "$STAMP" != "$TODAY" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"; echo "first refresh of $TODAY — model jobs on"
-            printf '{"date":"%s"}\n' "$TODAY" > data/model-window.json
           else
             echo "run=false" >> "$GITHUB_OUTPUT"; echo "model window already used today ($STAMP) — skipping model jobs"
           fi
 
       - name: Write the lines the feed cannot compute
+        id: context
         working-directory: pipeline
         if: steps.modelgate.outputs.run == 'true'
         continue-on-error: true   # a missing sentence never fails a refresh; the feed keeps its factual fallback
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node write-context.mjs
+
+      # The window is recorded as used only once the work actually succeeded. Stamping on
+      # the attempt instead would let one transient API error cost a whole day of authored
+      # lines, which is the staleness this rewrite exists to stop. On failure the next
+      # refresh simply tries again, so a bad day costs at most a few more attempts.
+      - name: Record that today's model window was used
+        if: steps.modelgate.outputs.run == 'true' && steps.context.outcome == 'success'
+        run: printf '{"date":"%s"}\n' "$(date -u +%F)" > data/model-window.json
 
       # Deliberately NOT behind modelgate. The gate exists for jobs that regenerate the
       # same content on a daily rhythm, where extra runs buy nothing. These two are
