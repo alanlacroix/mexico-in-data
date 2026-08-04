@@ -1,472 +1,490 @@
 {
-  "meta": {
-    "note": "News source registry for The Mexico Brief. All RSS/API, no scrapes. Google News and GDELT are discovery backstops only and are never shown as publishers. Pan-LatAm/global feeds set mx:true and get a Mexico keyword filter; Mexico-native feeds set mx:false and pass through. Original set verified 2026-07-16; waves 1-2 (fintech/deals/insight/security/energy/e-commerce/Mexico-China per docs/strategy/source-gap-research-2026-08.md) verified end-to-end 2026-08-01 — every feed below returned HTTP 200 with parseable items and a fresh pubDate from this machine on that date. Removed same day: animalpolitico (RSS discontinued, 404 on all known paths; replaced by Aristegui as the accountability anchor), techcrunch-mx (feed alive but newest item Jun 2025 — dead tag). El Economista direct feeds stay OUT: real (declared in their own <head>) but their bot wall blocks non-browser TLS fingerprints even with a browser UA; the gnews-eleconomista backstop carries the outlet instead.",
-    "beatToTag": {
-      "politics": "politics",
-      "economy": "economy",
-      "companies": "markets",
-      "fintech": "markets",
-      "deals": "trade",
-      "us-mexico": "trade",
-      "society": "society",
-      "security": "security",
-      "energy": "energy"
-    }
+ "meta": {
+  "note": "News source registry for The Mexico Brief. All RSS/API, no scrapes. Google News and GDELT are discovery backstops only and are never shown as publishers. Pan-LatAm/global feeds set mx:true and get a Mexico keyword filter; Mexico-native feeds set mx:false and pass through. Original set verified 2026-07-16; waves 1-2 (fintech/deals/insight/security/energy/e-commerce/Mexico-China per docs/strategy/source-gap-research-2026-08.md) verified end-to-end 2026-08-01 — every feed below returned HTTP 200 with parseable items and a fresh pubDate from this machine on that date. Removed same day: animalpolitico (RSS discontinued, 404 on all known paths; replaced by Aristegui as the accountability anchor), techcrunch-mx (feed alive but newest item Jun 2025 — dead tag). El Economista direct feeds stay OUT: real (declared in their own <head>) but their bot wall blocks non-browser TLS fingerprints even with a browser UA; the gnews-eleconomista backstop carries the outlet instead. Added 2026-08-03 after finding the ledger held zero items from the international majors: ft-mexico (a real Mexico-only feed, every item on topic) and nyt-americas (regional, a few Mexico items a day). Reuters has no public feed since 2020 and is reachable only through an aggregator redirect, so it stays out rather than break the click-through-to-source promise. WSJ and Bloomberg global feeds verified working but carried no Mexico items on the day, so they were not worth the noise.",
+  "beatToTag": {
+   "politics": "politics",
+   "economy": "economy",
+   "companies": "markets",
+   "fintech": "markets",
+   "deals": "trade",
+   "us-mexico": "trade",
+   "society": "society",
+   "security": "security",
+   "energy": "energy"
+  }
+ },
+ "sources": [
+  {
+   "id": "elfin-empresas",
+   "name": "El Financiero — Empresas",
+   "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/empresas/?outputType=xml",
+   "beat": "companies",
+   "tier": 2,
+   "lang": "es",
+   "mx": false
   },
-  "sources": [
-    {
-      "id": "elfin-empresas",
-      "name": "El Financiero — Empresas",
-      "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/empresas/?outputType=xml",
-      "beat": "companies",
-      "tier": 2,
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "elfin-economia",
-      "name": "El Financiero — Economía",
-      "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/economia/?outputType=xml",
-      "beat": "economy",
-      "tier": 2,
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "elfin-mercados",
-      "name": "El Financiero — Mercados",
-      "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/mercados/?outputType=xml",
-      "beat": "companies",
-      "tier": 2,
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-eleconomista",
-      "name": "El Economista",
-      "url": "https://news.google.com/rss/search?q=site%3Aeleconomista.com.mx%20(M%C3%A9xico%20OR%20Banxico%20OR%20econom%C3%ADa%20OR%20empresas%20OR%20mercados)&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "economy",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "expansion-empresas",
-      "name": "Expansión — Empresas",
-      "url": "https://expansion.mx/rss/empresas",
-      "beat": "companies",
-      "tier": 2,
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "elpais-mexico",
-      "name": "El País — México",
-      "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/mexico/portada",
-      "beat": "politics",
-      "tier": 2,
-      "lang": "es",
-      "mx": true
-    },
-    {
-      "id": "aristegui-mexico",
-      "name": "Aristegui Noticias",
-      "url": "https://editorial.aristeguinoticias.com/category/mexico/feed/",
-      "beat": "politics",
-      "tier": 2,
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "ciep",
-      "name": "CIEP",
-      "url": "https://ciep.mx/feed/",
-      "beat": "economy",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "ceey",
-      "name": "CEEY",
-      "url": "https://ceey.org.mx/feed/",
-      "beat": "society",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "iupana",
-      "name": "iupana",
-      "url": "https://iupana.com/feed/",
-      "beat": "fintech",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": true
-    },
-    {
-      "id": "elceo",
-      "name": "El CEO",
-      "url": "https://elceo.com/feed/",
-      "beat": "fintech",
-      "tier": 2,
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "contxto",
-      "name": "Contxto",
-      "url": "https://contxto.com/en/feed/",
-      "beat": "deals",
-      "tier": "specialist",
-      "lang": "en",
-      "mx": true
-    },
-    {
-      "id": "latamlist",
-      "name": "LatamList",
-      "url": "https://latamlist.com/feed/",
-      "beat": "deals",
-      "tier": "specialist",
-      "lang": "en",
-      "mx": true
-    },
-    {
-      "id": "crunchbase",
-      "name": "Crunchbase News",
-      "url": "https://news.crunchbase.com/feed/",
-      "beat": "deals",
-      "tier": 2,
-      "lang": "en",
-      "mx": true
-    },
-    {
-      "id": "guardian-mx",
-      "name": "The Guardian — Mexico",
-      "url": "https://www.theguardian.com/world/mexico/rss",
-      "beat": "politics",
-      "tier": 1,
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "bloomberglinea",
-      "name": "Bloomberg Línea",
-      "url": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml",
-      "beat": "economy",
-      "tier": 2,
-      "lang": "es",
-      "mx": true
-    },
-    {
-      "id": "mexico-business-news",
-      "name": "Mexico Business News",
-      "url": "https://mexicobusiness.news/jsonapi/node/article?page%5Blimit%5D=100&sort=-created",
-      "baseUrl": "https://mexicobusiness.news",
-      "format": "jsonapi",
-      "beat": "companies",
-      "tier": "specialist",
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "ascoa",
-      "name": "AS/COA",
-      "url": "https://www.as-coa.org/rss.xml",
-      "beat": "us-mexico",
-      "tier": "specialist",
-      "lang": "en",
-      "mx": true
-    },
-    {
-      "id": "gnews-usmca",
-      "name": "Google News — trade & tariffs",
-      "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(aranceles%20OR%20USMCA%20OR%20TMEC%20OR%20Trump%20comercio)&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "us-mexico",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-politics",
-      "name": "Google News — politics",
-      "url": "https://news.google.com/rss/search?q=(Sheinbaum%20OR%20Morena%20OR%20%22reforma%20judicial%22)%20M%C3%A9xico&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "politics",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-security",
-      "name": "Google News — security",
-      "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(seguridad%20OR%20homicidios%20OR%20c%C3%A1rtel%20OR%20violencia%20OR%20Harfuch%20OR%20extorsi%C3%B3n)&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "security",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-dof",
-      "name": "Google News — policy & DOF",
-      "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(DOF%20OR%20decreto%20OR%20%22reforma%20constitucional%22%20OR%20Congreso%20OR%20Hacienda)&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "politics",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-wilson-mexico",
-      "name": "Wilson Center — Mexico Institute",
-      "url": "https://news.google.com/rss/search?q=site%3Awilsoncenter.org%20Mexico%20(%22Mexico%20Institute%22%20OR%20USMCA%20OR%20trade%20OR%20migration)&hl=en-US&gl=US&ceid=US:en",
-      "beat": "us-mexico",
-      "tier": "aggregator",
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "gnews-investment",
-      "name": "Google News — investment & nearshoring",
-      "url": "https://news.google.com/rss/search?q=Mexico%20(investment%20OR%20%22private%20credit%22%20OR%20nearshoring%20OR%20%22foreign%20investment%22%20OR%20acquires%20OR%20fund%20OR%20stake%20OR%20IPO)&hl=en-US&gl=US&ceid=US:en",
-      "beat": "economy",
-      "tier": "aggregator",
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "gnews-markets",
-      "name": "Google News — ratings & capital markets",
-      "url": "https://news.google.com/rss/search?q=Mexico%20(Fitch%20OR%20Moody%20OR%20%22credit%20rating%22%20OR%20downgrade%20OR%20Pemex%20bonds%20OR%20Mbono%20OR%20%22sovereign%20debt%22)&hl=en-US&gl=US&ceid=US:en",
-      "beat": "economy",
-      "tier": "aggregator",
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "gnews-ustr",
-      "name": "Google News — USTR & U.S. trade officials",
-      "url": "https://news.google.com/rss/search?q=(%22Trade%20Representative%22%20OR%20USTR%20OR%20%22U.S.%20Treasury%22)%20(Mexico%20OR%20USMCA%20OR%20%22T-MEC%22)&hl=en-US&gl=US&ceid=US:en",
-      "beat": "us-mexico",
-      "tier": "aggregator",
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "fintechexpert",
-      "name": "FintechExpert.mx",
-      "url": "https://www.fintechexpert.mx/feed",
-      "beat": "fintech",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "amvo",
-      "name": "AMVO",
-      "url": "https://blog.amvo.org.mx/rss.xml",
-      "beat": "fintech",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "mexicodecoded",
-      "name": "Mexico Decoded",
-      "url": "https://www.mexicodecoded.com/feed",
-      "beat": "politics",
-      "tier": 1,
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "mxpe",
-      "name": "The Mexico Political Economist",
-      "url": "https://www.mxpe.org/feed",
-      "beat": "politics",
-      "tier": 1,
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "startupslatam",
-      "name": "Startups Latam",
-      "url": "https://startupslatam.com/feed/",
-      "beat": "deals",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": true
-    },
-    {
-      "id": "datoz",
-      "name": "Datoz",
-      "url": "https://www.datoz.com/feed/",
-      "beat": "deals",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "insightcrime-mx",
-      "name": "InSight Crime — Mexico",
-      "url": "https://insightcrime.org/tag/mexico/feed/",
-      "beat": "security",
-      "tier": "specialist",
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "dof-sumario",
-      "name": "Diario Oficial de la Federación",
-      "url": "https://www.diariooficial.gob.mx/sumario.xml",
-      "format": "dof",
-      "charset": "latin1",
-      "beat": "politics",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-payments-watchlist",
-      "name": "Google News — payments watchlist",
-      "url": "https://news.google.com/rss/search?q=(Clip+OR+%22Mercado+Pago%22+OR+Getnet+OR+Kushki+OR+Stori+OR+%22Nu+M%C3%A9xico%22+OR+Klar+OR+Plata+OR+Ual%C3%A1+OR+Openpay+OR+Billpocket+OR+Konfio)+(fintech+OR+pagos+OR+tarjeta)+M%C3%A9xico&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "fintech",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-payments-rails",
-      "name": "Google News — payment rails & regulation",
-      "url": "https://news.google.com/rss/search?q=(SPEI+OR+CoDi+OR+DiMo+OR+%22Ley+Fintech%22+OR+adquirencia+OR+%22cuotas+de+intercambio%22)+(Banxico+OR+CNBV+OR+pagos+OR+fintech)&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "fintech",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-cnbv-actions",
-      "name": "Google News — CNBV licensing & enforcement",
-      "url": "https://news.google.com/rss/search?q=CNBV+(sanciona+OR+revoca+OR+autoriza+OR+multa+OR+suspende)+(ITF+OR+IFPE+OR+fintech+OR+%22instituci%C3%B3n+de+pagos%22)&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "fintech",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-merchant-crime",
-      "name": "Google News — crime against business",
-      "url": "https://news.google.com/rss/search?q=extorsi%C3%B3n+comercio+OR+negocio+OR+%22cobro+de+piso%22+OR+%22robo+de+transporte%22+OR+%22robo+a+cuentahabiente%22&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "security",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "pemex-nacionales",
-      "name": "Pemex — Sala de prensa",
-      "url": "https://www.pemex.com/saladeprensa/boletines_nacionales/_layouts/listfeed.aspx?List=%7b7626F8B4-FCAD-41B1-AEE3-2B66E60B61E0%7d",
-      "beat": "energy",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "energiaadebate",
-      "name": "Energía a Debate",
-      "url": "https://www.energiaadebate.com/feed/",
-      "beat": "energy",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "t21",
-      "name": "T21",
-      "url": "https://t21.com.mx/feed/",
-      "beat": "energy",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "inmobiliare",
-      "name": "Inmobiliare",
-      "url": "https://www.inmobiliare.com/feed/",
-      "beat": "energy",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "retailers-mx",
-      "name": "Retailers.mx",
-      "url": "https://retailers.mx/feed/",
-      "beat": "fintech",
-      "tier": "specialist",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "m4ec-mx",
-      "name": "Marketing4eCommerce México",
-      "url": "https://marketing4ecommerce.mx/feed/",
-      "beat": "fintech",
-      "tier": 2,
-      "lang": "es",
-      "mx": true
-    },
-    {
-      "id": "mexcham",
-      "name": "MEXCHAM",
-      "url": "https://www.mexcham.org/feed/",
-      "beat": "us-mexico",
-      "tier": "specialist",
-      "lang": "en",
-      "mx": false
-    },
-    {
-      "id": "dialogue-earth-es",
-      "name": "Dialogue Earth",
-      "url": "https://dialogue.earth/es/feed/",
-      "beat": "us-mexico",
-      "tier": 2,
-      "lang": "es",
-      "mx": true
-    },
-    {
-      "id": "gnews-energy",
-      "name": "Google News — energy",
-      "url": "https://news.google.com/rss/search?q=Pemex+OR+CFE+OR+%22red+el%C3%A9ctrica%22+OR+apag%C3%B3n+OR+%22planta+solar%22+OR+%22parque+e%C3%B3lico%22+OR+%22energ%C3%ADa+renovable%22+OR+%22centro+de+datos%22+-jubilados+-pensiones+-%22aire+acondicionado%22&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "energy",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-infra",
-      "name": "Google News — infrastructure & nearshoring",
-      "url": "https://news.google.com/rss/search?q=%22Tren+Maya%22+OR+%22Corredor+Interoce%C3%A1nico%22+OR+puertos+OR+%22parque+industrial%22+OR+%22parques+industriales%22+OR+(sequ%C3%ADa+M%C3%A9xico+agua)+OR+apagones+OR+nearshoring&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "energy",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-ecommerce",
-      "name": "Google News — e-commerce",
-      "url": "https://news.google.com/rss/search?q=%28%22Mercado%20Libre%22%20OR%20%22Amazon%20M%C3%A9xico%22%20OR%20Shein%20OR%20Temu%20OR%20%22comercio%20electr%C3%B3nico%22%20OR%20AMVO%20OR%20Rappi%20OR%20%22%C3%BAltima%20milla%22%29%20M%C3%A9xico%20-cup%C3%B3n%20-descuento%20-oferta%20-rebaja&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "fintech",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    },
-    {
-      "id": "gnews-mexico-china",
-      "name": "Google News — Mexico-China",
-      "url": "https://news.google.com/rss/search?q=%28%22inversi%C3%B3n%20china%22%20OR%20%22empresas%20chinas%22%20OR%20%22planta%20de%20BYD%22%20OR%20%22f%C3%A1brica%20de%20BYD%22%20OR%20transbordo%20OR%20triangulaci%C3%B3n%20OR%20%22aranceles%20a%20China%22%20OR%20%22productos%20chinos%22%20OR%20%22banco%20chino%22%29%20M%C3%A9xico&hl=es-419&gl=MX&ceid=MX:es",
-      "beat": "us-mexico",
-      "tier": "aggregator",
-      "lang": "es",
-      "mx": false
-    }
-  ]
+  {
+   "id": "elfin-economia",
+   "name": "El Financiero — Economía",
+   "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/economia/?outputType=xml",
+   "beat": "economy",
+   "tier": 2,
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "elfin-mercados",
+   "name": "El Financiero — Mercados",
+   "url": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/mercados/?outputType=xml",
+   "beat": "companies",
+   "tier": 2,
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-eleconomista",
+   "name": "El Economista",
+   "url": "https://news.google.com/rss/search?q=site%3Aeleconomista.com.mx%20(M%C3%A9xico%20OR%20Banxico%20OR%20econom%C3%ADa%20OR%20empresas%20OR%20mercados)&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "economy",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "expansion-empresas",
+   "name": "Expansión — Empresas",
+   "url": "https://expansion.mx/rss/empresas",
+   "beat": "companies",
+   "tier": 2,
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "elpais-mexico",
+   "name": "El País — México",
+   "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/mexico/portada",
+   "beat": "politics",
+   "tier": 2,
+   "lang": "es",
+   "mx": true
+  },
+  {
+   "id": "aristegui-mexico",
+   "name": "Aristegui Noticias",
+   "url": "https://editorial.aristeguinoticias.com/category/mexico/feed/",
+   "beat": "politics",
+   "tier": 2,
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "ciep",
+   "name": "CIEP",
+   "url": "https://ciep.mx/feed/",
+   "beat": "economy",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "ceey",
+   "name": "CEEY",
+   "url": "https://ceey.org.mx/feed/",
+   "beat": "society",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "iupana",
+   "name": "iupana",
+   "url": "https://iupana.com/feed/",
+   "beat": "fintech",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": true
+  },
+  {
+   "id": "elceo",
+   "name": "El CEO",
+   "url": "https://elceo.com/feed/",
+   "beat": "fintech",
+   "tier": 2,
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "contxto",
+   "name": "Contxto",
+   "url": "https://contxto.com/en/feed/",
+   "beat": "deals",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "latamlist",
+   "name": "LatamList",
+   "url": "https://latamlist.com/feed/",
+   "beat": "deals",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "crunchbase",
+   "name": "Crunchbase News",
+   "url": "https://news.crunchbase.com/feed/",
+   "beat": "deals",
+   "tier": 2,
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "guardian-mx",
+   "name": "The Guardian — Mexico",
+   "url": "https://www.theguardian.com/world/mexico/rss",
+   "beat": "politics",
+   "tier": 1,
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "bloomberglinea",
+   "name": "Bloomberg Línea",
+   "url": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml",
+   "beat": "economy",
+   "tier": 2,
+   "lang": "es",
+   "mx": true
+  },
+  {
+   "id": "mexico-business-news",
+   "name": "Mexico Business News",
+   "url": "https://mexicobusiness.news/jsonapi/node/article?page%5Blimit%5D=100&sort=-created",
+   "baseUrl": "https://mexicobusiness.news",
+   "format": "jsonapi",
+   "beat": "companies",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "ascoa",
+   "name": "AS/COA",
+   "url": "https://www.as-coa.org/rss.xml",
+   "beat": "us-mexico",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "gnews-usmca",
+   "name": "Google News — trade & tariffs",
+   "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(aranceles%20OR%20USMCA%20OR%20TMEC%20OR%20Trump%20comercio)&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "us-mexico",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-politics",
+   "name": "Google News — politics",
+   "url": "https://news.google.com/rss/search?q=(Sheinbaum%20OR%20Morena%20OR%20%22reforma%20judicial%22)%20M%C3%A9xico&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "politics",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-security",
+   "name": "Google News — security",
+   "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(seguridad%20OR%20homicidios%20OR%20c%C3%A1rtel%20OR%20violencia%20OR%20Harfuch%20OR%20extorsi%C3%B3n)&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "security",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-dof",
+   "name": "Google News — policy & DOF",
+   "url": "https://news.google.com/rss/search?q=M%C3%A9xico%20(DOF%20OR%20decreto%20OR%20%22reforma%20constitucional%22%20OR%20Congreso%20OR%20Hacienda)&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "politics",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-wilson-mexico",
+   "name": "Wilson Center — Mexico Institute",
+   "url": "https://news.google.com/rss/search?q=site%3Awilsoncenter.org%20Mexico%20(%22Mexico%20Institute%22%20OR%20USMCA%20OR%20trade%20OR%20migration)&hl=en-US&gl=US&ceid=US:en",
+   "beat": "us-mexico",
+   "tier": "aggregator",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "gnews-investment",
+   "name": "Google News — investment & nearshoring",
+   "url": "https://news.google.com/rss/search?q=Mexico%20(investment%20OR%20%22private%20credit%22%20OR%20nearshoring%20OR%20%22foreign%20investment%22%20OR%20acquires%20OR%20fund%20OR%20stake%20OR%20IPO)&hl=en-US&gl=US&ceid=US:en",
+   "beat": "economy",
+   "tier": "aggregator",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "gnews-markets",
+   "name": "Google News — ratings & capital markets",
+   "url": "https://news.google.com/rss/search?q=Mexico%20(Fitch%20OR%20Moody%20OR%20%22credit%20rating%22%20OR%20downgrade%20OR%20Pemex%20bonds%20OR%20Mbono%20OR%20%22sovereign%20debt%22)&hl=en-US&gl=US&ceid=US:en",
+   "beat": "economy",
+   "tier": "aggregator",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "gnews-ustr",
+   "name": "Google News — USTR & U.S. trade officials",
+   "url": "https://news.google.com/rss/search?q=(%22Trade%20Representative%22%20OR%20USTR%20OR%20%22U.S.%20Treasury%22)%20(Mexico%20OR%20USMCA%20OR%20%22T-MEC%22)&hl=en-US&gl=US&ceid=US:en",
+   "beat": "us-mexico",
+   "tier": "aggregator",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "fintechexpert",
+   "name": "FintechExpert.mx",
+   "url": "https://www.fintechexpert.mx/feed",
+   "beat": "fintech",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "amvo",
+   "name": "AMVO",
+   "url": "https://blog.amvo.org.mx/rss.xml",
+   "beat": "fintech",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "mexicodecoded",
+   "name": "Mexico Decoded",
+   "url": "https://www.mexicodecoded.com/feed",
+   "beat": "politics",
+   "tier": 1,
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "mxpe",
+   "name": "The Mexico Political Economist",
+   "url": "https://www.mxpe.org/feed",
+   "beat": "politics",
+   "tier": 1,
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "startupslatam",
+   "name": "Startups Latam",
+   "url": "https://startupslatam.com/feed/",
+   "beat": "deals",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": true
+  },
+  {
+   "id": "datoz",
+   "name": "Datoz",
+   "url": "https://www.datoz.com/feed/",
+   "beat": "deals",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "insightcrime-mx",
+   "name": "InSight Crime — Mexico",
+   "url": "https://insightcrime.org/tag/mexico/feed/",
+   "beat": "security",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "dof-sumario",
+   "name": "Diario Oficial de la Federación",
+   "url": "https://www.diariooficial.gob.mx/sumario.xml",
+   "format": "dof",
+   "charset": "latin1",
+   "beat": "politics",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-payments-watchlist",
+   "name": "Google News — payments watchlist",
+   "url": "https://news.google.com/rss/search?q=(Clip+OR+%22Mercado+Pago%22+OR+Getnet+OR+Kushki+OR+Stori+OR+%22Nu+M%C3%A9xico%22+OR+Klar+OR+Plata+OR+Ual%C3%A1+OR+Openpay+OR+Billpocket+OR+Konfio)+(fintech+OR+pagos+OR+tarjeta)+M%C3%A9xico&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "fintech",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-payments-rails",
+   "name": "Google News — payment rails & regulation",
+   "url": "https://news.google.com/rss/search?q=(SPEI+OR+CoDi+OR+DiMo+OR+%22Ley+Fintech%22+OR+adquirencia+OR+%22cuotas+de+intercambio%22)+(Banxico+OR+CNBV+OR+pagos+OR+fintech)&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "fintech",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-cnbv-actions",
+   "name": "Google News — CNBV licensing & enforcement",
+   "url": "https://news.google.com/rss/search?q=CNBV+(sanciona+OR+revoca+OR+autoriza+OR+multa+OR+suspende)+(ITF+OR+IFPE+OR+fintech+OR+%22instituci%C3%B3n+de+pagos%22)&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "fintech",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-merchant-crime",
+   "name": "Google News — crime against business",
+   "url": "https://news.google.com/rss/search?q=extorsi%C3%B3n+comercio+OR+negocio+OR+%22cobro+de+piso%22+OR+%22robo+de+transporte%22+OR+%22robo+a+cuentahabiente%22&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "security",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "pemex-nacionales",
+   "name": "Pemex — Sala de prensa",
+   "url": "https://www.pemex.com/saladeprensa/boletines_nacionales/_layouts/listfeed.aspx?List=%7b7626F8B4-FCAD-41B1-AEE3-2B66E60B61E0%7d",
+   "beat": "energy",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "energiaadebate",
+   "name": "Energía a Debate",
+   "url": "https://www.energiaadebate.com/feed/",
+   "beat": "energy",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "t21",
+   "name": "T21",
+   "url": "https://t21.com.mx/feed/",
+   "beat": "energy",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "inmobiliare",
+   "name": "Inmobiliare",
+   "url": "https://www.inmobiliare.com/feed/",
+   "beat": "energy",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "retailers-mx",
+   "name": "Retailers.mx",
+   "url": "https://retailers.mx/feed/",
+   "beat": "fintech",
+   "tier": "specialist",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "m4ec-mx",
+   "name": "Marketing4eCommerce México",
+   "url": "https://marketing4ecommerce.mx/feed/",
+   "beat": "fintech",
+   "tier": 2,
+   "lang": "es",
+   "mx": true
+  },
+  {
+   "id": "mexcham",
+   "name": "MEXCHAM",
+   "url": "https://www.mexcham.org/feed/",
+   "beat": "us-mexico",
+   "tier": "specialist",
+   "lang": "en",
+   "mx": false
+  },
+  {
+   "id": "dialogue-earth-es",
+   "name": "Dialogue Earth",
+   "url": "https://dialogue.earth/es/feed/",
+   "beat": "us-mexico",
+   "tier": 2,
+   "lang": "es",
+   "mx": true
+  },
+  {
+   "id": "gnews-energy",
+   "name": "Google News — energy",
+   "url": "https://news.google.com/rss/search?q=Pemex+OR+CFE+OR+%22red+el%C3%A9ctrica%22+OR+apag%C3%B3n+OR+%22planta+solar%22+OR+%22parque+e%C3%B3lico%22+OR+%22energ%C3%ADa+renovable%22+OR+%22centro+de+datos%22+-jubilados+-pensiones+-%22aire+acondicionado%22&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "energy",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-infra",
+   "name": "Google News — infrastructure & nearshoring",
+   "url": "https://news.google.com/rss/search?q=%22Tren+Maya%22+OR+%22Corredor+Interoce%C3%A1nico%22+OR+puertos+OR+%22parque+industrial%22+OR+%22parques+industriales%22+OR+(sequ%C3%ADa+M%C3%A9xico+agua)+OR+apagones+OR+nearshoring&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "energy",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-ecommerce",
+   "name": "Google News — e-commerce",
+   "url": "https://news.google.com/rss/search?q=%28%22Mercado%20Libre%22%20OR%20%22Amazon%20M%C3%A9xico%22%20OR%20Shein%20OR%20Temu%20OR%20%22comercio%20electr%C3%B3nico%22%20OR%20AMVO%20OR%20Rappi%20OR%20%22%C3%BAltima%20milla%22%29%20M%C3%A9xico%20-cup%C3%B3n%20-descuento%20-oferta%20-rebaja&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "fintech",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "gnews-mexico-china",
+   "name": "Google News — Mexico-China",
+   "url": "https://news.google.com/rss/search?q=%28%22inversi%C3%B3n%20china%22%20OR%20%22empresas%20chinas%22%20OR%20%22planta%20de%20BYD%22%20OR%20%22f%C3%A1brica%20de%20BYD%22%20OR%20transbordo%20OR%20triangulaci%C3%B3n%20OR%20%22aranceles%20a%20China%22%20OR%20%22productos%20chinos%22%20OR%20%22banco%20chino%22%29%20M%C3%A9xico&hl=es-419&gl=MX&ceid=MX:es",
+   "beat": "us-mexico",
+   "tier": "aggregator",
+   "lang": "es",
+   "mx": false
+  },
+  {
+   "id": "ft-mexico",
+   "name": "Financial Times — Mexico",
+   "url": "https://www.ft.com/mexico?format=rss",
+   "beat": "economy",
+   "tier": "1",
+   "lang": "en",
+   "mx": true
+  },
+  {
+   "id": "nyt-americas",
+   "name": "The New York Times — Americas",
+   "url": "https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml",
+   "beat": "politics",
+   "tier": "1",
+   "lang": "en",
+   "mx": false
+  }
+ ]
 }
