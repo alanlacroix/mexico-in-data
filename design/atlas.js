@@ -284,10 +284,13 @@ function markState(code) {
 function renderCrumb() {
   const crumb = $('#crumb');
   if (LEVEL === 'states' && !SELSTATE) {
-    crumb.innerHTML = '<span class="bc plain">All 32 states</span>';
+    crumb.hidden = true;
+    crumb.innerHTML = '';
   } else if (LEVEL === 'states') {
+    crumb.hidden = false;
     crumb.innerHTML = `<button class="bc" type="button" data-back="all">← All states</button><span class="sep">/</span><span class="bc plain">${ST[SELSTATE].name}</span>`;
   } else {
+    crumb.hidden = false;
     const municipality = SEL && REG[SEL] ? `<span class="sep">/</span><span class="bc plain">${REG[SEL].nom}</span>` : '';
     crumb.innerHTML = `<button class="bc" type="button" data-back="all">← All states</button><span class="sep">/</span><button class="bc" type="button" data-back="state">${ST[CURSTATE].name}</button><span class="sep">/</span><span class="bc plain">Municipal poverty</span>${municipality}`;
   }
@@ -296,14 +299,18 @@ function renderCrumb() {
 }
 
 function renderSummary() {
+  const summary = $('#statesum');
   if (LEVEL === 'muni') {
-    $('#statesum').innerHTML = `<b>2020 is the latest official municipal poverty release.</b> State poverty is available for 2024, so the two should not be read as the same period.`;
+    summary.hidden = false;
+    summary.innerHTML = `<b>Municipal poverty: 2020.</b> State poverty: 2024. Do not compare directly.`;
     return;
   }
   if (!SELSTATE) {
-    $('#statesum').textContent = 'The map and list use the same metric. Select a state for the exact value and comparison.';
+    summary.hidden = true;
+    summary.textContent = '';
     return;
   }
+  summary.hidden = false;
   const metric = METRICS[METRIC], value = STVAL[METRIC][SELSTATE];
   const { rank } = rankAmong(Object.values(STVAL[METRIC]), value);
   const standing = rankPhrase(rank);
@@ -352,22 +359,22 @@ function renderContextStories() {
   if (!wrap) return;
   const stories = [
     {
-      key: 'scale', code: '15', metric: 'gdp', kicker: 'Scale is not prosperity',
-      title: `State of Mexico has Mexico's ${shortRankPhrase(metricRank('15', 'gdp'))} total GDP, but its ${shortRankPhrase(metricRank('15', 'gdppc'))} GDP per person.`,
-      copy: `${fmtGDP(STVAL.gdp['15'])} is a huge economy. Dividing by ${METRICS.pop.fmt(STVAL.pop['15'])} residents changes the picture.`
+      key: 'scale', code: '15', metric: 'gdp', kicker: 'State of Mexico',
+      title: `${shortRankPhrase(metricRank('15', 'gdp'))} GDP. ${shortRankPhrase(metricRank('15', 'gdppc'))} GDP per person.`,
+      copy: `${METRICS.pop.fmt(STVAL.pop['15'])} residents change the ranking.`
     },
     {
-      key: 'work', code: '20', metric: 'unemp', kicker: 'Low unemployment can mislead',
-      title: `Oaxaca has Mexico's lowest unemployment, but its highest informality.`,
-      copy: `The unemployment rate is ${METRICS.unemp.fmt(STVAL.unemp['20'])}; ${METRICS.inf.fmt(STVAL.inf['20'])} of workers are informal. Read the two together.`
+      key: 'work', code: '20', metric: 'unemp', kicker: 'Oaxaca',
+      title: `${shortRankPhrase(metricRank('20', 'unemp'))} unemployment. ${shortRankPhrase(metricRank('20', 'inf'))} informality.`,
+      copy: 'Low unemployment can coexist with informal work.'
     },
     {
-      key: 'oil', code: '04', metric: 'gdppc', kicker: 'Output is not income',
-      title: `Campeche has Mexico's ${shortRankPhrase(metricRank('04', 'gdppc'))} output per person, but its ${shortRankPhrase(metricRank('04', 'pov'))} poverty rate.`,
-      copy: `Campeche's oil-heavy economy can make output per person unusually high. The figure is ${METRICS.gdppc.fmt(STVAL.gdppc['04'])}; it is not resident income, and poverty is ${METRICS.pov.fmt(STVAL.pov['04'])}.`
+      key: 'oil', code: '04', metric: 'gdppc', kicker: 'Campeche',
+      title: `${shortRankPhrase(metricRank('04', 'gdppc'))} output per person. ${shortRankPhrase(metricRank('04', 'pov'))} poverty.`,
+      copy: 'Output is not resident income.'
     }
   ];
-  wrap.innerHTML = stories.map((story) => `<button class="storycard" type="button" data-story="${story.key}" aria-pressed="false"><span class="story-k">${story.kicker}</span><span class="story-t">${story.title}</span><span class="story-c">${story.copy}</span><span class="story-a">See the state brief →</span></button>`).join('');
+  wrap.innerHTML = stories.map((story) => `<button class="storycard" type="button" data-story="${story.key}" aria-pressed="false"><span class="story-k">${story.kicker}</span><span class="story-t">${story.title}</span><span class="story-c">${story.copy}</span><span class="story-a">Open →</span></button>`).join('');
   wrap.querySelectorAll('.storycard').forEach((button) => button.addEventListener('click', () => {
     const story = stories.find((candidate) => candidate.key === button.dataset.story);
     if (!story) return;

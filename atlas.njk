@@ -9,23 +9,21 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   :root{--ink-3:#555}
   body{font-size:var(--fs-small)}
   button,input{font:inherit}
-  .hero{padding:24px 0 4px}
+  .hero{padding:20px 0 0}
   .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.02;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
-  .hero .dek{font-size:15px;color:var(--ink-2);margin-top:10px;max-width:72ch;line-height:1.55}
-  .hero .personal-note{font-size:var(--fs-meta);color:var(--mut);margin-top:8px;max-width:72ch;line-height:1.5}
-  .storyblock{margin-top:24px;padding:18px 0 4px;border-top:1px solid var(--line)}
-  .storyhead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:11px}
-  .storyhead h2{font-family:var(--sans);font-size:var(--fs-h3);line-height:1.15;color:var(--ink)}
-  .storyhead p{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);line-height:1.45;text-align:right;max-width:34ch}
-  .storygrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-  .storycard{min-height:148px;padding:14px 15px 13px;border:1px solid var(--line-2);border-radius:9px;background:var(--paper);color:var(--ink);text-align:left;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start}
+  .hero .dek{font-size:15px;color:var(--ink-2);margin-top:9px;max-width:52ch;line-height:1.45}
+  .storyblock{margin-top:16px;padding:13px 0 0;border-top:1px solid var(--line)}
+  .storyhead{margin-bottom:8px}
+  .storyhead h2{font-family:var(--sans);font-size:18px;line-height:1.15;color:var(--ink)}
+  .storygrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+  .storycard{min-height:112px;padding:11px 13px 10px;border:1px solid var(--line-2);border-radius:8px;background:var(--paper);color:var(--ink);text-align:left;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start}
   .storycard:hover,.storycard:focus-visible,.storycard.on{border-color:var(--green);background:var(--green-bg)}
   .storycard:focus-visible{outline:2px solid var(--green);outline-offset:2px}
-  .story-k{font-family:var(--mono);font-size:10px;line-height:1.25;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d)}
-  .story-t{display:block;font-family:var(--sans);font-size:16px;line-height:1.23;font-weight:650;margin-top:8px;color:var(--ink)}
-  .story-c{display:block;font-size:12.5px;line-height:1.45;color:var(--ink-2);margin-top:7px}
-  .story-a{display:block;font-family:var(--mono);font-size:10px;color:var(--green-d);text-transform:uppercase;letter-spacing:.04em;margin-top:auto;padding-top:10px}
-  .controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end;margin-top:20px}
+  .story-k{font-family:var(--mono);font-size:10px;line-height:1.2;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d)}
+  .story-t{display:block;font-family:var(--sans);font-size:16px;line-height:1.2;font-weight:650;margin-top:5px;color:var(--ink)}
+  .story-c{display:block;font-size:12px;line-height:1.35;color:var(--ink-2);margin-top:4px}
+  .story-a{display:block;font-family:var(--mono);font-size:9px;color:var(--green-d);text-transform:uppercase;letter-spacing:.04em;margin-top:auto;padding-top:6px}
+  .controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:flex-end;margin-top:14px}
   .searchcol{flex:1;min-width:280px}
   .control-label{display:block;font-family:var(--mono);font-size:11px;color:var(--mut);margin-bottom:7px;letter-spacing:.03em;text-transform:uppercase}
   .searchbox{position:relative;max-width:430px}
@@ -41,7 +39,7 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   .metricsel button{min-height:44px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:10px 14px;border:0;background:var(--paper);color:var(--ink-2);cursor:pointer;border-right:1px solid var(--line-2)}
   .metricsel button:last-child{border-right:0}.metricsel button.on{background:var(--ink);color:#fff}.metricsel button:disabled{cursor:not-allowed;opacity:.48}
   .metricmeta{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.5}
-  .crumb{display:flex;align-items:center;gap:8px;margin:20px 0 6px;flex-wrap:wrap;min-height:22px}
+  .crumb{display:flex;align-items:center;gap:8px;margin:14px 0 6px;flex-wrap:wrap;min-height:22px}
   .bc{font-family:var(--mono);font-size:11px;color:var(--green-d);text-transform:uppercase;letter-spacing:.03em;border:0;background:transparent;padding:4px 0;cursor:pointer}.bc.plain{color:var(--mut);cursor:default}.sep{color:var(--line-2)}
   .statesum{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin:0 0 8px;line-height:1.55;scroll-margin-top:76px}.statesum:focus{outline:none}.statesum b{color:var(--ink)}
   .mapgrid{display:block}
@@ -63,20 +61,18 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   .miniback{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:10px clamp(16px,5vw,32px);display:none;align-items:center;justify-content:space-between;z-index:45}.miniback.show{display:flex}.mb-n{font-family:var(--sans);font-size:14px}.mb-a{min-height:44px;border:0;background:transparent;color:#9fd9bd;font-family:var(--mono);font-size:11px;cursor:pointer}
   .atlaserr{border:1px solid var(--line-2);border-left:3px solid var(--red);padding:14px 16px;margin:12px 0;font-size:var(--fs-small);line-height:1.5;color:var(--ink-2)}.atlaserr button{display:block;min-height:44px;margin-top:10px;padding:0 14px;border:1px solid var(--green-d);border-radius:7px;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);cursor:pointer}
   @media(min-width:1000px){.mapgrid{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:24px;align-items:start}.mapgrid #ficha-wrap{position:sticky;top:68px}.ficha{margin:0}}
-  @media(max-width:900px){.storygrid{grid-template-columns:1fr}.storycard{min-height:0}.storyhead{display:block}.storyhead p{text-align:left;margin-top:5px}}
+  @media(max-width:900px){.storygrid{grid-template-columns:1fr}.storycard{min-height:0}}
   @media(max-width:720px){.hero{padding-top:18px}.storygrid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(280px,86%);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}.storycard{scroll-snap-align:start}.controls{display:block}.metriccol{margin-top:14px}.metricsel{display:grid;grid-template-columns:1fr 1fr}.metricsel button:nth-child(2){border-right:0}.metricsel button:nth-child(-n+2){border-bottom:1px solid var(--line-2)}.searchcol{min-width:0}.stlabel{font-size:26px;stroke-width:4px;font-weight:650}.legend-bins{display:flex;overflow-x:auto;padding-bottom:3px}.legend-bin{min-width:104px}.rankhead{align-items:flex-start}.rankname{font-size:13px}.rankrow{grid-template-columns:34px minmax(0,1fr) auto}.rankval{font-size:11px}}
 </style>
 <div class="wrap">
   <section class="hero">
     <span class="eyebrow">Atlas · 32 states</span>
     <h1>Mexico, state by state</h1>
-    <p class="dek">The number is the easy part. The harder part is knowing what it means. Start with a contradiction below, or pick a place to see the value, the comparison, and the caveat together.</p>
-    <p class="personal-note">Every figure comes from an official source. The interpretation stays deliberately narrow: it explains the comparison without pretending the data proves why it happened.</p>
+    <p class="dek">Compare Mexico's states. See what each ranking leaves out.</p>
 
     <section class="storyblock" aria-labelledby="story-title">
       <div class="storyhead">
-        <h2 id="story-title">Start with a contradiction</h2>
-        <p>Three examples of why one ranking is rarely enough.</p>
+        <h2 id="story-title">Three useful comparisons</h2>
       </div>
       <div class="storygrid" id="context-stories"></div>
     </section>
@@ -105,8 +101,8 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
     <div class="metricmeta" id="metricmeta"></div>
   </section>
 
-  <div class="crumb" id="crumb"></div>
-  <div class="statesum" id="statesum" aria-live="polite" tabindex="-1"></div>
+  <div class="crumb" id="crumb" hidden></div>
+  <div class="statesum" id="statesum" aria-live="polite" tabindex="-1" hidden></div>
 
   <div class="mapgrid">
     <div class="mapcol">
