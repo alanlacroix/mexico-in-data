@@ -29,7 +29,8 @@
     "amexcap.com/feed/": "org PR, ten weeks stale at check"
    }
   },
-  "egressRisk": "mexicocomovamos.mx, mexicoevalua.org and dallasfed.org answer 200 from a laptop and 403 to some datacenter ranges. They are wired anyway; if they fail from the runner, health.json will show it as consecutive failures rather than silently returning nothing."
+  "egressRisk": "mexicocomovamos.mx, mexicoevalua.org and dallasfed.org answer 200 from a laptop and 403 to some datacenter ranges. They are wired anyway; if they fail from the runner, health.json will show it as consecutive failures rather than silently returning nothing.",
+  "runnerEgress": "Substack blocks GitHub Actions IP ranges. boz-larr and ioan-grillo both fetch 200 from a laptop and fail from the runner. Grillo is served from his custom domain instead; if boz-larr keeps failing it should be removed rather than left as a standing red mark in health."
  },
  "sources": [
   {
@@ -588,11 +589,12 @@
   {
    "id": "ioan-grillo",
    "name": "CrashOut by Ioan Grillo",
-   "url": "https://ioangrillo.substack.com/feed",
+   "url": "https://www.crashoutmedia.com/feed",
    "beat": "security",
    "tier": "specialist",
    "lang": "en",
-   "mx": false
+   "mx": false,
+   "note": "Custom domain rather than ioangrillo.substack.com: Substack blocks the runner IP range."
   },
   {
    "id": "mexico-como-vamos",
