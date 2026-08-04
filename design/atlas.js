@@ -1,7 +1,7 @@
 const $ = (s) => document.querySelector(s);
 const enNum = (n) => Number(n).toLocaleString('en-US');
 const norm = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-const DATA_VERSION = '20260713';
+const DATA_VERSION = '20260804-state-first';
 const J = async (p) => {
   const url = `${p}${p.includes('?') ? '&' : '?'}v=${DATA_VERSION}`;
   const response = await fetch(url);
@@ -324,6 +324,7 @@ function nationalComparison(code, metricKey) {
   if (metricKey === 'gdp') return `Mexico: ${fmtGDP(NAT.gdp_mxn_m)} · this state produces ${(value / NAT.gdp_mxn_m * 100).toFixed(1)}% of the total.`;
   if (metricKey === 'pop') return `Mexico: ${METRICS.pop.fmt(NAT.population)} · ${(value / NAT.population * 100).toFixed(1)}% lives in this state.`;
   const national = NAT[metric.field === 'poverty' ? 'poverty' : metric.field === 'informality' ? 'informality' : 'unemployment'];
+  if (!Number.isFinite(national)) return 'Mexico comparison unavailable for this period.';
   const difference = value - national;
   if (Math.abs(difference) < .05) return `Matches Mexico at ${metric.fmt(national)}.`;
   return `Mexico: ${metric.fmt(national)} · this state is ${Math.abs(difference).toFixed(1)} points ${difference > 0 ? 'above' : 'below'}.`;
