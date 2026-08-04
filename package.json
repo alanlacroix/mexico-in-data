@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('_site',{recursive:true,force:true})\"",
-    "build:site": "npm run clean && eleventy",
+    "build:site": "node pipeline/prerender-topics.mjs && npm run clean && eleventy",
     "dev": "eleventy --serve --port=8080",
     "build": "npm run build:site && npm run check && npm run check:release",
     "release": "npm run build",

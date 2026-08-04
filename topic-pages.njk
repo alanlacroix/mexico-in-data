@@ -255,6 +255,15 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
 
   {% endraw %}
   {%- set core = topicStatic[topicRoute.key] -%}
+  {#- The full quarterly review, rendered at build time by pipeline/prerender-topics.mjs
+      from this very module, so a crawler and a reader without JavaScript get the whole
+      page instead of a stub (measured 2026-08-03: 198 crawler-visible words here against
+      1,694 on server-rendered /deals). The module below still runs and replaces this with
+      an identical render, which is what keeps the interactive behaviour. If a room fails
+      to prerender it is absent from the map and the static core takes over. -#}
+  {%- if prerenderedTopics[topicRoute.key] %}
+  <div id="topicApp">{{ prerenderedTopics[topicRoute.key] | safe }}</div>
+  {%- else %}
   <div id="topicApp">
     <section class="topic-hero">
       <div>
@@ -279,6 +288,7 @@ footerBlurb: "Mexico’s economic, political, security and business news, all in
     <p class="tp-core__note">The full page, with the dated decision log, loads next. <a href="/sources.html">See where the data comes from</a>.</p>
     {%- endif %}
   </div>
+  {%- endif %}
   {% raw %}
 </div>
 

@@ -7,8 +7,10 @@ pagination:
 locales: ["en", "es"]
 permalink: "{% if locale == 'es' %}/es/{% else %}/{% endif %}"
 eleventyComputed:
-  title: "{% if locale == 'es' %}The Mexico Brief · en español{% else %}The Mexico Brief{% endif %}"
+  title: "{% if locale == 'es' %}Noticias de México en datos oficiales · The Mexico Brief{% else %}Mexico economic, political and security news · The Mexico Brief{% endif %}"
   description: "{% if locale == 'es' %}La economía, la política y la seguridad de México, en un solo lugar.{% else %}Mexico’s economic, political, security and business news, all in one place.{% endif %}"
+  # <title> leads with what people search; og:title leads with the brand, because a
+  # shared link card is seen by someone deciding whether to trust the source.
   ogTitle: "{% if locale == 'es' %}The Mexico Brief · en español{% else %}The Mexico Brief{% endif %}"
   ogDescription: "{% if locale == 'es' %}La economía, la política y la seguridad de México, en un solo lugar.{% else %}Mexico’s economic, political, security and business news, all in one place.{% endif %}"
 bodyClass: feed-page

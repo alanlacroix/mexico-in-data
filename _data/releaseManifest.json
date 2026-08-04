@@ -66,11 +66,6 @@
       "route": "/about.html",
       "file": "about.html",
       "canonical": "/about"
-    },
-    {
-      "route": "/privacy.html",
-      "file": "privacy.html",
-      "canonical": "/privacy"
     }
   ],
   "compatibilityRoutes": [
@@ -203,6 +198,14 @@
     },
     {
       "route": "/latest-edition.html",
+      "target": "/"
+    },
+    {
+      "route": "/privacy",
+      "target": "/"
+    },
+    {
+      "route": "/privacy.html",
       "target": "/"
     }
   ],
