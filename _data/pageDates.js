@@ -1,65 +1,68 @@
-// pageDates.js — a real published/modified date per page.
+// pageDates.js — a real published/modified date per page, for the sitemap and the
+// structured data.
 //
-// Both the sitemap and the structured data used to stamp every URL with the build time.
-// That is not a signal, it is noise: it told Google that all thirteen pages changed at
-// 13:55:35.679Z, every build, including the quarterly reviews that had not changed in
-// days. Google discounts lastmod when it obviously tracks the deploy rather than the
-// content, so a wrong date is worse than none: it can get the whole signal ignored,
-// including on the homepage, which genuinely does change daily.
+// Why these are declared rather than computed. Both surfaces used to stamp the build
+// time on every URL, which told Google that all thirteen pages changed on every deploy.
+// Google discounts a lastmod that obviously tracks the deploy, so a wrong date is worse
+// than none: it can get the signal ignored on the homepage, which genuinely does change
+// daily.
 //
-// So: the homepage takes its date from the publication receipt, which is the real
-// editorial date. Everything else takes the last commit that touched its source
-// template, which is the real answer to "when did this page last change".
+// The obvious fix, reading the last commit that touched each template, works locally and
+// silently fails in production: Cloudflare Pages builds from a SHALLOW clone, so `git log`
+// there returns the same single commit for every file. Confirmed on 2026-08-04, when the
+// deployed sitemap gave all twelve static pages one identical timestamp while the local
+// build dated the annual report correctly to July. A date source that is right on my
+// machine and wrong on the server is worse than one that is simply honest.
+//
+// So the editorial dates live here, in the open, next to a test that fails when a template
+// changes and its date does not (pipeline/test/page-dates.test.mjs, which checks against
+// real git history wherever that history exists). The daily edition still comes from the
+// publication receipt, because that one is genuinely automatic and always correct.
+//
+// WHEN YOU MEANINGFULLY REVISE A PAGE, UPDATE ITS DATE HERE. Formatting, a typo or a CSS
+// tweak is not a revision; new or rewritten content is.
 const fs = require('node:fs');
 const path = require('node:path');
-const { execFileSync } = require('node:child_process');
 
 const ROOT = path.join(__dirname, '..');
 
-// Route to the template that owns it. Explicit because it is short and because guessing
-// wrong here publishes a wrong date, which is the failure this file exists to fix.
-const SOURCE = {
-  '/': 'index.njk',
-  '/es/': 'index.njk',
-  '/economy': 'topic-pages.njk',
-  '/payments': 'topic-pages.njk',
-  '/politics': 'topic-pages.njk',
-  '/society': 'topic-pages.njk',
-  '/us-mexico': 'topic-pages.njk',
-  '/deals': 'deals.njk',
-  '/energy': 'energy.njk',
-  '/atlas': 'atlas.njk',
-  '/sources': 'sources.njk',
-  '/about': 'about.njk',
-  '/reports/mexico-overview-2026': 'reports/mexico-overview-2026.html',
+// route -> { revised, source }. `source` is the template the guard test watches.
+const PAGES = {
+  '/economy': { revised: '2026-08-03', source: 'topic-pages.njk' },
+  '/payments': { revised: '2026-08-03', source: 'topic-pages.njk' },
+  '/politics': { revised: '2026-08-03', source: 'topic-pages.njk' },
+  '/society': { revised: '2026-08-03', source: 'topic-pages.njk' },
+  '/us-mexico': { revised: '2026-08-03', source: 'topic-pages.njk' },
+  '/deals': { revised: '2026-08-03', source: 'deals.njk' },
+  '/energy': { revised: '2026-08-03', source: 'energy.njk' },
+  '/atlas': { revised: '2026-08-03', source: 'atlas.njk' },
+  '/sources': { revised: '2026-08-04', source: 'sources.njk' },
+  '/about': { revised: '2026-08-03', source: 'about.njk' },
+  '/reports/mexico-overview-2026': { revised: '2026-07-15', source: 'reports/mexico-overview-2026.html' },
 };
 
-const gitDate = (file) => {
-  try {
-    const iso = execFileSync('git', ['log', '-1', '--format=%cI', '--', file], { cwd: ROOT, encoding: 'utf8' }).trim();
-    return iso || null;
-  } catch {
-    return null;
-  }
-};
+// Noon UTC, so the date a reader sees is the date every timezone agrees on.
+const atNoon = (day) => `${day}T12:00:00Z`;
 
 module.exports = function () {
   const receipt = (() => {
-    try { return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'publication-status.json'), 'utf8')); } catch { return {}; }
+    try {
+      return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'publication-status.json'), 'utf8'));
+    } catch {
+      return {};
+    }
   })();
-  // The edition's own timestamp, not the deploy's. Falls back to the build only if the
-  // receipt is unreadable, which would itself be a bigger problem than a date.
   const editionAt = receipt.generatedAt || new Date().toISOString();
 
-  const cache = new Map();
-  const out = {};
-  for (const [route, file] of Object.entries(SOURCE)) {
-    if (route === '/' || route === '/es/') {
-      out[route] = { modified: editionAt, published: editionAt, daily: true };
-      continue;
-    }
-    if (!cache.has(file)) cache.set(file, gitDate(file) || editionAt);
-    out[route] = { modified: cache.get(file), published: cache.get(file), daily: false };
+  const out = {
+    '/': { modified: editionAt, published: editionAt, daily: true },
+    '/es/': { modified: editionAt, published: editionAt, daily: true },
+  };
+  for (const [route, page] of Object.entries(PAGES)) {
+    out[route] = { modified: atNoon(page.revised), published: atNoon(page.revised), daily: false };
   }
   return out;
 };
+
+// Exported for the guard test, which needs the declared dates and the files they claim.
+module.exports.PAGES = PAGES;
