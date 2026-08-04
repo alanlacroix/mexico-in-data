@@ -30,7 +30,7 @@
    }
   },
   "egressRisk": "mexicocomovamos.mx, mexicoevalua.org and dallasfed.org answer 200 from a laptop and 403 to some datacenter ranges. They are wired anyway; if they fail from the runner, health.json will show it as consecutive failures rather than silently returning nothing.",
-  "runnerEgress": "Substack blocks GitHub Actions IP ranges. boz-larr and ioan-grillo both fetch 200 from a laptop and fail from the runner. Grillo is served from his custom domain instead; if boz-larr keeps failing it should be removed rather than left as a standing red mark in health."
+  "runnerEgress": "Substack blocks GitHub Actions IP ranges. Ioan Grillo is served from his custom domain crashoutmedia.com and works from the runner. The Latin America Risk Report has no non-Substack path, fetches 200 from a laptop and fails from the runner, so it was removed rather than left as a standing red mark. Re-add only behind a fetch path that works from CI."
  },
  "sources": [
   {
@@ -576,15 +576,6 @@
    "tier": "1",
    "lang": "es",
    "mx": false
-  },
-  {
-   "id": "boz-larr",
-   "name": "Latin America Risk Report",
-   "url": "https://boz.substack.com/feed",
-   "beat": "politics",
-   "tier": "specialist",
-   "lang": "en",
-   "mx": true
   },
   {
    "id": "ioan-grillo",
