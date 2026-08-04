@@ -13,6 +13,18 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   .hero h1{font-family:var(--sans);font-size:var(--fs-display);line-height:1.02;letter-spacing:-.02em;margin:8px 0 0;color:var(--ink)}
   .hero .dek{font-size:15px;color:var(--ink-2);margin-top:10px;max-width:72ch;line-height:1.55}
   .hero .personal-note{font-size:var(--fs-meta);color:var(--mut);margin-top:8px;max-width:72ch;line-height:1.5}
+  .storyblock{margin-top:24px;padding:18px 0 4px;border-top:1px solid var(--line)}
+  .storyhead{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-bottom:11px}
+  .storyhead h2{font-family:var(--sans);font-size:var(--fs-h3);line-height:1.15;color:var(--ink)}
+  .storyhead p{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);line-height:1.45;text-align:right;max-width:34ch}
+  .storygrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .storycard{min-height:148px;padding:14px 15px 13px;border:1px solid var(--line-2);border-radius:9px;background:var(--paper);color:var(--ink);text-align:left;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start}
+  .storycard:hover,.storycard:focus-visible,.storycard.on{border-color:var(--green);background:var(--green-bg)}
+  .storycard:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+  .story-k{font-family:var(--mono);font-size:10px;line-height:1.25;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d)}
+  .story-t{display:block;font-family:var(--sans);font-size:16px;line-height:1.23;font-weight:650;margin-top:8px;color:var(--ink)}
+  .story-c{display:block;font-size:12.5px;line-height:1.45;color:var(--ink-2);margin-top:7px}
+  .story-a{display:block;font-family:var(--mono);font-size:10px;color:var(--green-d);text-transform:uppercase;letter-spacing:.04em;margin-top:auto;padding-top:10px}
   .controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end;margin-top:20px}
   .searchcol{flex:1;min-width:280px}
   .control-label{display:block;font-family:var(--mono);font-size:11px;color:var(--mut);margin-bottom:7px;letter-spacing:.03em;text-transform:uppercase}
@@ -31,7 +43,7 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   .metricmeta{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.5}
   .crumb{display:flex;align-items:center;gap:8px;margin:20px 0 6px;flex-wrap:wrap;min-height:22px}
   .bc{font-family:var(--mono);font-size:11px;color:var(--green-d);text-transform:uppercase;letter-spacing:.03em;border:0;background:transparent;padding:4px 0;cursor:pointer}.bc.plain{color:var(--mut);cursor:default}.sep{color:var(--line-2)}
-  .statesum{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin:0 0 8px;line-height:1.55}.statesum b{color:var(--ink)}
+  .statesum{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin:0 0 8px;line-height:1.55;scroll-margin-top:76px}.statesum:focus{outline:none}.statesum b{color:var(--ink)}
   .mapgrid{display:block}
   .mapstage{position:relative;touch-action:pan-y;margin-top:6px}
   #map{width:100%;height:clamp(280px,46vw,470px);background:linear-gradient(180deg,#fbfbf9,#f6f6f2);border:1px solid var(--line);border-radius:8px;display:block}
@@ -44,18 +56,30 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   .legend{margin-top:12px;font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}.legend .lt{color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}.legend-bins{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;max-width:760px}.legend-bin{min-width:0}.legend-bin i{display:block;width:100%;height:12px}.legend-bin b{display:block;margin-top:5px;font-weight:400;font-size:10px;line-height:1.25;color:var(--ink-2);font-variant-numeric:tabular-nums}.legend .nd{display:inline-flex;align-items:center;gap:5px;margin-top:8px}.legend .nd i{width:14px;height:12px;background:#eee;display:inline-block;border:1px solid var(--line-2)}
   .sourcestrip{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);line-height:1.55;margin-top:10px}.sourcestrip a{color:var(--green-d)}
   .ficha{margin:18px 0 0;border:1px solid var(--line-2);border-radius:9px;overflow:hidden}.fhead{padding:15px 17px 13px;border-bottom:1px solid var(--line);background:var(--paper-2)}.fh-name{font-family:var(--sans);font-size:var(--fs-h3);font-weight:650;color:var(--ink);line-height:1.1;padding-right:68px}.fh-ent{font-size:var(--fs-meta);color:var(--ink-2);margin-top:3px}.fh-pob{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px}.fh-pob a{color:var(--green-d)}.fh-x{float:right;min-height:44px;border:0;background:transparent;color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);cursor:pointer;padding:0}.fstand{padding:13px 17px;border-bottom:1px solid var(--line);background:var(--green-bg);font-size:13px;line-height:1.5;color:var(--ink-2)}.fstand-label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--green-d);margin-bottom:5px}.fstand b{color:var(--ink)}.fmetric{padding:13px 17px;border-bottom:1px solid var(--line)}.fm-l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut)}.fm-v{font-family:var(--sans);font-size:26px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.05;margin-top:4px}.fm-v small{font-size:12px;color:var(--mut)}.fm-verdict{font-size:13px;color:var(--ink-2);margin-top:7px;line-height:1.45}.fm-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px;line-height:1.45}.fm-src a{color:var(--green-d)}.fclose{padding:12px 17px;font-size:var(--fs-meta);color:var(--mut);background:var(--paper-2);line-height:1.5}.drillbtn{display:block;width:100%;min-height:46px;margin-top:10px;border:1px solid var(--green);border-radius:7px;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer}.drillbtn:hover{background:var(--green-bg)}.drillbtn:disabled{cursor:wait;opacity:.65}
+  .fmetric.primary{background:#fff;border-left:3px solid var(--green);padding-left:14px}.fmetric.primary .fm-v{font-size:31px}
+  .fwatch{margin-top:9px;padding-top:8px;border-top:1px solid rgba(10,125,77,.18);font-size:12px;color:var(--ink-2)}
+  .fmore{border-bottom:1px solid var(--line);background:var(--paper)}.fmore summary{min-height:44px;display:flex;align-items:center;padding:0 17px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--green-d);cursor:pointer;list-style:none}.fmore summary::-webkit-details-marker{display:none}.fmore summary::after{content:'+';margin-left:auto;font-size:16px}.fmore[open] summary::after{content:'−'}.fmore .fmetric:last-child{border-bottom:0}
   .ranksec{border-top:2px solid var(--green);margin:34px 0 4px;padding-top:18px}.rankhead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}.rankhead h2{font-family:var(--sans);font-size:var(--fs-h2);line-height:1.1;color:var(--ink)}.ranknote{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:5px}.ranktoggle{min-height:44px;border:1px solid var(--line-2);border-radius:7px;background:var(--paper);color:var(--ink-2);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.03em;padding:8px 12px;cursor:pointer}.ranklist{margin-top:14px;border-top:1px solid var(--line)}.rankrow{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;min-height:45px;padding:8px 6px;border:0;border-bottom:1px solid var(--line);background:var(--paper);text-align:left;color:var(--ink);cursor:pointer}.rankrow:hover,.rankrow.sel{background:var(--green-bg)}.ranknum{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut)}.rankname{font-size:14px}.rankval{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;color:var(--ink-2);text-align:right}.rankbreak{padding:8px 6px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
   .miniback{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;padding:10px clamp(16px,5vw,32px);display:none;align-items:center;justify-content:space-between;z-index:45}.miniback.show{display:flex}.mb-n{font-family:var(--sans);font-size:14px}.mb-a{min-height:44px;border:0;background:transparent;color:#9fd9bd;font-family:var(--mono);font-size:11px;cursor:pointer}
   .atlaserr{border:1px solid var(--line-2);border-left:3px solid var(--red);padding:14px 16px;margin:12px 0;font-size:var(--fs-small);line-height:1.5;color:var(--ink-2)}.atlaserr button{display:block;min-height:44px;margin-top:10px;padding:0 14px;border:1px solid var(--green-d);border-radius:7px;background:var(--paper);color:var(--green-d);font-family:var(--mono);font-size:var(--fs-label);cursor:pointer}
-  @media(min-width:1000px){.mapgrid{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:24px;align-items:start}.mapgrid #ficha-wrap{position:sticky;top:16px}.ficha{margin:0}}
-  @media(max-width:720px){.hero{padding-top:18px}.controls{display:block}.metriccol{margin-top:14px}.metricsel{display:grid;grid-template-columns:1fr 1fr}.metricsel button:nth-child(2){border-right:0}.metricsel button:nth-child(-n+2){border-bottom:1px solid var(--line-2)}.searchcol{min-width:0}.stlabel{font-size:26px;stroke-width:4px;font-weight:650}.legend-bins{display:flex;overflow-x:auto;padding-bottom:3px}.legend-bin{min-width:104px}.rankhead{align-items:flex-start}.rankname{font-size:13px}.rankrow{grid-template-columns:34px minmax(0,1fr) auto}.rankval{font-size:11px}}
+  @media(min-width:1000px){.mapgrid{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:24px;align-items:start}.mapgrid #ficha-wrap{position:sticky;top:68px}.ficha{margin:0}}
+  @media(max-width:900px){.storygrid{grid-template-columns:1fr}.storycard{min-height:0}.storyhead{display:block}.storyhead p{text-align:left;margin-top:5px}}
+  @media(max-width:720px){.hero{padding-top:18px}.storygrid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(280px,86%);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}.storycard{scroll-snap-align:start}.controls{display:block}.metriccol{margin-top:14px}.metricsel{display:grid;grid-template-columns:1fr 1fr}.metricsel button:nth-child(2){border-right:0}.metricsel button:nth-child(-n+2){border-bottom:1px solid var(--line-2)}.searchcol{min-width:0}.stlabel{font-size:26px;stroke-width:4px;font-weight:650}.legend-bins{display:flex;overflow-x:auto;padding-bottom:3px}.legend-bin{min-width:104px}.rankhead{align-items:flex-start}.rankname{font-size:13px}.rankrow{grid-template-columns:34px minmax(0,1fr) auto}.rankval{font-size:11px}}
 </style>
 <div class="wrap">
   <section class="hero">
     <span class="eyebrow">Atlas · 32 states</span>
     <h1>Mexico, state by state</h1>
-    <p class="dek">Compare the states by output, output per person, population, poverty, informal employment, or unemployment. Pick one for the exact value, its rank, the national comparison, and the original source. Municipal poverty is available one level deeper.</p>
-    <p class="personal-note">I usually start with GDP per person: total GDP tells you size, GDP per person makes states comparable. The clearest pattern on the map is the north–south divide. The north produces about twice the south per person, and poverty runs the other way.</p>
+    <p class="dek">The number is the easy part. The harder part is knowing what it means. Start with a contradiction below, or pick a place to see the value, the comparison, and the caveat together.</p>
+    <p class="personal-note">Every figure comes from an official source. The interpretation stays deliberately narrow: it explains the comparison without pretending the data proves why it happened.</p>
+
+    <section class="storyblock" aria-labelledby="story-title">
+      <div class="storyhead">
+        <h2 id="story-title">Start with a contradiction</h2>
+        <p>Three examples of why one ranking is rarely enough.</p>
+      </div>
+      <div class="storygrid" id="context-stories"></div>
+    </section>
 
     <div class="controls">
       <div class="searchcol">
@@ -82,7 +106,7 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
   </section>
 
   <div class="crumb" id="crumb"></div>
-  <div class="statesum" id="statesum" aria-live="polite"></div>
+  <div class="statesum" id="statesum" aria-live="polite" tabindex="-1"></div>
 
   <div class="mapgrid">
     <div class="mapcol">
@@ -112,5 +136,5 @@ description: "Compare Mexico's 32 states by output, output per person, poverty, 
 <div class="maptip" id="maptip"></div>
 <div class="miniback" id="miniback"><span class="mb-n" id="mb-name"></span><button class="mb-a" id="mb-act" type="button">See profile ↑</button></div>
 
-<script src="/design/atlas.js?v=20260713-3" defer></script>
+<script src="/design/atlas.js?v=20260803-1" defer></script>
 {% endraw %}
