@@ -22,7 +22,7 @@ module.exports = [
     label: 'Politics',
     permalink: '/politics.html',
     title: 'Politics · The Mexico Brief',
-    description: 'The dated political decisions and official calendar that matter for Mexico.',
+    description: 'The dated political decisions and official calendar that move money and rules in Mexico: the budget package, the votes that close by mid-November, and who they bind.',
   },
   {
     key: 'society',

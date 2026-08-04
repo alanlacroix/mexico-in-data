@@ -4,7 +4,12 @@ eleventyExcludeFromCollections: true
 ---
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{#- lastmod is the page's real last change, from _data/pageDates.js: the publication
+    receipt for the daily edition, the last commit touching the template for everything
+    else. It used to be the build time on every URL, which told Google that all thirteen
+    pages changed on every deploy. Google discounts an obviously deploy-tracking lastmod,
+    so that stamp was actively spending the signal the homepage needs. -#}
 {%- for item in releaseManifest.publicRoutes %}
-  <url><loc>{{ releaseManifest.siteUrl }}{{ item.canonical }}</loc><lastmod>{{ buildTime }}</lastmod></url>
+  <url><loc>{{ releaseManifest.siteUrl }}{{ item.canonical }}</loc><lastmod>{{ (pageDates[item.canonical].modified if pageDates[item.canonical] else buildTime) }}</lastmod></url>
 {%- endfor %}
 </urlset>

@@ -8,11 +8,13 @@ locales: ["en", "es"]
 permalink: "{% if locale == 'es' %}/es/{% else %}/{% endif %}"
 eleventyComputed:
   title: "{% if locale == 'es' %}Noticias de México en datos oficiales · The Mexico Brief{% else %}Mexico economic, political and security news · The Mexico Brief{% endif %}"
-  description: "{% if locale == 'es' %}La economía, la política y la seguridad de México, en un solo lugar.{% else %}Mexico’s economic, political, security and business news, all in one place.{% endif %}"
+  description: "{% if locale == 'es' %}La economía, la política y la seguridad de México en un solo lugar: lo que se movió hoy, con cifras oficiales fechadas y el enlace a la fuente original.{% else %}Mexico’s economic, political, security and business news in one place: what moved today, with dated official figures and a link to every original source.{% endif %}"
   # <title> leads with what people search; og:title leads with the brand, because a
   # shared link card is seen by someone deciding whether to trust the source.
   ogTitle: "{% if locale == 'es' %}The Mexico Brief · en español{% else %}The Mexico Brief{% endif %}"
   ogDescription: "{% if locale == 'es' %}La economía, la política y la seguridad de México, en un solo lugar.{% else %}Mexico’s economic, political, security and business news, all in one place.{% endif %}"
+  articleHeadline: "{% if locale == 'es' %}Qué se movió en México: {{ editionDate.es }}{% else %}What moved in Mexico: {{ editionDate.en }}{% endif %}"
+articleType: NewsArticle
 bodyClass: feed-page
 ---
 {#- One template, two pages (Alan, 2026-08-03: the site also ships in Spanish —

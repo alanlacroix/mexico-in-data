@@ -1,0 +1,46 @@
+---
+permalink: /feed.xml
+eleventyExcludeFromCollections: true
+---
+{#- An Atom feed. A daily publication with no feed is invisible to readers, aggregators
+    and news crawlers that never touch a sitemap, and it is the one distribution channel
+    here that does not depend on Google. Entries are today's brief plus the stories the
+    edition actually led with, so subscribing gives you the edition rather than a firehose
+    of every wire item. -#}
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>The Mexico Brief</title>
+  <subtitle>Mexico’s economic, political, security and business news, all in one place.</subtitle>
+  <link href="https://mexicobrief.com/feed.xml" rel="self"/>
+  <link href="https://mexicobrief.com/"/>
+  <updated>{{ pageDates['/'].modified }}</updated>
+  <id>https://mexicobrief.com/</id>
+  <author><name>Alan Lacroix</name></author>
+  <rights>© {{ editionDate.iso | slice(0, 4) }} The Mexico Brief</rights>
+  <entry>
+    <title>What moved in Mexico: {{ editionDate.en }}</title>
+    <link href="https://mexicobrief.com/"/>
+    <id>https://mexicobrief.com/#edition-{{ editionDate.iso }}</id>
+    <updated>{{ pageDates['/'].modified }}</updated>
+    <summary type="text">{{ feed.brief }}</summary>
+  </entry>
+{%- for story in feed.stories %}
+  <entry>
+    <title>{{ story.title }}</title>
+    <link href="{{ story.url }}"/>
+    <id>https://mexicobrief.com/#story-{{ editionDate.iso }}-{{ story.id }}</id>
+    <updated>{{ pageDates['/'].modified }}</updated>
+    <category term="{{ story.cat }}"/>
+    <summary type="text">{{ story.dek }}</summary>
+  </entry>
+{%- endfor %}
+{%- for room in topicRoutes %}
+  <entry>
+    <title>{{ room.label }}: quarterly review</title>
+    <link href="https://mexicobrief.com{{ room.permalink }}"/>
+    <id>https://mexicobrief.com{{ room.permalink }}</id>
+    <updated>{{ pageDates[room.permalink | replace('.html', '')].modified }}</updated>
+    <summary type="text">{{ room.description }}</summary>
+  </entry>
+{%- endfor %}
+</feed>
