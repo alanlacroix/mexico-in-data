@@ -21,13 +21,23 @@ assert.ok(
 );
 assert.match(run, /if \(only && records\.some\(\(record\) => record\.status === 'failed'\)\)/, 'a scoped connector failure must make its workflow step fail');
 
+// One edition a day (Alan, 2026-08-03, the budget call) is still the law. What
+// changed on 2026-08-04 is what enforces it. Four precise cron minutes used to do
+// both jobs: pick the hour and imply the slot. GitHub's scheduler does not land this
+// repo near its cron slots (a ':17' cron ran at :51, :34, :54, :12, :03 and :51 over
+// four days, and the morning edition was dropped outright twice), so precision was
+// buying nothing and costing Alan his morning. The workflow now attempts hourly and
+// the receipt-aware gate decides. That makes the slot pin, not the cron, the thing
+// standing between us and a second edition, so it is what this test guards.
 assert.match(
   happening,
-  // One edition a day (Alan, 2026-08-03, the budget call): the morning window
-  // must exist and the evening cron must NOT come back silently — restoring it
-  // doubles the model bill, so it has to be a deliberate, tested change.
-  /cron:\s*'7,37 13,14 \* \* \*'/,
-  'the morning edition must get two chances in both possible UTC hours',
+  /cron:\s*'\d+ \* \* \* \*'/,
+  'the edition must attempt hourly, because the cron minute cannot be relied on',
+);
+assert.match(
+  happening,
+  /REQUESTED_SLOT:[^\n]*event_name == 'schedule'[^\n]*'morning'/,
+  "a scheduled run must publish the day's single morning edition; leaving it on 'auto' let a late runner publish a second, afternoon edition (2026-08-04T00:57Z)",
 );
 assert.doesNotMatch(
   happening,

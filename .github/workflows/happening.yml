@@ -6,18 +6,21 @@ name: happening
 
 on:
   schedule:
-    # One edition a day (Alan, 2026-08-03, the $2/month budget call): the morning
-    # window only. Two non-top-of-hour chances in both possible UTC hours; the gate
-    # resolves Eastern time and skips duplicates after the publication receipt.
-    # The evening cron came off — the wire and the number tiles keep refreshing on
-    # their own deterministic schedule, and a breaking evening story can still be
-    # published by manual dispatch.
-    - cron: '7,37 13,14 * * *'  # 9 AM Eastern, EST or EDT
-    # Catch-up. GitHub's scheduler is best-effort and dropped all four morning
-    # occurrences on 2026-08-03, so the site sat on the previous day's edition. The
-    # publication receipt makes these no-ops once the window has published.
-    - cron: '11,41 15,16,17 * * *' # late morning Eastern, catch-up only
-    - cron: '26,56 23,0 * * *'     # late evening Eastern, catch-up only
+    # Run hourly and let the gate decide. This is deliberate, and it replaced four
+    # precise cron minutes on 2026-08-04 after Alan hit a third late morning in a row.
+    #
+    # GitHub's scheduler is best-effort and, for this repo, is not merely late: over
+    # 2026-08-01..04 the every-6-hours refresh (cron ':17') actually fired at :51, :34,
+    # :54, :12, :03 and :51, hours from its slot, and the morning edition cron was
+    # dropped outright on the 3rd and the 4th. Asking that scheduler to hit 13:07 UTC
+    # was the bug. No number of extra precise crons fixes an unreliable clock.
+    #
+    # pipeline/editorial-gate.mjs is already state-based rather than clock-based: it
+    # refuses before 9am Eastern and refuses again once the day's receipt exists. So an
+    # hourly attempt is free (the gate exits in seconds) and the edition now publishes on
+    # the first runner GitHub grants after 9am Eastern instead of waiting for a specific
+    # minute that may never come.
+    - cron: '23 * * * *'
   workflow_dispatch:
     inputs:
       slot:
@@ -63,7 +66,10 @@ jobs:
       - name: Decide whether this edition is still due
         id: timing
         env:
-          REQUESTED_SLOT: ${{ github.event.inputs.slot || 'auto' }}
+          # A scheduled run is always the day's single edition. Left as 'auto' it derived
+          # the slot from the wall clock, so a late runner published a SECOND, 'afternoon'
+          # edition (seen 2026-08-04T00:57Z). Manual dispatch can still ask for either.
+          REQUESTED_SLOT: ${{ github.event.inputs.slot || (github.event_name == 'schedule' && 'morning') || 'auto' }}
           SCHEDULE: ${{ github.event.schedule }}
           FORCE_PUBLICATION: ${{ github.event.inputs.force || 'false' }}
         run: node pipeline/editorial-gate.mjs

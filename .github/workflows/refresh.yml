@@ -77,17 +77,27 @@ jobs:
 
       - name: Decide whether the model runs this refresh
         id: modelgate
-        # The data connectors run every 6 hours; the model jobs do not need to. The wire,
-        # the economy notes and the calendar lines change on a daily rhythm at most, so
-        # paying for a model pass on all ~6.7 daily refreshes bought nothing. One window a
-        # day (the 12:17 UTC run), plus any manual dispatch.
+        # State-based, not clock-based (rewritten 2026-08-04). This used to fire only when
+        # the UTC hour was exactly 12, which quietly meant never: GitHub's scheduler does
+        # not land this workflow near its cron slot. Over 2026-08-01..04 a ':17' cron
+        # actually ran at :51, :34, :54, :12, :03 and :51, and not one run fell in hour 12,
+        # so write-context.mjs had not run on a schedule since. The site kept publishing,
+        # just with the previous day's authored lines, which is exactly the kind of silent
+        # staleness this repo is supposed to refuse.
+        #
+        # So ask the question that actually matters: has the model pass happened today?
+        # The first refresh of each UTC day takes the window, whenever GitHub grants it.
+        # Same one pass a day, same cost, no dependence on a clock we do not control.
         run: |
+          TODAY=$(date -u +%F)
+          STAMP=$(sed -n 's/.*"date"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' data/model-window.json 2>/dev/null | head -1)
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"; echo "manual dispatch — model jobs on"
-          elif [ "$(date -u +%H)" = "12" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"; echo "daily model window — model jobs on"
+          elif [ "$STAMP" != "$TODAY" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"; echo "first refresh of $TODAY — model jobs on"
+            printf '{"date":"%s"}\n' "$TODAY" > data/model-window.json
           else
-            echo "run=false" >> "$GITHUB_OUTPUT"; echo "outside the daily model window — skipping model jobs"
+            echo "run=false" >> "$GITHUB_OUTPUT"; echo "model window already used today ($STAMP) — skipping model jobs"
           fi
 
       - name: Write the lines the feed cannot compute
