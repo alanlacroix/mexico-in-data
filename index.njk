@@ -87,12 +87,10 @@ bodyClass: feed-page
   .card-meta .c{color:#1A1B1D;display:inline-flex;align-items:center;gap:6px}
   .dot{width:7px;height:7px;border-radius:999px;flex:none}
   .card-meta .s{color:#86888E}
-  .es{border:1px solid #D9D9DB;padding:2px 5px;font-size:9px;color:#96989E;font-style:normal}
   .card h3{font-family:var(--sans);font-weight:600;font-size:24px;line-height:1.18;letter-spacing:-.018em;color:#111214;margin:10px 0 0;text-wrap:pretty}
   .card-wk h3{font-size:20px;line-height:1.25;letter-spacing:-.013em}
   .card h3 a{color:inherit}
   .card h3 a:hover{color:#0B6E4F;text-decoration:none}
-  .orig{font-family:var(--mono);font-size:12px;line-height:1.4;color:#96989E;max-width:58ch;text-wrap:pretty}
   .dek{font-family:var(--sans);font-size:16px;line-height:1.5;color:#5C5E63;max-width:60ch;margin:0;text-wrap:pretty}
   .card-wk .dek{font-size:15px}
 
@@ -241,9 +239,8 @@ bodyClass: feed-page
       {%- for item in f.week %}
       <article class="card card-wk" data-cat="{{ item.cat }}">
         <div class="card-rail">
-          <div class="card-meta"><span class="d">{{ item.date }}</span><span class="c"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</span><span class="s">{{ item.source }}{% if item.lang %} <i class="es">{{ item.lang }}</i>{% endif %}</span></div>
+          <div class="card-meta"><span class="d">{{ item.date }}</span><span class="c"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</span><span class="s">{{ item.source }}</span></div>
           <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
-          {%- if item.orig %}<p class="orig">{{ item.orig }}</p>{% endif %}
         </div>
         {#- Reading list only. Briefly explained lives under Today's stories and
             nowhere else (Alan, 2026-08-02): analysis concentrated in one place,

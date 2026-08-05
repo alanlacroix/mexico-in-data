@@ -195,11 +195,10 @@ module.exports = function () {
         cat: group.label,
         catKey: group.key,
         source: item.sourceName,
-        // "The wire translated this" is inferred from the original differing from the
-        // published title, so the comparison has to ignore differences that are not a
-        // translation. A trailing space and a curly-vs-straight apostrophe were enough to
-        // mark three English headlines as Spanish originals, and the Spanish edition then
-        // skipped them as already-Spanish and printed English (2026-08-03).
+        // Keep translation provenance in the data so the Spanish edition can restore the
+        // native headline. The English template intentionally shows only the English title.
+        // The comparison ignores punctuation-only differences so Spanish mode does not
+        // mistake an English headline for a translated one (2026-08-03).
         lang: translated(item) ? 'ES' : '',
         orig: translated(item) ? item.originalTitle : '',
         url: item.url,

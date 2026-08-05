@@ -113,7 +113,7 @@ module.exports = function () {
     const x = englished(raw);
     return {
     title: x.title,
-    // Kept so the card can show the original headline under the translation and tag it ES.
+    // Kept as data for the Spanish edition; the English card shows only its English title.
     originalTitle: x.originalTitle || '', url: x.url, sourceName: x.sourceName || x.source, domain: x.source, dek: trim(x.dek),
     date: x.published_at, dateLabel: dateLabel(x.published_at), dayLabel: dayLabel(x.published_at),
     curated: false, bg: '', drivers: '', implications: '',

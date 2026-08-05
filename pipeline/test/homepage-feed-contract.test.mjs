@@ -303,8 +303,11 @@ for (const article of wire.articles) {
 
 const feedData = fs.readFileSync(path.join(root, '_data/feed.js'), 'utf8');
 const homepageTemplate = fs.readFileSync(path.join(root, 'index.njk'), 'utf8');
+const spanishFeedSource = fs.readFileSync(path.join(root, '_data/feedEs.js'), 'utf8');
 const happeningBuilder = fs.readFileSync(path.join(root, 'pipeline/build-happening.js'), 'utf8');
 const briefBuilder = fs.readFileSync(path.join(root, 'pipeline/build-brief.js'), 'utf8');
+assert.doesNotMatch(homepageTemplate, /item\.(?:orig|lang)/, 'the English homepage must not print alternate-language title metadata');
+assert.match(spanishFeedSource, /w\.lang === 'ES' && w\.orig \? w\.orig/, 'the Spanish edition must still restore native Spanish titles');
 assert.doesNotMatch(homepageTemplate, /from ['"]\/assets\/mb\.js/, 'the homepage must not download the full render toolkit for one time helper');
 assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepage source status must be embedded at build time');
 // The disclosure moved into the feed's BE panel. The bar is unchanged and now lives in
