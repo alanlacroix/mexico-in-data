@@ -165,6 +165,11 @@ assert.match(
 );
 assert.match(
   publicationFallback,
+  /workflow_run:[\s\S]*workflows:[\s\S]*- happening[\s\S]*types:[\s\S]*- completed/,
+  'every completed publication must immediately re-audit the control plane',
+);
+assert.match(
+  publicationFallback,
   /permissions:[\s\S]*?actions:\s*write/,
   'the repository fallback must be allowed to dispatch the publication workflow',
 );
