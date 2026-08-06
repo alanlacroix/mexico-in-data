@@ -7,7 +7,6 @@ const DEFAULT_RETRY_COOLDOWN_MINUTES = 45;
 const DEFAULT_FAILURE_WINDOW_MINUTES = 180;
 const DEFAULT_MAX_FAILURES = 3;
 const MORNING_MINUTE_ET = 9 * 60;
-const AFTERNOON_MINUTE_ET = 17 * 60 + 15;
 
 function positiveNumber(value, fallback) {
   const parsed = Number(value);
@@ -34,9 +33,10 @@ function easternParts(now) {
 }
 
 /**
- * Return the latest publication slot that should already be live.
- * Both cutoffs include a grace period so the normal GitHub schedule gets the
- * first chance to publish before the watchdog intervenes.
+ * Return the day's single publication slot once it should already be live.
+ * The grace period gives the normal GitHub schedule the first chance to
+ * publish before recovery intervenes. There is deliberately no afternoon
+ * cutoff: the editorial product has one edition per day.
  */
 export function dueEdition(now = new Date(), graceMinutes = DEFAULT_GRACE_MINUTES) {
   const parts = easternParts(now);
@@ -44,9 +44,6 @@ export function dueEdition(now = new Date(), graceMinutes = DEFAULT_GRACE_MINUTE
   const grace = positiveNumber(graceMinutes, DEFAULT_GRACE_MINUTES);
   const editorialDate = `${parts.year}-${parts.month}-${parts.day}`;
 
-  if (minuteOfDay >= AFTERNOON_MINUTE_ET + grace) {
-    return { editorialDate, slot: 'afternoon' };
-  }
   if (minuteOfDay >= MORNING_MINUTE_ET + grace) {
     return { editorialDate, slot: 'morning' };
   }

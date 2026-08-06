@@ -6,6 +6,10 @@ import {
   recoveryThrottle,
   watchdogDecision,
 } from '../../ops/publication-watchdog/src/decision.mjs';
+import {
+  checkHealth,
+  runScheduledCheck,
+} from '../../ops/publication-watchdog/src/index.mjs';
 
 const morningBeforeGrace = new Date('2026-07-31T13:19:00Z'); // 9:19 AM EDT
 const morningDue = new Date('2026-07-31T13:20:00Z'); // 9:20 AM EDT
@@ -17,9 +21,13 @@ assert.deepEqual(dueEdition(morningDue), { editorialDate: '2026-07-31', slot: 'm
 assert.deepEqual(
   dueEdition(beforeAfternoonGrace),
   { editorialDate: '2026-07-31', slot: 'morning' },
-  'morning remains the due edition until the afternoon grace period ends',
+  'the morning edition remains the only edition due later in the day',
 );
-assert.deepEqual(dueEdition(afternoonDue), { editorialDate: '2026-07-31', slot: 'afternoon' });
+assert.deepEqual(
+  dueEdition(afternoonDue),
+  { editorialDate: '2026-07-31', slot: 'morning' },
+  'the watchdog must never invent a second afternoon edition',
+);
 
 assert.equal(
   publicationCoversEdition(
@@ -95,14 +103,52 @@ assert.deepEqual(
 assert.deepEqual(
   watchdogDecision({
     now: afternoonDue,
-    status: { editorialDate: '2026-07-31', slot: 'morning' },
+    status: { editorialDate: '2026-07-30', slot: 'morning' },
     runs: [],
   }),
   {
     action: 'dispatch',
     reason: 'publication is stale and no active run exists',
-    due: { editorialDate: '2026-07-31', slot: 'afternoon' },
+    due: { editorialDate: '2026-07-31', slot: 'morning' },
   },
 );
+
+const originalFetch = globalThis.fetch;
+const heartbeatStore = new Map();
+const healthyEnv = {
+  GITHUB_TOKEN: 'test-token',
+  WATCHDOG_STATE: {
+    get: async (key) => heartbeatStore.get(key) || null,
+    put: async (key, value) => heartbeatStore.set(key, value),
+  },
+};
+
+globalThis.fetch = async (url) => {
+  const target = String(url);
+  if (target.includes('publication-status.json')) {
+    return Response.json({ editorialDate: '2026-07-31', slot: 'morning', publicationId: 'test-1' });
+  }
+  if (target.includes('/actions/workflows/')) {
+    return Response.json({ workflow_runs: [{ id: 99, status: 'completed', conclusion: 'success', created_at: morningDue.toISOString() }] });
+  }
+  throw new Error(`unexpected test URL: ${target}`);
+};
+
+try {
+  await runScheduledCheck(healthyEnv, morningDue);
+  const healthy = await checkHealth(healthyEnv, new Date(morningDue.getTime() + 15 * 60_000));
+  assert.equal(healthy.ok, true, 'health must prove the secret, APIs, KV binding, and scheduled heartbeat');
+  assert.equal(healthy.checks.heartbeatFresh, true);
+
+  const missingToken = await checkHealth({ ...healthyEnv, GITHUB_TOKEN: '' }, morningDue);
+  assert.equal(missingToken.ok, false, 'an undeployable credential state must never report healthy');
+  assert.equal(missingToken.checks.githubTokenConfigured, false);
+
+  const stale = await checkHealth(healthyEnv, new Date(morningDue.getTime() + 60 * 60_000));
+  assert.equal(stale.ok, false, 'a missing cron invocation must make the public health check fail');
+  assert.equal(stale.checks.heartbeatFresh, false);
+} finally {
+  globalThis.fetch = originalFetch;
+}
 
 console.log('publication-watchdog tests: ok');

@@ -7,6 +7,12 @@
   "triggers": {
     "crons": ["*/15 * * * *"]
   },
+  "kv_namespaces": [
+    {
+      "binding": "WATCHDOG_STATE",
+      "id": "c3c0a02b000e462bb974cd67d246a386"
+    }
+  ],
   "vars": {
     "PUBLICATION_STATUS_URL": "https://mexicobrief.com/data/publication-status.json",
     "GITHUB_OWNER": "alanlacroix",
@@ -17,7 +23,8 @@
     "RECENT_RUN_MINUTES": "180",
     "RETRY_COOLDOWN_MINUTES": "45",
     "FAILURE_WINDOW_MINUTES": "180",
-    "MAX_RECOVERY_FAILURES": "3"
+    "MAX_RECOVERY_FAILURES": "3",
+    "HEARTBEAT_MAX_AGE_MINUTES": "45"
   },
   "observability": {
     "enabled": true

@@ -11,6 +11,7 @@ const receiptWriter = fs.readFileSync(path.join(root, 'pipeline', 'write-publica
 const productionVerifier = fs.readFileSync(path.join(root, 'pipeline', 'verify-production.mjs'), 'utf8');
 const refresh = workflow('refresh.yml');
 const happening = workflow('happening.yml');
+const publicationFallback = workflow('publication-fallback.yml');
 const sesnsp = workflow('refresh-sesnsp.yml');
 
 const alertWrite = 'fs.writeFileSync(ALERTS, JSON.stringify(alerts, null, 2));';
@@ -151,6 +152,27 @@ for (const name of ['refresh.yml', 'refresh-imss.yml', 'refresh-sesnsp.yml', 'we
   );
 }
 assert.doesNotMatch(happening, /\[CF-Pages-Skip\]/, 'an editorial publication must trigger production deployment');
+
+assert.match(
+  publicationFallback,
+  /cron:\s*'11,41 \* \* \* \*'/,
+  'the repository fallback must get repeated chances without pretending GitHub is the primary clock',
+);
+assert.match(
+  publicationFallback,
+  /permissions:[\s\S]*?actions:\s*write/,
+  'the repository fallback must be allowed to dispatch the publication workflow',
+);
+assert.match(
+  publicationFallback,
+  /node pipeline\/verify-watchdog-health\.mjs[\s\S]*node ops\/publication-watchdog\/run-once\.mjs/,
+  'the repository fallback must verify the independent control plane before running its own recovery decision',
+);
+assert.match(
+  publicationFallback,
+  /Publication control plane is unhealthy[\s\S]*state:\s*'closed'/,
+  'a broken safeguard must stay visible as an incident until both controls recover',
+);
 
 assert.match(sesnsp, /cron:\s*'35 15 21 \* \*'/, 'SESNSP must refresh after the stated day-20 publication deadline');
 assert.match(sesnsp, /ENABLE_SESNSP:\s*'1'/, 'the SESNSP monthly job must explicitly open the heavy-source gate');

@@ -11,7 +11,10 @@ const DEFAULTS = Object.freeze({
   retryCooldownMinutes: 45,
   failureWindowMinutes: 180,
   maxFailures: 3,
+  heartbeatMaxAgeMinutes: 45,
 });
+
+const HEARTBEAT_KEY = 'last-scheduled-check';
 
 function numericEnv(value, fallback) {
   const parsed = Number(value);
@@ -30,6 +33,7 @@ function config(env) {
     retryCooldownMinutes: numericEnv(env.RETRY_COOLDOWN_MINUTES, DEFAULTS.retryCooldownMinutes),
     failureWindowMinutes: numericEnv(env.FAILURE_WINDOW_MINUTES, DEFAULTS.failureWindowMinutes),
     maxFailures: numericEnv(env.MAX_RECOVERY_FAILURES, DEFAULTS.maxFailures),
+    heartbeatMaxAgeMinutes: numericEnv(env.HEARTBEAT_MAX_AGE_MINUTES, DEFAULTS.heartbeatMaxAgeMinutes),
   };
 }
 
@@ -166,7 +170,123 @@ export async function runWatchdog(env, now = new Date()) {
   return { action: 'dispatch', reason: 'publication was stale', due };
 }
 
-function healthResponse(request) {
+async function writeHeartbeat(env, heartbeat) {
+  if (!env.WATCHDOG_STATE || typeof env.WATCHDOG_STATE.put !== 'function') {
+    throw new Error('WATCHDOG_STATE KV binding is not configured');
+  }
+  await env.WATCHDOG_STATE.put(HEARTBEAT_KEY, JSON.stringify(heartbeat), {
+    expirationTtl: 7 * 24 * 60 * 60,
+  });
+}
+
+async function readHeartbeat(env) {
+  if (!env.WATCHDOG_STATE || typeof env.WATCHDOG_STATE.get !== 'function') return null;
+  const raw = await env.WATCHDOG_STATE.get(HEARTBEAT_KEY);
+  if (!raw) return null;
+  const heartbeat = JSON.parse(raw);
+  if (!heartbeat || typeof heartbeat !== 'object' || Array.isArray(heartbeat)) {
+    throw new Error('watchdog heartbeat was not a JSON object');
+  }
+  return heartbeat;
+}
+
+export async function runScheduledCheck(env, now = new Date()) {
+  const checkedAt = now.toISOString();
+  try {
+    const result = await runWatchdog(env, now);
+    await writeHeartbeat(env, { ok: true, checkedAt, result });
+    return result;
+  } catch (error) {
+    try {
+      await writeHeartbeat(env, { ok: false, checkedAt, error: error.message });
+    } catch (heartbeatError) {
+      log('error', 'heartbeat_write_failed', { checkedAt, message: heartbeatError.message });
+    }
+    throw error;
+  }
+}
+
+function errorMessage(error) {
+  return error instanceof Error ? error.message : String(error);
+}
+
+export async function checkHealth(env, now = new Date()) {
+  const settings = config(env);
+  const checks = {
+    githubTokenConfigured: Boolean(env.GITHUB_TOKEN),
+    stateBindingConfigured: Boolean(env.WATCHDOG_STATE && typeof env.WATCHDOG_STATE.get === 'function'),
+    publicationStatusReachable: false,
+    githubApiReachable: false,
+    heartbeatFresh: false,
+    lastScheduledCheckHealthy: false,
+  };
+  const errors = [];
+  let livePublication = null;
+  let latestWorkflowRun = null;
+  let heartbeat = null;
+
+  try {
+    livePublication = await fetchPublicationStatus(settings.publicationStatusUrl);
+    checks.publicationStatusReachable = true;
+  } catch (error) {
+    errors.push(`publication status: ${errorMessage(error)}`);
+  }
+
+  if (!checks.githubTokenConfigured) {
+    errors.push('GITHUB_TOKEN secret is not configured');
+  } else {
+    try {
+      const runs = await fetchWorkflowRuns(settings, env.GITHUB_TOKEN);
+      latestWorkflowRun = runs[0] || null;
+      checks.githubApiReachable = true;
+    } catch (error) {
+      errors.push(`GitHub API: ${errorMessage(error)}`);
+    }
+  }
+
+  if (!checks.stateBindingConfigured) {
+    errors.push('WATCHDOG_STATE KV binding is not configured');
+  } else {
+    try {
+      heartbeat = await readHeartbeat(env);
+      const heartbeatTime = Date.parse(heartbeat?.checkedAt || '');
+      const ageMinutes = Number.isFinite(heartbeatTime)
+        ? (now.getTime() - heartbeatTime) / 60_000
+        : Infinity;
+      checks.heartbeatFresh = ageMinutes >= -5 && ageMinutes <= settings.heartbeatMaxAgeMinutes;
+      checks.lastScheduledCheckHealthy = heartbeat?.ok === true;
+      if (!heartbeat) errors.push('scheduled heartbeat has not been recorded');
+      else if (!checks.heartbeatFresh) errors.push('scheduled heartbeat is stale');
+      else if (!checks.lastScheduledCheckHealthy) errors.push(`last scheduled check failed: ${heartbeat.error || 'unknown error'}`);
+    } catch (error) {
+      errors.push(`watchdog heartbeat: ${errorMessage(error)}`);
+    }
+  }
+
+  const ok = Object.values(checks).every(Boolean);
+  return {
+    ok,
+    service: 'publication-watchdog',
+    dispatchFromHttp: false,
+    checkedAt: now.toISOString(),
+    checks,
+    errors,
+    heartbeat,
+    livePublication: livePublication ? {
+      editorialDate: livePublication.editorialDate || null,
+      slot: livePublication.slot || null,
+      publicationId: livePublication.publicationId || null,
+    } : null,
+    latestWorkflowRun: latestWorkflowRun ? {
+      id: latestWorkflowRun.id ?? null,
+      status: latestWorkflowRun.status || null,
+      conclusion: latestWorkflowRun.conclusion || null,
+      createdAt: latestWorkflowRun.created_at || null,
+    } : null,
+  };
+}
+
+async function healthResponse(request, env) {
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     return new Response('Method not allowed', {
       status: 405,
@@ -177,11 +297,12 @@ function healthResponse(request) {
   const path = new URL(request.url).pathname;
   if (path !== '/' && path !== '/health') return new Response('Not found', { status: 404 });
 
+  const health = await checkHealth(env);
   const body = request.method === 'HEAD'
     ? null
-    : JSON.stringify({ ok: true, service: 'publication-watchdog', dispatchFromHttp: false });
+    : JSON.stringify(health);
   return new Response(body, {
-    status: 200,
+    status: health.ok ? 200 : 503,
     headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
   });
 }
@@ -189,14 +310,14 @@ function healthResponse(request) {
 export default {
   // This route is intentionally read-only. Only the scheduled handler below
   // can invoke runWatchdog and dispatch a GitHub workflow.
-  fetch(request) {
-    return healthResponse(request);
+  fetch(request, env) {
+    return healthResponse(request, env);
   },
 
   scheduled(controller, env, ctx) {
     const now = new Date(controller.scheduledTime);
     ctx.waitUntil(
-      runWatchdog(env, now).catch((error) => {
+      runScheduledCheck(env, now).catch((error) => {
         log('error', 'watchdog_failed', { checkedAt: now.toISOString(), message: error.message });
         throw error;
       }),

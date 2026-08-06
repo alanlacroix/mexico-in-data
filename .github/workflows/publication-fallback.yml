@@ -1,0 +1,119 @@
+name: publication-fallback
+
+# This is the repository-side safety net, not the primary clock. The independent
+# Cloudflare Worker checks every 15 minutes. This workflow both verifies that
+# external control plane and makes the same receipt-aware recovery decision when
+# GitHub happens to grant a runner. A push to the recovery code runs it at once,
+# which also makes deploying a fix exercise the recovery path instead of merely
+# changing source files.
+on:
+  schedule:
+    - cron: '11,41 * * * *'
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/publication-fallback.yml'
+      - 'ops/publication-watchdog/**'
+      - 'pipeline/verify-watchdog-health.mjs'
+
+permissions:
+  contents: read
+  actions: write
+  issues: write
+
+concurrency:
+  group: mexico-brief-publication-recovery
+  cancel-in-progress: true
+
+jobs:
+  verify-and-recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Verify the independent watchdog is truly operational
+        id: external
+        continue-on-error: true
+        env:
+          WATCHDOG_HEALTH_URL: ${{ vars.PUBLICATION_WATCHDOG_HEALTH_URL }}
+        run: node pipeline/verify-watchdog-health.mjs
+
+      - name: Recover a missed publication from inside GitHub
+        id: fallback
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPO: ${{ github.event.repository.name }}
+          GITHUB_REF: main
+        run: node ops/publication-watchdog/run-once.mjs
+
+      - name: Reconcile the publication-control incident
+        if: always()
+        uses: actions/github-script@v7
+        env:
+          EXTERNAL_OUTCOME: ${{ steps.external.outcome }}
+          FALLBACK_OUTCOME: ${{ steps.fallback.outcome }}
+        with:
+          script: |
+            const title = 'Publication control plane is unhealthy';
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100,
+            });
+            const existing = issues.find((issue) => issue.title === title);
+            const healthy = process.env.EXTERNAL_OUTCOME === 'success'
+              && process.env.FALLBACK_OUTCOME === 'success';
+
+            if (healthy) {
+              if (existing) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existing.number,
+                  state: 'closed',
+                  state_reason: 'completed',
+                });
+              }
+              return;
+            }
+
+            const body = [
+              'A production publication safeguard failed.',
+              '',
+              `- Independent Cloudflare watchdog health: **${process.env.EXTERNAL_OUTCOME}**`,
+              `- In-repository recovery check: **${process.env.FALLBACK_OUTCOME}**`,
+              `- Checked: ${new Date().toISOString()}`,
+              '',
+              'This issue stays open until both controls pass in the same run.',
+            ].join('\n');
+
+            if (existing) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing.number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+              });
+            }
+
+      - name: Fail visibly while either safeguard is broken
+        if: always() && (steps.external.outcome != 'success' || steps.fallback.outcome != 'success')
+        run: exit 1
