@@ -48,7 +48,7 @@ jobs:
         id: external
         continue-on-error: true
         env:
-          WATCHDOG_HEALTH_URL: ${{ vars.PUBLICATION_WATCHDOG_HEALTH_URL }}
+          WATCHDOG_HEALTH_URL: https://mexico-brief-publication-watchdog.alanlacroix94.workers.dev/health
         run: node pipeline/verify-watchdog-health.mjs
 
       - name: Recover a missed publication from inside GitHub

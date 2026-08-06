@@ -180,6 +180,11 @@ assert.match(
 );
 assert.match(
   publicationFallback,
+  /WATCHDOG_HEALTH_URL:\s*https:\/\/mexico-brief-publication-watchdog\.alanlacroix94\.workers\.dev\/health/,
+  'the production audit must target the deployed Worker directly, not an optional unset variable',
+);
+assert.match(
+  publicationFallback,
   /Publication control plane is unhealthy[\s\S]*state:\s*'closed'/,
   'a broken safeguard must stay visible as an incident until both controls recover',
 );
