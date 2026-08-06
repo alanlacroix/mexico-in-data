@@ -8,6 +8,7 @@ import {
 } from '../../ops/publication-watchdog/src/decision.mjs';
 import {
   checkHealth,
+  runWatchdog,
   runScheduledCheck,
 } from '../../ops/publication-watchdog/src/index.mjs';
 
@@ -115,6 +116,7 @@ assert.deepEqual(
 
 const originalFetch = globalThis.fetch;
 const heartbeatStore = new Map();
+let dispatchCalls = 0;
 const healthyEnv = {
   GITHUB_TOKEN: 'test-token',
   WATCHDOG_STATE: {
@@ -123,12 +125,16 @@ const healthyEnv = {
   },
 };
 
-globalThis.fetch = async (url) => {
+globalThis.fetch = async (url, init = {}) => {
   const target = String(url);
   if (target.includes('publication-status.json')) {
     return Response.json({ editorialDate: '2026-07-31', slot: 'morning', publicationId: 'test-1' });
   }
   if (target.includes('/actions/workflows/')) {
+    if (init.method === 'POST') {
+      dispatchCalls += 1;
+      return new Response(null, { status: 204 });
+    }
     return Response.json({ workflow_runs: [{ id: 99, status: 'completed', conclusion: 'success', created_at: morningDue.toISOString() }] });
   }
   throw new Error(`unexpected test URL: ${target}`);
@@ -147,6 +153,13 @@ try {
   const stale = await checkHealth(healthyEnv, new Date(morningDue.getTime() + 60 * 60_000));
   assert.equal(stale.ok, false, 'a missing cron invocation must make the public health check fail');
   assert.equal(stale.checks.heartbeatFresh, false);
+
+  const repositoryFallback = await runWatchdog({
+    ...healthyEnv,
+    PUBLICATION_STATUS_JSON: JSON.stringify({ editorialDate: '2026-07-30', slot: 'morning' }),
+  }, morningDue);
+  assert.equal(repositoryFallback.action, 'dispatch');
+  assert.equal(dispatchCalls, 1, 'the repository receipt path must dispatch without fetching the public receipt');
 } finally {
   globalThis.fetch = originalFetch;
 }

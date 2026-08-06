@@ -64,6 +64,15 @@ async function fetchPublicationStatus(url) {
   return status;
 }
 
+function publicationStatusOverride(env) {
+  if (!env.PUBLICATION_STATUS_JSON) return undefined;
+  const status = JSON.parse(env.PUBLICATION_STATUS_JSON);
+  if (!status || typeof status !== 'object' || Array.isArray(status)) {
+    throw new Error('PUBLICATION_STATUS_JSON was not a JSON object');
+  }
+  return status;
+}
+
 function workflowRunsUrl(settings) {
   const workflow = encodeURIComponent(settings.githubWorkflow);
   const url = new URL(
@@ -128,7 +137,10 @@ export async function runWatchdog(env, now = new Date()) {
     return { action: 'none', reason: 'no edition is due', due: null };
   }
 
-  const status = await fetchPublicationStatus(settings.publicationStatusUrl);
+  const overriddenStatus = publicationStatusOverride(env);
+  const status = overriddenStatus === undefined
+    ? await fetchPublicationStatus(settings.publicationStatusUrl)
+    : overriddenStatus;
   if (publicationCoversEdition(status, due)) {
     log('info', 'publication_current', {
       due,

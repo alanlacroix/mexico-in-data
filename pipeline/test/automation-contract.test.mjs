@@ -40,6 +40,11 @@ assert.match(
   /REQUESTED_SLOT:[^\n]*event_name == 'schedule'[^\n]*'morning'/,
   "a scheduled run must publish the day's single morning edition; leaving it on 'auto' let a late runner publish a second, afternoon edition (2026-08-04T00:57Z)",
 );
+assert.match(
+  happening,
+  /push:[\s\S]*paths:[\s\S]*\.github\/workflows\/happening\.yml[\s\S]*REQUESTED_SLOT:[^\n]*event_name == 'push'[^\n]*'morning'/,
+  'a publisher change must exercise the workflow once without inventing an afternoon edition',
+);
 assert.doesNotMatch(
   happening,
   /cron:\s*'22,52 21,22 \* \* \*'/,
