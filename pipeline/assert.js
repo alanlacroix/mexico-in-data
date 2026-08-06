@@ -14,19 +14,11 @@ const fails = [], warns = [];
 // FAIL 1 — no committed tool-call / paste garbage (the </content></invoke> class of bug)
 for (const f of njk) if (/<\/(content|invoke|antml:invoke)>/.test(R(f))) fails.push(`paste garbage in ${f}`);
 
-// FAIL 2 — the Atlas municipality count must equal the loaded registry (no hard-coded count drift)
-try {
-  const muni = JSON.parse(R('data/meta/municipios.json')).m;
-  const n = Array.isArray(muni) ? muni.length : Object.keys(muni).length;
-  const m = R('atlas.njk').match(/([0-9],?[0-9]{3}) municipalities/);
-  if (m && m[1].replace(/,/g, '') !== String(n)) fails.push(`atlas.njk says "${m[1]} municipalities", the registry has ${n}`);
-} catch (e) { warns.push('municipios registry unreadable: ' + e.message); }
-
-// WARN 3 — em-dashes in njk (voice law bans them in prose; the '—' null-cell placeholder in JS is fine)
+// WARN 2 — em-dashes in njk (voice law bans them in prose; the '—' null-cell placeholder in JS is fine)
 let dash = 0; for (const f of njk) dash += (R(f).match(/—/g) || []).length;
 if (dash) warns.push(`${dash} em-dashes across njk — confirm each is the '—' data placeholder, not prose`);
 
-// WARN 4 — a section page's inline <style> re-accumulating after the Phase-1 dedup
+// WARN 3 — a section page's inline <style> re-accumulating after the Phase-1 dedup
 for (const f of SECTIONS.map((s) => s + '.njk').filter((f) => fs.existsSync(path.join(ROOT, f)))) {
   const m = R(f).match(/<style>([\s\S]*?)<\/style>/);
   const n = m ? m[1].split('\n').filter((l) => l.trim() && !l.trim().startsWith('/*')).length : 0;

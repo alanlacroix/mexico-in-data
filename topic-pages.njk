@@ -332,8 +332,7 @@ await Promise.all([
   json('/data/trade-us.json').then(x=>DB.tradeUS=x).catch(console.warn),
   json('/data/demographics.json').then(x=>DB.demographics=x).catch(console.warn),
   json('/data/vitals.json').then(x=>DB.vitals=x).catch(console.warn),
-  json('/data/layers/sesnsp-delitos.json').then(x=>DB.crime=x).catch(console.warn),
-  json('/data/layers/coneval-pobreza.json').then(x=>DB.poverty=x).catch(console.warn)
+  json('/data/layers/sesnsp-delitos.json').then(x=>DB.crime=x).catch(console.warn)
 ]);
 
 const s=id=>(DB.series[id]?.data||[]).filter(p=>Number.isFinite(+p.value)).map(p=>({date:String(p.date),value:+p.value}));
@@ -730,7 +729,7 @@ function societyTopic(){
     },
     record:changedMatches('society',3),
     sources:[topicSource('banxico-remesas'),{label:'CONAPO · population projections',href:demo.sourceUrl,date:String(popYear)},{label:'INEGI · registered births',href:births.sourceUrl,date:String(births.latest.year)},{label:'INEGI · registered deaths',href:deaths.sourceUrl,date:String(deaths.latest.year)},{label:'SESNSP · municipal reported offenses',href:crime.meta.sourceUrl,date:crimePeriod},{label:FACTS.informal.label,href:FACTS.informal.url,date:'ENOE'},{label:FACTS.victim.label,href:FACTS.victim.url,date:FACTS.victim.year}],
-    method:`Population is a projection (${fmt(pop/1e6,1)} million for ${popYear}, median age ${demo.medianAge}); births and deaths are registrations; the security figure is a year-to-date count of reported offences. Informality, the unemployment rate and the victimization figures are dated survey results carried as standing facts, not wired time series, so they update on the survey's schedule rather than the site's. The poverty map lives in the Atlas and the real wage on the Economy page. The walkthrough above is re-read and re-stamped every quarter.`
+    method:`Population is a projection (${fmt(pop/1e6,1)} million for ${popYear}, median age ${demo.medianAge}); births and deaths are registrations; the security figure is a year-to-date count of reported offences. Informality, the unemployment rate and the victimization figures are dated survey results carried as standing facts, not wired time series, so they update on the survey's schedule rather than the site's. The real wage appears on the Economy page. The walkthrough above is re-read and re-stamped every quarter.`
   };
 }
 

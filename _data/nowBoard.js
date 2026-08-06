@@ -50,7 +50,10 @@ const arrow = (value) => value > 0 ? '↑' : value < 0 ? '↓' : '→';
 const signedPercent = (value) => value === 0 ? 'No change' : `${arrow(value)} ${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)}%`;
 const signedPoints = (value) => value === 0 ? 'No change' : `${arrow(value)} ${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)} pp`;
 const percentChange = (current, prior) => prior ? (current / prior - 1) * 100 : null;
-const link = (id) => `/atlas.html`;  // charts folded into Atlas (Fable 2026-08-02)
+const sourceAction = (series) => {
+  const href = series?.meta?.sourceUrl || '/sources.html';
+  return { href, actionLabel: 'Open source', external: /^https?:\/\//.test(href) };
+};
 const LIVE_PESO_URL = 'https://www.google.com/finance/quote/USD-MXN?hl=en';
 const observed = (date, cadence) => {
   const parsed = new Date(`${date}T12:00:00Z`);
@@ -100,7 +103,7 @@ module.exports = function () {
       compare: dayChange == null ? 'Latest national average' : percentFromPrior(dayChange),
       delta: dayChange == null ? null : signedPercent(dayChange),
       date: current.date, cadence: 'daily', dateLead: 'National average', updateLabel: 'Refreshed through the day',
-      source: 'Mexico energy regulator', href: link(fuel.id), actionLabel: 'View history' });
+      source: 'Mexico energy regulator', ...sourceAction(fuel) });
   }
 
   if (cetes) {
@@ -111,7 +114,7 @@ module.exports = function () {
       move: prior ? movementFromPrior(current.value - prior.value) : 'Latest yield',
       delta: prior ? signedPoints(current.value - prior.value) : null,
       date: current.date, cadence: 'daily', dateLead: 'Latest yield', updateLabel: 'New reading each trading day',
-      source: 'Banco de México', href: link(cetes.id), actionLabel: 'View history' });
+      source: 'Banco de México', ...sourceAction(cetes) });
   }
 
   // Not a Mexican number, but on most days it is why the peso moved.
@@ -122,7 +125,7 @@ module.exports = function () {
       move: prior ? movementFromPrior(current.value - prior.value) : 'Latest close',
       delta: prior ? signedPoints(current.value - prior.value) : null,
       date: current.date, cadence: 'daily', dateLead: 'Latest close', updateLabel: 'New close each trading day',
-      source: 'US Federal Reserve', href: link(ust10.id), actionLabel: 'View history' });
+      source: 'US Federal Reserve', ...sourceAction(ust10) });
   }
 
   if (ipc) {
@@ -134,7 +137,7 @@ module.exports = function () {
       move: dayChange == null ? 'Latest close' : percentFromPrior(dayChange),
       delta: dayChange == null ? null : signedPercent(dayChange),
       date: current.date, cadence: 'daily', dateLead: 'Latest close', updateLabel: 'New close each trading day',
-      source: 'Banco de México', href: link(ipc.id), actionLabel: 'View history' });
+      source: 'Banco de México', ...sourceAction(ipc) });
   }
 
   if (inflation) {
@@ -143,7 +146,7 @@ module.exports = function () {
       compare: `${number(Math.abs(gap), 2)} pp ${gap >= 0 ? 'above' : 'below'} the central bank’s 3% target`,
       delta: priorInflation ? signedPoints(current.value - priorInflation.value) : null,
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
-      source: 'Mexico statistics agency · central bank target', href: link(inflation.id), actionLabel: 'View history' });
+      source: 'Mexico statistics agency · central bank target', ...sourceAction(inflation) });
   }
 
   if (rate) {
@@ -153,7 +156,7 @@ module.exports = function () {
       compare: gap == null ? 'Latest policy setting' : relativeTo(gap, `${observed(inflationNow.date, 'monthly')} inflation`),
       delta: priorRate ? signedPoints(current.value - priorRate.value) : null,
       date: current.date, cadence: 'meeting', dateLead: 'Current setting', updateLabel: 'Can change at policy meetings',
-      source: 'Banco de México', href: link(rate.id), actionLabel: 'View history' });
+      source: 'Banco de México', ...sourceAction(rate) });
   }
 
   if (activity) {
@@ -162,7 +165,7 @@ module.exports = function () {
       compare: prior ? movementFromPrior(current.value - prior.value) : 'Latest annual change',
       delta: prior ? signedPoints(current.value - prior.value) : null,
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
-      source: 'Mexico statistics agency', href: link(activity.id), actionLabel: 'View history' });
+      source: 'Mexico statistics agency', ...sourceAction(activity) });
   }
 
   if (exportsTotal) {
@@ -173,7 +176,7 @@ module.exports = function () {
       compare: change == null ? 'Latest monthly total' : percentVsYear(change, 'higher', 'lower'),
       delta: monthChange == null ? null : signedPercent(monthChange),
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
-      source: 'Banco de México', href: link(exportsTotal.id), actionLabel: 'View history' });
+      source: 'Banco de México', ...sourceAction(exportsTotal) });
   }
 
   if (remittances) {
@@ -184,7 +187,7 @@ module.exports = function () {
       compare: change == null ? 'Latest monthly inflow' : percentVsYear(change, 'higher', 'lower'),
       delta: monthChange == null ? null : signedPercent(monthChange),
       date: current.date, cadence: 'monthly', dateLead: 'Latest release', updateLabel: 'New release each month',
-      source: 'Banco de México', href: link(remittances.id), actionLabel: 'View history' });
+      source: 'Banco de México', ...sourceAction(remittances) });
   }
 
   return addObservedLabels(cards);

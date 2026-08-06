@@ -78,7 +78,7 @@
     {#- The daily brief and the quarterly reviews are dated, authored, sourced writing.
         Declaring them only as WebPage described the container and not the thing, and gave
         up any article eligibility. articleType is set per template; a page that does not
-        set one (Atlas, Sources, About) stays a plain WebPage, which is what it is. -#}
+        set one (Sources or About) stays a plain WebPage, which is what it is. -#}
     {%- if articleType %},
     {
       "@type": {{ articleType | dump | safe }},

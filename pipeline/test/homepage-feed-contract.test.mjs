@@ -208,6 +208,8 @@ assert.ok(nowBoard.every((item) => item.date && item.source && item.compare && !
 assert.ok(nowBoard.every((item) => item.move && !/\btoday\b/i.test(item.move)), 'every number needs a short move line that does not claim to have moved today');
 assert.ok(nowBoard.every((item) => item.dateLead && item.updateLabel && item.actionLabel), 'every number must explain its observation date, update schedule, and destination');
 assert.equal(nowBoard.find((item) => item.id === 'banxico-usdmxn-fix')?.href, 'https://www.google.com/finance/quote/USD-MXN?hl=en', 'the peso card must open a clearly labeled live quote');
+assert.ok(nowBoard.every((item) => !/atlas/i.test(item.href || '')), 'no number card may depend on the retired Atlas');
+assert.ok(nowBoard.filter((item) => item.id !== 'banxico-usdmxn-fix').every((item) => item.actionLabel === 'Open source' && item.external), 'non-peso number cards must open their official sources');
 assert.equal(nowBoard.find((item) => item.id === 'banxico-tasa-objetivo')?.updateLabel, 'Can change at policy meetings', 'the policy rate must not imply that it changes daily');
 
 // The homepage has two rooms: what changed since yesterday, and what is true. A number

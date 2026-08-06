@@ -288,25 +288,8 @@ try {
   }
 } catch (error) { fails.push(`narrative contracts: ${error.message}`); }
 
-// 7. Atlas and trade hierarchy invariants. A visual hierarchy must conserve the
-// quantity it partitions; otherwise area/length no longer means the stated value.
-try {
-  const atlas = read('data/atlas-states.json');
-  const states = Object.entries(atlas.states || {});
-  if (states.length !== 32) fails.push(`atlas: expected 32 states, found ${states.length}`);
-  for (const [code, state] of states) {
-    if (!/^\d{2}$/.test(code)) fails.push(`atlas: invalid state code ${code}`);
-    for (const key of ['name', 'official_name', 'gdp_mxn_m', 'gdppc_mxn', 'pop', 'poverty', 'informality']) if (state[key] === undefined || state[key] === null) fails.push(`atlas: ${code} missing ${key}`);
-    for (const key of ['gdp_mxn_m', 'gdppc_mxn', 'pop', 'poverty', 'informality']) if (!Number.isFinite(state[key])) fails.push(`atlas: ${code}.${key} is not finite`);
-  }
-  const stateSum = states.reduce((sum, [, state]) => sum + Number(state.gdp_mxn_m || 0), 0);
-  const stated = Number(atlas.meta?.national?.state_gdp_sum_mxn_m);
-  if (!Number.isFinite(stated) || Math.abs(stateSum - stated) / stated > 1e-9) fails.push('atlas: state GDP does not reconcile to the stated state sum');
-  for (const [key, source] of Object.entries(atlas.meta?.sources || {})) {
-    if (!source.label || !source.period || !source.unit || !/^https?:\/\//.test(source.url || '')) fails.push(`atlas: source ${key} is incomplete`);
-  }
-} catch (error) { fails.push(`data/atlas-states.json: ${error.message}`); }
-
+// 7. Trade hierarchy invariants. A visual hierarchy must conserve the quantity
+// it partitions; otherwise area/length no longer means the stated value.
 try {
   addErrors('trade HS4 hierarchy', validateHs4Hierarchy(read('data/trade/exports-hs4.json'), read('data/trade/exports-by-product.json')));
 } catch (error) { fails.push(`trade hierarchy: ${error.message}`); }

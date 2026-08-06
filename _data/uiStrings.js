@@ -17,7 +17,7 @@ module.exports = {
     watching: 'What we’re watching', source: 'Source', sources: 'Sources',
     week: 'This week', weekSub: 'if you missed the week', all: 'All', showMoreTpl: 'Show {n} more', showLess: 'Show less',
     coming: 'Coming up', comingSub: 'Scheduled releases and decisions',
-    econ: 'Where the economy stands', econLink: 'Mexico, state by state →',
+    econ: 'Where the economy stands',
     mail: 'Weekly email',
     mailCopy: 'One email a week: what changed in Mexico, why it changed, and the sources behind it.',
     mailExample: 'See an example →', mailPlaceholder: 'you@email.com', mailButton: 'Subscribe',
@@ -34,12 +34,12 @@ module.exports = {
     watching: 'Qué estamos siguiendo', source: 'Fuente', sources: 'Fuentes',
     week: 'Esta semana', weekSub: 'si te perdiste la semana', all: 'Todas', showMoreTpl: 'Ver {n} más', showLess: 'Ver menos',
     coming: 'Próximamente', comingSub: 'Publicaciones y decisiones programadas',
-    econ: 'Dónde está la economía', econLink: 'México, estado por estado →',
+    econ: 'Dónde está la economía',
     mail: 'Correo semanal',
     mailCopy: 'Un correo a la semana: qué cambió en México, por qué cambió y las fuentes detrás.',
     mailExample: 'Ver un ejemplo →', mailPlaceholder: 'tu@correo.com', mailButton: 'Suscribirme',
     mailFine: 'Un correo a la semana. Cancela cuando quieras.',
-    esNote: 'Las secciones de datos (Atlas, Fuentes) están en inglés por ahora.', footSections: 'Secciones', footSite: 'Sitio',
+    esNote: 'La sección Fuentes está en inglés por ahora.', footSections: 'Secciones', footSite: 'Sitio',
   },
   maps: {
     cats: {

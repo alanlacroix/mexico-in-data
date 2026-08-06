@@ -9,7 +9,6 @@
 // (trade.html stays live and reachable from that room, just off the menu).
 module.exports = [
   { label: 'Brief', href: '/' },
-  { label: 'Atlas', href: '/atlas.html' },
   { label: 'Quarterly review',
     match: ['/economy.html', '/payments.html', '/deals.html', '/politics.html', '/society.html', '/us-mexico.html', '/energy.html'],
     menu: [

@@ -85,11 +85,6 @@ export const PAGE_DATA_CONTRACTS = {
     'data/demographics.json', 'data/vitals.json',
   ],
   'US & Mexico': [...CONTEXT, ...MONEY, 'data/trade-us.json', 'data/trade/exports-by-partner.json'],
-  'Atlas': [
-    'data/geo/estados.geojson', 'data/atlas-states.json',
-    'data/meta/municipios.json', 'data/geo/municipios.topojson',
-    'data/layers/coneval-pobreza.json',
-  ],
   'Model': [
     SERIES('banxico-usdmxn-fix'), SERIES('banxico-inflacion'),
     SERIES('banxico-tasa-objetivo'), SERIES('banxico-pib-crecimiento'),

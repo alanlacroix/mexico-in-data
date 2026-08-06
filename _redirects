@@ -11,11 +11,11 @@
 /data       /sources  301
 /data.html  /sources  301
 
-# Prune (Fable 2026-07-16): Overview and The Model parked; send old links somewhere true.
+# Retired standalone pages land on the Brief.
 /overview        /         301
 /overview.html   /         301
-/model           /atlas    301
-/model.html      /atlas    301
+/model           /         301
+/model.html      /         301
 /mockup          /         301
 /mockup.html     /         301
 /daily-start-mockup.html   /  301
@@ -30,13 +30,14 @@
 /topics-start-mockup.html /economy  301
 /trade.html /us-mexico.html 301
 
-# Consolidate (Fable 2026-08-02, executing Alan's cleanup call): three self-serve
-# data surfaces contradicted "someone did the looking for you" twice over. Atlas
-# stays; Explore and Charts fold into it.
-/explore        /atlas  301
-/explore.html   /atlas  301
-/chart          /atlas  301
-/chart.html     /atlas  301
+# Atlas and its earlier aliases were withdrawn 2026-08-06. Old links land on the
+# Brief so bookmarks never become dead ends.
+/atlas          /  301
+/atlas.html     /  301
+/explore        /  301
+/explore.html   /  301
+/chart          /  301
+/chart.html     /  301
 
 # Weekly email withdrawn 2026-08-03 (Alan): the signup promised a delivery that had
 # never happened. Old links land on the Brief, which is the product either way.
