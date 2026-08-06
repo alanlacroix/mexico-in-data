@@ -194,6 +194,7 @@ module.exports = function () {
         date: item.dayLabel || monthDay(item.date),
         cat: group.label,
         catKey: group.key,
+        contextHref: group.href,
         source: item.sourceName,
         // Keep translation provenance in the data so the Spanish edition can restore the
         // native headline. The English template intentionally shows only the English title.

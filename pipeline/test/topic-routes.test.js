@@ -38,7 +38,7 @@ for (const href of [...routeLinks, '/deals.html', '/energy.html']) if (!(topicsM
 // The section anatomy applies to the standalone pages too (Fable 2026-08-01):
 // same modules, same order, no placeholder copy. Energy is not converted yet, so
 // it is checked for existence only until its build lands.
-const ANATOMY = ['How it works', 'The numbers', 'What changed this quarter', "What's ahead", 'My view', 'The record', 'Sources and method'];
+const ANATOMY = ['Start here', 'How it works', 'The numbers', 'What changed this quarter', "What's ahead", 'My view', 'The record', 'Sources and method'];
 for (const href of ['/deals.html', '/energy.html']) {
   const out = path.join(root, '_site', href.slice(1));
   if (!fs.existsSync(out)) fail(`missing built section page: ${href}`);
@@ -53,6 +53,7 @@ for (const page of ['deals.html', 'energy.html']) {
     cursor = at;
   }
   if (!/Last revised \w{3} \d{1,2}, \d{4}/.test(html)) fail(`${page}: the walkthrough must carry a revised date`);
+  for (const label of ['What is true now', 'What changed', 'What to watch']) if (!html.includes(label)) fail(`${page}: Start here is missing "${label}"`);
   if (!html.includes('What would change my mind')) fail(`${page}: My view must end with what would change it`);
   if (/opens in October|first quarterly view|New section, opened/i.test(html)) fail(`${page}: placeholder copy must not ship`);
 }
@@ -68,10 +69,16 @@ for (const route of routes) {
   const html = fs.readFileSync(output, 'utf8');
   if (!html.includes(`const ROUTE_TOPIC="${route.key}"`)) fail(`${route.key} rendered with the wrong topic key`);
   if (!html.includes('data-evidence="table"')) fail(`${route.key} has no exact table control`);
+  for (const label of ['What is true now', 'What changed', 'What to watch']) if (!html.includes(label)) fail(`${route.key}: Start here is missing "${label}"`);
   if (html.includes('amp;amp')) fail(`${route.key} contains double-escaped metadata`);
   if (/prototype/i.test(html)) fail(`${route.key} still exposes prototype language`);
   if (html.includes('https://ustr.gov/about/policy-offices/press-office/press-releases/2026/july/ambassador-greer-issues-statement-usmca-joint-review')) fail(`${route.key} contains the unverified USTR URL`);
 }
+
+const homepage = fs.readFileSync(path.join(root, '_site', 'index.html'), 'utf8');
+if (!homepage.includes('id="wk-context"')) fail('homepage topic filters need a context-page link');
+if (!homepage.includes('data-cat-key=')) fail('homepage stories need stable topic keys for incoming context links');
+if (homepage.includes('#all-news')) fail('homepage links still use the retired all-news anchor');
 
 const products = JSON.parse(fs.readFileSync(path.join(root, 'data', 'trade', 'exports-by-product.json'), 'utf8'));
 if (products.reconciliation?.pass !== true) fail('trade composition must fail closed until annual reconciliation passes');

@@ -161,6 +161,20 @@ small{font-size:var(--fs-label)}
 .chip.r{background:var(--red-bg);color:var(--red)}
 .chip.a{background:var(--amber-bg);color:var(--amber)}
 
+/* Quarterly context: one short orientation layer before the full review. */
+.start-here{margin-top:25px;border-top:2px solid var(--ink);padding-top:11px}
+.start-here-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-bottom:10px}
+.start-here-head h2{font-size:var(--fs-h2);line-height:1.2;margin:0}
+.start-here-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.45;color:var(--mut)}
+.start-here-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2)}
+.start-here-card{background:var(--paper);padding:15px 16px 16px;min-width:0}
+.start-here-label{font-family:var(--mono);font-size:var(--fs-label);font-weight:600;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d);margin-bottom:7px}
+.start-here-card p{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2);margin:0}
+@media(max-width:700px){
+  .start-here-grid{grid-template-columns:1fr}
+  .start-here-card{padding:13px 14px 14px}
+}
+
 /* tables — McKinsey clean: hairline rules, mono header */
 table.mck{border-collapse:collapse;width:100%;font-size:var(--fs-small)}
 table.mck th,table.mck td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}

@@ -862,8 +862,8 @@ function chartShell(c,id){
   document.addEventListener?.('pointerout',(ev)=>{const holder=ev.target.closest?.('.chart-hover');if(holder&&!(ev.relatedTarget&&holder.contains(ev.relatedTarget)))clearHover(holder);});
 })();
 // ============ THE SECTION ANATOMY (Fable ruling 2026-08-01) ============
-// Every section page meets the reader in the same order: lede → How it works →
-// The numbers → What changed this quarter → What's ahead → My view → The record
+// Every section page meets the reader in the same order: Start here → lede →
+// How it works → The numbers → What changed this quarter → What's ahead → My view → The record
 // → Sources and method. The walkthrough carries its own revised date; every
 // number slot carries a read; a sourced table is a valid slot, so a data-poor
 // section fills the same shape without faking depth. This supersedes the
@@ -872,10 +872,32 @@ function chartShell(c,id){
 function slotTable(t){
   return `<div class="slot-table"><table class="mck"><thead><tr>${t.cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${t.rows.map(r=>`<tr>${r.map((cell,i)=>`<td${i?'':' class="rowhead"'}>${cell}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
+function firstSentence(text){
+  const value=String(text||'').trim();
+  const match=value.match(/^.*?[.!?](?=\s|$)/);
+  return match?match[0]:value;
+}
+function watchSentence(items){
+  const item=items?.[0];
+  if(!item)return 'No source-backed date is on the calendar yet.';
+  const parsed=/^\d{4}-/.test(item.date||'')?dateObj(item.date):null;
+  if(!parsed)return `${item.label}: ${item.date}${item.source?` · ${item.source}`:''}.`;
+  const when=parsed.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});
+  return `${item.label} is next ${item.approx?'in the week of ':'on '}${when}${item.source?`, from ${item.source}`:''}.`;
+}
+function startHere(t){
+  const cards=[
+    ['What is true now',firstSentence(t.lede)],
+    ['What changed',firstSentence(t.quarter?.[0])],
+    ['What to watch',watchSentence(t.ahead)],
+  ];
+  return `<section class="start-here"><div class="start-here-head"><h2>Start here</h2><div class="start-here-note">The short version before the full review</div></div><div class="start-here-grid">${cards.map(([label,text])=>`<article class="start-here-card"><div class="start-here-label">${label}</div><p>${text}</p></article>`).join('')}</div></section>`;
+}
 function renderAnatomy(t){
   const slots=t.slots.map((slot,i)=>`<div class="slot">${slot.chart?chartShell(slot.chart,'slot-'+i):slotTable(slot.table)}<p class="slot-read">${slot.read}</p></div>`).join('');
   return `
     <section class="topic-hero anatomy-page"><div><div class="edition-label">Quarterly review</div><h1>${t.title}</h1><div class="edition-meta">${EDITION.label} · Published ${EDITION.published} · Data through ${EDITION.dataThrough} · Next review ${EDITION.next}</div><div class="edition-contract">The figures are sourced. The argument and forecasts are mine.</div></div><div class="topic-asof story-stamp">${t.stamp}</div></section>
+    ${startHere(t)}
     <p class="lead">${t.lede}</p>
     <section class="section"><div class="section-head"><div><h2>How it works</h2></div><div class="section-note">Last revised ${t.howItWorks.revised}</div></div>${t.howItWorks.paras.map(x=>`<p class="story-p">${x}</p>`).join('')}</section>
     <section class="section"><h2>The numbers</h2>${slots}</section>
@@ -883,7 +905,7 @@ function renderAnatomy(t){
     <section class="section"><h2>What's ahead</h2>${upcomingList(t.ahead)}</section>
     <section class="section"><h2>My view</h2>${t.view.paras.map(x=>`<p class="story-p">${x}</p>`).join('')}<p class="story-p change-mind"><b>What would change my mind:</b> ${t.view.changeMind}</p></section>
     <section class="section"><h2>The record</h2>${updateList(t.record)}</section>
-    <p class="daily-link-row"><a class="daily-link" href="/?topic=${encodeURIComponent(TOPIC_FEED[current]||'')}#all-news">Daily coverage of this section lives on the homepage →</a></p>
+    <p class="daily-link-row"><a class="daily-link" href="/?topic=${encodeURIComponent(TOPIC_FEED[current]||'')}#sec-week">Daily coverage of this section lives on the homepage →</a></p>
     <details class="sources"><summary>Sources and method</summary><div class="sources-body">${renderSources(t)}</div></details>`;
 }
 function render(topic){
@@ -906,7 +928,7 @@ function render(topic){
     return;
   }
   $('#topicApp').innerHTML=`
-    <section class="topic-hero"><div><h1>${t.title}</h1></div><div class="topic-asof story-stamp">${t.asof}<br><a class="daily-link" href="/?topic=${encodeURIComponent(TOPIC_FEED[current]||'')}#all-news">Daily coverage of this section lives on the homepage →</a></div></section>
+    <section class="topic-hero"><div><h1>${t.title}</h1></div><div class="topic-asof story-stamp">${t.asof}<br><a class="daily-link" href="/?topic=${encodeURIComponent(TOPIC_FEED[current]||'')}#sec-week">Daily coverage of this section lives on the homepage →</a></div></section>
     <p class="lead">${t.lead}</p>
     ${t.next?`<div class="next-line"><span class="nk">Next</span>${t.next}</div>`:''}
     ${t.sections.map((sec,i)=>`<section class="section story-sec"><h2>${String(sec.h2).replace(/\.\s*$/,'')}</h2>${sec.prose.map(p=>`<p class="story-p">${p}</p>`).join('')}${sec.chart?chartShell(sec.chart,'story-ev-'+i):''}</section>`).join('')}

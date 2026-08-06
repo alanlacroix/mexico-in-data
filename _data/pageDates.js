@@ -28,13 +28,13 @@ const ROOT = path.join(__dirname, '..');
 
 // route -> { revised, source }. `source` is the template the guard test watches.
 const PAGES = {
-  '/economy': { revised: '2026-08-03', source: 'topic-pages.njk' },
-  '/payments': { revised: '2026-08-03', source: 'topic-pages.njk' },
-  '/politics': { revised: '2026-08-03', source: 'topic-pages.njk' },
-  '/society': { revised: '2026-08-03', source: 'topic-pages.njk' },
-  '/us-mexico': { revised: '2026-08-03', source: 'topic-pages.njk' },
-  '/deals': { revised: '2026-08-03', source: 'deals.njk' },
-  '/energy': { revised: '2026-08-03', source: 'energy.njk' },
+  '/economy': { revised: '2026-08-06', source: 'topic-pages.njk' },
+  '/payments': { revised: '2026-08-06', source: 'topic-pages.njk' },
+  '/politics': { revised: '2026-08-06', source: 'topic-pages.njk' },
+  '/society': { revised: '2026-08-06', source: 'topic-pages.njk' },
+  '/us-mexico': { revised: '2026-08-06', source: 'topic-pages.njk' },
+  '/deals': { revised: '2026-08-06', source: 'deals.njk' },
+  '/energy': { revised: '2026-08-06', source: 'energy.njk' },
   '/sources': { revised: '2026-08-04', source: 'sources.njk' },
   '/about': { revised: '2026-08-03', source: 'about.njk' },
   '/reports/mexico-overview-2026': { revised: '2026-07-15', source: 'reports/mexico-overview-2026.html' },

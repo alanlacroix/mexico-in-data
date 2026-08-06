@@ -129,7 +129,7 @@ for (const route of routes) {
   const anatomyPage = output.includes('anatomy-page');
   const storyPage = !anatomyPage && output.includes('story-sec');
   if (anatomyPage) {
-    const ORDER = ['How it works', 'The numbers', 'What changed this quarter', "What's ahead", 'My view', 'The record', 'Sources and method'];
+    const ORDER = ['Start here', 'How it works', 'The numbers', 'What changed this quarter', "What's ahead", 'My view', 'The record', 'Sources and method'];
     let cursor = -1;
     for (const heading of ORDER) {
       const at = output.indexOf('>' + heading + '<');
@@ -138,6 +138,9 @@ for (const route of routes) {
       cursor = at;
     }
     if (!/Last revised \w{3} \d{1,2}, \d{4}/.test(output)) throw new Error(`${route.key}: the walkthrough must carry a revised date`);
+    for (const label of ['What is true now', 'What changed', 'What to watch']) {
+      if (!output.includes(label)) throw new Error(`${route.key}: Start here is missing "${label}"`);
+    }
     const slotCount = (output.match(/class="slot"/g) || []).length;
     const readCount = (output.match(/class="slot-read"/g) || []).length;
     if (!slotCount) throw new Error(`${route.key}: the anatomy needs at least one number slot`);

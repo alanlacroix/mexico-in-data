@@ -85,6 +85,7 @@ bodyClass: feed-page
   .card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.06em}
   .card-meta .d{color:#5C5E63}
   .card-meta .c{color:#1A1B1D;display:inline-flex;align-items:center;gap:6px}
+  .card-meta a.c:hover{color:#0B6E4F;text-decoration:underline;text-underline-offset:3px}
   .dot{width:7px;height:7px;border-radius:999px;flex:none}
   .card-meta .s{color:#86888E}
   .card h3{font-family:var(--sans);font-weight:600;font-size:24px;line-height:1.18;letter-spacing:-.018em;color:#111214;margin:10px 0 0;text-wrap:pretty}
@@ -110,11 +111,14 @@ bodyClass: feed-page
   .bd-watch{font-family:var(--serif);font-size:16px;line-height:1.55;color:#3C3D40;max-width:58ch;text-wrap:pretty}
   .bd-src a{color:#0B6E4F;font-family:var(--mono);font-size:12px}
 
-  .chips{display:flex;flex-wrap:wrap;gap:7px;padding-bottom:18px}
+  .week-tools{display:flex;align-items:center;justify-content:space-between;gap:10px 20px;flex-wrap:wrap;padding-bottom:18px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
   .chip{border:1px solid #E2E2E2;padding:7px 12px;background:#fff;color:#1A1B1D;font-family:var(--mono);font-weight:500;font-size:12px;cursor:pointer}
   .chip span{opacity:.55;margin-left:5px}
   .chip:hover{border-color:#0B6E4F}
   .chip.on{background:#111214;color:#fff;border-color:#111214}
+  .wk-context{margin-left:auto;color:#0B6E4F;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.04em;text-decoration:none}
+  .wk-context:hover{text-decoration:underline;text-underline-offset:3px}
   .more{display:block;width:100%;margin-top:18px;background:#F5F5F5;border:1px solid #E2E2E2;padding:13px;font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#1A1B1D;cursor:pointer}
   .more:hover{background:#EBEBEB;color:#0B6E4F}
 
@@ -234,12 +238,15 @@ bodyClass: feed-page
   {% if f.week.length %}<section class="feed-sec" id="sec-week" data-sec="This week">
     <div class="sec-rule"></div>
     <div class="sec-head"><h2>{{ L.week }}</h2><div class="sec-meta">{{ f.weekLabel }} · {{ L.weekSub }}</div></div>
-    <div class="chips" id="wk-chips"></div>
+    <div class="week-tools">
+      <div class="chips" id="wk-chips"></div>
+      <a class="wk-context" id="wk-context" href="/" hidden></a>
+    </div>
     <div class="cards cards-wk" id="wk-list">
       {%- for item in f.week %}
-      <article class="card card-wk" data-cat="{{ item.cat }}">
+      <article class="card card-wk" data-cat="{{ item.cat }}" data-cat-key="{{ item.catKey }}">
         <div class="card-rail">
-          <div class="card-meta"><span class="d">{{ item.date }}</span><span class="c"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</span><span class="s">{{ item.source }}</span></div>
+          <div class="card-meta"><span class="d">{{ item.date }}</span><a class="c" href="{{ item.contextHref }}" aria-label="{{ item.cat }} context"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</a><span class="s">{{ item.source }}</span></div>
           <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
         </div>
         {#- Reading list only. Briefly explained lives under Today's stories and
@@ -304,7 +311,7 @@ const I18N = {
   be: {{ L.be | dump | safe }}, beHide: {{ L.beHide | dump | safe }},
   why: {{ L.why | dump | safe }}, hide: {{ L.hide | dump | safe }},
   all: {{ L.all | dump | safe }}, showMoreTpl: {{ L.showMoreTpl | dump | safe }},
-  showLess: {{ L.showLess | dump | safe }},
+  showLess: {{ L.showLess | dump | safe }}, contextLinkTpl: {{ L.contextLinkTpl | dump | safe }},
 };
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -336,36 +343,54 @@ if (asof) {
 }
 
 // This week: chips derived from the categories actually present, with live counts.
-const list = $('#wk-list'), chipRow = $('#wk-chips'), moreBtn = $('#wk-more');
-if (list && chipRow && moreBtn) {
+const list = $('#wk-list'), chipRow = $('#wk-chips'), moreBtn = $('#wk-more'), contextLink = $('#wk-context');
+if (list && chipRow && moreBtn && contextLink) {
   const cards = $$('.card', list);
   const VISIBLE = 6;               // "All" opens with a readable handful, not the whole week
-  let filter = 'All', expanded = false;
 
   const counts = new Map();
-  cards.forEach((card) => counts.set(card.dataset.cat, (counts.get(card.dataset.cat) || 0) + 1));
-  chipRow.innerHTML = ['All', ...counts.keys()].map((cat) => {
-    const n = cat === 'All' ? cards.length : counts.get(cat);
-    return `<button class="chip${cat === 'All' ? ' on' : ''}" type="button" data-cat="${cat}">${cat === 'All' ? I18N.all : cat}<span>${n}</span></button>`;
+  cards.forEach((card) => {
+    const href = $('.card-meta a.c', card)?.getAttribute('href') || '/';
+    const current = counts.get(card.dataset.catKey) || { label: card.dataset.cat, href, count: 0 };
+    counts.set(card.dataset.catKey, { ...current, count: current.count + 1 });
+  });
+  const requested = new URLSearchParams(location.search).get('topic');
+  let filter = counts.has(requested) ? requested : 'all', expanded = false;
+  chipRow.innerHTML = ['all', ...counts.keys()].map((key) => {
+    const item = counts.get(key);
+    const n = key === 'all' ? cards.length : item.count;
+    const label = key === 'all' ? I18N.all : item.label;
+    return `<button class="chip${key === filter ? ' on' : ''}" type="button" data-key="${key}">${label}<span>${n}</span></button>`;
   }).join('');
 
   const render = () => {
-    const matching = cards.filter((card) => filter === 'All' || card.dataset.cat === filter);
+    const matching = cards.filter((card) => filter === 'all' || card.dataset.catKey === filter);
     cards.forEach((card) => { card.hidden = true; });
-    const cap = filter === 'All' ? VISIBLE : matching.length;
+    const cap = filter === 'all' ? VISIBLE : matching.length;
     const shown = expanded ? matching : matching.slice(0, cap);
     shown.forEach((card) => { card.hidden = false; });
     const rest = matching.length - shown.length;
     // A toggle, not a one-way door (Alan, 2026-08-03): expanded shows "Show less".
     moreBtn.hidden = rest <= 0 && !expanded;
     moreBtn.textContent = expanded ? I18N.showLess : I18N.showMoreTpl.replace('{n}', rest);
-    $$('.chip', chipRow).forEach((chip) => chip.classList.toggle('on', chip.dataset.cat === filter));
+    $$('.chip', chipRow).forEach((chip) => chip.classList.toggle('on', chip.dataset.key === filter));
+    const selected = counts.get(filter);
+    contextLink.hidden = !selected;
+    if (selected) {
+      contextLink.href = selected.href;
+      contextLink.textContent = I18N.contextLinkTpl.replace('{topic}', selected.label);
+    }
   };
   chipRow.addEventListener('click', (event) => {
     const chip = event.target.closest('.chip');
     if (!chip) return;
-    filter = chip.dataset.cat;
+    filter = chip.dataset.key;
     expanded = false;                       // a new filter starts from the top
+    const url = new URL(location.href);
+    if (filter === 'all') url.searchParams.delete('topic');
+    else url.searchParams.set('topic', filter);
+    url.hash = 'sec-week';
+    history.replaceState(null, '', url);
     render();
   });
   moreBtn.addEventListener('click', () => {
