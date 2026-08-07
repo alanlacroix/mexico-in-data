@@ -33,9 +33,15 @@ import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
 import { fetchArticle } from './lib/fetch-article.js';
 import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
+import scheduledCandidate from './lib/scheduled-candidate.cjs';
+import importanceRubric from './lib/importance-rubric.cjs';
+import candidatePriority from './lib/candidate-priority.cjs';
 
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
+const { linkScheduledCandidate } = scheduledCandidate;
+const { normalizeModelImportanceRow } = importanceRubric;
+const { prioritizeCandidates } = candidatePriority;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -103,7 +109,7 @@ function weekKey(dt) {
   const ys = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   return d.getUTCFullYear() + '-W' + String(Math.ceil((((d - ys) / 864e5) + 1) / 7)).padStart(2, '0');
 }
-function candidates(now) {
+function candidates(now, existingEvents = [], schedule = []) {
   const seen = new Set(), all = [];
   for (let i = 0; i <= 5; i++) {                         // last ~6 ISO-week files cover a 30-day window
     const w = weekKey(new Date(now.getTime() - i * 7 * 864e5));
@@ -120,15 +126,25 @@ function candidates(now) {
     .filter((x) => x.source !== 'news.google.com')
     .filter((x) => !/^google news\b|^via gdelt$/i.test(String(x.sourceName || '')))
     .filter(publishableCandidate);
+  const alreadyPublished = new Set(arr(existingEvents).flatMap((event) => [
+    event.url,
+    ...arr(event.coverage).map((source) => source.url),
+  ]).filter(Boolean));
   pool.sort((a, b) => Date.parse(b.published_at) - Date.parse(a.published_at));
   // Use the same transitive event clustering as storage and publication. A one-pass
   // “compare with the kept headline” loop loses bridge reports and makes the result
   // depend on source order.
-  return groupEvents(pool).slice(0, MAX_CANDIDATES).map((group) => ({
+  const grouped = groupEvents(pool).map((group) => ({
     ...group.event,
     _n: normTitle(group.event.title),
     _coverage: group.coverage,
+    _scheduled: linkScheduledCandidate(group.event, schedule, editorialDay(group.event.published_at)),
+    _alreadyPublished: group.coverage.some((source) => alreadyPublished.has(source.url)),
   }));
+  // The input cap is a cost control, never an editorial policy. Exact scheduled outcomes
+  // and reports the log has not processed get first access to the curator. Old recurring
+  // commentary can no longer crowd a central-bank decision out before it is even scored.
+  return prioritizeCandidates(grouped).slice(0, MAX_CANDIDATES);
 }
 
 // ---- shape an event-log entry from a news item ----
@@ -136,16 +152,52 @@ const clampImp = (n) => Math.max(0, Math.min(10, Math.round(+n || 5)));   // 0-1
 const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 52);
 function mkEvent(x, section, importance, title, why, company = '') {
   const date = editorialDay(x.published_at);
-  return {
+  const scheduled = x._scheduled || null;
+  const event = {
     id: 'n-' + slug(x.title) + '-' + date,
     date, section, title: (title || x.title || '').trim(), why: (why || '').trim(),
     company: (company || '').trim(),
-    source: x.sourceName || x.source || '', url: x.url, importance: clampImp(importance), kind: 'event',
+    source: x.sourceName || x.source || '', url: x.url,
+    importance: clampImp(Math.max(Number(importance) || 0, Number(scheduled?.importanceFloor) || 0)), kind: 'event',
     publishedAt: x.published_at || '', sourceTier: x.tier || '',
     coverage: mergeCoverage(x._coverage || [], {
       source: x.sourceName || x.source || '', url: x.url, publishedAt: x.published_at || '',
       date, title: (title || x.title || '').trim(), summary: (why || x.dek || '').trim(),
     }),
+  };
+  if (scheduled) Object.assign(event, {
+    scheduledEventId: scheduled.id,
+    scheduledImportanceFloor: scheduled.importanceFloor,
+    requiredForBrief: scheduled.requiredForBrief,
+    importanceProvenance: `scheduled-floor:${scheduled.id}`,
+  });
+  return event;
+}
+
+function scheduledObligation(x) {
+  const scheduled = x?._scheduled;
+  if (!scheduled) return null;
+  const host = (value) => {
+    try { return new URL(String(value || '')).hostname.replace(/^www\./, ''); }
+    catch { return ''; }
+  };
+  const reportHost = host(x.url);
+  const officialHost = host(scheduled.sourceUrl);
+  return {
+    id: scheduled.id,
+    kind: scheduled.topic === 'policy-rate' ? 'decision' : 'release',
+    scheduledFor: scheduled.date,
+    matched: true,
+    outcomeObserved: true,
+    scheduleAuthoritative: true,
+    authoritativeEvidence: Boolean(reportHost && officialHost
+      && (reportHost === officialHost || reportHost.endsWith(`.${officialHost}`))),
+    importanceFloor: scheduled.importanceFloor,
+    evidence: {
+      source: x.sourceName || x.source || '',
+      url: x.url,
+      publishedAt: x.published_at || x.publishedAt || '',
+    },
   };
 }
 
@@ -183,6 +235,14 @@ function curateFallback(cands, now) {
     const s = beatSection(x);
     if ((cap[s] || 0) >= 2) continue;                                     // ≤2 per section, keep it cross-domain
     const ev = mkEvent(x, s, 2, x.title, summary);                        // imp 2: never outranks a real event
+    if (x._scheduled) {
+      const scored = normalizeModelImportanceRow({ importance: 2, importanceComponents: {} }, {
+        scheduledObligation: scheduledObligation(x),
+      });
+      ev.importance = scored.importance;
+      ev.importanceComponents = scored.importanceComponents;
+      ev.importanceProvenance = scored.importanceProvenance;
+    }
     const flags = slopFlags(ev);
     if (flags.length) { quarantine(ev, flags); continue; }                // no LLM to translate/clean → raw source is quarantined, never published
     cap[s] = (cap[s] || 0) + 1;
@@ -196,17 +256,23 @@ function curateFallback(cands, now) {
 async function curate(cands, now) {
   if (!cands.length) return [];
   if (!hasLLM()) return curateFallback(cands, now);
+  const SCORE = { type: 'integer', minimum: 0, maximum: 2 };
   const schema = { type: 'object', additionalProperties: false, required: ['events'], properties: { events: { type: 'array', items: {
-    type: 'object', additionalProperties: false, required: ['i', 'section', 'importance', 'title', 'why', 'company'], properties: {
+    type: 'object', additionalProperties: false, required: ['i', 'section', 'importance', 'importanceComponents', 'title', 'why', 'company'], properties: {
       i: { type: 'integer' }, section: { type: 'string', enum: SECTIONS }, importance: { type: 'integer' },
+      importanceComponents: { type: 'object', additionalProperties: false,
+        required: ['nationalConsequence', 'usMexicoStakes', 'modelImpact', 'durability', 'officialness'],
+        properties: { nationalConsequence: SCORE, usMexicoStakes: SCORE, modelImpact: SCORE, durability: SCORE, officialness: SCORE } },
       title: { type: 'string' }, why: { type: 'string' }, company: { type: 'string' },
     } } } } };
   const system = `You are the editor of The Mexico Brief's event log — "What's happening", the homepage lead. From the candidate news items, SELECT only the genuine, dated developments someone tracking Mexico needs to know: a decree or law (DOF), a Banxico or government policy decision, a court ruling, a security development, a tariff or USMCA move, an election or cabinet change, a major deal or company event. Give particular weight to companies, investment, trade, technology and AI, payments and fintech, energy, public finances, and policy changes with economic consequences. SKIP routine market recaps, price blurbs, consumer-service trivia, listicles, opinion, sports, generic global-market stories without a direct Mexico consequence, and near-duplicates of items you already picked.
 CRIME AND VIOLENCE SCOPE (important): The Mexico Brief is not a crime tracker. SKIP an event when the violence IS the story, reported for its own sake: cartel or gang violence, individual homicides, shootings, murders, kidnappings, disappearances, body counts, or a personal tragedy. KEEP an event that carries a genuine political, economic, electoral, or diplomatic angle even when it involves crime, gangs, or death: a security law or reform, a court or legal ruling with political weight, a U.S.-Mexico security or migration dispute, a sanction or extradition with diplomatic stakes, or the government's own crime statistics presented as a record of its performance. When a violent event also has real political or economic consequence, keep it and FRAME it by that consequence, not the violence. When in doubt, ask whether a reader following Mexico's economy, politics, and U.S. relationship needs it; if the only thing there is the crime itself, skip it.
+SCHEDULED OUTCOMES (hard requirement): a candidate with scheduledOutcome is an exact-day actor + subject + outcome match to an editorial obligation. SELECT it. A decision to hold a rate or leave a policy unchanged is still a new outcome because the decision, vote and guidance resolve uncertainty. Do not mistake "unchanged" for "not news."
 For each item you select, return:
 - i: its index in the list
 - section: exactly one of economy | money | politics | security | us-mexico | society
-- importance: 0-10, scored by the Brief rubric — add 0, 1, or 2 on EACH of five criteria: (1) national consequence, (2) US-Mexico stakes, (3) model impact (does it move or explain the peso, inflation, the policy rate, or growth?), (4) durability (still matters in 30 days — a first report of a real change scores; commentary and re-reports score 0), (5) officialness (a primary source like Banxico, INEGI, DOF, SHCP, or USTR is available). A defining national event (USMCA, a constitutional reform) scores 9-10; a solid worth-a-line item lands 5-6; anything below 5 will not make the Brief.
+- importanceComponents: score 0, 1, or 2 on EACH of five criteria: nationalConsequence, usMexicoStakes, modelImpact, durability, and officialness. Return the five scores separately. Code, not you, owns the arithmetic.
+- importance: the sum of those five component scores. It is retained only as an audit cross-check; code recomputes it and ignores a conflicting total. A scheduled decision or data release is a new outcome even when the rate or value is unchanged: the decision, vote and guidance are new information. A defining national event (USMCA, a constitutional reform) scores 9-10; a solid worth-a-line item lands 5-6; anything below 5 will not make the Brief.
 - title: a clean, factual headline in the present tense — rewrite the source headline for clarity, no hype, no em-dash, no clickbait. Do not use unexplained acronyms in a public headline. Say "US trade office", "US-Mexico-Canada trade agreement", "Mexico's statistics agency", or the equally clear plain-English name instead of USTR, USMCA, INEGI, DOF, and similar shorthand.
 - why: ONE or two sentences of CONTEXT on why it matters — enough to actually explain the story, not just restate the headline. Write ONLY from the provided title and dek. State the stakes plainly; no invented facts, no numbers not present in the source, no adjectives doing the work of an argument.
 - company: if this event is primarily about ONE specific named company (a deal, earnings, an investment, a corporate move, a regulator's action against it), set this to that company's clean common name (e.g. "BYD", "Nu", "Pemex", "Femsa", "Volaris"). If it is not about a single identifiable company, set it to an empty string "". Never invent a company not named in the source.
@@ -215,7 +281,23 @@ Aim for BREADTH across sections — a reader should see politics, security, and 
 ${REPORT}
 
 ${BAN}`;
-  const payload = cands.map((x, i) => ({ i, beat: x.beat, date: editorialDay(x.published_at), title: x.title, dek: (x.dek || '').slice(0, 200) }));
+  const payload = cands.map((x, i) => ({
+    i,
+    beat: x.beat,
+    date: editorialDay(x.published_at),
+    source: x.sourceName || x.source || '',
+    sourceTier: x.tier || '',
+    url: x.url,
+    scheduledOutcome: x._scheduled ? {
+      id: x._scheduled.id,
+      label: x._scheduled.label,
+      officialSource: x._scheduled.source,
+      importanceFloor: x._scheduled.importanceFloor,
+      requiredForBrief: x._scheduled.requiredForBrief,
+    } : null,
+    title: x.title,
+    dek: (x.dek || '').slice(0, 200),
+  }));
   // Headroom matters: this model reasons over the full candidate list before it
   // emits JSON, and that reasoning is billed as output tokens. Measured: an 8000-token
   // ceiling was spent almost entirely on reasoning and the JSON still truncated, which
@@ -243,7 +325,10 @@ ${BAN}`;
       console.warn(`  reject generated event ${r.i}: ${gate.flags.join('; ')}`);
       continue;
     }
-    const ev = mkEvent(x, sec, r.importance, r.title, r.why, r.company);
+    const scored = normalizeModelImportanceRow(r, { scheduledObligation: scheduledObligation(x) });
+    const ev = mkEvent(x, sec, scored.importance, r.title, r.why, r.company);
+    ev.importanceComponents = scored.importanceComponents;
+    ev.importanceProvenance = scored.importanceProvenance;
     const slop = slopFlags(ev);                                           // enforce the copy contract even on model output (link/date/language/whole-sentence)
     if (slop.length) { quarantine(ev, slop); continue; }
     events.push(ev);
@@ -258,7 +343,8 @@ ${BAN}`;
 //   prediction  — what we expect or the measurable condition that would change the view
 // All three are grounded in the article, same-thread reporting when available, and the
 // site's standing facts. A thin source yields no analysis, never filler. ----
-const BG_MAX = 4;             // Briefly explained exists ONLY for Today's stories (3 render); one spare covers a review rejection.
+const BG_MAX = 5;             // Analysis is optional; at most the five possible Brief stories are drafted.
+const BG_FETCH_MAX = 9;       // Failed article fetches must not consume the scarce analysis slots.
 const BG_DAYS = 14;           // recent events earn the analysis fetch
 const BG_MIN_IMP = 5;         // ordinary headlines do not need an analysis layer
 const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
@@ -276,7 +362,11 @@ async function addBackgrounds(events, now) {
   // the picture is picked up once it appears (Audit 2026-07-18: an El País Ruffo story was
   // permanently blank because the first fetch loaded the page image-less and locked it).
   const needsImage = (e) => !e.image && (e.imgTries || 0) < IMG_MAX_TRIES;
-  const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (needsAnalysis(e) || needsImage(e)) && e.url && (Date.parse(e.date) || 0) >= cutoff).slice(0, BG_MAX);
+  const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (needsAnalysis(e) || needsImage(e)) && e.url && (Date.parse(e.date) || 0) >= cutoff)
+    .sort((a, b) => Number(Boolean(b.scheduledEventId)) - Number(Boolean(a.scheduledEventId))
+      || (Number(b.importance) || 0) - (Number(a.importance) || 0)
+      || (Date.parse(b.publishedAt || b.date) || 0) - (Date.parse(a.publishedAt || a.date) || 0))
+    .slice(0, BG_FETCH_MAX);
   if (!want.length) return 0;
   const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
   // The site's own numbers, handed to the writer so "connect the dots" has dots to
@@ -314,7 +404,7 @@ async function addBackgrounds(events, now) {
   }
   // Only run the model for stories that actually need analysis — an image-only retry gets its
   // picture from the fetch above and skips the (paid) model call.
-  const items = fetched.filter((x) => x.r.ok && needsAnalysis(x.e)).map((x, i) => ({
+  const items = fetched.filter((x) => x.r.ok && needsAnalysis(x.e)).slice(0, BG_MAX).map((x, i) => ({
     i,
     e: x.e,
     body: x.r.text.slice(0, 1800),
@@ -435,7 +525,8 @@ function mergeLog(existing, fresh, now) {
     const freshTime = Date.parse(freshest.publishedAt || freshest.published_at || freshest.date) || 0;
     const merged = { ...prior, importance: group.importance, coverage: group.coverage };
     if (freshTime > priorTime && !existingIds.has(freshest.id)) {
-      for (const key of ['date', 'section', 'title', 'why', 'company', 'source', 'url', 'publishedAt', 'sourceTier', 'image', 'imgTries']) {
+      for (const key of ['date', 'section', 'title', 'why', 'company', 'source', 'url', 'publishedAt', 'sourceTier', 'image', 'imgTries',
+        'scheduledEventId', 'scheduledImportanceFloor', 'requiredForBrief', 'importanceProvenance', 'importanceComponents']) {
         if (freshest[key] !== undefined) merged[key] = freshest[key];
       }
       if (!merged.image && group.event.image) merged.image = group.event.image;
@@ -445,19 +536,48 @@ function mergeLog(existing, fresh, now) {
   });
   const cutoff = now.getTime() - KEEP_DAYS * 864e5;
   const kept = events.filter((e) => { const t = Date.parse(e.date) || 0; return t >= cutoff || (e.importance || 0) >= 5; });
-  kept.sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0));
+  kept.sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0)
+    || (Number(b.importance) || 0) - (Number(a.importance) || 0)
+    || (Date.parse(b.publishedAt || b.date) || 0) - (Date.parse(a.publishedAt || a.date) || 0));
   return { events: kept.slice(0, MAX_STORE), added, removedDuplicates: Math.max(0, before + fresh.length - events.length) };
+}
+
+function attachScheduledMetadata(events, schedule) {
+  return events.map((event) => {
+    const scheduled = linkScheduledCandidate(event, schedule, event.date);
+    if (!scheduled) return event;
+    const alreadyAudited = event.scheduledEventId === scheduled.id
+      && event.importanceComponents && event.importanceProvenance;
+    const scored = alreadyAudited ? {
+      importance: event.importance,
+      importanceComponents: event.importanceComponents,
+      importanceProvenance: event.importanceProvenance,
+    } : normalizeModelImportanceRow({
+      importance: event.importance,
+      importanceComponents: event.importanceComponents || {},
+    }, { scheduledObligation: scheduledObligation({ ...event, _scheduled: scheduled }) });
+    return {
+      ...event,
+      importance: clampImp(Math.max(Number(event.importance) || 0, scored.importance)),
+      importanceComponents: event.importanceComponents || scored.importanceComponents,
+      scheduledEventId: scheduled.id,
+      scheduledImportanceFloor: scheduled.importanceFloor,
+      requiredForBrief: scheduled.requiredForBrief,
+      importanceProvenance: scored.importanceProvenance,
+    };
+  });
 }
 
 async function main() {
   const now = new Date();
   console.log(`\nbuild-happening · model ${hasLLM() ? model : 'none (deterministic fallback)'}`);
   const existing = readJson(D('happening.json'), { meta: {}, events: [] });
-  const cands = candidates(now);
+  const schedule = readJson(D('events.json'), { events: [] });
+  const cands = candidates(now, existing.events, schedule);
   console.log(`  candidates ${cands.length} (last ${WINDOW_DAYS}d) · existing log ${arr(existing.events).length}`);
   const fresh = await curate(cands, now);
   console.log(`  curated ${fresh.length} fresh events`);
-  const merged = mergeLog(existing, fresh, now).events;
+  const merged = attachScheduledMetadata(mergeLog(existing, fresh, now).events, schedule);
   // Curated framing stays human; referenced values are re-derived from the stored
   // first-party dataset on every run so corrected source data cannot leave stale copy.
   const events = reconcileHappeningFactCopy(merged, { tradeUS: readJson(D('trade-us.json'), null) });

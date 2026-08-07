@@ -30,7 +30,18 @@ export async function checkProduction() {
 
   const brief = await get('/data/brief.json');
   if (brief.meta?.editorialDate !== EXPECTED_DATE) throw new Error(`live brief date is ${brief.meta?.editorialDate || 'missing'}`);
-  if (!Array.isArray(brief.items) || brief.items.length > 5) throw new Error('live brief has an invalid story set');
+  if (!Array.isArray(brief.items) || brief.items.length > 4) throw new Error('live brief has an invalid story set');
+  if (brief.meta?.selection?.policy !== 'importance-first-v1'
+      || !Array.isArray(brief.meta?.selection?.receipt)) {
+    throw new Error('live brief is missing its selection audit');
+  }
+  if (brief.meta.selection.receipt.some((row) => /analysis/i.test(String(row.reason || '')))) {
+    throw new Error('live brief selection still depends on optional analysis');
+  }
+
+  const eventStatus = await get('/data/event-status.json');
+  if (eventStatus.meta?.editorialDate !== EXPECTED_DATE) throw new Error('live scheduled-outcome audit has the wrong date');
+  if (Number(eventStatus.meta?.blockers) > 0) throw new Error('live edition has an unresolved scheduled-outcome blocker');
 
   // These assertions have to track the page. They were still looking for the "Mexico
   // today" headline and a data-editorial-date attribute, both of which the 2026-08-02

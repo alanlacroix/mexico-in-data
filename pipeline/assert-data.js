@@ -17,10 +17,12 @@ import { lintReportText, lintAnalysisText, analysisNeedsScale } from './lib/lint
 import newsDay from './lib/news-day.cjs';
 import homeEditorialDate from './lib/home-editorial.cjs';
 import newsWindow from './lib/news-window.cjs';
+import scheduleCoverage from './lib/schedule-coverage.cjs';
 
 const { editorialDay } = newsDay;
 const { currentHomeEditorial } = homeEditorialDate;
 const { eventTimestamp } = newsWindow;
+const { validateScheduleCoverage } = scheduleCoverage;
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
@@ -158,6 +160,9 @@ try {
   if (dayAge(happening.meta?.generatedAt) > 4) warns.push(`happening: generated ${Math.floor(dayAge(happening.meta.generatedAt))} days ago`);
 
   const brief = read('data/brief.json');
+  for (const error of validateScheduleCoverage(read('data/events.json'), editorialDay(new Date()))) {
+    fails.push(`scheduled outcomes: ${error}`);
+  }
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
   const expectedContentSig = createHash('sha256').update(JSON.stringify(claims.map((claim) => [
     claim.href, claim.date, claim.h1 || claim.headline, claim.context, claim.source,
@@ -203,6 +208,49 @@ try {
     const claimHasAnalysis = ['background', 'view', 'prediction'].some((field) => String(claim[field] || '').trim());
     const claimHasCompleteAnalysis = ['background', 'view', 'prediction'].every((field) => String(claim[field] || '').trim());
     if (claimHasAnalysis && (!claimHasCompleteAnalysis || Number(claim.analysisV) < 7)) fails.push(`brief: claim ${index + 1} exposes incomplete or unapproved BE analysis`);
+  }
+
+  // Completeness is a separate publication contract from ranking. Exact, high-impact
+  // calendar obligations remain open until the event log contains a report explicitly
+  // linked by scheduledEventId. A prior-day miss blocks the edition instead of quietly
+  // certifying an incomplete Brief. Same-day pending events remain visible in the audit
+  // but do not hold a morning edition before the release occurs.
+  if (!exists('data/event-status.json')) {
+    fails.push('scheduled outcomes: data/event-status.json is missing');
+  } else {
+    const eventStatus = read('data/event-status.json');
+    if (eventStatus.meta?.editorialDate !== brief.meta?.editorialDate) {
+      fails.push('scheduled outcomes: status date does not match the Brief editorial date');
+    }
+    for (const outcome of eventStatus.outcomes || []) {
+      if (outcome.hardBlock || outcome.status === 'missing') {
+        fails.push(`scheduled outcomes: ${outcome.id || outcome.label} is missing after its publication day`);
+      }
+      if (outcome.status !== 'satisfied' || !outcome.requiredForBrief || !outcome.matchedEventId) continue;
+      const matched = events.find((event) => event.id === outcome.matchedEventId);
+      const builtAt = Date.parse(brief.meta?.generatedAt);
+      const maxAge = (Number(brief.meta?.windowHours) || 36) * 60 * 60 * 1000;
+      const published = eventTimestamp(matched);
+      const isCurrent = Number.isFinite(builtAt) && published
+        && published <= builtAt + (15 * 60 * 1000) && published >= builtAt - maxAge;
+      if (isCurrent && !claims.some((claim) => (Array.isArray(claim.refs) ? claim.refs : []).includes(outcome.matchedEventId))) {
+        fails.push(`brief: required scheduled outcome ${outcome.id} was satisfied but not selected`);
+      }
+    }
+  }
+
+  const selectionReceipt = brief.meta?.selection?.receipt;
+  if (!Array.isArray(selectionReceipt)) fails.push('brief: selection receipt is missing');
+  else {
+    if (selectionReceipt.some((row) => /analysis/i.test(String(row.reason || '')))) {
+      fails.push('brief: optional analysis must never be an exclusion reason');
+    }
+    const selectedIds = new Set(selectionReceipt.filter((row) => row.selected).map((row) => row.id));
+    for (const claim of claims) {
+      if (!(Array.isArray(claim.refs) ? claim.refs : []).some((ref) => selectedIds.has(ref))) {
+        fails.push(`brief: published claim ${(claim.h1 || claim.headline || '').slice(0, 50)} is absent from the selection receipt`);
+      }
+    }
   }
   for (const live of brief.standing?.live || []) if (!servedById.has(live.series)) fails.push(`brief: standing line needs missing series ${live.series}`);
   if (dayAge(brief.meta?.generatedAt) > 4) warns.push(`brief: generated ${Math.floor(dayAge(brief.meta.generatedAt))} days ago`);

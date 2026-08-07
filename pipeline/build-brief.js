@@ -15,12 +15,14 @@ import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
 import newsWindow from './lib/news-window.cjs';
 import plainLanguage from './lib/plain-language.cjs';
+import briefSelection from './lib/brief-selection.cjs';
 
 const { editorialDay } = newsDay;
 const { board, buildStanding } = briefStanding;
 const { groupEvents, sameThread } = newsThreads;
 const { DEFAULT_WINDOW_HOURS, FALLBACK_WINDOW_HOURS, recentEvents } = newsWindow;
 const { plainExplanation, plainHeadline } = plainLanguage;
+const { optionalAnalysis, selectDailyBrief } = briefSelection;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -62,18 +64,13 @@ const contextGate = (e) => lintReportText({
   maxSentences: 2,
 });
 const ctxOf = (e) => stripDash(contextGate(e).ok ? shippedContext(e) : '');
-const analysisReady = (e) => Number(e && e.analysisV) >= 7
-  && ['background', 'view', 'prediction'].every((field) => String(e && e[field] || '').trim());
+const effImp = (e) => Math.max(
+  Number(e && e.importance) || 0,
+  Number(e && e.scheduledImportanceFloor) || 0,
+);
 
-// Major investment commitments get a deterministic floor so an unusually large deal is not
-// buried by a conservative source score. Both a money signal and an investment term must match.
-const BIG_MONEY = /\$?\s?\d{1,4}\s?(?:billion|bn)\b|\d{1,4}\s?mil\s?millones\s?de\s?d[oó]lares/i;
-const INVEST_TERM = /\b(invest|inversi[oó]n|private credit|cr[eé]dito privado|nearshoring|fund|fondo|acquisi|adquisici|stake|\bIPO\b)\b/i;
-const bigCapital = (e) => { const t = `${e.title || ''} ${e.why || ''} ${e.context || ''}`; return BIG_MONEY.test(t) && INVEST_TERM.test(t); };
-const effImp = (e) => (bigCapital(e) ? Math.max(e.importance || 0, 8) : (e.importance || 0));
-
-// Declared interests reorder qualifying news; they never decide what counts as news. Stories
-// at importance 8+ take their slots first, and one untagged wildcard prevents a closed bubble.
+// Declared interests are same-band tie-breakers only. They never decide what counts as
+// news and can never make a lower-importance story outrank a higher-importance one.
 const INTERESTS = (() => {
   try {
     return JSON.parse(fs.readFileSync(new URL('../data/interests.json', import.meta.url), 'utf8'))
@@ -85,61 +82,34 @@ const interestTags = (e) => {
   return INTERESTS.filter((x) => x.rx.test(hay)).map((x) => x.tag);
 };
 function select(events) {
-  const THRESH = 5, CAP = 5, NEVER_OUTRANKED = 8, BOOST = 2;
-  const eligible = events.filter((e) => {
-    const gate = contextGate(e);
-    if (!gate.ok && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: ${gate.flags.join('; ')}`);
-    if (gate.ok && !analysisReady(e) && (e.importance || 0) >= THRESH) console.warn(`  hold ${e.id}: Briefly Explained is not approved`);
-    // Key developments promise more than a headline. A fresh story remains available in
-    // All headlines until its full Briefly Explained unit passes review; it must never
-    // displace the last reviewed Brief with an empty BE control.
-    return gate.ok && analysisReady(e) && e.url && e.source;
-  });
-  const ranked = groupEvents(eligible).map((group) => ({
+  const candidates = groupEvents(events).map((group) => ({
     ...group.event,
     importance: group.importance,
     coverage: group.coverage,
-  })).filter((e) => effImp(e) >= THRESH)
-    .sort((a, b) => (effImp(b) - effImp(a)) || (b._t - a._t));
-  for (const e of ranked) { e._tags = interestTags(e); e._boosted = false; }
-
-  // Pass 1: defining stories take slots first, regardless of the interest list.
-  const picked = ranked.filter((e) => effImp(e) >= NEVER_OUTRANKED).slice(0, CAP);
-
-  // Pass 2: remaining slots by importance, interests and a small breadth preference.
-  // Breadth is only a tiebreaker. It can surface another qualified source or beat, but it
-  // cannot make weak news outrank an important development.
-  const rest = ranked.filter((e) => !picked.includes(e));
-  while (picked.length < CAP && rest.length) {
-    const usedSources = new Set(picked.map((e) => e.source).filter(Boolean));
-    const usedSections = new Set(picked.map((e) => e.section).filter(Boolean));
-    rest.sort((a, b) => {
-      const score = (e) => effImp(e)
-        + (e._tags.length ? BOOST : 0)
-        + (!usedSources.has(e.source) ? 0.6 : 0)
-        + (!usedSections.has(e.section) ? 0.25 : 0);
-      return score(b) - score(a) || b._t - a._t;
-    });
-    const nextIndex = picked.length < 3
-      ? 0
-      : rest.findIndex((candidate) => effImp(candidate) >= 6 || candidate._tags.length > 0);
-    if (nextIndex < 0) break;
-    const [e] = rest.splice(nextIndex, 1);
-    e._boosted = e._tags.length > 0;
-    picked.push(e);
-  }
-
-  // One wildcard outside Alan's declared interests prevents a completely closed bubble.
-  const boostedCount = picked.filter((e) => e._tags.length).length;
-  if (picked.length === CAP && boostedCount === CAP) {
-    const wildcard = ranked.find((e) => !picked.includes(e) && !e._tags.length && effImp(e) >= 6);
-    if (wildcard) {
-      const dropped = picked[picked.length - 1];
-      picked[picked.length - 1] = wildcard;
-      console.log(`  wildcard: "${wildcard.title.slice(0, 50)}" replaces "${dropped.title.slice(0, 50)}" (anti-bubble slot)`);
-    }
-  }
-  return picked;
+  }));
+  const result = selectDailyBrief(candidates, {
+    effectiveImportance: effImp,
+    interestTags,
+    scheduledMatch: (event) => Boolean(event.scheduledEventId),
+    candidateGate: (event) => {
+      if (!event?.url) return { ok: false, reason: 'missing-url' };
+      if (!event?.source) return { ok: false, reason: 'missing-source' };
+      const gate = contextGate(event);
+      if (!gate.ok) {
+        if (effImp(event) >= 5) console.warn(`  hold ${event.id}: ${gate.flags.join('; ')}`);
+        return { ok: false, reason: `copy-gate:${gate.flags.join('|')}` };
+      }
+      return { ok: true };
+    },
+  });
+  const receiptById = new Map(result.receipt.map((row) => [row.id, row]));
+  const picked = result.selected.map((event) => ({
+    ...event,
+    _tags: interestTags(event),
+    _effectiveImportance: effImp(event),
+    _selectionReason: receiptById.get(event.id)?.reason || '',
+  }));
+  return { picked, receipt: result.receipt };
 }
 
 function assertUniqueEvents(events) {
@@ -185,18 +155,19 @@ async function main() {
   const prevHrefs = new Set([prev && prev.lead && prev.lead.href, ...arr(prev && prev.items).map((i) => i.href)].filter(Boolean));
 
   let windowHours = DEFAULT_WINDOW_HOURS;
-  let picked = select(P.recent);
+  let selection = select(P.recent);
+  let picked = selection.picked;
   if (picked.length < 3) {
     const wider = select(P.fallback);
-    if (wider.length > picked.length) {
-      picked = wider;
+    if (wider.picked.length > picked.length) {
+      selection = wider;
+      picked = wider.picked;
       windowHours = FALLBACK_WINDOW_HOURS;
     }
   }
   const priorStories = [prev?.lead, ...arr(prev?.items)].filter(Boolean);
   const priorApproved = Boolean(prev?.summary && priorStories.length)
-    && priorStories.every((story) => Number(story.analysisV) >= 7
-      && ['background', 'view', 'prediction'].every((field) => String(story[field] || '').trim()));
+    && priorStories.every((story) => story.href && story.source && arr(story.refs).length);
   if (!picked.length) {
     // A quiet or incomplete refresh must not erase the last reviewed Brief. Fresh,
     // unreviewed stories remain visible in All headlines until their complete BE unit
@@ -216,6 +187,11 @@ async function main() {
           newCount: 0,
           carriedForward: true,
           windowHours,
+          selection: {
+            policy: 'importance-first-v1',
+            receipt: selection.receipt,
+            scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
+          },
         },
         lead: prev.lead ? { ...prev.lead, isNew: false } : null,
         items: arr(prev.items).map((item) => ({ ...item, isNew: false })),
@@ -233,6 +209,11 @@ async function main() {
         reviewedAt, latestItemDate: '', quiet: true, newCount: 0,
         generatedAt: now.toISOString(), mode: 'curated', count: 0, words: 8,
         windowHours,
+        selection: {
+          policy: 'importance-first-v1',
+          receipt: selection.receipt,
+          scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
+        },
       },
       summary: 'No major developments have cleared the brief yet.',
       lead: null,
@@ -246,18 +227,25 @@ async function main() {
   const isNew = (e) => !prevHrefs.has(e.url || '');
   const lead0 = picked[0];
   const pass4 = (e) => {
-    const approved = Number(e.analysisV) >= 7 && ['background', 'view', 'prediction'].every((field) => String(e[field] || '').trim());
+    const approved = optionalAnalysis(e);
     return {
-      background: approved ? plainExplanation(e.background) : '',
-      view: approved ? plainExplanation(e.view) : '',
-      prediction: approved ? plainExplanation(e.prediction) : '',
-      analysisV: approved ? Number(e.analysisV) : 0,
+      background: approved ? plainExplanation(approved.background) : '',
+      view: approved ? plainExplanation(approved.view) : '',
+      prediction: approved ? plainExplanation(approved.prediction) : '',
+      analysisV: approved ? Number(approved.analysisV) : 0,
       drivers: plainExplanation(e.drivers), implications: plainExplanation(e.implications), next: plainExplanation(e.next),
       image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '', publishedAt: String(e.publishedAt || '').trim(), coverage: arr(e.coverage),
     };
   };
   // Ranking provenance (Fable 2026-07-20): base importance, interest tags, boost, final rank.
-  const rankOf = (e, i) => ({ rank: i + 1, importance: e.importance || 0, tags: e._tags || [], boosted: !!e._boosted });
+  const rankOf = (e, i) => ({
+    rank: i + 1,
+    importance: e.importance || 0,
+    effectiveImportance: e._effectiveImportance || effImp(e),
+    tags: e._tags || [],
+    scheduledEventId: e.scheduledEventId || '',
+    reason: e._selectionReason || '',
+  });
   const lead = { h1: plainHeadline(stripDash(lead0.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(lead0)), ...pass4(lead0), refs: [lead0.id],
     href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0), ranking: rankOf(lead0, 0) };
   const items = picked.slice(1).map((e, i) => ({ headline: plainHeadline(stripDash(e.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(e)), ...pass4(e),
@@ -291,7 +279,12 @@ async function main() {
   const out = { meta: { title: 'The brief', editorialDate, updated: editorialDate, asOf: editorialDate,
     reviewedAt, latestItemDate: selectedDates.at(-1) || '', quiet, newCount,
     generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words, contentSig,
-    windowHours }, summary, lead, items, standing };
+    windowHours,
+    selection: {
+      policy: 'importance-first-v1',
+      receipt: selection.receipt,
+      scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
+    } }, summary, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
   console.log(`  wrote ${path.relative(ROOT, OUT)} · ${1 + items.length} items · ${words} words · picked: ${picked.map((e) => e.importance).join('/')} · ${unchanged ? 'content unchanged (clock held)' : 'content changed (clock bumped)'}`);
 }

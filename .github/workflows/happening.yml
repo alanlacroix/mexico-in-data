@@ -105,6 +105,13 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-happening.js
 
+      - name: Reconcile scheduled outcomes
+        if: steps.timing.outputs.run == 'true'
+        working-directory: pipeline
+        env:
+          EDITORIAL_DATE: ${{ steps.timing.outputs.editorial_date }}
+        run: node reconcile-scheduled-events.mjs
+
       - name: Build the homepage brief
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
@@ -148,6 +155,7 @@ jobs:
           (
             cd pipeline
             node build-happening.js
+            EDITORIAL_DATE="${{ steps.timing.outputs.editorial_date }}" node reconcile-scheduled-events.mjs
             node build-brief.js
             node build-areas.js
             node build-companies.js || true
@@ -175,7 +183,7 @@ jobs:
         run: |
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/news.json data/news/ data/happening.json data/brief.json data/areas.json data/companies.json data/publication-status.json data/llm-spend.json data/es/
+          git add data/news.json data/news/ data/happening.json data/event-status.json data/brief.json data/areas.json data/companies.json data/publication-status.json data/llm-spend.json data/es/
           git commit -m "publication: ${PUBLICATION_DATE} ${PUBLICATION_SLOT} edition"
           # A single push attempt used to lose the whole publication to a non-fast-forward
           # whenever anything else landed on main mid-run (2026-08-02 22:14: the edition

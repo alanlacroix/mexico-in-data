@@ -1,7 +1,15 @@
 {
   "meta": {
-    "updated": "2026-07-09",
-    "note": "Dated facts only — scheduled events and processes underway. No predictions. Each carries its source."
+    "updated": "2026-08-07",
+    "note": "Dated facts only — scheduled events and processes underway. No predictions. Each carries its source.",
+    "coveragePolicy": {
+      "minimumForwardDays": 90,
+      "minimumFutureOccurrences": 2,
+      "streams": [
+        { "key": "banxico-policy", "idPrefix": "banxico-policy-", "sourceUrl": "https://www.banxico.org.mx/publicaciones-y-prensa/anuncios-de-las-decisiones-de-politica-monetaria/anuncios-politica-monetaria-t.html" },
+        { "key": "inegi-cpi", "idPrefix": "inegi-cpi-", "sourceUrl": "https://www.inegi.org.mx/contenidos/saladeprensa/doc/cal_2026.pdf" }
+      ]
+    }
   },
   "events": [
     {
@@ -77,8 +85,13 @@
       "sourceUrl": "https://www.banxico.org.mx/publicaciones-y-prensa/remesas/remesas-balanza-pagos-banco.html"
     },
     {
+      "id": "banxico-policy-2026-08-06",
       "date": "2026-08-06",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 8,
+      "outcome": { "actor": "banxico", "topic": "policy-rate" },
       "label": "Banxico monetary-policy decision",
       "kind": "banxico",
       "mechanism": "Sets Banxico's overnight policy rate",
@@ -86,9 +99,70 @@
       "sourceUrl": "https://www.banxico.org.mx/publicaciones-y-prensa/anuncios-de-las-decisiones-de-politica-monetaria/anuncios-politica-monetaria-t.html"
     },
     {
+      "id": "inegi-cpi-2026-08-07",
       "date": "2026-08-07",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 7,
+      "outcome": { "actor": "inegi", "topic": "inflation", "actorMayBeImplicit": true },
       "label": "INEGI CPI — monthly (INPC, July; headline + core)",
+      "kind": "inegi",
+      "mechanism": "Updates headline and core consumer-price inflation",
+      "source": "INEGI",
+      "sourceUrl": "https://www.inegi.org.mx/contenidos/saladeprensa/doc/cal_2026.pdf"
+    },
+    {
+      "id": "inegi-cpi-2026-09-09",
+      "date": "2026-09-09",
+      "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 7,
+      "outcome": { "actor": "inegi", "topic": "inflation", "actorMayBeImplicit": true },
+      "label": "INEGI CPI — monthly (INPC, August; headline + core)",
+      "kind": "inegi",
+      "mechanism": "Updates headline and core consumer-price inflation",
+      "source": "INEGI",
+      "sourceUrl": "https://www.inegi.org.mx/contenidos/saladeprensa/doc/cal_2026.pdf"
+    },
+    {
+      "id": "inegi-cpi-2026-10-08",
+      "date": "2026-10-08",
+      "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 7,
+      "outcome": { "actor": "inegi", "topic": "inflation", "actorMayBeImplicit": true },
+      "label": "INEGI CPI — monthly (INPC, September; headline + core)",
+      "kind": "inegi",
+      "mechanism": "Updates headline and core consumer-price inflation",
+      "source": "INEGI",
+      "sourceUrl": "https://www.inegi.org.mx/contenidos/saladeprensa/doc/cal_2026.pdf"
+    },
+    {
+      "id": "inegi-cpi-2026-11-09",
+      "date": "2026-11-09",
+      "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 7,
+      "outcome": { "actor": "inegi", "topic": "inflation", "actorMayBeImplicit": true },
+      "label": "INEGI CPI — monthly (INPC, October; headline + core)",
+      "kind": "inegi",
+      "mechanism": "Updates headline and core consumer-price inflation",
+      "source": "INEGI",
+      "sourceUrl": "https://www.inegi.org.mx/contenidos/saladeprensa/doc/cal_2026.pdf"
+    },
+    {
+      "id": "inegi-cpi-2026-12-09",
+      "date": "2026-12-09",
+      "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 7,
+      "outcome": { "actor": "inegi", "topic": "inflation", "actorMayBeImplicit": true },
+      "label": "INEGI CPI — monthly (INPC, November; headline + core)",
       "kind": "inegi",
       "mechanism": "Updates headline and core consumer-price inflation",
       "source": "INEGI",
@@ -104,8 +178,13 @@
       "sourceUrl": "https://www.economia.gob.mx/files/gobmx/mapaflujosIEDgobmx.html"
     },
     {
+      "id": "presidential-informe-2026-09-01",
       "date": "2026-09-01",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 7,
+      "outcome": { "actor": "presidency", "topic": "state-of-nation" },
       "label": "Presidential Informe de Gobierno (Sheinbaum, 2nd) — Congress opens",
       "kind": "political",
       "mechanism": "Constitutional state-of-the-nation report opening the legislative year",
@@ -113,8 +192,13 @@
       "sourceUrl": "https://www.diputados.gob.mx/LeyesBiblio/pdf/CPEUM.pdf"
     },
     {
+      "id": "federal-budget-package-2027-2026-09-08",
       "date": "2026-09-08",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 8,
+      "outcome": { "actor": "finance-ministry", "topic": "budget-package" },
       "label": "Paquete Económico 2027 delivered to Congress (statutory deadline)",
       "kind": "fiscal",
       "mechanism": "Sets the government's proposed 2027 revenue and spending framework",
@@ -131,8 +215,13 @@
       "sourceUrl": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
     },
     {
+      "id": "banxico-policy-2026-09-24",
       "date": "2026-09-24",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 8,
+      "outcome": { "actor": "banxico", "topic": "policy-rate" },
       "label": "Banxico monetary-policy decision",
       "kind": "banxico",
       "mechanism": "Sets Banxico's overnight policy rate",
@@ -149,8 +238,13 @@
       "sourceUrl": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
     },
     {
+      "id": "federal-revenue-law-2027-2026-10-31",
       "date": "2026-10-31",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 8,
+      "outcome": { "actor": "congress", "topic": "revenue-law" },
       "label": "Ley de Ingresos 2027 — Senate approval deadline",
       "kind": "fiscal",
       "mechanism": "Fixes federal revenue and debt ceilings for 2027",
@@ -158,8 +252,13 @@
       "sourceUrl": "https://www.diputados.gob.mx/LeyesBiblio/pdf/CPEUM.pdf"
     },
     {
+      "id": "banxico-policy-2026-11-05",
       "date": "2026-11-05",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 8,
+      "outcome": { "actor": "banxico", "topic": "policy-rate" },
       "label": "Banxico monetary-policy decision",
       "kind": "banxico",
       "mechanism": "Sets Banxico's overnight policy rate",
@@ -167,8 +266,13 @@
       "sourceUrl": "https://www.banxico.org.mx/publicaciones-y-prensa/anuncios-de-las-decisiones-de-politica-monetaria/anuncios-politica-monetaria-t.html"
     },
     {
+      "id": "federal-spending-budget-2027-2026-11-15",
       "date": "2026-11-15",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 8,
+      "outcome": { "actor": "congress", "topic": "spending-budget" },
       "label": "Presupuesto de Egresos 2027 — Chamber of Deputies deadline",
       "kind": "fiscal",
       "mechanism": "Allocates federal spending for 2027",
@@ -185,8 +289,13 @@
       "sourceUrl": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
     },
     {
+      "id": "banxico-policy-2026-12-17",
       "date": "2026-12-17",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 8,
+      "outcome": { "actor": "banxico", "topic": "policy-rate" },
       "label": "Banxico monetary-policy decision (final 2026)",
       "kind": "banxico",
       "mechanism": "Sets Banxico's overnight policy rate",
@@ -194,8 +303,13 @@
       "sourceUrl": "https://www.banxico.org.mx/publicaciones-y-prensa/anuncios-de-las-decisiones-de-politica-monetaria/anuncios-politica-monetaria-t.html"
     },
     {
+      "id": "mexico-midterms-2027-06-06",
       "date": "2027-06-06",
       "approx": false,
+      "outcomeRequired": true,
+      "requiredForBrief": true,
+      "importanceFloor": 10,
+      "outcome": { "actor": "ine", "topic": "election" },
       "label": "Midterm elections — all 500 deputies, 17 governorships, 2nd judicial-election cohort",
       "kind": "election",
       "mechanism": "The deputies elected here are the chamber that votes every November 15 spending bill; the second judicial-election cohort is on the same ballot.",

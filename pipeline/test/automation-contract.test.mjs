@@ -77,13 +77,17 @@ assert.match(
 );
 assert.match(
   happening,
-  /node build-news\.js[\s\S]*node collect-news\.js[\s\S]*node build-happening\.js[\s\S]*node build-brief\.js/,
+  /node build-news\.js[\s\S]*node collect-news\.js[\s\S]*node build-happening\.js[\s\S]*node reconcile-scheduled-events\.mjs[\s\S]*node build-brief\.js/,
   'each editorial pass must refresh the news wire before reconsidering the brief',
+);
+assert.ok(
+  (happening.match(/node reconcile-scheduled-events\.mjs/g) || []).length >= 2,
+  'both the normal build and last-approved fallback must recheck scheduled outcomes',
 );
 assert.match(
   happening,
-  /git add[^\n]*data\/news\.json[^\n]*data\/brief\.json[^\n]*data\/publication-status\.json/,
-  'the publication commit must contain the refreshed wire, brief, and receipt together',
+  /git add[^\n]*data\/news\.json[^\n]*data\/event-status\.json[^\n]*data\/brief\.json[^\n]*data\/publication-status\.json/,
+  'the publication commit must contain the refreshed wire, scheduled-outcome audit, brief, and receipt together',
 );
 assert.match(
   happening,
@@ -94,6 +98,11 @@ assert.match(
   productionVerifier,
   /status\.publicationId !== EXPECTED_ID[\s\S]*status\.editorialDate !== EXPECTED_DATE[\s\S]*SLOT_RANK\[status\.slot\]/,
   'production verification must match the exact receipt id, date, and edition rank',
+);
+assert.match(
+  productionVerifier,
+  /selection\?\.policy !== 'importance-first-v1'[\s\S]*get\('\/data\/event-status\.json'\)[\s\S]*blockers/,
+  'production verification must require the ranking receipt and a blocker-free scheduled-outcome audit',
 );
 // The homepage stopped carrying a data-editorial-date attribute in the 2026-08-02
 // rebuild; the edition's date is now rendered in the dateline. The guarantee is the same:

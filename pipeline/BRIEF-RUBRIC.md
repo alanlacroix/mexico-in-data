@@ -6,19 +6,32 @@ The homepage Brief is the daily glance: **3–5 of the most important things in 
 
 Every candidate event in `data/happening.json` gets an `importance` from **0 to 10**: score it **0, 1, or 2** on each of the five criteria and add them up.
 
+The model returns the five component scores separately. Code normalizes and sums them, records the model's reported total only for comparison, and stores the component-level provenance. A model-written total is never trusted as the ranking input.
+
 1. **National consequence** — does it change policy, the economy, or daily life for Mexico broadly? (2 = national; 1 = a sector or one state; 0 = one company)
 2. **US–Mexico stakes** — tariffs, USMCA, remittances, migration, security cooperation. (2 = central; 0 = none)
 3. **Model impact** — does it move or explain a board number (peso, inflation, rate, growth)? (2 = moves one; 1 = related; 0 = no)
 4. **Durability** — will it still matter in 30 days? First report of a real change scores; commentary and re-reports score 0. (2 = lasting; 0 = noise)
 5. **Officialness** — is a primary/official source available (Banxico, INEGI, DOF, SHCP, USTR)? (2 = official; 1 = official-ish/press; 0 = rumor)
 
+An authoritative scheduled decision or release is a new outcome even when the number does not change. A rate hold, unchanged vote, or flat release still resolves uncertainty and may change guidance. When an exact calendar obligation is matched to linked authoritative evidence, durability and officialness each receive a score of 2. Any configured importance floor is applied only after that evidence check and is recorded separately.
+
 ## What ships
 
 - **Threshold: importance ≥ 5.** Only events at 5+ are eligible.
+- **Importance bands are absolute.** Personal interests, scheduled status, breadth, and freshness may break ties inside one band. They may never move importance-5 news above importance-6 news.
 - **Cap: 5.** Never more, even on a huge day.
 - **Floor: 3 (soft).** If fewer than 3 clear the threshold, ship what clears it. Never pad to a count.
 - **A fourth or fifth item must earn the extra space.** It needs importance ≥ 6 or a direct match to the stated interest list. A routine importance-5 item does not fill an empty slot.
 - Two reports about the same meeting or decision use one slot and retain both source links.
+- Optional analysis is not an eligibility rule. A factual, sourced event competes even when Briefly Explained is missing; the disclosure renders only when all three approved fields are present.
+- Every build writes a receipt for every candidate with its effective importance, final rank, selection or exclusion reason, tags, scheduled status, and analysis state.
+
+## Calendar completeness
+
+Exact high-impact calendar entries opt in with a stable `id` and `outcomeRequired: true`. A curated report closes the obligation only when it carries that exact `scheduledEventId`; a similar headline or next-day commentary does not count. An unresolved event is `pending` on its scheduled day and becomes a publication blocker the following editorial day. This keeps an early edition from waiting for an afternoon release while preventing the next edition from certifying a missing decision.
+
+If an event is postponed, cancelled, or deliberately waived, the calendar row may carry a `resolution` with that status, a named source, and an evidence URL. An unsupported status or a resolution without linked evidence fails validation; it cannot become a convenient escape hatch.
 
 ## Where the context comes from
 

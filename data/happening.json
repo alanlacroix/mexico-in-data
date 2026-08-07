@@ -11,6 +11,45 @@
   },
   "events": [
     {
+      "id": "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
+      "date": "2026-08-07",
+      "section": "money",
+      "title": "Mexico's annual inflation slows to 3.12 percent in July, lowest since 2020",
+      "why": "Annual price growth eased to 3.12 percent in July, the lowest reading since 2020.",
+      "company": "",
+      "source": "El Economista",
+      "url": "https://eleconomista.com.mx/economia/inflacion-mexico-desacelero-3-12-julio-menor-nivel-20260807-827157.html",
+      "importance": 7,
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "componentSource": "code-reviewed"
+      },
+      "scheduledEventId": "inegi-cpi-2026-08-07",
+      "scheduledImportanceFloor": 7,
+      "requiredForBrief": true,
+      "kind": "event",
+      "publishedAt": "2026-08-07T13:15:39.000Z",
+      "sourceTier": 2,
+      "coverage": [
+        {
+          "source": "El Economista",
+          "url": "https://eleconomista.com.mx/economia/inflacion-mexico-desacelero-3-12-julio-menor-nivel-20260807-827157.html",
+          "publishedAt": "2026-08-07T13:15:39.000Z",
+          "date": "2026-08-07",
+          "title": "Mexico's annual inflation slows to 3.12 percent in July, lowest since 2020",
+          "summary": "Annual price growth eased to 3.12 percent in July, the lowest reading since 2020."
+        }
+      ]
+    },
+    {
       "id": "n-m-xico-y-per-restablecen-las-relaciones-diplom-ticas-2026-08-07",
       "date": "2026-08-07",
       "section": "politics",
@@ -425,7 +464,31 @@
       "company": "",
       "source": "El Financiero — Economía",
       "url": "https://elfinanciero.com.mx/economia/2026/08/06/tasa-de-interes-del-banxico-en-que-nivel-quedo-hoy-6-de-agosto-de-2026/",
-      "importance": 6,
+      "importance": 8,
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 2
+      },
+      "scheduledEventId": "banxico-policy-2026-08-06",
+      "scheduledImportanceFloor": 8,
+      "requiredForBrief": true,
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "reportedTotal": 6,
+        "componentSource": "code-reviewed",
+        "scheduledOutcome": {
+          "applied": true,
+          "id": "banxico-policy-2026-08-06",
+          "kind": "decision",
+          "isNewOutcome": true,
+          "changed": false,
+          "importanceFloor": { "requested": 8, "before": 6, "after": 8, "applied": true }
+        }
+      },
       "kind": "event",
       "publishedAt": "2026-08-06T19:40:22.000Z",
       "sourceTier": 2,
@@ -1454,36 +1517,6 @@
       "background": "Pemex files a 6-K report with the US Securities and Exchange Commission because it carries dollar-denominated bonds held by US investors, obligating disclosure of material weaknesses in its financial controls.",
       "view": "The admission matters because it confirms internal control failures persisted through five different directors and three presidential terms rather than being isolated to one administration. Pemex is not financially separate from the federal government, so weaker credibility with bondholders raises the cost of the sovereign-backed refinancing that keeps the company afloat, at a time when that support already competes with spending on grids and water for new factories.",
       "prediction": "Pemex is likely to face higher borrowing costs or tighter covenant terms on its next bond issuance or refinancing round. That would be contradicted if global investors price new Pemex debt at spreads similar to prior issuances despite the disclosed control weaknesses.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-ganancias-de-cfe-se-desploman-por-el-d-lar-d-bil-2026-07-30",
-      "date": "2026-07-30",
-      "section": "economy",
-      "title": "CFE's profit falls 43% in the second quarter on a weaker dollar",
-      "why": "The state utility's net income dropped as peso appreciation reduced the value of its dollar-linked revenue, adding pressure to its finances.",
-      "company": "CFE",
-      "source": "Bloomberg Línea",
-      "url": "https://bloomberglinea.com/latinoamerica/mexico/ganancias-de-cfe-se-desploman-por-el-dolar-debil/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-07-30T21:11:00.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "Bloomberg Línea",
-          "url": "https://bloomberglinea.com/latinoamerica/mexico/ganancias-de-cfe-se-desploman-por-el-dolar-debil/",
-          "publishedAt": "2026-07-30T21:11:00.000Z",
-          "date": "2026-07-30",
-          "title": "CFE's profit falls 43% in the second quarter on a weaker dollar",
-          "summary": "The state utility's net income dropped as peso appreciation reduced the value of its dollar-linked revenue, adding pressure to its finances."
-        }
-      ],
-      "image": "https://www.bloomberglinea.com/resizer/v2/TSLLY3NLQMJX5IRRLMLX2E6J3Q.jpg?auth=b5bcecaa2a5c206b7414bcdaefc53b8c0dfd9f2a0a4f8fc81d185f195745d2b1&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 1,
-      "background": "CFE carries substantial dollar-denominated debt against mostly peso-denominated assets, so it uses currency swaps to convert fixed dollar interest obligations into fixed peso obligations and manage that mismatch.",
-      "view": "The profit drop is a currency-translation effect, not a decline in electricity sales or operating performance, since revenue fell only 1% while exchange-rate gains collapsed 50%. A stronger peso mechanically shrinks CFE's dollar debt burden in peso terms, but it also means past currency gains that flattered profits are reversing, so investors should watch operating income rather than headline net income to judge the utility's underlying finances.",
-      "prediction": "CFE's reported profit will likely stay volatile with the peso rather than reflect a change in electricity demand or costs. That view fails if a quarter shows a swing in net income driven by sales volume or operating costs rather than exchange-rate effects.",
       "analysisV": 7
     },
     {

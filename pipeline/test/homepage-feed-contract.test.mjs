@@ -30,7 +30,10 @@ assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
 assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
-assert.ok(dailyBrief.stories.every((story) => story.analysisV >= 7 && story.bg && story.view && story.prediction), 'every key development must include a complete approved BE unit');
+assert.ok(dailyBrief.stories.every((story) => {
+  const fields = [story.bg, story.view, story.prediction].filter((value) => String(value || '').trim());
+  return (story.analysisV >= 7 && fields.length === 3) || (story.analysisV === 0 && fields.length === 0);
+}), 'optional BE analysis must be complete and approved or absent as one atomic unit');
 for (let i = 0; i < dailyBrief.stories.length; i += 1) {
   for (let j = i + 1; j < dailyBrief.stories.length; j += 1) {
     assert.equal(sameThread(dailyBrief.stories[i], dailyBrief.stories[j]), false, 'the rendered Brief must never repeat one event');
@@ -326,7 +329,9 @@ assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, compl
 }
 // The brief still comes before the stories it summarises.
 assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf('id="sec-stories"'), 'the Brief must render before key developments');
-assert.match(briefBuilder, /return gate\.ok && analysisReady\(e\) && e\.url && e\.source/, 'an unreviewed story must not enter key developments');
+assert.doesNotMatch(briefBuilder, /analysisReady\(e\)/, 'optional analysis readiness must never decide whether a story enters key developments');
+assert.match(briefBuilder, /selectDailyBrief\(candidates/, 'key developments must use the auditable importance-first selector');
+assert.doesNotMatch(briefBuilder, /BIG_MONEY|bigCapital/, 'a dollar-amount regex must not override the audited importance rubric');
 assert.match(
   briefBuilder,
   /if \(priorApproved\)[\s\S]*editorialDate[\s\S]*carriedForward:\s*true[\s\S]*fs\.writeFileSync\(OUT/,
@@ -337,6 +342,8 @@ for (const phrase of [/\bThe base case is\b/i, /\bThat view would change if\b/i]
 }
 assert.match(happeningBuilder, /strictForecast: field === 'prediction'/, 'every generated BE forecast must include a base case and a change-of-mind condition');
 assert.match(happeningBuilder, /CORE\.every\(\(field\) => proposed\[field\]\)/, 'the three BE fields must be approved together, never assembled across runs');
-assert.match(briefBuilder, /Number\(e\.analysisV\) >= 7/, 'the brief builder must withhold unapproved BE analysis');
+assert.match(happeningBuilder, /SCHEDULED OUTCOMES \(hard requirement\)[\s\S]*SELECT it[\s\S]*unchanged[\s\S]*not news/i,
+  'the curator must treat an unchanged scheduled decision as a required new outcome');
+assert.match(briefBuilder, /optionalAnalysis\(e\)/, 'the brief builder must expose optional analysis atomically');
 
 console.log('homepage-feed-contract: ok');

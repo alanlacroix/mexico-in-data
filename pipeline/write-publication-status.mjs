@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const statusPath = path.join(ROOT, 'data', 'publication-status.json');
 const briefPath = path.join(ROOT, 'data', 'brief.json');
+const eventStatusPath = path.join(ROOT, 'data', 'event-status.json');
 
 const slot = process.env.PUBLICATION_SLOT;
 const editorialDate = process.env.PUBLICATION_DATE;
@@ -16,6 +17,7 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(editorialDate || '')) throw new Error(`Invalid p
 if (!publicationId) throw new Error('PUBLICATION_ID is required');
 
 const brief = JSON.parse(fs.readFileSync(briefPath, 'utf8'));
+const eventStatus = JSON.parse(fs.readFileSync(eventStatusPath, 'utf8'));
 if (brief.meta?.editorialDate !== editorialDate) {
   throw new Error(`Brief editorial date ${brief.meta?.editorialDate || '(missing)'} does not match ${editorialDate}`);
 }
@@ -29,6 +31,14 @@ const status = {
   generatedAt: new Date().toISOString(),
   briefGeneratedAt: brief.meta?.generatedAt || null,
   briefReviewedAt: brief.meta?.reviewedAt || null,
+  selectionPolicy: brief.meta?.selection?.policy || null,
+  selectionCandidates: Array.isArray(brief.meta?.selection?.receipt) ? brief.meta.selection.receipt.length : 0,
+  selectedStories: [brief.lead, ...(brief.items || [])].filter(Boolean).length,
+  scheduledOutcomes: {
+    checkedAt: eventStatus.meta?.checkedAt || null,
+    blockers: Number(eventStatus.meta?.blockers) || 0,
+    pending: (eventStatus.outcomes || []).filter((outcome) => outcome.status === 'pending').length,
+  },
   workflowRunId: process.env.GITHUB_RUN_ID || null,
   workflowRunAttempt: Number(process.env.GITHUB_RUN_ATTEMPT || 1),
 };
