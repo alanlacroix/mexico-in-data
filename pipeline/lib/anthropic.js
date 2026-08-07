@@ -54,6 +54,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const MONTHLY_CAP_USD = 2.0;
+// Preserve most of the small budget for the two jobs that define the product:
+// selecting the Brief and explaining its top stories. Translation, topic synthesis
+// and other fail-soft polish stop first. This changes allocation, never Alan's cap.
+const CORE_RESERVE_USD = 1.4;
 // LLM_LEDGER_PATH redirects the ledger so a test can exercise the real settle path
 // without spending against Alan's actual monthly cap. Only tests set it.
 const LEDGER = process.env.LLM_LEDGER_PATH
@@ -73,9 +77,12 @@ function settle(costUSD) {
   for (const k of Object.keys(ledger)) if (k < monthKey() && Object.keys(ledger).length > 3) delete ledger[k];
   try { fs.writeFileSync(LEDGER, `${JSON.stringify(ledger, null, 1)}\n`); } catch { /* read-only fs: skip */ }
 }
-function overBudget() {
+function budgetLimit(priority = 'standard') {
+  return priority === 'core' ? MONTHLY_CAP_USD : MONTHLY_CAP_USD - CORE_RESERVE_USD;
+}
+function overBudget(priority = 'standard') {
   if (process.env.LLM_BUDGET_OVERRIDE) return false;
-  return spentThisMonth() >= MONTHLY_CAP_USD;
+  return spentThisMonth() >= budgetLimit(priority);
 }
 const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 
@@ -93,6 +100,17 @@ const _tok = {};                         // model -> { in, out }
 export const hasLLM = () => !!KEY;
 export const model = DEFAULT_MODEL;
 export const models = { SONNET, HAIKU };
+export function budgetStatus(priority = 'standard') {
+  const spentUSD = spentThisMonth();
+  const limitUSD = budgetLimit(priority);
+  return {
+    priority,
+    spentUSD,
+    limitUSD,
+    remainingUSD: Math.max(0, limitUSD - spentUSD),
+    available: Boolean(process.env.LLM_BUDGET_OVERRIDE) || spentUSD < limitUSD,
+  };
+}
 
 // Cumulative token usage and cost for the run, priced per model.
 export function usage() {
@@ -122,10 +140,12 @@ export function usage() {
 // This is not a quality knob turned down to save money. Extraction against an explicit
 // rubric is the case where low effort costs nothing real, and Sonnet 5 respects the
 // level strictly, which is exactly what a deterministic pass wants.
-export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL, effort }) {
+export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL, effort, priority = 'standard' }) {
   if (!KEY) return null;
-  if (overBudget()) {
-    console.warn(`  llm: monthly cap reached ($${spentThisMonth().toFixed(2)} of $${MONTHLY_CAP_USD}) — skipping call; site keeps last-good content until the 1st`);
+  if (overBudget(priority)) {
+    const status = budgetStatus(priority);
+    const reason = priority === 'core' ? 'monthly cap reached' : 'core Brief reserve reached';
+    console.warn(`  llm: ${reason} ($${status.spentUSD.toFixed(2)} of $${status.limitUSD.toFixed(2)}) — skipping ${priority} call`);
     return null;
   }
   const body = {

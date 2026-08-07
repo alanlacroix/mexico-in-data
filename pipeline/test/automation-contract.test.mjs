@@ -80,6 +80,20 @@ assert.match(
   /node build-news\.js[\s\S]*node collect-news\.js[\s\S]*node build-happening\.js[\s\S]*node reconcile-scheduled-events\.mjs[\s\S]*node build-brief\.js/,
   'each editorial pass must refresh the news wire before reconsidering the brief',
 );
+assert.match(
+  happening,
+  /node build-happening\.js --skip-analysis[\s\S]*node build-brief\.js --selection-only[\s\S]*node build-happening\.js --analysis-for-brief[\s\S]*node build-brief\.js/,
+  'the workflow must lock the ranked stories before spending the explanation budget on those exact stories',
+);
+assert.ok(
+  (happening.match(/node build-happening\.js --analysis-for-brief/g) || []).length >= 2,
+  'normal publication and the recovery path must both target the locked Brief selection',
+);
+assert.match(
+  happening,
+  /Validate generated editorial claims[\s\S]*ANTHROPIC_API_KEY:[^\n]*secrets\.ANTHROPIC_API_KEY[\s\S]*node build-happening\.js --analysis-for-brief/,
+  'the recovery path must retain the model key instead of silently rebuilding without explanations',
+);
 assert.ok(
   (happening.match(/node reconcile-scheduled-events\.mjs/g) || []).length >= 2,
   'both the normal build and last-approved fallback must recheck scheduled outcomes',

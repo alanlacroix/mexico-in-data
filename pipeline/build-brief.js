@@ -10,12 +10,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, hasLLM } from './lib/anthropic.js';
 import briefStanding from './lib/brief-standing.cjs';
-import { lintReportText } from './lib/lint.js';
+import { lintReportText, reportContextDistinct } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
 import newsWindow from './lib/news-window.cjs';
 import plainLanguage from './lib/plain-language.cjs';
 import briefSelection from './lib/brief-selection.cjs';
+import reportEvidence from './lib/report-evidence.cjs';
 
 const { editorialDay } = newsDay;
 const { board, buildStanding } = briefStanding;
@@ -23,6 +24,7 @@ const { groupEvents, sameThread } = newsThreads;
 const { DEFAULT_WINDOW_HOURS, FALLBACK_WINDOW_HOURS, recentEvents } = newsWindow;
 const { plainExplanation, plainHeadline } = plainLanguage;
 const { optionalAnalysis, selectDailyBrief } = briefSelection;
+const { evidenceInputs } = reportEvidence;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -57,12 +59,18 @@ const WORDS = (t) => stripDash(t).split(/\s+/).filter(Boolean).length;
 // stored `why` is clean rewritten English (link + date + whole sentences), so it may feed
 // the Brief. lintReportText still enforces style + the no-invented-numbers rule below.
 const shippedContext = (e) => (e && (e.context || e.why)) || '';
-const contextGate = (e) => lintReportText({
-  text: shippedContext(e),
-  inputs: [e.date, e.title, e.context, e.why],
-  maxWords: 55,
-  maxSentences: 2,
-});
+const contextGate = (e) => {
+  const gate = lintReportText({
+    text: shippedContext(e),
+    inputs: evidenceInputs(e),
+    maxWords: 55,
+    maxSentences: 2,
+  });
+  if (gate.ok && !reportContextDistinct({ headline: e.title, context: shippedContext(e) })) {
+    return { ok: false, flags: ['context repeats the headline without adding a sourced fact'] };
+  }
+  return gate;
+};
 const ctxOf = (e) => stripDash(contextGate(e).ok ? shippedContext(e) : '');
 const effImp = (e) => Math.max(
   Number(e && e.importance) || 0,
@@ -78,7 +86,9 @@ const INTERESTS = (() => {
   } catch { return []; }
 })();
 const interestTags = (e) => {
-  const hay = `${e.title || ''} ${e.why || ''} ${e.section || ''}`;
+  // Tie-break interests come from the retained source facts as well as the public
+  // rewrite. Editing a headline for clarity must not silently change its rank.
+  const hay = `${e.title || ''} ${e.why || ''} ${e.reportEvidence?.title || ''} ${e.reportEvidence?.dek || ''} ${e.section || ''}`;
   return INTERESTS.filter((x) => x.rx.test(hay)).map((x) => x.tag);
 };
 function select(events) {
@@ -145,6 +155,7 @@ async function writeSummary(picked) {
 
 async function main() {
   const now = new Date();
+  const selectionOnly = process.argv.includes('--selection-only');
   const editorialDate = editorialDay(now);
   console.log(`\nbuild-brief · ${hasLLM() ? 'llm available (drafts only, gated)' : 'no llm — human context'}`);
   const P = pool(now);
@@ -190,6 +201,8 @@ async function main() {
           selection: {
             policy: 'importance-first-v1',
             receipt: selection.receipt,
+            lockedIds: [],
+            empty: true,
             scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
           },
         },
@@ -212,6 +225,8 @@ async function main() {
         selection: {
           policy: 'importance-first-v1',
           receipt: selection.receipt,
+          lockedIds: [],
+          empty: true,
           scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
         },
       },
@@ -225,9 +240,17 @@ async function main() {
     return;
   }
   const isNew = (e) => !prevHrefs.has(e.url || '');
+  const pickedIds = picked.map((event) => event.id).filter(Boolean);
+  const lockedIds = arr(prev?.meta?.selection?.lockedIds);
+  if (!selectionOnly && prev?.meta?.editorialDate === editorialDate && lockedIds.length
+      && JSON.stringify(lockedIds) !== JSON.stringify(pickedIds)) {
+    throw new Error(`selected story set changed after analysis enrichment: ${lockedIds.join(',')} -> ${pickedIds.join(',')}`);
+  }
   const lead0 = picked[0];
-  const pass4 = (e) => {
-    const approved = optionalAnalysis(e);
+  const pass4 = (e, rank) => {
+    // Briefly Explained is reserved for the three stories that define the edition.
+    // Lower cards stay fast to scan even if an old event-log row still has analysis.
+    const approved = rank <= 3 ? optionalAnalysis(e) : null;
     return {
       background: approved ? plainExplanation(approved.background) : '',
       view: approved ? plainExplanation(approved.view) : '',
@@ -246,9 +269,9 @@ async function main() {
     scheduledEventId: e.scheduledEventId || '',
     reason: e._selectionReason || '',
   });
-  const lead = { h1: plainHeadline(stripDash(lead0.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(lead0)), ...pass4(lead0), refs: [lead0.id],
+  const lead = { h1: plainHeadline(stripDash(lead0.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(lead0)), ...pass4(lead0, 1), refs: [lead0.id],
     href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0), ranking: rankOf(lead0, 0) };
-  const items = picked.slice(1).map((e, i) => ({ headline: plainHeadline(stripDash(e.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(e)), ...pass4(e),
+  const items = picked.slice(1).map((e, i) => ({ headline: plainHeadline(stripDash(e.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(e)), ...pass4(e, i + 2),
     refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', isNew: isNew(e), ranking: rankOf(e, i + 1) }));
   // Last line of defense: a regression upstream must fail the build instead of putting
   // two cards for the same event on the public Brief.
@@ -275,7 +298,9 @@ async function main() {
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
   // Keep an unchanged summary stable. When the story set changes, a failed model draft gets
   // a deterministic summary of the current headlines, never prose from the previous set.
-  const summary = (unchanged && String(prev.summary || '').trim()) || await writeSummary(picked) || fallbackSummary(picked);
+  const summary = (unchanged && String(prev.summary || '').trim())
+    || (!selectionOnly ? await writeSummary(picked) : '')
+    || fallbackSummary(picked);
   const out = { meta: { title: 'The brief', editorialDate, updated: editorialDate, asOf: editorialDate,
     reviewedAt, latestItemDate: selectedDates.at(-1) || '', quiet, newCount,
     generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words, contentSig,
@@ -283,6 +308,7 @@ async function main() {
     selection: {
       policy: 'importance-first-v1',
       receipt: selection.receipt,
+      lockedIds: selectionOnly ? pickedIds : (lockedIds.length ? lockedIds : pickedIds),
       scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
     } }, summary, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));

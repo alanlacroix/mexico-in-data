@@ -25,7 +25,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { askJSON, hasLLM, usage, model, models } from './lib/anthropic.js';
+import { askJSON, budgetStatus, hasLLM, usage, model, models } from './lib/anthropic.js';
 import { REPORT, ANALYSIS_SHAPE, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
 import { lintReportText, lintAnalysisText, analysisNeedsScale, slopFlags, isSlop } from './lib/lint.js';
 import { mexicoRelevant } from './lib/news-trust.js';
@@ -160,6 +160,10 @@ function mkEvent(x, section, importance, title, why, company = '') {
     source: x.sourceName || x.source || '', url: x.url,
     importance: clampImp(Math.max(Number(importance) || 0, Number(scheduled?.importanceFloor) || 0)), kind: 'event',
     publishedAt: x.published_at || '', sourceTier: x.tier || '',
+    reportEvidence: {
+      title: String(x.title || '').trim(),
+      dek: String(x.dek || '').trim(),
+    },
     coverage: mergeCoverage(x._coverage || [], {
       source: x.sourceName || x.source || '', url: x.url, publishedAt: x.published_at || '',
       date, title: (title || x.title || '').trim(), summary: (why || x.dek || '').trim(),
@@ -304,7 +308,7 @@ ${BAN}`;
   // silently drops the ENTIRE clean batch to the raw-source fallback (the real "slop"
   // engine). Budget generously so reasoning + a full MAX_NEW batch both fit; the gate
   // still caps event count and why length, so the committed output stays small.
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 16000, effort: 'low', model: models.HAIKU });
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 16000, effort: 'low', model: models.HAIKU, priority: 'core' });
   if (!out || !Array.isArray(out.events)) { console.warn('  curate: no model result — deterministic fallback'); return curateFallback(cands, now); }
   const events = [];
   for (const r of out.events) {
@@ -348,8 +352,8 @@ const BG_FETCH_MAX = 9;       // Failed article fetches must not consume the sca
 const BG_DAYS = 14;           // recent events earn the analysis fetch
 const BG_MIN_IMP = 5;         // ordinary headlines do not need an analysis layer
 const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
-async function addBackgrounds(events, now) {
-  if (!hasLLM()) return 0;
+async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = false } = {}) {
+  const priority = new Set(priorityIds);
   const cutoff = now.getTime() - BG_DAYS * 864e5;
   const totalWords = (e) => ['background', 'view', 'prediction']
     .reduce((n, f) => n + String(e[f] || '').split(/\s+/).filter(Boolean).length, 0);
@@ -357,18 +361,40 @@ async function addBackgrounds(events, now) {
   const CORE = ['background', 'view', 'prediction'];
   const coreComplete = (e) => CORE.every((f) => stripDashWs(e[f]));
   const needsAnalysis = (e) => !coreComplete(e) || totalWords(e) > 190 || e.analysisV !== 7;
+  const outcome = (event, reason) => ({ id: event?.id || '', ready: Boolean(event && coreComplete(event) && event.analysisV === 7), reason });
+  if (!hasLLM()) return {
+    added: 0,
+    outcomes: priorityIds.map((id) => {
+      const event = events.find((candidate) => candidate.id === id);
+      return outcome(event, event && coreComplete(event) && event.analysisV === 7 ? 'ready' : 'no-llm');
+    }),
+  };
   // A fresh article often loads BEFORE its og:image is set (or behind a first-hit consent
   // page), so "fetched, no image" is NOT final — retry up to a few times over later runs so
   // the picture is picked up once it appears (Audit 2026-07-18: an El País Ruffo story was
   // permanently blank because the first fetch loaded the page image-less and locked it).
   const needsImage = (e) => !e.image && (e.imgTries || 0) < IMG_MAX_TRIES;
   const want = events.filter((e) => (e.importance || 0) >= BG_MIN_IMP && (needsAnalysis(e) || needsImage(e)) && e.url && (Date.parse(e.date) || 0) >= cutoff)
-    .sort((a, b) => Number(Boolean(b.scheduledEventId)) - Number(Boolean(a.scheduledEventId))
+    .filter((e) => !onlyPriority || priority.has(e.id))
+    .sort((a, b) => Number(priority.has(b.id)) - Number(priority.has(a.id))
+      || Number(Boolean(b.scheduledEventId)) - Number(Boolean(a.scheduledEventId))
       || (Number(b.importance) || 0) - (Number(a.importance) || 0)
       || (Date.parse(b.publishedAt || b.date) || 0) - (Date.parse(a.publishedAt || a.date) || 0))
     .slice(0, BG_FETCH_MAX);
-  if (!want.length) return 0;
+  if (!want.length) return {
+    added: 0,
+    outcomes: priorityIds.map((id) => {
+      const event = events.find((candidate) => candidate.id === id);
+      return outcome(event, event && coreComplete(event) && event.analysisV === 7 ? 'ready' : 'not-eligible');
+    }),
+  };
   const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
+  const calendarText = arr(readJson(D('events.json'), { events: [] }).events)
+    .filter((event) => event?.date && Date.parse(`${event.date}T12:00:00Z`) >= now.getTime() - 864e5
+      && Date.parse(`${event.date}T12:00:00Z`) <= now.getTime() + (60 * 864e5))
+    .slice(0, 12)
+    .map((event) => `${event.date}: ${event.label || event.title || event.id}`)
+    .join('; ');
   // The site's own numbers, handed to the writer so "connect the dots" has dots to
   // connect while staying inside the closed world: these are the figures the
   // homepage already publishes, so citing one can never introduce a new claim.
@@ -417,13 +443,20 @@ async function addBackgrounds(events, now) {
   }));
   const imgGot = fetched.filter((x) => x.r.image).length;
   console.log(`  fetch: ${want.length} wanted · ${items.length} to analyze · ${imgGot} images grabbed`);
-  if (!items.length) return 0;
+  if (!items.length) return {
+    added: 0,
+    outcomes: priorityIds.map((id) => {
+      const event = events.find((candidate) => candidate.id === id);
+      const fetch = fetched.find((item) => item.e.id === id);
+      return outcome(event, event && coreComplete(event) && event.analysisV === 7 ? 'ready' : (fetch && !fetch.r.ok ? 'fetch-failed' : 'no-analysis-needed'));
+    }),
+  };
   const FIELD = { type: 'string' };
   const schema = { type: 'object', additionalProperties: false, required: ['analyses'], properties: { analyses: { type: 'array', items: {
     type: 'object', additionalProperties: false, required: ['i', 'background', 'view', 'prediction'], properties: {
       i: { type: 'integer' }, background: FIELD, view: FIELD, prediction: FIELD } } } } };
-  const system = `You are writing the optional BRIEFLY EXPLAINED layer for The Mexico Brief. The visible summary already reports what happened. Use the ARTICLE, any OTHER REPORTING, and the site's STANDING FACTS to add three distinct things:
-THE INSIGHT TEST (hard requirement): every field must contain at least one true thing that is NOT in the article — a connection to a standing fact, one of the site numbers below, the second source, or an earlier event in the log. Summarizing the article in different words is a publication failure; the reader already has the summary one line up. If you cannot add anything true beyond the article, return "" for that field — an empty panel is honest, a paraphrase is not.
+  const system = `You are writing the optional BRIEFLY EXPLAINED layer for The Mexico Brief. The visible summary already reports what happened. Use the ARTICLE, any OTHER REPORTING, the site's STANDING FACTS, board numbers, and scheduled calendar to add three distinct things:
+THE INSIGHT TEST (hard requirement): every field must contain at least one true thing that is NOT in the article — a connection to a standing fact, one of the site numbers below, the calendar, the second source, or an earlier event in the log. Summarizing the article in different words is a publication failure; the reader already has the summary one line up. If you cannot add anything true beyond the article, return "" for that field — an empty panel is honest, a paraphrase is not.
 - background: one or two sentences explaining the institution, agreement, market, or structural fact a newcomer needs. Do not restate the event.
 - view: two or three sentences giving a narrow judgment about what changes in practice and why. This is explicitly labeled "Our view", so take a position. Explain the mechanism, the constraint, and who benefits. If the story leads with money, capacity, jobs, or another announcement number, give it a denominator or a useful comparison. If the supplied evidence has no comparison, return "" instead of calling the number large, nice, useful, or important.
 - prediction: state the most likely next outcome in ordinary language AND the observable condition that would prove it wrong. Distinguish signing, financing, permits, construction and operation. Do not invent a date, number, decision, or certainty.
@@ -439,51 +472,87 @@ ${ANALYSIS_SHAPE}
 ${EARNED_LINE}
 
 ${BAN}`;
-  const payload = { standingFacts: standingText, siteNumbers, items: items.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })) };
-  // The Briefly Explained writer — the ONLY analysis the model writes anywhere on
-  // the site, at most four items once a day. 'medium' by Alan's budget call
-  // (2026-08-03): on Sonnet 5 it is comparable to Sonnet 4.6 at 'high', the level
-  // this prompt was written and tuned against. The insight test and the site
-  // numbers are what carry the quality; effort was the cost dial.
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 10000, effort: 'medium' });
-  if (!out || !Array.isArray(out.analyses)) { console.warn('  analysis: no model result — skipped'); return 0; }
+  const payloadFor = (batch) => ({
+    standingFacts: standingText,
+    scheduledCalendar: calendarText,
+    siteNumbers,
+    items: batch.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })),
+  });
+  // Start cheaply against the exact top-three set. A single medium-effort retry is
+  // reserved for any story whose three fields fail as a unit; selection never changes
+  // to hide an explanation failure.
+  const request = (batch, effort, maxTokens) => askJSON({
+    system,
+    user: JSON.stringify(payloadFor(batch)),
+    schema,
+    maxTokens,
+    effort,
+    priority: 'core',
+  });
   const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
   let added = 0;
-  for (const r of out.analyses) {
-    const item = items.find((x) => x.i === r.i); if (!item) continue;
-    // Treat the disclosure as one editorial unit. Never combine a newly approved field
-    // with older prose and then call the whole thing reviewed.
-    const proposed = {};
-    for (const field of CORE) {
-      const text = stripDashWs(r[field]);
-      if (!text) continue;
-      const [maxWords, maxSentences] = CAPS[field];
-      const inputs = [item.e.title, item.e.context || item.e.why, item.body, standingText,
-        ...item.secondary.flatMap((source) => [source.title, source.summary, source.text])];
-      const gate = field === 'background'
-        ? lintReportText({ text, inputs, maxWords, maxSentences })
-        : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
-          requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
-          strictForecast: field === 'prediction', forbidFirstPerson: true });
-      const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
-      if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
-      // Anti-repetition (Audit 2026-07-17): drop a field that merely restates the one-line
-      // summary or an earlier field, so the four parts stay four distinct things.
-      const priors = [item.e.context || item.e.why, ...Object.values(proposed)].filter(Boolean);
-      if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
-      proposed[field] = text;
+  const completed = new Set();
+  const applyDraft = (out, batch) => {
+    if (!out || !Array.isArray(out.analyses)) return false;
+    for (const r of out.analyses) {
+      const item = batch.find((x) => x.i === r.i); if (!item) continue;
+      // Treat the disclosure as one editorial unit. Never combine a newly approved field
+      // with older prose and then call the whole thing reviewed.
+      const proposed = {};
+      for (const field of CORE) {
+        const text = stripDashWs(r[field]);
+        if (!text) continue;
+        const [maxWords, maxSentences] = CAPS[field];
+        const inputs = [item.e.title, item.e.context || item.e.why, item.body, standingText, calendarText,
+          ...item.secondary.flatMap((source) => [source.title, source.summary, source.text])];
+        const gate = field === 'background'
+          ? lintReportText({ text, inputs, maxWords, maxSentences })
+          : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
+            requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
+            strictForecast: field === 'prediction', forbidFirstPerson: true });
+        const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
+        if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
+        // Anti-repetition (Audit 2026-07-17): drop a field that merely restates the one-line
+        // summary or an earlier field, so the four parts stay four distinct things.
+        const priors = [item.e.context || item.e.why, ...Object.values(proposed)].filter(Boolean);
+        if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
+        proposed[field] = text;
+      }
+      // v7: all three fields must pass together. An incomplete proposal changes none of the
+      // visible analysis and keeps its old version so a later run retries it.
+      if (CORE.every((field) => proposed[field])) {
+        Object.assign(item.e, proposed, { analysisV: 7 });
+        if (!completed.has(item.e.id)) added++;
+        completed.add(item.e.id);
+      } else if (Object.keys(proposed).length) {
+        console.warn(`  analysis incomplete ${item.e.id}: missing ${CORE.filter((f) => !proposed[f]).join(', ')} — discarded as a set; no BE shown`);
+      }
+      if (!stripDashWs(r.background)) console.warn(`  standing-gap: no background written for "${item.e.title.slice(0, 60)}" — is a standing fact missing?`);
     }
-    // v7: all three fields must pass together. An incomplete proposal changes none of the
-    // visible analysis and keeps its old version so a later run retries it.
-    if (CORE.every((field) => proposed[field])) {
-      Object.assign(item.e, proposed, { analysisV: 7 });
-      added++;
-    } else if (Object.keys(proposed).length) {
-      console.warn(`  analysis incomplete ${item.e.id}: missing ${CORE.filter((f) => !proposed[f]).join(', ')} — discarded as a set; no BE shown`);
-    }
-    if (!stripDashWs(r.background)) console.warn(`  standing-gap: no background written for "${item.e.title.slice(0, 60)}" — is a standing fact missing?`);
+    return true;
+  };
+
+  const first = await request(items, 'low', 7000);
+  const firstReturned = applyDraft(first, items);
+  const retryItems = items.filter((item) => !completed.has(item.e.id));
+  let retryReturned = false;
+  if (retryItems.length && budgetStatus('core').available) {
+    console.warn(`  analysis retry: ${retryItems.length} selected ${retryItems.length === 1 ? 'story' : 'stories'} did not clear all three fields`);
+    retryReturned = applyDraft(await request(retryItems, 'medium', 7000), retryItems);
   }
-  return added;
+  if (!firstReturned && !retryReturned) console.warn('  analysis: no model result — selected stories remain unpublished');
+  return {
+    added,
+    outcomes: priorityIds.map((id) => {
+      const event = events.find((candidate) => candidate.id === id);
+      const fetch = fetched.find((item) => item.e.id === id);
+      if (event && coreComplete(event) && event.analysisV === 7) return outcome(event, 'ready');
+      if (fetch && !fetch.r.ok) return outcome(event, 'fetch-failed');
+      if (!budgetStatus('core').available) return outcome(event, 'budget-unavailable');
+      if (!firstReturned && !retryReturned) return outcome(event, 'model-unavailable');
+      return outcome(event, 'field-rejected');
+    }),
+  };
 }
 
 // ---- merge append-only into the existing log ----
@@ -525,12 +594,16 @@ function mergeLog(existing, fresh, now) {
     const freshTime = Date.parse(freshest.publishedAt || freshest.published_at || freshest.date) || 0;
     const merged = { ...prior, importance: group.importance, coverage: group.coverage };
     if (freshTime > priorTime && !existingIds.has(freshest.id)) {
-      for (const key of ['date', 'section', 'title', 'why', 'company', 'source', 'url', 'publishedAt', 'sourceTier', 'image', 'imgTries',
+      for (const key of ['date', 'section', 'title', 'why', 'company', 'source', 'url', 'publishedAt', 'sourceTier', 'image', 'imgTries', 'reportEvidence',
         'scheduledEventId', 'scheduledImportanceFloor', 'requiredForBrief', 'importanceProvenance', 'importanceComponents']) {
         if (freshest[key] !== undefined) merged[key] = freshest[key];
       }
       if (!merged.image && group.event.image) merged.image = group.event.image;
       for (const key of ['background', 'view', 'prediction', 'drivers', 'implications', 'next', 'analysisV']) delete merged[key];
+    }
+    if (!merged.reportEvidence) {
+      const evidenced = group.members.find((member) => member.reportEvidence);
+      if (evidenced) merged.reportEvidence = evidenced.reportEvidence;
     }
     return merged;
   });
@@ -570,8 +643,47 @@ function attachScheduledMetadata(events, schedule) {
 
 async function main() {
   const now = new Date();
+  const analysisOnly = process.argv.includes('--analysis-for-brief');
+  const skipAnalysis = process.argv.includes('--skip-analysis');
   console.log(`\nbuild-happening · model ${hasLLM() ? model : 'none (deterministic fallback)'}`);
   const existing = readJson(D('happening.json'), { meta: {}, events: [] });
+  if (analysisOnly) {
+    const brief = readJson(D('brief.json'), {});
+    if (brief?.meta?.selection?.empty) {
+      console.log('  targeted analysis: quiet edition, no selected stories');
+      return;
+    }
+    const selectedIds = [brief.lead, ...arr(brief.items)].slice(0, 3)
+      .map((story) => arr(story?.refs)[0])
+      .filter(Boolean);
+    if (!selectedIds.length) {
+      console.log('  targeted analysis: quiet edition, no selected stories');
+      return;
+    }
+    const lockedIds = arr(brief?.meta?.selection?.lockedIds).slice(0, 3);
+    if (!lockedIds.length || JSON.stringify(lockedIds) !== JSON.stringify(selectedIds)) {
+      throw new Error('targeted analysis requires the exact selection-only lock for this edition');
+    }
+    const events = arr(existing.events);
+    const analysis = await addBackgrounds(events, now, { priorityIds: selectedIds, onlyPriority: true });
+    const out = {
+      ...existing,
+      meta: {
+        ...existing.meta,
+        updated: editorialDay(now),
+        generatedAt: now.toISOString(),
+        count: events.length,
+        llm: hasLLM(),
+        analysisTarget: { policy: 'selected-brief-v1', ids: selectedIds, ...analysis },
+      },
+      events,
+    };
+    fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
+    const u = usage();
+    console.log(`  targeted analysis: ${analysis.outcomes.filter((item) => item.ready).length}/${selectedIds.length} selected stories ready`);
+    console.log(`  llm: ${u.calls} calls · ${u.input}+${u.output} tok · ~$${u.costUSD.toFixed(4)}\n`);
+    return;
+  }
   const schedule = readJson(D('events.json'), { events: [] });
   const cands = candidates(now, existing.events, schedule);
   console.log(`  candidates ${cands.length} (last ${WINDOW_DAYS}d) · existing log ${arr(existing.events).length}`);
@@ -581,8 +693,8 @@ async function main() {
   // Curated framing stays human; referenced values are re-derived from the stored
   // first-party dataset on every run so corrected source data cannot leave stale copy.
   const events = reconcileHappeningFactCopy(merged, { tradeUS: readJson(D('trade-us.json'), null) });
-  const bgAdded = await addBackgrounds(events, now);
-  if (bgAdded) console.log(`  background: ${bgAdded} written (article-grounded)`);
+  const bgResult = skipAnalysis ? { added: 0, outcomes: [] } : await addBackgrounds(events, now);
+  if (bgResult.added) console.log(`  background: ${bgResult.added} written (article-grounded)`);
 
   const out = {
     meta: {

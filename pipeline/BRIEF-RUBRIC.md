@@ -24,7 +24,7 @@ An authoritative scheduled decision or release is a new outcome even when the nu
 - **Floor: 3 (soft).** If fewer than 3 clear the threshold, ship what clears it. Never pad to a count.
 - **A fourth or fifth item must earn the extra space.** It needs importance ≥ 6 or a direct match to the stated interest list. A routine importance-5 item does not fill an empty slot.
 - Two reports about the same meeting or decision use one slot and retain both source links.
-- Optional analysis is not an eligibility rule. A factual, sourced event competes even when Briefly Explained is missing; the disclosure renders only when all three approved fields are present.
+- Analysis never changes ranking. A factual, sourced event competes even when its explanation is missing. After the exact story order is locked, the top three are enriched in that order. A non-quiet edition is not publication-ready until all three have a complete, approved Briefly Explained unit. Failure blocks the receipt; it never demotes a fact or promotes a lesser story.
 - Every build writes a receipt for every candidate with its effective importance, final rank, selection or exclusion reason, tags, scheduled status, and analysis state.
 
 ## Calendar completeness
@@ -44,6 +44,10 @@ The visible summary is factual and comes from the linked report. Only the three 
 Briefly Explained never uses first person. State the likely next outcome directly, then name the evidence that would prove it wrong. Start with the actual actor, event, or outcome. Do not repeat "The base case is" or "That view would change if" as a template across stories. First-person analysis belongs only in the quarterly review.
 
 Ordinary headlines never get this layer.
+
+The pipeline runs in one fixed order: build the event log without speculative analysis, reconcile scheduled outcomes, lock the Brief selection, explain those exact top-three references, rebuild without changing their order, and then test publication readiness. The normal and recovery workflows use the same sequence. A missing model, exhausted core budget, failed article fetch, or rejected field remains visible as an operational failure instead of certifying an unexplained edition.
+
+Factual copy uses ordinary actor-action-fact language. Terms such as “hawkish” and “dovish” are compressed judgments, not report copy. State the rate decision, guidance and reason directly. The source title and dek are retained separately from the rewrite, and the copy gate validates against those inputs rather than allowing generated context to validate itself.
 
 ### Briefly explained: the length law
 

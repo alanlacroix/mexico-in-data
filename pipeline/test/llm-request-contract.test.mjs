@@ -19,7 +19,10 @@ process.env.LLM_BUDGET_OVERRIDE = '1';
 // numbers nobody was billed for.
 process.env.LLM_LEDGER_PATH = path.join(os.tmpdir(), 'mb-test-ledger.json');
 
-const { askJSON, models } = await import('../lib/anthropic.js');
+const { askJSON, budgetStatus, models } = await import('../lib/anthropic.js');
+
+assert.ok(budgetStatus('core').limitUSD > budgetStatus('standard').limitUSD,
+  'the fixed monthly cap must reserve budget for ranking and selected-story analysis');
 
 await askJSON({ system: 's', user: 'u', effort: 'low', model: models.HAIKU });
 assert.equal(sent.at(-1).model, 'claude-haiku-4-5');
@@ -29,6 +32,9 @@ assert.equal(sent.at(-1).output_config?.effort, undefined,
 await askJSON({ system: 's', user: 'u', effort: 'low', model: models.SONNET });
 assert.equal(sent.at(-1).output_config?.effort, 'low',
   'effort must still reach Sonnet, which is where the cost saving comes from');
+
+await askJSON({ system: 's', user: 'u', model: models.SONNET, priority: 'core' });
+assert.equal(sent.at(-1).priority, undefined, 'internal budget priority must never leak into the provider request');
 
 // A schema still has to survive alongside a stripped effort.
 await askJSON({ system: 's', user: 'u', effort: 'low', model: models.HAIKU, schema: { type: 'object' } });

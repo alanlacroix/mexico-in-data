@@ -25,11 +25,16 @@ const AI_TICS = /\b(delve|dive into|rich tapestry|vibrant|think of it as|let'?s 
 // copy should state the supported consequence instead of announcing that it is the
 // biggest, sharpest, central, or defining story. This is intentionally narrower than
 // a general style checker: it protects the automated surfaces, not Alan's essays.
-const EDITORIALIZING = /\b(biggest overhang|sharpest escalation|story of the moment|this is the print|freshest print|central (?:monetary |political |economic )?pivot|the whole [^.]{0,70}\b(?:rests|is an open question)|story is (?:still )?intact|first read on how|board is being set|a bet on)\b/i;
+const EDITORIALIZING = /\b(biggest overhang|sharpest escalation|story of the moment|this is the print|freshest print|central (?:monetary |political |economic )?pivot|the whole [^.]{0,70}\b(?:rests|is an open question)|story is (?:still )?intact|first read on how|board is being set|a bet on|press(?:es|ed|ing)? [^.]{0,30} hard)\b/i;
 // Vague newsroom abstractions are especially expensive on a short brief: they sound
 // analytical without telling the reader who did what. Keep this list narrow and based on
 // copy that has actually failed review.
-const VAGUE_NEWSROOM = /\b(losing momentum|fiscal room|budgetary room|welfare commitments|signals? (?:a|the) broader shift|raises? (?:fresh )?questions|mounting pressure|evolving landscape)\b/i;
+const VAGUE_NEWSROOM = /\b(losing momentum|fiscal room|budgetary room|welfare commitments|signals? (?:a|the) broader shift|raises? (?:fresh )?questions|mounting pressure|evolving landscape|shaping expectations|maintain(?:s|ed|ing)? (?:its|a|the) [^.]{0,35} stance)\b/i;
+// "Hawkish" and "dovish" compress a judgment, a direction and a comparison into one
+// insider label. They are not inherently false, but they make a general reader guess:
+// tighter than what, because of which part of the decision, and with what consequence?
+// The Brief must state the rate action, guidance and reason in ordinary language.
+const UNEXPLAINED_POLICY_LABEL = /\b(?:hawkish|dovish|hawkishness|dovishness)\b/i;
 const VAGUE_ANALYSIS = /\b(could have implications|could impact|important to watch|will be important to watch|suggests? that|indicates? that|underscores? (?:the|a)|highlights? (?:the|a)|reflects? (?:a|the) broader|may signal|broader trend|complex picture|key takeaway)\b/i;
 // These words evaluate an announcement without helping the reader understand it. They
 // are especially dangerous in labelled analysis because the polish can disguise the
@@ -46,6 +51,28 @@ const FIRST_PERSON = /\b(?:I|me|my|mine|we|our|ours)\b/i;
 const numericTokens = (s) => (String(s || '').match(/\d+(?:[.,]\d+)*/g) || [])
   .map((x) => x.replace(/,/g, '').replace(/^0+(?=\d)/, ''));
 
+const CONTEXT_STOP = new Set(['a', 'an', 'and', 'at', 'by', 'for', 'from', 'in', 'is', 'its', 'of', 'on', 'since', 'the', 'to']);
+const contextTokens = (value) => String(value || '').toLowerCase()
+  .replace(/annual price growth/g, 'inflation')
+  .replace(/\b(?:eased|eases|fell|falls|fallen|slowed|slows|lower)\b/g, 'decline')
+  .replace(/\b(?:lowest|low)\b/g, 'low')
+  .replace(/[^a-z0-9.]+/g, ' ')
+  .split(/\s+/)
+  .filter((token) => token && !CONTEXT_STOP.has(token));
+
+// A context line earns its space only by adding a second sourced fact, comparison,
+// mechanism or caveat. This catches the common model failure where the dek simply
+// rewrites the headline with synonyms (for example, "inflation slows" becoming
+// "annual price growth eased").
+export function reportContextDistinct({ headline = '', context = '' }) {
+  const title = new Set(contextTokens(headline));
+  const body = new Set(contextTokens(context));
+  if (!title.size || !body.size) return false;
+  let overlap = 0;
+  for (const token of body) if (title.has(token)) overlap++;
+  return overlap / Math.min(title.size, body.size) < 0.75;
+}
+
 export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSentences = 2, checkNumbers = true }) {
   const flags = [];
   const clean = String(text || '').trim();
@@ -56,6 +83,7 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   const tic = clean.match(AI_TICS); if (tic) flags.push(`AI tic: "${tic[0]}"`);
   const editorial = clean.match(EDITORIALIZING); if (editorial) flags.push(`editorial shorthand: "${editorial[0]}"`);
   const vague = clean.match(VAGUE_NEWSROOM); if (vague) flags.push(`vague newsroom phrase: "${vague[0]}"`);
+  const policyLabel = clean.match(UNEXPLAINED_POLICY_LABEL); if (policyLabel) flags.push(`unexplained monetary-policy label: "${policyLabel[0]}"`);
   const collision = clean.match(ENTITY_ALIAS_COLLISION); if (collision) flags.push(`duplicated institutional label: "${collision[0]}"`);
   if (/\.{3}|…/.test(clean)) flags.push('ellipsis or truncated copy');
   const words = clean.split(/\s+/).filter(Boolean).length;

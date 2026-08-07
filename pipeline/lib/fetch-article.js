@@ -45,8 +45,21 @@ export function extractOgImage(html) {
 export function extractText(html) {
   if (!html) return '';
   let s = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ');
-  const art = s.match(/<article\b[\s\S]*?<\/article>/i);
-  if (art) s = art[0];
+  // Prefer the publisher's actual story-body container. Some WordPress themes do not
+  // wrap the story in <article>; they reserve <article> for the related-story cards
+  // below it. Taking the first <article> made a perfectly readable source look empty
+  // and prevented Briefly Explained from running. The tags marker is a useful, narrow
+  // end boundary for those themes, while the ordinary single-article fallback still
+  // handles cleaner publisher markup.
+  const body = s.match(/<div[^>]+class=["'][^"']*\bcontent-inner\b[^"']*["'][^>]*>([\s\S]*?)(?=<div[^>]+class=["'][^"']*\b(?:jeg_post_tags|post-tags|article-tags)\b)/i)
+    || s.match(/<div[^>]+(?:itemprop=["']articleBody["']|class=["'][^"']*\b(?:entry-content|article-content|post-content)\b[^"']*["'])[^>]*>([\s\S]*?)(?=<div[^>]+class=["'][^"']*\b(?:related|author|share-bottom|post-tags|article-tags)\b)/i);
+  if (body) s = body[1];
+  else {
+    const articles = [...s.matchAll(/<article\b[\s\S]*?<\/article>/gi)].map((match) => match[0]);
+    // Multiple <article> elements are commonly a list of cards, not the story body.
+    // Keep the full document in that case instead of confidently extracting a teaser.
+    if (articles.length === 1) s = articles[0];
+  }
   return s.replace(/<[^>]+>/g, ' ')
     .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
     .replace(/&#0?39;|&apos;|&#8217;/g, "'").replace(/&nbsp;|&#160;/g, ' ')

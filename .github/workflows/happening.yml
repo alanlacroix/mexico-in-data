@@ -103,7 +103,10 @@ jobs:
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node build-happening.js
+        # Selection must happen before explanation work. Otherwise this step guesses
+        # which five stories will matter, spends the analysis slots, and can miss the
+        # exact stories the Brief chooses a few seconds later.
+        run: node build-happening.js --skip-analysis
 
       - name: Reconcile scheduled outcomes
         if: steps.timing.outputs.run == 'true'
@@ -111,6 +114,18 @@ jobs:
         env:
           EDITORIAL_DATE: ${{ steps.timing.outputs.editorial_date }}
         run: node reconcile-scheduled-events.mjs
+
+      - name: Lock the homepage story selection
+        if: steps.timing.outputs.run == 'true'
+        working-directory: pipeline
+        run: node build-brief.js --selection-only
+
+      - name: Explain the stories that were actually selected
+        if: steps.timing.outputs.run == 'true'
+        working-directory: pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node build-happening.js --analysis-for-brief
 
       - name: Build the homepage brief
         if: steps.timing.outputs.run == 'true'
@@ -142,6 +157,8 @@ jobs:
 
       - name: Validate generated editorial claims
         if: steps.timing.outputs.run == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           if node pipeline/assert-data.js && node pipeline/test/homepage-feed-contract.test.mjs; then
             exit 0
@@ -154,8 +171,10 @@ jobs:
           git show HEAD:data/companies.json > data/companies.json
           (
             cd pipeline
-            node build-happening.js
+            node build-happening.js --skip-analysis
             EDITORIAL_DATE="${{ steps.timing.outputs.editorial_date }}" node reconcile-scheduled-events.mjs
+            node build-brief.js --selection-only
+            node build-happening.js --analysis-for-brief
             node build-brief.js
             node build-areas.js
             node build-companies.js || true

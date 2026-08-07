@@ -13,16 +13,20 @@ import {
   isSafeHttpUrl, validPeriod,
 } from './lib/publication-contract.js';
 import { freshnessStatus } from './lib/freshness.js';
-import { lintReportText, lintAnalysisText, analysisNeedsScale } from './lib/lint.js';
+import { lintReportText, lintAnalysisText, analysisNeedsScale, reportContextDistinct } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import homeEditorialDate from './lib/home-editorial.cjs';
 import newsWindow from './lib/news-window.cjs';
 import scheduleCoverage from './lib/schedule-coverage.cjs';
+import briefReadinessPolicy from './lib/brief-readiness.cjs';
+import reportEvidence from './lib/report-evidence.cjs';
 
 const { editorialDay } = newsDay;
 const { currentHomeEditorial } = homeEditorialDate;
 const { eventTimestamp } = newsWindow;
 const { validateScheduleCoverage } = scheduleCoverage;
+const { briefReadiness } = briefReadinessPolicy;
+const { evidenceInputs } = reportEvidence;
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
@@ -137,6 +141,15 @@ try {
     if (event.publishedAt && editorialDay(event.publishedAt) !== event.date) fails.push(`happening: ${event.id || index} date does not match its Mexico City publication day`);
     for (const key of ['title', 'source', 'why']) checkText(`happening: ${event.id || index}.${key}`, event[key]);
     if (!isSafeHttpUrl(event.url)) fails.push(`happening: ${event.id || index} has invalid source URL`);
+    if (event.reportEvidence) {
+      const reportGate = lintReportText({
+        text: `${event.title}. ${event.why || ''}`,
+        inputs: evidenceInputs(event),
+        maxWords: 70,
+        maxSentences: 3,
+      });
+      if (!reportGate.ok) fails.push(`happening: ${event.id || index} factual rewrite fails retained source evidence (${reportGate.flags.join('; ')})`);
+    }
     const analysisInputs = [event.date, event.title, event.context, event.why, event.background, event.drivers, event.implications, event.next,
       ...(event.coverage || []).flatMap((source) => [source.title, source.summary])];
     const completeAnalysis = ['background', 'view', 'prediction'].every((field) => String(event[field] || '').trim());
@@ -164,6 +177,7 @@ try {
     fails.push(`scheduled outcomes: ${error}`);
   }
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
+  const explanationReadiness = briefReadiness(brief);
   const expectedContentSig = createHash('sha256').update(JSON.stringify(claims.map((claim) => [
     claim.href, claim.date, claim.h1 || claim.headline, claim.context, claim.source,
     claim.background, claim.view, claim.prediction, claim.analysisV, claim.implications, claim.next,
@@ -173,6 +187,9 @@ try {
     fails.push('brief: an empty day must be marked quiet and include an honest empty-state summary');
   }
   if (claims.length && !brief.lead) fails.push('brief: a non-empty day needs a lead');
+  if (!explanationReadiness.ok) {
+    fails.push(`brief: the first ${explanationReadiness.requiredCount} selected stories need complete Briefly Explained units (missing ${explanationReadiness.missingRequired.join(', ')})`);
+  }
   if (brief.meta?.count !== claims.length) fails.push(`brief: meta.count ${brief.meta?.count} does not match ${claims.length} total claims`);
   if (brief.meta?.contentSig !== expectedContentSig) fails.push('brief: content signature does not match the visible story set');
   if (String(brief.summary || '').trim()) {
@@ -201,10 +218,13 @@ try {
     if (!backedInWindow) fails.push(`brief: claim ${index + 1} falls outside its ${Number(brief.meta?.windowHours) || 36}-hour news window`);
     const sourceInputs = (claim.refs || []).flatMap((ref) => {
       const event = events.find((candidate) => candidate.id === ref);
-      return event ? [event.date, event.title, event.context, event.why] : [];
+      return event ? evidenceInputs(event) : [];
     });
     const contextGate = lintReportText({ text: claim.context, inputs: sourceInputs, maxWords: 55, maxSentences: 2 });
     if (!contextGate.ok) fails.push(`brief: claim ${index + 1} context fails the public copy gate (${contextGate.flags.join('; ')})`);
+    if (!reportContextDistinct({ headline: claim.h1 || claim.headline, context: claim.context })) {
+      fails.push(`brief: claim ${index + 1} context repeats its headline without adding a sourced fact`);
+    }
     const claimHasAnalysis = ['background', 'view', 'prediction'].some((field) => String(claim[field] || '').trim());
     const claimHasCompleteAnalysis = ['background', 'view', 'prediction'].every((field) => String(claim[field] || '').trim());
     if (claimHasAnalysis && (!claimHasCompleteAnalysis || Number(claim.analysisV) < 7)) fails.push(`brief: claim ${index + 1} exposes incomplete or unapproved BE analysis`);

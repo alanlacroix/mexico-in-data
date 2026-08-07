@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import briefReadinessPolicy from './lib/brief-readiness.cjs';
+
+const { briefReadiness } = briefReadinessPolicy;
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const statusPath = path.join(ROOT, 'data', 'publication-status.json');
@@ -18,6 +21,10 @@ if (!publicationId) throw new Error('PUBLICATION_ID is required');
 
 const brief = JSON.parse(fs.readFileSync(briefPath, 'utf8'));
 const eventStatus = JSON.parse(fs.readFileSync(eventStatusPath, 'utf8'));
+const explanationReadiness = briefReadiness(brief);
+if (!explanationReadiness.ok) {
+  throw new Error(`Briefly Explained is not ready for ${explanationReadiness.missingRequired.join(', ')}`);
+}
 if (brief.meta?.editorialDate !== editorialDate) {
   throw new Error(`Brief editorial date ${brief.meta?.editorialDate || '(missing)'} does not match ${editorialDate}`);
 }
@@ -34,6 +41,7 @@ const status = {
   selectionPolicy: brief.meta?.selection?.policy || null,
   selectionCandidates: Array.isArray(brief.meta?.selection?.receipt) ? brief.meta.selection.receipt.length : 0,
   selectedStories: [brief.lead, ...(brief.items || [])].filter(Boolean).length,
+  explanations: explanationReadiness,
   scheduledOutcomes: {
     checkedAt: eventStatus.meta?.checkedAt || null,
     blockers: Number(eventStatus.meta?.blockers) || 0,

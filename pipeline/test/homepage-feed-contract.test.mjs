@@ -235,6 +235,15 @@ assert.ok(lintReportText({
   text: 'Federal transfers are losing momentum and tightening fiscal room.',
   inputs: ['Federal transfers are losing momentum and tightening fiscal room.'],
 }).flags.some((flag) => flag.startsWith('vague newsroom phrase')), 'automated copy must reject vague pseudo-analysis');
+for (const copy of [
+  'The central bank maintained its hawkish stance.',
+  'The central bank took a dovish turn.',
+  'The decision is shaping expectations.',
+  'Congress presses Mexico hard.',
+]) {
+  assert.equal(lintReportText({ text: copy, inputs: [copy] }).ok, false,
+    `factual copy must reject insider or editorial shorthand: ${copy}`);
+}
 assert.equal(lintReportText({
   text: 'Federal revenue shared with the states grew 0.9% from a year earlier.',
   inputs: ['Federal revenue shared with the states grew 0.9% from a year earlier.'],
