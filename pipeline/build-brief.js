@@ -176,43 +176,9 @@ async function main() {
       windowHours = FALLBACK_WINDOW_HOURS;
     }
   }
-  const priorStories = [prev?.lead, ...arr(prev?.items)].filter(Boolean);
-  const priorApproved = Boolean(prev?.summary && priorStories.length)
-    && priorStories.every((story) => story.href && story.source && arr(story.refs).length);
   if (!picked.length) {
-    // A quiet or incomplete refresh must not erase the last reviewed Brief. Fresh,
-    // unreviewed stories remain visible in All headlines until their complete BE unit
-    // clears review. Record that today's edition was actually checked while keeping
-    // the last approved story set; otherwise a successful quiet-day run looks exactly
-    // like a broken scheduler and cannot receive today's publication receipt.
-    if (priorApproved) {
-      const carried = {
-        ...prev,
-        meta: {
-          ...prev.meta,
-          editorialDate,
-          updated: editorialDate,
-          asOf: editorialDate,
-          reviewedAt: now.toISOString(),
-          generatedAt: now.toISOString(),
-          newCount: 0,
-          carriedForward: true,
-          windowHours,
-          selection: {
-            policy: 'importance-first-v1',
-            receipt: selection.receipt,
-            lockedIds: [],
-            empty: true,
-            scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
-          },
-        },
-        lead: prev.lead ? { ...prev.lead, isNew: false } : null,
-        items: arr(prev.items).map((item) => ({ ...item, isNew: false })),
-      };
-      fs.writeFileSync(OUT, JSON.stringify(carried, null, 2));
-      console.log('  no newly approved key developments; published today with the last approved story set');
-      return;
-    }
+    // A quiet edition says so plainly. Never relabel yesterday's claims as today's:
+    // those stories cannot appear in today's selection receipt and must not be certified.
     const contentSig = fingerprint([]);
     const unchanged = prev?.meta?.contentSig === contentSig && prev?.meta?.editorialDate === editorialDate;
     const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();

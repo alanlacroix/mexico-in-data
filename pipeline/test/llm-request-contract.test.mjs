@@ -8,9 +8,10 @@ import os from 'node:os';
 import fs from 'node:fs';
 
 const sent = [];
+let response = () => ({ ok: true, json: async () => ({ content: [{ type: 'text', text: '{}' }], usage: { input_tokens: 1, output_tokens: 1 } }) });
 globalThis.fetch = async (_url, init) => {
   sent.push(JSON.parse(init.body));
-  return { ok: true, json: async () => ({ content: [{ type: 'text', text: '{}' }], usage: { input_tokens: 1, output_tokens: 1 } }) };
+  return response();
 };
 process.env.ANTHROPIC_API_KEY = 'test-key';
 process.env.LLM_BUDGET_OVERRIDE = '1';
@@ -56,5 +57,18 @@ const before = fs.readFileSync(prodLedger, 'utf8');
 await askJSON({ system: 's', user: 'u', model: models.SONNET });
 assert.equal(fs.readFileSync(prodLedger, 'utf8'), before,
   'the test must never write spend into the production budget ledger');
+
+// Permanent request bugs in ranking or Briefly Explained must stop publication.
+// Optional model jobs may still degrade on the same provider response.
+response = () => ({ ok: false, status: 400, text: async () => 'invalid request fixture' });
+await assert.rejects(
+  askJSON({ system: 's', user: 'u', priority: 'core' }),
+  /core LLM request rejected with HTTP 400/,
+);
+assert.equal(
+  await askJSON({ system: 's', user: 'u', priority: 'standard' }),
+  null,
+  'optional model work may still fail soft on HTTP 400',
+);
 
 console.log('llm-request-contract: ok');

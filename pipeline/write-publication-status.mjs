@@ -15,7 +15,7 @@ const editorialDate = process.env.PUBLICATION_DATE;
 const publicationId = process.env.PUBLICATION_ID;
 const deployAttempt = Number(process.env.DEPLOY_ATTEMPT || 1);
 
-if (!['morning', 'afternoon'].includes(slot)) throw new Error(`Invalid publication slot: ${slot || '(missing)'}`);
+if (slot !== 'morning') throw new Error(`Invalid publication slot: ${slot || '(missing)'}`);
 if (!/^\d{4}-\d{2}-\d{2}$/.test(editorialDate || '')) throw new Error(`Invalid publication date: ${editorialDate || '(missing)'}`);
 if (!publicationId) throw new Error('PUBLICATION_ID is required');
 

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const FILE = fileURLToPath(import.meta.url);
 const ROOT = path.resolve(path.dirname(FILE), '..');
 const STATUS_PATH = path.join(ROOT, 'data', 'publication-status.json');
-const SLOT_RANK = { morning: 1, afternoon: 2 };
+const VALID_RECEIPT_SLOTS = new Set(['morning', 'afternoon']); // read legacy receipts; only morning is written now
 
 function zonedParts(date, timeZone) {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -21,26 +21,18 @@ function dateKey(date, timeZone = 'America/Mexico_City') {
   return `${parts.year}-${parts.month}-${parts.day}`;
 }
 
-function requestedSlot({ requested = 'auto', schedule = '', now = new Date() } = {}) {
-  if (requested === 'morning' || requested === 'afternoon') return requested;
-  if (/13,14/.test(schedule)) return 'morning';
-  if (/21,22/.test(schedule)) return 'afternoon';
-  const hour = Number(zonedParts(now, 'America/New_York').hour);
-  return hour >= 17 ? 'afternoon' : 'morning';
-}
-
-export function editorialDecision({ requested = 'auto', schedule = '', now = new Date(), status = null, force = false } = {}) {
-  const slot = requestedSlot({ requested, schedule, now });
+export function editorialDecision({ now = new Date(), status = null, force = false } = {}) {
+  const slot = 'morning';
   const easternHour = Number(zonedParts(now, 'America/New_York').hour);
-  const dueHour = slot === 'afternoon' ? 17 : 9;
+  const dueHour = 9;
   const editorialDate = dateKey(now);
 
   if (easternHour < dueHour) {
     return { run: false, slot, editorialDate, reason: `not due before ${dueHour}:00 Eastern` };
   }
 
-  const publishedRank = status?.editorialDate === editorialDate ? (SLOT_RANK[status.slot] || 0) : 0;
-  if (!force && publishedRank >= SLOT_RANK[slot]) {
+  const alreadyPublished = status?.editorialDate === editorialDate && VALID_RECEIPT_SLOTS.has(status?.slot);
+  if (!force && alreadyPublished) {
     return { run: false, slot, editorialDate, reason: `${status.slot} edition already published` };
   }
 
@@ -63,8 +55,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === FILE) {
   try { status = JSON.parse(fs.readFileSync(STATUS_PATH, 'utf8')); } catch { /* first publication */ }
   const now = process.env.NOW_ISO ? new Date(process.env.NOW_ISO) : new Date();
   const result = editorialDecision({
-    requested: process.env.REQUESTED_SLOT || 'auto',
-    schedule: process.env.SCHEDULE || '',
     now,
     status,
     force: process.env.FORCE_PUBLICATION === 'true',

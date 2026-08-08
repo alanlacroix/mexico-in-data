@@ -11,7 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { getJson } from './lib/http.js';
-import { domainTrusted } from './lib/news-trust.js';
+import { cleanNewsText, domainTrusted } from './lib/news-trust.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, '..', 'data', 'news.json');
@@ -74,12 +74,13 @@ async function main() {
   const trusted = [];
   for (const a of arts) {
     if (!a.url || !a.title) continue;
-    if (!isRelevant(a.title)) continue;   // must be about Mexico
+    const title = cleanNewsText(a.title);
+    if (!title || !isRelevant(title)) continue;   // must be about Mexico
     const domain = (a.domain || (a.url.match(/^https?:\/\/([^/]+)/) || [])[1] || '').replace(/^www\./, '');
-    const key = (a.title || '').toLowerCase().slice(0, 60);
+    const key = title.toLowerCase().slice(0, 60);
     if (seen.has(key)) continue;          // crude title dedupe
     seen.add(key);
-    const item = { title: a.title.trim(), url: a.url, domain, date: seenToIso(a.seendate), tag: tagOf(a.title) };
+    const item = { title, url: a.url, domain, date: seenToIso(a.seendate), tag: tagOf(title) };
     if (domainTrusted(domain)) trusted.push(item);
   }
   const items = trusted.slice(0, 20);

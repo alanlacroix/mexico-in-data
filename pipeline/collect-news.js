@@ -12,7 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { domainTrusted, mexicoRelevant, publicHeadlineEligible } from './lib/news-trust.js';
+import { cleanNewsText, domainTrusted, mexicoRelevant, newsCollectionHealth, publicHeadlineEligible } from './lib/news-trust.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -38,25 +38,7 @@ async function fetchText(url, charset) {
 }
 
 // ---- minimal RSS/Atom parsing (zero-dep) ----
-const stripCdata = (s) => s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1');
-const stripTags = (s) => s.replace(/<[^>]+>/g, ' ');
-const NAMED_ENTITIES = { aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', uuml: 'ü', Aacute: 'Á', Eacute: 'É', Iacute: 'Í', Oacute: 'Ó', Uacute: 'Ú', Ntilde: 'Ñ', iquest: '¿', iexcl: '¡', laquo: '«', raquo: '»', deg: '°', ordm: 'º', ordf: 'ª', ldquo: '“', rdquo: '”', lsquo: '‘', rsquo: '’', ndash: '–', mdash: '—', hellip: '…' };
-const decodeOnce = (s) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-  .replace(/&quot;/g, '"').replace(/&#0?39;|&apos;/g, "'").replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
-  .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/&nbsp;/g, ' ')
-  .replace(/&([A-Za-z]+);/g, (m, name) => NAMED_ENTITIES[name] || m);
-// Decode before stripping tags. Otherwise an encoded `<img onerror=...>` survives
-// the tag pass and becomes markup later when a page renders the headline.
-const decodeAll = (s) => {
-  let value = String(s || '');
-  for (let i = 0; i < 3; i += 1) {
-    const next = decodeOnce(value);
-    if (next === value) break;
-    value = next;
-  }
-  return value;
-};
-const clean = (s) => stripTags(decodeAll(stripCdata(s || ''))).replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim();
+const clean = cleanNewsText;
 // WordPress feeds append "The post X appeared first on Y" / "El artículo X apareció
 // primero en Y" to descriptions; that is feed plumbing, not a dek.
 const stripFeedBoilerplate = (s) => String(s || '').replace(/\s*(The post |El art[ií]culo |La entrada ).*$/i, '').trim();
@@ -236,8 +218,6 @@ async function main() {
   }
 
   ledger.sort((a, b) => String(b.published_at).localeCompare(String(a.published_at)));
-  fs.writeFileSync(weekFile(thisWeek), JSON.stringify(ledger));
-
   // rolling 72h wire the site reads — shape mirrors the old news.json
   const cutoff = Date.now() - 72 * 3600 * 1000;
   const tagOf = REG.meta.beatToTag;
@@ -263,10 +243,17 @@ async function main() {
       cadence: 'continuous', fetchedAt: now.toISOString(), count: publicArticles.length },
     articles: publicArticles,
   };
+
+  const alive = Object.values(health).filter((h) => h.consecutive_failures === 0).length;
+  const collection = newsCollectionHealth({ aliveSources: alive, totalSources: REG.sources.length, wireCount: publicArticles.length });
+  if (!collection.ok) {
+    throw new Error(`catastrophic news collection failure: ${alive}/${REG.sources.length} sources alive; wire ${publicArticles.length}; minimum ${collection.minimumAlive} live sources and a non-empty wire`);
+  }
+
+  fs.writeFileSync(weekFile(thisWeek), JSON.stringify(ledger));
   fs.writeFileSync(path.join(NEWSDIR, 'wire.json'), JSON.stringify(wire));
   fs.writeFileSync(path.join(NEWSDIR, 'health.json'), JSON.stringify(health, null, 2));
 
-  const alive = Object.values(health).filter((h) => h.consecutive_failures === 0).length;
   console.log(`\nnews: +${added} new · ledger ${thisWeek} now ${ledger.length} · wire ${wire.articles.length} · ${alive}/${REG.sources.length} sources alive`);
 }
 

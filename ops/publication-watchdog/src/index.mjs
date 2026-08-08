@@ -108,8 +108,6 @@ async function dispatchWorkflow(settings, token, due) {
     body: JSON.stringify({
       ref: settings.githubRef,
       inputs: {
-        slot: due.slot,
-        reason: `Cloudflare watchdog: ${due.editorialDate} ${due.slot} edition is not live`,
         force: 'true',
       },
     }),

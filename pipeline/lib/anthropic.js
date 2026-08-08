@@ -125,8 +125,9 @@ export function usage() {
 }
 
 // Ask the model for a JSON answer. With `schema`, structured outputs guarantee the
-// first content block is valid JSON. Returns the parsed object, or null on any
-// failure (no key, HTTP error, unparseable) so callers degrade instead of crash.
+// first content block is valid JSON. Transient errors and optional jobs return null.
+// A malformed core request throws because deterministic fallback cannot repair code
+// that will send the same rejected request on every future publication.
 // Effort, which is the whole ballgame on cost here. Sonnet 5 runs ADAPTIVE THINKING
 // BY DEFAULT and bills that reasoning as output tokens, and output is priced 5x input.
 // Measured 2026-08-02 on the curation pass: 26,038 input against 15,519 output for two
@@ -192,6 +193,9 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
     if (r.status === 400) _badRequests++;
     console.warn('  llm: HTTP', r.status, detail,
       r.status === 400 ? '\n  ^ REQUEST BUG, not a transient failure: this will fail every run until the code changes.' : '');
+    if (r.status === 400 && priority === 'core') {
+      throw new Error(`core LLM request rejected with HTTP 400${detail ? `: ${detail}` : ''}`);
+    }
     return null;
   }
   const j = await r.json().catch(() => null);

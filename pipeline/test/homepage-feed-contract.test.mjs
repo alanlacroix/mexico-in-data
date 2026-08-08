@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lintEventReport, lintReportText, lintAnalysisText } from '../lib/lint.js';
-import { domainTrusted, publicHeadlineEligible } from '../lib/news-trust.js';
+import { cleanNewsText, domainTrusted, newsCollectionHealth, publicHeadlineEligible } from '../lib/news-trust.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const require = createRequire(import.meta.url);
@@ -308,6 +308,16 @@ assert.equal(domainTrusted('graphics.reuters.com'), true, 'subdomains of an allo
 assert.equal(publicHeadlineEligible('Ozempic study compares pérdida de peso'), false, 'the word peso as weight must not create a Mexico match');
 assert.equal(publicHeadlineEligible('Peso gains against the dollar during USMCA talks'), true, 'a Mexico currency headline must remain eligible');
 assert.equal(publicHeadlineEligible('Why Mexico is the next big thing?'), false, 'question-style and sensational framing must not enter the public wire');
+assert.equal(
+  cleanNewsText('&amp;lt;img src=x onerror=alert(1)&amp;gt;Mexico inflation falls'),
+  'Mexico inflation falls',
+  'encoded external markup must become plain text before entering the ledger',
+);
+assert.equal(newsCollectionHealth({ aliveSources: 36, totalSources: 72, wireCount: 1 }).ok, true);
+assert.equal(newsCollectionHealth({ aliveSources: 35, totalSources: 72, wireCount: 1 }).ok, false,
+  'a majority feed outage must stop publication');
+assert.equal(newsCollectionHealth({ aliveSources: 72, totalSources: 72, wireCount: 0 }).ok, false,
+  'an empty rolling wire must stop publication');
 
 const sourceByName = new Map(registry.sources.map((source) => [source.name, source]));
 assert.equal(sourceByName.get('El País — México')?.mx, true, 'the broad El País feed must pass the Mexico relevance gate');
@@ -320,6 +330,7 @@ for (const article of wire.articles) {
 }
 
 const feedData = fs.readFileSync(path.join(root, '_data/feed.js'), 'utf8');
+const eleventyConfig = fs.readFileSync(path.join(root, '.eleventy.js'), 'utf8');
 const homepageTemplate = fs.readFileSync(path.join(root, 'index.njk'), 'utf8');
 const spanishFeedSource = fs.readFileSync(path.join(root, '_data/feedEs.js'), 'utf8');
 const happeningBuilder = fs.readFileSync(path.join(root, 'pipeline/build-happening.js'), 'utf8');
@@ -328,6 +339,8 @@ assert.doesNotMatch(homepageTemplate, /item\.(?:orig|lang)/, 'the English homepa
 assert.match(spanishFeedSource, /w\.lang === 'ES' && w\.orig \? w\.orig/, 'the Spanish edition must still restore native Spanish titles');
 assert.doesNotMatch(homepageTemplate, /from ['"]\/assets\/mb\.js/, 'the homepage must not download the full render toolkit for one time helper');
 assert.doesNotMatch(homepageTemplate, /fetch\(['"]\/data\/health\.json/, 'homepage source status must be embedded at build time');
+assert.match(eleventyConfig, /setNunjucksEnvironmentOptions\(\{\s*autoescape:\s*true\s*\}\)/,
+  'Nunjucks must escape external feed values unless a template explicitly marks trusted markup safe');
 // The disclosure moved into the feed's BE panel. The bar is unchanged and now lives in
 // _data/feed.js: a story only carries a `why` when the pipeline wrote a complete,
 // versioned analysis for it, and the panel does not render without one.
@@ -345,11 +358,10 @@ assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf
 assert.doesNotMatch(briefBuilder, /analysisReady\(e\)/, 'optional analysis readiness must never decide whether a story enters key developments');
 assert.match(briefBuilder, /selectDailyBrief\(candidates/, 'key developments must use the auditable importance-first selector');
 assert.doesNotMatch(briefBuilder, /BIG_MONEY|bigCapital/, 'a dollar-amount regex must not override the audited importance rubric');
-assert.match(
-  briefBuilder,
-  /if \(priorApproved\)[\s\S]*editorialDate[\s\S]*carriedForward:\s*true[\s\S]*fs\.writeFileSync\(OUT/,
-  'a completed quiet-day review must preserve the approved story set while recording today\'s edition'
-);
+assert.doesNotMatch(briefBuilder, /priorApproved|carriedForward/,
+  'a quiet edition must never recertify the prior story set as today');
+assert.match(briefBuilder, /if \(!picked\.length\)[\s\S]*quiet:\s*true[\s\S]*lead:\s*null[\s\S]*items:\s*\[\]/,
+  'a genuinely quiet day must publish an explicit, receipt-compatible empty state');
 for (const phrase of [/\bThe base case is\b/i, /\bThat view would change if\b/i]) {
   assert.ok(dailyBrief.stories.filter((story) => phrase.test(story.prediction || '')).length <= 1, 'BE predictions must not repeat a stock forecast phrase');
 }

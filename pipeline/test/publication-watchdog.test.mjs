@@ -117,6 +117,7 @@ assert.deepEqual(
 const originalFetch = globalThis.fetch;
 const heartbeatStore = new Map();
 let dispatchCalls = 0;
+const dispatchInputs = [];
 let servedPublication = { editorialDate: '2026-07-31', slot: 'morning', publicationId: 'test-1' };
 let servedRuns = [{ id: 99, status: 'completed', conclusion: 'success', created_at: morningDue.toISOString() }];
 const healthyEnv = {
@@ -135,6 +136,7 @@ globalThis.fetch = async (url, init = {}) => {
   if (target.includes('/actions/workflows/')) {
     if (init.method === 'POST') {
       dispatchCalls += 1;
+      dispatchInputs.push(JSON.parse(init.body).inputs);
       return new Response(null, { status: 204 });
     }
     return Response.json({ workflow_runs: servedRuns });
@@ -169,15 +171,13 @@ try {
     'exhausted recovery must fail loudly instead of recording a healthy heartbeat',
   );
 
-  servedPublication = { editorialDate: '2026-07-31', slot: 'morning', publicationId: 'test-1' };
+  servedPublication = { editorialDate: '2026-07-30', slot: 'morning', publicationId: 'stale-production' };
   servedRuns = [{ id: 99, status: 'completed', conclusion: 'success', created_at: morningDue.toISOString() }];
 
-  const repositoryFallback = await runWatchdog({
-    ...healthyEnv,
-    PUBLICATION_STATUS_JSON: JSON.stringify({ editorialDate: '2026-07-30', slot: 'morning' }),
-  }, morningDue);
+  const repositoryFallback = await runWatchdog(healthyEnv, morningDue);
   assert.equal(repositoryFallback.action, 'dispatch');
-  assert.equal(dispatchCalls, 1, 'the repository receipt path must dispatch without fetching the public receipt');
+  assert.equal(dispatchCalls, 1, 'stale production must dispatch even when the repository run previously succeeded');
+  assert.deepEqual(dispatchInputs[0], { force: 'true' }, 'recovery needs one input: bypass the stale repository receipt');
 } finally {
   globalThis.fetch = originalFetch;
 }

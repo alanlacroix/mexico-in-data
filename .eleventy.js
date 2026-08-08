@@ -10,6 +10,9 @@ const crypto = require('node:crypto');
 const path = require('node:path');
 
 module.exports = function (ec) {
+  // External headlines and source labels are data, never markup. Autoescape is the
+  // final browser boundary; the few intentional HTML fragments use an explicit | safe.
+  ec.setNunjucksEnvironmentOptions({ autoescape: true });
   ec.addPassthroughCopy('design');
   ec.addPassthroughCopy('assets');   // shared JS toolkit (mb.js) the section pages import
   // Only runtime data belongs in the public artifact. Email drafts and raw

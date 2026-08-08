@@ -12,7 +12,13 @@ const productionVerifier = fs.readFileSync(path.join(root, 'pipeline', 'verify-p
 const refresh = workflow('refresh.yml');
 const happening = workflow('happening.yml');
 const publicationFallback = workflow('publication-fallback.yml');
+const recordPublishedEmail = workflow('record-published-email.yml');
+const refreshImss = workflow('refresh-imss.yml');
 const sesnsp = workflow('refresh-sesnsp.yml');
+const watchdogRunOnce = fs.readFileSync(path.join(root, 'ops', 'publication-watchdog', 'run-once.mjs'), 'utf8');
+const collectorBlock = happening.match(
+  /- name: Refresh the news ledger[\s\S]*?(?=\n      - name: Build the event log)/,
+)?.[0] || '';
 const validationBlock = happening.match(
   /- name: Validate generated editorial claims[\s\S]*?(?=\n      - name: Write this edition's publication receipt)/,
 )?.[0] || '';
@@ -31,23 +37,17 @@ assert.match(run, /if \(only && records\.some\(\(record\) => record\.status === 
 // repo near its cron slots (a ':17' cron ran at :51, :34, :54, :12, :03 and :51 over
 // four days, and the morning edition was dropped outright twice), so precision was
 // buying nothing and costing Alan his morning. The workflow now attempts hourly and
-// the receipt-aware gate decides. That makes the slot pin, not the cron, the thing
-// standing between us and a second edition, so it is what this test guards.
+// the receipt-aware gate decides. The gate has one morning state; there is no second
+// slot, publisher-on-push path, or wall-clock shell branch to drift independently.
 assert.match(
   happening,
   /cron:\s*'\d+ \* \* \* \*'/,
   'the edition must attempt hourly, because the cron minute cannot be relied on',
 );
-assert.match(
-  happening,
-  /REQUESTED_SLOT:[^\n]*event_name == 'schedule'[^\n]*'morning'/,
-  "a scheduled run must publish the day's single morning edition; leaving it on 'auto' let a late runner publish a second, afternoon edition (2026-08-04T00:57Z)",
-);
-assert.match(
-  happening,
-  /push:[\s\S]*paths:[\s\S]*\.github\/workflows\/happening\.yml[\s\S]*REQUESTED_SLOT:[^\n]*event_name == 'push'[^\n]*'morning'/,
-  'a publisher change must exercise the workflow once without inventing an afternoon edition',
-);
+assert.doesNotMatch(happening, /\n  push:/,
+  'editing the publisher must not launch a receipt-gated no-op publication run');
+assert.doesNotMatch(happening, /REQUESTED_SLOT|SCHEDULE:|\n\s+- afternoon\s*$/m,
+  'the publisher must not retain a second edition-selection path');
 assert.doesNotMatch(
   happening,
   /cron:\s*'22,52 21,22 \* \* \*'/,
@@ -58,6 +58,10 @@ assert.match(
   /node pipeline\/editorial-gate\.mjs/,
   'every redundant schedule must pass through the receipt-aware editorial gate',
 );
+assert.match(collectorBlock, /node collect-news\.js/,
+  'the core news collector must run before publication');
+assert.doesNotMatch(collectorBlock, /continue-on-error/,
+  'a catastrophic collector failure must stop publication instead of looking green');
 assert.match(
   happening,
   /FORCE_PUBLICATION:[^\n]*github\.event\.inputs\.force/,
@@ -196,11 +200,22 @@ assert.match(
   /cron:\s*'11,41 \* \* \* \*'/,
   'the repository fallback must get repeated chances without pretending GitHub is the primary clock',
 );
+assert.match(watchdogRunOnce, /runWatchdog\(process\.env, new Date\(\)\)/,
+  'the GitHub fallback must decide from the public production receipt');
+assert.doesNotMatch(watchdogRunOnce, /PUBLICATION_STATUS_JSON|data\/publication-status\.json/,
+  'a repository receipt must never hide a stale Pages deployment from recovery');
 assert.match(
   publicationFallback,
   /workflow_run:[\s\S]*workflows:[\s\S]*- happening[\s\S]*types:[\s\S]*- completed/,
   'every completed publication must immediately re-audit the control plane',
 );
+
+assert.match(recordPublishedEmail, /WEEK_INPUT:\s*\$\{\{ inputs\.week \}\}[\s\S]*git commit -m "email: record published \$\{WEEK_INPUT\}"/,
+  'manual workflow input must reach the shell only through an environment variable');
+assert.doesNotMatch(recordPublishedEmail, /git commit[^\n]*\$\{\{\s*inputs\./,
+  'manual input must never be interpolated directly into a shell command');
+assert.doesNotMatch(refreshImss, /issues:\s*write/,
+  'the IMSS data refresh must not receive unused issue-write permission');
 assert.match(
   publicationFallback,
   /permissions:[\s\S]*?actions:\s*write/,

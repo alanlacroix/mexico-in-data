@@ -21,29 +21,8 @@ on:
     # the first runner GitHub grants after 9am Eastern instead of waiting for a specific
     # minute that may never come.
     - cron: '23 * * * *'
-  # Changing the publisher must exercise it once on main. The receipt-aware gate
-  # makes this idempotent, while a broken workflow can no longer be merged and
-  # then wait until the next unreliable schedule to reveal itself.
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/happening.yml'
   workflow_dispatch:
     inputs:
-      slot:
-        description: Edition to publish
-        required: true
-        default: auto
-        type: choice
-        options:
-          - auto
-          - morning
-          - afternoon
-      reason:
-        description: Why this run was requested
-        required: false
-        type: string
       force:
         description: Republish even if the repository receipt is current
         required: true
@@ -74,11 +53,6 @@ jobs:
       - name: Decide whether this edition is still due
         id: timing
         env:
-          # A scheduled run is always the day's single edition. Left as 'auto' it derived
-          # the slot from the wall clock, so a late runner published a SECOND, 'afternoon'
-          # edition (seen 2026-08-04T00:57Z). Manual dispatch can still ask for either.
-          REQUESTED_SLOT: ${{ github.event.inputs.slot || ((github.event_name == 'schedule' || github.event_name == 'push') && 'morning') || 'auto' }}
-          SCHEDULE: ${{ github.event.schedule }}
           FORCE_PUBLICATION: ${{ github.event.inputs.force || 'false' }}
         run: node pipeline/editorial-gate.mjs
 
@@ -95,7 +69,6 @@ jobs:
       - name: Refresh the news ledger
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
-        continue-on-error: true
         run: node collect-news.js
 
       - name: Build the event log
