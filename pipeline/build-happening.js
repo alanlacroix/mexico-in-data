@@ -37,6 +37,7 @@ import scheduledCandidate from './lib/scheduled-candidate.cjs';
 import importanceRubric from './lib/importance-rubric.cjs';
 import candidatePriority from './lib/candidate-priority.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
+import analysisAttempts from './lib/analysis-attempts.cjs';
 
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
@@ -44,6 +45,7 @@ const { linkScheduledCandidate } = scheduledCandidate;
 const { normalizeModelImportanceRow } = importanceRubric;
 const { prioritizeCandidates } = candidatePriority;
 const { evidenceInputs } = reportEvidence;
+const { mergeApprovedAttempt } = analysisAttempts;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -489,12 +491,17 @@ ${BAN}`;
   const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
   let added = 0;
   const completed = new Set();
+  // Keep fields that passed during this exact locked-selection run. A retry sees
+  // identical evidence and the same story, so combining its independently approved
+  // field with an approved field from attempt one is still one reviewed unit. Nothing
+  // from an earlier edition or an unapproved field is carried forward.
+  const approvedThisRun = new Map();
   const applyDraft = (out, batch) => {
     if (!out || !Array.isArray(out.analyses)) return false;
     for (const r of out.analyses) {
       const item = batch.find((x) => x.i === r.i); if (!item) continue;
-      // Treat the disclosure as one editorial unit. Never combine a newly approved field
-      // with older prose and then call the whole thing reviewed.
+      // Treat the disclosure as one editorial unit. Older published prose never enters
+      // this object; only fields approved in this run against this locked evidence do.
       const proposed = {};
       for (const field of CORE) {
         const text = stripDashWs(r[field]);
@@ -515,14 +522,16 @@ ${BAN}`;
         if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
         proposed[field] = text;
       }
-      // v7: all three fields must pass together. An incomplete proposal changes none of the
-      // visible analysis and keeps its old version so a later run retries it.
-      if (CORE.every((field) => proposed[field])) {
-        Object.assign(item.e, proposed, { analysisV: 7 });
+      const approved = mergeApprovedAttempt(approvedThisRun.get(item.e.id), proposed, CORE);
+      approvedThisRun.set(item.e.id, approved);
+      // v7: all three fields must pass before anything becomes visible. The fields may
+      // come from the first attempt or its one bounded retry, but never from old prose.
+      if (CORE.every((field) => approved[field])) {
+        Object.assign(item.e, approved, { analysisV: 7 });
         if (!completed.has(item.e.id)) added++;
         completed.add(item.e.id);
-      } else if (Object.keys(proposed).length) {
-        console.warn(`  analysis incomplete ${item.e.id}: missing ${CORE.filter((f) => !proposed[f]).join(', ')} — discarded as a set; no BE shown`);
+      } else if (Object.keys(approved).length) {
+        console.warn(`  analysis incomplete ${item.e.id}: missing ${CORE.filter((f) => !approved[f]).join(', ')} — held for the bounded retry; no BE shown`);
       }
       if (!stripDashWs(r.background)) console.warn(`  standing-gap: no background written for "${item.e.title.slice(0, 60)}" — is a standing fact missing?`);
     }

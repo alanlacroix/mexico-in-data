@@ -354,7 +354,11 @@ for (const phrase of [/\bThe base case is\b/i, /\bThat view would change if\b/i]
   assert.ok(dailyBrief.stories.filter((story) => phrase.test(story.prediction || '')).length <= 1, 'BE predictions must not repeat a stock forecast phrase');
 }
 assert.match(happeningBuilder, /strictForecast: field === 'prediction'/, 'every generated BE forecast must include a base case and a change-of-mind condition');
-assert.match(happeningBuilder, /CORE\.every\(\(field\) => proposed\[field\]\)/, 'the three BE fields must be approved together, never assembled across runs');
+assert.match(happeningBuilder, /const approvedThisRun = new Map\(\)/, 'approved retry fields must be scoped to one locked publication run');
+assert.match(happeningBuilder, /mergeApprovedAttempt\(approvedThisRun\.get\(item\.e\.id\), proposed, CORE\)/,
+  'a bounded retry may complete the same evidence-locked BE unit');
+assert.match(happeningBuilder, /CORE\.every\(\(field\) => approved\[field\]\)/,
+  'no BE field may become visible until all three fields have passed their gates');
 assert.match(happeningBuilder, /SCHEDULED OUTCOMES \(hard requirement\)[\s\S]*SELECT it[\s\S]*unchanged[\s\S]*not news/i,
   'the curator must treat an unchanged scheduled decision as a required new outcome');
 assert.match(briefBuilder, /optionalAnalysis\(e\)/, 'the brief builder must expose optional analysis atomically');

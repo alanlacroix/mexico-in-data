@@ -6,6 +6,7 @@ import { reportContextDistinct } from '../lib/lint.js';
 const require = createRequire(import.meta.url);
 const { briefReadiness } = require('../lib/brief-readiness.cjs');
 const { evidenceInputs } = require('../lib/report-evidence.cjs');
+const { mergeApprovedAttempt } = require('../lib/analysis-attempts.cjs');
 const interests = require('../../data/interests.json');
 
 const story = (id, ready = false) => ({
@@ -21,9 +22,29 @@ const brief = (states) => ({ lead: story('lead', states[0]), items: states.slice
 assert.equal(briefReadiness(brief([false, false, false, true, true])).ok, false,
   'analysis on lower-ranked stories must not disguise an unexplained lead and top three');
 assert.deepEqual(briefReadiness(brief([false, false, false])).missingRequired, ['lead', 'item-2', 'item-3']);
-assert.equal(briefReadiness(brief([true, true, true, false, false])).ok, true,
-  'the top three define publication readiness; lower cards remain quick to scan');
+assert.equal(briefReadiness(brief([true, true, false, false, false])).ok, true,
+  'two complete explanations in the top three are enough to publish without forcing filler into a thin story');
+assert.deepEqual(briefReadiness(brief([true, true, false])).missingTarget, ['item-3'],
+  'the receipt must still disclose a top-three story that has no approved explanation');
+assert.equal(briefReadiness(brief([true, false, false])).ok, false,
+  'one explanation cannot satisfy a normal three-story edition');
+assert.equal(briefReadiness(brief([false, true, true])).ok, true,
+  'analysis availability must not reorder or demote the factual lead');
 assert.equal(briefReadiness({ lead: null, items: [] }).ok, true, 'a genuinely quiet edition is a clean no-op');
+
+assert.deepEqual(
+  mergeApprovedAttempt(
+    { background: 'Approved background.', prediction: 'Approved prediction.' },
+    { view: 'Approved view because the mechanism is clear.' },
+    ['background', 'view', 'prediction'],
+  ),
+  {
+    background: 'Approved background.',
+    view: 'Approved view because the mechanism is clear.',
+    prediction: 'Approved prediction.',
+  },
+  'a bounded retry may complete the same evidence-locked analysis unit without reviving a rejected field',
+);
 
 const retained = evidenceInputs({
   date: '2026-08-07',

@@ -16,23 +16,30 @@ function hasApprovedAnalysis(story) {
 
 function briefReadiness(brief) {
   const stories = [brief && brief.lead, ...arr(brief && brief.items)].filter(Boolean);
-  const requiredStories = stories.slice(0, Math.min(3, stories.length));
-  const missingRequired = requiredStories
+  const targetStories = stories.slice(0, Math.min(3, stories.length));
+  const minimumReadyCount = Math.min(2, targetStories.length);
+  const missingTarget = targetStories
     .map((story, index) => ({ story, index }))
     .filter(({ story }) => !hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
+  const readyTargetCount = targetStories.length - missingTarget.length;
+  const ok = stories.length === 0 || readyTargetCount >= minimumReadyCount;
+  const missingRequired = ok ? [] : missingTarget;
   const readyIds = stories
     .map((story, index) => ({ story, index }))
     .filter(({ story }) => hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
   return {
-    policy: 'top-three-explained-v1',
+    policy: 'two-of-top-three-explained-v2',
     storyCount: stories.length,
-    requiredCount: requiredStories.length,
+    targetCount: targetStories.length,
+    requiredCount: minimumReadyCount,
     readyCount: readyIds.length,
+    readyTargetCount,
     readyIds,
+    missingTarget,
     missingRequired,
-    ok: stories.length === 0 || missingRequired.length === 0,
+    ok,
   };
 }
 
