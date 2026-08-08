@@ -157,28 +157,7 @@ jobs:
 
       - name: Validate generated editorial claims
         if: steps.timing.outputs.run == 'true'
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          if node pipeline/assert-data.js && node pipeline/test/homepage-feed-contract.test.mjs; then
-            exit 0
-          fi
-
-          echo "::warning::Generated copy failed validation; rebuilding from the last approved event log."
-          git show HEAD:data/happening.json > data/happening.json
-          git show HEAD:data/brief.json > data/brief.json
-          git show HEAD:data/areas.json > data/areas.json
-          git show HEAD:data/companies.json > data/companies.json
-          (
-            cd pipeline
-            node build-happening.js --skip-analysis
-            EDITORIAL_DATE="${{ steps.timing.outputs.editorial_date }}" node reconcile-scheduled-events.mjs
-            node build-brief.js --selection-only
-            node build-happening.js --analysis-for-brief
-            node build-brief.js
-            node build-areas.js
-            node build-companies.js || true
-          )
           node pipeline/assert-data.js
           node pipeline/test/homepage-feed-contract.test.mjs
 

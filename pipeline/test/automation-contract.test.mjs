@@ -13,6 +13,9 @@ const refresh = workflow('refresh.yml');
 const happening = workflow('happening.yml');
 const publicationFallback = workflow('publication-fallback.yml');
 const sesnsp = workflow('refresh-sesnsp.yml');
+const validationBlock = happening.match(
+  /- name: Validate generated editorial claims[\s\S]*?(?=\n      - name: Write this edition's publication receipt)/,
+)?.[0] || '';
 
 const alertWrite = 'fs.writeFileSync(ALERTS, JSON.stringify(alerts, null, 2));';
 assert.equal(run.split(alertWrite).length - 1, 1, 'the current alert ledger must be written exactly once');
@@ -85,18 +88,25 @@ assert.match(
   /node build-happening\.js --skip-analysis[\s\S]*node build-brief\.js --selection-only[\s\S]*node build-happening\.js --analysis-for-brief[\s\S]*node build-brief\.js/,
   'the workflow must lock the ranked stories before spending the explanation budget on those exact stories',
 );
-assert.ok(
-  (happening.match(/node build-happening\.js --analysis-for-brief/g) || []).length >= 2,
-  'normal publication and the recovery path must both target the locked Brief selection',
+assert.equal(
+  (happening.match(/node build-happening\.js --analysis-for-brief/g) || []).length,
+  1,
+  'one publication run must have exactly one targeted explanation pass',
+);
+assert.equal(
+  (happening.match(/node reconcile-scheduled-events\.mjs/g) || []).length,
+  1,
+  'one publication run must reconcile scheduled outcomes exactly once',
 );
 assert.match(
-  happening,
-  /Validate generated editorial claims[\s\S]*ANTHROPIC_API_KEY:[^\n]*secrets\.ANTHROPIC_API_KEY[\s\S]*node build-happening\.js --analysis-for-brief/,
-  'the recovery path must retain the model key instead of silently rebuilding without explanations',
+  validationBlock,
+  /node pipeline\/assert-data\.js[\s\S]*node pipeline\/test\/homepage-feed-contract\.test\.mjs/,
+  'validation must check the one generated edition before it can be certified',
 );
-assert.ok(
-  (happening.match(/node reconcile-scheduled-events\.mjs/g) || []).length >= 2,
-  'both the normal build and last-approved fallback must recheck scheduled outcomes',
+assert.doesNotMatch(
+  validationBlock,
+  /git show HEAD:data|build-happening|build-brief|build-areas|build-companies|ANTHROPIC_API_KEY/,
+  'validation must never restore old files or launch a second hidden publication pipeline',
 );
 assert.match(
   happening,
