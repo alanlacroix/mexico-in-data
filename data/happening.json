@@ -2,14 +2,113 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-07",
+    "updated": "2026-08-08",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/sources",
     "count": 60,
-    "generatedAt": "2026-08-07T13:32:48.939Z",
-    "llm": true
+    "generatedAt": "2026-08-08T15:17:56.072Z",
+    "llm": true,
+    "analysisTarget": {
+      "policy": "selected-brief-v1",
+      "ids": [
+        "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
+        "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
+        "n-house-gop-backs-greer-s-strategy-to-delay-usmca-rene-2026-08-07"
+      ],
+      "added": 1,
+      "outcomes": [
+        {
+          "id": "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-house-gop-backs-greer-s-strategy-to-delay-usmca-rene-2026-08-07",
+          "ready": false,
+          "reason": "field-rejected"
+        }
+      ]
+    }
   },
   "events": [
+    {
+      "id": "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
+      "date": "2026-08-07",
+      "section": "us-mexico",
+      "title": "Mexico wins USMCA arbitration against US investment funds over TV Azteca debt",
+      "why": "A USMCA tribunal rejected a 219 million dollar claim by Cyrus and Contrarian funds against Mexico, ruling the investors were not protected by the trade agreement. The decision spares Mexico from paying disputed bondholder claims.",
+      "company": "TV Azteca",
+      "source": "Expansión — Empresas",
+      "url": "https://expansion.mx/empresas/2026/08/07/mexico-no-tendra-pagar-deuda-tv-azteca",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-07T19:14:07.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México gana arbitraje contra fondos estadounidenses por deuda de TV Azteca",
+        "dek": "El tribunal del CIADI concluyó que los fondos Cyrus y Contrarian no estaban protegidos por el T-MEC, por lo que desechó su reclamación de 219 millones de dólares contra México por el impago de bonos de TV Azteca."
+      },
+      "coverage": [
+        {
+          "source": "Expansión — Empresas",
+          "url": "https://expansion.mx/empresas/2026/08/07/mexico-no-tendra-pagar-deuda-tv-azteca",
+          "publishedAt": "2026-08-07T19:14:07.000Z",
+          "date": "2026-08-07",
+          "title": "Mexico wins USMCA arbitration against US investment funds over TV Azteca debt",
+          "summary": "A USMCA tribunal rejected a 219 million dollar claim by Cyrus and Contrarian funds against Mexico, ruling the investors were not protected by the trade agreement. The decision spares Mexico from paying disputed bondholder claims."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": 7,
+        "componentSource": "model"
+      },
+      "imgTries": 1,
+      "background": "USMCA contains an investor-state dispute mechanism that lets foreign investors sue a member government before an independent tribunal if they believe treaty protections were violated, separate from Mexico's domestic courts.",
+      "view": "The ruling closes one specific claim rather than settling how USMCA investor protections apply to sovereign debt disputes generally, since it turned on whether these particular bondholders qualified for protection at all. It also matters for public finances: Mexico is already on the last investment-grade rung at Moody's partly because of Pemex support costs, so avoiding a $219 million payout keeps one more claim off a debt load that rose to 53.2% of GDP in 2025.",
+      "prediction": "The funds are likely to explore appeal routes or alternative legal claims rather than drop the matter, since $219 million is a large sum to abandon after losing on jurisdiction rather than merits. That view would be wrong if Cyrus and Contrarian publicly confirm they are not pursuing further action.",
+      "analysisV": 7
+    },
     {
       "id": "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
       "date": "2026-08-07",
@@ -55,7 +154,215 @@
       "background": "Headline inflation includes food and energy prices that can move sharply. Core inflation removes the most volatile items and is usually a better guide to persistent price pressure.",
       "view": "The gap matters because volatile food and energy prices can pull the headline down before persistent prices improve. The current reading therefore says less about lasting inflation than the 3.12 percent figure suggests.",
       "prediction": "The September 9 release will show whether the decline has reached core prices. If core inflation falls, the July improvement is broader. If it rises, the 3.12 percent headline will have overstated the progress.",
-      "analysisV": 7
+      "analysisV": 7,
+      "image": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/05/07/69fd1ec0a2138.webp",
+      "imgTries": 1
+    },
+    {
+      "id": "n-pemex-y-petrobras-negocian-un-segundo-acuerdo-de-coo-2026-08-07",
+      "date": "2026-08-07",
+      "section": "economy",
+      "title": "Pemex and Petrobras negotiate expanded refining partnership",
+      "why": "Pemex and Brazil's Petrobras are negotiating a second agreement to deepen cooperation in refining, fuels, biofuels, and petrochemicals in Mexico. The deal would expand the companies' existing alliance to cover downstream operations.",
+      "company": "Pemex",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/08/07/pemex-y-petrobras-negocian-un-segundo-acuerdo-de-cooperacion-de-refinacion-y-venta-de-combustibles/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-07T23:46:19.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Pemex y Petrobras negocian un segundo acuerdo de cooperación de refinación y venta de combustibles",
+        "dek": "Pemex y Petrobras negocian ampliar su alianza al refino, combustibles, biocombustibles y petroquímica en México."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/07/pemex-y-petrobras-negocian-un-segundo-acuerdo-de-cooperacion-de-refinacion-y-venta-de-combustibles/",
+          "publishedAt": "2026-08-07T23:46:19.000Z",
+          "date": "2026-08-07",
+          "title": "Pemex and Petrobras negotiate expanded refining partnership",
+          "summary": "Pemex and Brazil's Petrobras are negotiating a second agreement to deepen cooperation in refining, fuels, biofuels, and petrochemicals in Mexico. The deal would expand the companies' existing alliance to cover downstream operations."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": 6,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-production-of-the-kia-ev3-electric-vehicle-has-begun-2026-08-07",
+      "date": "2026-08-07",
+      "section": "economy",
+      "title": "Kia begins production of EV3 electric vehicle in Nuevo León",
+      "why": "Kia Mexico has started manufacturing the EV3, its first fully electric vehicle produced domestically. The move signals automakers' shift toward EV production in Mexico amid global electrification trends.",
+      "company": "Kia",
+      "source": "MEXICONOW",
+      "url": "https://mexico-now.com/production-of-the-kia-ev3-electric-vehicle-has-begun-in-nuevo-leon/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-07T21:00:00.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Production of the KIA EV3 electric vehicle has begun in Nuevo León.",
+        "dek": "KIA Mexico has begun production of the EV3, the brand’s first 100% electric vehicle manufactured in the country, at its..."
+      },
+      "coverage": [
+        {
+          "source": "MEXICONOW",
+          "url": "https://mexico-now.com/production-of-the-kia-ev3-electric-vehicle-has-begun-in-nuevo-leon/",
+          "publishedAt": "2026-08-07T21:00:00.000Z",
+          "date": "2026-08-07",
+          "title": "Kia begins production of EV3 electric vehicle in Nuevo León",
+          "summary": "Kia Mexico has started manufacturing the EV3, its first fully electric vehicle produced domestically. The move signals automakers' shift toward EV production in Mexico amid global electrification trends."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": 6,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-house-gop-backs-greer-s-strategy-to-delay-usmca-rene-2026-08-07",
+      "date": "2026-08-07",
+      "section": "us-mexico",
+      "title": "House Republicans back US trade office strategy to delay US-Mexico-Canada trade agreement review",
+      "why": "A coalition of 167 House Republicans formally endorsed the US Trade Representative's decision to extend the joint review of the USMCA, delaying the agreement's renewal timeline beyond its scheduled completion date.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/automotive/news/house-gop-backs-greers-strategy-delay-usmca-renewal",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-07T18:59:15.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "House GOP Backs Greer’s Strategy to Delay USMCA Renewal",
+        "dek": "A coalition of 167 House Republicans, led by Rep. Rudy Yakym, R-Ind., has formally signaled support for US Trade Representative Jamieson Greer’s decision to prolong the joint review of the USMCA and condition its extension on specific policy concessions from Mexico and Canada. In a letter sent to Greer, lawmakers from"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/automotive/news/house-gop-backs-greers-strategy-delay-usmca-renewal",
+          "publishedAt": "2026-08-07T18:59:15.000Z",
+          "date": "2026-08-07",
+          "title": "House Republicans back US trade office strategy to delay US-Mexico-Canada trade agreement review",
+          "summary": "A coalition of 167 House Republicans formally endorsed the US Trade Representative's decision to extend the joint review of the USMCA, delaying the agreement's renewal timeline beyond its scheduled completion date."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": 6,
+        "componentSource": "model"
+      },
+      "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/500px-Jamieson_Greer_in_2025_%28cropped%29.jpg?h=1445155f&itok=JyYdl8ph",
+      "imgTries": 1
     },
     {
       "id": "n-m-xico-y-per-restablecen-las-relaciones-diplom-ticas-2026-08-07",
@@ -78,31 +385,6 @@
           "date": "2026-08-07",
           "title": "Mexico and Peru restore diplomatic ties after four years of rupture",
           "summary": "Mexico is normalizing relations with Peru after years of tension over support for ousted president Pedro Castillo, signaling a diplomatic reset under Sheinbaum with Peru's newly elected government."
-        }
-      ],
-      "imgTries": 1
-    },
-    {
-      "id": "n-resoluci-n-que-modifica-las-disposiciones-de-car-cte-2026-08-07",
-      "date": "2026-08-07",
-      "section": "money",
-      "title": "Treasury modifies investment fund rules and service-provider regulations",
-      "why": "A DOF decree adjusts the regulatory framework governing mutual funds and intermediaries, affecting how investment vehicles operate in Mexico's financial system.",
-      "company": "",
-      "source": "Diario Oficial de la Federación",
-      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5795722&fecha=07/08/2026",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-07T12:00:00.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "Diario Oficial de la Federación",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5795722&fecha=07/08/2026",
-          "publishedAt": "2026-08-07T12:00:00.000Z",
-          "date": "2026-08-07",
-          "title": "Treasury modifies investment fund rules and service-provider regulations",
-          "summary": "A DOF decree adjusts the regulatory framework governing mutual funds and intermediaries, affecting how investment vehicles operate in Mexico's financial system."
         }
       ],
       "imgTries": 1
@@ -131,6 +413,31 @@
         }
       ],
       "image": "https://www.elfinanciero.com.mx/resizer/v2/SAA7AIRZGVBPXHBSG5IWBMQVI4.jpg?smart=true&auth=17d6f85b23f00caedc2215ea8aa941e7b5723277d4d393ccb10de63becc3ba01&width=1200&height=630",
+      "imgTries": 1
+    },
+    {
+      "id": "n-resoluci-n-que-modifica-las-disposiciones-de-car-cte-2026-08-07",
+      "date": "2026-08-07",
+      "section": "money",
+      "title": "Treasury modifies investment fund rules and service-provider regulations",
+      "why": "A DOF decree adjusts the regulatory framework governing mutual funds and intermediaries, affecting how investment vehicles operate in Mexico's financial system.",
+      "company": "",
+      "source": "Diario Oficial de la Federación",
+      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5795722&fecha=07/08/2026",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-07T12:00:00.000Z",
+      "sourceTier": "specialist",
+      "coverage": [
+        {
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5795722&fecha=07/08/2026",
+          "publishedAt": "2026-08-07T12:00:00.000Z",
+          "date": "2026-08-07",
+          "title": "Treasury modifies investment fund rules and service-provider regulations",
+          "summary": "A DOF decree adjusts the regulatory framework governing mutual funds and intermediaries, affecting how investment vehicles operate in Mexico's financial system."
+        }
+      ],
       "imgTries": 1
     },
     {
@@ -184,6 +491,167 @@
       ]
     },
     {
+      "id": "n-ai-cybersecurity-anchor-mexico-s-2026-tech-spending-2026-08-07",
+      "date": "2026-08-07",
+      "section": "economy",
+      "title": "Mexican companies to spend 776 million dollars on AI and 1.48 billion on cybersecurity in 2026",
+      "why": "Mexican firms are directing record spending toward AI software and cybersecurity as technology budgets shift from hardware to cloud services and advanced software capabilities.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/tech/news/ai-cybersecurity-anchor-mexicos-2026-tech-spending",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-07T19:07:37.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "AI, Cybersecurity Anchor Mexico's 2026 Tech Spending",
+        "dek": "Mexican companies will direct US$776 million to AI software and services and US$1.48 billion to cybersecurity in 2026, as IDC and Select data show technology budgets shifting from hardware toward cloud-based, automation-driven models. However, the country faces a shortage of 77,000 cybersecurity specialists, low securi"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/tech/news/ai-cybersecurity-anchor-mexicos-2026-tech-spending",
+          "publishedAt": "2026-08-07T19:07:37.000Z",
+          "date": "2026-08-07",
+          "title": "Mexican companies to spend 776 million dollars on AI and 1.48 billion on cybersecurity in 2026",
+          "summary": "Mexican firms are directing record spending toward AI software and cybersecurity as technology budgets shift from hardware to cloud services and advanced software capabilities."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 0
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": 6,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-banxico-deja-con-tres-candados-la-tasa-de-inter-s-qu-2026-08-06",
+      "date": "2026-08-06",
+      "section": "money",
+      "title": "Banxico holds its policy rate at 6.50 percent",
+      "why": "The board left the rate unchanged and said it expects inflation to reach its target in the fourth quarter of 2027.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/08/06/tasa-de-interes-del-banxico-en-que-nivel-quedo-hoy-6-de-agosto-de-2026/",
+      "importance": 9,
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 2
+      },
+      "scheduledEventId": "banxico-policy-2026-08-06",
+      "scheduledImportanceFloor": 8,
+      "requiredForBrief": true,
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "reportedTotal": 6,
+        "componentSource": "code-reviewed",
+        "scheduledOutcome": {
+          "applied": true,
+          "id": "banxico-policy-2026-08-06",
+          "kind": "decision",
+          "isNewOutcome": true,
+          "changed": false,
+          "importanceFloor": {
+            "requested": 8,
+            "before": 6,
+            "after": 8,
+            "applied": true
+          }
+        }
+      },
+      "kind": "event",
+      "publishedAt": "2026-08-06T19:40:22.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Banxico deja ‘con tres candados’ la tasa de interés: Queda sin cambios en 6.50%",
+        "dek": "La Junta de Gobierno consideró que la inflación llegará a su meta objetivo hasta el cuarto trimestre de 2027."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/06/tasa-de-interes-del-banxico-en-que-nivel-quedo-hoy-6-de-agosto-de-2026/",
+          "publishedAt": "2026-08-06T19:40:22.000Z",
+          "date": "2026-08-06",
+          "title": "Banxico holds its policy rate at 6.50 percent",
+          "summary": "The board left the rate unchanged and said it expects inflation to reach its target in the fourth quarter of 2027."
+        }
+      ],
+      "background": "Banxico uses the overnight policy rate to influence borrowing and spending. A rate above inflation can slow prices, but it also makes credit more expensive.",
+      "view": "July's inflation report explains the wait. Headline inflation is close to target, but underlying inflation is falling more slowly. Banxico is waiting for that underlying measure to improve before making credit cheaper again.",
+      "prediction": "The next tests will be the September 9 inflation release and the September 24 rate decision. If underlying inflation falls again, a cut becomes more likely. If it reverses, another hold becomes more likely.",
+      "analysisV": 7
+    },
+    {
+      "id": "n-congresistas-de-eu-exigen-cambios-al-t-mec-y-aumenta-2026-08-06",
+      "date": "2026-08-06",
+      "section": "us-mexico",
+      "title": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
+      "why": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-06T23:46:48.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Congresistas de EU exigen cambios al T-MEC y aumentan la presión sobre México",
+        "dek": "Congresistas de EU respaldan endurecer la revisión del T-MEC y piden priorizar resultados para fortalecer comercio y competitividad."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
+          "publishedAt": "2026-08-06T23:46:48.000Z",
+          "date": "2026-08-06",
+          "title": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
+          "summary": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness."
+        }
+      ],
+      "background": "The agreement remains in force without a new extension. Because the three countries did not agree to a 16-year extension in July, they will return to the review every year and the treaty can continue through 2036.",
+      "view": "The letter raises negotiating pressure, but it does not change tariffs or treaty rules. Existing factories keep their current access. The practical cost is uncertainty for companies considering investments that take years to repay.",
+      "prediction": "The demands are likely to matter only if they appear in formal US negotiating objectives or draft text. Specific Mexican commitments on market access or outside-country investment would confirm that the letter is shaping the review.",
+      "analysisV": 7
+    },
+    {
       "id": "n-la-demanda-futura-de-electricidad-amenaza-al-nearsho-2026-08-06",
       "date": "2026-08-06",
       "section": "economy",
@@ -218,32 +686,6 @@
       "analysisV": 7
     },
     {
-      "id": "n-inicia-segunda-fase-de-remodelaci-n-del-aicm-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Mexico City airport enters second phase of renovation",
-      "why": "The Mexico City International Airport begins major modernization work through year-end 2026. This infrastructure upgrade affects connectivity and logistics costs for nearshoring and international commerce.",
-      "company": "",
-      "source": "T21",
-      "url": "https://t21.com.mx/inicia-segunda-fase-de-remodelacion-del-aicm/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-06T13:23:43.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "T21",
-          "url": "https://t21.com.mx/inicia-segunda-fase-de-remodelacion-del-aicm/",
-          "publishedAt": "2026-08-06T13:23:43.000Z",
-          "date": "2026-08-06",
-          "title": "Mexico City airport enters second phase of renovation",
-          "summary": "The Mexico City International Airport begins major modernization work through year-end 2026. This infrastructure upgrade affects connectivity and logistics costs for nearshoring and international commerce."
-        }
-      ],
-      "image": "https://t21.com.mx/wp-content/uploads/2026/08/Sin-titulo1.jpg",
-      "imgTries": 1
-    },
-    {
       "id": "n-mecanismo-laboral-del-t-mec-tendr-cambios-modestos-f-2026-08-06",
       "date": "2026-08-06",
       "section": "us-mexico",
@@ -271,6 +713,128 @@
         }
       ],
       "image": "https://www.bloomberglinea.com/resizer/v2/3YVKSEALV5CA5ICE2GJZSDS7QU.jpg?auth=b04819fa5fc4f12151c34ef25a499908b6a2fa8906b29f0378b8a8a9f589c8cd&width=1200&height=630&quality=80&smart=true",
+      "imgTries": 1
+    },
+    {
+      "id": "n-m-xico-estrecha-los-lazos-con-brasil-en-plena-escala-2026-08-06",
+      "date": "2026-08-06",
+      "section": "us-mexico",
+      "title": "Mexico and Brazil strengthen ties amid rising US-Brazil tensions under Trump",
+      "why": "Mexico's foreign minister meets with Lula to discuss democracy in Latin America and finalize a Petrobras-Pemex cooperation deal, positioning the countries as a bloc during friction with the US.",
+      "company": "",
+      "source": "El País — México",
+      "url": "https://elpais.com/mexico/2026-08-07/mexico-estrecha-los-lazos-con-brasil-en-plena-escalada-de-la-tension-entre-lula-y-trump.html",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-07T04:00:00.000Z",
+      "sourceTier": 2,
+      "coverage": [
+        {
+          "source": "El País — México",
+          "url": "https://elpais.com/mexico/2026-08-07/mexico-estrecha-los-lazos-con-brasil-en-plena-escalada-de-la-tension-entre-lula-y-trump.html",
+          "publishedAt": "2026-08-07T04:00:00.000Z",
+          "date": "2026-08-06",
+          "title": "Mexico and Brazil strengthen ties amid rising US-Brazil tensions under Trump",
+          "summary": "Mexico's foreign minister meets with Lula to discuss democracy in Latin America and finalize a Petrobras-Pemex cooperation deal, positioning the countries as a bloc during friction with the US."
+        }
+      ]
+    },
+    {
+      "id": "n-didi-suma-20-millones-de-viajes-el-ctricos-en-m-xico-2026-08-06",
+      "date": "2026-08-06",
+      "section": "economy",
+      "title": "DiDi logs 20 million electric rides in Mexico with 15,000 EV drivers on platform",
+      "why": "DiDi is building out a green transport network in Mexico as part of broader adoption of electric vehicles in ride-hailing, signaling market shift toward cleaner mobility.",
+      "company": "DiDi",
+      "source": "DPL News",
+      "url": "https://dplnews.com/didi-20-millones-viajes-electricos-mexico/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-07T01:41:24.000Z",
+      "sourceTier": "specialist",
+      "coverage": [
+        {
+          "source": "DPL News",
+          "url": "https://dplnews.com/didi-20-millones-viajes-electricos-mexico/",
+          "publishedAt": "2026-08-07T01:41:24.000Z",
+          "date": "2026-08-06",
+          "title": "DiDi logs 20 million electric rides in Mexico with 15,000 EV drivers on platform",
+          "summary": "DiDi is building out a green transport network in Mexico as part of broader adoption of electric vehicles in ride-hailing, signaling market shift toward cleaner mobility."
+        }
+      ]
+    },
+    {
+      "id": "n-kia-apuesta-por-el-ev3-para-acelerar-su-estrategia-e-2026-08-06",
+      "date": "2026-08-06",
+      "section": "economy",
+      "title": "Kia launches EV3 locally in Mexico with 605-kilometer range and 689,700-peso entry price",
+      "why": "Kia is moving assembly of its affordable electric vehicle to Mexico, lowering the price barrier for EV adoption and competing directly with Tesla and other makers to expand the domestic market.",
+      "company": "Kia",
+      "source": "Expansión — Empresas",
+      "url": "https://expansion.mx/empresas/2026/08/06/kia-ev3-suv-electrico-mexico-precio-autonomia",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-07T01:20:28.000Z",
+      "sourceTier": 2,
+      "coverage": [
+        {
+          "source": "Expansión — Empresas",
+          "url": "https://expansion.mx/empresas/2026/08/06/kia-ev3-suv-electrico-mexico-precio-autonomia",
+          "publishedAt": "2026-08-07T01:20:28.000Z",
+          "date": "2026-08-06",
+          "title": "Kia launches EV3 locally in Mexico with 605-kilometer range and 689,700-peso entry price",
+          "summary": "Kia is moving assembly of its affordable electric vehicle to Mexico, lowering the price barrier for EV adoption and competing directly with Tesla and other makers to expand the domestic market."
+        }
+      ]
+    },
+    {
+      "id": "n-mexican-economy-gains-momentum-2026-08-06",
+      "date": "2026-08-06",
+      "section": "economy",
+      "title": "Mexican economy expands 6.1 percent annualized in second quarter, reversing first-quarter contraction",
+      "why": "GDP growth rebounded sharply from a 2.4 percent contraction in Q1, signaling economic recovery and moderating concerns about stagnation under the new administration.",
+      "company": "",
+      "source": "Dallas Fed — Research",
+      "url": "https://dallasfed.org/research/update/mex/2026/2605",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-06T20:11:00.000Z",
+      "sourceTier": "specialist",
+      "coverage": [
+        {
+          "source": "Dallas Fed — Research",
+          "url": "https://dallasfed.org/research/update/mex/2026/2605",
+          "publishedAt": "2026-08-06T20:11:00.000Z",
+          "date": "2026-08-06",
+          "title": "Mexican economy expands 6.1 percent annualized in second quarter, reversing first-quarter contraction",
+          "summary": "GDP growth rebounded sharply from a 2.4 percent contraction in Q1, signaling economic recovery and moderating concerns about stagnation under the new administration."
+        }
+      ]
+    },
+    {
+      "id": "n-inicia-segunda-fase-de-remodelaci-n-del-aicm-2026-08-06",
+      "date": "2026-08-06",
+      "section": "economy",
+      "title": "Mexico City airport enters second phase of renovation",
+      "why": "The Mexico City International Airport begins major modernization work through year-end 2026. This infrastructure upgrade affects connectivity and logistics costs for nearshoring and international commerce.",
+      "company": "",
+      "source": "T21",
+      "url": "https://t21.com.mx/inicia-segunda-fase-de-remodelacion-del-aicm/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-06T13:23:43.000Z",
+      "sourceTier": "specialist",
+      "coverage": [
+        {
+          "source": "T21",
+          "url": "https://t21.com.mx/inicia-segunda-fase-de-remodelacion-del-aicm/",
+          "publishedAt": "2026-08-06T13:23:43.000Z",
+          "date": "2026-08-06",
+          "title": "Mexico City airport enters second phase of renovation",
+          "summary": "The Mexico City International Airport begins major modernization work through year-end 2026. This infrastructure upgrade affects connectivity and logistics costs for nearshoring and international commerce."
+        }
+      ],
+      "image": "https://t21.com.mx/wp-content/uploads/2026/08/Sin-titulo1.jpg",
       "imgTries": 1
     },
     {
@@ -352,188 +916,28 @@
       ]
     },
     {
-      "id": "n-m-xico-estrecha-los-lazos-con-brasil-en-plena-escala-2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "Mexico and Brazil strengthen ties amid rising US-Brazil tensions under Trump",
-      "why": "Mexico's foreign minister meets with Lula to discuss democracy in Latin America and finalize a Petrobras-Pemex cooperation deal, positioning the countries as a bloc during friction with the US.",
-      "company": "",
-      "source": "El País — México",
-      "url": "https://elpais.com/mexico/2026-08-07/mexico-estrecha-los-lazos-con-brasil-en-plena-escalada-de-la-tension-entre-lula-y-trump.html",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-07T04:00:00.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/2026-08-07/mexico-estrecha-los-lazos-con-brasil-en-plena-escalada-de-la-tension-entre-lula-y-trump.html",
-          "publishedAt": "2026-08-07T04:00:00.000Z",
-          "date": "2026-08-06",
-          "title": "Mexico and Brazil strengthen ties amid rising US-Brazil tensions under Trump",
-          "summary": "Mexico's foreign minister meets with Lula to discuss democracy in Latin America and finalize a Petrobras-Pemex cooperation deal, positioning the countries as a bloc during friction with the US."
-        }
-      ]
-    },
-    {
-      "id": "n-didi-suma-20-millones-de-viajes-el-ctricos-en-m-xico-2026-08-06",
-      "date": "2026-08-06",
+      "id": "n-mercado-libre-acelera-en-m-xico-ingresos-crecen-55-e-2026-08-05",
+      "date": "2026-08-05",
       "section": "economy",
-      "title": "DiDi logs 20 million electric rides in Mexico with 15,000 EV drivers on platform",
-      "why": "DiDi is building out a green transport network in Mexico as part of broader adoption of electric vehicles in ride-hailing, signaling market shift toward cleaner mobility.",
-      "company": "DiDi",
-      "source": "DPL News",
-      "url": "https://dplnews.com/didi-20-millones-viajes-electricos-mexico/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-07T01:41:24.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "DPL News",
-          "url": "https://dplnews.com/didi-20-millones-viajes-electricos-mexico/",
-          "publishedAt": "2026-08-07T01:41:24.000Z",
-          "date": "2026-08-06",
-          "title": "DiDi logs 20 million electric rides in Mexico with 15,000 EV drivers on platform",
-          "summary": "DiDi is building out a green transport network in Mexico as part of broader adoption of electric vehicles in ride-hailing, signaling market shift toward cleaner mobility."
-        }
-      ]
-    },
-    {
-      "id": "n-kia-apuesta-por-el-ev3-para-acelerar-su-estrategia-e-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Kia launches EV3 locally in Mexico with 605-kilometer range and 689,700-peso entry price",
-      "why": "Kia is moving assembly of its affordable electric vehicle to Mexico, lowering the price barrier for EV adoption and competing directly with Tesla and other makers to expand the domestic market.",
-      "company": "Kia",
-      "source": "Expansión — Empresas",
-      "url": "https://expansion.mx/empresas/2026/08/06/kia-ev3-suv-electrico-mexico-precio-autonomia",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-07T01:20:28.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "Expansión — Empresas",
-          "url": "https://expansion.mx/empresas/2026/08/06/kia-ev3-suv-electrico-mexico-precio-autonomia",
-          "publishedAt": "2026-08-07T01:20:28.000Z",
-          "date": "2026-08-06",
-          "title": "Kia launches EV3 locally in Mexico with 605-kilometer range and 689,700-peso entry price",
-          "summary": "Kia is moving assembly of its affordable electric vehicle to Mexico, lowering the price barrier for EV adoption and competing directly with Tesla and other makers to expand the domestic market."
-        }
-      ]
-    },
-    {
-      "id": "n-congresistas-de-eu-exigen-cambios-al-t-mec-y-aumenta-2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
-      "why": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness.",
-      "company": "",
+      "title": "Mercado Libre accelerates in Mexico with 55% revenue growth in second quarter, driven by e-commerce and Mercado Pago",
+      "why": "Mexico's strong performance lifted company-wide results in the quarter. Mercado Pago's expansion in payments processing and the buoyancy of digital commerce reflect sustained consumer spending and fintech adoption.",
+      "company": "Mercado Libre",
       "source": "El CEO",
-      "url": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
-      "importance": 6,
+      "url": "https://elceo.com/negocios/mercado-libre-acelera-en-mexico-ingresos-crecen-55-en-el-2t26-impulsados-por-el-e-commerce-y-mercado-pago/",
+      "importance": 7,
       "kind": "event",
-      "publishedAt": "2026-08-06T23:46:48.000Z",
+      "publishedAt": "2026-08-05T23:34:56.000Z",
       "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Congresistas de EU exigen cambios al T-MEC y aumentan la presión sobre México",
-        "dek": "Congresistas de EU respaldan endurecer la revisión del T-MEC y piden priorizar resultados para fortalecer comercio y competitividad."
-      },
       "coverage": [
         {
           "source": "El CEO",
-          "url": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
-          "publishedAt": "2026-08-06T23:46:48.000Z",
-          "date": "2026-08-06",
-          "title": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
-          "summary": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness."
-        }
-      ],
-      "background": "The agreement remains in force without a new extension. Because the three countries did not agree to a 16-year extension in July, they will return to the review every year and the treaty can continue through 2036.",
-      "view": "The letter raises negotiating pressure, but it does not change tariffs or treaty rules. Existing factories keep their current access. The practical cost is uncertainty for companies considering investments that take years to repay.",
-      "prediction": "The demands are likely to matter only if they appear in formal US negotiating objectives or draft text. Specific Mexican commitments on market access or outside-country investment would confirm that the letter is shaping the review.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-mexican-economy-gains-momentum-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Mexican economy expands 6.1 percent annualized in second quarter, reversing first-quarter contraction",
-      "why": "GDP growth rebounded sharply from a 2.4 percent contraction in Q1, signaling economic recovery and moderating concerns about stagnation under the new administration.",
-      "company": "",
-      "source": "Dallas Fed — Research",
-      "url": "https://dallasfed.org/research/update/mex/2026/2605",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-06T20:11:00.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "Dallas Fed — Research",
-          "url": "https://dallasfed.org/research/update/mex/2026/2605",
-          "publishedAt": "2026-08-06T20:11:00.000Z",
-          "date": "2026-08-06",
-          "title": "Mexican economy expands 6.1 percent annualized in second quarter, reversing first-quarter contraction",
-          "summary": "GDP growth rebounded sharply from a 2.4 percent contraction in Q1, signaling economic recovery and moderating concerns about stagnation under the new administration."
+          "url": "https://elceo.com/negocios/mercado-libre-acelera-en-mexico-ingresos-crecen-55-en-el-2t26-impulsados-por-el-e-commerce-y-mercado-pago/",
+          "publishedAt": "2026-08-05T23:34:56.000Z",
+          "date": "2026-08-05",
+          "title": "Mercado Libre accelerates in Mexico with 55% revenue growth in second quarter, driven by e-commerce and Mercado Pago",
+          "summary": "Mexico's strong performance lifted company-wide results in the quarter. Mercado Pago's expansion in payments processing and the buoyancy of digital commerce reflect sustained consumer spending and fintech adoption."
         }
       ]
-    },
-    {
-      "id": "n-banxico-deja-con-tres-candados-la-tasa-de-inter-s-qu-2026-08-06",
-      "date": "2026-08-06",
-      "section": "money",
-      "title": "Banxico holds its policy rate at 6.50 percent",
-      "why": "The board left the rate unchanged and said it expects inflation to reach its target in the fourth quarter of 2027.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/06/tasa-de-interes-del-banxico-en-que-nivel-quedo-hoy-6-de-agosto-de-2026/",
-      "importance": 8,
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 2
-      },
-      "scheduledEventId": "banxico-policy-2026-08-06",
-      "scheduledImportanceFloor": 8,
-      "requiredForBrief": true,
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "reportedTotal": 6,
-        "componentSource": "code-reviewed",
-        "scheduledOutcome": {
-          "applied": true,
-          "id": "banxico-policy-2026-08-06",
-          "kind": "decision",
-          "isNewOutcome": true,
-          "changed": false,
-          "importanceFloor": { "requested": 8, "before": 6, "after": 8, "applied": true }
-        }
-      },
-      "kind": "event",
-      "publishedAt": "2026-08-06T19:40:22.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Banxico deja ‘con tres candados’ la tasa de interés: Queda sin cambios en 6.50%",
-        "dek": "La Junta de Gobierno consideró que la inflación llegará a su meta objetivo hasta el cuarto trimestre de 2027."
-      },
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/06/tasa-de-interes-del-banxico-en-que-nivel-quedo-hoy-6-de-agosto-de-2026/",
-          "publishedAt": "2026-08-06T19:40:22.000Z",
-          "date": "2026-08-06",
-          "title": "Banxico holds its policy rate at 6.50 percent",
-          "summary": "The board left the rate unchanged and said it expects inflation to reach its target in the fourth quarter of 2027."
-        }
-      ],
-      "background": "Banxico uses the overnight policy rate to influence borrowing and spending. A rate above inflation can slow prices, but it also makes credit more expensive.",
-      "view": "July's inflation report explains the wait. Headline inflation is close to target, but underlying inflation is falling more slowly. Banxico is waiting for that underlying measure to improve before making credit cheaper again.",
-      "prediction": "The next tests will be the September 9 inflation release and the September 24 rate decision. If underlying inflation falls again, a cut becomes more likely. If it reverses, another hold becomes more likely.",
-      "analysisV": 7
     },
     {
       "id": "n-exportaciones-de-petr-leo-de-pemex-se-desploman-28-l-2026-08-05",
@@ -590,30 +994,6 @@
       ]
     },
     {
-      "id": "n-mercado-libre-acelera-en-m-xico-ingresos-crecen-55-e-2026-08-05",
-      "date": "2026-08-05",
-      "section": "economy",
-      "title": "Mercado Libre accelerates in Mexico with 55% revenue growth in second quarter, driven by e-commerce and Mercado Pago",
-      "why": "Mexico's strong performance lifted company-wide results in the quarter. Mercado Pago's expansion in payments processing and the buoyancy of digital commerce reflect sustained consumer spending and fintech adoption.",
-      "company": "Mercado Libre",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/mercado-libre-acelera-en-mexico-ingresos-crecen-55-en-el-2t26-impulsados-por-el-e-commerce-y-mercado-pago/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-05T23:34:56.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/mercado-libre-acelera-en-mexico-ingresos-crecen-55-en-el-2t26-impulsados-por-el-e-commerce-y-mercado-pago/",
-          "publishedAt": "2026-08-05T23:34:56.000Z",
-          "date": "2026-08-05",
-          "title": "Mercado Libre accelerates in Mexico with 55% revenue growth in second quarter, driven by e-commerce and Mercado Pago",
-          "summary": "Mexico's strong performance lifted company-wide results in the quarter. Mercado Pago's expansion in payments processing and the buoyancy of digital commerce reflect sustained consumer spending and fintech adoption."
-        }
-      ]
-    },
-    {
       "id": "n-m-xico-puede-construir-su-modelo-regulatorio-de-ia-r-2026-08-05",
       "date": "2026-08-05",
       "section": "politics",
@@ -662,26 +1042,26 @@
       ]
     },
     {
-      "id": "n-mexico-s-national-ai-strategy-2026-08-04",
+      "id": "n-dos-bocas-se-apaga-refinaci-n-de-petr-leo-cae-23-en--2026-08-04",
       "date": "2026-08-04",
-      "section": "politics",
-      "title": "Mexico’s national AI strategy",
-      "why": "Mexico finds itself realising it needs an artificial intelligence plan.",
-      "company": "",
-      "source": "The Mexico Political Economist",
-      "url": "https://mxpe.org/p/mexico-ai-strategy",
-      "importance": 2,
+      "section": "economy",
+      "title": "Pemex refining collapses 23 percent in June after string of safety incidents",
+      "why": "Crude refining output fell sharply following fires, leaks, floods, and workplace accidents across Pemex's refineries in the first half of 2026. The operational crisis deepens Pemex's production and export crisis.",
+      "company": "Pemex",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/08/04/dos-bocas-se-apaga-refinacion-de-petroleo-cae-23-en-junio-tras-meses-de-incidentes/",
+      "importance": 6,
       "kind": "event",
-      "publishedAt": "2026-08-04T12:03:40.000Z",
-      "sourceTier": 1,
+      "publishedAt": "2026-08-04T18:40:39.000Z",
+      "sourceTier": 2,
       "coverage": [
         {
-          "source": "The Mexico Political Economist",
-          "url": "https://mxpe.org/p/mexico-ai-strategy",
-          "publishedAt": "2026-08-04T12:03:40.000Z",
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/04/dos-bocas-se-apaga-refinacion-de-petroleo-cae-23-en-junio-tras-meses-de-incidentes/",
+          "publishedAt": "2026-08-04T18:40:39.000Z",
           "date": "2026-08-04",
-          "title": "Mexico’s national AI strategy",
-          "summary": "Mexico finds itself realising it needs an artificial intelligence plan."
+          "title": "Pemex refining collapses 23 percent in June after string of safety incidents",
+          "summary": "Crude refining output fell sharply following fires, leaks, floods, and workplace accidents across Pemex's refineries in the first half of 2026. The operational crisis deepens Pemex's production and export crisis."
         }
       ]
     },
@@ -764,30 +1144,6 @@
       "imgTries": 1
     },
     {
-      "id": "n-banco-multiva-fortalece-su-capital-con-emisi-n-inter-2026-08-04",
-      "date": "2026-08-04",
-      "section": "money",
-      "title": "Banco Multiva raises 300 million dollars in international AT1 capital",
-      "why": "The Mexican bank completed its first international AT1 (Additional Tier 1) bond offering to strengthen capital and fund strategic projects. AT1 is hybrid debt that absorbs losses and signals lender confidence in the issuer.",
-      "company": "Banco Multiva",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/banco-multiva-fortalece-su-capital-con-emision-internacional-at1-por-300-millones-de-dolares/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-05T00:08:59.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/banco-multiva-fortalece-su-capital-con-emision-internacional-at1-por-300-millones-de-dolares/",
-          "publishedAt": "2026-08-05T00:08:59.000Z",
-          "date": "2026-08-04",
-          "title": "Banco Multiva raises 300 million dollars in international AT1 capital",
-          "summary": "The Mexican bank completed its first international AT1 (Additional Tier 1) bond offering to strengthen capital and fund strategic projects. AT1 is hybrid debt that absorbs losses and signals lender confidence in the issuer."
-        }
-      ]
-    },
-    {
       "id": "n-mexico-breaks-another-record-for-car-sales-2026-08-04",
       "date": "2026-08-04",
       "section": "economy",
@@ -808,30 +1164,6 @@
           "date": "2026-08-04",
           "title": "Mexico vehicle sales hit 885,000 units in the period, up 5 percent",
           "summary": "Auto sales in Mexico continued to climb, reflecting consumer demand and nearshoring manufacturing. Vehicle production and sales are barometers of both domestic demand and export-driven industrial output."
-        }
-      ]
-    },
-    {
-      "id": "n-hey-banco-lleva-el-pago-de-servicios-a-su-app-con-te-2026-08-04",
-      "date": "2026-08-04",
-      "section": "money",
-      "title": "Hey Banco integrates bill-payment service into its app via tapi technology",
-      "why": "Hey Banco added utility bill payments (electricity, water) to its mobile app using tapi's technology, extending fintech reach into basic consumer services. The integration competes with traditional banks and payment channels.",
-      "company": "Hey Banco",
-      "source": "DPL News",
-      "url": "https://dplnews.com/tapi-pago-servicios-hey-banco/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-04T22:17:12.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "DPL News",
-          "url": "https://dplnews.com/tapi-pago-servicios-hey-banco/",
-          "publishedAt": "2026-08-04T22:17:12.000Z",
-          "date": "2026-08-04",
-          "title": "Hey Banco integrates bill-payment service into its app via tapi technology",
-          "summary": "Hey Banco added utility bill payments (electricity, water) to its mobile app using tapi's technology, extending fintech reach into basic consumer services. The integration competes with traditional banks and payment channels."
         }
       ]
     },
@@ -860,6 +1192,54 @@
       ]
     },
     {
+      "id": "n-banco-multiva-fortalece-su-capital-con-emisi-n-inter-2026-08-04",
+      "date": "2026-08-04",
+      "section": "money",
+      "title": "Banco Multiva raises 300 million dollars in international AT1 capital",
+      "why": "The Mexican bank completed its first international AT1 (Additional Tier 1) bond offering to strengthen capital and fund strategic projects. AT1 is hybrid debt that absorbs losses and signals lender confidence in the issuer.",
+      "company": "Banco Multiva",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/banco-multiva-fortalece-su-capital-con-emision-internacional-at1-por-300-millones-de-dolares/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-05T00:08:59.000Z",
+      "sourceTier": 2,
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/banco-multiva-fortalece-su-capital-con-emision-internacional-at1-por-300-millones-de-dolares/",
+          "publishedAt": "2026-08-05T00:08:59.000Z",
+          "date": "2026-08-04",
+          "title": "Banco Multiva raises 300 million dollars in international AT1 capital",
+          "summary": "The Mexican bank completed its first international AT1 (Additional Tier 1) bond offering to strengthen capital and fund strategic projects. AT1 is hybrid debt that absorbs losses and signals lender confidence in the issuer."
+        }
+      ]
+    },
+    {
+      "id": "n-hey-banco-lleva-el-pago-de-servicios-a-su-app-con-te-2026-08-04",
+      "date": "2026-08-04",
+      "section": "money",
+      "title": "Hey Banco integrates bill-payment service into its app via tapi technology",
+      "why": "Hey Banco added utility bill payments (electricity, water) to its mobile app using tapi's technology, extending fintech reach into basic consumer services. The integration competes with traditional banks and payment channels.",
+      "company": "Hey Banco",
+      "source": "DPL News",
+      "url": "https://dplnews.com/tapi-pago-servicios-hey-banco/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-04T22:17:12.000Z",
+      "sourceTier": "specialist",
+      "coverage": [
+        {
+          "source": "DPL News",
+          "url": "https://dplnews.com/tapi-pago-servicios-hey-banco/",
+          "publishedAt": "2026-08-04T22:17:12.000Z",
+          "date": "2026-08-04",
+          "title": "Hey Banco integrates bill-payment service into its app via tapi technology",
+          "summary": "Hey Banco added utility bill payments (electricity, water) to its mobile app using tapi's technology, extending fintech reach into basic consumer services. The integration competes with traditional banks and payment channels."
+        }
+      ]
+    },
+    {
       "id": "n-alza-en-ieps-presiona-a-coca-cola-a-subir-precio-de--2026-08-04",
       "date": "2026-08-04",
       "section": "money",
@@ -884,50 +1264,26 @@
       ]
     },
     {
-      "id": "n-dos-bocas-se-apaga-refinaci-n-de-petr-leo-cae-23-en--2026-08-04",
+      "id": "n-mexico-s-national-ai-strategy-2026-08-04",
       "date": "2026-08-04",
-      "section": "economy",
-      "title": "Pemex refining collapses 23 percent in June after string of safety incidents",
-      "why": "Crude refining output fell sharply following fires, leaks, floods, and workplace accidents across Pemex's refineries in the first half of 2026. The operational crisis deepens Pemex's production and export crisis.",
-      "company": "Pemex",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/04/dos-bocas-se-apaga-refinacion-de-petroleo-cae-23-en-junio-tras-meses-de-incidentes/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-04T18:40:39.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/04/dos-bocas-se-apaga-refinacion-de-petroleo-cae-23-en-junio-tras-meses-de-incidentes/",
-          "publishedAt": "2026-08-04T18:40:39.000Z",
-          "date": "2026-08-04",
-          "title": "Pemex refining collapses 23 percent in June after string of safety incidents",
-          "summary": "Crude refining output fell sharply following fires, leaks, floods, and workplace accidents across Pemex's refineries in the first half of 2026. The operational crisis deepens Pemex's production and export crisis."
-        }
-      ]
-    },
-    {
-      "id": "n-unexpectedly-good-mexico-news-2026-08-03",
-      "date": "2026-08-03",
       "section": "politics",
-      "title": "Unexpectedly good Mexico news",
-      "why": "MXPE Weekly Essentials ft. GDP growth, auto investment, tax revenue, and other highlights in Mexican politics, policy, and markets from the past week.",
+      "title": "Mexico’s national AI strategy",
+      "why": "Mexico finds itself realising it needs an artificial intelligence plan.",
       "company": "",
       "source": "The Mexico Political Economist",
-      "url": "https://mxpe.org/p/good-mexico-news",
+      "url": "https://mxpe.org/p/mexico-ai-strategy",
       "importance": 2,
       "kind": "event",
-      "publishedAt": "2026-08-03T12:04:30.000Z",
+      "publishedAt": "2026-08-04T12:03:40.000Z",
       "sourceTier": 1,
       "coverage": [
         {
           "source": "The Mexico Political Economist",
-          "url": "https://mxpe.org/p/good-mexico-news",
-          "publishedAt": "2026-08-03T12:04:30.000Z",
-          "date": "2026-08-03",
-          "title": "Unexpectedly good Mexico news",
-          "summary": "MXPE Weekly Essentials ft. GDP growth, auto investment, tax revenue, and other highlights in Mexican politics, policy, and markets from the past week."
+          "url": "https://mxpe.org/p/mexico-ai-strategy",
+          "publishedAt": "2026-08-04T12:03:40.000Z",
+          "date": "2026-08-04",
+          "title": "Mexico’s national AI strategy",
+          "summary": "Mexico finds itself realising it needs an artificial intelligence plan."
         }
       ]
     },
@@ -960,6 +1316,56 @@
       "view": "A ruling that Mexico violated the treaty but paid Vulcan minimal damages leaves Mexico's exposure look worse on paper than in practice. The mechanism that matters for other investors is precedent, not payout: future claimants can now cite a clear violation finding, but the token damages suggest tribunals will keep finding fault without imposing costs large enough to change government behavior.",
       "prediction": "Vulcan is likely to keep pressing publicly for a larger settlement or a separate claim, while Mexico's government treats the ruling as a near-win since most claims were dismissed. This would be wrong if Vulcan files a new arbitration seeking the undisclosed damages figure, or if other investors cite this case to file fresh claims over property seizures.",
       "analysisV": 7
+    },
+    {
+      "id": "n-sat-registra-la-mayor-ca-da-en-la-recaudaci-n-de-isr-2026-08-03",
+      "date": "2026-08-03",
+      "section": "money",
+      "title": "Tax authority records largest income tax collection decline in 17 years as manufacturing weakens",
+      "why": "Income tax receipts from manufacturers collapsed 15.75 percent in the first half of 2026. The drop signals deteriorating industrial performance and reduced government revenue when fiscal space is already tight.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/sat-caida-recaudacion-isr-debilidad-manufacturera/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-03T08:00:15.000Z",
+      "sourceTier": 2,
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/sat-caida-recaudacion-isr-debilidad-manufacturera/",
+          "publishedAt": "2026-08-03T08:00:15.000Z",
+          "date": "2026-08-03",
+          "title": "Tax authority records largest income tax collection decline in 17 years as manufacturing weakens",
+          "summary": "Income tax receipts from manufacturers collapsed 15.75 percent in the first half of 2026. The drop signals deteriorating industrial performance and reduced government revenue when fiscal space is already tight."
+        }
+      ]
+    },
+    {
+      "id": "n-analistas-de-banxico-suben-su-previsi-n-sobre-el-pib-2026-08-03",
+      "date": "2026-08-03",
+      "section": "money",
+      "title": "Banxico survey raises 2026 GDP forecast, expects inflation to moderate by third quarter",
+      "why": "Analysts upgraded growth expectations while predicting disinflation ahead. Banxico's survey sets expectations for the policy rate path and market positioning.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/analistas-de-banxico-suben-su-prevision-sobre-el-pib-pero-pronostican-una-desaceleracion-en-el-3t26/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-03T17:38:24.000Z",
+      "sourceTier": 2,
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/analistas-de-banxico-suben-su-prevision-sobre-el-pib-pero-pronostican-una-desaceleracion-en-el-3t26/",
+          "publishedAt": "2026-08-03T17:38:24.000Z",
+          "date": "2026-08-03",
+          "title": "Banxico survey raises 2026 GDP forecast, expects inflation to moderate by third quarter",
+          "summary": "Analysts upgraded growth expectations while predicting disinflation ahead. Banxico's survey sets expectations for the policy rate path and market positioning."
+        }
+      ],
+      "image": "https://elceo.com/wp-content/uploads/2026/08/Banxico_encuestra_julio_2026_.jpg",
+      "imgTries": 1
     },
     {
       "id": "n-pemex-dos-bocas-llega-a-su-segundo-aniversario-con-u-2026-08-03",
@@ -1014,32 +1420,6 @@
       "imgTries": 1
     },
     {
-      "id": "n-analistas-de-banxico-suben-su-previsi-n-sobre-el-pib-2026-08-03",
-      "date": "2026-08-03",
-      "section": "money",
-      "title": "Banxico survey raises 2026 GDP forecast, expects inflation to moderate by third quarter",
-      "why": "Analysts upgraded growth expectations while predicting disinflation ahead. Banxico's survey sets expectations for the policy rate path and market positioning.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/analistas-de-banxico-suben-su-prevision-sobre-el-pib-pero-pronostican-una-desaceleracion-en-el-3t26/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-03T17:38:24.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/analistas-de-banxico-suben-su-prevision-sobre-el-pib-pero-pronostican-una-desaceleracion-en-el-3t26/",
-          "publishedAt": "2026-08-03T17:38:24.000Z",
-          "date": "2026-08-03",
-          "title": "Banxico survey raises 2026 GDP forecast, expects inflation to moderate by third quarter",
-          "summary": "Analysts upgraded growth expectations while predicting disinflation ahead. Banxico's survey sets expectations for the policy rate path and market positioning."
-        }
-      ],
-      "image": "https://elceo.com/wp-content/uploads/2026/08/Banxico_encuestra_julio_2026_.jpg",
-      "imgTries": 1
-    },
-    {
       "id": "n-secretar-a-de-econom-a-advierte-escasez-de-personal--2026-08-03",
       "date": "2026-08-03",
       "section": "economy",
@@ -1064,26 +1444,26 @@
       ]
     },
     {
-      "id": "n-sat-registra-la-mayor-ca-da-en-la-recaudaci-n-de-isr-2026-08-03",
+      "id": "n-unexpectedly-good-mexico-news-2026-08-03",
       "date": "2026-08-03",
-      "section": "money",
-      "title": "Tax authority records largest income tax collection decline in 17 years as manufacturing weakens",
-      "why": "Income tax receipts from manufacturers collapsed 15.75 percent in the first half of 2026. The drop signals deteriorating industrial performance and reduced government revenue when fiscal space is already tight.",
+      "section": "politics",
+      "title": "Unexpectedly good Mexico news",
+      "why": "MXPE Weekly Essentials ft. GDP growth, auto investment, tax revenue, and other highlights in Mexican politics, policy, and markets from the past week.",
       "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/sat-caida-recaudacion-isr-debilidad-manufacturera/",
-      "importance": 7,
+      "source": "The Mexico Political Economist",
+      "url": "https://mxpe.org/p/good-mexico-news",
+      "importance": 2,
       "kind": "event",
-      "publishedAt": "2026-08-03T08:00:15.000Z",
-      "sourceTier": 2,
+      "publishedAt": "2026-08-03T12:04:30.000Z",
+      "sourceTier": 1,
       "coverage": [
         {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/sat-caida-recaudacion-isr-debilidad-manufacturera/",
-          "publishedAt": "2026-08-03T08:00:15.000Z",
+          "source": "The Mexico Political Economist",
+          "url": "https://mxpe.org/p/good-mexico-news",
+          "publishedAt": "2026-08-03T12:04:30.000Z",
           "date": "2026-08-03",
-          "title": "Tax authority records largest income tax collection decline in 17 years as manufacturing weakens",
-          "summary": "Income tax receipts from manufacturers collapsed 15.75 percent in the first half of 2026. The drop signals deteriorating industrial performance and reduced government revenue when fiscal space is already tight."
+          "title": "Unexpectedly good Mexico news",
+          "summary": "MXPE Weekly Essentials ft. GDP growth, auto investment, tax revenue, and other highlights in Mexican politics, policy, and markets from the past week."
         }
       ]
     },
@@ -1118,36 +1498,6 @@
       "analysisV": 7
     },
     {
-      "id": "n-los-delincuentes-no-tienen-d-nde-esconderse-embajado-2026-08-02",
-      "date": "2026-08-02",
-      "section": "security",
-      "title": "US ambassador says cartel leaders have nowhere to hide after arrest",
-      "why": "Ambassador Ronald Johnson credits joint US-Mexico efforts to dismantle cartels after the arrest of a cartel leader, underscoring continued security cooperation between the Sheinbaum and Trump administrations.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/0208/mexico/los-delincuentes-no-tienen-donde-esconderse-embajador-de-ee-uu-tras-detencion-del-lider-del-cartel-de-los-reyes/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-02T12:38:13.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/0208/mexico/los-delincuentes-no-tienen-donde-esconderse-embajador-de-ee-uu-tras-detencion-del-lider-del-cartel-de-los-reyes/",
-          "publishedAt": "2026-08-02T12:38:13.000Z",
-          "date": "2026-08-02",
-          "title": "US ambassador says cartel leaders have nowhere to hide after arrest",
-          "summary": "Ambassador Ronald Johnson credits joint US-Mexico efforts to dismantle cartels after the arrest of a cartel leader, underscoring continued security cooperation between the Sheinbaum and Trump administrations."
-        }
-      ],
-      "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/08/cae-poncho-cartel-reyes-02082026.jpg",
-      "imgTries": 2,
-      "background": "Cárteles Unidos is one of the armed groups operating in Michoacán's avocado and lime belt, an area where cartel extortion of agricultural producers has been a persistent security problem separate from drug trafficking.",
-      "view": "An arrest announcement is a security operation, not evidence of a trend. The government's own preliminary data show daily homicides down 46% from September 2024, but that figure comes from prosecutor reports ahead of final death certificates, and INEGI separately found 93.2% of crimes nationally go unreported or uninvestigated. A single cartel leader's capture in Michoacán says nothing about whether extortion and cargo theft, which fall hardest on small firms without private security, are actually declining there.",
-      "prediction": "Cárteles Unidos or a successor faction likely continues operating in the area with a new leader, since arrests of individual figures have not historically ended cartel activity in Michoacán. This would be wrong if local business groups or state prosecutors report a measurable drop in extortion complaints in the months after the arrest.",
-      "analysisV": 7
-    },
-    {
       "id": "n-sheinbaum-responde-a-la-presi-n-de-trump-sobre-la-es-2026-08-02",
       "date": "2026-08-02",
       "section": "security",
@@ -1178,6 +1528,36 @@
           "summary": "Desde Oaxaca, Sheinbaum Pardo vinculó la defensa de la soberanía y la independencia con el derecho de los mexicanos a decidir el rumbo del país sin injerencias externas."
         }
       ]
+    },
+    {
+      "id": "n-los-delincuentes-no-tienen-d-nde-esconderse-embajado-2026-08-02",
+      "date": "2026-08-02",
+      "section": "security",
+      "title": "US ambassador says cartel leaders have nowhere to hide after arrest",
+      "why": "Ambassador Ronald Johnson credits joint US-Mexico efforts to dismantle cartels after the arrest of a cartel leader, underscoring continued security cooperation between the Sheinbaum and Trump administrations.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/0208/mexico/los-delincuentes-no-tienen-donde-esconderse-embajador-de-ee-uu-tras-detencion-del-lider-del-cartel-de-los-reyes/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-02T12:38:13.000Z",
+      "sourceTier": 2,
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/0208/mexico/los-delincuentes-no-tienen-donde-esconderse-embajador-de-ee-uu-tras-detencion-del-lider-del-cartel-de-los-reyes/",
+          "publishedAt": "2026-08-02T12:38:13.000Z",
+          "date": "2026-08-02",
+          "title": "US ambassador says cartel leaders have nowhere to hide after arrest",
+          "summary": "Ambassador Ronald Johnson credits joint US-Mexico efforts to dismantle cartels after the arrest of a cartel leader, underscoring continued security cooperation between the Sheinbaum and Trump administrations."
+        }
+      ],
+      "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/08/cae-poncho-cartel-reyes-02082026.jpg",
+      "imgTries": 2,
+      "background": "Cárteles Unidos is one of the armed groups operating in Michoacán's avocado and lime belt, an area where cartel extortion of agricultural producers has been a persistent security problem separate from drug trafficking.",
+      "view": "An arrest announcement is a security operation, not evidence of a trend. The government's own preliminary data show daily homicides down 46% from September 2024, but that figure comes from prosecutor reports ahead of final death certificates, and INEGI separately found 93.2% of crimes nationally go unreported or uninvestigated. A single cartel leader's capture in Michoacán says nothing about whether extortion and cargo theft, which fall hardest on small firms without private security, are actually declining there.",
+      "prediction": "Cárteles Unidos or a successor faction likely continues operating in the area with a new leader, since arrests of individual figures have not historically ended cartel activity in Michoacán. This would be wrong if local business groups or state prosecutors report a measurable drop in extortion complaints in the months after the arrest.",
+      "analysisV": 7
     },
     {
       "id": "n-el-fraude-en-los-ex-menes-de-ingreso-pone-en-jaque-a-2026-08-01",
@@ -1280,66 +1660,6 @@
       "imgTries": 1
     },
     {
-      "id": "n-pemex-y-petrobras-eval-an-activos-en-aguas-profundas-2026-07-31",
-      "date": "2026-07-31",
-      "section": "economy",
-      "title": "Pemex and Petrobras study deepwater and pre-salt assets in the Gulf of Mexico",
-      "why": "The state oil companies aim to reduce exploration risk and open new opportunities in Pemex's offshore portfolio through technical cooperation.",
-      "company": "Pemex",
-      "source": "Bloomberg Línea",
-      "url": "https://bloomberglinea.com/latinoamerica/mexico/pemex-y-petrobras-evaluan-activos-en-aguas-profundas-y-capa-presalina-en-el-golfo-de-mexico/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-07-31T19:34:50.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "Bloomberg Línea",
-          "url": "https://bloomberglinea.com/latinoamerica/mexico/pemex-y-petrobras-evaluan-activos-en-aguas-profundas-y-capa-presalina-en-el-golfo-de-mexico/",
-          "publishedAt": "2026-07-31T19:34:50.000Z",
-          "date": "2026-07-31",
-          "title": "Pemex and Petrobras study deepwater and pre-salt assets in the Gulf of Mexico",
-          "summary": "The state oil companies aim to reduce exploration risk and open new opportunities in Pemex's offshore portfolio through technical cooperation."
-        }
-      ],
-      "image": "https://www.bloomberglinea.com/resizer/v2/PVYLFO2CNJBBZBYEU4QAR5KWSE.jpeg?auth=3d04b57c0463a10878452de339c2bbf10f32f6702cfc700ba69293d2522760f0&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 1,
-      "background": "Pemex has struggled with deepwater exploration because it lacks the technical experience Petrobras built in Brazil's pre-salt fields, one of the most complex offshore plays in the world.",
-      "view": "Sharing seismic data and exploration methods is a low-cost way for Pemex to reduce risk on projects it could not otherwise justify funding alone. This is a technical cooperation agreement, not a joint venture or capital commitment, so it does not address Pemex's financing gap or change the money the government spends propping up the company. Any output from these eight offshore assets is years away even under a favorable outcome.",
-      "prediction": "Pemex and Petrobras are likely to spend months to years on data review before any drilling decision follows. That view would be wrong if either company announces a capital commitment or a specific well to be drilled rather than continued study.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-vulcan-y-ken-salazar-la-historia-detr-s-del-conflict-2026-07-31",
-      "date": "2026-07-31",
-      "section": "us-mexico",
-      "title": "Arbitration panel closes part of Vulcan Materials' dispute with the Mexican government",
-      "why": "The ruling ends part of a long-running conflict over the company's limestone quarry in Quintana Roo, a case that strained relations during the previous administration.",
-      "company": "Vulcan Materials",
-      "source": "El CEO",
-      "url": "https://elceo.com/opinion/vulcan-y-ken-salazar-la-historia-detras-del-conflicto-que-marco-la-relacion-con-amlo/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-07-31T08:00:52.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/opinion/vulcan-y-ken-salazar-la-historia-detras-del-conflicto-que-marco-la-relacion-con-amlo/",
-          "publishedAt": "2026-07-31T08:00:52.000Z",
-          "date": "2026-07-31",
-          "title": "Arbitration panel closes part of Vulcan Materials' dispute with the Mexican government",
-          "summary": "The ruling ends part of a long-running conflict over the company's limestone quarry in Quintana Roo, a case that strained relations during the previous administration."
-        }
-      ],
-      "image": "https://elceo.com/wp-content/uploads/2026/07/Ken_Salazar_Vulcan.jpg",
-      "imgTries": 2,
-      "background": "Vulcan Materials' dispute over its limestone quarry in Quintana Roo began under the López Obrador administration, when the government pursued decrees and a possible land purchase, prompting the company to pursue litigation and an international arbitration claim.",
-      "view": "The ruling closes one arbitration claim, not the underlying dispute over the quarry's status. Vulcan gains a narrow legal win while broader questions over land use and future decrees remain open. Arbitration's ability to resolve discrete claims incrementally, rather than the whole case at once, is what lets the company bank partial certainty without ending the conflict.",
-      "prediction": "Vulcan and the Mexican government are more likely to keep negotiating remaining claims than to reach a full settlement soon. That would be wrong if the two sides announce a comprehensive resolution or the company divests the Quintana Roo operation.",
-      "analysisV": 7
-    },
-    {
       "id": "n-pib-de-m-xico-sorprende-con-alza-de-2-1-anual-en-seg-2026-07-31",
       "date": "2026-07-31",
       "section": "economy",
@@ -1420,28 +1740,34 @@
       ]
     },
     {
-      "id": "n-cae-43-utilidad-neta-de-la-cfe-en-primer-semestre-de-2026-07-31",
+      "id": "n-vulcan-y-ken-salazar-la-historia-detr-s-del-conflict-2026-07-31",
       "date": "2026-07-31",
-      "section": "economy",
-      "title": "CFE's net profit falls 43% in first half of 2026",
-      "why": "The state power utility's gross and operating profits could not offset a decline in pre-tax and continuing operations profit, adding to concerns about its finances.",
-      "company": "CFE",
-      "source": "Energía a Debate",
-      "url": "https://energiaadebate.com/cae-43-utilidad-neta-de-la-cfe-en-primer-semestre-de-2026/",
-      "importance": 6,
+      "section": "us-mexico",
+      "title": "Arbitration panel closes part of Vulcan Materials' dispute with the Mexican government",
+      "why": "The ruling ends part of a long-running conflict over the company's limestone quarry in Quintana Roo, a case that strained relations during the previous administration.",
+      "company": "Vulcan Materials",
+      "source": "El CEO",
+      "url": "https://elceo.com/opinion/vulcan-y-ken-salazar-la-historia-detras-del-conflicto-que-marco-la-relacion-con-amlo/",
+      "importance": 7,
       "kind": "event",
-      "publishedAt": "2026-07-31T20:45:25.000Z",
-      "sourceTier": "specialist",
+      "publishedAt": "2026-07-31T08:00:52.000Z",
+      "sourceTier": 2,
       "coverage": [
         {
-          "source": "Energía a Debate",
-          "url": "https://energiaadebate.com/cae-43-utilidad-neta-de-la-cfe-en-primer-semestre-de-2026/",
-          "publishedAt": "2026-07-31T20:45:25.000Z",
+          "source": "El CEO",
+          "url": "https://elceo.com/opinion/vulcan-y-ken-salazar-la-historia-detras-del-conflicto-que-marco-la-relacion-con-amlo/",
+          "publishedAt": "2026-07-31T08:00:52.000Z",
           "date": "2026-07-31",
-          "title": "CFE's net profit falls 43% in first half of 2026",
-          "summary": "The state power utility's gross and operating profits could not offset a decline in pre-tax and continuing operations profit, adding to concerns about its finances."
+          "title": "Arbitration panel closes part of Vulcan Materials' dispute with the Mexican government",
+          "summary": "The ruling ends part of a long-running conflict over the company's limestone quarry in Quintana Roo, a case that strained relations during the previous administration."
         }
-      ]
+      ],
+      "image": "https://elceo.com/wp-content/uploads/2026/07/Ken_Salazar_Vulcan.jpg",
+      "imgTries": 2,
+      "background": "Vulcan Materials' dispute over its limestone quarry in Quintana Roo began under the López Obrador administration, when the government pursued decrees and a possible land purchase, prompting the company to pursue litigation and an international arbitration claim.",
+      "view": "The ruling closes one arbitration claim, not the underlying dispute over the quarry's status. Vulcan gains a narrow legal win while broader questions over land use and future decrees remain open. Arbitration's ability to resolve discrete claims incrementally, rather than the whole case at once, is what lets the company bank partial certainty without ending the conflict.",
+      "prediction": "Vulcan and the Mexican government are more likely to keep negotiating remaining claims than to reach a full settlement soon. That would be wrong if the two sides announce a comprehensive resolution or the company divests the Quintana Roo operation.",
+      "analysisV": 7
     },
     {
       "id": "n-grupo-m-xico-debe-reparar-da-o-ambiental-por-nuevo-d-2026-07-31",
@@ -1464,6 +1790,30 @@
           "date": "2026-07-31",
           "title": "Environmental regulator orders Grupo México to repair damage from new Sonora chemical spill",
           "summary": "Mexico's environmental protection agency ordered urgent measures to remove derailed rail cars and contaminated infrastructure after another chemical spill linked to Grupo México in Sonora."
+        }
+      ]
+    },
+    {
+      "id": "n-cae-43-utilidad-neta-de-la-cfe-en-primer-semestre-de-2026-07-31",
+      "date": "2026-07-31",
+      "section": "economy",
+      "title": "CFE's net profit falls 43% in first half of 2026",
+      "why": "The state power utility's gross and operating profits could not offset a decline in pre-tax and continuing operations profit, adding to concerns about its finances.",
+      "company": "CFE",
+      "source": "Energía a Debate",
+      "url": "https://energiaadebate.com/cae-43-utilidad-neta-de-la-cfe-en-primer-semestre-de-2026/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-07-31T20:45:25.000Z",
+      "sourceTier": "specialist",
+      "coverage": [
+        {
+          "source": "Energía a Debate",
+          "url": "https://energiaadebate.com/cae-43-utilidad-neta-de-la-cfe-en-primer-semestre-de-2026/",
+          "publishedAt": "2026-07-31T20:45:25.000Z",
+          "date": "2026-07-31",
+          "title": "CFE's net profit falls 43% in first half of 2026",
+          "summary": "The state power utility's gross and operating profits could not offset a decline in pre-tax and continuing operations profit, adding to concerns about its finances."
         }
       ]
     },
@@ -1492,153 +1842,33 @@
       ]
     },
     {
-      "id": "n-econom-a-de-m-xico-sorprende-con-crecimiento-mayor-a-2026-07-30",
-      "date": "2026-07-30",
+      "id": "n-pemex-y-petrobras-eval-an-activos-en-aguas-profundas-2026-07-31",
+      "date": "2026-07-31",
       "section": "economy",
-      "title": "Mexico's economy grows 1.5% in second quarter, beating forecasts",
-      "why": "Growth was driven by record exports and consumption tied to the World Cup, offering an upside surprise amid ongoing trade tensions with the United States.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/07/30/economia-de-mexico-sorprende-con-crecimiento-mayor-al-previsto-sube-15-en-segundo-trimestre/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-07-30T14:10:42.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/07/30/economia-de-mexico-sorprende-con-crecimiento-mayor-al-previsto-sube-15-en-segundo-trimestre/",
-          "publishedAt": "2026-07-30T14:10:42.000Z",
-          "date": "2026-07-30",
-          "title": "Mexico's economy grows 1.5% in second quarter, beating forecasts",
-          "summary": "Growth was driven by record exports and consumption tied to the World Cup, offering an upside surprise amid ongoing trade tensions with the United States."
-        }
-      ],
-      "image": "https://www.elfinanciero.com.mx/resizer/v2/J3MA4GCRKRFZJCMDNEYMNXXXEE.jpg?smart=true&auth=aacca7ba6531a3e09c1be47acc3525bd2fec95e5d09c3d43be686f4304ae161c&width=1200&height=630",
-      "imgTries": 1,
-      "background": "Mexico's statistics agency INEGI reports quarterly GDP growth against the prior three-month period, a different measure from the annual figure. Full-year 2025 growth was only about 0.6%, so a single strong quarter needs that pace as context.",
-      "view": "The 1.5% quarter-on-quarter gain beat forecasts of 1.4%, but exports and World Cup-related spending are one-off drivers rather than proof of a durable shift in the growth rate. Fixed investment fell from 23.8% to 22.4% of GDP in 2025, the number that would need to reverse before a strong export quarter turns into lasting capacity. A record export quarter can coexist with the same weak link between trade and household income that produced 2025's 0.6% growth.",
-      "prediction": "The most likely path is a slowdown in the third quarter once World Cup consumption fades, unless investment data show new capacity being built rather than existing plants running harder. That would be contradicted by a rise in the investment share of GDP alongside continued export strength.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-de-lozoya-a-v-ctor-rodr-guez-pemex-reconoce-errores--2026-07-30",
-      "date": "2026-07-30",
-      "section": "money",
-      "title": "Pemex acknowledges financial reporting errors spanning three presidential terms",
-      "why": "The state oil company's admission of accounting problems dating back years could complicate its access to financing at a time when investors are already wary of its debt load.",
+      "title": "Pemex and Petrobras study deepwater and pre-salt assets in the Gulf of Mexico",
+      "why": "The state oil companies aim to reduce exploration risk and open new opportunities in Pemex's offshore portfolio through technical cooperation.",
       "company": "Pemex",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/de-lozoya-a-victor-rodriguez-pemex-reconoce-errores-financieros-en-tres-sexenios/",
-      "importance": 6,
+      "source": "Bloomberg Línea",
+      "url": "https://bloomberglinea.com/latinoamerica/mexico/pemex-y-petrobras-evaluan-activos-en-aguas-profundas-y-capa-presalina-en-el-golfo-de-mexico/",
+      "importance": 5,
       "kind": "event",
-      "publishedAt": "2026-07-30T08:00:19.000Z",
+      "publishedAt": "2026-07-31T19:34:50.000Z",
       "sourceTier": 2,
       "coverage": [
         {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/de-lozoya-a-victor-rodriguez-pemex-reconoce-errores-financieros-en-tres-sexenios/",
-          "publishedAt": "2026-07-30T08:00:19.000Z",
-          "date": "2026-07-30",
-          "title": "Pemex acknowledges financial reporting errors spanning three presidential terms",
-          "summary": "The state oil company's admission of accounting problems dating back years could complicate its access to financing at a time when investors are already wary of its debt load."
+          "source": "Bloomberg Línea",
+          "url": "https://bloomberglinea.com/latinoamerica/mexico/pemex-y-petrobras-evaluan-activos-en-aguas-profundas-y-capa-presalina-en-el-golfo-de-mexico/",
+          "publishedAt": "2026-07-31T19:34:50.000Z",
+          "date": "2026-07-31",
+          "title": "Pemex and Petrobras study deepwater and pre-salt assets in the Gulf of Mexico",
+          "summary": "The state oil companies aim to reduce exploration risk and open new opportunities in Pemex's offshore portfolio through technical cooperation."
         }
       ],
-      "image": "https://elceo.com/wp-content/uploads/2026/07/pemex_emilio_lozoya_victor_octavio_romero_victor_rodriguez.jpg",
-      "imgTries": 2,
-      "background": "Pemex files a 6-K report with the US Securities and Exchange Commission because it carries dollar-denominated bonds held by US investors, obligating disclosure of material weaknesses in its financial controls.",
-      "view": "The admission matters because it confirms internal control failures persisted through five different directors and three presidential terms rather than being isolated to one administration. Pemex is not financially separate from the federal government, so weaker credibility with bondholders raises the cost of the sovereign-backed refinancing that keeps the company afloat, at a time when that support already competes with spending on grids and water for new factories.",
-      "prediction": "Pemex is likely to face higher borrowing costs or tighter covenant terms on its next bond issuance or refinancing round. That would be contradicted if global investors price new Pemex debt at spreads similar to prior issuances despite the disclosed control weaknesses.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-deuda-p-blica-de-m-xico-sube-de-50-4-a-51-del-pib-en-2026-07-30",
-      "date": "2026-07-30",
-      "section": "economy",
-      "title": "Mexico's public debt rises to 51% of GDP in the first half of 2026",
-      "why": "Federal spending grew 2.1% from a year earlier, pushing the debt-to-GDP ratio up from 50.4% as credit rating agencies increase pressure on the government's fiscal accounts.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/07/30/deuda-publica-de-mexico-sube-de-504-a-51-del-pib-en-primera-mitad-de-2026/",
-      "importance": 9,
-      "kind": "event",
-      "publishedAt": "2026-07-30T23:46:56.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/07/30/deuda-publica-de-mexico-sube-de-504-a-51-del-pib-en-primera-mitad-de-2026/",
-          "publishedAt": "2026-07-30T23:46:56.000Z",
-          "date": "2026-07-30",
-          "title": "Mexico's public debt rises to 51% of GDP in the first half of 2026",
-          "summary": "Federal spending grew 2.1% from a year earlier, pushing the debt-to-GDP ratio up from 50.4% as credit rating agencies increase pressure on the government's fiscal accounts."
-        }
-      ],
-      "image": "https://www.elfinanciero.com.mx/resizer/v2/MY7SYXFECZG4TOOVL6BSQAF4E4.jpg?smart=true&auth=b59e2c5115828d05977559e7127514250591478d68690efc38202b59971a571e&width=1200&height=630",
-      "imgTries": 4,
-      "background": "The finance ministry's net debt figure differs from the broader public-sector debt measure that rating agencies track, and both have been climbing: broad debt was already on a path from 52.0% of GDP in 2024 toward a projected 54.7% in 2026.",
-      "view": "The one-year jump from 49.5% to 51% of GDP tracks the same upward trend as the broader debt series, not a new problem on its own. Because pensions, interest payments and support for Pemex already crowd out spending on electricity, water and security, each additional point of debt narrows the room for the infrastructure new factories need. Hacienda's comparison to the Latin American average does not change what a credit-rating review looks at, which is the trend line, not the label.",
-      "prediction": "Net debt is likely to keep rising through the second half of 2026, in line with the broader debt trajectory Hacienda has already projected. That path would be disrupted only if federal spending growth slows sharply or GDP growth surprises to the upside, neither of which the current numbers show.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-estados-unidos-reduce-su-tasa-efectiva-de-aranceles--2026-07-30",
-      "date": "2026-07-30",
-      "section": "us-mexico",
-      "title": "Fitch says the US effective tariff rate on Mexican goods eases to 3.7%",
-      "why": "The rating agency's estimate reflects changes in US trade policy and trade flows, easing concern over the tariff burden on Mexican exports even as broader negotiations continue.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/estados-unidos-reduce-su-tasa-efectiva-de-aranceles-para-mexico-a-3-7-segun-fitch-ratings/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-07-30T21:36:15.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/estados-unidos-reduce-su-tasa-efectiva-de-aranceles-para-mexico-a-3-7-segun-fitch-ratings/",
-          "publishedAt": "2026-07-30T21:36:15.000Z",
-          "date": "2026-07-30",
-          "title": "Fitch says the US effective tariff rate on Mexican goods eases to 3.7%",
-          "summary": "The rating agency's estimate reflects changes in US trade policy and trade flows, easing concern over the tariff burden on Mexican exports even as broader negotiations continue."
-        }
-      ],
-      "image": "https://elceo.com/wp-content/uploads/2026/07/aranceles_efectivos_estadounidenses_para_Mexico_bajan_a_3.7.jpg",
+      "image": "https://www.bloomberglinea.com/resizer/v2/PVYLFO2CNJBBZBYEU4QAR5KWSE.jpeg?auth=3d04b57c0463a10878452de339c2bbf10f32f6702cfc700ba69293d2522760f0&width=1200&height=630&quality=80&smart=true",
       "imgTries": 1,
-      "background": "The United States taxes Mexican exports through overlapping tariff regimes, including duties tied to Section 301 authority and country-specific rates that depend on whether goods meet USMCA rules of origin.",
-      "view": "An effective tariff rate of 3.7% looks manageable next to blanket duties elsewhere, but the figure blends USMCA-compliant goods entering tariff-free with non-compliant goods facing a 10% rate or higher sectoral tariffs, so it masks which exporters are actually exposed. The rate could shift again once the pending Section 301 ruling on manufacturing capacity is decided, since that case sits outside the calculation Fitch used.",
-      "prediction": "The effective tariff rate is likely to stay near this level only until the Section 301 ruling is issued, at which point it could move in either direction depending on the decision. That view would be wrong if the rate changes without any new US tariff action, which would mean trade-flow shifts rather than policy are driving it.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-record-exports-more-tariffs-mexico-braces-for-ustr-d-2026-07-30",
-      "date": "2026-07-30",
-      "section": "us-mexico",
-      "title": "US trade office nears decision on Mexico's manufacturing capacity as exports hit a record",
-      "why": "A ruling under a Section 301 investigation could bring new tariffs as August talks with Washington approach, even as Mexico's exports reached $389.7 billion, a record.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/trade-and-investment/news/record-exports-more-tariffs-mexico-braces-ustr-decision",
-      "importance": 9,
-      "kind": "event",
-      "publishedAt": "2026-07-30T16:56:28.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/trade-and-investment/news/record-exports-more-tariffs-mexico-braces-ustr-decision",
-          "publishedAt": "2026-07-30T16:56:28.000Z",
-          "date": "2026-07-30",
-          "title": "US trade office nears decision on Mexico's manufacturing capacity as exports hit a record",
-          "summary": "A ruling under a Section 301 investigation could bring new tariffs as August talks with Washington approach, even as Mexico's exports reached $389.7 billion, a record."
-        }
-      ],
-      "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-07/MBN-2025-Thumbnails-TheWeekIn-Policy-and-Economy%20%281%29_3.jpg?h=0a43b1f9&itok=lrKfEv4S",
-      "imgTries": 2,
-      "background": "Section 301 is a US trade law tool that lets Washington investigate practices it considers unfair and impose tariffs outside the normal dispute process, separate from the annual USMCA treaty review.",
-      "view": "A pending 301 ruling on Mexico's manufacturing capacity could add tariffs on top of existing measures even as exports set a record. The first half's $389.7 billion is close to sixty percent of all of 2025's $665 billion in goods exports, so volume is not what Washington is targeting, the composition and origin of that capacity is. Exporters gain little from record shipments if the review focuses on how components enter Mexican supply chains rather than how much crosses the border.",
-      "prediction": "New tariffs or a negotiated carve-out are more likely than inaction once the August talks conclude. That expectation would be wrong if USTR delays the ruling past the talks or folds the issue into the broader annual USMCA review instead of acting on its own.",
+      "background": "Pemex has struggled with deepwater exploration because it lacks the technical experience Petrobras built in Brazil's pre-salt fields, one of the most complex offshore plays in the world.",
+      "view": "Sharing seismic data and exploration methods is a low-cost way for Pemex to reduce risk on projects it could not otherwise justify funding alone. This is a technical cooperation agreement, not a joint venture or capital commitment, so it does not address Pemex's financing gap or change the money the government spends propping up the company. Any output from these eight offshore assets is years away even under a favorable outcome.",
+      "prediction": "Pemex and Petrobras are likely to spend months to years on data review before any drilling decision follows. That view would be wrong if either company announces a capital commitment or a specific well to be drilled rather than continued study.",
       "analysisV": 7
     }
   ]

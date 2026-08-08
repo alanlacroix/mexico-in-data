@@ -1,24 +1,24 @@
 {
   "meta": {
     "title": "The brief",
-    "editorialDate": "2026-08-07",
-    "updated": "2026-08-07",
-    "asOf": "2026-08-07",
-    "reviewedAt": "2026-08-07T15:39:28.658Z",
+    "editorialDate": "2026-08-08",
+    "updated": "2026-08-08",
+    "asOf": "2026-08-08",
+    "reviewedAt": "2026-08-08T15:18:22.317Z",
     "latestItemDate": "2026-08-07",
     "quiet": false,
     "newCount": 0,
-    "generatedAt": "2026-08-07T15:39:28.658Z",
+    "generatedAt": "2026-08-08T15:18:22.317Z",
     "mode": "curated",
     "count": 5,
-    "words": 107,
-    "contentSig": "d2e95a700ccab14d8a24eaee80e6b356b629881d9e263c3608909c337b6011bb",
+    "words": 160,
+    "contentSig": "8c04a318a47c1e6c5b125e76e23a52b434674f836869b9719822dcf107540d90",
     "windowHours": 36,
     "selection": {
       "policy": "importance-first-v1",
       "receipt": [
         {
-          "id": "n-banxico-deja-con-tres-candados-la-tasa-de-inter-s-qu-2026-08-06",
+          "id": "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
           "rank": 1,
           "selected": true,
           "reason": "selected:core",
@@ -27,24 +27,41 @@
           "importanceProvenance": {
             "rubricVersion": "five-component-v1",
             "calculatedTotal": 8,
-            "reportedTotal": 6,
-            "componentSource": "code-reviewed",
-            "scheduledOutcome": {
-              "applied": true,
-              "id": "banxico-policy-2026-08-06",
-              "kind": "decision",
-              "isNewOutcome": true,
-              "changed": false,
-              "importanceFloor": {
-                "requested": 8,
-                "before": 6,
-                "after": 8,
-                "applied": true
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
               }
-            }
+            },
+            "reportedTotal": 7,
+            "componentSource": "model"
           },
-          "tags": [],
-          "scheduledMatch": true,
+          "tags": [
+            "growth",
+            "us-relationship"
+          ],
+          "scheduledMatch": false,
           "analysisState": "ready",
           "analysisVersion": 7,
           "analysis": {
@@ -76,8 +93,163 @@
           }
         },
         {
-          "id": "n-m-xico-y-per-restablecen-las-relaciones-diplom-ticas-2026-08-07",
+          "id": "n-pemex-y-petrobras-negocian-un-segundo-acuerdo-de-coo-2026-08-07",
           "rank": 7,
+          "selected": false,
+          "reason": "not-selected:cap-reached",
+          "effectiveImportance": 6,
+          "rawImportance": 6,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 6,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": 6,
+            "componentSource": "model"
+          },
+          "tags": [],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          }
+        },
+        {
+          "id": "n-production-of-the-kia-ev3-electric-vehicle-has-begun-2026-08-07",
+          "rank": 4,
+          "selected": true,
+          "reason": "selected:extension:importance",
+          "effectiveImportance": 6,
+          "rawImportance": 6,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 6,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": 6,
+            "componentSource": "model"
+          },
+          "tags": [
+            "growth"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          }
+        },
+        {
+          "id": "n-house-gop-backs-greer-s-strategy-to-delay-usmca-rene-2026-08-07",
+          "rank": 3,
+          "selected": true,
+          "reason": "selected:core",
+          "effectiveImportance": 6,
+          "rawImportance": 6,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 6,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": 6,
+            "componentSource": "model"
+          },
+          "tags": [
+            "political-stability",
+            "us-relationship"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          }
+        },
+        {
+          "id": "n-m-xico-y-per-restablecen-las-relaciones-diplom-ticas-2026-08-07",
+          "rank": 6,
           "selected": false,
           "reason": "not-selected:cap-reached",
           "effectiveImportance": 6,
@@ -95,9 +267,9 @@
         },
         {
           "id": "n-gobierno-abre-la-puerta-al-fracking-prometen-cuidado-2026-08-07",
-          "rank": 6,
-          "selected": false,
-          "reason": "not-selected:cap-reached",
+          "rank": 5,
+          "selected": true,
+          "reason": "selected:extension:importance",
           "effectiveImportance": 6,
           "rawImportance": 6,
           "importanceProvenance": null,
@@ -114,70 +286,8 @@
           }
         },
         {
-          "id": "n-congresistas-de-eu-exigen-cambios-al-t-mec-y-aumenta-2026-08-06",
-          "rank": 3,
-          "selected": true,
-          "reason": "selected:core",
-          "effectiveImportance": 6,
-          "rawImportance": 6,
-          "importanceProvenance": null,
-          "tags": [
-            "political-stability",
-            "us-relationship"
-          ],
-          "scheduledMatch": false,
-          "analysisState": "ready",
-          "analysisVersion": 7,
-          "analysis": {
-            "state": "ready",
-            "version": 7,
-            "complete": true
-          }
-        },
-        {
-          "id": "n-la-demanda-futura-de-electricidad-amenaza-al-nearsho-2026-08-06",
-          "rank": 4,
-          "selected": true,
-          "reason": "selected:extension:importance",
-          "effectiveImportance": 6,
-          "rawImportance": 6,
-          "importanceProvenance": null,
-          "tags": [
-            "ai-tech",
-            "growth"
-          ],
-          "scheduledMatch": false,
-          "analysisState": "ready",
-          "analysisVersion": 7,
-          "analysis": {
-            "state": "ready",
-            "version": 7,
-            "complete": true
-          }
-        },
-        {
-          "id": "n-mecanismo-laboral-del-t-mec-tendr-cambios-modestos-f-2026-08-06",
-          "rank": 5,
-          "selected": true,
-          "reason": "selected:extension:importance",
-          "effectiveImportance": 6,
-          "rawImportance": 6,
-          "importanceProvenance": null,
-          "tags": [
-            "us-relationship"
-          ],
-          "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
-          "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
-          }
-        },
-        {
           "id": "n-resoluci-n-que-modifica-las-disposiciones-de-car-cte-2026-08-07",
-          "rank": 9,
+          "rank": 8,
           "selected": false,
           "reason": "not-selected:cap-reached",
           "effectiveImportance": 5,
@@ -198,7 +308,7 @@
         },
         {
           "id": "n-inversi-n-f-sica-del-gobierno-presenta-rezago-de-15--2026-08-07",
-          "rank": 11,
+          "rank": 9,
           "selected": false,
           "reason": "not-selected:cap-reached",
           "effectiveImportance": 5,
@@ -218,7 +328,7 @@
         },
         {
           "id": "n-informaci-nconfindencial-banxico-y-la-fed-toman-cami-2026-08-07",
-          "rank": 16,
+          "rank": 11,
           "selected": false,
           "reason": "not-selected:cap-reached",
           "effectiveImportance": 5,
@@ -236,82 +346,6 @@
         },
         {
           "id": "n-m-xico-estrecha-los-lazos-con-brasil-en-plena-escala-2026-08-06",
-          "rank": 12,
-          "selected": false,
-          "reason": "not-selected:cap-reached",
-          "effectiveImportance": 5,
-          "rawImportance": 5,
-          "importanceProvenance": null,
-          "tags": [
-            "us-relationship"
-          ],
-          "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
-          "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
-          }
-        },
-        {
-          "id": "n-didi-suma-20-millones-de-viajes-el-ctricos-en-m-xico-2026-08-06",
-          "rank": 17,
-          "selected": false,
-          "reason": "not-selected:cap-reached",
-          "effectiveImportance": 5,
-          "rawImportance": 5,
-          "importanceProvenance": null,
-          "tags": [],
-          "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
-          "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
-          }
-        },
-        {
-          "id": "n-kia-apuesta-por-el-ev3-para-acelerar-su-estrategia-e-2026-08-06",
-          "rank": 14,
-          "selected": false,
-          "reason": "not-selected:cap-reached",
-          "effectiveImportance": 5,
-          "rawImportance": 5,
-          "importanceProvenance": null,
-          "tags": [],
-          "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
-          "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
-          }
-        },
-        {
-          "id": "n-mexican-economy-gains-momentum-2026-08-06",
-          "rank": null,
-          "selected": false,
-          "reason": "ineligible:copy-gate:unsupported numbers: 2.4, 1",
-          "effectiveImportance": 5,
-          "rawImportance": 5,
-          "importanceProvenance": null,
-          "tags": [
-            "growth"
-          ],
-          "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
-          "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
-          }
-        },
-        {
-          "id": "n-inicia-segunda-fase-de-remodelaci-n-del-aicm-2026-08-06",
           "rank": 10,
           "selected": false,
           "reason": "not-selected:cap-reached",
@@ -319,51 +353,9 @@
           "rawImportance": 5,
           "importanceProvenance": null,
           "tags": [
-            "growth"
-          ],
-          "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
-          "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
-          }
-        },
-        {
-          "id": "n-t-mec-digital-el-desaf-o-de-construir-una-gobernanza-2026-08-06",
-          "rank": 8,
-          "selected": false,
-          "reason": "not-selected:cap-reached",
-          "effectiveImportance": 5,
-          "rawImportance": 5,
-          "importanceProvenance": null,
-          "tags": [
-            "ai-tech",
-            "growth",
             "us-relationship"
           ],
           "scheduledMatch": false,
-          "analysisState": "ready",
-          "analysisVersion": 7,
-          "analysis": {
-            "state": "ready",
-            "version": 7,
-            "complete": true
-          }
-        },
-        {
-          "id": "n-inversi-n-productiva-en-m-xico-liga-2-meses-al-alza--2026-08-06",
-          "rank": 13,
-          "selected": false,
-          "reason": "not-selected:cap-reached",
-          "effectiveImportance": 5,
-          "rawImportance": 5,
-          "importanceProvenance": null,
-          "tags": [
-            "growth"
-          ],
-          "scheduledMatch": false,
           "analysisState": "missing",
           "analysisVersion": 0,
           "analysis": {
@@ -373,14 +365,48 @@
           }
         },
         {
-          "id": "n-an-lisis-aci-worldwide-y-dlocal-abren-oxxo-pay-spei--2026-08-06",
-          "rank": 15,
+          "id": "n-ai-cybersecurity-anchor-mexico-s-2026-tech-spending-2026-08-07",
+          "rank": null,
           "selected": false,
-          "reason": "not-selected:cap-reached",
-          "effectiveImportance": 5,
-          "rawImportance": 5,
-          "importanceProvenance": null,
-          "tags": [],
+          "reason": "ineligible:below-importance-floor",
+          "effectiveImportance": 4,
+          "rawImportance": 4,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 4,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": 6,
+            "componentSource": "model"
+          },
+          "tags": [
+            "ai-tech"
+          ],
           "scheduledMatch": false,
           "analysisState": "missing",
           "analysisVersion": 0,
@@ -392,58 +418,61 @@
         }
       ],
       "lockedIds": [
-        "n-banxico-deja-con-tres-candados-la-tasa-de-inter-s-qu-2026-08-06",
+        "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
         "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
-        "n-congresistas-de-eu-exigen-cambios-al-t-mec-y-aumenta-2026-08-06",
-        "n-la-demanda-futura-de-electricidad-amenaza-al-nearsho-2026-08-06",
-        "n-mecanismo-laboral-del-t-mec-tendr-cambios-modestos-f-2026-08-06"
+        "n-house-gop-backs-greer-s-strategy-to-delay-usmca-rene-2026-08-07",
+        "n-production-of-the-kia-ev3-electric-vehicle-has-begun-2026-08-07",
+        "n-gobierno-abre-la-puerta-al-fracking-prometen-cuidado-2026-08-07"
       ],
       "scheduledOutcomes": {
-        "editorialDate": "2026-08-07",
-        "checkedAt": "2026-08-07T14:50:16.761Z",
+        "editorialDate": "2026-08-08",
+        "checkedAt": "2026-08-08T15:17:55.898Z",
         "count": 14,
         "blockers": 0,
         "ok": true
       }
     }
   },
-  "summary": "The board left the rate unchanged and said it expects inflation to reach its target in the fourth quarter of 2027. The headline rate is close to the Mexican central bank's target, but underlying inflation remained more persistent. The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness.",
+  "summary": "A US-Mexico-Canada trade agreement tribunal rejected a 219 million dollar claim by Cyrus and Contrarian funds against Mexico, ruling the investors were not protected by the trade agreement. The decision spares Mexico from paying disputed bondholder claims. The headline rate is close to the Mexican central bank's target, but underlying inflation remained more persistent. A coalition of 167 House Republicans formally endorsed the US Trade Representative's decision to extend the joint review of the US-Mexico-Canada trade agreement, delaying the agreement's renewal timeline beyond its scheduled completion date.",
   "lead": {
-    "h1": "Mexico's central bank holds its policy rate at 6.50 percent",
-    "context": "The board left the rate unchanged and said it expects inflation to reach its target in the fourth quarter of 2027.",
-    "background": "Mexico's central bank uses the overnight policy rate to influence borrowing and spending. A rate above inflation can slow prices, but it also makes credit more expensive.",
-    "view": "July's inflation report explains the wait. Headline inflation is close to target, but underlying inflation is falling more slowly. Mexico's central bank is waiting for that underlying measure to improve before making credit cheaper again.",
-    "prediction": "The next tests will be the September 9 inflation release and the September 24 rate decision. If underlying inflation falls again, a cut becomes more likely. If it reverses, another hold becomes more likely.",
+    "h1": "Mexico wins US-Mexico-Canada trade agreement arbitration against US investment funds over TV Azteca debt",
+    "context": "A US-Mexico-Canada trade agreement tribunal rejected a 219 million dollar claim by Cyrus and Contrarian funds against Mexico, ruling the investors were not protected by the trade agreement. The decision spares Mexico from paying disputed bondholder claims.",
+    "background": "US-Mexico-Canada trade agreement contains an investor-state dispute mechanism that lets foreign investors sue a member government before an independent tribunal if they believe treaty protections were violated, separate from Mexico's domestic courts.",
+    "view": "The ruling closes one specific claim rather than settling how US-Mexico-Canada trade agreement investor protections apply to sovereign debt disputes generally, since it turned on whether these particular bondholders qualified for protection at all. It also matters for public finances: Mexico is already on the last investment-grade rung at Moody's partly because of Pemex support costs, so avoiding a $219 million payout keeps one more claim off a debt load that rose to 53.2% of gross domestic product in 2025.",
+    "prediction": "The funds are likely to explore appeal routes or alternative legal claims rather than drop the matter, since $219 million is a large sum to abandon after losing on jurisdiction rather than merits. That view would be wrong if Cyrus and Contrarian publicly confirm they are not pursuing further action.",
     "analysisV": 7,
     "drivers": "",
     "implications": "",
     "next": "",
     "image": "",
-    "publishedAt": "2026-08-06T19:40:22.000Z",
+    "publishedAt": "2026-08-07T19:14:07.000Z",
     "coverage": [
       {
-        "source": "El Financiero — Economía",
-        "url": "https://elfinanciero.com.mx/economia/2026/08/06/tasa-de-interes-del-banxico-en-que-nivel-quedo-hoy-6-de-agosto-de-2026/",
-        "publishedAt": "2026-08-06T19:40:22.000Z",
-        "date": "2026-08-06",
-        "title": "Banxico holds its policy rate at 6.50 percent",
-        "summary": "The board left the rate unchanged and said it expects inflation to reach its target in the fourth quarter of 2027."
+        "source": "Expansión — Empresas",
+        "url": "https://expansion.mx/empresas/2026/08/07/mexico-no-tendra-pagar-deuda-tv-azteca",
+        "publishedAt": "2026-08-07T19:14:07.000Z",
+        "date": "2026-08-07",
+        "title": "Mexico wins USMCA arbitration against US investment funds over TV Azteca debt",
+        "summary": "A USMCA tribunal rejected a 219 million dollar claim by Cyrus and Contrarian funds against Mexico, ruling the investors were not protected by the trade agreement. The decision spares Mexico from paying disputed bondholder claims."
       }
     ],
     "refs": [
-      "n-banxico-deja-con-tres-candados-la-tasa-de-inter-s-qu-2026-08-06"
+      "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07"
     ],
-    "href": "https://elfinanciero.com.mx/economia/2026/08/06/tasa-de-interes-del-banxico-en-que-nivel-quedo-hoy-6-de-agosto-de-2026/",
-    "source": "El Financiero — Economía",
-    "date": "2026-08-06",
-    "section": "money",
+    "href": "https://expansion.mx/empresas/2026/08/07/mexico-no-tendra-pagar-deuda-tv-azteca",
+    "source": "Expansión — Empresas",
+    "date": "2026-08-07",
+    "section": "us-mexico",
     "isNew": false,
     "ranking": {
       "rank": 1,
       "importance": 8,
       "effectiveImportance": 8,
-      "tags": [],
-      "scheduledEventId": "banxico-policy-2026-08-06",
+      "tags": [
+        "growth",
+        "us-relationship"
+      ],
+      "scheduledEventId": "",
       "reason": "selected:core"
     }
   },
@@ -458,7 +487,7 @@
       "drivers": "",
       "implications": "",
       "next": "",
-      "image": "",
+      "image": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/05/07/69fd1ec0a2138.webp",
       "publishedAt": "2026-08-07T13:15:39.000Z",
       "coverage": [
         {
@@ -488,33 +517,33 @@
       }
     },
     {
-      "headline": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
-      "context": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness.",
-      "background": "The agreement remains in force without a new extension. Because the three countries did not agree to a 16-year extension in July, they will return to the review every year and the treaty can continue through 2036.",
-      "view": "The letter raises negotiating pressure, but it does not change tariffs or treaty rules. Existing factories keep their current access. The practical cost is uncertainty for companies considering investments that take years to repay.",
-      "prediction": "The demands are likely to matter only if they appear in formal US negotiating objectives or draft text. Specific Mexican commitments on market access or outside-country investment would confirm that the letter is shaping the review.",
-      "analysisV": 7,
+      "headline": "House Republicans back US trade office strategy to delay US-Mexico-Canada trade agreement review",
+      "context": "A coalition of 167 House Republicans formally endorsed the US Trade Representative's decision to extend the joint review of the US-Mexico-Canada trade agreement, delaying the agreement's renewal timeline beyond its scheduled completion date.",
+      "background": "",
+      "view": "",
+      "prediction": "",
+      "analysisV": 0,
       "drivers": "",
       "implications": "",
       "next": "",
-      "image": "",
-      "publishedAt": "2026-08-06T23:46:48.000Z",
+      "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/500px-Jamieson_Greer_in_2025_%28cropped%29.jpg?h=1445155f&itok=JyYdl8ph",
+      "publishedAt": "2026-08-07T18:59:15.000Z",
       "coverage": [
         {
-          "source": "El CEO",
-          "url": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
-          "publishedAt": "2026-08-06T23:46:48.000Z",
-          "date": "2026-08-06",
-          "title": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
-          "summary": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness."
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/automotive/news/house-gop-backs-greers-strategy-delay-usmca-renewal",
+          "publishedAt": "2026-08-07T18:59:15.000Z",
+          "date": "2026-08-07",
+          "title": "House Republicans back US trade office strategy to delay US-Mexico-Canada trade agreement review",
+          "summary": "A coalition of 167 House Republicans formally endorsed the US Trade Representative's decision to extend the joint review of the USMCA, delaying the agreement's renewal timeline beyond its scheduled completion date."
         }
       ],
       "refs": [
-        "n-congresistas-de-eu-exigen-cambios-al-t-mec-y-aumenta-2026-08-06"
+        "n-house-gop-backs-greer-s-strategy-to-delay-usmca-rene-2026-08-07"
       ],
-      "href": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
-      "source": "El CEO",
-      "date": "2026-08-06",
+      "href": "https://mexicobusiness.news/automotive/news/house-gop-backs-greers-strategy-delay-usmca-renewal",
+      "source": "Mexico Business News",
+      "date": "2026-08-07",
       "section": "us-mexico",
       "isNew": false,
       "ranking": {
@@ -530,8 +559,8 @@
       }
     },
     {
-      "headline": "Mexico's power system may not meet demand from new factories and data centers",
-      "context": "The report says limited power supply is a bottleneck for new factories, data centers and artificial-intelligence infrastructure.",
+      "headline": "Kia begins production of EV3 electric vehicle in Nuevo León",
+      "context": "Kia Mexico has started manufacturing the EV3, its first fully electric vehicle produced domestically. The move signals automakers' shift toward EV production in Mexico amid global electrification trends.",
       "background": "",
       "view": "",
       "prediction": "",
@@ -539,24 +568,24 @@
       "drivers": "",
       "implications": "",
       "next": "",
-      "image": "https://energiaadebate.com/file/logo.png",
-      "publishedAt": "2026-08-06T14:00:26.000Z",
+      "image": "",
+      "publishedAt": "2026-08-07T21:00:00.000Z",
       "coverage": [
         {
-          "source": "Energía a Debate",
-          "url": "https://energiaadebate.com/la-demanda-futura-de-electricidad-amenaza-al-nearshoring-y-a-la-inteligencia-artificial-en-mexico/",
-          "publishedAt": "2026-08-06T14:00:26.000Z",
-          "date": "2026-08-06",
-          "title": "Mexico's power system may not meet demand from new factories and data centers",
-          "summary": "The report says limited power supply is a bottleneck for new factories, data centers and artificial-intelligence infrastructure."
+          "source": "MEXICONOW",
+          "url": "https://mexico-now.com/production-of-the-kia-ev3-electric-vehicle-has-begun-in-nuevo-leon/",
+          "publishedAt": "2026-08-07T21:00:00.000Z",
+          "date": "2026-08-07",
+          "title": "Kia begins production of EV3 electric vehicle in Nuevo León",
+          "summary": "Kia Mexico has started manufacturing the EV3, its first fully electric vehicle produced domestically. The move signals automakers' shift toward EV production in Mexico amid global electrification trends."
         }
       ],
       "refs": [
-        "n-la-demanda-futura-de-electricidad-amenaza-al-nearsho-2026-08-06"
+        "n-production-of-the-kia-ev3-electric-vehicle-has-begun-2026-08-07"
       ],
-      "href": "https://energiaadebate.com/la-demanda-futura-de-electricidad-amenaza-al-nearshoring-y-a-la-inteligencia-artificial-en-mexico/",
-      "source": "Energía a Debate",
-      "date": "2026-08-06",
+      "href": "https://mexico-now.com/production-of-the-kia-ev3-electric-vehicle-has-begun-in-nuevo-leon/",
+      "source": "MEXICONOW",
+      "date": "2026-08-07",
       "section": "economy",
       "isNew": false,
       "ranking": {
@@ -564,16 +593,15 @@
         "importance": 6,
         "effectiveImportance": 6,
         "tags": [
-          "growth",
-          "ai-tech"
+          "growth"
         ],
         "scheduledEventId": "",
         "reason": "selected:extension:importance"
       }
     },
     {
-      "headline": "US labor official expects only modest changes to the trade agreement's factory complaint process",
-      "context": "The official said only modest changes are expected, and a fourth round of talks may take place in September.",
+      "headline": "Government opens door to hydraulic fracturing with water and wastewater protocols",
+      "context": "President Sheinbaum reversed campaign opposition to fracking, setting conditions for extracting gas and oil using saltwater and residual water instead of freshwater to ease environmental and public concerns.",
       "background": "",
       "view": "",
       "prediction": "",
@@ -581,32 +609,32 @@
       "drivers": "",
       "implications": "",
       "next": "",
-      "image": "https://www.bloomberglinea.com/resizer/v2/3YVKSEALV5CA5ICE2GJZSDS7QU.jpg?auth=b04819fa5fc4f12151c34ef25a499908b6a2fa8906b29f0378b8a8a9f589c8cd&width=1200&height=630&quality=80&smart=true",
-      "publishedAt": "2026-08-06T12:03:52.000Z",
+      "image": "https://www.elfinanciero.com.mx/resizer/v2/SAA7AIRZGVBPXHBSG5IWBMQVI4.jpg?smart=true&auth=17d6f85b23f00caedc2215ea8aa941e7b5723277d4d393ccb10de63becc3ba01&width=1200&height=630",
+      "publishedAt": "2026-08-07T10:00:39.000Z",
       "coverage": [
         {
-          "source": "Bloomberg Línea",
-          "url": "https://bloomberglinea.com/latinoamerica/mexico/mecanismo-laboral-del-t-mec-tendra-cambios-modestos-funcionario-de-eeuu/",
-          "publishedAt": "2026-08-06T12:03:52.000Z",
-          "date": "2026-08-06",
-          "title": "US labor official expects only modest changes to the trade agreement's factory complaint process",
-          "summary": "The official said only modest changes are expected, and a fourth round of talks may take place in September."
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/07/gobierno-abre-la-puerta-al-fracking-prometen-cuidado-del-agua-y-consultas-ciudadanas/",
+          "publishedAt": "2026-08-07T10:00:39.000Z",
+          "date": "2026-08-07",
+          "title": "Government opens door to hydraulic fracturing with water and wastewater protocols",
+          "summary": "President Sheinbaum reversed campaign opposition to fracking, setting conditions for extracting gas and oil using saltwater and residual water instead of freshwater to ease environmental and public concerns."
         }
       ],
       "refs": [
-        "n-mecanismo-laboral-del-t-mec-tendr-cambios-modestos-f-2026-08-06"
+        "n-gobierno-abre-la-puerta-al-fracking-prometen-cuidado-2026-08-07"
       ],
-      "href": "https://bloomberglinea.com/latinoamerica/mexico/mecanismo-laboral-del-t-mec-tendra-cambios-modestos-funcionario-de-eeuu/",
-      "source": "Bloomberg Línea",
-      "date": "2026-08-06",
-      "section": "us-mexico",
+      "href": "https://elfinanciero.com.mx/economia/2026/08/07/gobierno-abre-la-puerta-al-fracking-prometen-cuidado-del-agua-y-consultas-ciudadanas/",
+      "source": "El Financiero — Economía",
+      "date": "2026-08-07",
+      "section": "economy",
       "isNew": false,
       "ranking": {
         "rank": 5,
         "importance": 6,
         "effectiveImportance": 6,
         "tags": [
-          "us-relationship"
+          "political-stability"
         ],
         "scheduledEventId": "",
         "reason": "selected:extension:importance"
