@@ -13,7 +13,7 @@ import {
   isSafeHttpUrl, validPeriod,
 } from './lib/publication-contract.js';
 import { freshnessStatus } from './lib/freshness.js';
-import { lintReportText, lintAnalysisText, analysisNeedsScale, reportContextDistinct } from './lib/lint.js';
+import { lintEventReport, lintReportText, lintAnalysisText, analysisNeedsScale, reportContextDistinct } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import homeEditorialDate from './lib/home-editorial.cjs';
 import newsWindow from './lib/news-window.cjs';
@@ -142,12 +142,7 @@ try {
     for (const key of ['title', 'source', 'why']) checkText(`happening: ${event.id || index}.${key}`, event[key]);
     if (!isSafeHttpUrl(event.url)) fails.push(`happening: ${event.id || index} has invalid source URL`);
     if (event.reportEvidence) {
-      const reportGate = lintReportText({
-        text: `${event.title}. ${event.why || ''}`,
-        inputs: evidenceInputs(event),
-        maxWords: 70,
-        maxSentences: 3,
-      });
+      const reportGate = lintEventReport({ event, inputs: evidenceInputs(event) });
       if (!reportGate.ok) fails.push(`happening: ${event.id || index} factual rewrite fails retained source evidence (${reportGate.flags.join('; ')})`);
     }
     const analysisInputs = [event.date, event.title, event.context, event.why, event.background, event.drivers, event.implications, event.next,

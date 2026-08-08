@@ -155,7 +155,18 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
     messages: [{ role: 'user', content: user }],
   };
   if (effort && EFFORT_MODELS.has(modelId)) body.output_config = { ...(body.output_config || {}), effort };
-  if (schema) body.output_config = { ...(body.output_config || {}), format: { type: 'json_schema', schema } };
+  if (schema) {
+    // Anthropic's structured-output subset rejects numeric range keywords such as
+    // minimum/maximum. A single unsupported keyword used to turn every curation
+    // request into the same permanent HTTP 400 while fail-soft fallback hid the
+    // request bug. Range checks belong in deterministic code after parsing anyway.
+    const cleanSchema = JSON.parse(JSON.stringify(schema, (key, value) => (
+      ['minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'multipleOf'].includes(key)
+        ? undefined
+        : value
+    )));
+    body.output_config = { ...(body.output_config || {}), format: { type: 'json_schema', schema: cleanSchema } };
+  }
   let r;
   try {
     r = await fetch(ENDPOINT, {

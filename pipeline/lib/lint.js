@@ -99,6 +99,23 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   return { ok: flags.length === 0, flags };
 }
 
+// One event, one publication gate. Model-curated rows, deterministic fallback rows,
+// stored-ledger self-healing, and the final publication assertion all call this exact
+// function. A weaker fallback gate is how raw feed ellipses reached the final validator
+// and blocked the entire August 8 edition.
+export function lintEventReport({ event = {}, inputs = [] }) {
+  const title = String(event.title || '').trim();
+  const context = String(event.why || event.context || '').trim();
+  const report = lintReportText({
+    text: `${title}. ${context}`,
+    inputs,
+    maxWords: 70,
+    maxSentences: 3,
+  });
+  const flags = [...new Set([...report.flags, ...slopFlags(event)])];
+  return { ok: flags.length === 0, flags };
+}
+
 // Analysis has a stricter job than report copy. A view must name a mechanism or
 // tradeoff; a forecast must name an observable condition. These checks are narrow
 // enough to run on generated Briefly explained fields without dictating the facts.
@@ -153,6 +170,7 @@ export function slopFlags(ev = {}) {
   if (!ev.url) flags.push('no source link');
   if (!ev.date) flags.push('no date');
   if (FEED_BOILERPLATE.test(title + ' ' + body)) flags.push('feed boilerplate');
+  if (/\.{3}|…/.test(title + ' ' + body)) flags.push('ellipsis or truncated copy');
   if (spanishDominant(title)) flags.push('non-English title');
   // "20,000 million dollars" is a calque of "20,000 millones de dólares": garbled in English
   // and ambiguous (Audit 2026-07-20: one reached the homepage as an Apollo headline).

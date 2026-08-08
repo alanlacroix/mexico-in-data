@@ -27,7 +27,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { askJSON, budgetStatus, hasLLM, usage, model, models } from './lib/anthropic.js';
 import { REPORT, ANALYSIS_SHAPE, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
-import { lintReportText, lintAnalysisText, analysisNeedsScale, slopFlags, isSlop } from './lib/lint.js';
+import { lintEventReport, lintReportText, lintAnalysisText, analysisNeedsScale, slopFlags, isSlop } from './lib/lint.js';
 import { mexicoRelevant } from './lib/news-trust.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
 import { fetchArticle } from './lib/fetch-article.js';
@@ -36,12 +36,14 @@ import newsThreads from './lib/news-threads.cjs';
 import scheduledCandidate from './lib/scheduled-candidate.cjs';
 import importanceRubric from './lib/importance-rubric.cjs';
 import candidatePriority from './lib/candidate-priority.cjs';
+import reportEvidence from './lib/report-evidence.cjs';
 
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
 const { linkScheduledCandidate } = scheduledCandidate;
 const { normalizeModelImportanceRow } = importanceRubric;
 const { prioritizeCandidates } = candidatePriority;
+const { evidenceInputs } = reportEvidence;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -247,7 +249,7 @@ function curateFallback(cands, now) {
       ev.importanceComponents = scored.importanceComponents;
       ev.importanceProvenance = scored.importanceProvenance;
     }
-    const flags = slopFlags(ev);
+    const flags = lintEventReport({ event: ev, inputs: evidenceInputs(ev) }).flags;
     if (flags.length) { quarantine(ev, flags); continue; }                // no LLM to translate/clean → raw source is quarantined, never published
     cap[s] = (cap[s] || 0) + 1;
     out.push(ev);
@@ -260,7 +262,9 @@ function curateFallback(cands, now) {
 async function curate(cands, now) {
   if (!cands.length) return [];
   if (!hasLLM()) return curateFallback(cands, now);
-  const SCORE = { type: 'integer', minimum: 0, maximum: 2 };
+  // Anthropic structured outputs reject minimum/maximum on integers. Code clamps
+  // every returned component below, so the provider schema only describes shape.
+  const SCORE = { type: 'integer' };
   const schema = { type: 'object', additionalProperties: false, required: ['events'], properties: { events: { type: 'array', items: {
     type: 'object', additionalProperties: false, required: ['i', 'section', 'importance', 'importanceComponents', 'title', 'why', 'company'], properties: {
       i: { type: 'integer' }, section: { type: 'string', enum: SECTIONS }, importance: { type: 'integer' },
@@ -318,23 +322,16 @@ ${BAN}`;
       console.warn(`  reject generated event ${r.i}: headline is not neutral`);
       continue;
     }
-    const report = `${String(r.title || '').trim()}. ${String(r.why || '').trim()}`;
-    const gate = lintReportText({
-      text: report,
-      inputs: [x.published_at, x.title, x.dek],
-      maxWords: 70,
-      maxSentences: 3,
-    });
+    const ev = mkEvent(x, sec, r.importance, r.title, r.why, r.company);
+    const gate = lintEventReport({ event: ev, inputs: evidenceInputs(ev) });
     if (!gate.ok) {
       console.warn(`  reject generated event ${r.i}: ${gate.flags.join('; ')}`);
       continue;
     }
     const scored = normalizeModelImportanceRow(r, { scheduledObligation: scheduledObligation(x) });
-    const ev = mkEvent(x, sec, scored.importance, r.title, r.why, r.company);
+    ev.importance = scored.importance;
     ev.importanceComponents = scored.importanceComponents;
     ev.importanceProvenance = scored.importanceProvenance;
-    const slop = slopFlags(ev);                                           // enforce the copy contract even on model output (link/date/language/whole-sentence)
-    if (slop.length) { quarantine(ev, slop); continue; }
     events.push(ev);
   }
   return events.slice(0, MAX_NEW);
@@ -570,7 +567,9 @@ function mergeLog(existing, fresh, now) {
     // Re-evaluate low-confidence deterministic MBN picks on every run. Model- or
     // human-curated MBN stories score 5+ and remain canonical.
     if (e.source === 'Mexico Business News' && (e.importance || 0) <= 2) return false;
-    const flags = slopFlags(e);
+    const flags = e.reportEvidence
+      ? lintEventReport({ event: e, inputs: evidenceInputs(e) }).flags
+      : slopFlags(e);
     if (flags.length) { quarantine(e, ['purged: ' + flags.join('; ')]); return false; }
     return true;
   });

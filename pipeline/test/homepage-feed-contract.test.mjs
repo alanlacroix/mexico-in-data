@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lintReportText, lintAnalysisText } from '../lib/lint.js';
+import { lintEventReport, lintReportText, lintAnalysisText } from '../lib/lint.js';
 import { domainTrusted, publicHeadlineEligible } from '../lib/news-trust.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -231,6 +231,10 @@ assert.deepEqual(
 );
 
 assert.ok(lintReportText({ text: 'One claim; another claim.', inputs: ['One claim', 'another claim'] }).flags.includes('semicolon'), 'public model copy must reject semicolons');
+assert.equal(lintEventReport({
+  event: { title: 'Technology changes the labor market...', why: 'The report describes changes in Mexico.', url: 'https://example.com', date: '2026-08-08' },
+  inputs: ['Technology changes the labor market...', 'The report describes changes in Mexico.'],
+}).ok, false, 'deterministic fallback must reject feed ellipses before they enter the event ledger');
 assert.ok(lintReportText({
   text: 'Federal transfers are losing momentum and tightening fiscal room.',
   inputs: ['Federal transfers are losing momentum and tightening fiscal room.'],

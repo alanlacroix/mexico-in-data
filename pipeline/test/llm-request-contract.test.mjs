@@ -41,6 +41,15 @@ await askJSON({ system: 's', user: 'u', effort: 'low', model: models.HAIKU, sche
 assert.equal(sent.at(-1).output_config?.format?.type, 'json_schema');
 assert.equal(sent.at(-1).output_config?.effort, undefined);
 
+// Anthropic rejects numeric range keywords in structured-output schemas. This exact
+// request bug disabled the event curator on August 8 and must be stripped centrally.
+await askJSON({
+  system: 's', user: 'u', model: models.HAIKU,
+  schema: { type: 'object', properties: { score: { type: 'integer', minimum: 0, maximum: 2 } } },
+});
+const scoreSchema = sent.at(-1).output_config.format.schema.properties.score;
+assert.deepEqual(scoreSchema, { type: 'integer' });
+
 // The production ledger must be untouched by this run.
 const prodLedger = path.join(path.dirname(new URL(import.meta.url).pathname), '..', '..', 'data', 'llm-spend.json');
 const before = fs.readFileSync(prodLedger, 'utf8');

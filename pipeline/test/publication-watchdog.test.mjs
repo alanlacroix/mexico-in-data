@@ -117,6 +117,8 @@ assert.deepEqual(
 const originalFetch = globalThis.fetch;
 const heartbeatStore = new Map();
 let dispatchCalls = 0;
+let servedPublication = { editorialDate: '2026-07-31', slot: 'morning', publicationId: 'test-1' };
+let servedRuns = [{ id: 99, status: 'completed', conclusion: 'success', created_at: morningDue.toISOString() }];
 const healthyEnv = {
   GITHUB_TOKEN: 'test-token',
   WATCHDOG_STATE: {
@@ -128,14 +130,14 @@ const healthyEnv = {
 globalThis.fetch = async (url, init = {}) => {
   const target = String(url);
   if (target.includes('publication-status.json')) {
-    return Response.json({ editorialDate: '2026-07-31', slot: 'morning', publicationId: 'test-1' });
+    return Response.json(servedPublication);
   }
   if (target.includes('/actions/workflows/')) {
     if (init.method === 'POST') {
       dispatchCalls += 1;
       return new Response(null, { status: 204 });
     }
-    return Response.json({ workflow_runs: [{ id: 99, status: 'completed', conclusion: 'success', created_at: morningDue.toISOString() }] });
+    return Response.json({ workflow_runs: servedRuns });
   }
   throw new Error(`unexpected test URL: ${target}`);
 };
@@ -153,6 +155,22 @@ try {
   const stale = await checkHealth(healthyEnv, new Date(morningDue.getTime() + 60 * 60_000));
   assert.equal(stale.ok, false, 'a missing cron invocation must make the public health check fail');
   assert.equal(stale.checks.heartbeatFresh, false);
+
+  servedPublication = { editorialDate: '2026-07-30', slot: 'morning', publicationId: 'old' };
+  servedRuns = [1, 2, 3].map((id) => ({
+    id, event: 'workflow_dispatch', status: 'completed', conclusion: 'failure', created_at: '2026-07-31T12:00:00Z',
+  }));
+  const exhausted = await checkHealth(healthyEnv, new Date(morningDue.getTime() + 15 * 60_000));
+  assert.equal(exhausted.ok, false, 'a stale edition after failed retries must never report healthy');
+  assert.equal(exhausted.checks.editionCurrentOrRecoveryActive, false);
+  await assert.rejects(
+    runWatchdog({ ...healthyEnv, PUBLICATION_STATUS_JSON: JSON.stringify(servedPublication) }, morningDue),
+    /recovery failure limit reached/,
+    'exhausted recovery must fail loudly instead of recording a healthy heartbeat',
+  );
+
+  servedPublication = { editorialDate: '2026-07-31', slot: 'morning', publicationId: 'test-1' };
+  servedRuns = [{ id: 99, status: 'completed', conclusion: 'success', created_at: morningDue.toISOString() }];
 
   const repositoryFallback = await runWatchdog({
     ...healthyEnv,

@@ -169,6 +169,9 @@ export async function runWatchdog(env, now = new Date()) {
   });
   if (throttle.blocked) {
     log(throttle.failures ? 'error' : 'info', 'recovery_throttled', { due, ...throttle });
+    if (throttle.failures) {
+      throw new Error(`publication is stale and ${throttle.reason} (${throttle.failures} failed runs)`);
+    }
     return { action: 'none', reason: throttle.reason, due };
   }
 
@@ -231,10 +234,12 @@ export async function checkHealth(env, now = new Date()) {
     githubApiReachable: false,
     heartbeatFresh: false,
     lastScheduledCheckHealthy: false,
+    editionCurrentOrRecoveryActive: false,
   };
   const errors = [];
   let livePublication = null;
   let latestWorkflowRun = null;
+  let workflowRuns = [];
   let heartbeat = null;
 
   try {
@@ -248,12 +253,23 @@ export async function checkHealth(env, now = new Date()) {
     errors.push('GITHUB_TOKEN secret is not configured');
   } else {
     try {
-      const runs = await fetchWorkflowRuns(settings, env.GITHUB_TOKEN);
-      latestWorkflowRun = runs[0] || null;
+      workflowRuns = await fetchWorkflowRuns(settings, env.GITHUB_TOKEN);
+      latestWorkflowRun = workflowRuns[0] || null;
       checks.githubApiReachable = true;
     } catch (error) {
       errors.push(`GitHub API: ${errorMessage(error)}`);
     }
+  }
+
+  const due = dueEdition(now, settings.graceMinutes);
+  const recoveryActive = due
+    ? recentActiveRun(workflowRuns, now, settings.recentRunMinutes)
+    : null;
+  checks.editionCurrentOrRecoveryActive = !due
+    || publicationCoversEdition(livePublication, due)
+    || Boolean(recoveryActive);
+  if (!checks.editionCurrentOrRecoveryActive) {
+    errors.push(`${due.editorialDate} ${due.slot} edition is not live and no recovery run is active`);
   }
 
   if (!checks.stateBindingConfigured) {
