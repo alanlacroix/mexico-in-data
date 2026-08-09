@@ -11,17 +11,12 @@
     "analysisTarget": {
       "policy": "selected-brief-v1",
       "ids": [
-        "n-el-sol-de-m-xico-inflaci-n-desacelera-a-3-12-en-juli-2026-08-07",
         "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
-        "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07"
+        "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
+        "n-us-security-agreements-resume-avocado-operations-2026-08-08"
       ],
       "added": 0,
       "outcomes": [
-        {
-          "id": "n-el-sol-de-m-xico-inflaci-n-desacelera-a-3-12-en-juli-2026-08-07",
-          "ready": false,
-          "reason": "budget-unavailable"
-        },
         {
           "id": "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
           "ready": true,
@@ -31,11 +26,56 @@
           "id": "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
           "ready": true,
           "reason": "ready"
+        },
+        {
+          "id": "n-us-security-agreements-resume-avocado-operations-2026-08-08",
+          "ready": false,
+          "reason": "budget-unavailable"
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "n-us-security-agreements-resume-avocado-operations-2026-08-08",
+      "date": "2026-08-08",
+      "section": "us-mexico",
+      "title": "US ambassador says security agreements will resume avocado operations in Michoacán",
+      "why": "Ronald Johnson said the commitments would strengthen security and allow US government activities to resume immediately in phases.",
+      "company": "",
+      "source": "El Economista",
+      "url": "https://eleconomista.com.mx/empresas/aguacate-mexicano-estados-unidos-destaca-acuerdos-seguridad-reanudar-operaciones-michoacan-20260808-827306.html",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-08T21:36:33.000Z",
+      "sourceTier": "1",
+      "reportEvidence": {
+        "title": "Aguacate mexicano: Estados Unidos destaca acuerdos de seguridad para reanudar operaciones en Michoacán",
+        "dek": "De acuerdo con el embajador Ronald Johnson, estos compromisos permitirán “fortalecer rápidamente la seguridad en Michoacán” y avanzar en la reanudación inmediata y por fases de las actividades del gobierno estadounidense."
+      },
+      "coverage": [
+        {
+          "source": "El Economista",
+          "url": "https://eleconomista.com.mx/empresas/aguacate-mexicano-estados-unidos-destaca-acuerdos-seguridad-reanudar-operaciones-michoacan-20260808-827306.html",
+          "publishedAt": "2026-08-08T21:36:33.000Z",
+          "date": "2026-08-08",
+          "title": "US ambassador says security agreements will resume avocado operations in Michoacán",
+          "summary": "Ronald Johnson said the commitments would strengthen security and allow US government activities to resume immediately in phases."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "componentSource": "code-reviewed"
+      }
+    },
     {
       "id": "n-gwm-cambia-la-estrategia-de-ora-en-m-xico-y-lanza-el-2026-08-08",
       "date": "2026-08-08",
@@ -103,110 +143,6 @@
         "reportedTotal": 6,
         "componentSource": "model"
       }
-    },
-    {
-      "id": "n-el-sol-de-m-xico-inflaci-n-desacelera-a-3-12-en-juli-2026-08-07",
-      "date": "2026-08-07",
-      "section": "money",
-      "title": "Mexico's inflation falls to 3.12% in July",
-      "why": "INEGI's monthly consumer price index shows headline inflation at 3.12%, driven by declines in eggs, chicken, and seafood. This is a scheduled official outcome from Mexico's statistics agency.",
-      "company": "",
-      "source": "Grupo Consultor de Mercados Agrícolas",
-      "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-07T20:34:46.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "El Sol de México: Inflación desacelera a 3.12% en julio",
-        "dek": "Miguel Ángel Ensástigue | 07 de agosto de 2026. Impulsada por una baja en los precios del huevo, el pollo, el camarón y otros productos pecuarios, la inflación general se ubicó en 3.12 por ciento anual en julio y ligó cuatro meses consecutivos de desaceleración, de acuerdo con el Instituto Nacional de Estadística y Geo"
-      },
-      "coverage": [
-        {
-          "source": "Grupo Consultor de Mercados Agrícolas",
-          "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
-          "publishedAt": "2026-08-07T20:34:46.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico's inflation falls to 3.12% in July",
-          "summary": "INEGI's monthly consumer price index shows headline inflation at 3.12%, driven by declines in eggs, chicken, and seafood. This is a scheduled official outcome from Mexico's statistics agency."
-        }
-      ],
-      "scheduledEventId": "inegi-cpi-2026-08-07",
-      "scheduledImportanceFloor": 7,
-      "requiredForBrief": true,
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted",
-            "scheduledFloor": {
-              "previous": 2,
-              "score": 2
-            }
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model",
-        "scheduledOutcome": {
-          "applied": true,
-          "id": "inegi-cpi-2026-08-07",
-          "kind": "release",
-          "scheduledFor": "2026-08-07",
-          "outcomeStatus": null,
-          "isNewOutcome": true,
-          "changed": false,
-          "evidence": {
-            "source": "Grupo Consultor de Mercados Agrícolas",
-            "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
-            "publishedAt": "2026-08-07T20:34:46.000Z"
-          },
-          "componentFloors": {
-            "durability": {
-              "previous": 2,
-              "score": 2,
-              "source": "scheduled-outcome-evidence"
-            }
-          },
-          "importanceFloor": {
-            "requested": 7,
-            "before": 8,
-            "after": 8,
-            "applied": false
-          }
-        }
-      },
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 2
-      },
-      "image": "https://gcma.com.mx/wp-content/uploads/2026/08/close-up-shopping-basket-and-fresh-products-on-cas-2026-01-05-06-13-22-utc-scaled.jpg",
-      "imgTries": 1
     },
     {
       "id": "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
@@ -314,6 +250,14 @@
         "dek": "La inflación interanual de México se moderó en julio en línea con lo previsto, aunque la persistencia de presiones en el componente subyacente respaldaba la postura cautelosa del Banco de México (Banxico)."
       },
       "coverage": [
+        {
+          "source": "Grupo Consultor de Mercados Agrícolas",
+          "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
+          "publishedAt": "2026-08-07T20:34:46.000Z",
+          "date": "2026-08-07",
+          "title": "Mexico's inflation falls to 3.12% in July",
+          "summary": "INEGI's monthly consumer price index shows headline inflation at 3.12%, driven by declines in eggs, chicken, and seafood. This is a scheduled official outcome from Mexico's statistics agency."
+        },
         {
           "source": "El Economista",
           "url": "https://eleconomista.com.mx/economia/inflacion-mexico-desacelero-3-12-julio-menor-nivel-20260807-827157.html",

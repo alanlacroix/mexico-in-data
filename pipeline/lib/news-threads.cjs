@@ -136,6 +136,20 @@ const conflictingNumericClaims = (a, b) => {
   }
   return false;
 };
+const sharedNumericClaims = (a, b) => {
+  const left = numericClaims(titleOf(a));
+  const right = numericClaims(titleOf(b));
+  return [...left].some((claim) => right.has(claim));
+};
+const indicatorKey = (value) => {
+  const text = normalize(value);
+  if (/\b(?:inflation|inflacion)\b/.test(text)) return 'inflation';
+  if (/\b(?:gdp|pib|gross domestic product)\b/.test(text)) return 'gdp';
+  if (/\b(?:unemployment|desempleo)\b/.test(text)) return 'unemployment';
+  if (/\b(?:remittances?|remesas?)\b/.test(text)) return 'remittances';
+  if (/\b(?:interest rate|policy rate|tasa de interes|tasa objetivo)\b/.test(text)) return 'policy-rate';
+  return '';
+};
 const eventDay = (event) => clean(event && event.date)
   || editorialDay(event && (event.publishedAt || event.published_at));
 const sameEditorialDay = (a, b) => !!eventDay(a) && eventDay(a) === eventDay(b);
@@ -167,6 +181,14 @@ function sameThread(a, b) {
   const anchorsA = distinctiveWords(titleA);
   const anchorsB = distinctiveWords(titleB);
   const sharedAnchors = intersectionSize(anchorsA, anchorsB);
+
+  // Two same-day reports of one official data print often have very different
+  // headlines (one names the level, another the cause). The indicator + exact value
+  // is the release identity. This is deliberately narrow: different values or
+  // different indicators remain separate.
+  const indicatorA = indicatorKey(titleOf(a));
+  const indicatorB = indicatorKey(titleOf(b));
+  if (sameEditorialDay(a, b) && indicatorA && indicatorA === indicatorB && sharedNumericClaims(a, b)) return true;
 
   // Strong paraphrases of one event, including adjacent-day and bilingual reports. Two
   // generic investment announcements are not one event merely because both say “Mexico”,

@@ -48,8 +48,23 @@ const ENTITY_ALIAS_COLLISION = /\b(?:Mexican\s+utility|(?:state(?:-owned)?\s+)?(
 const SCALE_ANCHOR = /(?:%|\bshare\b|\baccounts? for\b|\bout of\b|\bof (?:the|that) (?:total|package|market|system|capacity|budget|economy)\b|\bcompared (?:with|to)\b|\brelative to\b|\broughly (?:a|one|two|three|four|five|\d)|\bcovered\b|\bexcluded\b|\bapplies only\b|\bfirst (?:package|round|award|project|test)\b)/i;
 const ANNOUNCEMENT_NUMBER = /(?:[$€£]\s*\d|\b\d+(?:[.,]\d+)?\s*(?:billion|million|trillion|bn|mn|mw|mwh|gw|gwh)\b)/i;
 const FIRST_PERSON = /\b(?:I|me|my|mine|we|our|ours)\b/i;
+const canonicalNumericToken = (raw) => {
+  let token = String(raw || '');
+  // Spanish publishers use a dot as the thousands separator and a comma as the
+  // decimal separator. Treat 1.500 and 1,500 as the same sourced count, and 3,12
+  // and 3.12 as the same decimal. This is normalization only: 3.37 still cannot
+  // become 3.4, and no arithmetic or rounding is allowed.
+  if (/^\d{1,3}(?:[.,]\d{3})+$/.test(token)) token = token.replace(/[.,]/g, '');
+  else if (/^\d+,\d+$/.test(token)) token = token.replace(',', '.');
+  else if (token.includes(',') && token.includes('.')) {
+    const decimal = token.lastIndexOf(',') > token.lastIndexOf('.') ? ',' : '.';
+    token = token.replace(new RegExp(`\\${decimal === ',' ? '.' : ','}`, 'g'), '')
+      .replace(decimal, '.');
+  }
+  return token.replace(/^0+(?=\d)/, '');
+};
 const numericTokens = (s) => (String(s || '').match(/\d+(?:[.,]\d+)*/g) || [])
-  .map((x) => x.replace(/,/g, '').replace(/^0+(?=\d)/, ''));
+  .map(canonicalNumericToken);
 
 const CONTEXT_STOP = new Set(['a', 'an', 'and', 'at', 'by', 'for', 'from', 'in', 'is', 'its', 'of', 'on', 'since', 'the', 'to']);
 const contextTokens = (value) => String(value || '').toLowerCase()

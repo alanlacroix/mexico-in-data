@@ -17,6 +17,25 @@ function attentionSignal(candidate) {
   return Number(STATE_CHANGE_RX.test(text)) + Number(CONSEQUENCE_RX.test(text));
 }
 
+function fallbackImportanceComponents(candidate) {
+  const text = `${candidate?.title || ''} ${candidate?.dek || ''}`.trim();
+  const empty = { nationalConsequence: 0, usMexicoStakes: 0, modelImpact: 0, durability: 0, officialness: 0 };
+  if (!text || attentionSignal(candidate) < 0) return empty;
+  const officialUrl = /(?:\.gob\.mx|inegi\.org\.mx|banxico\.org\.mx|ustr\.gov|whitehouse\.gov|dof\.gob\.mx)/i.test(String(candidate?.url || ''));
+  const publicActor = /\b(?:government|gobierno|congress|congreso|senate|senado|court|corte|tribunal|banxico|banco de m[eé]xico|hacienda|president|secretar[ií]a|regulator|regulad|commission|comisi[oó]n|cofepris|cfe|pemex)\b/i.test(text);
+  const usMexico = /\b(?:united states|estados unidos|ee\.?\s*uu\.?|u\.?s\.?|usmca|t-?mec|trade agreement|arancel|tariff|import|export|border|frontera)\w*/i.test(text);
+  const operatingModel = /\b(?:investment|inversi[oó]n|acqui|merger|plant|factory|production|manufactur|energy|energ[ií]a|infrastructure|infraestructura|bank|fintech|payment|technology|tecnolog[ií]a|artificial intelligence|trade|comercio|export|import)\w*/i.test(text);
+  const companyMove = /\b(?:company|empresa|launch|lanza|starts?|inicia|begins?|acquires?|invierte|invests?)\w*/i.test(text);
+  const changed = STATE_CHANGE_RX.test(text);
+  return {
+    nationalConsequence: publicActor ? (officialUrl ? 2 : 1) : 0,
+    usMexicoStakes: usMexico ? 2 : 0,
+    modelImpact: operatingModel ? 2 : companyMove ? 1 : 0,
+    durability: changed ? 2 : attentionSignal(candidate) > 0 ? 1 : 0,
+    officialness: officialUrl ? 2 : (candidate?.tier === 1 || candidate?.tier === '1' || candidate?.tier === 'specialist') ? 1 : 0,
+  };
+}
+
 function prioritizeCandidates(candidates) {
   return (Array.isArray(candidates) ? candidates : []).slice().sort((a, b) =>
     Number(Boolean(b?._scheduled)) - Number(Boolean(a?._scheduled))
@@ -44,4 +63,4 @@ function decisionCoverage(candidateCount, decisions) {
   return { ok: missing.length === 0 && duplicates.length === 0 && invalid.length === 0, missing, duplicates, invalid };
 }
 
-module.exports = { attentionSignal, decisionCoverage, prioritizeCandidates };
+module.exports = { attentionSignal, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates };

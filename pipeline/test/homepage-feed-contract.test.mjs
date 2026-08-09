@@ -104,6 +104,19 @@ assert.equal(grouped.length, 1, 'related same-day reports must render as one eve
 assert.equal(grouped[0].sourceCount, 2, 'a grouped event must retain both source links');
 assert.equal(grouped[0].event.source, 'Outlet B', 'the current state must use the newer equally ranked report');
 
+const sameInflationRelease = groupEvents([
+  {
+    date: '2026-08-07', publishedAt: '2026-08-07T13:15:39Z', source: 'Outlet A',
+    url: 'https://example.com/inflation-a', title: "Mexico's annual inflation falls to 3.12 percent in July, its lowest since 2020",
+  },
+  {
+    date: '2026-08-07', publishedAt: '2026-08-07T20:34:46Z', source: 'Outlet B',
+    url: 'https://example.com/inflation-b', title: "Mexico's inflation falls to 3.12% in July",
+  },
+]);
+assert.equal(sameInflationRelease.length, 1, 'two same-day reports of the same official indicator value must use one story slot');
+assert.equal(sameInflationRelease[0].sourceCount, 2, 'the merged release must retain both source links');
+
 const relatedButDistinct = groupEvents([
   { date: '2026-07-21', title: 'Mexico and the US launch the first annual USMCA review', source: 'Outlet A', url: 'https://example.com/review' },
   { date: '2026-07-21', title: 'Sheinbaum presses USMCA talks at the World Cup final', source: 'Outlet B', url: 'https://example.com/world-cup' },
@@ -257,6 +270,18 @@ assert.equal(lintReportText({
   text: 'Federal revenue shared with the states grew 0.9% from a year earlier.',
   inputs: ['Federal revenue shared with the states grew 0.9% from a year earlier.'],
 }).ok, true, 'plain actor-action copy must pass the report gate');
+assert.equal(lintReportText({
+  text: 'Mexico deployed 1,500 military personnel.',
+  inputs: ['México desplegó 1.500 militares.'],
+}).ok, true, 'Spanish and English thousands separators must describe the same sourced number');
+assert.equal(lintReportText({
+  text: 'Inflation was 3.12%.',
+  inputs: ['La inflación fue de 3,12%.'],
+}).ok, true, 'Spanish and English decimal separators must describe the same sourced number');
+assert.equal(lintReportText({
+  text: 'Inflation was 3.4%.',
+  inputs: ['Inflation was 3.37%.'],
+}).ok, false, 'locale normalization must not allow model rounding');
 assert.ok(lintAnalysisText({
   text: 'This could have implications for investors.',
   inputs: ['This could have implications for investors.'],

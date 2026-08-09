@@ -42,8 +42,8 @@ import analysisAttempts from './lib/analysis-attempts.cjs';
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
 const { linkScheduledCandidate } = scheduledCandidate;
-const { normalizeModelImportanceRow } = importanceRubric;
-const { attentionSignal, decisionCoverage, prioritizeCandidates } = candidatePriority;
+const { applyScheduledImportanceFloor, normalizeModelImportanceRow, scoreImportance } = importanceRubric;
+const { attentionSignal, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates } = candidatePriority;
 const { evidenceInputs } = reportEvidence;
 const { mergeApprovedAttempt } = analysisAttempts;
 
@@ -70,7 +70,7 @@ function quarantine(ev, flags) {
   console.warn(`  quarantine ${ev.id || ev.title?.slice(0, 40)}: ${flags.join('; ')}`);
 }
 
-const WINDOW_DAYS = 30;      // consider news from the last 30 days
+const WINDOW_DAYS = 3;       // daily curation is a recent-news job, not a 30-day backlog replay
 const KEEP_DAYS = 60;        // the stored log holds a rolling ~60-day window (older ages out, unless imp 5)
 const MAX_STORE = 60;        // hard cap on stored entries
 const MAX_NEW = 16;          // model returns at most this many new events per run
@@ -209,11 +209,11 @@ function scheduledObligation(x) {
   };
 }
 
-// Without the model we can't reliably tell an event from a listicle, so the fallback is
-// deliberately conservative: skip obvious non-events, require a Mexico signal, and cap
-// importance at 2 so a fallback item never outranks a real (model- or hand-curated) event
-// on the homepage. It's a safety net to keep the log fresh when the LLM is down, not a
-// substitute for it.
+// Without the model, the fallback remains conservative: skip obvious non-events, require
+// a Mexico signal and publish only complete English source copy. A small deterministic
+// version of the same five-part rubric still separates a government or cross-border state
+// change from a product launch. The Brief must not freeze merely because its monthly model
+// budget is exhausted.
 // Bars the soft-feature classes a keyless fallback can't tell from real events: quizzes, versus
 // listicles, "the N most ___" rankings, brand-history features ("la historia de…"), routine FX
 // open/close recaps ("así abre el tipo de cambio", "peso busca rescatar…"), forecast-cut rehashes,
@@ -227,7 +227,6 @@ function firstWholeSentence(text, max = 280) {
   return clean.length <= max && /[.!?]$/.test(clean) ? clean : '';
 }
 function curateFallback(cands, now) {
-  const tierW = (t) => (t === 1 ? 4 : t === 'specialist' ? 3 : t === 2 ? 2 : 1);
   const scored = cands
     .map((x) => ({ x, summary: firstWholeSentence(x.dek) }))
     .filter(({ summary }) => summary)                                     // need a whole sourced sentence for "why"
@@ -236,21 +235,22 @@ function curateFallback(cands, now) {
     .filter(({ x }) => !RAW_HEADLINE_RX.test(x.title || ''))                   // no raw clickbait without an editor rewrite
     .filter(({ x }) => mexicoRelevant((x.title || '') + ' ' + (x.dek || ''))) // must be about Mexico, not off-topic
     .filter(({ x }) => x.sourceName !== 'Mexico Business News' || TASTE_RX.test((x.title || '') + ' ' + (x.dek || '')))
-    .map(({ x, summary }) => ({ x, summary, w: tierW(x.tier) * 2 + (Date.parse(x.published_at) > now.getTime() - 4 * 864e5 ? 2 : 0) }));
-  scored.sort((a, b) => b.w - a.w || Date.parse(b.x.published_at) - Date.parse(a.x.published_at));
+    .map(({ x, summary }) => {
+      const base = scoreImportance(fallbackImportanceComponents(x), { componentSource: 'deterministic-fallback-v1' });
+      const importance = x._scheduled ? applyScheduledImportanceFloor(base, scheduledObligation(x)) : base;
+      return { x, summary, importance };
+    })
+    .filter(({ importance }) => importance.importance >= 2);
+  scored.sort((a, b) => b.importance.importance - a.importance.importance
+    || Date.parse(b.x.published_at) - Date.parse(a.x.published_at));
   const out = [], cap = {};
-  for (const { x, summary } of scored) {
+  for (const { x, summary, importance } of scored) {
     const s = beatSection(x);
     if ((cap[s] || 0) >= 2) continue;                                     // ≤2 per section, keep it cross-domain
-    const ev = mkEvent(x, s, 2, x.title, summary);                        // imp 2: never outranks a real event
-    if (x._scheduled) {
-      const scored = normalizeModelImportanceRow({ importance: 2, importanceComponents: {} }, {
-        scheduledObligation: scheduledObligation(x),
-      });
-      ev.importance = scored.importance;
-      ev.importanceComponents = scored.importanceComponents;
-      ev.importanceProvenance = scored.importanceProvenance;
-    }
+    const ev = mkEvent(x, s, importance.importance, x.title, summary);
+    ev.importance = importance.importance;
+    ev.importanceComponents = importance.importanceComponents;
+    ev.importanceProvenance = importance.importanceProvenance;
     const flags = lintEventReport({ event: ev, inputs: evidenceInputs(ev) }).flags;
     if (flags.length) { quarantine(ev, flags); continue; }                // no LLM to translate/clean → raw source is quarantined, never published
     cap[s] = (cap[s] || 0) + 1;

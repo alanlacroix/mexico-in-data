@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import priority from '../lib/candidate-priority.cjs';
 
-const { attentionSignal, decisionCoverage, prioritizeCandidates } = priority;
+const { attentionSignal, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates } = priority;
+const total = (components) => Object.values(components).reduce((sum, value) => sum + value, 0);
 
 const recurring = Array.from({ length: 60 }, (_, index) => ({
   id: `replay-${index}`,
@@ -47,5 +48,16 @@ assert.deepEqual(decisionCoverage(3, [{ i: 2 }, { i: 0 }, { i: 1 }]), {
 assert.deepEqual(decisionCoverage(3, [{ i: 0 }, { i: 0 }, { i: 4 }]), {
   ok: false, missing: [1, 2], duplicates: [0], invalid: [4],
 }, 'a missing, duplicate, or out-of-range decision must fail the exhaustive curation contract');
+
+assert.ok(total(fallbackImportanceComponents({
+  title: 'United States resumes avocado inspections in Michoacán after a security agreement with Mexico',
+  dek: 'Government operations resume in phases.', tier: 1, url: 'https://example.com/avocado',
+})) >= 5, 'keyless curation must still recognize a consequential US-Mexico state change');
+assert.ok(total(fallbackImportanceComponents({
+  title: 'GWM launches a new car model in Mexico', dek: 'The company adds a product to its range.', tier: 2,
+})) < 5, 'a routine product launch must not become a top Brief story without model review');
+assert.equal(total(fallbackImportanceComponents({
+  title: 'Weather in Mexico this Sunday', dek: 'Rain is expected.', tier: 1,
+})), 0, 'routine coverage must remain outside deterministic Brief ranking');
 
 console.log('candidate-priority tests: ok');
