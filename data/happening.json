@@ -6,17 +6,22 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/sources",
     "count": 60,
-    "generatedAt": "2026-08-09T15:21:28.459Z",
+    "generatedAt": "2026-08-09T15:32:47.980Z",
     "llm": true,
     "analysisTarget": {
       "policy": "selected-brief-v1",
       "ids": [
+        "n-el-sol-de-m-xico-inflaci-n-desacelera-a-3-12-en-juli-2026-08-07",
         "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
-        "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
-        "n-house-gop-backs-greer-s-strategy-to-delay-usmca-rene-2026-08-07"
+        "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07"
       ],
-      "added": 1,
+      "added": 0,
       "outcomes": [
+        {
+          "id": "n-el-sol-de-m-xico-inflaci-n-desacelera-a-3-12-en-juli-2026-08-07",
+          "ready": false,
+          "reason": "budget-unavailable"
+        },
         {
           "id": "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
           "ready": true,
@@ -24,11 +29,6 @@
         },
         {
           "id": "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-house-gop-backs-greer-s-strategy-to-delay-usmca-rene-2026-08-07",
           "ready": true,
           "reason": "ready"
         }
@@ -105,6 +105,110 @@
       }
     },
     {
+      "id": "n-el-sol-de-m-xico-inflaci-n-desacelera-a-3-12-en-juli-2026-08-07",
+      "date": "2026-08-07",
+      "section": "money",
+      "title": "Mexico's inflation falls to 3.12% in July",
+      "why": "INEGI's monthly consumer price index shows headline inflation at 3.12%, driven by declines in eggs, chicken, and seafood. This is a scheduled official outcome from Mexico's statistics agency.",
+      "company": "",
+      "source": "Grupo Consultor de Mercados Agrícolas",
+      "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-07T20:34:46.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "El Sol de México: Inflación desacelera a 3.12% en julio",
+        "dek": "Miguel Ángel Ensástigue | 07 de agosto de 2026. Impulsada por una baja en los precios del huevo, el pollo, el camarón y otros productos pecuarios, la inflación general se ubicó en 3.12 por ciento anual en julio y ligó cuatro meses consecutivos de desaceleración, de acuerdo con el Instituto Nacional de Estadística y Geo"
+      },
+      "coverage": [
+        {
+          "source": "Grupo Consultor de Mercados Agrícolas",
+          "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
+          "publishedAt": "2026-08-07T20:34:46.000Z",
+          "date": "2026-08-07",
+          "title": "Mexico's inflation falls to 3.12% in July",
+          "summary": "INEGI's monthly consumer price index shows headline inflation at 3.12%, driven by declines in eggs, chicken, and seafood. This is a scheduled official outcome from Mexico's statistics agency."
+        }
+      ],
+      "scheduledEventId": "inegi-cpi-2026-08-07",
+      "scheduledImportanceFloor": 7,
+      "requiredForBrief": true,
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted",
+            "scheduledFloor": {
+              "previous": 2,
+              "score": 2
+            }
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model",
+        "scheduledOutcome": {
+          "applied": true,
+          "id": "inegi-cpi-2026-08-07",
+          "kind": "release",
+          "scheduledFor": "2026-08-07",
+          "outcomeStatus": null,
+          "isNewOutcome": true,
+          "changed": false,
+          "evidence": {
+            "source": "Grupo Consultor de Mercados Agrícolas",
+            "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
+            "publishedAt": "2026-08-07T20:34:46.000Z"
+          },
+          "componentFloors": {
+            "durability": {
+              "previous": 2,
+              "score": 2,
+              "source": "scheduled-outcome-evidence"
+            }
+          },
+          "importanceFloor": {
+            "requested": 7,
+            "before": 8,
+            "after": 8,
+            "applied": false
+          }
+        }
+      },
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 2
+      },
+      "image": "https://gcma.com.mx/wp-content/uploads/2026/08/close-up-shopping-basket-and-fresh-products-on-cas-2026-01-05-06-13-22-utc-scaled.jpg",
+      "imgTries": 1
+    },
+    {
       "id": "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
       "date": "2026-08-07",
       "section": "us-mexico",
@@ -171,7 +275,7 @@
         "reportedTotal": 7,
         "componentSource": "model"
       },
-      "imgTries": 4,
+      "imgTries": 5,
       "background": "USMCA contains an investor-state dispute mechanism that lets foreign investors sue a member government before an independent tribunal if they believe treaty protections were violated, separate from Mexico's domestic courts.",
       "view": "The ruling closes one specific claim rather than settling how USMCA investor protections apply to sovereign debt disputes generally, since it turned on whether these particular bondholders qualified for protection at all. It also matters for public finances: Mexico is already on the last investment-grade rung at Moody's partly because of Pemex support costs, so avoiding a $219 million payout keeps one more claim off a debt load that rose to 53.2% of GDP in 2025.",
       "prediction": "The funds are likely to explore appeal routes or alternative legal claims rather than drop the matter, since $219 million is a large sum to abandon after losing on jurisdiction rather than merits. That view would be wrong if Cyrus and Contrarian publicly confirm they are not pursuing further action.",
@@ -1234,6 +1338,142 @@
       "view": "July's inflation report explains the wait. Headline inflation is close to target, but underlying inflation is falling more slowly. Banxico is waiting for that underlying measure to improve before making credit cheaper again.",
       "prediction": "The next tests will be the September 9 inflation release and the September 24 rate decision. If underlying inflation falls again, a cut becomes more likely. If it reverses, another hold becomes more likely.",
       "analysisV": 7
+    },
+    {
+      "id": "n-threat-prompts-us-to-suspend-avocado-inspections-in--2026-08-06",
+      "date": "2026-08-06",
+      "section": "us-mexico",
+      "title": "US suspends government operations in Michoacán over threat to US interests",
+      "why": "The United States suspended all federal operations in Michoacán, including avocado inspections, citing a threat to US interests. This preceded Mexico's military deployment to restore safety.",
+      "company": "",
+      "source": "Border Report",
+      "url": "https://borderreport.com/hot-topics/threat-prompts-us-to-suspend-avocado-inspections-in-michoacan/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-06T22:36:40.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Threat prompts US to suspend avocado inspections in Michoacan",
+        "dek": "The United States announced Wednesday that it had suspended all government operations in the Mexican state of Michoacan because of a \"threat to U.S. interests,\" including a halt to the inspections of avocados required for their export."
+      },
+      "coverage": [
+        {
+          "source": "Border Report",
+          "url": "https://borderreport.com/hot-topics/threat-prompts-us-to-suspend-avocado-inspections-in-michoacan/",
+          "publishedAt": "2026-08-06T22:36:40.000Z",
+          "date": "2026-08-06",
+          "title": "US suspends government operations in Michoacán over threat to US interests",
+          "summary": "The United States suspended all federal operations in Michoacán, including avocado inspections, citing a threat to US interests. This preceded Mexico's military deployment to restore safety."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-los-lugares-de-m-xico-donde-no-se-podr-hacer-frackin-2026-08-06",
+      "date": "2026-08-06",
+      "section": "economy",
+      "title": "Mexico's expert committee maps regions banned from fracking operations",
+      "why": "A government-appointed panel of 54 scientists and experts identified areas where fracking is prohibited based on environmental, social, and economic factors, as part of President Sheinbaum's energy policy review.",
+      "company": "",
+      "source": "Expansión — Empresas",
+      "url": "https://expansion.mx/empresas/2026/08/06/mapa-fracking-mexico-estados-donde-se-debe-prohibir",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-06T17:43:45.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Los lugares de México donde no se podrá hacer fracking de acuerdo con el comité de expertos de Sheinbaum",
+        "dek": "Un grupo de 54 científicos y expertos asesoran al gobierno sobre la viabilidad del uso de fracking. Se analizaron diversos factores como ambientales, sociales y económicos."
+      },
+      "coverage": [
+        {
+          "source": "Expansión — Empresas",
+          "url": "https://expansion.mx/empresas/2026/08/06/mapa-fracking-mexico-estados-donde-se-debe-prohibir",
+          "publishedAt": "2026-08-06T17:43:45.000Z",
+          "date": "2026-08-06",
+          "title": "Mexico's expert committee maps regions banned from fracking operations",
+          "summary": "A government-appointed panel of 54 scientists and experts identified areas where fracking is prohibited based on environmental, social, and economic factors, as part of President Sheinbaum's energy policy review."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
     },
     {
       "id": "n-preparan-carnaval-petrolero-acuerdo-pemex-petrobras--2026-08-06",
@@ -2354,98 +2594,6 @@
           "summary": "MXPE Weekly Essentials ft. GDP growth, auto investment, tax revenue, and other highlights in Mexican politics, policy, and markets from the past week."
         }
       ]
-    },
-    {
-      "id": "n-robert-lighthizer-anticipa-una-renegociaci-n-del-t-m-2026-08-02",
-      "date": "2026-08-02",
-      "section": "us-mexico",
-      "title": "US trade adviser Robert Lighthizer urges tougher rules of origin in USMCA review",
-      "why": "Lighthizer says the scheduled review of the US-Mexico-Canada trade agreement should include stricter rules of origin to narrow the US trade deficit with Mexico, an early sign of the tougher terms Washington may seek in the 2026 negotiation.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/internacional/robert-lighthizer-anticipa-renegociacion-t-mec-reglas-de-origen-menor-deficit-eu-mexico/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-02T17:40:52.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/internacional/robert-lighthizer-anticipa-renegociacion-t-mec-reglas-de-origen-menor-deficit-eu-mexico/",
-          "publishedAt": "2026-08-02T17:40:52.000Z",
-          "date": "2026-08-02",
-          "title": "US trade adviser Robert Lighthizer urges tougher rules of origin in USMCA review",
-          "summary": "Lighthizer says the scheduled review of the US-Mexico-Canada trade agreement should include stricter rules of origin to narrow the US trade deficit with Mexico, an early sign of the tougher terms Washington may seek in the 2026 negotiation."
-        }
-      ],
-      "image": "https://elceo.com/wp-content/uploads/2026/08/robert-lighthizer-anticipa-renegociacion-t-mec-reglas-de-origen-menor-deficit-eu-mexico.jpg",
-      "imgTries": 1,
-      "background": "USMCA's Article 34.7 now requires the United States, Mexico and Canada to review the trade pact annually, after Washington declined a 16-year extension in July 2026. Rules of origin set how much regional, and how much Chinese, content a product can contain and still qualify for tariff-free treatment.",
-      "view": "Lighthizer no longer holds office, but as the pact's original architect his push for tighter rules of origin signals the pressure Mexico can expect. Mexico imported $129.5bn in goods from China in 2024 against $9.1bn in exports there, and stricter content rules would force manufacturers to swap suppliers or lose tariff-free access, raising costs across the $872bn US-Mexico trade relationship.",
-      "prediction": "Rules of origin are likely to dominate the 2026 review without an immediate treaty change, since annual reviews do not require renegotiation. That would be wrong if the three countries agree on revised origin language or a country moves toward withdrawal this cycle.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-sheinbaum-responde-a-la-presi-n-de-trump-sobre-la-es-2026-08-02",
-      "date": "2026-08-02",
-      "section": "security",
-      "title": "Sheinbaum pushes back against Trump pressure on security strategy, says Mexico is friend to all",
-      "why": "Mexico's president rejected Trump's critique of her refusal to allow foreign security forces to operate domestically. The standoff reflects a core sovereignty dispute that could affect U.S.-Mexico security cooperation.",
-      "company": "",
-      "source": "El País — México",
-      "url": "https://elpais.com/mexico/2026-08-03/sheinbaum-responde-a-la-presion-de-trump-sobre-la-estrategia-de-seguridad-mexico-es-amigo-de-todo-el-mundo.html",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-03T02:05:24.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/2026-08-03/sheinbaum-responde-a-la-presion-de-trump-sobre-la-estrategia-de-seguridad-mexico-es-amigo-de-todo-el-mundo.html",
-          "publishedAt": "2026-08-03T02:05:24.000Z",
-          "date": "2026-08-02",
-          "title": "Sheinbaum pushes back against Trump pressure on security strategy, says Mexico is friend to all",
-          "summary": "Mexico's president rejected Trump's critique of her refusal to allow foreign security forces to operate domestically. The standoff reflects a core sovereignty dispute that could affect U.S.-Mexico security cooperation."
-        },
-        {
-          "source": "aristeguinoticias.com",
-          "url": "https://aristeguinoticias.com/0208/mexico/sheinbaum-responde-a-trump-mexico-es-amigo-de-todo-el-mundo/",
-          "publishedAt": "2026-08-02T23:46:18.000Z",
-          "date": "2026-08-02",
-          "title": "Sheinbaum responde a Trump: ‘México es amigo de todo el mundo’",
-          "summary": "Desde Oaxaca, Sheinbaum Pardo vinculó la defensa de la soberanía y la independencia con el derecho de los mexicanos a decidir el rumbo del país sin injerencias externas."
-        }
-      ]
-    },
-    {
-      "id": "n-los-delincuentes-no-tienen-d-nde-esconderse-embajado-2026-08-02",
-      "date": "2026-08-02",
-      "section": "security",
-      "title": "US ambassador says cartel leaders have nowhere to hide after arrest",
-      "why": "Ambassador Ronald Johnson credits joint US-Mexico efforts to dismantle cartels after the arrest of a cartel leader, underscoring continued security cooperation between the Sheinbaum and Trump administrations.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/0208/mexico/los-delincuentes-no-tienen-donde-esconderse-embajador-de-ee-uu-tras-detencion-del-lider-del-cartel-de-los-reyes/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-02T12:38:13.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/0208/mexico/los-delincuentes-no-tienen-donde-esconderse-embajador-de-ee-uu-tras-detencion-del-lider-del-cartel-de-los-reyes/",
-          "publishedAt": "2026-08-02T12:38:13.000Z",
-          "date": "2026-08-02",
-          "title": "US ambassador says cartel leaders have nowhere to hide after arrest",
-          "summary": "Ambassador Ronald Johnson credits joint US-Mexico efforts to dismantle cartels after the arrest of a cartel leader, underscoring continued security cooperation between the Sheinbaum and Trump administrations."
-        }
-      ],
-      "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/08/cae-poncho-cartel-reyes-02082026.jpg",
-      "imgTries": 2,
-      "background": "Cárteles Unidos is one of the armed groups operating in Michoacán's avocado and lime belt, an area where cartel extortion of agricultural producers has been a persistent security problem separate from drug trafficking.",
-      "view": "An arrest announcement is a security operation, not evidence of a trend. The government's own preliminary data show daily homicides down 46% from September 2024, but that figure comes from prosecutor reports ahead of final death certificates, and INEGI separately found 93.2% of crimes nationally go unreported or uninvestigated. A single cartel leader's capture in Michoacán says nothing about whether extortion and cargo theft, which fall hardest on small firms without private security, are actually declining there.",
-      "prediction": "Cárteles Unidos or a successor faction likely continues operating in the area with a new leader, since arrests of individual figures have not historically ended cartel activity in Michoacán. This would be wrong if local business groups or state prosecutors report a measurable drop in extortion complaints in the months after the arrest.",
-      "analysisV": 7
     }
   ]
 }
