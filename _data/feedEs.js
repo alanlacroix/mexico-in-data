@@ -10,26 +10,26 @@
 //      Briefly-explained fields, deks, calendar lines), keyed by a hash of the
 //      English so each sentence is translated exactly once, ever, under the es-MX
 //      contract in pipeline/translate-es.mjs.
-// Fallback is always the English text: a missing translation shows English rather
-// than stale or absent content, and translate-es.mjs fills it on the next window.
+// The current Brief is all-or-nothing by language. If any required translation is
+// missing, this module carries the last complete Spanish Brief. Optional sections
+// omit missing free text instead of leaking English into the Spanish edition.
 const fs = require('node:fs');
 const path = require('node:path');
-const crypto = require('node:crypto');
 const feed = require('./feed.js');
 const ui = require('./uiStrings.js');
+const { hash, cached, resolveSpanishBrief } = require('../pipeline/lib/es-translation.cjs');
 
 const CACHE = path.join(__dirname, '..', 'data', 'es', 'strings.json');
+const BRIEF_SNAPSHOT = path.join(__dirname, '..', 'data', 'es', 'brief.json');
 const cache = (() => {
   try { return JSON.parse(fs.readFileSync(CACHE, 'utf8')); } catch { return {}; }
 })();
+const snapshot = (() => {
+  try { return JSON.parse(fs.readFileSync(BRIEF_SNAPSHOT, 'utf8')); } catch { return null; }
+})();
 
-const hash = (text) => crypto.createHash('sha256').update(String(text)).digest('hex').slice(0, 16);
-// Translate free text via the cache; English fallback by design.
-const t = (text) => {
-  const clean = String(text || '').trim();
-  if (!clean) return '';
-  return cache[hash(clean)] || clean;
-};
+// Free text appears only when a reviewed cache entry exists.
+const t = (text) => cached(cache, text);
 const mapped = (table) => (value) => table[value] || value;
 const cat = mapped(ui.maps.cats);
 const esDate = (label) => String(label || '')
@@ -41,11 +41,27 @@ const esRel = (rel) => {
 };
 
 module.exports = function () {
-  const f = feed();
+  const f = feed.forLocale('es');
+  const briefFeed = resolveSpanishBrief(f, cache, snapshot);
+  const translatedStories = briefFeed.stories.map((s) => ({ ...s, date: esDate(s.date), cat: cat(s.cat) }));
+  const translatedWeek = f.week.map((w) => ({
+    ...w,
+    date: esDate(w.date),
+    cat: cat(w.cat),
+    title: w.lang === 'ES' && w.orig ? w.orig : t(w.title),
+    dek: w.lang === 'ES' ? '' : t(w.dek),
+    orig: '',
+    lang: '',
+  })).filter((w) => w.title);
   return {
     ...f,
-    brief: t(f.brief),
-    latestStoryDate: esDate(f.latestStoryDate),
+    date: briefFeed.editorialDate,
+    updated: briefFeed.updated,
+    carrying: Boolean(f.carrying || briefFeed.translationCarrying),
+    translationCarrying: briefFeed.translationCarrying,
+    brief: briefFeed.brief,
+    briefSources: briefFeed.briefSources || [],
+    latestStoryDate: esDate(briefFeed.latestStoryDate),
     numbers: f.numbers.map((n) => ({
       ...n,
       label: mapped(ui.maps.tileLabels)(n.label),
@@ -53,35 +69,15 @@ module.exports = function () {
       tag: mapped(ui.maps.tags)(n.tag),
       why: [ui.maps.meaning[n.id], t(n.compare)].filter(Boolean).join(' '),
     })),
-    stories: f.stories.map((s) => ({
-      ...s,
-      date: esDate(s.date),
-      cat: cat(s.cat),
-      title: t(s.title),
-      dek: t(s.dek),
-      bg: t(s.bg),
-      view: t(s.view),
-      watch: t(s.watch),
-      why: t(s.why),
-    })),
-    week: f.week.map((w) => ({
-      ...w,
-      date: esDate(w.date),
-      cat: cat(w.cat),
-      // Native Spanish headline when the ledger kept one; the translation debt is zero
-      // for these — the original is shown, tagged nothing, because it needs no tag here.
-      title: w.lang === 'ES' && w.orig ? w.orig : t(w.title),
-      dek: w.lang === 'ES' ? '' : t(w.dek),
-      orig: '',
-      lang: '',
-    })),
+    stories: translatedStories,
+    week: translatedWeek,
     weekLabel: esDate(f.weekLabel),
     upcoming: f.upcoming.map((g) => ({
       ...g,
       when: esDate(g.when).replace(/^Week of /, 'Semana del '),
       rel: esRel(g.rel),
-      items: g.items.map((e) => ({ ...e, title: t(e.title), what: t(e.what), why: t(e.why) })),
-    })),
+      items: g.items.map((e) => ({ ...e, title: t(e.title), what: t(e.what), why: t(e.why) })).filter((e) => e.title),
+    })).filter((g) => g.items.length),
     econ: f.econ.map((r) => ({
       ...r,
       name: mapped(ui.maps.econNames)(r.name),

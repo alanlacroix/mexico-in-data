@@ -110,10 +110,10 @@ jobs:
       - name: Translate the new edition for /es/
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
-        continue-on-error: true   # /es/ shows English for anything untranslated; never blocks publication
+        continue-on-error: true   # a miss carries the last complete Spanish Brief; it never mixes languages
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node translate-es.mjs
+        run: node translate-es.mjs --critical
 
       - name: Build the topic areas
         if: steps.timing.outputs.run == 'true'

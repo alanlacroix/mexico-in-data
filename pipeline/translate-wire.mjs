@@ -12,7 +12,7 @@
 // the Spanish original is kept beside the translation so the record is not lost.
 //
 // Fail-soft, like every other model touchpoint here: with no ANTHROPIC_API_KEY the cache
-// simply does not grow and the site renders whatever it already has.
+// simply does not grow. The English feed omits untranslated ES items; /es/ keeps the native copy.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -119,7 +119,7 @@ async function main() {
     return;
   }
   if (!hasLLM()) {
-    console.log(`translate-wire: ${pending.length} untranslated, but no ANTHROPIC_API_KEY — leaving the wire as collected.`);
+    console.log(`translate-wire: ${pending.length} untranslated, but no ANTHROPIC_API_KEY — omitting them from EN and keeping them native on /es/.`);
     return;
   }
 
@@ -165,6 +165,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  // Never block a refresh over a translation. The wire is still publishable untranslated.
+  // Never block a refresh over a translation. Each language surface fails closed.
   console.warn('translate-wire: skipped —', error.message);
 });

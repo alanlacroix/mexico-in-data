@@ -121,7 +121,7 @@ const chipFor = (title) => {
   return picked.join(' ').replace(/[,.:;]$/, '') || 'Story';
 };
 
-module.exports = function () {
+function buildFeed(locale = 'en') {
   const brief = dailyBrief();
   const board = boards();
   const week = weeklyTop();
@@ -188,7 +188,16 @@ module.exports = function () {
   // four per topic keeps it a scan, not a feed.
   const weekItems = [];
   for (const group of week.groups) {
-    for (const item of group.items.filter((x) => !x.shownToday).slice(0, 4)) {
+    const visible = group.items
+      .filter((item) => !item.shownToday)
+      .filter((item) => locale !== 'en' || item.sourceLang !== 'es' || translated(item))
+      .slice(0, 4);
+    for (const item of visible) {
+      const translatedFromSpanish = translated(item);
+      const nativeSpanish = item.sourceLang === 'es' && !translatedFromSpanish;
+      // The language toggle is a contract. If an ES wire item has not reached the
+      // translation cache, omit it from EN; feedEs asks for the native-inclusive
+      // lane and restores the original title there.
       weekItems.push({
         id: `${group.key}-${weekItems.length}`,
         date: item.dayLabel || monthDay(item.date),
@@ -200,8 +209,8 @@ module.exports = function () {
         // native headline. The English template intentionally shows only the English title.
         // The comparison ignores punctuation-only differences so Spanish mode does not
         // mistake an English headline for a translated one (2026-08-03).
-        lang: translated(item) ? 'ES' : '',
-        orig: translated(item) ? item.originalTitle : '',
+        lang: translatedFromSpanish || nativeSpanish ? 'ES' : '',
+        orig: translatedFromSpanish ? item.originalTitle : (nativeSpanish ? item.title : ''),
         url: item.url,
         title: item.title,
         dek: item.dek || '',
@@ -305,4 +314,10 @@ module.exports = function () {
     upcoming,
     econ,
   };
-};
+}
+
+// Eleventy calls global-data functions with its own data context as an argument,
+// so locale cannot be the exported function's positional parameter. The default
+// export is always EN; feedEs opts into the native-Spanish wire explicitly.
+module.exports = function () { return buildFeed('en'); };
+module.exports.forLocale = buildFeed;

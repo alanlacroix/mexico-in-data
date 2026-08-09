@@ -100,6 +100,7 @@ module.exports = function () {
   const curatedItem = (s) => ({
     title: s.title, url: s.url, sourceName: s.source, domain: s.source, dek: trim(s.summary),
     date: s.date, dateLabel: dateLabel(s.date), dayLabel: dayLabel(s.date), curated: true,
+    sourceLang: 'en',
     bg: s.bg || '', drivers: s.drivers || '', implications: s.implications || '', next: s.next || '',
     be: Boolean(s.bg && s.drivers && s.implications),
   });
@@ -114,7 +115,8 @@ module.exports = function () {
     return {
     title: x.title,
     // Kept as data for the Spanish edition; the English card shows only its English title.
-    originalTitle: x.originalTitle || '', url: x.url, sourceName: x.sourceName || x.source, domain: x.source, dek: trim(x.dek),
+    originalTitle: x.originalTitle || '', sourceLang: String(x.lang || '').toLowerCase(),
+    url: x.url, sourceName: x.sourceName || x.source, domain: x.source, dek: trim(x.dek),
     date: x.published_at, dateLabel: dateLabel(x.published_at), dayLabel: dayLabel(x.published_at),
     curated: false, bg: '', drivers: '', implications: '',
     view: '', next: '',
@@ -219,6 +221,7 @@ module.exports = function () {
       const sec = SECTIONS.find((s) => s.key === key) || SECTIONS[2];
       return {
         title: trim(e.title), url: e.url, sourceName: e.source, domain: e.source,
+        sourceLang: 'en',
         dek: trim(e.why), date: String(e.date).slice(0, 10),
         dateLabel: dateLabel(e.date), dayLabel: dayLabel(e.date),
         curated: true, importance: Number(e.importance),

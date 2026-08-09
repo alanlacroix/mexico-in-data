@@ -128,14 +128,14 @@ jobs:
       # call, so a quiet refresh still costs nothing.
       - name: Fill the Spanish edition's translation cache
         working-directory: pipeline
-        continue-on-error: true   # a missing translation shows English on /es/, never breaks it
+        continue-on-error: true   # a miss carries the last complete Spanish Brief and omits optional untranslated copy
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node translate-es.mjs
 
       - name: Put the wire into English
         working-directory: pipeline
-        continue-on-error: true   # a translation miss never fails a refresh; the wire is publishable as collected
+        continue-on-error: true   # a miss omits ES items from EN and keeps their native copy on /es/
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node translate-wire.mjs

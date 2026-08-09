@@ -7,23 +7,25 @@
 // here (hand-written in _data/uiStrings.js), and native-Spanish wire headlines
 // never come through here (shown verbatim). Only free editorial English does.
 //
-// Fail-soft like every model touchpoint: no key, or the monthly budget cap hit,
-// and the cache simply does not grow — /es/ shows English for the missing pieces.
+// The current Brief is atomic by language. When all of its required strings are
+// translated, this script saves a complete Spanish snapshot. If translation is
+// unavailable, /es/ carries that snapshot instead of mixing English into Spanish.
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { askJSON, hasLLM, usage } from './lib/anthropic.js';
+import { askJSON, hasLLM, models, usage } from './lib/anthropic.js';
 
 const require = createRequire(import.meta.url);
 const feed = require('../_data/feed.js');
+const { hash, criticalStrings, translatedBriefSnapshot } = require('./lib/es-translation.cjs');
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'data', 'es', 'strings.json');
-const hash = (text) => crypto.createHash('sha256').update(String(text)).digest('hex').slice(0, 16);
+const BRIEF_OUT = path.join(ROOT, 'data', 'es', 'brief.json');
 const BATCH = 25;
 const MAX_PER_RUN = 120;   // backlog ceiling; a first run fills over a few windows
+const criticalOnly = process.argv.includes('--critical');
 
 // The es-MX contract. The traps are named because each one is a real slop signature.
 const SYSTEM = [
@@ -66,24 +68,28 @@ function collect(f) {
 
 async function main() {
   const cache = (() => { try { return JSON.parse(fs.readFileSync(OUT, 'utf8')); } catch { return {}; } })();
-  const wanted = collect(feed());
+  const currentFeed = feed();
+  const wanted = criticalOnly ? criticalStrings(currentFeed) : collect(currentFeed);
   const pending = wanted.filter((s) => !cache[hash(s)]).slice(0, MAX_PER_RUN);
-  if (!pending.length) { console.log('translate-es: cache is current.'); return; }
-  if (!hasLLM()) { console.log(`translate-es: ${pending.length} strings untranslated, no ANTHROPIC_API_KEY — /es/ shows English for those.`); return; }
+  if (!pending.length) console.log(`translate-es: ${criticalOnly ? 'critical ' : ''}cache is current.`);
+  else if (!hasLLM()) console.log(`translate-es: ${pending.length} strings untranslated, no ANTHROPIC_API_KEY — keeping the last complete Spanish Brief.`);
 
   let done = 0;
-  for (let start = 0; start < pending.length; start += BATCH) {
+  for (let start = 0; hasLLM() && start < pending.length; start += BATCH) {
     const batch = pending.slice(start, start + BATCH);
     const answer = await askJSON({
       system: SYSTEM,
       user: JSON.stringify(batch.map((text, i) => ({ i, en: text }))),
       schema: SCHEMA,
       maxTokens: 6000,
-      // Sonnet, not Haiku: this text carries the site's editorial voice into a
-      // language Alan reads natively — a wrong register is instantly visible to
-      // the owner. Low effort: it is translation under a written contract, and
-      // the contract does the deliberating.
+      // Translation is mechanical and number-checked. Haiku keeps the required
+      // bilingual surface affordable; the written register contract does the
+      // editorial work rather than open-ended model reasoning.
+      model: models.HAIKU,
       effort: 'low',
+      // The five selected stories are part of the product, not optional polish.
+      // Broad wire/context translation keeps the lower standard budget priority.
+      priority: criticalOnly ? 'core' : 'standard',
     });
     if (!answer?.items) { console.warn(`  batch ${start / BATCH + 1}: no usable answer`); continue; }
     for (const row of answer.items) {
@@ -102,6 +108,25 @@ async function main() {
   }
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   fs.writeFileSync(OUT, `${JSON.stringify(cache, null, 1)}\n`);
+  const translated = translatedBriefSnapshot(currentFeed, cache);
+  if (translated.ok) {
+    const briefData = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'brief.json'), 'utf8'));
+    const snapshotContent = {
+      ...translated.snapshot,
+      contentSig: briefData.meta?.contentSig || '',
+    };
+    const prior = (() => { try { return JSON.parse(fs.readFileSync(BRIEF_OUT, 'utf8')); } catch { return null; } })();
+    const { savedAt: _priorSavedAt, ...priorContent } = prior || {};
+    if (JSON.stringify(priorContent) !== JSON.stringify(snapshotContent)) {
+      const snapshot = { ...snapshotContent, savedAt: new Date().toISOString() };
+      fs.writeFileSync(BRIEF_OUT, `${JSON.stringify(snapshot, null, 1)}\n`);
+      console.log(`translate-es: complete Spanish Brief saved (${snapshot.contentSig.slice(0, 12) || 'no signature'}).`);
+    } else {
+      console.log(`translate-es: complete Spanish Brief unchanged (${snapshotContent.contentSig.slice(0, 12) || 'no signature'}).`);
+    }
+  } else {
+    console.warn(`translate-es: Spanish Brief incomplete (${translated.missing.length} missing); keeping last complete snapshot.`);
+  }
   const { calls, costUSD } = usage();
   console.log(`translate-es: ${done} translated · ${Object.keys(cache).length} cached · ${calls} calls · ~$${costUSD.toFixed(4)}`);
 }
