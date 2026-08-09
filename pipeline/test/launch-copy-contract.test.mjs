@@ -48,6 +48,8 @@ assert.match(text('_data/uiStrings.js'), /Where the economy stands/, 'the econom
 // never falsely claim that every selected article was published today.
 assert.match(text('_data/uiStrings.js'), /Key developments/, 'homepage must lead readers through the major stories without misdating them');
 assert.doesNotMatch(text('_data/uiStrings.js'), /Today\u2019s stories|storyCount:[^\n]*today/, 'rolling-window stories must never be labelled as today');
+assert.doesNotMatch(home, /what moved today|lo que se movió hoy|What moved in Mexico: \{\{ editionDate|Qué se movió en México: \{\{ editionDate/i,
+  'homepage metadata must not recertify rolling-window stories as today');
 assert.match(home, /\{\{ L\.stories \}\}/, 'the homepage must render the stories heading');
 assert.match(home, /L\.storyCount\(f\.stories\.length, f\.latestStoryDate\)/, 'the story count and newest source date must be derived from the data');
 // The block is now labelled "The week" and its All view is the week's five (Alan,
