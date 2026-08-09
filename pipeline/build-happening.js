@@ -43,7 +43,7 @@ const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
 const { linkScheduledCandidate } = scheduledCandidate;
 const { normalizeModelImportanceRow } = importanceRubric;
-const { prioritizeCandidates } = candidatePriority;
+const { attentionSignal, decisionCoverage, prioritizeCandidates } = candidatePriority;
 const { evidenceInputs } = reportEvidence;
 const { mergeApprovedAttempt } = analysisAttempts;
 
@@ -74,7 +74,7 @@ const WINDOW_DAYS = 30;      // consider news from the last 30 days
 const KEEP_DAYS = 60;        // the stored log holds a rolling ~60-day window (older ages out, unless imp 5)
 const MAX_STORE = 60;        // hard cap on stored entries
 const MAX_NEW = 16;          // model returns at most this many new events per run
-const MAX_CANDIDATES = 50;   // was 90. Biggest input line in the pipeline; 50 still leaves 3x the breadth needed to pick 16.
+const MAX_CANDIDATES = 24;   // small enough for one exhaustive decision per row; attention priority protects consequential older items.
 
 const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
 
@@ -260,33 +260,34 @@ function curateFallback(cands, now) {
   return out;
 }
 
-// ---- select + rank + write, via the model (fail-soft) ----
+// ---- assess every candidate, then rank + write, via the model (fail-soft) ----
 async function curate(cands, now) {
   if (!cands.length) return [];
   if (!hasLLM()) return curateFallback(cands, now);
   // Anthropic structured outputs reject minimum/maximum on integers. Code clamps
   // every returned component below, so the provider schema only describes shape.
   const SCORE = { type: 'integer' };
-  const schema = { type: 'object', additionalProperties: false, required: ['events'], properties: { events: { type: 'array', items: {
-    type: 'object', additionalProperties: false, required: ['i', 'section', 'importance', 'importanceComponents', 'title', 'why', 'company'], properties: {
-      i: { type: 'integer' }, section: { type: 'string', enum: SECTIONS }, importance: { type: 'integer' },
+  const schema = { type: 'object', additionalProperties: false, required: ['decisions'], properties: { decisions: { type: 'array', items: {
+    type: 'object', additionalProperties: false, required: ['i', 'decision', 'section', 'importanceComponents', 'title', 'why', 'company'], properties: {
+      i: { type: 'integer' }, decision: { type: 'string', enum: ['keep', 'routine', 'duplicate', 'outside-scope', 'thin-evidence'] },
+      section: { type: 'string', enum: SECTIONS },
       importanceComponents: { type: 'object', additionalProperties: false,
         required: ['nationalConsequence', 'usMexicoStakes', 'modelImpact', 'durability', 'officialness'],
         properties: { nationalConsequence: SCORE, usMexicoStakes: SCORE, modelImpact: SCORE, durability: SCORE, officialness: SCORE } },
       title: { type: 'string' }, why: { type: 'string' }, company: { type: 'string' },
     } } } } };
-  const system = `You are the editor of The Mexico Brief's event log — "What's happening", the homepage lead. From the candidate news items, SELECT only the genuine, dated developments someone tracking Mexico needs to know: a decree or law (DOF), a Banxico or government policy decision, a court ruling, a security development, a tariff or USMCA move, an election or cabinet change, a major deal or company event. Give particular weight to companies, investment, trade, technology and AI, payments and fintech, energy, public finances, and policy changes with economic consequences. SKIP routine market recaps, price blurbs, consumer-service trivia, listicles, opinion, sports, generic global-market stories without a direct Mexico consequence, and near-duplicates of items you already picked.
+  const system = `You are the editor of The Mexico Brief's event log — "What's happening", the homepage lead. ASSESS EVERY candidate news item. Return exactly one decision for every input index, with no missing or repeated index. Use decision "keep" only for a genuine, dated development someone tracking Mexico needs to know: a decree or law (DOF), a Banxico or government policy decision, a court ruling, a security development, a tariff or USMCA move, an election or cabinet change, a major deal or company event. Give particular weight to companies, investment, trade, technology and AI, payments and fintech, energy, public finances, and policy changes with economic consequences. Use the other decision codes for routine market recaps, price blurbs, consumer-service trivia, listicles, opinion, sports, generic global-market stories without a direct Mexico consequence, duplicates, or evidence too thin to report.
 CRIME AND VIOLENCE SCOPE (important): The Mexico Brief is not a crime tracker. SKIP an event when the violence IS the story, reported for its own sake: cartel or gang violence, individual homicides, shootings, murders, kidnappings, disappearances, body counts, or a personal tragedy. KEEP an event that carries a genuine political, economic, electoral, or diplomatic angle even when it involves crime, gangs, or death: a security law or reform, a court or legal ruling with political weight, a U.S.-Mexico security or migration dispute, a sanction or extradition with diplomatic stakes, or the government's own crime statistics presented as a record of its performance. When a violent event also has real political or economic consequence, keep it and FRAME it by that consequence, not the violence. When in doubt, ask whether a reader following Mexico's economy, politics, and U.S. relationship needs it; if the only thing there is the crime itself, skip it.
 SCHEDULED OUTCOMES (hard requirement): a candidate with scheduledOutcome is an exact-day actor + subject + outcome match to an editorial obligation. SELECT it. A decision to hold a rate or leave a policy unchanged is still a new outcome because the decision, vote and guidance resolve uncertainty. Do not mistake "unchanged" for "not news."
-For each item you select, return:
+For EVERY item, return:
 - i: its index in the list
+- decision: keep | routine | duplicate | outside-scope | thin-evidence
 - section: exactly one of economy | money | politics | security | us-mexico | society
 - importanceComponents: score 0, 1, or 2 on EACH of five criteria: nationalConsequence, usMexicoStakes, modelImpact, durability, and officialness. Return the five scores separately. Code, not you, owns the arithmetic.
-- importance: the sum of those five component scores. It is retained only as an audit cross-check; code recomputes it and ignores a conflicting total. A scheduled decision or data release is a new outcome even when the rate or value is unchanged: the decision, vote and guidance are new information. A defining national event (USMCA, a constitutional reform) scores 9-10; a solid worth-a-line item lands 5-6; anything below 5 will not make the Brief.
-- title: a clean, factual headline in the present tense — rewrite the source headline for clarity, no hype, no em-dash, no clickbait. Do not use unexplained acronyms in a public headline. Say "US trade office", "US-Mexico-Canada trade agreement", "Mexico's statistics agency", or the equally clear plain-English name instead of USTR, USMCA, INEGI, DOF, and similar shorthand.
-- why: ONE or two sentences of CONTEXT on why it matters — enough to actually explain the story, not just restate the headline. Write ONLY from the provided title and dek. State the stakes plainly; no invented facts, no numbers not present in the source, no adjectives doing the work of an argument.
-- company: if this event is primarily about ONE specific named company (a deal, earnings, an investment, a corporate move, a regulator's action against it), set this to that company's clean common name (e.g. "BYD", "Nu", "Pemex", "Femsa", "Volaris"). If it is not about a single identifiable company, set it to an empty string "". Never invent a company not named in the source.
-Aim for BREADTH across sections — a reader should see politics, security, and U.S.–Mexico, not only economics. Prefer the most consequential item when several cover the same story. Select at most ${MAX_NEW}. Return JSON.
+- title: for keep, a clean factual headline in present tense; otherwise "". No hype, em-dash, clickbait or unexplained acronyms. Say "US trade office", "US-Mexico-Canada trade agreement", "Mexico's statistics agency", or an equally clear plain-English name instead of USTR, USMCA, INEGI, DOF, and similar shorthand.
+- why: for keep, ONE or two sentences of context that add a sourced fact; otherwise "". Write ONLY from the provided title and dek. Copy every number exactly as supplied. No invented facts or adjectives doing the work of an argument.
+- company: for keep, the one named company when the event is primarily about it; otherwise "". Never invent a company.
+A scheduled outcome must use decision "keep". A defining national event scores 9-10; a solid worth-a-line item lands 5-6; routine or out-of-scope material scores 0. Code chooses the final ${MAX_NEW} by the component total. Return JSON.
 
 ${REPORT}
 
@@ -308,29 +309,47 @@ ${BAN}`;
     title: x.title,
     dek: (x.dek || '').slice(0, 200),
   }));
-  // Headroom matters: this model reasons over the full candidate list before it
-  // emits JSON, and that reasoning is billed as output tokens. Measured: an 8000-token
-  // ceiling was spent almost entirely on reasoning and the JSON still truncated, which
-  // silently drops the ENTIRE clean batch to the raw-source fallback (the real "slop"
-  // engine). Budget generously so reasoning + a full MAX_NEW batch both fit; the gate
-  // still caps event count and why length, so the committed output stays small.
+  // The response is deliberately exhaustive. A model omission is a failed curation
+  // contract, not an invisible editorial decision. Keeping the input to 24 makes the
+  // one-row-per-candidate receipt cheaper than repeatedly rescoring a 50-item backlog.
   const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 16000, effort: 'low', model: models.HAIKU, priority: 'core' });
-  if (!out || !Array.isArray(out.events)) { console.warn('  curate: no model result — deterministic fallback'); return curateFallback(cands, now); }
+  if (!out || !Array.isArray(out.decisions)) { console.warn('  curate: no model result — deterministic fallback'); return curateFallback(cands, now); }
+  const coverage = decisionCoverage(cands.length, out.decisions);
+  if (!coverage.ok) {
+    throw new Error(`curation decision receipt is incomplete: missing=${coverage.missing.join(',') || 'none'} duplicate=${coverage.duplicates.join(',') || 'none'} invalid=${coverage.invalid.join(',') || 'none'}`);
+  }
+  const assessed = out.decisions.map((row) => {
+    const x = cands[row.i];
+    return { row, x, scored: normalizeModelImportanceRow(row, { scheduledObligation: scheduledObligation(x) }) };
+  });
+  const counts = assessed.reduce((memo, item) => {
+    memo[item.row.decision] = (memo[item.row.decision] || 0) + 1;
+    return memo;
+  }, {});
+  console.log(`  curation receipt ${assessed.length}/${cands.length} decisions · ${JSON.stringify(counts)}`);
+  for (const item of assessed) {
+    if (item.row.decision !== 'keep' && attentionSignal(item.x) >= 2) {
+      console.warn(`  reviewed signal candidate ${item.row.i}: ${item.row.decision} (${item.scored.importance}/10) · ${String(item.x.title || '').slice(0, 100)}`);
+    }
+  }
+  const kept = assessed.filter((item) => item.row.decision === 'keep')
+    .sort((a, b) => b.scored.importance - a.scored.importance
+      || Number(Boolean(b.x._scheduled)) - Number(Boolean(a.x._scheduled))
+      || a.row.i - b.row.i)
+    .slice(0, MAX_NEW);
   const events = [];
-  for (const r of out.events) {
-    const x = cands[r.i]; if (!x) continue;
+  for (const { row: r, x, scored } of kept) {
     const sec = SECTIONS.includes(r.section) ? r.section : beatSection(x);
     if (RAW_HEADLINE_RX.test(String(r.title || ''))) {
       console.warn(`  reject generated event ${r.i}: headline is not neutral`);
       continue;
     }
-    const ev = mkEvent(x, sec, r.importance, r.title, r.why, r.company);
+    const ev = mkEvent(x, sec, scored.importance, r.title, r.why, r.company);
     const gate = lintEventReport({ event: ev, inputs: evidenceInputs(ev) });
     if (!gate.ok) {
       console.warn(`  reject generated event ${r.i}: ${gate.flags.join('; ')}`);
       continue;
     }
-    const scored = normalizeModelImportanceRow(r, { scheduledObligation: scheduledObligation(x) });
     ev.importance = scored.importance;
     ev.importanceComponents = scored.importanceComponents;
     ev.importanceProvenance = scored.importanceProvenance;

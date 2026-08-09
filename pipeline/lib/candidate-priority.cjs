@@ -26,4 +26,22 @@ function prioritizeCandidates(candidates) {
       - (Date.parse(a?.published_at || a?.publishedAt || '') || 0));
 }
 
-module.exports = { attentionSignal, prioritizeCandidates };
+function decisionCoverage(candidateCount, decisions) {
+  const expected = Math.max(0, Number(candidateCount) || 0);
+  const seen = new Set();
+  const duplicates = [];
+  const invalid = [];
+  for (const row of Array.isArray(decisions) ? decisions : []) {
+    const index = Number(row?.i);
+    if (!Number.isInteger(index) || index < 0 || index >= expected) {
+      invalid.push(row?.i);
+      continue;
+    }
+    if (seen.has(index)) duplicates.push(index);
+    seen.add(index);
+  }
+  const missing = Array.from({ length: expected }, (_, index) => index).filter((index) => !seen.has(index));
+  return { ok: missing.length === 0 && duplicates.length === 0 && invalid.length === 0, missing, duplicates, invalid };
+}
+
+module.exports = { attentionSignal, decisionCoverage, prioritizeCandidates };

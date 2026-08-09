@@ -378,6 +378,8 @@ assert.match(happeningBuilder, /CORE\.every\(\(field\) => approved\[field\]\)/,
   'no BE field may become visible until all three fields have passed their gates');
 assert.match(happeningBuilder, /SCHEDULED OUTCOMES \(hard requirement\)[\s\S]*SELECT it[\s\S]*unchanged[\s\S]*not news/i,
   'the curator must treat an unchanged scheduled decision as a required new outcome');
+assert.match(happeningBuilder, /ASSESS EVERY candidate[\s\S]*decisionCoverage\(cands\.length, out\.decisions\)[\s\S]*throw new Error\(`curation decision receipt is incomplete/,
+  'the curator must account for every candidate in its bounded batch instead of silently omitting one');
 assert.match(briefBuilder, /optionalAnalysis\(e\)/, 'the brief builder must expose optional analysis atomically');
 
 console.log('homepage-feed-contract: ok');
