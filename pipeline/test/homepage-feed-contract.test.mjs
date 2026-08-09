@@ -30,6 +30,11 @@ assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
 assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
+assert.equal(
+  dailyBrief.latestItemDate,
+  dailyBrief.stories.map((story) => story.date).filter(Boolean).sort().at(-1) || '',
+  'the homepage must expose the newest selected article date instead of implying every article is from today',
+);
 assert.ok(dailyBrief.stories.every((story) => {
   const fields = [story.bg, story.view, story.prediction].filter((value) => String(value || '').trim());
   return (story.analysisV >= 7 && fields.length === 3) || (story.analysisV === 0 && fields.length === 0);
@@ -346,7 +351,7 @@ assert.match(eleventyConfig, /setNunjucksEnvironmentOptions\(\{\s*autoescape:\s*
 // versioned analysis for it, and the panel does not render without one.
 assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, complete analysis may expose the disclosure');
 // This week is a reading list (Alan, 2026-08-02): wire cards must never render a
-// Briefly explained panel. The analysis layer exists only under Today's stories,
+// Briefly explained panel. The analysis layer exists only under Key developments,
 // so the week loop must not reference item.why / item.bg / item.view at all.
 {
   const weekBlock = homepageTemplate.slice(homepageTemplate.indexOf('id="sec-week"'), homepageTemplate.indexOf('id="sec-coming"'));

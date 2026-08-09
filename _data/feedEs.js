@@ -45,6 +45,7 @@ module.exports = function () {
   return {
     ...f,
     brief: t(f.brief),
+    latestStoryDate: esDate(f.latestStoryDate),
     numbers: f.numbers.map((n) => ({
       ...n,
       label: mapped(ui.maps.tileLabels)(n.label),

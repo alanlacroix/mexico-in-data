@@ -44,12 +44,12 @@ assert.match(home, /data-sec="What moved"/, 'homepage must lead with the reading
 // Same bilingual move as above: the heading lives in uiStrings, the room in the template.
 assert.match(home, /data-sec="The economy"/, 'the slower official readings must keep their own room below the news');
 assert.match(text('_data/uiStrings.js'), /Where the economy stands/, 'the economy room must keep its EN title');
-// "Key developments" became "The headlines" inside the Today section (Alan, 2026-08-02:
-// the name did not say what period it covered). The window label beside it still does.
-// (heading moved to _data/uiStrings.js with the bilingual homepage, 2026-08-03)
-assert.match(text('_data/uiStrings.js'), /Today\u2019s stories/, 'homepage must lead readers through the major stories');
+// The Brief uses a rolling window. The heading must describe editorial importance,
+// never falsely claim that every selected article was published today.
+assert.match(text('_data/uiStrings.js'), /Key developments/, 'homepage must lead readers through the major stories without misdating them');
+assert.doesNotMatch(text('_data/uiStrings.js'), /Today\u2019s stories|storyCount:[^\n]*today/, 'rolling-window stories must never be labelled as today');
 assert.match(home, /\{\{ L\.stories \}\}/, 'the homepage must render the stories heading');
-assert.match(home, /L\.storyCount\(f\.stories\.length\)/, 'the story count must be derived from the data, never written in');
+assert.match(home, /L\.storyCount\(f\.stories\.length, f\.latestStoryDate\)/, 'the story count and newest source date must be derived from the data');
 // The block is now labelled "The week" and its All view is the week's five (Alan,
 // 2026-08-02). What must not regress is that the deeper per-section feed still exists
 // on the homepage rather than moving to a separate page.

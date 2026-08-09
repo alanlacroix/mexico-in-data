@@ -70,7 +70,7 @@ module.exports = function () {
     .map((rule) => rule.tag);
 
   // write-why.mjs is gone (Alan, 2026-08-02): This week is a reading list, and
-  // Briefly explained lives only under Today's stories. Wire items carry no
+  // Briefly explained lives only under Key developments. Wire items carry no
   // authored analysis anymore.
 
   const translations = (() => {

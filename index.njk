@@ -208,9 +208,9 @@ bodyClass: feed-page
     </div>
   </section>{% endif %}
 
-  {% if f.stories.length %}<section class="feed-sec" id="sec-stories" data-sec="Today's stories">
+  {% if f.stories.length %}<section class="feed-sec" id="sec-stories" data-sec="Key developments">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.stories }}</h2><div class="sec-meta">{{ L.storyCount(f.stories.length) }}</div></div>
+    <div class="sec-head"><h2>{{ L.stories }}</h2><div class="sec-meta">{{ L.storyCount(f.stories.length, f.latestStoryDate) }}</div></div>
     <div class="cards">
       {%- for story in f.stories %}
       <article class="card">
@@ -249,7 +249,7 @@ bodyClass: feed-page
           <div class="card-meta"><span class="d">{{ item.date }}</span><a class="c" href="{{ item.contextHref }}" aria-label="{{ item.cat }} context"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</a><span class="s">{{ item.source }}</span></div>
           <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
         </div>
-        {#- Reading list only. Briefly explained lives under Today's stories and
+        {#- Reading list only. Briefly explained lives under Key developments and
             nowhere else (Alan, 2026-08-02): analysis concentrated in one place,
             done properly, instead of spread thin across forty wire cards. -#}
         <div class="card-body">

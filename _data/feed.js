@@ -160,7 +160,7 @@ module.exports = function () {
     };
   });
 
-  // ---- Today's stories -----------------------------------------------------
+  // ---- Key developments ---------------------------------------------------
   const stories = brief.stories.map((story) => ({
     id: story.id,
     chip: chipFor(story.title),
@@ -184,7 +184,7 @@ module.exports = function () {
   // This week is a curated reading list, not an analysis surface (Alan,
   // 2026-08-02). The old "no explanation, no card" gate protected an analysis
   // surface that no longer exists here; Briefly explained lives only under
-  // Today's stories now. Ranking, dedup and the slop gate still decide entry;
+  // Key developments now. Ranking, dedup and the slop gate still decide entry;
   // four per topic keeps it a scan, not a feed.
   const weekItems = [];
   for (const group of week.groups) {
@@ -297,6 +297,7 @@ module.exports = function () {
     carrying: brief.carryingLastBrief,
     brief: brief.summaryLead,
     briefSources: brief.briefSources,
+    latestStoryDate: monthDay(brief.latestItemDate),
     numbers,
     stories,
     week: weekItems,

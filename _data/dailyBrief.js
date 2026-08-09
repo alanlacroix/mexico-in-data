@@ -81,6 +81,7 @@ module.exports = function (now = new Date()) {
     return { ...group, coverage: mergeCoverage(group.coverage, related, related.flatMap((event) => event.coverage || [])) };
   });
   const stories = briefGroups.map(toStory).filter((story) => story.title).slice(0, 5);
+  const latestItemDate = stories.map((story) => story.date).filter(Boolean).sort().at(-1) || '';
   const fallback = stories.slice(0, 3).map((story) => sentence(story.title)).join(' ');
   const quietCopy = 'No major developments have cleared the brief yet.';
 
@@ -103,6 +104,7 @@ module.exports = function (now = new Date()) {
     summaryLead: plainExplanation((generatedForToday || carryingLastBrief) && clean(brief.summary) ? clean(brief.summary) : (fallback || quietCopy)),
     stories,
     briefSources,
+    latestItemDate,
     windowHours: Number(meta.windowHours) || 36,
     windowLabel: carryingLastBrief ? `Latest brief · ${shortDate(briefEditorialDate)}` : `Past ${Number(meta.windowHours) || 36} hours`,
   };
