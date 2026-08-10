@@ -41,10 +41,10 @@ const KEY = process.env.ANTHROPIC_API_KEY || '';
 const EFFORT_MODELS = new Set([SONNET]);
 
 // ---- The budget, enforced rather than hoped for -----------------------------
-// Alan's ceiling is $2/month, hard. Estimates have been wrong twice this session,
+// Alan's ceiling is $5/month, hard. Estimates have been wrong twice this session,
 // so the ceiling is code: every call settles into a committed ledger
 // (data/llm-spend.json, pushed by the same CI steps that commit data/), and once
-// the month's total crosses the cap, askJSON returns null. Every caller already
+// the balance reaches the cap—or cannot safely fit the next call—askJSON returns null. Every caller already
 // treats null as "keep last-good content" — the pipeline was built fail-soft, so
 // a capped month degrades to a slightly staler site, never a broken one.
 // The guard opens again on the 1st. Manual override for debugging:
@@ -53,11 +53,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const MONTHLY_CAP_USD = 2.0;
+const MONTHLY_CAP_USD = 5.0;
 // Preserve most of the small budget for the two jobs that define the product:
 // selecting the Brief and explaining its top stories. Translation, topic synthesis
 // and other fail-soft polish stop first. This changes allocation, never Alan's cap.
-const CORE_RESERVE_USD = 1.4;
+const CORE_RESERVE_USD = 2.5;
 // LLM_LEDGER_PATH redirects the ledger so a test can exercise the real settle path
 // without spending against Alan's actual monthly cap. Only tests set it.
 const LEDGER = process.env.LLM_LEDGER_PATH
@@ -92,6 +92,18 @@ const RATES = {
   [SONNET]: { in: 3, out: 15 },
   [HAIKU]: { in: 1, out: 5 },
 };
+
+// Refuse a call before sending it when its worst-case token bill could cross the
+// applicable limit. Checking only the settled ledger lets the final call overshoot:
+// $4.99 is technically under a $5 cap, but it is not enough room for another request.
+// UTF-8 bytes are a conservative ceiling for input tokens; the extra 1,024-token
+// allowance covers provider framing that is not represented in our JSON body.
+function projectedMaximumCost(body, modelId) {
+  const rate = RATES[modelId] || RATES[SONNET];
+  const inputTokenCeiling = new TextEncoder().encode(JSON.stringify(body)).byteLength + 1024;
+  const outputTokenCeiling = Math.max(0, Number(body.max_tokens) || 0);
+  return (inputTokenCeiling / 1e6) * rate.in + (outputTokenCeiling / 1e6) * rate.out;
+}
 
 let _calls = 0;
 let _badRequests = 0;               // permanent request bugs (HTTP 400), reported by usage()
@@ -167,6 +179,14 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
         : value
     )));
     body.output_config = { ...(body.output_config || {}), format: { type: 'json_schema', schema: cleanSchema } };
+  }
+  if (!process.env.LLM_BUDGET_OVERRIDE) {
+    const status = budgetStatus(priority);
+    const projectedUSD = projectedMaximumCost(body, modelId);
+    if (status.spentUSD + projectedUSD > status.limitUSD) {
+      console.warn(`  llm: call could exceed ${priority} cap ($${status.spentUSD.toFixed(2)} spent + up to $${projectedUSD.toFixed(2)}; limit $${status.limitUSD.toFixed(2)}) — skipping`);
+      return null;
+    }
   }
   let r;
   try {

@@ -16,7 +16,7 @@ globalThis.fetch = async (_url, init) => {
 process.env.ANTHROPIC_API_KEY = 'test-key';
 process.env.LLM_BUDGET_OVERRIDE = '1';
 // Never settle fake usage into the real ledger: that ledger is the enforcement mechanism
-// for Alan's $2/month cap, and a test that runs on every CI push would spend it down with
+// for Alan's $5/month cap, and a test that runs on every CI push would spend it down with
 // numbers nobody was billed for.
 process.env.LLM_LEDGER_PATH = path.join(os.tmpdir(), 'mb-test-ledger.json');
 
@@ -24,6 +24,8 @@ const { askJSON, budgetStatus, models } = await import('../lib/anthropic.js');
 
 assert.ok(budgetStatus('core').limitUSD > budgetStatus('standard').limitUSD,
   'the fixed monthly cap must reserve budget for ranking and selected-story analysis');
+assert.equal(budgetStatus('core').limitUSD, 5, 'the total monthly ceiling must be exactly $5');
+assert.equal(budgetStatus('standard').limitUSD, 2.5, 'half the ceiling must remain reserved for the Brief');
 
 await askJSON({ system: 's', user: 'u', effort: 'low', model: models.HAIKU });
 assert.equal(sent.at(-1).model, 'claude-haiku-4-5');
@@ -57,6 +59,19 @@ const before = fs.readFileSync(prodLedger, 'utf8');
 await askJSON({ system: 's', user: 'u', model: models.SONNET });
 assert.equal(fs.readFileSync(prodLedger, 'utf8'), before,
   'the test must never write spend into the production budget ledger');
+
+// The guard is prospective: a call that could take the ledger over $5 is refused
+// before any request leaves the process, even when the settled balance is still $4.99.
+delete process.env.LLM_BUDGET_OVERRIDE;
+fs.writeFileSync(process.env.LLM_LEDGER_PATH, `${JSON.stringify({ [new Date().toISOString().slice(0, 7)]: 4.99 })}\n`);
+const sentBeforeCapCheck = sent.length;
+assert.equal(
+  await askJSON({ system: 's', user: 'u', model: models.SONNET, priority: 'core', maxTokens: 1500 }),
+  null,
+  'a request whose maximum bill could exceed $5 must be skipped',
+);
+assert.equal(sent.length, sentBeforeCapCheck, 'a cap-blocked request must never reach the provider');
+process.env.LLM_BUDGET_OVERRIDE = '1';
 
 // Permanent request bugs in ranking or Briefly Explained must stop publication.
 // Optional model jobs may still degrade on the same provider response.
