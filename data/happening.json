@@ -5,9 +5,9 @@
     "updated": "2026-08-10",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/sources",
-    "count": 57,
-    "generatedAt": "2026-08-10T16:42:16.777Z",
-    "llm": false,
+    "count": 58,
+    "generatedAt": "2026-08-10T16:55:46.931Z",
+    "llm": true,
     "analysisTarget": {
       "policy": "selected-brief-v1",
       "ids": [
@@ -18,12 +18,79 @@
         {
           "id": "n-us-security-agreements-resume-avocado-operations-2026-08-08",
           "ready": false,
-          "reason": "no-llm"
+          "reason": "budget-unavailable"
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "n-mexico-united-states-resume-avocado-exports-2026-08-10",
+      "date": "2026-08-10",
+      "section": "economy",
+      "title": "Mexico, United States Resume Avocado Exports",
+      "why": "Mexico and the United States are gradually restoring avocado exports from Michoacan after security threats disrupted US inspection operations, highlighting the trade sector’s exposure to security conditions in Mexico’s key producing regions.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/agribusiness/news/mexico-united-states-resume-avocado-exports",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-10T16:03:07.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mexico, United States Resume Avocado Exports",
+        "dek": "Mexico and the United States are gradually restoring avocado exports from Michoacan after security threats disrupted US inspection operations, highlighting the trade sector’s exposure to security conditions in Mexico’s key producing regions. The disruption affects avocado producers, packers, exporters and US buyers, wh"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/agribusiness/news/mexico-united-states-resume-avocado-exports",
+          "publishedAt": "2026-08-10T16:03:07.000Z",
+          "date": "2026-08-10",
+          "title": "Mexico, United States Resume Avocado Exports",
+          "summary": "Mexico and the United States are gradually restoring avocado exports from Michoacan after security threats disrupted US inspection operations, highlighting the trade sector’s exposure to security conditions in Mexico’s key producing regions."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
+    },
     {
       "id": "n-us-security-agreements-resume-avocado-operations-2026-08-08",
       "date": "2026-08-08",
@@ -62,7 +129,9 @@
         "rubricVersion": "five-component-v1",
         "calculatedTotal": 7,
         "componentSource": "code-reviewed"
-      }
+      },
+      "image": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/08/06/6a756d0ae26cf.jpeg",
+      "imgTries": 1
     },
     {
       "id": "n-gwm-cambia-la-estrategia-de-ora-en-m-xico-y-lanza-el-2026-08-08",
