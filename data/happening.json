@@ -5,25 +5,99 @@
     "updated": "2026-08-10",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/sources",
-    "count": 58,
-    "generatedAt": "2026-08-10T16:55:46.931Z",
+    "count": 60,
+    "generatedAt": "2026-08-10T17:50:17.783Z",
     "llm": true,
     "analysisTarget": {
       "policy": "selected-brief-v1",
       "ids": [
-        "n-us-security-agreements-resume-avocado-operations-2026-08-08"
+        "n-us-security-agreements-resume-avocado-operations-2026-08-08",
+        "n-nuevas-reglas-antilavado-de-dinero-estas-son-las-mod-2026-08-10"
       ],
-      "added": 0,
+      "added": 2,
       "outcomes": [
         {
           "id": "n-us-security-agreements-resume-avocado-operations-2026-08-08",
-          "ready": false,
-          "reason": "budget-unavailable"
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-nuevas-reglas-antilavado-de-dinero-estas-son-las-mod-2026-08-10",
+          "ready": true,
+          "reason": "ready"
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "n-kia-ev3-launch-puts-mexico-plant-on-track-for-record-2026-08-10",
+      "date": "2026-08-10",
+      "section": "economy",
+      "title": "Kia Mexico plant on track for 300,000 units following 649 million dollar EV3 investment",
+      "why": "Kia's Pesquería plant in Mexico is projected to exceed 300,000 annual units by end of 2026, driven by a 649 million dollar investment to produce the all-electric EV3 compact SUV.",
+      "company": "Kia",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/automotive/news/kia-ev3-launch-puts-mexico-plant-track-record-300k",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-10T16:12:58.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Kia EV3 Launch Puts Mexico Plant on Track for Record 300K",
+        "dek": "Driven by a US$649 million investment to produce the all-electric EV3 compact SUV, Kia’s Pesquería plant in Mexico is projected to surpass 300,000 units by the end of 2026, reaching a annual volume milestone in its 10-year operating history while supporting national efforts to build out local supply chains."
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/automotive/news/kia-ev3-launch-puts-mexico-plant-track-record-300k",
+          "publishedAt": "2026-08-10T16:12:58.000Z",
+          "date": "2026-08-10",
+          "title": "Kia Mexico plant on track for 300,000 units following 649 million dollar EV3 investment",
+          "summary": "Kia's Pesquería plant in Mexico is projected to exceed 300,000 annual units by end of 2026, driven by a 649 million dollar investment to produce the all-electric EV3 compact SUV."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
     {
       "id": "n-mexico-united-states-resume-avocado-exports-2026-08-10",
       "date": "2026-08-10",
@@ -49,6 +123,22 @@
           "date": "2026-08-10",
           "title": "Mexico, United States Resume Avocado Exports",
           "summary": "Mexico and the United States are gradually restoring avocado exports from Michoacan after security threats disrupted US inspection operations, highlighting the trade sector’s exposure to security conditions in Mexico’s key producing regions."
+        },
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/eu-no-informo-amenazas-inspectores-claudia-sheinbaum-seguridad-inspectores-aguacate/",
+          "publishedAt": "2026-08-10T15:51:42.000Z",
+          "date": "2026-08-10",
+          "title": "US and Mexico expand avocado export security as inspections resume in Michoacan",
+          "summary": "The US has resumed inspections in Michoacan avocado zones after 45 packing plants reopened exports following security reinforcement for US inspectors. Mexico's government states the US did not report prior threats to inspectors."
+        },
+        {
+          "source": "El País — México",
+          "url": "https://elpais.com/mexico/economia/2026-08-08/estados-unidos-reanuda-parcialmente-las-exportaciones-de-aguacate-desde-mexico.html",
+          "publishedAt": "2026-08-08T01:49:38.000Z",
+          "date": "2026-08-07",
+          "title": "US resumes partial avocado exports from Mexico after military deployment to Michoacan",
+          "summary": "Avocado sector exports resumed after Mexican deployment of 1,500 troops to Michoacan to counter violence and restore conditions for US inspections to proceed."
         }
       ],
       "importanceComponents": {
@@ -92,6 +182,80 @@
       }
     },
     {
+      "id": "n-nuevas-reglas-antilavado-de-dinero-estas-son-las-mod-2026-08-10",
+      "date": "2026-08-10",
+      "section": "money",
+      "title": "Mexico's Treasury announces new anti-money-laundering rules effective November 2026",
+      "why": "Mexico's Secretaría de Hacienda has issued modified rules on anti-money-laundering requirements with phased implementation beginning in November 2026.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/nuevas-reglas-antilavado-de-dinero-estas-son-las-modificaciones-y-requerimientos/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-10T17:17:02.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Nuevas reglas antilavado de dinero: estas son las modificaciones y requerimientos",
+        "dek": "Las nuevas reglas de la Secretaría de Hacienda entrarán en vigor paulatinamente a partir de noviembre del 2026. La publicación Nuevas reglas antilavado de dinero: estas son las modificaciones y requerimientos apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/nuevas-reglas-antilavado-de-dinero-estas-son-las-modificaciones-y-requerimientos/",
+          "publishedAt": "2026-08-10T17:17:02.000Z",
+          "date": "2026-08-10",
+          "title": "Mexico's Treasury announces new anti-money-laundering rules effective November 2026",
+          "summary": "Mexico's Secretaría de Hacienda has issued modified rules on anti-money-laundering requirements with phased implementation beginning in November 2026."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://elceo.com/wp-content/uploads/2026/08/hacienda_reglas_lavado_dinero.jpg",
+      "imgTries": 1,
+      "background": "The reform amends Mexico's anti-money-laundering law (LFPIORPI), which governs the roughly 120,000 registered individuals and businesses in \"vulnerable activities\" such as real estate, jewelry and financial services that must report suspicious transactions.",
+      "view": "The shift from a uniform compliance model to a risk-based one lands with a long runway: rules take effect November 30, 2026, main requirements start in 2027, and audits begin only in 2028. That gap matters because Mexico's commercial-bank credit to the private sector is just 35.5% of GDP, so tighter money-laundering oversight targets the formal financial system while informal channels, where 55.2% of workers already operate, remain largely untouched.",
+      "prediction": "Most likely outcome: large firms and financial institutions begin building risk-classification systems well before the 2027 deadline, while smaller registered businesses delay compliance until closer to the 2028 audit start. This would be wrong if Hacienda enforces the November 2026 date more strictly than stated or moves audits earlier.",
+      "analysisV": 7
+    },
+    {
       "id": "n-us-security-agreements-resume-avocado-operations-2026-08-08",
       "date": "2026-08-08",
       "section": "us-mexico",
@@ -131,7 +295,11 @@
         "componentSource": "code-reviewed"
       },
       "image": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/08/06/6a756d0ae26cf.jpeg",
-      "imgTries": 1
+      "imgTries": 2,
+      "background": "Michoacán is Mexico's main avocado export state, and US Department of Agriculture inspectors normally certify orchards there before fruit can cross the border, which is why a security-related suspension halts the trade until Washington judges it safe to send staff back. Avocados sit within the broader US-Mexico goods relationship where about 80% of Mexico's exports go to the United States.",
+      "view": "This is a security concession, not a trade agreement, and it addresses federal-state coordination rather than the extortion and cargo theft that INEGI data shows go unreported 93.2% of the time and fall hardest on small producers who cannot pay for protection. The government's claim of a 46% drop in daily homicides since September 2024 is still preliminary prosecutor data, so a security commitment announced this week rests on figures that could be revised once final death certificates arrive.",
+      "prediction": "US personnel most likely resume avocado-related activity in Michoacán in stages over the coming weeks, with no fixed date given. That would be disproven if Washington re-suspends operations following a new violence alert, which is the same trigger that halted the activity this time.",
+      "analysisV": 7
     },
     {
       "id": "n-gwm-cambia-la-estrategia-de-ora-en-m-xico-y-lanza-el-2026-08-08",
@@ -200,6 +368,59 @@
         "reportedTotal": 6,
         "componentSource": "model"
       }
+    },
+    {
+      "id": "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
+      "date": "2026-08-07",
+      "section": "money",
+      "title": "Mexico's inflation falls to 3.12% in July",
+      "why": "The headline rate is close to Banxico's target, but underlying inflation remained more persistent.",
+      "company": "",
+      "source": "Grupo Consultor de Mercados Agrícolas",
+      "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
+      "importance": 8,
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "componentSource": "code-reviewed"
+      },
+      "scheduledEventId": "inegi-cpi-2026-08-07",
+      "scheduledImportanceFloor": 7,
+      "requiredForBrief": true,
+      "kind": "event",
+      "publishedAt": "2026-08-07T20:34:46.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "La inflación en México desaceleró a 3.12% en julio, su menor nivel desde 2020",
+        "dek": "La inflación interanual de México se moderó en julio en línea con lo previsto, aunque la persistencia de presiones en el componente subyacente respaldaba la postura cautelosa del Banco de México (Banxico)."
+      },
+      "coverage": [
+        {
+          "source": "Grupo Consultor de Mercados Agrícolas",
+          "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
+          "publishedAt": "2026-08-07T20:34:46.000Z",
+          "date": "2026-08-07",
+          "title": "Mexico's inflation falls to 3.12% in July",
+          "summary": "The headline rate is close to Banxico's target, but underlying inflation remained more persistent."
+        },
+        {
+          "source": "El Economista",
+          "url": "https://eleconomista.com.mx/economia/inflacion-mexico-desacelero-3-12-julio-menor-nivel-20260807-827157.html",
+          "publishedAt": "2026-08-07T13:15:39.000Z",
+          "date": "2026-08-07",
+          "title": "Mexico's annual inflation falls to 3.12 percent in July, its lowest rate since 2020",
+          "summary": "The headline rate is close to Banxico's target, but underlying inflation remained more persistent."
+        }
+      ],
+      "image": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/05/07/69fd1ec0a2138.webp",
+      "imgTries": 1
     },
     {
       "id": "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
@@ -273,59 +494,6 @@
       "view": "The ruling closes one specific claim rather than settling how USMCA investor protections apply to sovereign debt disputes generally, since it turned on whether these particular bondholders qualified for protection at all. It also matters for public finances: Mexico is already on the last investment-grade rung at Moody's partly because of Pemex support costs, so avoiding a $219 million payout keeps one more claim off a debt load that rose to 53.2% of GDP in 2025.",
       "prediction": "The funds are likely to explore appeal routes or alternative legal claims rather than drop the matter, since $219 million is a large sum to abandon after losing on jurisdiction rather than merits. That view would be wrong if Cyrus and Contrarian publicly confirm they are not pursuing further action.",
       "analysisV": 7
-    },
-    {
-      "id": "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
-      "date": "2026-08-07",
-      "section": "money",
-      "title": "Mexico's inflation falls to 3.12% in July",
-      "why": "The headline rate is close to Banxico's target, but underlying inflation remained more persistent.",
-      "company": "",
-      "source": "Grupo Consultor de Mercados Agrícolas",
-      "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
-      "importance": 7,
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "componentSource": "code-reviewed"
-      },
-      "scheduledEventId": "inegi-cpi-2026-08-07",
-      "scheduledImportanceFloor": 7,
-      "requiredForBrief": true,
-      "kind": "event",
-      "publishedAt": "2026-08-07T20:34:46.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "La inflación en México desaceleró a 3.12% en julio, su menor nivel desde 2020",
-        "dek": "La inflación interanual de México se moderó en julio en línea con lo previsto, aunque la persistencia de presiones en el componente subyacente respaldaba la postura cautelosa del Banco de México (Banxico)."
-      },
-      "coverage": [
-        {
-          "source": "Grupo Consultor de Mercados Agrícolas",
-          "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
-          "publishedAt": "2026-08-07T20:34:46.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico's inflation falls to 3.12% in July",
-          "summary": "The headline rate is close to Banxico's target, but underlying inflation remained more persistent."
-        },
-        {
-          "source": "El Economista",
-          "url": "https://eleconomista.com.mx/economia/inflacion-mexico-desacelero-3-12-julio-menor-nivel-20260807-827157.html",
-          "publishedAt": "2026-08-07T13:15:39.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico's annual inflation falls to 3.12 percent in July, its lowest rate since 2020",
-          "summary": "The headline rate is close to Banxico's target, but underlying inflation remained more persistent."
-        }
-      ],
-      "image": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/05/07/69fd1ec0a2138.webp",
-      "imgTries": 1
     },
     {
       "id": "n-m-xico-y-per-restablecen-las-relaciones-diplom-ticas-2026-08-07",

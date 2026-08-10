@@ -4,19 +4,71 @@
     "editorialDate": "2026-08-10",
     "updated": "2026-08-10",
     "asOf": "2026-08-10",
-    "reviewedAt": "2026-08-10T16:42:16.741Z",
-    "latestItemDate": "2026-08-08",
+    "reviewedAt": "2026-08-10T17:50:41.885Z",
+    "latestItemDate": "2026-08-10",
     "quiet": false,
     "newCount": 0,
-    "generatedAt": "2026-08-10T16:55:47.318Z",
+    "generatedAt": "2026-08-10T17:50:41.885Z",
     "mode": "curated",
-    "count": 1,
-    "words": 35,
-    "contentSig": "db0a55e927ca31f4adead986b29a6f3f812b25ccca698d2f351d651965393863",
+    "count": 2,
+    "words": 53,
+    "contentSig": "ee6455b3032e1cffbd2de08631412c7f2ee20f9d5685732347c95e1a96ef56fa",
     "windowHours": 60,
     "selection": {
       "policy": "importance-first-v1",
       "receipt": [
+        {
+          "id": "n-kia-ev3-launch-puts-mexico-plant-on-track-for-record-2026-08-10",
+          "rank": null,
+          "selected": false,
+          "reason": "ineligible:copy-gate:context repeats the headline without adding a sourced fact",
+          "effectiveImportance": 7,
+          "rawImportance": 7,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 7,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "model"
+          },
+          "tags": [
+            "growth"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          }
+        },
         {
           "id": "n-mexico-united-states-resume-avocado-exports-2026-08-10",
           "rank": null,
@@ -82,12 +134,62 @@
             "us-relationship"
           ],
           "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
+          "analysisState": "ready",
+          "analysisVersion": 7,
           "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
+            "state": "ready",
+            "version": 7,
+            "complete": true
+          }
+        },
+        {
+          "id": "n-nuevas-reglas-antilavado-de-dinero-estas-son-las-mod-2026-08-10",
+          "rank": 2,
+          "selected": true,
+          "reason": "selected:core",
+          "effectiveImportance": 6,
+          "rawImportance": 6,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 6,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "model"
+          },
+          "tags": [],
+          "scheduledMatch": false,
+          "analysisState": "ready",
+          "analysisVersion": 7,
+          "analysis": {
+            "state": "ready",
+            "version": 7,
+            "complete": true
           }
         },
         {
@@ -142,25 +244,26 @@
         }
       ],
       "lockedIds": [
-        "n-us-security-agreements-resume-avocado-operations-2026-08-08"
+        "n-us-security-agreements-resume-avocado-operations-2026-08-08",
+        "n-nuevas-reglas-antilavado-de-dinero-estas-son-las-mod-2026-08-10"
       ],
       "scheduledOutcomes": {
         "editorialDate": "2026-08-10",
-        "checkedAt": "2026-08-10T16:55:46.766Z",
+        "checkedAt": "2026-08-10T17:50:17.611Z",
         "count": 14,
         "blockers": 0,
         "ok": true
       }
     }
   },
-  "summary": "Ronald Johnson said the commitments would strengthen security and allow US government activities to resume immediately in phases.",
+  "summary": "US Ambassador Ronald Johnson said new security agreements will let US government activities resume immediately in phases, restarting avocado operations in Michoacán. Separately, Mexico's Treasury issued modified anti-money-laundering rules, with phased implementation beginning in November 2026.",
   "lead": {
     "h1": "US ambassador says security agreements will resume avocado operations in Michoacán",
     "context": "Ronald Johnson said the commitments would strengthen security and allow US government activities to resume immediately in phases.",
-    "background": "",
-    "view": "",
-    "prediction": "",
-    "analysisV": 0,
+    "background": "Michoacán is Mexico's main avocado export state, and US Department of Agriculture inspectors normally certify orchards there before fruit can cross the border, which is why a security-related suspension halts the trade until Washington judges it safe to send staff back. Avocados sit within the broader US-Mexico goods relationship where about 80% of Mexico's exports go to the United States.",
+    "view": "This is a security concession, not a trade agreement, and it addresses federal-state coordination rather than the extortion and cargo theft that Mexico's statistics agency data shows go unreported 93.2% of the time and fall hardest on small producers who cannot pay for protection. The government's claim of a 46% drop in daily homicides since September 2024 is still preliminary prosecutor data, so a security commitment announced this week rests on figures that could be revised once final death certificates arrive.",
+    "prediction": "US personnel most likely resume avocado-related activity in Michoacán in stages over the coming weeks, with no fixed date given. That would be disproven if Washington re-suspends operations following a new violence alert, which is the same trigger that halted the activity this time.",
+    "analysisV": 7,
     "drivers": "",
     "implications": "",
     "next": "",
@@ -195,7 +298,47 @@
       "reason": "selected:core"
     }
   },
-  "items": [],
+  "items": [
+    {
+      "headline": "Mexico's Treasury announces new anti-money-laundering rules effective November 2026",
+      "context": "Mexico's Secretaría de Hacienda has issued modified rules on anti-money-laundering requirements with phased implementation beginning in November 2026.",
+      "background": "The reform amends Mexico's anti-money-laundering law (LFPIORPI), which governs the roughly 120,000 registered individuals and businesses in \"vulnerable activities\" such as real estate, jewelry and financial services that must report suspicious transactions.",
+      "view": "The shift from a uniform compliance model to a risk-based one lands with a long runway: rules take effect November 30, 2026, main requirements start in 2027, and audits begin only in 2028. That gap matters because Mexico's commercial-bank credit to the private sector is just 35.5% of gross domestic product, so tighter money-laundering oversight targets the formal financial system while informal channels, where 55.2% of workers already operate, remain largely untouched.",
+      "prediction": "Most likely outcome: large firms and financial institutions begin building risk-classification systems well before the 2027 deadline, while smaller registered businesses delay compliance until closer to the 2028 audit start. This would be wrong if Hacienda enforces the November 2026 date more strictly than stated or moves audits earlier.",
+      "analysisV": 7,
+      "drivers": "",
+      "implications": "",
+      "next": "",
+      "image": "https://elceo.com/wp-content/uploads/2026/08/hacienda_reglas_lavado_dinero.jpg",
+      "publishedAt": "2026-08-10T17:17:02.000Z",
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/nuevas-reglas-antilavado-de-dinero-estas-son-las-modificaciones-y-requerimientos/",
+          "publishedAt": "2026-08-10T17:17:02.000Z",
+          "date": "2026-08-10",
+          "title": "Mexico's Treasury announces new anti-money-laundering rules effective November 2026",
+          "summary": "Mexico's Secretaría de Hacienda has issued modified rules on anti-money-laundering requirements with phased implementation beginning in November 2026."
+        }
+      ],
+      "refs": [
+        "n-nuevas-reglas-antilavado-de-dinero-estas-son-las-mod-2026-08-10"
+      ],
+      "href": "https://elceo.com/economia/nuevas-reglas-antilavado-de-dinero-estas-son-las-modificaciones-y-requerimientos/",
+      "source": "El CEO",
+      "date": "2026-08-10",
+      "section": "money",
+      "isNew": false,
+      "ranking": {
+        "rank": 2,
+        "importance": 6,
+        "effectiveImportance": 6,
+        "tags": [],
+        "scheduledEventId": "",
+        "reason": "selected:core"
+      }
+    }
+  ],
   "standing": {
     "text": "The peso trades at 17.14 pesos to the dollar; inflation is 3.12%; the policy rate is 6.50%.",
     "live": [
