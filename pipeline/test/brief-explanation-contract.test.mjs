@@ -19,18 +19,20 @@ const story = (id, ready = false) => ({
 });
 const brief = (states) => ({ lead: story('lead', states[0]), items: states.slice(1).map((ready, index) => story(`item-${index + 2}`, ready)) });
 
-assert.equal(briefReadiness(brief([false, false, false, true, true])).ok, false,
+assert.equal(briefReadiness(brief([false, false, false, true, true])).targetMet, false,
   'analysis on lower-ranked stories must not disguise an unexplained lead and top three');
-assert.deepEqual(briefReadiness(brief([false, false, false])).missingRequired, ['lead', 'item-2', 'item-3']);
-assert.equal(briefReadiness(brief([true, true, false, false, false])).ok, true,
-  'two complete explanations in the top three are enough to publish without forcing filler into a thin story');
+assert.deepEqual(briefReadiness(brief([false, false, false])).missingTarget, ['lead', 'item-2', 'item-3']);
+assert.equal(briefReadiness(brief([false, false, false])).publicationBlocking, false,
+  'missing optional analysis must never stop a verified factual edition');
+assert.equal(briefReadiness(brief([true, true, false, false, false])).targetMet, true,
+  'two complete explanations in the top three meet the editorial target');
 assert.deepEqual(briefReadiness(brief([true, true, false])).missingTarget, ['item-3'],
   'the receipt must still disclose a top-three story that has no approved explanation');
-assert.equal(briefReadiness(brief([true, false, false])).ok, false,
+assert.equal(briefReadiness(brief([true, false, false])).targetMet, false,
   'one explanation cannot satisfy a normal three-story edition');
-assert.equal(briefReadiness(brief([false, true, true])).ok, true,
+assert.equal(briefReadiness(brief([false, true, true])).targetMet, true,
   'analysis availability must not reorder or demote the factual lead');
-assert.equal(briefReadiness({ lead: null, items: [] }).ok, true, 'a genuinely quiet edition is a clean no-op');
+assert.equal(briefReadiness({ lead: null, items: [] }).targetMet, true, 'a genuinely quiet edition is a clean no-op');
 
 assert.deepEqual(
   mergeApprovedAttempt(

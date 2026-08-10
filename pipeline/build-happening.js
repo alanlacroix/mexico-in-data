@@ -28,7 +28,7 @@ import { fileURLToPath } from 'node:url';
 import { askJSON, budgetStatus, hasLLM, usage, model, models } from './lib/anthropic.js';
 import { REPORT, ANALYSIS_SHAPE, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
 import { lintEventReport, lintReportText, lintAnalysisText, analysisNeedsScale, slopFlags, isSlop } from './lib/lint.js';
-import { mexicoRelevant } from './lib/news-trust.js';
+import { eventCandidateEligible, mexicoRelevant } from './lib/news-trust.js';
 import { reconcileHappeningFactCopy } from './lib/fact-copy.js';
 import { fetchArticle } from './lib/fetch-article.js';
 import newsDay from './lib/news-day.cjs';
@@ -59,6 +59,7 @@ const NOTE = "Curated cross-domain event log: the developments moving Mexico, ea
 
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
 const arr = (v) => (Array.isArray(v) ? v : []);
+const NEWS_SOURCES = arr(readJson(path.join(__dirname, 'news-sources.json'), { sources: [] }).sources);
 
 // Items rejected this run (raw source language, feed boilerplate, truncation, or a
 // missing link/date). They never reach the log; they are written to a quarantine file
@@ -100,6 +101,7 @@ function beatSection(x) {
 const normTitle = (t) => (t || '').toLowerCase().replace(/[^a-z0-9áéíóúñü ]/g, ' ').replace(/\s+/g, ' ').trim();
 const TASTE_RX = /automotive|vehicle|rail|manufactur|investment|nearshor|trade|usmca|t-?mec|fintech|bank|payment|embedded finance|\bai\b|artificial intelligence|data cent|energy|pemex|cfe|public financ|digital rules|technology/i;
 const publishableCandidate = (x) => (x.tier === 1 || x.tier === 2 || x.tier === 'specialist')
+  && eventCandidateEligible(x, NEWS_SOURCES)
   && mexicoRelevant(`${x.title || ''} ${x.dek || ''}`)
   && (x.sourceName !== 'Mexico Business News' || TASTE_RX.test(`${x.title || ''} ${x.dek || ''}`));
 function jaccard(a, b) {
@@ -590,6 +592,10 @@ function mergeLog(existing, fresh, now) {
   events = events.filter((e) => {
     if (/news\.google\.com/i.test(String(e.url || '')) || /^google news\b|^via gdelt$/i.test(String(e.source || ''))) {
       quarantine(e, ['purged: aggregator is discovery, not a publishable source']);
+      return false;
+    }
+    if (!eventCandidateEligible({ sourceName: e.source, url: e.url }, NEWS_SOURCES)) {
+      quarantine(e, ['purged: commentary is reading, not a dated Brief event']);
       return false;
     }
     // Re-evaluate low-confidence deterministic MBN picks on every run. Model- or

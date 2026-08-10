@@ -182,8 +182,8 @@ try {
     fails.push('brief: an empty day must be marked quiet and include an honest empty-state summary');
   }
   if (claims.length && !brief.lead) fails.push('brief: a non-empty day needs a lead');
-  if (!explanationReadiness.ok) {
-    fails.push(`brief: at least ${explanationReadiness.requiredCount} of the first ${explanationReadiness.targetCount} selected stories need complete Briefly Explained units (ready ${explanationReadiness.readyTargetCount}; missing ${explanationReadiness.missingRequired.join(', ')})`);
+  if (!explanationReadiness.targetMet) {
+    warns.push(`brief: Briefly Explained target not met (ready ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount}; missing ${explanationReadiness.missingTarget.join(', ')}); publishing the verified factual edition without optional analysis`);
   }
   if (brief.meta?.count !== claims.length) fails.push(`brief: meta.count ${brief.meta?.count} does not match ${claims.length} total claims`);
   if (brief.meta?.contentSig !== expectedContentSig) fails.push('brief: content signature does not match the visible story set');

@@ -23,14 +23,16 @@ function briefReadiness(brief) {
     .filter(({ story }) => !hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
   const readyTargetCount = targetStories.length - missingTarget.length;
-  const ok = stories.length === 0 || readyTargetCount >= minimumReadyCount;
-  const missingRequired = ok ? [] : missingTarget;
+  // Explanation coverage is a quality target, not a publication dependency. The
+  // factual Brief is the product's heartbeat; holding verified news hostage when
+  // the optional model is unavailable makes a degraded extra take down the core.
+  const targetMet = stories.length === 0 || readyTargetCount >= minimumReadyCount;
   const readyIds = stories
     .map((story, index) => ({ story, index }))
     .filter(({ story }) => hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
   return {
-    policy: 'two-of-top-three-explained-v2',
+    policy: 'two-of-top-three-explained-advisory-v3',
     storyCount: stories.length,
     targetCount: targetStories.length,
     requiredCount: minimumReadyCount,
@@ -38,8 +40,8 @@ function briefReadiness(brief) {
     readyTargetCount,
     readyIds,
     missingTarget,
-    missingRequired,
-    ok,
+    targetMet,
+    publicationBlocking: false,
   };
 }
 

@@ -45,7 +45,7 @@ Briefly Explained never uses first person. State the likely next outcome directl
 
 Ordinary headlines never get this layer.
 
-The pipeline runs in one fixed order: build the event log without speculative analysis, reconcile scheduled outcomes, lock the Brief selection, explain those exact top-three references, rebuild without changing their order, and then test publication readiness. The normal and recovery workflows use the same sequence. A missing model, exhausted core budget, failed article fetch, or rejected field remains visible as an operational failure instead of certifying an unexplained edition.
+The pipeline runs in one fixed order: build the event log without speculative analysis, reconcile scheduled outcomes, lock the Brief selection, explain those exact top-three references, and rebuild without changing their order. The normal and recovery workflows use the same sequence. Explanation coverage is recorded in the publication receipt and warned on when it misses the target. It never blocks verified factual news: a missing model, exhausted budget, failed article fetch, or rejected field degrades the optional panel without taking down the Brief itself.
 
 Factual copy uses ordinary actor-action-fact language. Terms such as “hawkish” and “dovish” are compressed judgments, not report copy. State the rate decision, guidance and reason directly. The source title and dek are retained separately from the rewrite, and the copy gate validates against those inputs rather than allowing generated context to validate itself.
 

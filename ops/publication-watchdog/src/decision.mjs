@@ -91,7 +91,11 @@ export function recoveryThrottle(runs, now = new Date(), {
     && ageMinutes(run, clock) >= -5 && ageMinutes(run, clock) < positiveNumber(cooldownMinutes, DEFAULT_RETRY_COOLDOWN_MINUTES));
   if (recentDispatch) return { blocked: true, reason: 'a recovery run was dispatched recently', runId: recentDispatch.id ?? null };
 
-  const failures = list.filter((run) => run?.status === 'completed' && run?.conclusion === 'failure'
+  // The circuit breaker counts recovery dispatches, not ordinary scheduled attempts.
+  // Counting every failed hourly run meant the watchdog disabled itself before it had
+  // made three independent recovery attempts—the exact moment it was most needed.
+  const failures = list.filter((run) => run?.event === 'workflow_dispatch'
+    && run?.status === 'completed' && run?.conclusion === 'failure'
     && ageMinutes(run, clock) >= 0 && ageMinutes(run, clock) < positiveNumber(failureWindowMinutes, DEFAULT_FAILURE_WINDOW_MINUTES));
   if (failures.length >= positiveNumber(maxFailures, DEFAULT_MAX_FAILURES)) {
     return { blocked: true, reason: 'recovery failure limit reached', failures: failures.length };

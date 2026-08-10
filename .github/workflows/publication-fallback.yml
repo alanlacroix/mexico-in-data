@@ -62,6 +62,7 @@ jobs:
         run: node ops/publication-watchdog/run-once.mjs
 
       - name: Reconcile the publication-control incident
+        id: incident
         if: always()
         uses: actions/github-script@v7
         env:
@@ -90,6 +91,7 @@ jobs:
                   state_reason: 'completed',
                 });
               }
+              core.setOutput('new_incident', 'false');
               return;
             }
 
@@ -118,7 +120,10 @@ jobs:
                 body,
               });
             }
+            // One failed run opens the durable incident. Later checks update that
+            // issue without generating the same failure email every 30 minutes.
+            core.setOutput('new_incident', existing ? 'false' : 'true');
 
       - name: Fail visibly while either safeguard is broken
-        if: always() && (steps.external.outcome != 'success' || steps.fallback.outcome != 'success')
+        if: always() && steps.incident.outputs.new_incident == 'true'
         run: exit 1

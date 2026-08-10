@@ -84,9 +84,11 @@ assert.match(
 );
 assert.match(
   happening,
-  /node build-news\.js[\s\S]*node collect-news\.js[\s\S]*node build-happening\.js[\s\S]*node reconcile-scheduled-events\.mjs[\s\S]*node build-brief\.js/,
-  'each editorial pass must refresh the news wire before reconsidering the brief',
+  /node collect-news\.js[\s\S]*node build-happening\.js[\s\S]*node reconcile-scheduled-events\.mjs[\s\S]*node build-brief\.js/,
+  'each editorial pass must refresh the primary RSS ledger before reconsidering the brief',
 );
+assert.doesNotMatch(happening, /node build-news\.js/,
+  'the flaky optional GDELT supplement belongs in the background refresh, not the publication path');
 assert.match(
   happening,
   /node build-happening\.js --skip-analysis[\s\S]*node build-brief\.js --selection-only[\s\S]*node build-happening\.js --analysis-for-brief[\s\S]*node build-brief\.js/,
@@ -235,6 +237,11 @@ assert.match(
   publicationFallback,
   /Publication control plane is unhealthy[\s\S]*state:\s*'closed'/,
   'a broken safeguard must stay visible as an incident until both controls recover',
+);
+assert.match(
+  publicationFallback,
+  /id:\s*incident[\s\S]*new_incident[\s\S]*steps\.incident\.outputs\.new_incident == 'true'/,
+  'the fallback must email once per incident instead of failing every repeated audit',
 );
 
 assert.match(sesnsp, /cron:\s*'35 15 21 \* \*'/, 'SESNSP must refresh after the stated day-20 publication deadline');

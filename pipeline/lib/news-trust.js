@@ -48,6 +48,18 @@ export function publicHeadlineEligible(value) {
   return mexicoRelevant(title) && !PUBLIC_HEADLINE_NOISE.test(title);
 }
 
+// Some trusted sources are useful reading but are not event wires. Keep their
+// essays in the topic feed while preventing a keyless fallback from mistaking an
+// argument for a new government or business action. Explicit source metadata and
+// an outlet's own /opinion/ path are the only exclusions; ordinary analysis about
+// a real dated development can still be assessed by the curator.
+export function eventCandidateEligible(article, sources = []) {
+  const source = (Array.isArray(sources) ? sources : []).find((item) => item.name === article?.sourceName);
+  if (source?.eventEligible === false) return false;
+  try { return !/\/opinion(?:\/|$)/i.test(new URL(String(article?.url || '')).pathname); }
+  catch { return false; }
+}
+
 export function domainTrusted(value) {
   const domain = String(value || '').toLowerCase().replace(/^www\./, '');
   if (TRUSTED_NEWS_DOMAINS.has(domain)) return true;

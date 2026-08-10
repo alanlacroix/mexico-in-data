@@ -1,6 +1,3 @@
-import briefReadinessPolicy from './lib/brief-readiness.cjs';
-
-const { briefReadiness } = briefReadinessPolicy;
 const BASE_URL = (process.env.PRODUCTION_URL || 'https://mexicobrief.com').replace(/\/$/, '');
 const EXPECTED_ID = process.env.PUBLICATION_ID;
 const EXPECTED_DATE = process.env.PUBLICATION_DATE;
@@ -41,11 +38,6 @@ export async function checkProduction() {
   if (brief.meta.selection.receipt.some((row) => /analysis/i.test(String(row.reason || '')))) {
     throw new Error('live brief selection still depends on optional analysis');
   }
-  const explanationReadiness = briefReadiness(brief);
-  if (!explanationReadiness.ok) {
-    throw new Error(`live brief is missing Briefly Explained for ${explanationReadiness.missingRequired.join(', ')}`);
-  }
-
   const eventStatus = await get('/data/event-status.json');
   if (eventStatus.meta?.editorialDate !== EXPECTED_DATE) throw new Error('live scheduled-outcome audit has the wrong date');
   if (Number(eventStatus.meta?.blockers) > 0) throw new Error('live edition has an unresolved scheduled-outcome blocker');

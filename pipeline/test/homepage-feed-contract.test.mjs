@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lintEventReport, lintReportText, lintAnalysisText } from '../lib/lint.js';
-import { cleanNewsText, domainTrusted, newsCollectionHealth, publicHeadlineEligible } from '../lib/news-trust.js';
+import { cleanNewsText, domainTrusted, eventCandidateEligible, newsCollectionHealth, publicHeadlineEligible } from '../lib/news-trust.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const require = createRequire(import.meta.url);
@@ -338,6 +338,18 @@ assert.equal(domainTrusted('graphics.reuters.com'), true, 'subdomains of an allo
 assert.equal(publicHeadlineEligible('Ozempic study compares pérdida de peso'), false, 'the word peso as weight must not create a Mexico match');
 assert.equal(publicHeadlineEligible('Peso gains against the dollar during USMCA talks'), true, 'a Mexico currency headline must remain eligible');
 assert.equal(publicHeadlineEligible('Why Mexico is the next big thing?'), false, 'question-style and sensational framing must not enter the public wire');
+assert.equal(eventCandidateEligible({
+  sourceName: 'The Mexico Political Economist',
+  url: 'https://mxpe.org/p/mexico-oil-future',
+}, registry.sources), false, 'a trusted commentary feed must not become a factual Brief event during keyless fallback');
+assert.equal(eventCandidateEligible({
+  sourceName: 'El Economista',
+  url: 'https://eleconomista.com.mx/opinion/a-column',
+}, registry.sources), false, 'an outlet opinion URL must not become a factual Brief event');
+assert.equal(eventCandidateEligible({
+  sourceName: 'El Economista',
+  url: 'https://eleconomista.com.mx/economia/a-policy-decision',
+}, registry.sources), true, 'reported coverage from the same outlet must remain eligible');
 assert.equal(
   cleanNewsText('&amp;lt;img src=x onerror=alert(1)&amp;gt;Mexico inflation falls'),
   'Mexico inflation falls',

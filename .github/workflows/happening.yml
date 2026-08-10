@@ -60,12 +60,6 @@ jobs:
         if: steps.timing.outputs.run == 'true'
         run: npm ci
 
-      - name: Check the latest trusted headlines
-        if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
-        continue-on-error: true
-        run: node build-news.js
-
       - name: Refresh the news ledger
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline

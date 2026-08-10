@@ -74,6 +74,11 @@ assert.equal(
   'recovery failure limit reached',
   'the watchdog must stop a notification-producing failure loop',
 );
+assert.equal(
+  recoveryThrottle([1, 2, 3, 4].map((id) => ({ id, event: 'schedule', status: 'completed', conclusion: 'failure', created_at: '2026-07-31T12:00:00Z' })), morningDue).blocked,
+  false,
+  'failed scheduled attempts must not consume the independent recovery allowance',
+);
 
 assert.deepEqual(
   watchdogDecision({
