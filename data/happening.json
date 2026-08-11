@@ -2,27 +2,33 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-10",
+    "updated": "2026-08-11",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/sources",
     "count": 60,
-    "generatedAt": "2026-08-10T17:50:17.783Z",
+    "generatedAt": "2026-08-11T13:32:05.118Z",
     "llm": true,
     "analysisTarget": {
       "policy": "selected-brief-v1",
       "ids": [
-        "n-us-security-agreements-resume-avocado-operations-2026-08-08",
-        "n-nuevas-reglas-antilavado-de-dinero-estas-son-las-mod-2026-08-10"
+        "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
+        "n-entrevista-roberto-lazzeri-el-financiero-que-m-xico--2026-08-10",
+        "n-m-xico-busca-frenar-arancel-de-hasta-51-6-de-china-a-2026-08-10"
       ],
-      "added": 2,
+      "added": 3,
       "outcomes": [
         {
-          "id": "n-us-security-agreements-resume-avocado-operations-2026-08-08",
+          "id": "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
           "ready": true,
           "reason": "ready"
         },
         {
-          "id": "n-nuevas-reglas-antilavado-de-dinero-estas-son-las-mod-2026-08-10",
+          "id": "n-entrevista-roberto-lazzeri-el-financiero-que-m-xico--2026-08-10",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-m-xico-busca-frenar-arancel-de-hasta-51-6-de-china-a-2026-08-10",
           "ready": true,
           "reason": "ready"
         }
@@ -30,6 +36,154 @@
     }
   },
   "events": [
+    {
+      "id": "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
+      "date": "2026-08-11",
+      "section": "us-mexico",
+      "title": "US money-transfer rule near Mexico border damages small businesses",
+      "why": "The Trump administration's April rule targeting cartel money-laundering has caused unintended economic harm to legitimate small companies along the US-Mexico border, affecting business operations and cash flows.",
+      "company": "",
+      "source": "The Guardian — Mexico",
+      "url": "https://theguardian.com/us-news/2026/aug/11/us-mexico-border-area-money-transfer-rule-change-small-businesses",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-11T11:00:02.000Z",
+      "sourceTier": 1,
+      "reportEvidence": {
+        "title": "The US tried to stop cartel money-laundering. It devastated mom-and-pop businesses instead",
+        "dek": "Small businesses pay hidden toll after money-transfer rule change to curb illicit activities near the US-Mexico border Last April, the Trump administration rolled out its latest tool in the fight against Mexican cartels: an aggressive crackdown on money transfers near the US-Mexico border . The administration said that"
+      },
+      "coverage": [
+        {
+          "source": "The Guardian — Mexico",
+          "url": "https://theguardian.com/us-news/2026/aug/11/us-mexico-border-area-money-transfer-rule-change-small-businesses",
+          "publishedAt": "2026-08-11T11:00:02.000Z",
+          "date": "2026-08-11",
+          "title": "US money-transfer rule near Mexico border damages small businesses",
+          "summary": "The Trump administration's April rule targeting cartel money-laundering has caused unintended economic harm to legitimate small companies along the US-Mexico border, affecting business operations and cash flows."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://i.guim.co.uk/img/media/8cd92cf7f4265cd4c21a5f8d0c4e663bccb68164/731_0_10925_8742/master/10925.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=edcd479f94b1f4e5cc8b6be40e01fc71",
+      "imgTries": 1,
+      "background": "The rule cut the cash-transaction reporting threshold for financial-services businesses near the border from $10,000 to $200, sweeping in ordinary grocery-store transfer counters used by immigrant families to pay bills and send money home.",
+      "view": "The mechanism is a data-collection net built for cartel laundering that instead catches small legal businesses lacking compliance staff to handle reporting at that volume. Remittances brought Mexico about $62.47bn in 2025, more than foreign direct investment, and that flow depends on cheap, accessible transfer points like Nachita's staying open. A rule that raises the cost of running those counters shrinks the informal channels households use to move money, without a public estimate of how much cartel activity it actually stops.",
+      "prediction": "Small transfer businesses near the border likely keep absorbing compliance costs or shut down transfer services rather than fight the rule, since litigation is slow and Congress has not acted. That would be wrong if the Treasury narrows the threshold back up or exempts small retailers, which has not been reported.",
+      "analysisV": 7
+    },
+    {
+      "id": "n-m-xico-busca-frenar-arancel-de-hasta-51-6-de-china-a-2026-08-10",
+      "date": "2026-08-10",
+      "section": "us-mexico",
+      "title": "China imposes preliminary 51.6 percent tariff on Mexican pecan exports",
+      "why": "China's Ministry of Commerce imposed the tariff on Mexican pecan exports citing dumping. Mexico is working to block the measure, which threatens a key agricultural export.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/mexico-busca-frenar-arancel-de-hasta-51-6-de-china-a-la-nuez-pecana/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-10T19:05:35.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México busca frenar arancel de hasta 51.6% de China a la nuez pecana",
+        "dek": "El Ministerio de Comercio Chino impuso un arancel preliminar a las exportaciones de nuez pecana mexicana por dumping. La publicación México busca frenar arancel de hasta 51.6% de China a la nuez pecana apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/mexico-busca-frenar-arancel-de-hasta-51-6-de-china-a-la-nuez-pecana/",
+          "publishedAt": "2026-08-10T19:05:35.000Z",
+          "date": "2026-08-10",
+          "title": "China imposes preliminary 51.6 percent tariff on Mexican pecan exports",
+          "summary": "China's Ministry of Commerce imposed the tariff on Mexican pecan exports citing dumping. Mexico is working to block the measure, which threatens a key agricultural export."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://elceo.com/wp-content/uploads/2026/08/SE_responde_arancel_chino_nuez_pecana.jpg",
+      "imgTries": 1,
+      "background": "Mexico exported about $9.1bn total to China in 2024 against $129.5bn in imports, so pecans are a rare Mexican export line into a market where Mexico normally buys, not sells.",
+      "view": "The tariff matters less for Mexico's overall trade, since direct pecan exports to China were $21.9m in 2024, a rounding error next to the roughly $665bn in total Mexican goods exports in 2025 and dwarfed by the $872bn in US-Mexico goods trade. The real exposure is reexports through the United States, which the preliminary ruling explicitly targets by hitting US exporters with a higher 54.3% rate, suggesting China is trying to close a triangulation route rather than punish Mexican producers directly.",
+      "prediction": "Mexico's economy ministry likely negotiates a reduced final rate before the investigation closes, since it has ten days to respond and is already coordinating with the Chinese embassy. That expectation fails if Beijing finalizes rates at or above the 51.6% preliminary level despite the talks.",
+      "analysisV": 7
+    },
     {
       "id": "n-kia-ev3-launch-puts-mexico-plant-on-track-for-record-2026-08-10",
       "date": "2026-08-10",
@@ -182,6 +336,148 @@
       }
     },
     {
+      "id": "n-entrevista-roberto-lazzeri-el-financiero-que-m-xico--2026-08-10",
+      "date": "2026-08-10",
+      "section": "politics",
+      "title": "Mexico appoints financier Roberto Lazzeri as ambassador to United States",
+      "why": "Lazzeri, sent to lead Mexico's most difficult diplomatic front, discusses the future of the US-Mexico-Canada trade agreement and regional integration.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/politica/entrevista-roberto-lazzeri-el-financiero-que-mexico-envio-como-embajador-a-su-frente-mas-dificil-washington/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-10T08:00:54.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Entrevista | Roberto Lazzeri, el financiero que México envió como embajador a su frente más difícil: Washington",
+        "dek": "Roberto Lazzeri habla sobre el futuro del T-MEC, la integración regional y los frentes que marcarán la agenda bilateral. La publicación Entrevista | Roberto Lazzeri, el financiero que México envió como embajador a su frente más difícil: Washington apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/politica/entrevista-roberto-lazzeri-el-financiero-que-mexico-envio-como-embajador-a-su-frente-mas-dificil-washington/",
+          "publishedAt": "2026-08-10T08:00:54.000Z",
+          "date": "2026-08-10",
+          "title": "Mexico appoints financier Roberto Lazzeri as ambassador to United States",
+          "summary": "Lazzeri, sent to lead Mexico's most difficult diplomatic front, discusses the future of the US-Mexico-Canada trade agreement and regional integration."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://elceo.com/wp-content/uploads/2026/08/roberto_lazzeri_entrevista_revista.jpg",
+      "imgTries": 1,
+      "background": "Mexico's president can appoint ambassadors without requiring political or diplomatic background, and Lazzeri's prior finance-ministry and development-bank roles put him in contact with the US Treasury and FinCEN during a 2025 money-laundering dispute involving three Mexican financial institutions.",
+      "view": "Sheinbaum picking a financial technician over a career diplomat signals that the bilateral relationship's hardest problems now run through banking and compliance channels, not conventional diplomacy. That fits a moment when the USMCA review process moves to annual cycles after the US declined a 16-year extension in July 2026, and when disputes over money flows, like the border cash-transfer rule, are already straining the relationship outside trade policy.",
+      "prediction": "Lazzeri's early tenure likely focuses on Treasury and FinCEN relationships rather than broad political outreach, given Sheinbaum's request that he engage the private and financial sectors. That would be wrong if he instead prioritizes congressional or USMCA negotiating rounds over financial-sector diplomacy in his first 100 days.",
+      "analysisV": 7
+    },
+    {
+      "id": "n-m-xico-registra-su-peor-julio-en-p-rdida-de-empleos--2026-08-10",
+      "date": "2026-08-10",
+      "section": "economy",
+      "title": "Mexico records worst July employment loss in recent memory",
+      "why": "Mexico lost 19,550 formal jobs in July, equivalent to a negative 0.1 percent monthly rate, according to Mexico's social security institute. This marks a sharp reversal after the summer tourism surge.",
+      "company": "",
+      "source": "Bloomberg Línea",
+      "url": "https://bloomberglinea.com/latinoamerica/mexico/mexico-registra-su-peor-julio-en-perdida-de-empleos-tras-concluir-el-mundial/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-10T23:37:27.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México registra su peor julio en pérdida de empleos tras concluir el Mundial",
+        "dek": "En julio se perdieron 19.550 puestos de trabajo, equivalente a una tasa negativa de 0,1% mensual, de acuerdo con el Instituto Mexicano del Seguro Social."
+      },
+      "coverage": [
+        {
+          "source": "Bloomberg Línea",
+          "url": "https://bloomberglinea.com/latinoamerica/mexico/mexico-registra-su-peor-julio-en-perdida-de-empleos-tras-concluir-el-mundial/",
+          "publishedAt": "2026-08-10T23:37:27.000Z",
+          "date": "2026-08-10",
+          "title": "Mexico records worst July employment loss in recent memory",
+          "summary": "Mexico lost 19,550 formal jobs in July, equivalent to a negative 0.1 percent monthly rate, according to Mexico's social security institute. This marks a sharp reversal after the summer tourism surge."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-nuevas-reglas-antilavado-de-dinero-estas-son-las-mod-2026-08-10",
       "date": "2026-08-10",
       "section": "money",
@@ -254,6 +550,142 @@
       "view": "The shift from a uniform compliance model to a risk-based one lands with a long runway: rules take effect November 30, 2026, main requirements start in 2027, and audits begin only in 2028. That gap matters because Mexico's commercial-bank credit to the private sector is just 35.5% of GDP, so tighter money-laundering oversight targets the formal financial system while informal channels, where 55.2% of workers already operate, remain largely untouched.",
       "prediction": "Most likely outcome: large firms and financial institutions begin building risk-classification systems well before the 2027 deadline, while smaller registered businesses delay compliance until closer to the 2028 audit start. This would be wrong if Hacienda enforces the November 2026 date more strictly than stated or moves audits earlier.",
       "analysisV": 7
+    },
+    {
+      "id": "n-kia-pone-a-prueba-la-estrategia-del-plan-m-xico-para-2026-08-10",
+      "date": "2026-08-10",
+      "section": "economy",
+      "title": "Kia tests Mexico plan to increase domestic content in auto production",
+      "why": "Kia's strategy tests the government's Plan Mexico to boost domestic manufacturing content. The undersecretary of industry detailed the initiative's importance to regional production.",
+      "company": "Kia",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/kia-pone-a-prueba-la-estrategia-del-plan-mexico-para-aumentar-contenido-nacional/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-10T08:00:20.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Kia pone a prueba la estrategia del Plan México para aumentar contenido nacional",
+        "dek": "En entrevista con EL CEO, la subsecretaria de Industria y Comercio de la Secretaría de Economía, Ximena Escobedo, detalla la importancia del Plan México. La publicación Kia pone a prueba la estrategia del Plan México para aumentar contenido nacional apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/kia-pone-a-prueba-la-estrategia-del-plan-mexico-para-aumentar-contenido-nacional/",
+          "publishedAt": "2026-08-10T08:00:20.000Z",
+          "date": "2026-08-10",
+          "title": "Kia tests Mexico plan to increase domestic content in auto production",
+          "summary": "Kia's strategy tests the government's Plan Mexico to boost domestic manufacturing content. The undersecretary of industry detailed the initiative's importance to regional production."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-inicia-construcci-n-de-central-la-esperanza-solar-en-2026-08-10",
+      "date": "2026-08-10",
+      "section": "economy",
+      "title": "Construction begins on La Esperanza Solar plant in Campeche with 420 MW generation and 150 MW storage",
+      "why": "Copenhagen Infrastructure Partners and CFE Calificados are building a hybrid solar and battery storage facility in Campeche with 420 megawatts of generation capacity and 150 megawatts of energy storage.",
+      "company": "Copenhagen Infrastructure Partners",
+      "source": "Energía a Debate",
+      "url": "https://energiaadebate.com/inicia-construccion-de-central-la-esperanza-solar-en-campeche-con-participacion-de-cfe-calificados/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-11T02:58:15.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Inicia construcción de central “La Esperanza Solar” en Campeche con participación de CFE Calificados",
+        "dek": "La central, que combina generación solar con almacenamiento, es desarrollada por Copenhagen Infrastructure Partners y tendrá 420 MW de capacidad de generación más 150 MW de almacenamiento"
+      },
+      "coverage": [
+        {
+          "source": "Energía a Debate",
+          "url": "https://energiaadebate.com/inicia-construccion-de-central-la-esperanza-solar-en-campeche-con-participacion-de-cfe-calificados/",
+          "publishedAt": "2026-08-11T02:58:15.000Z",
+          "date": "2026-08-10",
+          "title": "Construction begins on La Esperanza Solar plant in Campeche with 420 MW generation and 150 MW storage",
+          "summary": "Copenhagen Infrastructure Partners and CFE Calificados are building a hybrid solar and battery storage facility in Campeche with 420 megawatts of generation capacity and 150 megawatts of energy storage."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
     },
     {
       "id": "n-us-security-agreements-resume-avocado-operations-2026-08-08",
@@ -2529,162 +2961,6 @@
           "date": "2026-08-04",
           "title": "Higher IEPS tax on sugary drinks pressures Coca-Cola to raise retail prices",
           "summary": "The government raised the special excise tax on soft drinks in 2026 as part of a public-health strategy to combat chronic disease. Coca-Cola is passing the cost to consumers, affecting pricing across the beverage sector."
-        }
-      ]
-    },
-    {
-      "id": "n-nos-desconcert-vulcan-critica-fallo-por-caso-calica--2026-08-03",
-      "date": "2026-08-03",
-      "section": "us-mexico",
-      "title": "Tribunal rules Mexico violated USMCA by seizing Calica installations in 2022",
-      "why": "The decision against Mexico in the investor-state dispute carries precedent for future claims and signals exposure under the trade agreement. Vulcan's public criticism indicates a pattern of tension over property rights and regulatory action.",
-      "company": "Vulcan",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/nos-desconcerto-vulcan-critica-fallo-por-caso-calica-que-reconocio-violaciones-de-mexico-al-tlcan/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-03T23:21:53.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/nos-desconcerto-vulcan-critica-fallo-por-caso-calica-que-reconocio-violaciones-de-mexico-al-tlcan/",
-          "publishedAt": "2026-08-03T23:21:53.000Z",
-          "date": "2026-08-03",
-          "title": "Tribunal rules Mexico violated USMCA by seizing Calica installations in 2022",
-          "summary": "The decision against Mexico in the investor-state dispute carries precedent for future claims and signals exposure under the trade agreement. Vulcan's public criticism indicates a pattern of tension over property rights and regulatory action."
-        }
-      ],
-      "image": "https://elceo.com/wp-content/uploads/2026/08/Vulcan_Materials_vuelve_a_senalar_al_gobierno_mexicano.jpg",
-      "imgTries": 1,
-      "background": "The tribunal ruled under the old NAFTA framework rather than USMCA, since Mexico seized the Calica limestone site in 2022, but the case sets precedent for how investor-state disputes are read under the current pact, which is now reviewed annually after the US declined a 16-year extension in July 2026.",
-      "view": "A ruling that Mexico violated the treaty but paid Vulcan minimal damages leaves Mexico's exposure look worse on paper than in practice. The mechanism that matters for other investors is precedent, not payout: future claimants can now cite a clear violation finding, but the token damages suggest tribunals will keep finding fault without imposing costs large enough to change government behavior.",
-      "prediction": "Vulcan is likely to keep pressing publicly for a larger settlement or a separate claim, while Mexico's government treats the ruling as a near-win since most claims were dismissed. This would be wrong if Vulcan files a new arbitration seeking the undisclosed damages figure, or if other investors cite this case to file fresh claims over property seizures.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-sat-registra-la-mayor-ca-da-en-la-recaudaci-n-de-isr-2026-08-03",
-      "date": "2026-08-03",
-      "section": "money",
-      "title": "Tax authority records largest income tax collection decline in 17 years as manufacturing weakens",
-      "why": "Income tax receipts from manufacturers collapsed 15.75 percent in the first half of 2026. The drop signals deteriorating industrial performance and reduced government revenue when fiscal space is already tight.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/sat-caida-recaudacion-isr-debilidad-manufacturera/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-03T08:00:15.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/sat-caida-recaudacion-isr-debilidad-manufacturera/",
-          "publishedAt": "2026-08-03T08:00:15.000Z",
-          "date": "2026-08-03",
-          "title": "Tax authority records largest income tax collection decline in 17 years as manufacturing weakens",
-          "summary": "Income tax receipts from manufacturers collapsed 15.75 percent in the first half of 2026. The drop signals deteriorating industrial performance and reduced government revenue when fiscal space is already tight."
-        }
-      ]
-    },
-    {
-      "id": "n-analistas-de-banxico-suben-su-previsi-n-sobre-el-pib-2026-08-03",
-      "date": "2026-08-03",
-      "section": "money",
-      "title": "Banxico survey raises 2026 GDP forecast, expects inflation to moderate by third quarter",
-      "why": "Analysts upgraded growth expectations while predicting disinflation ahead. Banxico's survey sets expectations for the policy rate path and market positioning.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/analistas-de-banxico-suben-su-prevision-sobre-el-pib-pero-pronostican-una-desaceleracion-en-el-3t26/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-03T17:38:24.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/analistas-de-banxico-suben-su-prevision-sobre-el-pib-pero-pronostican-una-desaceleracion-en-el-3t26/",
-          "publishedAt": "2026-08-03T17:38:24.000Z",
-          "date": "2026-08-03",
-          "title": "Banxico survey raises 2026 GDP forecast, expects inflation to moderate by third quarter",
-          "summary": "Analysts upgraded growth expectations while predicting disinflation ahead. Banxico's survey sets expectations for the policy rate path and market positioning."
-        }
-      ],
-      "image": "https://elceo.com/wp-content/uploads/2026/08/Banxico_encuestra_julio_2026_.jpg",
-      "imgTries": 1
-    },
-    {
-      "id": "n-pemex-dos-bocas-llega-a-su-segundo-aniversario-con-u-2026-08-03",
-      "date": "2026-08-03",
-      "section": "economy",
-      "title": "Dos Bocas refinery output drops to 141,113 barrels per day in June, worst in ten months",
-      "why": "Mexico's flagship refinery continues to underperform design capacity two years after opening. Weak processing rates constrain domestic fuel supply and limit export revenue.",
-      "company": "Pemex",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/pemex-dos-bocas-llega-a-su-segundo-aniversario-con-un-freno-en-el-procesamiento-de-petroleo/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-03T21:02:15.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/pemex-dos-bocas-llega-a-su-segundo-aniversario-con-un-freno-en-el-procesamiento-de-petroleo/",
-          "publishedAt": "2026-08-03T21:02:15.000Z",
-          "date": "2026-08-03",
-          "title": "Dos Bocas refinery output drops to 141,113 barrels per day in June, worst in ten months",
-          "summary": "Mexico's flagship refinery continues to underperform design capacity two years after opening. Weak processing rates constrain domestic fuel supply and limit export revenue."
-        }
-      ],
-      "image": "https://elceo.com/wp-content/uploads/2026/08/refineria_dos_bocas_produccion_junio_2026.jpg",
-      "imgTries": 1
-    },
-    {
-      "id": "n-cerca-de-tres-millones-de-empleos-en-m-xico-tienen-u-2026-08-03",
-      "date": "2026-08-03",
-      "section": "society",
-      "title": "Nearly three million formal jobs in Mexico face medium or high exposure to artificial intelligence",
-      "why": "AI automation threatens routine tasks across formal employment. The labor market faces both displacement risk and productivity gains, raising questions about worker retraining and social protection.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/0308/mexico/cerca-de-tres-millones-de-empleos-en-mexico-tienen-una-exposicion-media-o-alta-a-la-ia/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-03T19:36:45.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/0308/mexico/cerca-de-tres-millones-de-empleos-en-mexico-tienen-una-exposicion-media-o-alta-a-la-ia/",
-          "publishedAt": "2026-08-03T19:36:45.000Z",
-          "date": "2026-08-03",
-          "title": "Nearly three million formal jobs in Mexico face medium or high exposure to artificial intelligence",
-          "summary": "AI automation threatens routine tasks across formal employment. The labor market faces both displacement risk and productivity gains, raising questions about worker retraining and social protection."
-        }
-      ],
-      "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/08/mujer-frente-a-computadora-inteligencia-artificial.jpg",
-      "imgTries": 1
-    },
-    {
-      "id": "n-secretar-a-de-econom-a-advierte-escasez-de-personal--2026-08-03",
-      "date": "2026-08-03",
-      "section": "economy",
-      "title": "Mexico's Economy Ministry warns of logistics personnel shortage affecting agriculture and trade",
-      "why": "Specialized logistics shortages constrain agroalimentary exports and supply chains when over half of farm output needs professional handling. The bottleneck risks competitiveness in perishables.",
-      "company": "",
-      "source": "T21",
-      "url": "https://t21.com.mx/secretaria-de-economia-advierte-escasez-de-personal-logistico-en-mexico/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-03T14:43:00.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "T21",
-          "url": "https://t21.com.mx/secretaria-de-economia-advierte-escasez-de-personal-logistico-en-mexico/",
-          "publishedAt": "2026-08-03T14:43:00.000Z",
-          "date": "2026-08-03",
-          "title": "Mexico's Economy Ministry warns of logistics personnel shortage affecting agriculture and trade",
-          "summary": "Specialized logistics shortages constrain agroalimentary exports and supply chains when over half of farm output needs professional handling. The bottleneck risks competitiveness in perishables."
         }
       ]
     }
