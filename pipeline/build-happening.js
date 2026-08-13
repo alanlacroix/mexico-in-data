@@ -645,7 +645,7 @@ ${BAN}`;
         const text = stripDashWs(r[field]);
         if (!text) { rememberRejection(item.e.id, field, ['field was empty']); continue; }
         const refField = `${field}Refs`;
-        const refs = [...new Set(arr(r[refField]).map(stripDashWs).filter(Boolean))];
+        let refs = [...new Set(arr(r[refField]).map(stripDashWs).filter(Boolean))];
         const invalidRefs = refs.filter((ref) => !evidenceById.has(ref));
         if (!refs.length || refs.length > 2 || invalidRefs.length) {
           const reason = !refs.length ? 'no evidence reference'
@@ -659,12 +659,27 @@ ${BAN}`;
         // Validate the public claim against only the evidence the draft itself cites.
         // Including generated copy or the whole research bundle here would let an
         // unsupported claim appear grounded merely because another source was nearby.
-        const inputs = refs.map((ref) => evidenceById.get(ref).text);
-        const gate = field === 'background'
-          ? lintReportText({ text, inputs, maxWords, maxSentences })
-          : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
-            requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
-            strictForecast: field === 'prediction', forbidFirstPerson: true });
+        const gateFor = (candidateRefs) => {
+          const inputs = candidateRefs.map((ref) => evidenceById.get(ref).text);
+          return field === 'background'
+            ? lintReportText({ text, inputs, maxWords, maxSentences })
+            : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
+              requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
+              strictForecast: field === 'prediction', forbidFirstPerson: true });
+        };
+        let gate = gateFor(refs);
+        // If the prose is otherwise sound and its only problem is a number found in
+        // another supplied source, attach that source deterministically. This repairs
+        // provenance, not prose: no claim changes and the two-source cap still applies.
+        if (!gate.ok && refs.length < 2 && gate.flags.every((flag) => /^unsupported number/.test(flag))) {
+          const supporting = item.evidence.find((entry) => !refs.includes(entry.id)
+            && gateFor([...refs, entry.id]).ok);
+          if (supporting) {
+            refs = [...refs, supporting.id];
+            gate = gateFor(refs);
+            console.log(`  analysis evidence repair ${item.e.id}.${field}: added ${supporting.id}`);
+          }
+        }
         const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
         if (!gate.ok || slop.length) {
           const reasons = [...gate.flags, ...slop];

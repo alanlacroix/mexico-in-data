@@ -295,7 +295,17 @@ assert.ok(lintAnalysisText({
   text: 'The outcome remains uncertain.',
   inputs: ['The outcome remains uncertain.'],
   role: 'prediction',
-}).flags.includes('forecast states no likely outcome'), 'a forecast without a likely outcome must fail the analysis gate');
+}).flags.some((flag) => flag.startsWith('forecast states no likely outcome')), 'a forecast without a likely outcome must fail the analysis gate');
+assert.ok(lintAnalysisText({
+  text: 'The ownership cap limits the number of eligible bidders, which reduces competition for the contract.',
+  inputs: ['The ownership cap limits the number of eligible bidders.'],
+  role: 'view',
+}).ok, 'ordinary causal verbs must count as a concrete mechanism without requiring the word because');
+assert.ok(lintAnalysisText({
+  text: 'The next ruling will show whether the tariff applies. A finding of no injury would weaken the case.',
+  inputs: ['The next ruling will determine whether a tariff applies. A finding can show no injury.'],
+  role: 'prediction',
+}).ok, 'a concrete next decision and an observable test are useful looking-ahead analysis');
 assert.ok(lintAnalysisText({
   text: 'The $1 billion number is nice. Permits matter more.',
   inputs: ['$1 billion investment in five projects.'],

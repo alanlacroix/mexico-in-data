@@ -143,7 +143,7 @@ export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWor
   const vague = clean.match(VAGUE_ANALYSIS); if (vague) flags.push(`vague analysis: "${vague[0]}"`);
   const empty = clean.match(EMPTY_EVALUATION); if (empty) flags.push(`empty evaluation: "${empty[0]}"`);
   if (forbidFirstPerson && FIRST_PERSON.test(clean)) flags.push('first person is not part of the publication voice');
-  if (role === 'view' && !/\b(because|but|while|until|unless|if|when|means?|so|which|matters? more|depends? on|only if)\b/i.test(clean)) {
+  if (role === 'view' && !/\b(because|but|while|until|unless|if|when|means?|so|which|matters? more|depends? on|only if|limits?|reduces?|raises?|increases?|makes?|leaves?|forces?|requires?|allows?|blocks?|delays?|exposes?|gives?|puts?)\b/i.test(clean)) {
     flags.push('view has no concrete mechanism or tradeoff');
   }
   if (role === 'view' && requireScale && !SCALE_ANCHOR.test(clean)) {
@@ -151,7 +151,9 @@ export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWor
   }
   if (role === 'prediction') {
     if (strictForecast) {
-      if (!/\b(base case|expect|likely|my guess|should|will|may)\b/i.test(clean)) flags.push('forecast states no likely outcome');
+      // A dated or named next decision is often more useful than a probabilistic
+      // flourish. Accept either an actual forecast or a concrete next-step sentence.
+      if (!/\b(base case|expect|likely|my guess|should|will|may|next (?:step|decision|ruling|review|report|release|evaluation|test)|preliminary (?:decision|finding|ruling))\b/i.test(clean)) flags.push('forecast states no likely outcome or concrete next step');
       if (!/\b(if|unless|until|would change|confirm|weaken)\b/i.test(clean)) flags.push('forecast has no change-of-mind condition');
     } else if (!/\b(watch|expect|base case|if|when|until|unless|next|would|should|confirm|weaken|appear|arrive|rise|fall|decline|increase|remain|begin|start)\b/i.test(clean)) {
       flags.push('forecast has no observable condition');
