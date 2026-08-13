@@ -58,6 +58,8 @@ assert.match(happeningBuilder, /field === 'background'[\s\S]*contextualEvidence/
   'Background must establish context from evidence beyond the original article');
 assert.match(happeningBuilder, /auditCompleted[\s\S]*initiated[\s\S]*preliminary[\s\S]*final[\s\S]*recovered/,
   'a separate evidence editor must check the status and procedural stage before publication');
+assert.match(happeningBuilder, /const request = \(batch, effort, maxTokens\) => askJSON\(\{[\s\S]*?model: models\.HAIKU,[\s\S]*?priority: 'core'/,
+  'evidence-locked drafting must use the bounded model tier so daily all-story coverage fits the monthly cap');
 
 assert.deepEqual(
   mergeApprovedAttempt(

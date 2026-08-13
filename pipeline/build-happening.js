@@ -524,8 +524,8 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
       },
     } } };
     // One small request per story is simpler and more dependable than asking one model
-    // turn to perform five searches and hoping it uses the full allowance. Haiku only
-    // identifies the record; Sonnet still writes the analysis after we fetch the page.
+    // turn to perform five searches and hoping it uses the full allowance. Search only
+    // identifies the record; the fetched document, not the search answer, is evidence.
     for (const target of researchTargets) {
       const researched = await askJSON({
         system: `Use the web search exactly once. Find one public PRIMARY RECORD for this Mexico news story. Prefer the government agency, regulator, court, legislature, official statistics release, company filing, or company investor-relations document that establishes the current status and procedural stage. Do not return another news article, search result page, social post, Wikipedia page, lobby group, or commentary. The record must help catch a stale or mistaken stage in the article, not merely repeat its headline. Return an empty URL when no primary public record exists. Return JSON only.`,
@@ -702,6 +702,7 @@ ${BAN}`;
     schema,
     maxTokens,
     effort,
+    model: models.HAIKU,
     priority: 'core',
   });
   const CAPS = { background: [50, 2], view: [70, 3], prediction: [55, 2] };

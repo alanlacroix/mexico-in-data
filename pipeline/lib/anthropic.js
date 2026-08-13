@@ -12,13 +12,14 @@
 // now runs ~11 model-calling jobs a day across six scripts. The principle it was
 // really protecting was one VOICE, and that survives.
 //
-//   Sonnet where the site has a view; Haiku where it has a task.
-//   If a wrong output would embarrass the analyst, Sonnet.
-//   If it would only embarrass the translator, Haiku.
+//   Sonnet where open-ended judgment has no independent check; Haiku where a narrow
+//   task has deterministic or independent verification.
 //
-// So ranking, "our view", the brief and the email stay on Sonnet. Literal
-// translation of a headline is mechanical and checkable, and is the single most
-// expensive line measured ($0.44 in one refresh), so it drops to Haiku.
+// Briefly Explained used to stay on Sonnet because it carries the site's view. It now
+// has a closed evidence packet, exact field-level citations, deterministic voice and
+// provenance gates, and a separate evidence-audit pass. That makes it a bounded,
+// checkable task and lets it use Haiku without weakening the publication contract.
+// Literal translation remains on Haiku for the same reason.
 //
 // Not doing prompt caching. Fable proposed it, but the minimum cacheable prefix is
 // 1024 tokens on Sonnet 5 and 4096 on Haiku 4.5, and the largest system prompt here
