@@ -61,7 +61,7 @@ assert.match(home, /class="dek"/, 'homepage stories must show a short summary wi
 // The feed moved from the curated-only lane to the weekly lane on 2026-08-02 so every
 // section has headlines behind its toggle. It still lives here, on the Brief.
 assert.match(home, /for item in f\.week/, 'the full news feed must live on the Brief instead of a separate Latest page');
-assert.match(home, /class="be-btn"/, 'key developments must offer the optional analysis layer');
+assert.match(home, /class="be-btn"/, 'every key development must offer the required analysis layer');
 assert.match(home, /class="be-badge">BE</, 'the homepage must explain the BE badge once');
 // (heading moved to _data/uiStrings.js with the bilingual homepage, 2026-08-03)
 assert.match(text('_data/uiStrings.js'), /ourView: 'Our view'/, 'the analysis layer must label the Brief’s judgment');
@@ -69,7 +69,7 @@ assert.match(home, /\{\{ L\.ourView \}\}/, 'the homepage must render the judgmen
 assert.match(text('_data/uiStrings.js'), /watching: 'What we\u2019re watching'/, 'the analysis layer must state what could confirm or weaken the view');
 assert.match(home, /\{\{ L\.watching \}\}/, 'the homepage must render the watching label');
 assert.match(voice, /export const ANALYSIS_SHAPE/, 'all generated analysis must share Alan’s approved reasoning pattern');
-for (const requirement of ['State the view in the first sentence', 'State the most likely outcome or direction', 'observable evidence would change the view', 'concrete implication for an investor or operator']) {
+for (const requirement of ['State the view in the first sentence', 'Name the next real decision, release, or result', 'observable evidence would confirm or weaken the view', 'concrete implication for an investor or operator']) {
   assert.ok(voice.includes(requirement), `analysis voice contract is missing: ${requirement}`);
 }
 assert.match(happeningBuilder, /ANALYSIS_SHAPE/, 'Briefly explained must use the shared analysis voice contract');

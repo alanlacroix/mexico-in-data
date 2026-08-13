@@ -20,7 +20,7 @@ const validationBlock = happening.match(
   /- name: Validate generated editorial claims[\s\S]*?(?=\n      - name: Write this edition's publication receipt)/,
 )?.[0] || '';
 const blockedSpendBlock = happening.match(
-  /- name: Preserve model spend when publication is blocked[\s\S]*?(?=\n      - name: Write this edition's publication receipt)/,
+  /- name: Preserve model spend when publication is blocked[\s\S]*?(?=\n      - name: Commit and push the edition once)/,
 )?.[0] || '';
 
 const alertWrite = 'fs.writeFileSync(ALERTS, JSON.stringify(alerts, null, 2));';
@@ -118,6 +118,11 @@ assert.match(blockedSpendBlock, /if: failure\(\)[\s\S]*git add data\/llm-spend\.
   'a blocked edition must preserve its real model spend before the job exits');
 assert.doesNotMatch(blockedSpendBlock, /git add[^\n]*(?:data\/brief|data\/happening|data\/news)/,
   'failure accounting must never publish editorial data from a blocked edition');
+assert.ok(
+  happening.indexOf('Build and validate the exact production artifact') < happening.indexOf('Preserve model spend when publication is blocked')
+    && happening.indexOf('Preserve model spend when publication is blocked') < happening.indexOf('Commit and push the edition once'),
+  'failed-run spend must be preserved after every pre-publication gate and before the edition commit',
+);
 assert.match(
   happening,
   /git add[^\n]*data\/news\/[^\n]*data\/event-status\.json[^\n]*data\/brief\.json[^\n]*data\/publication-status\.json/,

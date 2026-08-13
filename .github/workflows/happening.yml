@@ -115,9 +115,21 @@ jobs:
           node pipeline/assert-data.js
           node pipeline/test/homepage-feed-contract.test.mjs
 
-      # A blocked edition has still used the model. Preserve only that spend before
-      # exiting so a failed retry cannot make the $5 monthly cap forget real usage.
-      # This runs before any publication commit can exist in the local checkout.
+      - name: Write this edition's publication receipt
+        if: steps.timing.outputs.run == 'true'
+        env:
+          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
+          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
+          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: node pipeline/write-publication-status.mjs
+
+      - name: Build and validate the exact production artifact
+        if: steps.timing.outputs.run == 'true'
+        run: npm run release
+
+      # A blocked edition has still used the model. Preserve only that spend after
+      # every pre-publication gate so any validation or artifact failure cannot make
+      # the $5 monthly cap forget real usage. No editorial file is staged here.
       - name: Preserve model spend when publication is blocked
         if: failure() && steps.timing.outputs.run == 'true'
         run: |
@@ -136,18 +148,6 @@ jobs:
             git pull --rebase --autostash origin main || exit 1
           done
           exit 1
-
-      - name: Write this edition's publication receipt
-        if: steps.timing.outputs.run == 'true'
-        env:
-          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
-        run: node pipeline/write-publication-status.mjs
-
-      - name: Build and validate the exact production artifact
-        if: steps.timing.outputs.run == 'true'
-        run: npm run release
 
       - name: Commit and push the edition once
         if: steps.timing.outputs.run == 'true'
