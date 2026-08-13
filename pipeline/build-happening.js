@@ -580,6 +580,7 @@ THE VALUE TEST: every field must add something the headline and summary do not a
 - prediction: the most likely next outcome, followed by one observable event or condition that would confirm or weaken that view. Use a supplied date only when one exists. Distinguish an announcement from financing, permits, construction, enforcement, or operation.
 HARD LENGTH LIMITS: background is at most 45 words and 2 sentences. View is at most 60 words and 3 sentences. Prediction is at most 45 words and 2 sentences. Aim for 60 to 120 words across the complete unit, not per field.
 MISSING FIELDS: write only the fields named in missingFields for each item. For every other field return "" and []. This lets one bounded retry repair only what failed without rewriting approved work.
+CORRECTIONS: when an item includes corrections, those are exact deterministic reasons the prior draft failed. Fix each named problem. An unsupported number must either be removed or supported by adding the evidence ID that contains it, without exceeding two references. A word-cap failure must be rewritten below the stated cap, not merely trimmed mid-sentence.
 PREDICTION SHAPE: state what is likely to happen, then use if, unless, confirm, or weaken to name the observable evidence that tests it. Both parts are required. Do not merely list what to watch.
 EVIDENCE REFERENCES: return one or two exact evidence IDs for each field in backgroundRefs, viewRefs, and predictionRefs. Cite only evidence actually supporting that field. A judgment may be an inference, but its mechanism must be supported. Unknown ID, unsupported number, or factual claim not supported by the cited evidence fails publication.
 If the evidence cannot support a field, return "" and [] for that field. That will block publication for review; inventing or padding is worse.
@@ -600,6 +601,12 @@ ${BAN}`;
   // is still one reviewed unit. Nothing from an earlier edition is carried forward.
   const approvedThisRun = new Map();
   const approvedRefsThisRun = new Map();
+  const rejectionsThisRun = new Map();
+  const rememberRejection = (eventId, field, reasons) => {
+    const prior = rejectionsThisRun.get(eventId) || {};
+    prior[field] = arr(reasons).filter(Boolean);
+    rejectionsThisRun.set(eventId, prior);
+  };
   const payloadFor = (batch) => ({
     items: batch.map((x) => ({
       i: x.i,
@@ -607,6 +614,7 @@ ${BAN}`;
       summary: x.e.context || x.e.why || '',
       evidence: x.evidence,
       missingFields: CORE.filter((field) => !approvedThisRun.get(x.e.id)?.[field]),
+      corrections: rejectionsThisRun.get(x.e.id) || {},
     })),
   });
   // Start cheaply against the exact selected set. A single medium-effort retry is
@@ -635,7 +643,7 @@ ${BAN}`;
       for (const field of CORE) {
         if (approvedThisRun.get(item.e.id)?.[field]) continue;
         const text = stripDashWs(r[field]);
-        if (!text) continue;
+        if (!text) { rememberRejection(item.e.id, field, ['field was empty']); continue; }
         const refField = `${field}Refs`;
         const refs = [...new Set(arr(r[refField]).map(stripDashWs).filter(Boolean))];
         const invalidRefs = refs.filter((ref) => !evidenceById.has(ref));
@@ -644,6 +652,7 @@ ${BAN}`;
             : refs.length > 2 ? `${refs.length} evidence references (cap 2)`
               : `unknown evidence reference ${invalidRefs.join(', ')}`;
           console.warn(`  analysis reject ${item.e.id}.${field}: ${reason}`);
+          rememberRejection(item.e.id, field, [reason]);
           continue;
         }
         const [maxWords, maxSentences] = CAPS[field];
@@ -657,13 +666,25 @@ ${BAN}`;
             requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
             strictForecast: field === 'prediction', forbidFirstPerson: true });
         const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
-        if (!gate.ok || slop.length) { console.warn(`  analysis reject ${item.e.id}.${field}: ${[...gate.flags, ...slop].join('; ')}`); continue; }
+        if (!gate.ok || slop.length) {
+          const reasons = [...gate.flags, ...slop];
+          console.warn(`  analysis reject ${item.e.id}.${field}: ${reasons.join('; ')}`);
+          rememberRejection(item.e.id, field, reasons);
+          continue;
+        }
         // Anti-repetition (Audit 2026-07-17): drop a field that merely restates the one-line
         // summary or an earlier field, so the four parts stay four distinct things.
         const priors = [item.e.context || item.e.why, ...Object.values(proposed)].filter(Boolean);
-        if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
+        if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) {
+          console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`);
+          rememberRejection(item.e.id, field, ['repeats the summary or an earlier field']);
+          continue;
+        }
         proposed[field] = text;
         proposedRefs[field] = refs;
+        const priorRejections = rejectionsThisRun.get(item.e.id) || {};
+        delete priorRejections[field];
+        rejectionsThisRun.set(item.e.id, priorRejections);
       }
       const approved = mergeApprovedAttempt(approvedThisRun.get(item.e.id), proposed, CORE);
       approvedThisRun.set(item.e.id, approved);

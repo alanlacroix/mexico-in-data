@@ -173,7 +173,7 @@ const FEED_BOILERPLATE = /\bla publicaci[oó]n\b|appeared first on|\bthe post\b|
 // dólares). Cognates and single letters are excluded to avoid English false positives
 // ("de" in "Círculo de Crédito" is one hit; the bar is two). Two or more = untranslated.
 const SPANISH = /\b(de|del|la|el|los|las|un|una|unos|unas|por|con|que|para|se|su|sus|al|lo|m[aá]s|seg[uú]n|ante|entre|sobre|desde|hasta|pero|como|este|esta|estos|estas|ya|y|mdp|mdd|sexenio|arancel|aranceles|empresas?|gobierno|millones|d[oó]lar|d[oó]lares)\b/gi;
-const spanishDominant = (s) => (String(s || '').match(SPANISH) || []).length >= 2;
+const spanishDominant = (s, threshold = 2) => (String(s || '').match(SPANISH) || []).length >= threshold;
 const endsClean = (s) => /[.!?]["'”’)\]]?$/.test(String(s || '').trim());
 
 // Objective slop flags for an event-log entry. `context`/`why` carries the public copy.
@@ -190,7 +190,10 @@ export function slopFlags(ev = {}) {
   // "20,000 million dollars" is a calque of "20,000 millones de dólares": garbled in English
   // and ambiguous (Audit 2026-07-20: one reached the homepage as an Apollo headline).
   if (/\b\d{1,3},\d{3}\s+millions?\s+(?:dollars|pesos|d[oó]lares)/i.test(title + ' ' + body)) flags.push('money calque (N,000 million)');
-  if (body && spanishDominant(body)) flags.push('non-English context');
+  // Two short Spanish tokens can be part of a Mexican institution or legal title
+  // inside otherwise English copy (for example, "Manual de Contabilidad"). Full
+  // untranslated prose easily clears four; use the higher bar for sentence copy.
+  if (body && spanishDominant(body, 4)) flags.push('non-English context');
   if (body && !endsClean(body)) flags.push('truncated context');
   return flags;
 }

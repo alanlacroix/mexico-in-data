@@ -404,6 +404,8 @@ for (const phrase of [/\bThe base case is\b/i, /\bThat view would change if\b/i]
 assert.match(happeningBuilder, /strictForecast: field === 'prediction'/, 'every generated BE forecast must include a base case and a change-of-mind condition');
 assert.match(happeningBuilder, /const approvedThisRun = new Map\(\)/, 'approved retry fields must be scoped to one locked publication run');
 assert.match(happeningBuilder, /const approvedRefsThisRun = new Map\(\)/, 'each approved field must retain the exact evidence IDs it used');
+assert.match(happeningBuilder, /corrections: rejectionsThisRun\.get\(x\.e\.id\) \|\| \{\}/,
+  'a bounded retry must receive the exact deterministic reasons each missing field failed');
 assert.match(happeningBuilder, /mergeApprovedAttempt\(approvedThisRun\.get\(item\.e\.id\), proposed, CORE\)/,
   'a bounded retry may complete the same evidence-locked BE unit');
 assert.match(happeningBuilder, /CORE\.every\(\(field\) => approved\[field\] && arr\(approvedRefs\[field\]\)\.length\)/,

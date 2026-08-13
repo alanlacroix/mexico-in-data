@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { extractText } from '../lib/fetch-article.js';
-import { reportContextDistinct } from '../lib/lint.js';
+import { reportContextDistinct, slopFlags } from '../lib/lint.js';
 
 const require = createRequire(import.meta.url);
 const { briefReadiness } = require('../lib/brief-readiness.cjs');
@@ -75,6 +75,16 @@ assert.equal(reportContextDistinct({
   headline: "Mexico's annual inflation falls to 3.12 percent in July, its lowest rate since 2020",
   context: "The headline rate is close to Banxico's target, but underlying inflation remained more persistent.",
 }), true, 'a sourced caveat should earn the context line');
+assert.equal(slopFlags({
+  title: 'Mexico updates its governmental accounting rules',
+  why: 'The Manual de Contabilidad Gubernamental de México sets the reporting structure.',
+  url: 'https://example.com/manual', date: '2026-08-13',
+}).includes('non-English context'), false, 'Spanish proper names inside English analysis must not trigger the language gate');
+assert.equal(slopFlags({
+  title: 'Mexico updates its governmental accounting rules',
+  why: 'El manual establece las reglas para que los gobiernos presenten sus cuentas.',
+  url: 'https://example.com/manual', date: '2026-08-13',
+}).includes('non-English context'), true, 'untranslated Spanish prose must still fail the language gate');
 
 const extracted = extractText(`
   <html><body>
