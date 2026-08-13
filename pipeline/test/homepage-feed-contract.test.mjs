@@ -406,8 +406,8 @@ assert.match(happeningBuilder, /const approvedThisRun = new Map\(\)/, 'approved 
 assert.match(happeningBuilder, /const approvedRefsThisRun = new Map\(\)/, 'each approved field must retain the exact evidence IDs it used');
 assert.match(happeningBuilder, /mergeApprovedAttempt\(approvedThisRun\.get\(item\.e\.id\), proposed, CORE\)/,
   'a bounded retry may complete the same evidence-locked BE unit');
-assert.match(happeningBuilder, /CORE\.every\(\(field\) => approved\[field\]\)/,
-  'no BE field may become visible until all three fields have passed their gates');
+assert.match(happeningBuilder, /CORE\.every\(\(field\) => approved\[field\] && arr\(approvedRefs\[field\]\)\.length\)/,
+  'no BE field may become visible until all three fields and their evidence references have passed their gates');
 assert.doesNotMatch(happeningBuilder, /\[brief\.lead, \.\.\.arr\(brief\.items\)\]\.slice\(0, 3\)/,
   'targeted explanation must cover the full locked selection, not only the first three stories');
 assert.match(happeningBuilder, /SCHEDULED OUTCOMES \(hard requirement\)[\s\S]*SELECT it[\s\S]*unchanged[\s\S]*not news/i,
