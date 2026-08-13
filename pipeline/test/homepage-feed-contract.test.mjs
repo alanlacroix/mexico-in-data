@@ -20,11 +20,14 @@ const boards = require(path.join(root, '_data/boards.js'))();
 const registry = require(path.join(root, 'pipeline/news-sources.json'));
 const wire = require(path.join(root, 'data/news/wire.json'));
 const happening = require(path.join(root, 'data/happening.json'));
+const briefFile = require(path.join(root, 'data/brief.json'));
 
 assert.equal(editorialDay('2026-07-21T03:00:00Z'), '2026-07-20', 'the editorial day must not roll over at UTC midnight');
 assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial day must follow Mexico City');
 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
+assert.equal(dailyBrief.editorialDate, briefFile.meta.editorialDate,
+  'a carried Brief must keep its actual edition date instead of being relabelled as today');
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
 assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
 assert.equal(

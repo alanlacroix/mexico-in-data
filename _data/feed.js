@@ -233,7 +233,7 @@ function buildFeed(locale = 'en') {
       url: event.sourceUrl,
     });
   }
-  const today = brief.editorialDate;
+  const today = brief.currentEditorialDate;
   const upcoming = [...groupsByWhen.values()].map((group) => {
     const days = Math.round((Date.parse(`${group.date}T12:00:00Z`) - Date.parse(`${today}T12:00:00Z`)) / 864e5);
     return {

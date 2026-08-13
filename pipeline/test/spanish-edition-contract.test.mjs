@@ -31,6 +31,8 @@ if (!missing.length) {
     'an incomplete translation must carry the last complete Spanish Brief');
   assert.equal(spanish.brief, snapshot.brief);
   assert.equal(spanish.stories.length, snapshot.stories.length);
+  assert.equal(spanish.date, snapshot.editorialDate,
+    'a carried Spanish Brief must keep its actual edition date');
 }
 
 for (const sourceText of criticalStrings(english).filter((text) => cached(cache, text))) {
@@ -64,6 +66,9 @@ assert.match(source, /\.filter\(\(w\) => w\.title\)/,
   'optional untranslated wire items must be omitted from Spanish');
 assert.match(workflow, /node translate-es\.mjs --critical/,
   'the publication workflow must translate the exact selected Brief before release');
+assert.match(fs.readFileSync(path.join(root, '_includes', 'partials', 'header.njk'), 'utf8'),
+  /not feedEs\.translationCarrying/,
+  'English must not advertise a stale Spanish snapshot as the current translation');
 const englishWeekUrls = new Set(english.week.map((item) => item.url));
 for (const item of nativeInclusive.week.filter((entry) => entry.lang === 'ES' && entry.title === entry.orig)) {
   assert.equal(englishWeekUrls.has(item.url), false,

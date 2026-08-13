@@ -6,7 +6,8 @@
     <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
     {%- set Lh = uiStrings[locale] if locale else uiStrings.en %}
     <span class="mast-tag">{{ Lh.tagline }}</span>
-    {%- if page.url == '/' %}<a class="lang-link" href="/es/" lang="es" hreflang="es">ES</a>
+    {#- Do not advertise an older Spanish snapshot as the translation of a newer Brief. -#}
+    {%- if page.url == '/' and not feedEs.translationCarrying %}<a class="lang-link" href="/es/" lang="es" hreflang="es">ES</a>
     {%- elif page.url == '/es/' %}<a class="lang-link" href="/" lang="en" hreflang="en">EN</a>{% endif %}
   </div>
 </header>

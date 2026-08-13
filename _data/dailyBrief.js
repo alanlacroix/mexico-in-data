@@ -75,6 +75,9 @@ module.exports = function (now = new Date()) {
   // failures. Its actual date is exposed to the template; it is never called today's.
   const carryingLastBrief = !generatedForToday && briefAgeDays > 0 && briefAgeDays <= 3;
   const visibleClaims = generatedForToday || carryingLastBrief ? claims : [];
+  // A carried edition keeps its real dateline. Relabelling yesterday's Brief
+  // with today's calendar date makes stale content look newly published.
+  const visibleEditionDate = visibleClaims.length ? briefEditorialDate : editorialDate;
   const briefGroups = groupEvents(visibleClaims).map((group) => {
     const related = (happening.events || []).filter((event) => sameThread(group.event, event));
     return { ...group, coverage: mergeCoverage(group.coverage, related, related.flatMap((event) => event.coverage || [])) };
@@ -95,7 +98,8 @@ module.exports = function (now = new Date()) {
   }
 
   return {
-    editorialDate,
+    editorialDate: visibleEditionDate,
+    currentEditorialDate: editorialDate,
     briefEditorialDate,
     carryingLastBrief,
     newsThrough: clean(meta.reviewedAt || meta.generatedAt || happening.meta?.generatedAt),
