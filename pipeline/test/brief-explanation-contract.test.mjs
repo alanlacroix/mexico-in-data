@@ -48,12 +48,14 @@ missingPrimary.lead.analysisSources = [{ kind: 'article', source: 'Example News'
 assert.equal(briefReadiness(missingPrimary).targetMet, false,
   'a news citation without a primary record and independent evidence audit is not ready');
 assert.equal(briefReadiness({ lead: null, items: [] }).targetMet, true, 'a genuinely quiet edition is a clean no-op');
-assert.match(happeningBuilder, /web_search_20250305[\s\S]*max_uses: researchTargets\.length/,
+assert.match(happeningBuilder, /for \(const target of researchTargets\)[\s\S]*web_search_20250305[\s\S]*max_uses: 1/,
   'selected non-official stories must get one bounded primary-record search each');
-assert.match(happeningBuilder, /returnedBySearch\.has\(sourceKey\(source\.url\)\)/,
+assert.match(happeningBuilder, /searched\.find\(\(source\) => sourceKey\(source\.url\) === sourceKey\(proposed\.url\)\)/,
   'a model-returned research URL must have appeared in the provider search results');
 assert.match(happeningBuilder, /primaryResearchUrl\(source\.url\)/,
   'research must resolve to a government, regulator, international body, or corporate filing page');
+assert.match(happeningBuilder, /field === 'background'[\s\S]*kind === 'primary'/,
+  'Background must establish the current status from the primary record before interpretation');
 assert.match(happeningBuilder, /auditCompleted[\s\S]*initiated[\s\S]*preliminary[\s\S]*final[\s\S]*recovered/,
   'a separate evidence editor must check the status and procedural stage before publication');
 

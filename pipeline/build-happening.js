@@ -517,39 +517,45 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
   // evidence set. Search finds the document; it never writes the analysis.
   const researchTargets = fetched.filter((item) => needsAnalysis(item.e) && !primaryRecordUrl(item.e.url));
   if (researchTargets.length) {
-    const researchSchema = { type: 'object', additionalProperties: false, required: ['sources'], properties: { sources: {
-      type: 'array', items: { type: 'object', additionalProperties: false,
-        required: ['i', 'url', 'source', 'title'], properties: {
-          i: { type: 'integer' }, url: { type: 'string' }, source: { type: 'string' }, title: { type: 'string' },
-        } },
+    const researchSchema = { type: 'object', additionalProperties: false, required: ['source'], properties: { source: {
+      type: 'object', additionalProperties: false, required: ['url', 'source', 'title'], properties: {
+        url: { type: 'string' }, source: { type: 'string' }, title: { type: 'string' },
+      },
     } } };
-    const researched = await askJSON({
-      system: `Find one public PRIMARY RECORD for each supplied Mexico news story. Use web search once per story. Prefer the government agency, regulator, court, legislature, official statistics release, company filing, or company investor-relations document that establishes the current status and procedural stage. Do not return another news article, search result page, social post, Wikipedia page, lobby group, or commentary. The record must help catch a stale or mistaken stage in the article, not merely repeat its headline. Return an empty URL when no primary public record exists. Return JSON only.`,
-      user: JSON.stringify({ stories: researchTargets.map((item, i) => ({
-        i, headline: item.e.title, summary: item.e.why, source: item.e.source, sourceUrl: item.e.url,
-      })) }),
-      schema: researchSchema,
-      maxTokens: 1800,
-      effort: 'low',
-      priority: 'core',
-      returnMeta: true,
-      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: researchTargets.length }],
-    });
-    const returnedBySearch = new Set(arr(researched?.webSources).map((source) => sourceKey(source.url)));
-    const candidates = arr(researched?.data?.sources).filter((source) => {
-      const target = researchTargets[Number(source?.i)];
-      return target && /^https:\/\//i.test(String(source?.url || ''))
-        && returnedBySearch.has(sourceKey(source.url))
-        && primaryResearchUrl(source.url)
-        && sourceHost(source.url) !== sourceHost(target.e.url);
-    });
-    await Promise.all(candidates.map(async (source) => {
-      const target = researchTargets[Number(source.i)];
-      if (target.research.length) return;
+    // One small request per story is simpler and more dependable than asking one model
+    // turn to perform five searches and hoping it uses the full allowance. Haiku only
+    // identifies the record; Sonnet still writes the analysis after we fetch the page.
+    for (const target of researchTargets) {
+      const researched = await askJSON({
+        system: `Use the web search exactly once. Find one public PRIMARY RECORD for this Mexico news story. Prefer the government agency, regulator, court, legislature, official statistics release, company filing, or company investor-relations document that establishes the current status and procedural stage. Do not return another news article, search result page, social post, Wikipedia page, lobby group, or commentary. The record must help catch a stale or mistaken stage in the article, not merely repeat its headline. Return an empty URL when no primary public record exists. Return JSON only.`,
+        user: JSON.stringify({ headline: target.e.title, summary: target.e.why, source: target.e.source, sourceUrl: target.e.url }),
+        schema: researchSchema,
+        maxTokens: 500,
+        model: models.HAIKU,
+        priority: 'core',
+        returnMeta: true,
+        tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 1 }],
+      });
+      const proposed = researched?.data?.source || {};
+      const searched = arr(researched?.webSources);
+      const exact = searched.find((source) => sourceKey(source.url) === sourceKey(proposed.url));
+      const source = exact || searched.find((candidate) => primaryResearchUrl(candidate.url));
+      if (!source || !primaryResearchUrl(source.url) || sourceHost(source.url) === sourceHost(target.e.url)) {
+        console.warn(`  research miss ${target.e.id}: no verified primary record`);
+        continue;
+      }
       const result = await fetchArticle(source.url).catch(() => ({ ok: false, text: '' }));
-      if (String(result.text || '').length < 250) return;
-      target.research.push({ source: stripDashWs(source.source) || sourceHost(source.url), title: stripDashWs(source.title), url: source.url, result });
-    }));
+      if (String(result.text || '').length < 250) {
+        console.warn(`  research miss ${target.e.id}: primary record could not be read`);
+        continue;
+      }
+      target.research.push({
+        source: stripDashWs(proposed.source) || sourceHost(source.url),
+        title: stripDashWs(proposed.title) || stripDashWs(source.title),
+        url: source.url,
+        result,
+      });
+    }
     console.log(`  research: ${fetched.filter((item) => primaryRecordUrl(item.e.url) || item.research.length).length}/${fetched.filter((item) => needsAnalysis(item.e)).length} selected stories have a primary record`);
   }
   // The article's own link-preview image rides along free with the fetch (unfurl-style
@@ -647,14 +653,14 @@ THE VALUE TEST: every field must add something the headline and summary do not a
 - background: the one institution, rule, market structure, or durable fact a newcomer needs to follow this story. Usually one sentence, two only when the second adds scale.
 - view: verdict first. Explain the practical consequence, the mechanism that produces it, and the relevant tradeoff. Say who is affected. If the story leads with money, capacity, jobs, or another announcement number, use a supplied denominator or comparison. If none exists, do not call the number large, small, good, or important.
 - prediction: the concrete next decision, release, or result and the observable fork it will resolve. Add a likely outcome only when the evidence supports one. Use a supplied date only when one exists. Distinguish an announcement from financing, permits, construction, enforcement, or operation.
-HARD LENGTH LIMITS: background is at most 45 words and 2 sentences. View is at most 60 words and 3 sentences. Prediction is at most 45 words and 2 sentences. Aim for 60 to 120 words across the complete unit, not per field.
+DRAFT TARGETS: background at most 35 words, view at most 50, prediction at most 35. These targets leave editing room below the hard publication caps of 45, 60, and 45 words. Aim for 60 to 105 words across the complete unit, not per field.
 MISSING FIELDS: write only the fields named in missingFields for each item. For every other field return "" and []. This lets one bounded retry repair only what failed without rewriting approved work.
 CORRECTIONS: when an item includes corrections, those are exact deterministic reasons the prior draft failed. Fix each named problem. An unsupported number must either be removed or supported by adding the evidence ID that contains it, without exceeding two references. A word-cap failure must be rewritten below the stated cap, not merely trimmed mid-sentence.
 PREDICTION SHAPE: name the next real step, then use if, unless, whether, confirm, or weaken to state the observable evidence that tests the view. Do not force a probability call when the supplied evidence supports only the next decision or release.
-EVIDENCE REFERENCES: return one or two exact evidence IDs for each field in backgroundRefs, viewRefs, and predictionRefs. Cite only evidence actually supporting that field. Across the complete unit, at least one field must cite evidence whose kind is "primary". A judgment may be an inference, but its mechanism must be supported. Unknown ID, unsupported number, or factual claim not supported by the cited evidence fails publication.
+EVIDENCE REFERENCES: return one or two exact evidence IDs for each field in backgroundRefs, viewRefs, and predictionRefs. Cite only evidence actually supporting that field. backgroundRefs must include evidence whose kind is "primary"; Background is where the public record establishes the current status before interpretation begins. A judgment may be an inference, but its mechanism must be supported. Unknown ID, unsupported number, or factual claim not supported by the cited evidence fails publication.
 If the evidence cannot support a field, return "" and [] for that field. That will block publication for review; inventing or padding is worse.
 Briefly Explained is not written in the first person. Do not use I, me, my, we, or our. Start with the actual actor, event, or outcome. Do not mechanically begin predictions with "The base case is" or follow with "That view would change if". Those phrases may appear once in a batch if they are genuinely the clearest wording, but repeated openers are a publication failure. First person is not part of the publication voice.
-Length is a claim about stakes, so make it true. A "this matters less than it looks" verdict should be short. Recent units that read well land roughly 60 to 120 words across all three fields; that is calibration, not a target. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number absent from the cited evidence. Return JSON.
+Length is a claim about stakes, so make it true. A "this matters less than it looks" verdict should be short. Never write "fiscal room"; say ability to spend or borrow. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number absent from the cited evidence. Return JSON.
 
 ${TRUST}
 
@@ -720,6 +726,12 @@ ${BAN}`;
           const reason = !refs.length ? 'no evidence reference'
             : refs.length > 2 ? `${refs.length} evidence references (cap 2)`
               : `unknown evidence reference ${invalidRefs.join(', ')}`;
+          console.warn(`  analysis reject ${item.e.id}.${field}: ${reason}`);
+          rememberRejection(item.e.id, field, [reason]);
+          continue;
+        }
+        if (field === 'background' && !refs.some((ref) => evidenceById.get(ref)?.kind === 'primary')) {
+          const reason = 'background must cite the supplied primary record';
           console.warn(`  analysis reject ${item.e.id}.${field}: ${reason}`);
           rememberRejection(item.e.id, field, [reason]);
           continue;
