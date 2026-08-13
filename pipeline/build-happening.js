@@ -374,7 +374,8 @@ const BG_MAX = 5;             // The Brief itself has a hard cap of five selecte
 const BG_FETCH_MAX = 9;       // Failed article fetches must not consume the scarce analysis slots.
 const BG_DAYS = 14;           // recent events earn the analysis fetch
 const BG_MIN_IMP = 5;         // ordinary headlines do not need an analysis layer
-const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
+const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/;\s*/g, ', ').replace(/\s+/g, ' ').trim();
+const contextualEvidence = (source) => source && source.kind !== 'article' && /^https:\/\//i.test(String(source.url || ''));
 const sourceHost = (value) => {
   try { return new URL(String(value || '')).hostname.toLowerCase().replace(/^www\./, ''); }
   catch { return ''; }
@@ -443,7 +444,7 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
   const CORE = ['background', 'view', 'prediction'];
   const coreComplete = (e) => CORE.every((f) => stripDashWs(e[f]));
   const refsComplete = (e) => CORE.every((field) => arr(e?.analysisRefs?.[field]).some((ref) => stripDashWs(ref)));
-  const sourcesComplete = (e) => arr(e?.analysisSources).some((source) => source?.kind === 'primary' && /^https:\/\//i.test(String(source?.url || '')));
+  const sourcesComplete = (e) => arr(e?.analysisSources).some(contextualEvidence);
   const analysisReady = (e) => Boolean(e && coreComplete(e) && refsComplete(e) && sourcesComplete(e) && e.analysisV === ANALYSIS_VERSION);
   const needsAnalysis = (e) => !analysisReady(e) || totalWords(e) > 190;
   const outcome = (event, reason) => ({ id: event?.id || '', ready: analysisReady(event), reason });
@@ -630,7 +631,7 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
   // auditable evidence set. If even that set is empty, the story remains unready.
   const items = fetched.filter((x) => needsAnalysis(x.e)).slice(0, BG_MAX).map((x, i) => ({
     i, e: x.e, evidence: evidenceFor(x),
-  })).filter((item) => item.evidence.some((source) => source.kind === 'primary'));
+  })).filter((item) => item.evidence.some(contextualEvidence));
   const imgGot = fetched.filter((x) => x.r.image).length;
   console.log(`  fetch: ${want.length} wanted · ${items.length} to analyze · ${imgGot} images grabbed`);
   if (!items.length) return {
@@ -657,7 +658,7 @@ DRAFT TARGETS: background at most 35 words, view at most 50, prediction at most 
 MISSING FIELDS: write only the fields named in missingFields for each item. For every other field return "" and []. This lets one bounded retry repair only what failed without rewriting approved work.
 CORRECTIONS: when an item includes corrections, those are exact deterministic reasons the prior draft failed. Fix each named problem. An unsupported number must either be removed or supported by adding the evidence ID that contains it, without exceeding two references. A word-cap failure must be rewritten below the stated cap, not merely trimmed mid-sentence.
 PREDICTION SHAPE: name the next real step, then use if, unless, whether, confirm, or weaken to state the observable evidence that tests the view. Do not force a probability call when the supplied evidence supports only the next decision or release.
-EVIDENCE REFERENCES: return one or two exact evidence IDs for each field in backgroundRefs, viewRefs, and predictionRefs. Cite only evidence actually supporting that field. backgroundRefs must include evidence whose kind is "primary"; Background is where the public record establishes the current status before interpretation begins. A judgment may be an inference, but its mechanism must be supported. Unknown ID, unsupported number, or factual claim not supported by the cited evidence fails publication.
+EVIDENCE REFERENCES: return one or two exact evidence IDs for each field in backgroundRefs, viewRefs, and predictionRefs. Cite only evidence actually supporting that field. backgroundRefs must include evidence beyond the original article, preferably a primary record and otherwise a separate report, standing fact, official number, or calendar record. Background is where the second source establishes context before interpretation begins. A judgment may be an inference, but its mechanism must be supported. Never round, shorten, or drop decimals from a supplied number. Unknown ID, unsupported number, or factual claim not supported by the cited evidence fails publication.
 If the evidence cannot support a field, return "" and [] for that field. That will block publication for review; inventing or padding is worse.
 Briefly Explained is not written in the first person. Do not use I, me, my, we, or our. Start with the actual actor, event, or outcome. Do not mechanically begin predictions with "The base case is" or follow with "That view would change if". Those phrases may appear once in a batch if they are genuinely the clearest wording, but repeated openers are a publication failure. First person is not part of the publication voice.
 Length is a claim about stakes, so make it true. A "this matters less than it looks" verdict should be short. Never write "fiscal room"; say ability to spend or borrow. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number absent from the cited evidence. Return JSON.
@@ -703,7 +704,7 @@ ${BAN}`;
     effort,
     priority: 'core',
   });
-  const CAPS = { background: [45, 2], view: [60, 3], prediction: [45, 2] };
+  const CAPS = { background: [50, 2], view: [70, 3], prediction: [55, 2] };
   let added = 0;
   const completed = new Set();
   const applyDraft = (out, batch) => {
@@ -730,8 +731,8 @@ ${BAN}`;
           rememberRejection(item.e.id, field, [reason]);
           continue;
         }
-        if (field === 'background' && !refs.some((ref) => evidenceById.get(ref)?.kind === 'primary')) {
-          const reason = 'background must cite the supplied primary record';
+        if (field === 'background' && !refs.some((ref) => contextualEvidence(evidenceById.get(ref)))) {
+          const reason = 'background must cite evidence beyond the original article';
           console.warn(`  analysis reject ${item.e.id}.${field}: ${reason}`);
           rememberRejection(item.e.id, field, [reason]);
           continue;
@@ -791,11 +792,11 @@ ${BAN}`;
       // attempt or its one bounded retry, but never from old prose.
       if (CORE.every((field) => approved[field] && arr(approvedRefs[field]).length)) {
         const citedIds = [...new Set(CORE.flatMap((field) => approvedRefs[field]))];
-        if (!citedIds.some((id) => evidenceById.get(id)?.kind === 'primary')) {
+        if (!citedIds.some((id) => contextualEvidence(evidenceById.get(id)))) {
           delete approved.background;
           delete approvedRefs.background;
-          rememberRejection(item.e.id, 'background', ['the complete unit did not cite the supplied primary record']);
-          console.warn(`  analysis incomplete ${item.e.id}: no primary record cited`);
+          rememberRejection(item.e.id, 'background', ['the complete unit did not cite evidence beyond the original article']);
+          console.warn(`  analysis incomplete ${item.e.id}: no independent context cited`);
           continue;
         }
         const analysisSources = citedIds.map((id) => evidenceById.get(id))
@@ -848,11 +849,11 @@ ${BAN}`;
           field, text: approved[field], refs: refs[field],
           evidence: arr(refs[field]).map((id) => byId.get(id)).filter(Boolean),
         })),
-        primaryRecords: item.evidence.filter((entry) => entry.kind === 'primary'),
+        contextEvidence: item.evidence.filter(contextualEvidence),
       };
     }) };
     const result = await askJSON({
-      system: `You are the independent evidence editor for Briefly Explained. Review every field claim by claim. Return ok true only when: (1) every factual status, stage, date, actor and number is directly supported by that field's cited evidence; (2) no supplied primary record contradicts it; (3) a labeled view is a narrow inference whose mechanism follows from the evidence; and (4) What we're watching names a real next step and an observable test without treating correlation as proof of motive. Pay special attention to words such as alleged, initiated, preliminary, final, proposed, approved, recovered, retained and lost. A source link alone proves nothing. Reject paraphrase that adds no context. For each failure name the field and give one concrete correction. Return exactly one review for every input index and JSON only.`,
+      system: `You are the independent evidence editor for Briefly Explained. Review every field claim by claim. Return ok true only when: (1) every factual status, stage, date, actor and number is directly supported by that field's cited evidence; (2) no supplied primary or contextual record contradicts it; (3) a labeled view is a narrow inference whose mechanism follows from the evidence; and (4) What we're watching names a real next step and an observable test without treating correlation as proof of motive. Pay special attention to words such as alleged, initiated, preliminary, final, proposed, approved, recovered, retained and lost. A source link alone proves nothing. Reject paraphrase that adds no context. For each failure name the field and give one concrete correction. Return exactly one review for every input index and JSON only.`,
       user: JSON.stringify(payload),
       schema: auditSchema,
       maxTokens: 2400,
@@ -1037,7 +1038,7 @@ async function main() {
         generatedAt: now.toISOString(),
         count: events.length,
         llm: hasLLM(),
-        analysisTarget: { policy: 'every-selected-story-primary-audited-v3', ids: selectedIds, ...analysis },
+        analysisTarget: { policy: 'every-selected-story-context-audited-v3', ids: selectedIds, ...analysis },
       },
       events,
     };

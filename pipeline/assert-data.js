@@ -135,8 +135,8 @@ try {
       if (!Array.isArray(event.analysisSources) || !event.analysisSources.some((source) => isSafeHttpUrl(source?.url))) {
         fails.push(`happening: ${event.id || index} has no linked Briefly Explained evidence`);
       }
-      if (!event.analysisSources?.some((source) => source?.kind === 'primary' && isSafeHttpUrl(source?.url))) {
-        fails.push(`happening: ${event.id || index} has no primary record in Briefly Explained evidence`);
+      if (!event.analysisSources?.some((source) => source?.kind !== 'article' && isSafeHttpUrl(source?.url))) {
+        fails.push(`happening: ${event.id || index} has no context source beyond the original article`);
       }
       for (const source of event.analysisSources || []) {
         if (!source?.source) fails.push(`happening: ${event.id || index} has an unnamed Briefly Explained source`);
@@ -227,8 +227,8 @@ try {
       if (!Array.isArray(claim.analysisSources) || !claim.analysisSources.some((source) => isSafeHttpUrl(source?.url))) {
         fails.push(`brief: claim ${index + 1} has no linked Briefly Explained evidence`);
       }
-      if (!claim.analysisSources?.some((source) => source?.kind === 'primary' && isSafeHttpUrl(source?.url))) {
-        fails.push(`brief: claim ${index + 1} has no primary record in Briefly Explained evidence`);
+      if (!claim.analysisSources?.some((source) => source?.kind !== 'article' && isSafeHttpUrl(source?.url))) {
+        fails.push(`brief: claim ${index + 1} has no context source beyond the original article`);
       }
     }
   }

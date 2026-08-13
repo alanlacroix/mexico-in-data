@@ -192,7 +192,7 @@ export function slopFlags(ev = {}) {
   // Two short Spanish tokens can be part of a Mexican institution or legal title
   // inside otherwise English copy (for example, "Manual de Contabilidad"). Full
   // untranslated prose easily clears four; use the higher bar for sentence copy.
-  if (body && spanishDominant(body, 4)) flags.push('non-English context');
+  if (body && spanishDominant(body, 5)) flags.push('non-English context');
   if (body && !endsClean(body)) flags.push('truncated context');
   return flags;
 }

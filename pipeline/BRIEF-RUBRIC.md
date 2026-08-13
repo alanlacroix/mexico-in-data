@@ -37,7 +37,7 @@ If an event is postponed, cancelled, or deliberately waived, the calendar row ma
 
 The visible summary is factual and comes from the linked report. Every selected key development opens **Briefly explained**, which has a stricter contract:
 
-- **Background:** the structural fact a newcomer needs, drawn from the report, a primary public record, related reporting, and the site's sourced standing facts.
+- **Background:** the structural fact a newcomer needs, drawn from evidence beyond the original report. Prefer a primary public record; otherwise use a separate report, standing fact, official number, or calendar record.
 - **Our view:** a narrow judgment tied to a concrete mechanism or tradeoff. This is analysis, not reported fact.
 - **What we're watching:** the next real decision, release, or result and the observable fork it will resolve. Include a likely outcome only when the evidence supports one.
 
@@ -45,7 +45,7 @@ Briefly Explained never uses first person. State the likely next outcome directl
 
 Ordinary headlines never get this layer.
 
-The pipeline runs in one fixed order: build the event log without speculative analysis, reconcile scheduled outcomes, lock the Brief selection, find a primary record for each selected non-official report, explain that exact full selection, audit each claim against its cited evidence and the primary record, and rebuild without changing its order. The normal and recovery workflows use the same sequence. Each field retains the evidence IDs it used, and the panel links the reader to the cited sources. A missing model, exhausted budget, thin evidence, failed research, or rejected field blocks the new edition and leaves the last complete edition live. It never changes the ranking to hide the failure.
+The pipeline runs in one fixed order: build the event log without speculative analysis, reconcile scheduled outcomes, lock the Brief selection, look for a primary record for each selected non-official report, explain that exact full selection with evidence beyond the original article, audit each claim against its cited evidence, and rebuild without changing its order. The normal and recovery workflows use the same sequence. Each field retains the evidence IDs it used, and the panel links the reader to the cited sources. A missing model, exhausted budget, thin evidence, failed context, or rejected field blocks the new edition and leaves the last complete edition live. It never changes the ranking to hide the failure.
 
 Factual copy uses ordinary actor-action-fact language. Terms such as “hawkish” and “dovish” are compressed judgments, not report copy. State the rate decision, guidance and reason directly. The source title and dek are retained separately from the rewrite, and the copy gate validates against those inputs rather than allowing generated context to validate itself.
 
@@ -73,7 +73,7 @@ An LLM may pre-draft context into **`context_draft`** from a pasted `excerpt`, b
 ## The law (unchanged)
 
 - Closed evidence: search may discover a primary public record, but only text fetched from retained links can support the writing.
-- No sentence without evidence: every Briefly Explained field carries one or two retained evidence IDs, and every unit cites at least one reader-accessible primary record.
+- No sentence without evidence: every Briefly Explained field carries one or two retained evidence IDs, and every unit cites a reader-accessible source beyond the original article. Use a primary record whenever one is available.
 - Separate claim audit: after drafting, a second pass checks status, stage, date, actor, mechanism, and contradictions before any field is approved.
 - The model never does math; every number appears verbatim in a cited input.
 - The Brief may refresh as new reporting arrives, but the selection and analysis contract does not change during the day.

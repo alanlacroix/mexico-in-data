@@ -7,7 +7,7 @@
 const DEFAULT_MIN_IMPORTANCE = 5;
 const DEFAULT_SOFT_FLOOR = 3;
 const DEFAULT_CAP = 5;
-// v9 adds a separately discovered primary record plus an independent claim audit.
+// v9 adds separately retained context beyond the original article plus an independent claim audit.
 // Older prose is never mistaken for the current product when an event returns.
 const ANALYSIS_VERSION = 9;
 const ANALYSIS_FIELDS = ['background', 'view', 'prediction'];
@@ -28,7 +28,7 @@ function analysisState(event) {
   const refsComplete = ANALYSIS_FIELDS.every((field) => Array.isArray(event && event.analysisRefs && event.analysisRefs[field])
     && event.analysisRefs[field].some(clean));
   const sourcesComplete = Array.isArray(event && event.analysisSources)
-    && event.analysisSources.some((source) => source && source.kind === 'primary'
+    && event.analysisSources.some((source) => source && source.kind !== 'article'
       && /^https:\/\//i.test(clean(source.url)));
   const complete = textComplete && refsComplete && sourcesComplete && version >= ANALYSIS_VERSION;
   let state = 'missing';

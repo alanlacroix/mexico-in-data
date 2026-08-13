@@ -179,7 +179,7 @@ function buildFeed(locale = 'en') {
     watch: story.prediction || '',
     why: story.view || story.bg || '',
     be: Boolean(story.bg && story.view && story.prediction && story.analysisV >= 9
-      && story.analysisSources?.some((source) => source?.kind === 'primary'
+      && story.analysisSources?.some((source) => source?.kind !== 'article'
         && /^https:\/\//i.test(String(source?.url || '')))),
     analysisSources: story.analysisSources || [],
   }));

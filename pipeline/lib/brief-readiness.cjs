@@ -14,7 +14,7 @@ function hasApprovedAnalysis(story) {
   return Number(story && story.analysisV) >= 9
     && ['background', 'view', 'prediction'].every((field) => text(story && story[field]))
     && ['background', 'view', 'prediction'].every((field) => arr(refs && refs[field]).some(text))
-    && arr(story && story.analysisSources).some((source) => source && source.kind === 'primary'
+    && arr(story && story.analysisSources).some((source) => source && source.kind !== 'article'
       && /^https:\/\//i.test(text(source.url)));
 }
 
@@ -33,7 +33,7 @@ function briefReadiness(brief) {
     .filter(({ story }) => hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
   return {
-    policy: 'every-selected-story-primary-audited-v5',
+    policy: 'every-selected-story-context-audited-v5',
     storyCount: stories.length,
     targetCount: targetStories.length,
     requiredCount: minimumReadyCount,

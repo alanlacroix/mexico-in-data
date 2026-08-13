@@ -54,8 +54,8 @@ assert.match(happeningBuilder, /searched\.find\(\(source\) => sourceKey\(source\
   'a model-returned research URL must have appeared in the provider search results');
 assert.match(happeningBuilder, /primaryResearchUrl\(source\.url\)/,
   'research must resolve to a government, regulator, international body, or corporate filing page');
-assert.match(happeningBuilder, /field === 'background'[\s\S]*kind === 'primary'/,
-  'Background must establish the current status from the primary record before interpretation');
+assert.match(happeningBuilder, /field === 'background'[\s\S]*contextualEvidence/,
+  'Background must establish context from evidence beyond the original article');
 assert.match(happeningBuilder, /auditCompleted[\s\S]*initiated[\s\S]*preliminary[\s\S]*final[\s\S]*recovered/,
   'a separate evidence editor must check the status and procedural stage before publication');
 
