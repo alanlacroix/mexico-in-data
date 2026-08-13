@@ -2,215 +2,70 @@
   "siteUrl": "https://mexicobrief.com",
   "outputDir": "_site",
   "publicRoutes": [
-    {
-      "route": "/",
-      "file": "index.html",
-      "canonical": "/"
-    },
-    {
-      "route": "/es/",
-      "file": "es/index.html",
-      "canonical": "/es/"
-    },
-    {
-      "route": "/reports/mexico-overview-2026.html",
-      "file": "reports/mexico-overview-2026.html",
-      "canonical": "/reports/mexico-overview-2026"
-    },
-    {
-      "route": "/economy.html",
-      "file": "economy.html",
-      "canonical": "/economy"
-    },
-    {
-      "route": "/payments.html",
-      "file": "payments.html",
-      "canonical": "/payments"
-    },
-    {
-      "route": "/deals.html",
-      "file": "deals.html",
-      "canonical": "/deals"
-    },
-    {
-      "route": "/energy.html",
-      "file": "energy.html",
-      "canonical": "/energy"
-    },
-    {
-      "route": "/politics.html",
-      "file": "politics.html",
-      "canonical": "/politics"
-    },
-    {
-      "route": "/society.html",
-      "file": "society.html",
-      "canonical": "/society"
-    },
-    {
-      "route": "/us-mexico.html",
-      "file": "us-mexico.html",
-      "canonical": "/us-mexico"
-    },
-    {
-      "route": "/sources.html",
-      "file": "sources.html",
-      "canonical": "/sources"
-    },
-    {
-      "route": "/about.html",
-      "file": "about.html",
-      "canonical": "/about"
-    }
+    { "route": "/", "file": "index.html", "canonical": "/" },
+    { "route": "/es/", "file": "es/index.html", "canonical": "/es/" }
   ],
   "compatibilityRoutes": [
-    {
-      "route": "/404.html",
-      "file": "404.html",
-      "canonical": "/404"
-    }
+    { "route": "/404.html", "file": "404.html", "canonical": "/404" }
   ],
   "redirectRoutes": [
-    {
-      "route": "/latest",
-      "target": "/"
-    },
-    {
-      "route": "/latest.html",
-      "target": "/"
-    },
-    {
-      "route": "/the-read",
-      "target": "/"
-    },
-    {
-      "route": "/the-read.html",
-      "target": "/"
-    },
-    {
-      "route": "/journal",
-      "target": "/"
-    },
-    {
-      "route": "/journal.html",
-      "target": "/"
-    },
-    {
-      "route": "/data",
-      "target": "/sources"
-    },
-    {
-      "route": "/data.html",
-      "target": "/sources"
-    },
-    {
-      "route": "/money",
-      "target": "/economy"
-    },
-    {
-      "route": "/money.html",
-      "target": "/economy"
-    },
-    {
-      "route": "/security",
-      "target": "/society"
-    },
-    {
-      "route": "/security.html",
-      "target": "/society"
-    },
-    {
-      "route": "/topics-start-mockup",
-      "target": "/economy"
-    },
-    {
-      "route": "/topics-start-mockup.html",
-      "target": "/economy"
-    },
-    {
-      "route": "/overview",
-      "target": "/"
-    },
-    {
-      "route": "/overview.html",
-      "target": "/"
-    },
-    {
-      "route": "/model",
-      "target": "/"
-    },
-    {
-      "route": "/model.html",
-      "target": "/"
-    },
-    {
-      "route": "/mockup",
-      "target": "/"
-    },
-    {
-      "route": "/mockup.html",
-      "target": "/"
-    },
-    {
-      "route": "/daily-start-mockup.html",
-      "target": "/"
-    },
-    {
-      "route": "/charts-start-mockup.html",
-      "target": "/"
-    },
-    {
-      "route": "/trade.html",
-      "target": "/us-mexico.html"
-    },
-    {
-      "route": "/atlas",
-      "target": "/"
-    },
-    {
-      "route": "/atlas.html",
-      "target": "/"
-    },
-    {
-      "route": "/explore",
-      "target": "/"
-    },
-    {
-      "route": "/explore.html",
-      "target": "/"
-    },
-    {
-      "route": "/chart",
-      "target": "/"
-    },
-    {
-      "route": "/chart.html",
-      "target": "/"
-    },
-    {
-      "route": "/weekly",
-      "target": "/"
-    },
-    {
-      "route": "/weekly.html",
-      "target": "/"
-    },
-    {
-      "route": "/latest-edition",
-      "target": "/"
-    },
-    {
-      "route": "/latest-edition.html",
-      "target": "/"
-    },
-    {
-      "route": "/privacy",
-      "target": "/"
-    },
-    {
-      "route": "/privacy.html",
-      "target": "/"
-    }
+    { "route": "/about", "target": "/" },
+    { "route": "/about.html", "target": "/" },
+    { "route": "/atlas", "target": "/" },
+    { "route": "/atlas.html", "target": "/" },
+    { "route": "/chart", "target": "/" },
+    { "route": "/chart.html", "target": "/" },
+    { "route": "/charts-start-mockup.html", "target": "/" },
+    { "route": "/daily-start-mockup.html", "target": "/" },
+    { "route": "/data", "target": "/" },
+    { "route": "/data.html", "target": "/" },
+    { "route": "/deals", "target": "/" },
+    { "route": "/deals.html", "target": "/" },
+    { "route": "/economy", "target": "/" },
+    { "route": "/economy.html", "target": "/" },
+    { "route": "/energy", "target": "/" },
+    { "route": "/energy.html", "target": "/" },
+    { "route": "/explore", "target": "/" },
+    { "route": "/explore.html", "target": "/" },
+    { "route": "/journal", "target": "/" },
+    { "route": "/journal.html", "target": "/" },
+    { "route": "/latest", "target": "/" },
+    { "route": "/latest.html", "target": "/" },
+    { "route": "/latest-edition", "target": "/" },
+    { "route": "/latest-edition.html", "target": "/" },
+    { "route": "/model", "target": "/" },
+    { "route": "/model.html", "target": "/" },
+    { "route": "/money", "target": "/" },
+    { "route": "/money.html", "target": "/" },
+    { "route": "/mockup", "target": "/" },
+    { "route": "/mockup.html", "target": "/" },
+    { "route": "/overview", "target": "/" },
+    { "route": "/overview.html", "target": "/" },
+    { "route": "/payments", "target": "/" },
+    { "route": "/payments.html", "target": "/" },
+    { "route": "/politics", "target": "/" },
+    { "route": "/politics.html", "target": "/" },
+    { "route": "/privacy", "target": "/" },
+    { "route": "/privacy.html", "target": "/" },
+    { "route": "/reports/mexico-overview-2026", "target": "/" },
+    { "route": "/reports/mexico-overview-2026.html", "target": "/" },
+    { "route": "/reports/mexico-overview-2026.pdf", "target": "/" },
+    { "route": "/security", "target": "/" },
+    { "route": "/security.html", "target": "/" },
+    { "route": "/society", "target": "/" },
+    { "route": "/society.html", "target": "/" },
+    { "route": "/sources", "target": "/" },
+    { "route": "/sources.html", "target": "/" },
+    { "route": "/the-read", "target": "/" },
+    { "route": "/the-read.html", "target": "/" },
+    { "route": "/topics-start-mockup", "target": "/" },
+    { "route": "/topics-start-mockup.html", "target": "/" },
+    { "route": "/trade", "target": "/" },
+    { "route": "/trade.html", "target": "/" },
+    { "route": "/us-mexico", "target": "/" },
+    { "route": "/us-mexico.html", "target": "/" },
+    { "route": "/weekly", "target": "/" },
+    { "route": "/weekly.html", "target": "/" }
   ],
   "previewRoutes": [],
   "requiredFiles": [
@@ -218,22 +73,15 @@
     "_redirects",
     "robots.txt",
     "sitemap.xml",
+    "feed.xml",
     "design/mckinsey-mx.css",
-    "assets/mb.js",
+    "assets/og.png",
+    "assets/og.svg",
     "data/publication-status.json",
-    "reports/mexico-overview-2026.html",
-    "reports/mexico-overview-2026.pdf"
+    "data/brief.json",
+    "data/event-status.json"
   ],
-  "functionRoutes": [
-    {
-      "route": "/api/subscribe",
-      "source": "functions/api/subscribe.js",
-      "methods": [
-        "GET",
-        "POST"
-      ]
-    }
-  ],
+  "functionRoutes": [],
   "sourceExclusions": [
     "_site/",
     "node_modules/",

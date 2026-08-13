@@ -7,14 +7,10 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
 const text = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const json = (file) => JSON.parse(text(file));
 const home = text('index.njk');
-const nav = text('_data/nav.js');
-const footerNav = text('_data/footernav.js');
-const topics = text('topic-pages.njk');
 const nowBoard = text('_data/nowBoard.js');
 const voice = text('pipeline/lib/voice.js');
 const happeningBuilder = text('pipeline/build-happening.js');
 const brief = json('data/brief.json');
-const homeEditorial = json('data/home-editorial.json');
 const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
   .filter((row) => row?.value != null && Number.isFinite(Number(row.value)))
   .sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
@@ -61,11 +57,6 @@ assert.match(home, /id="wk-chips"/, 'the deeper feed must keep a filter per sect
 // week's five, a second personalised view of the same list was furniture. The interest
 // rules still rank the Brief; they no longer get their own filter.
 assert.doesNotMatch(home, /My topics/, 'the retired My topics filter must not come back');
-// The homepage "My read" connection is not one of the blocks in the 2026-08-02 design
-// handoff, so the feed no longer renders it. Labelled opinion did not disappear with it:
-// every story's BE panel still separates WHY IT MATTERS from the reported facts, and the
-// reviewed note itself is still written and still gates the email.
-assert.ok(homeEditorial.myRead?.text, 'a reviewed prediction must remain explicitly separate from reported facts');
 assert.match(home, /class="dek"/, 'homepage stories must show a short summary without requiring a click');
 // The feed moved from the curated-only lane to the weekly lane on 2026-08-02 so every
 // section has headlines behind its toggle. It still lives here, on the Brief.
@@ -82,9 +73,8 @@ for (const requirement of ['State the view in the first sentence', 'State the mo
   assert.ok(voice.includes(requirement), `analysis voice contract is missing: ${requirement}`);
 }
 assert.match(happeningBuilder, /ANALYSIS_SHAPE/, 'Briefly explained must use the shared analysis voice contract');
-assert.doesNotMatch(topics, /class="be-mark"|class="be-summary"|guideHTML\(/i, 'BE belongs on the main Brief, not quarterly topic pages');
-assert.doesNotMatch(nav, /label:\s*'Latest'/i, 'Latest must not compete with Brief in the masthead');
-assert.doesNotMatch(footerNav, /label:\s*'Latest'/i, 'Latest must not remain as a duplicate footer destination');
+assert.doesNotMatch(text('_includes/partials/header.njk'), /menu-btn|menu-panel|Quarterly review/i,
+  'the homepage-only masthead must not regrow a secondary navigation product');
 assert.match(home, /id="sec-coming"/, 'homepage must show the next official dates');
 // "Known next" became "Scheduled releases and decisions" (Alan, 2026-08-02) when every
 // section header was given a plain statement of the period it covers. Same guarantee:
@@ -99,25 +89,6 @@ for (const id of [
 ]) {
   assert.match(nowBoard, new RegExp(id), `the number set must include ${id}`);
 }
-
-assert.doesNotMatch(topics, /minimum wage is (?:<b>)?\$(?!\$\{)/i,
-  'minimum-wage copy must never use an unqualified dollar sign');
-// Guard the overclaim itself rather than one frozen sentence (2026-07-21): intermediate
-// imports are A reason exports and imports co-move, never the whole reason.
-assert.doesNotMatch(topics, /(?:that is|thats|this is) why exports and imports rise and fall/i,
-  'trade copy must not claim one complete cause for co-movement');
-// Re-pointed 2026-08-03 for the plain-language rewrite. The old anchor was the phrase
-// "exports and imports rise and fall together", which stated the co-movement without
-// explaining it. The new copy explains the mechanism instead: the same product families
-// crossing twice because much of Mexican manufacturing is assembly. Anchor the mechanism,
-// which is what a reader actually needs, and keep the overclaim guard above intact.
-assert.match(topics, /both directions[\s\S]{0,120}assembly/i,
-  'trade copy should still explain WHY exports and imports co-move, not just assert it');
-for (const phrase of [/local source registry/i, /event registry/i, /local feed/i, /fails closed/i, /automatically colored as good/i]) {
-  assert.doesNotMatch(topics, phrase, `topic pages must not expose internal QA language: ${phrase}`);
-}
-
-// model.njk deleted in the 2026-08-02 cleanup; its honesty assertions went with the page.
 
 const expectedStanding = `The peso trades at ${Number(latestSeriesValue('banxico-usdmxn-fix')).toFixed(2)} pesos to the dollar; inflation is ${Number(latestSeriesValue('banxico-inflacion')).toFixed(2)}%; the policy rate is ${Number(latestSeriesValue('banxico-tasa-objetivo')).toFixed(2)}%.`;
 assert.equal(brief.standing.text, expectedStanding,

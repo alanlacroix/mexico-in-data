@@ -26,22 +26,7 @@ const path = require('node:path');
 
 const ROOT = path.join(__dirname, '..');
 
-// route -> { revised, source }. `source` is the template the guard test watches.
-const PAGES = {
-  '/economy': { revised: '2026-08-06', source: 'topic-pages.njk' },
-  '/payments': { revised: '2026-08-06', source: 'topic-pages.njk' },
-  '/politics': { revised: '2026-08-06', source: 'topic-pages.njk' },
-  '/society': { revised: '2026-08-06', source: 'topic-pages.njk' },
-  '/us-mexico': { revised: '2026-08-06', source: 'topic-pages.njk' },
-  '/deals': { revised: '2026-08-06', source: 'deals.njk' },
-  '/energy': { revised: '2026-08-06', source: 'energy.njk' },
-  '/sources': { revised: '2026-08-04', source: 'sources.njk' },
-  '/about': { revised: '2026-08-03', source: 'about.njk' },
-  '/reports/mexico-overview-2026': { revised: '2026-07-15', source: 'reports/mexico-overview-2026.html' },
-};
-
-// Noon UTC, so the date a reader sees is the date every timezone agrees on.
-const atNoon = (day) => `${day}T12:00:00Z`;
+const PAGES = {};
 
 module.exports = function () {
   const receipt = (() => {
@@ -57,9 +42,6 @@ module.exports = function () {
     '/': { modified: editionAt, published: editionAt, daily: true },
     '/es/': { modified: editionAt, published: editionAt, daily: true },
   };
-  for (const [route, page] of Object.entries(PAGES)) {
-    out[route] = { modified: atNoon(page.revised), published: atNoon(page.revised), daily: false };
-  }
   return out;
 };
 

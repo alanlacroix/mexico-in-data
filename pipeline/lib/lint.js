@@ -142,7 +142,7 @@ export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWor
   const clean = String(text || '').trim();
   const vague = clean.match(VAGUE_ANALYSIS); if (vague) flags.push(`vague analysis: "${vague[0]}"`);
   const empty = clean.match(EMPTY_EVALUATION); if (empty) flags.push(`empty evaluation: "${empty[0]}"`);
-  if (forbidFirstPerson && FIRST_PERSON.test(clean)) flags.push('first person is reserved for the quarterly review');
+  if (forbidFirstPerson && FIRST_PERSON.test(clean)) flags.push('first person is not part of the publication voice');
   if (role === 'view' && !/\b(because|but|while|until|unless|if|when|means?|so|which|matters? more|depends? on|only if)\b/i.test(clean)) {
     flags.push('view has no concrete mechanism or tradeoff');
   }

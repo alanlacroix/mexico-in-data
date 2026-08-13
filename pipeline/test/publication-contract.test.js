@@ -1,17 +1,9 @@
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
 import {
-  PUBLIC_TOPIC_AREAS, isSafeHttpUrl, validateNarrativeText,
-  validateSeriesDocument, validateHealthDocument, validateHs4Hierarchy,
-  validateTopicAreasDocument,
+  isSafeHttpUrl, validateNarrativeText,
+  validateSeriesDocument, validateHealthDocument,
 } from '../lib/publication-contract.js';
 import { observationPeriodEnd, freshnessStatus, stalenessFlag } from '../lib/freshness.js';
-
-// mb.js is shipped as a browser ESM file in a package that otherwise contains
-// CommonJS pipeline scripts. Load that exact source as an ESM data URL so this
-// contract test exercises the production helper without changing package mode.
-const mbSource = fs.readFileSync(new URL('../../assets/mb.js', import.meta.url), 'utf8');
-const { stampFor } = await import(`data:text/javascript;base64,${Buffer.from(mbSource).toString('base64')}`);
 
 const NOW = new Date('2026-07-13T12:00:00Z');
 const baseSeries = () => ({
@@ -46,17 +38,6 @@ assert.equal(freshnessStatus({ cadence: '~5-yearly' }, '2020', NOW).key, 'multi-
 assert.equal(stalenessFlag({ cadence: 'quarterly' }, '2024-10', NOW)?.startsWith('stale_quarter_'), true);
 assert.equal(stalenessFlag({ cadence: 'monthly' }, '2026-04-01', NOW), null);
 
-assert.deepEqual(
-  stampFor({ cadence: 'business-daily', vintage: '2026-07-13' }, 'banxico-usdmxn-fix'),
-  { cls: '', t: 'DAILY · Jul 13' },
-  'Banxico FIX must be labeled as a dated daily reference, not a live quote',
-);
-assert.deepEqual(
-  stampFor({ cadence: '4-hourly', vintage: '2026-07-13' }, 'cre-gasolina-regular'),
-  { cls: 'live', t: '● LIVE' },
-  'genuinely intraday feeds should retain the live label',
-);
-
 {
   const doc = baseSeries();
   const health = { generatedAt: NOW.toISOString(), summary: { ok: 1, flagged: 0, failed: 0, skipped: 0, darkSources: [] }, sources: [
@@ -65,14 +46,6 @@ assert.deepEqual(
   assert.equal(validateHealthDocument(health, new Map([['example', doc]])).length, 0);
   health.summary.ok = 2;
   assert(validateHealthDocument(health, new Map([['example', doc]])).some((error) => /summary.ok/.test(error)));
-}
-
-{
-  const parents = { year: 2024, total: 100, items: [{ code: '99', value: 10 }] };
-  const good = { year: 2024, total: 100, byChapter: { 99: [{ code: '9999', value: 10, shareParent: 100 }] } };
-  assert.equal(validateHs4Hierarchy(good, parents).length, 0);
-  const bad = { year: 2024, total: 100, byChapter: { 99: [{ code: '9999', value: 41.62, shareParent: 416.2 }] } };
-  assert(validateHs4Hierarchy(bad, parents).some((error) => /exceed parent/.test(error)));
 }
 
 assert(validateNarrativeText('&lt;img src=x onerror=alert(1)&gt;').some((error) => /markup/.test(error)));
@@ -84,13 +57,5 @@ assert(validateNarrativeText("Moody's affirmed the state power utility Mexico's 
 assert.equal(validateNarrativeText("Moody's affirmed Mexico's state-owned electricity utility." ).length, 0);
 assert.equal(isSafeHttpUrl('javascript:alert(1)'), false);
 assert.equal(isSafeHttpUrl('https://example.com/story'), true);
-
-{
-  const good = { meta: {}, areas: PUBLIC_TOPIC_AREAS.map((topic) => ({ ...topic })) };
-  assert.equal(validateTopicAreasDocument(good).length, 0);
-  const stale = { meta: {}, areas: good.areas.map((topic) => ({ ...topic })) };
-  stale.areas.splice(1, 0, { key: 'money', label: 'Money', href: '/money.html' });
-  assert(validateTopicAreasDocument(stale).some((error) => /expected 6 topics|topic 2/.test(error)));
-}
 
 console.log('publication-contract tests: ok');

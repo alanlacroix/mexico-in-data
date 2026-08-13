@@ -51,7 +51,7 @@ const signedPercent = (value) => value === 0 ? 'No change' : `${arrow(value)} ${
 const signedPoints = (value) => value === 0 ? 'No change' : `${arrow(value)} ${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)} pp`;
 const percentChange = (current, prior) => prior ? (current / prior - 1) * 100 : null;
 const sourceAction = (series) => {
-  const href = series?.meta?.sourceUrl || '/sources.html';
+  const href = series?.meta?.sourceUrl || '/';
   return { href, actionLabel: 'Open source', external: /^https?:\/\//.test(href) };
 };
 const LIVE_PESO_URL = 'https://www.google.com/finance/quote/USD-MXN?hl=en';

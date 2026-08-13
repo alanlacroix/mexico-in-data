@@ -5,11 +5,9 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createRequire } from 'node:module';
 import { checkInlineScriptsInHtml } from './lib/inline-script-check.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const require = createRequire(import.meta.url);
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, '_data/releaseManifest.json'), 'utf8'));
 const OUTPUT = path.join(ROOT, manifest.outputDir);
 const failures = [];
@@ -146,21 +144,7 @@ for (const file of actualHtml) {
   if (!rules.some((rule) => /^X-Robots-Tag:\s*noindex(?:,|\b)/i.test(rule))) failures.push(`${file}: mockup needs an X-Robots-Tag rule in _headers`);
 }
 
-// 3. Navigation is a production interface, not a lab index.
-const navSource = fs.readFileSync(path.join(ROOT, '_data/nav.js'), 'utf8');
-if (/mockup|localhost|127\.0\.0\.1|file:\/\//i.test(navSource)) failures.push('_data/nav.js contains a preview or local-only reference');
-const nav = require(path.join(ROOT, '_data/nav.js'));
-function navLinks(items) {
-  return items.flatMap((item) => item.href ? [item.href] : (item.menu || []).flatMap((group) => navLinks(group.links || [])));
-}
-const classifiedRoutes = new Set([
-  ...[...manifest.publicRoutes, ...manifest.compatibilityRoutes].map((item) => item.route),
-  ...redirectRoutes.keys(),
-]);
-for (const href of navLinks(nav)) {
-  if (!classifiedRoutes.has(href)) failures.push(`navigation target is not a classified production route: ${href}`);
-}
-
+// 3. The masthead is part of the production interface.
 for (const item of manifest.publicRoutes) {
   if (!actualHtml.has(item.file)) continue;
   const html = readOutput(item.file);
@@ -216,7 +200,7 @@ const forbiddenText = [
 ];
 const secretNames = [
   'ANTHROPIC_API_KEY', 'BANXICO_TOKEN', 'INEGI_TOKEN', 'FRED_API_KEY', 'CENSUS_API_KEY',
-  'SUPABASE_SERVICE_KEY', 'BEEHIIV_API_KEY', 'BEEHIIV_PUB_ID',
+  'SUPABASE_SERVICE_KEY',
 ];
 const liveSecrets = secretNames.map((name) => ({ name, value: process.env[name] })).filter((item) => item.value && item.value.length >= 12);
 for (const file of publicTextFiles) {

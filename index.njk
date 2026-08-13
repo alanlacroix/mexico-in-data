@@ -117,8 +117,6 @@ bodyClass: feed-page
   .chip span{opacity:.55;margin-left:5px}
   .chip:hover{border-color:#0B6E4F}
   .chip.on{background:#111214;color:#fff;border-color:#111214}
-  .wk-context{margin-left:auto;color:#0B6E4F;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.04em;text-decoration:none}
-  .wk-context:hover{text-decoration:underline;text-underline-offset:3px}
   .more{display:block;width:100%;margin-top:18px;background:#F5F5F5;border:1px solid #E2E2E2;padding:13px;font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#1A1B1D;cursor:pointer}
   .more:hover{background:#EBEBEB;color:#0B6E4F}
 
@@ -240,13 +238,12 @@ bodyClass: feed-page
     <div class="sec-head"><h2>{{ L.week }}</h2><div class="sec-meta">{{ f.weekLabel }} · {{ L.weekSub }}</div></div>
     <div class="week-tools">
       <div class="chips" id="wk-chips"></div>
-      <a class="wk-context" id="wk-context" href="/" hidden></a>
     </div>
     <div class="cards cards-wk" id="wk-list">
       {%- for item in f.week %}
       <article class="card card-wk" data-cat="{{ item.cat }}" data-cat-key="{{ item.catKey }}">
         <div class="card-rail">
-          <div class="card-meta"><span class="d">{{ item.date }}</span><a class="c" href="{{ item.contextHref }}" aria-label="{{ item.cat }} context"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</a><span class="s">{{ item.source }}</span></div>
+          <div class="card-meta"><span class="d">{{ item.date }}</span><span class="c"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</span><span class="s">{{ item.source }}</span></div>
           <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
         </div>
         {#- Reading list only. Briefly explained lives under Key developments and
@@ -299,11 +296,6 @@ bodyClass: feed-page
     <p class="econ-src">Banco de México · INEGI</p>
   </section>{% endif %}
 
-  {#- The weekly email is withdrawn for now (Alan, 2026-08-03). Capturing addresses
-      for a newsletter that has never been sent was the largest unkept promise on
-      the site; not-promising beats not-sending. The pipeline (build-email.js,
-      email.yml) and the Beehiiv Function stay in place, dormant, so this returns
-      as one commit the day an edition actually ships. -#}
 </div>
 
 <script type="module">
@@ -343,15 +335,14 @@ if (asof) {
 }
 
 // This week: chips derived from the categories actually present, with live counts.
-const list = $('#wk-list'), chipRow = $('#wk-chips'), moreBtn = $('#wk-more'), contextLink = $('#wk-context');
-if (list && chipRow && moreBtn && contextLink) {
+const list = $('#wk-list'), chipRow = $('#wk-chips'), moreBtn = $('#wk-more');
+if (list && chipRow && moreBtn) {
   const cards = $$('.card', list);
   const VISIBLE = 6;               // "All" opens with a readable handful, not the whole week
 
   const counts = new Map();
   cards.forEach((card) => {
-    const href = $('.card-meta a.c', card)?.getAttribute('href') || '/';
-    const current = counts.get(card.dataset.catKey) || { label: card.dataset.cat, href, count: 0 };
+    const current = counts.get(card.dataset.catKey) || { label: card.dataset.cat, count: 0 };
     counts.set(card.dataset.catKey, { ...current, count: current.count + 1 });
   });
   const requested = new URLSearchParams(location.search).get('topic');
@@ -374,12 +365,6 @@ if (list && chipRow && moreBtn && contextLink) {
     moreBtn.hidden = rest <= 0 && !expanded;
     moreBtn.textContent = expanded ? I18N.showLess : I18N.showMoreTpl.replace('{n}', rest);
     $$('.chip', chipRow).forEach((chip) => chip.classList.toggle('on', chip.dataset.key === filter));
-    const selected = counts.get(filter);
-    contextLink.hidden = !selected;
-    if (selected) {
-      contextLink.href = selected.href;
-      contextLink.textContent = I18N.contextLinkTpl.replace('{topic}', selected.label);
-    }
   };
   chipRow.addEventListener('click', (event) => {
     const chip = event.target.closest('.chip');

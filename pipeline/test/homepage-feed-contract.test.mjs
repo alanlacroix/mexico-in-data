@@ -9,15 +9,12 @@ import { cleanNewsText, domainTrusted, eventCandidateEligible, newsCollectionHea
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const require = createRequire(import.meta.url);
 const { editorialDay } = require(path.join(root, 'pipeline/lib/news-day.cjs'));
-const { currentHomeEditorial } = require(path.join(root, 'pipeline/lib/home-editorial.cjs'));
 const { groupEvents, sameThread } = require(path.join(root, 'pipeline/lib/news-threads.cjs'));
 const { recentEvents } = require(path.join(root, 'pipeline/lib/news-window.cjs'));
 const dailyBriefFactory = require(path.join(root, '_data/dailyBrief.js'));
 const latestStoriesFactory = require(path.join(root, '_data/latestStories.js'));
-const homeEditorialFactory = require(path.join(root, '_data/homeEditorial.js'));
 const dailyBrief = dailyBriefFactory();
 const latestStories = latestStoriesFactory();
-const currentEditorial = homeEditorialFactory();
 const nowBoard = require(path.join(root, '_data/nowBoard.js'))();
 const boards = require(path.join(root, '_data/boards.js'))();
 const registry = require(path.join(root, 'pipeline/news-sources.json'));
@@ -62,7 +59,6 @@ assert.doesNotMatch(
 assert.ok(latestStories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'recent headlines must not contain future-dated stories');
 assert.equal(groupEvents(happening.events || []).length, (happening.events || []).length, 'the stored event log must not contain two records for one development');
 assert.equal(happening.meta?.count, (happening.events || []).length, 'the event-log count must match its records');
-if (currentEditorial) assert.ok(['My read', 'Connection to watch'].includes(currentEditorial.myRead?.label), 'a connection must state whether it is reviewed or deterministic');
 assert.equal(dailyBriefFactory({}).editorialDate, dailyBrief.editorialDate, 'Eleventy’s data argument must not be mistaken for a clock');
 
 const lastBriefDate = dailyBrief.briefEditorialDate;
@@ -72,13 +68,6 @@ const carriedBrief = dailyBriefFactory(nextDay);
 assert.equal(carriedBrief.carryingLastBrief, true, 'a failed next-day refresh must keep the last successful brief visible');
 assert.ok(carriedBrief.stories.length > 0, 'the last successful brief must not disappear during a short workflow failure');
 assert.match(carriedBrief.windowLabel, /Latest brief/, 'carried developments must not be presented as a fresh rolling window');
-assert.equal(homeEditorialFactory(nextDay), null, 'a prior-day My read must disappear on the next day');
-assert.equal(
-  currentHomeEditorial({ forDate: lastBriefDate, myRead: { text: 'Old note' } }, editorialDay(nextDay)),
-  null,
-  'an expired reviewed note must not be validated as current publication content',
-);
-
 const staleNow = new Date('2099-12-31T12:00:00Z');
 const staleBrief = dailyBriefFactory(staleNow);
 assert.equal(staleBrief.editorialDate, '2099-12-31', 'the wall-clock Mexico City day must be authoritative');
@@ -332,7 +321,7 @@ assert.ok(lintAnalysisText({
   inputs: ['Construction starts in December. The schedule may slip.'],
   role: 'prediction',
   forbidFirstPerson: true,
-}).flags.includes('first person is reserved for the quarterly review'), 'Briefly Explained must reject first-person analysis');
+}).flags.includes('first person is not part of the publication voice'), 'Briefly Explained must reject first-person analysis');
 assert.equal(domainTrusted('actionforex.com'), false, 'an unknown GDELT publisher must not enter the public wire');
 assert.equal(domainTrusted('graphics.reuters.com'), true, 'subdomains of an allowlisted publisher must remain eligible');
 assert.equal(publicHeadlineEligible('Ozempic study compares pérdida de peso'), false, 'the word peso as weight must not create a Mexico match');

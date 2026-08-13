@@ -109,19 +109,6 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node translate-es.mjs --critical
 
-      - name: Build the topic areas
-        if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node build-areas.js
-
-      - name: Build the companies tracker
-        if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
-        continue-on-error: true
-        run: node build-companies.js
-
       - name: Validate generated editorial claims
         if: steps.timing.outputs.run == 'true'
         run: |
@@ -148,7 +135,7 @@ jobs:
         run: |
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/news.json data/news/ data/happening.json data/event-status.json data/brief.json data/areas.json data/companies.json data/publication-status.json data/llm-spend.json data/es/
+          git add data/news/ data/happening.json data/event-status.json data/brief.json data/publication-status.json data/llm-spend.json data/es/
           git commit -m "publication: ${PUBLICATION_DATE} ${PUBLICATION_SLOT} edition"
           # A single push attempt used to lose the whole publication to a non-fast-forward
           # whenever anything else landed on main mid-run (2026-08-02 22:14: the edition

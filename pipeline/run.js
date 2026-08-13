@@ -1,7 +1,5 @@
-// run.js — the orchestrator. Loads every connector, runs each through the shared
-// harness, and writes data/health.json (the machine-generated data-health page's
-// backing data + the CI alert source). Never throws on a data failure: the site
-// must still deploy with last-good. Failures surface as health flags + alerts.
+// Refresh only the ten series rendered on the homepage. A connector that does not
+// affect the product must not delay it or generate operational noise.
 //
 //   node run.js                 # run all connectors
 //   node run.js --only cre      # run connectors whose id includes "cre"
@@ -17,6 +15,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CONNECTOR_DIR = path.join(__dirname, 'connectors');
 const HEALTH = path.join(__dirname, '..', 'data', 'health.json');
 const ALERTS = path.join(__dirname, 'alerts.json');
+const HOMEPAGE_CONNECTORS = new Set([
+  'banxico-usdmxn-fix', 'cre-gasolina-regular', 'banxico-cetes-28d',
+  'fred-ust10', 'banxico-bmv-ipc', 'banxico-inflacion',
+  'banxico-tasa-objetivo', 'banxico-igae', 'banxico-exports-total',
+  'banxico-remesas',
+]);
 
 async function loadConnectors() {
   const files = fs.readdirSync(CONNECTOR_DIR).filter((f) => f.endsWith('.js'));
@@ -58,6 +62,7 @@ async function main() {
 
   let connectors = await loadConnectors();
   if (only) connectors = connectors.filter((c) => c.manifest.id.includes(only));
+  else connectors = connectors.filter((c) => HOMEPAGE_CONNECTORS.has(c.manifest.id));
   if (!connectors.length) { console.error(`no connectors match "${only}"`); process.exit(1); }
 
   console.log(`\n▶ Mexico pipeline — ${connectors.length} connector(s) @ ${now}\n`);

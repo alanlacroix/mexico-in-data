@@ -16,19 +16,19 @@ const latestStories = require('./latestStories.js');
 const dailyBrief = require('./dailyBrief.js');
 
 const SECTIONS = [
-  { key: 'payments', label: 'Payments & fintech', href: '/payments.html', beats: ['fintech'], curated: [] },
-  { key: 'deals', label: 'Deals & investment', href: '/deals.html', beats: ['deals'], curated: [] },
-  { key: 'economy', label: 'Economy & money', href: '/economy.html', beats: ['economy', 'companies'], curated: ['economy'] },
+  { key: 'payments', label: 'Payments & fintech', beats: ['fintech'], curated: [] },
+  { key: 'deals', label: 'Deals & investment', beats: ['deals'], curated: [] },
+  { key: 'economy', label: 'Economy & money', beats: ['economy', 'companies'], curated: ['economy'] },
   {
-    key: 'usmexico', label: 'US & Mexico', href: '/us-mexico.html', beats: ['us-mexico'], curated: ['us-mexico'],
+    key: 'usmexico', label: 'US & Mexico', beats: ['us-mexico'], curated: ['us-mexico'],
     match: /\bt-?mec\b|\busmca\b|arancel|tariff|washington|casa blanca|white house|frontera con estados unidos|comercio bilateral|secci[oó]n 301|\bustr\b|deportaci|remesas hacia m[eé]xico/i,
   },
-  { key: 'politics', label: 'Politics', href: '/politics.html', beats: ['politics'], curated: ['politics'] },
+  { key: 'politics', label: 'Politics', beats: ['politics'], curated: ['politics'] },
   {
-    key: 'society', label: 'Security & society', href: '/society.html', beats: ['society', 'security'], curated: ['society'],
+    key: 'society', label: 'Security & society', beats: ['society', 'security'], curated: ['society'],
     match: /\bc[aá]rtel\b|crimen organizado|narcotr[aá]fico|homicid|violencia|extorsi[oó]n|secuestr|desaparecid|fentanil|huachicol|seguridad p[uú]blica|guardia nacional/i,
   },
-  { key: 'energy', label: 'Energy & infrastructure', href: '/energy.html', beats: ['energy'], curated: [] },
+  { key: 'energy', label: 'Energy & infrastructure', beats: ['energy'], curated: [] },
 ];
 const TIER_W = { 1: 3, specialist: 3, 2: 2 };
 // Roughly five a section. A soft rule: the point of the week is a read, not the archive.
@@ -168,14 +168,13 @@ module.exports = function () {
       interestTags: tagsFor(it),
       topic: sec.key,
       topicLabel: sec.label,
-      topicUrl: sec.href,
       source: it.sourceName,
       summary: it.dek,
       date: String(it.date || '').slice(0, 10),
     }));
     items.forEach((it) => { sectionOf.set(it.url, sec.label); claimed.add(it.url); });
     rooms[sec.key] = { items, summary: null, curatedCount: curated.length };
-    groups.push({ key: sec.key, label: sec.label, href: sec.href, items, curatedCount: curated.length });
+    groups.push({ key: sec.key, label: sec.label, items, curatedCount: curated.length });
   }
 
   // THE WEEK'S FIVE — corroboration-weighted, cross-section, deduped vs today.
@@ -227,7 +226,7 @@ module.exports = function () {
         curated: true, importance: Number(e.importance),
         bg: e.background || '', view: e.view || '', next: e.prediction || '',
         be: Boolean(e.background && e.view && e.prediction),
-        section: sec.label, sectionKey: sec.key, href: sec.href,
+        section: sec.label, sectionKey: sec.key,
         china: CHINA.test(`${e.title} ${e.why || ''}`),
       };
     })
@@ -283,7 +282,7 @@ module.exports = function () {
       inFive: true, prediction: five.next, analysisV: five.be ? 7 : 0,
       shownToday: false,
       interestTags: tagsFor(five),
-      topic: group.key, topicLabel: group.label, topicUrl: group.href,
+      topic: group.key, topicLabel: group.label,
       source: five.sourceName, summary: five.dek,
     });
   }

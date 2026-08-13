@@ -1,86 +1,25 @@
-/* ============================================================
-   McKinsey-MX — the house style for the Mexico project
-   White paper, black ink, McKinsey exhibit discipline,
-   Mexican flag green + red as the only accents.
-   Clean sans everywhere (Inter), including bold headlines,
-   exactly like McKinsey — built for maximum readability.
-   The one tweak vs. McKinsey: a hairline green section rule.
-
-   For the hosted site this loads real webfonts; inside a
-   Claude Artifact (which blocks font CDNs) the system-font
-   fallbacks in the stacks take over automatically.
-   ============================================================ */
-
-/* Webfonts — hosted site only (Artifacts fall back to system stacks).
-   One clean sans (Inter) for body and headlines, McKinsey-style. */
-/* Fonts are loaded via a <link> in the head (base.njk), not @import, so they fetch in
-   parallel with this stylesheet instead of waterfalling behind it — a Core Web Vitals win. */
-
 :root{
-  /* ground + ink — McKinsey-exact */
-  --bg:#ffffff;            /* white page (Alan's call) */
-  --paper:#ffffff;
-  --paper-2:#f5f4ef;       /* faint warm gray — table headers, strips */
-  --panel:#f3f4f5;         /* neutral grey panel — no beige on the daily surfaces (Alan, 2026-08-02) */
-  --paper-3:#eceae4;
-  --ink:#101214;           /* headlines, big numbers, section heads, nav */
-  --ink-2:#565c62;         /* body: story summaries, standfirsts */
-  --mut:#6e757b;           /* meta floor: dates, outlets, clock lines, helper text */
-
-  /* Mexican flag accents — the only color on the page */
-  --green:#0a7d4d;         /* primary accent: links, exhibit numbers, positive */
-  --green-on-dark:#4ec98a; /* the same green lifted to read on the black masthead only */
-
-  /* Section identity (Fable 2026-08-02, after The Guardian). The site has exactly two
-     colour encodings: the link green above, and these seven. Colour answers WHAT KIND,
-     never how good or which direction, so no delta, indicator or number is ever coloured
-     (a falling MXN/US$ is the peso strengthening; colour would lie). One lightness band,
-     nothing near the link green, and colour only ever duplicates a word already printed:
-     greyscale the page and nothing is lost. */
-  --sec-payments:#1f6feb;
-  --sec-deals:#7b4fc9;
-  --sec-economy:#0b6b7a;
-  --sec-usmexico:#a8500f;
-  --sec-politics:#8a1c46;
-  --sec-society:#7a5c11;
-  --sec-energy:#2c6e3f;
-  --green-d:#0a7d4d;       /* one green, aliased so every green on the site is THE green */
-  --green-bg:#e7f2ec;
-  --red:#b3261e;           /* staleness and negative moves — nothing else */
-  --red-bg:#f8e8ea;
-  --amber:#a6791a;         /* neutral / watch (use sparingly) */
-  --amber-bg:#f5eeda;
-
-  /* rules */
-  --line:#ededeb;   /* rule: hairline between stories */
-  --line-2:#e4e4e1; /* frame: card borders */
-
-  /* Type — two families, fixed roles (Fable 2026-07-12). Inter for anything a reader
-     reads (headings, prose, links); IBM Plex Mono for the label layer (eyebrows, meta,
-     source tags, nav, datelines) + data figures. No serif — the old --serif was Inter. */
+  --bg:#fff;
+  --paper:#fff;
+  --paper-2:#f5f5f5;
+  --panel:#f3f4f5;
+  --ink:#101214;
+  --ink-2:#565c62;
+  --mut:#6e757b;
+  --green:#0a7d4d;
+  --green-d:#0a7d4d;
+  --red:#b3261e;
+  --line:#ededeb;
+  --line-2:#e4e4e1;
   --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
-  /* Alan, 2026-08-02: keep the type we had. The handoff asked for Archivo + Newsreader;
-     the site stays on Inter, and --serif is an alias rather than a second family, so the
-     explanation voice is carried by size and colour instead of by a serif. */
   --serif:var(--sans);
   --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,Consolas,monospace;
-
-  /* The scale — the ONLY seven sizes on the site. Every font-size resolves to one of these. */
-  --fs-label:11px;                     /* mono label layer, uppercase + tracked (floor: nothing smaller) */
-  --fs-meta:13px;                      /* Inter secondary: captions, keys, footnotes */
-  --fs-small:15px;                     /* compact prose: cards, calendar entries, lists */
-  --fs-body:18px;                      /* prose default */
-  --fs-h3:22px;                        /* card titles, h3 */
-  --fs-h2:28px;                        /* section heads, h2 */
-  --fs-display:clamp(32px,5vw,44px);   /* h1 — one treatment, every page */
-
-  --measure:66ch;
-  /* THE container width. One number, and no surface declares its own max-width.
-     Named for what it is, because the old --maxw said nothing about its purpose and was
-     quietly rebound from 1240 to 1440 under a different philosophy (Fable, 2026-08-03). */
+  --fs-label:11px;
+  --fs-small:15px;
+  --fs-body:18px;
+  --fs-h2:28px;
+  --fs-display:clamp(32px,5vw,44px);
   --page:1120px;
-  --maxw:var(--page);   /* compatibility alias; prefer --page */
-  --w-prose:680px;
 }
 
 *{box-sizing:border-box}
@@ -90,410 +29,39 @@ body{
   font-family:var(--sans);font-size:var(--fs-body);line-height:1.6;
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
 }
-h1,h2,h3,h4{font-family:var(--sans);color:var(--ink);font-weight:600;line-height:1.2;margin:0;text-wrap:balance;letter-spacing:-.014em}
+h1,h2,h3,h4{font-family:var(--sans);color:var(--ink);font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
 h1{font-size:var(--fs-display)}
 h2{font-size:var(--fs-h2)}
-h3{font-size:var(--fs-h3)}
 p{margin:0}
 a{color:var(--green);text-decoration:none}
 a:hover{text-decoration:underline;text-underline-offset:2px}
-a:focus-visible,button:focus-visible{outline:2.5px solid var(--green);outline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2.5px solid var(--green);outline-offset:2px}
 ::selection{background:#cbe8d9}
-.skip-link{position:fixed;left:12px;top:8px;z-index:1000;transform:translateY(-160%);background:var(--ink);color:#fff;padding:9px 12px;border-radius:0;font-size:var(--fs-small)}
-.skip-link:focus{transform:translateY(0);outline:3px solid var(--green);outline-offset:2px}
-/* controls inherit the type system — kills the Arial/UA-size leak on any unstyled button/input */
 button,input,select,textarea,optgroup{font:inherit;letter-spacing:inherit;color:inherit}
-/* <small> never drops below the 11px floor (Fable 2026-07-12); explicit .x small sizes still win */
-small{font-size:var(--fs-label)}
-.hp-field{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
-.privacy-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.5;color:var(--mut);margin-top:7px}
-.privacy-note a{color:var(--green-d)}
-
 .wrap{max-width:var(--page);margin:0 auto;padding:0 20px}
-.col{max-width:var(--measure)}
-.mono{font-family:var(--mono)} .tnum{font-variant-numeric:tabular-nums}
 .eyebrow{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
-.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.skip-link{position:fixed;left:12px;top:8px;z-index:1000;transform:translateY(-160%);background:var(--ink);color:#fff;padding:9px 12px;font-size:var(--fs-small)}
+.skip-link:focus{transform:translateY(0);outline:3px solid var(--green)}
 
-/* Briefly Explained — one house mark, used only where a compact layer of context exists. */
-.be-key{display:flex;align-items:center;gap:9px;margin-top:13px;font-size:12px;line-height:1.4;color:var(--mut)}
-.be-key b{color:var(--ink-2);font-weight:600}
-.be-mark{display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:24px;padding:0 4px;background:#fff;color:var(--ink);border:1px solid var(--ink);border-bottom:3px solid var(--green);border-radius:0;font-family:var(--mono);font-size:10px;line-height:1;font-weight:750;letter-spacing:.04em;transition:background .12s,color .12s}
-.be-summary{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:0;padding:0;list-style:none;cursor:pointer;background:transparent;border:0}
-.be-summary::-webkit-details-marker{display:none}
-.be-summary:hover .be-mark,details[open]>.be-summary .be-mark{background:var(--green);border-color:var(--green);color:#fff}
-.be-summary:focus-visible{outline:2px solid var(--green);outline-offset:1px;border-radius:0}
-
-/* section head — the signature hairline green rule is the tweak */
-.section-head{border-top:2px solid var(--green);padding-top:14px;margin-bottom:14px}
-.section-head .no{font-family:var(--mono);font-size:var(--fs-label);color:var(--green);font-weight:600;letter-spacing:.04em}
-.section-head h2{font-size:var(--fs-h2);margin-top:6px}
-.section-head .dek{color:var(--ink-2);font-size:var(--fs-small);margin-top:8px;max-width:66ch}
-
-/* Header primitive (Fable 2026-07-12, permanent fix for mobile mid-phrase wrap). THE RULE: a headline
-   never shares a line with meta type. The eyebrow (kicker) and any as-of/link label are small meta and
-   may share one row; the H2 ALWAYS owns its own full-width block line. No inline H2s, ever. */
-.eyebrow-row{display:flex;align-items:baseline;justify-content:space-between;gap:4px 14px;flex-wrap:wrap}
-.eyebrow-row .no{text-transform:uppercase;letter-spacing:.05em}
-.eyebrow-row .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
-.eyebrow-row .asof a,.eyebrow-row a.asof{color:var(--green-d);text-decoration:none}
-.eyebrow-row .asof a:hover,.eyebrow-row a.asof:hover{text-decoration:underline}
-/* Homepage module header = the section-head pattern at H3 scale + module spacing (denser stacked cards) */
-.section-head--tight{margin:54px 0 16px;padding-top:15px}
-.section-head--tight h2{font-family:var(--sans);font-size:var(--fs-h3);color:var(--ink);letter-spacing:-.01em;margin-top:4px;display:block}
-
-/* THE EXHIBIT — copied from McKinsey, kept exactly: numbered,
-   conclusion-title, units, footnotes, Source line with links. */
-.exhibit{border:1px solid var(--line-2);background:var(--paper);border-radius:0;overflow:hidden}
-.exhibit .ex-head{padding:16px 22px 2px}
-.exhibit .ex-no{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:600}
-.exhibit .ex-title{font-family:var(--sans);font-weight:600;font-size:var(--fs-body);line-height:1.3;margin-top:5px;color:var(--ink);max-width:80ch}
-.exhibit .ex-units{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:6px}
-.exhibit .ex-body{padding:10px 22px 6px}
-.exhibit .ex-foot{border-top:1px solid var(--line);margin-top:8px;padding:11px 22px 15px}
-.exhibit .ex-fn{font-size:var(--fs-label);color:var(--mut);line-height:1.5}
-.exhibit .ex-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px}
-.exhibit .ex-src a{color:var(--green)}
-
-/* verdict / status chips — green good, red concern, amber neutral */
-.chip{display:inline-block;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:0;font-weight:600;white-space:nowrap}
-.chip.g{background:var(--green-bg);color:var(--green-d)}
-.chip.r{background:var(--red-bg);color:var(--red)}
-.chip.a{background:var(--amber-bg);color:var(--amber)}
-
-/* Quarterly context: one short orientation layer before the full review. */
-.start-here{margin-top:25px;border-top:2px solid var(--ink);padding-top:11px}
-.start-here-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-bottom:10px}
-.start-here-head h2{font-size:var(--fs-h2);line-height:1.2;margin:0}
-.start-here-note{font-family:var(--mono);font-size:var(--fs-label);line-height:1.45;color:var(--mut)}
-.start-here-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2)}
-.start-here-card{background:var(--paper);padding:15px 16px 16px;min-width:0}
-.start-here-label{font-family:var(--mono);font-size:var(--fs-label);font-weight:600;letter-spacing:.055em;text-transform:uppercase;color:var(--green-d);margin-bottom:7px}
-.start-here-card p{font-size:var(--fs-meta);line-height:1.5;color:var(--ink-2);margin:0}
-@media(max-width:700px){
-  .start-here-grid{grid-template-columns:1fr}
-  .start-here-card{padding:13px 14px 14px}
-}
-
-/* tables — McKinsey clean: hairline rules, mono header */
-table.mck{border-collapse:collapse;width:100%;font-size:var(--fs-small)}
-table.mck th,table.mck td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
-table.mck thead th{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut);background:var(--paper-2)}
-table.mck td.k{font-weight:600;color:var(--ink);white-space:nowrap}
-
-.tblwrap{overflow-x:auto}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-
-/* ============================================================
-   SITE CHROME — masthead, nav, footer. ONE source of truth;
-   the header/footer components render these and pages no longer
-   hand-copy them (which is how the nav ended up in 7 versions
-   and two footers dropped Economy + About). The masthead + footer
-   share the page's .wrap width, so the header finally aligns with
-   the body on every page.
-   ============================================================ */
-/* masthead — identical on every page; solid white, fixed height, nothing animated */
-/* Masthead + menu + footer, to the design handoff of 2026-08-02. One dark bar, one row:
-   wordmark, the section indicator the homepage scroll spy writes into, and the menu
-   button. No breakpoints anywhere; the panel grid reflows on auto-fit like the feed. */
 header.mast{position:sticky;top:0;z-index:60;background:#111214}
 .mast-row{max-width:var(--page);margin:0 auto;padding:13px 20px;display:flex;align-items:center;gap:16px}
 .brand{font-family:var(--sans);font-weight:700;font-size:17px;letter-spacing:-.008em;color:#fff;white-space:nowrap;text-decoration:none}
-.brand:hover{text-decoration:none;color:#fff}
-.brand .u{border-bottom:3px solid #16A06C;padding-bottom:2px}
-.lang-link{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.1em;color:#C6C8CD;text-decoration:none;border:1px solid #3A3C42;padding:3px 8px;margin-left:14px;white-space:nowrap}
-.lang-link:hover{color:#fff;border-color:#6B6D73;text-decoration:none}
-.mast-sec{flex:0 1 auto;min-width:0;text-align:right;font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#86888E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.menu-btn{width:34px;height:28px;display:flex;flex-direction:column;justify-content:center;gap:5px;background:none;border:0;padding:0;cursor:pointer;flex:none}
-.menu-btn span{display:block;height:1.5px;background:#fff;border-radius:1px}
-.menu-btn:hover{opacity:.7}
-.menu-panel{position:absolute;top:100%;left:0;right:0;background:#111214;border-top:1px solid #2A2B2E;animation:panel .28s ease}
-.menu-panel[hidden]{display:none}
-.menu-grid{max-width:var(--page);margin:0 auto;padding:22px 20px 26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:22px}
-.menu-col{display:flex;flex-direction:column;gap:9px;min-width:0}
-.menu-h{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D73}
-.menu-col a{font-family:var(--sans);font-weight:600;font-size:16px;color:#fff;text-decoration:none}
-.menu-col a:hover{color:#16A06C;text-decoration:none}
-.menu-col-quiet a{font-family:var(--mono);font-weight:400;font-size:15px;color:#C6C8CD}
-
-/* Tagline band — the masthead's continuation, outside the sticky element so it scrolls
-   away. The footer prints the same string. */
-/* Tagline moved inline into the masthead row (2026-08-03) — the band it replaced
-   spent ~70px of the first screen restating what the wordmark already says. */
-/* Readable, not decorative: 12.5px and a color that actually clears the dark band. */
-.mast-tag{flex:1;min-width:0;margin-left:18px;font-family:var(--mono);font-size:12.5px;letter-spacing:.01em;color:#B9BBC1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* Below 760px the wordmark, the language toggle and the menu button already fill the row.
-   The tagline and the scroll-spy section label are both secondary context, and a label
-   clipped to "THE B…" tells a reader less than no label at all, so both come off rather
-   than competing for room that is not there. */
-@media (max-width:760px){
-  .mast-tag,.mast-sec{display:none}
-  /* .mast-tag carried flex:1 and was what pushed the trailing controls to the right
-     edge. With it hidden there is nothing left to expand, so the controls bunched up
-     against the wordmark. Give the first of them the auto margin instead. The language
-     toggle only exists on the homepage pair, so the button takes the job everywhere
-     else, and sits tight against the toggle where there is one. */
-  .menu-btn{margin-left:auto}
+.brand:hover{color:#fff;text-decoration:none}
+.brand .u{border-bottom:3px solid #16a06c;padding-bottom:2px}
+.mast-tag{flex:1;min-width:0;margin-left:18px;font-family:var(--mono);font-size:12.5px;letter-spacing:.01em;color:#b9bbc1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lang-link{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.1em;color:#c6c8cd;text-decoration:none;border:1px solid #3a3c42;padding:3px 8px;white-space:nowrap}
+.lang-link:hover{color:#fff;border-color:#6b6d73;text-decoration:none}
+@media(max-width:760px){
+  .mast-tag{display:none}
   .lang-link{margin-left:auto}
-  .lang-link~.menu-btn{margin-left:0}
 }
 
-footer.foot{background:#111214;padding:28px 0 36px;margin-top:56px;border-top:0}
-.foot-row{max-width:var(--page);margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:22px 40px}
-.foot .fblurb{font-family:var(--mono);font-size:13.5px;line-height:1.6;color:#86888E;max-width:54ch;margin-top:18px}
-/* Calm footer nav (2026-08-03): the header menu's own pattern — a 10px muted
-   group label, sentence-case links stacked beneath, two columns side by side. */
-.foot .fnav{display:flex;gap:18px 56px;align-items:flex-start;flex-wrap:wrap}
-.foot .fnav-col{display:flex;flex-direction:column;gap:9px;min-width:150px}
-.foot .fnav-h{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D73;margin-bottom:2px}
-.foot .fnav a{font-family:var(--sans);font-weight:500;font-size:14px;color:#C6C8CD;text-decoration:none;line-height:1.3}
-.foot .fnav a:hover{color:#16A06C;text-decoration:none}
-
-/* the live "dateline" — the freshness stamp, now homepage CONTENT (a hero element),
-   never chrome. Chrome never animates; the pulse lives on the page. */
-.dateline{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);text-decoration:none}
-.dateline:hover{color:var(--green-d)}
-.dateline .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:lp 2.4s ease-in-out infinite}
-@keyframes lp{0%,100%{opacity:1}50%{opacity:.3}}
-@media(prefers-reduced-motion:reduce){.dateline .dot{animation:none}}
-
-/* narrow reading pages (about, model prose) share one width token */
-.reading .wrap{max-width:820px}
-
-/* footer — one component, same nav as the header */
-footer.foot{border-top:1px solid var(--line);margin-top:56px}
-footer.foot .wrap{padding-top:18px;padding-bottom:54px}
-.foot .fnav{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:12px}
-/* (duplicate .fnav a rule removed 2026-08-03 — it re-capitalized and re-greened the calm footer from further down the cascade, and its 36px min-height caused the sprawling gaps) */
-.foot .fblurb{font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.7;max-width:66ch;margin:0}
-
-/* Source-class badge — the honest-source policy made visible (Fable 2026-07-11): every figure
-   wears its provenance. Mexican-official data is the CORE (green); context sources (US,
-   multilateral, poll, market, modeled) read muted ink, the class named in the label. Palette
-   stays closed — green + ink only, purely typographic, no new hues. */
-.tbadge{margin-top:7px;line-height:1}
-.srcb{display:inline-block;font-family:var(--mono);font-size:11px;line-height:1.3;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:0;padding:0 5px;white-space:nowrap}
-.srcb.core{color:var(--green-d);border-color:var(--green-bg);background:var(--green-bg)}
-
-/* Topics dropdown (Fable's six-slot nav): a hover-popup on desktop, inline in the collapsed menu on
-   mobile. Border only — no shadow (the record is square). */
-.navdrop{position:relative;display:inline-flex;align-items:center}
-.navdrop-t{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.05em;color:rgba(255,255,255,.66);background:none;border:0;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:5px}
-.navdrop-t:hover{color:#fff}
-.navdrop-t .caret{font-size:var(--fs-label);position:relative;top:1px}
-.navdrop.here-sec>.navdrop-t{color:#fff;font-weight:600}
-.navdrop-menu{position:absolute;top:100%;left:0;margin-top:6px;background:#fff;border:1px solid var(--line-2);border-radius:0;padding:8px 0;min-width:210px;display:none;z-index:60}
-.navdrop:hover .navdrop-menu,.navdrop:focus-within .navdrop-menu,.navdrop.open .navdrop-menu{display:block}
-/* bridge the 6px gap between the button and the menu so hover doesn't drop mid-travel (desktop only) */
-@media(min-width:1001px){.navdrop-menu::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}}
-.navdrop-grp+.navdrop-grp{border-top:1px solid var(--line);margin-top:6px;padding-top:8px}
-.navdrop-gl{display:block;font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.05em;color:var(--mut);padding:2px 16px 5px}
-.navdrop-menu a{display:block;font-family:var(--mono);font-size:var(--fs-label);text-transform:none;letter-spacing:0;color:var(--ink-2);padding:6px 16px;white-space:nowrap;border:0}
-.navdrop-menu a:hover{color:var(--green-d)}
-.navdrop-menu a.here{color:var(--green-d);font-weight:600}
-@media(max-width:1000px){
-  .navdrop{display:block;width:100%}
-  /* inside the collapsed panel the submenu sits on the black bar, not on a white card,
-     so these rules also carry the reversed palette (they follow the on-white ones above) */
-  .navdrop-t{width:100%;justify-content:flex-start;min-height:44px;padding:8px 2px;border-bottom:1px solid rgba(255,255,255,.13);font-size:13px}
-  .navdrop-t .caret{display:none}
-  .navdrop-menu{position:static;display:block;background:transparent;border:0;border-radius:0;padding:0;margin:0;min-width:0}
-  .navdrop-grp+.navdrop-grp{border-top:0;margin:0;padding:0}
-  .navdrop-gl{padding:10px 2px 2px;color:rgba(255,255,255,.5)}
-  .navdrop-menu a{padding:11px 2px 11px 16px;border-bottom:1px solid rgba(255,255,255,.13);font-size:13px;color:rgba(255,255,255,.66)}
-  .navdrop-menu a:hover,.navdrop-menu a.here{color:var(--green-on-dark)}
-}
-
-/* Source disclosure — real <summary> text (a11y) at a 44px target, with the series id, observation
-   date and retrieval date shown (the review's #1 trust ask). Overrides the per-page ::before label. */
-.srcd{margin-top:6px}
-.srcd summary{list-style:none;cursor:pointer;font-family:var(--mono);font-size:11px;color:var(--green-d);display:inline-flex;align-items:center;gap:5px;min-height:44px;padding:2px 0}
-.srcd summary::-webkit-details-marker{display:none}
-.srcd summary::before{content:"▸";font-size:var(--fs-label)}
-.srcd[open] summary::before{content:"▾"}
-.mrow .srcd summary{font-size:11px;min-height:44px;color:var(--green-d)}
-.mrow .srcd summary::before{content:"▸"!important}
-.mrow .srcd[open] summary::before{content:"▾"!important}
-.srcd .src-body{font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.7;padding:2px 0 6px}
-.srcd .src-body a{color:var(--green)}
-.srcd .src-body b{color:var(--ink)}
-
-/* Section-page hero deck — the short-title + deck grammar (Fable: kill the sentence-length H1s). */
-.hero .dek{font-family:var(--sans);font-size:var(--fs-h3);line-height:1.4;color:var(--ink-2);margin:10px 0 0;max-width:60ch;font-weight:400;letter-spacing:-.005em}
-
-/* "The story" — Fable's site-wide sourced-narrative block that closes each section. Two plain
-   paragraphs, no labels; every number in it is visible in a chart above. */
-.story{margin:26px 0 0;background:var(--paper-2);border:1px solid var(--line);border-radius:0;padding:16px 18px;max-width:68ch}
-.story .st-lbl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.1em;text-transform:uppercase;color:var(--green-d);font-weight:600;display:flex;justify-content:space-between;gap:12px}
-.story .st-lbl .asof{color:var(--mut);font-weight:400;white-space:nowrap}
-.story p{font-size:var(--fs-small);line-height:1.58;color:var(--ink-2);margin:9px 0 0}
-.story p b{color:var(--ink)}
-.story .st-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px}
-.story .st-src a{color:var(--green)}
-
-/* Demographics stat strip — a row of headline stats, each tagged Projection (CONAPO model output)
-   or Measured (a real count/registration), so a projected figure can never be read as a measurement. */
-.dstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:0;overflow:hidden;margin:22px 0 0}
-.dstat{background:var(--paper);padding:14px 16px 12px;position:relative}
-.dstat .dsl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
-.dstat .dsv{font-family:var(--sans);font-size:var(--fs-h2);line-height:1.05;color:var(--ink);margin-top:4px;letter-spacing:-.01em}
-.dstat .dss{font-size:var(--fs-meta);color:var(--ink-2);margin-top:3px}
-.dbadge{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:0;font-weight:600}
-.dbadge.proj{background:rgba(180,120,20,.12);color:#8a5a10}
-.dbadge.meas{background:var(--green-wash,rgba(30,120,80,.10));color:var(--green-d)}
-@media (prefers-color-scheme:dark){.dbadge.proj{background:rgba(220,160,60,.16);color:#e0b060}}
-
-/* Treemap — our product-space view. Cells lift slightly on hover; legend maps sector → color. */
-#tm-basket .treemap{border:1px solid var(--line);border-radius:0}
-#tm-basket .tmc{cursor:crosshair}
-#tm-basket .tmc:hover rect{stroke:var(--ink);stroke-width:1.4}
-.tmleg{display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px 0 0}
-.tmlg{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);letter-spacing:.02em}
-.tmlg i{width:11px;height:11px;border-radius:0;display:inline-block;flex:0 0 auto}
-
-/* Population explorer — horizon toggle over the CONAPO projection chart */
-.horizon{display:flex;align-items:center;gap:8px;margin:0 0 12px}
-.horizon .hz-lbl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
-.horizon button{font-family:var(--mono);font-size:11px;padding:4px 13px;border:1px solid var(--line);background:var(--paper);color:var(--ink-2);border-radius:0;cursor:pointer;transition:background .12s}
-.horizon button:hover{border-color:var(--green)}
-.horizon button.on{background:var(--green);color:#fff;border-color:var(--green)}
-.projchart{cursor:crosshair}
-
-/* Page orientation block — WHAT / NOW / NEXT, between the hero and the numbers board */
-.pageintro{margin:0 0 6px;border-left:2px solid var(--green);padding:3px 0 3px 16px;display:grid;gap:8px}
-.pi-row{display:grid;grid-template-columns:50px 1fr;gap:14px;align-items:baseline}
-.pi-k{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.09em;text-transform:uppercase;color:var(--green-d);font-weight:600}
-.pi-v{font-family:var(--sans);font-size:15px;line-height:1.5;color:var(--ink-2)}
-.pi-v b{color:var(--ink);font-weight:600}
-@media(max-width:640px){.pi-row{grid-template-columns:42px 1fr;gap:10px}.pi-v{font-size:var(--fs-small)}}
-
-/* ============ SECTION PAGES — shared component styles ============
-   Extracted 2026-07-12 (Phase 1): these 73 rules were byte-identical copy-pasted
-   across money/trade/politics/security/society/usmexico. One source of truth now.
-   Page <style> blocks (in body) still override anything page-specific. */
-.hero{padding:28px 0 6px}
-.hero .state{font-family:var(--sans);font-size:var(--fs-display);line-height:1.12;letter-spacing:-.02em;margin:10px 0 0;color:var(--ink);max-width:22ch}
-.hero .state{max-width:30ch}
-.hero .statedate{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.03em;text-transform:uppercase;color:var(--mut);margin-top:14px}
-.hero .statedate b{color:var(--green-d)}
-.blk-note{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:10px;line-height:1.6}
-.board-lbl{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 8px;border-top:2px solid var(--green);padding-top:11px}
-.board-lbl .no{font-family:var(--mono);font-size:var(--fs-label);color:var(--green);font-weight:600}
-.board-lbl h2{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink)}
-.board-lbl .asof{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);white-space:nowrap}
-.tablero{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:0;overflow:hidden;margin:2px 0 4px}
-.tile{background:var(--paper);padding:16px 17px 15px;cursor:pointer}
-.tile:hover{background:var(--paper-2)}
-.tile .tl{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut);line-height:1.3;min-height:2.4em}
-.tile .tv{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;line-height:1;letter-spacing:-.015em}
-.tile .tv small{font-size:13px;color:var(--mut);font-weight:400}
-.tile .dl{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink);margin-top:6px;font-variant-numeric:tabular-nums;display:block}
-.tile svg.spark{margin-top:7px}
-.tile svg.spark path{stroke:var(--ink-3);stroke-width:1.5}
-.tile .tb{font-family:var(--mono);font-size:var(--fs-label);color:var(--ink-2);margin-top:7px;line-height:1.4}
-.tile .tb .arw{font-weight:700}
-.tile .stamp{margin-top:6px;display:block}
-.tile .tsrc{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--mut);margin-top:4px;display:block;line-height:1.35}
-.stamp{font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
-.stamp.live{color:var(--green-d);font-weight:600}
-.chip-ph{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--amber2);background:var(--amber-bg2);padding:1px 6px;border-radius:0;margin-left:6px}
-.mrow{border-bottom:1px solid var(--line);padding:15px 0}
-.mrow:last-child{border-bottom:none}
-.mrow .mr-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.mrow .mr-label{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.02em;text-transform:uppercase;color:var(--mut)}
-.mrow .mr-main{display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap}
-.mrow .mr-val{font-family:var(--sans);font-size:var(--fs-h2);color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
-.mrow .mr-val small{font-size:13px;color:var(--mut);font-weight:400}
-.mrow .mr-spark{margin-left:auto}
-.mrow .mr-verdict{font-size:var(--fs-small);color:var(--ink-2);margin-top:8px;line-height:1.45}
-.mrow .mr-verdict b{color:var(--ink)}
-.mrow .mr-bench{font-family:var(--mono);font-size:var(--fs-label);color:var(--green-d);margin-top:6px}
-.mrow details{margin-top:8px}
-.mrow summary{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);cursor:pointer;list-style:none}
-.mrow summary::-webkit-details-marker{display:none}
-.mrow summary::before{content:"▸ source & date"}
-.mrow details[open] summary::before{content:"▾ source & date"}
-.mrow .src-body{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:5px;line-height:1.6}
-.mrow .src-body a{color:var(--green)}
-.ctxline{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.6;padding-top:10px;border-top:1px solid var(--line)}
-.ctxline b{color:var(--ink)}
-.watchtbl{margin:10px 0 4px}
-.watchtbl .wtr{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:baseline}
-.watchtbl .wtr:last-child{border-bottom:none}
-.watchtbl .wtr .wd{font-family:var(--mono);font-size:11px;color:var(--ink);min-width:88px;font-variant-numeric:tabular-nums}
-.watchtbl .wtr .wk{width:3px;align-self:stretch;border-radius:0;background:var(--line-2)}
-.watchtbl .wtr .wk.banxico,.watchtbl .wtr .wk.fomc{background:var(--green)}
-.watchtbl .wtr .wt{font-size:var(--fs-small);color:var(--ink);flex:1}
-.watchtbl .wtr .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:2px}
-.watchtbl .wtr .wsrc{font-family:var(--mono);font-size:var(--fs-label)}
-.cb-empty{font-family:var(--mono);font-size:11px;color:var(--mut);padding:12px 0}
-.wire .wi{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:11px;align-items:baseline}
-.wire .wi:last-child{border-bottom:none}
-.wire .wtag{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line-2);border-radius:0;padding:1px 5px;white-space:nowrap;margin-top:2px}
-.wire .wtag.trade{color:var(--amber2);border-color:var(--amber-bg2)}
-.wire .wbody{flex:1}
-.wire .wt{font-size:var(--fs-small);color:var(--ink);line-height:1.35;text-decoration:none}
-.wire .wt:hover{color:var(--green-d);text-decoration:underline}
-.wire .wm{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:3px}
-.wire-note{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:10px;line-height:1.6}
-.tools-grid{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:6px 0 4px}
-.tools-grid a{display:block;background:var(--paper);padding:14px 16px;text-decoration:none}
-.tools-grid a:hover{background:var(--paper-2)}
-.tools-grid .tk{font-family:var(--mono);font-size:var(--fs-label);text-transform:uppercase;letter-spacing:.04em;color:var(--green)}
-.tools-grid .th{font-family:var(--sans);font-size:var(--fs-small);color:var(--ink);margin:4px 0 3px}
-.tools-grid .td{font-size:13px;color:var(--ink-2);line-height:1.45}
-.srcnote{font-family:var(--mono);font-size:11px;color:var(--mut);margin-top:12px;line-height:1.7}
-.srcnote a{color:var(--green)}
-.data-alert{max-width:var(--page);margin:12px auto 0;padding:10px 16px;border:1px solid #d9b35d;border-left:3px solid var(--amber2,#8f6a15);background:var(--amber-bg2,#f6efdc);border-radius:0;font-size:var(--fs-small);line-height:1.45;color:var(--ink)}
+.data-alert{max-width:var(--page);margin:12px auto 0;padding:10px 16px;border:1px solid #d9b35d;border-left:3px solid #8f6a15;background:#f6efdc;font-size:var(--fs-small);line-height:1.45;color:var(--ink)}
 .data-alert[hidden]{display:none}
-.data-alert a{color:var(--green-d);font-weight:600}
-@media(max-width:calc(1120px + 32px)){.data-alert{margin-left:16px;margin-right:16px}}
+@media(max-width:1152px){.data-alert{margin-left:16px;margin-right:16px}}
 
-/* exhibit + chart + table + tooltip styles (consolidated 2026-07-12, Phase 1b: was drifted-duplicated across the section pages; one canonical copy now) */
-section.blk{margin:34px 0 0}
-.tile .dl.up::before{content:"▲ ";font-size:var(--fs-label)} .tile .dl.dn::before{content:"▼ ";font-size:var(--fs-label)}
-.tile .dl.fl{color:var(--mut)} .tile .dl small{color:var(--mut)}
-svg.spark{display:block}
-svg.spark path{fill:none;stroke:var(--ink-3);stroke-width:1.3}
-svg.spark circle{fill:var(--green)}
-.exwrap{margin:16px 0 8px}
-.exwrap.wide{background:#fff;border:1px solid var(--line-2);border-radius:0;padding:18px 20px;margin:16px 0}
-.ex-tag{width:26px;height:5px;background:var(--green);border-radius:1px;margin-bottom:7px}
-.ex-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.ex-no{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--green);font-weight:600}
-.ex-title{font-family:var(--sans);font-size:var(--fs-body);line-height:1.22;margin:3px 0 2px;color:var(--ink);letter-spacing:-.005em}
-.ex-sub{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-bottom:8px}
-.ex-src{font-family:var(--mono);font-size:var(--fs-label);color:var(--mut);margin-top:7px;line-height:1.5}
-.ex-src a{color:var(--green)}
-.ex-toggle{display:flex;gap:5px}
-.ex-toggle button{font-family:var(--mono);font-size:11px;text-transform:uppercase;padding:0 13px;min-height:44px;border:1px solid var(--line-2);background:var(--paper);border-radius:0;color:var(--mut);cursor:pointer}
-.ex-toggle button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-svg.chart{display:block;width:100%;height:auto}
-.chart .gl{stroke:var(--line);stroke-width:1}
-.chart .axl{font-family:var(--mono);font-size:11px;fill:var(--ink-2)}
-.chart .band{fill:var(--green-bg);opacity:.55}
-.chart .bandl{font-family:var(--mono);font-size:var(--fs-label);fill:var(--green-d)}
-.chart .ln{fill:none;stroke:var(--ink);stroke-width:2}
-.chart .ln2{fill:none;stroke:var(--green);stroke-width:2}
-.chart .zero{stroke:var(--ink-3);stroke-width:1}
-.chart .bar{fill:#8f8f88} .chart .bar2{fill:var(--green)}
-.chart .dot{fill:var(--green);stroke:#fff;stroke-width:1.5}
-.chart .vlab{font-family:var(--mono);font-size:var(--fs-label);font-variant-numeric:tabular-nums}
-.chart .endlab{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
-.chart .cat{font-family:var(--sans);font-size:11px;fill:var(--ink)}
-.chart .cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 2;opacity:0}
-.chart .hdot{opacity:0}
-.charttip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 10px;border-radius:0;opacity:0;transition:opacity .08s;z-index:70;min-width:120px}
-.charttip b{font-family:var(--sans);font-size:var(--fs-meta);color:#fff}
-.charttip .tr{display:flex;justify-content:space-between;gap:12px;margin-top:3px}
-.charttip .tr i{width:9px;height:9px;border-radius:0;display:inline-block;margin-right:5px;vertical-align:middle}
-.charttip .tr .nm{color:#cfcfc9}
-.charttip .tr .vv{font-variant-numeric:tabular-nums}
-.dtbl{overflow-x:auto}
-table.dt{border-collapse:collapse;width:100%;font-size:13px}
-table.dt th,table.dt td{padding:7px 12px;border-bottom:1px solid var(--line);text-align:right}
-table.dt thead th{font-family:var(--mono);font-size:var(--fs-label);letter-spacing:.04em;text-transform:uppercase;color:var(--mut);border-bottom:1.5px solid var(--line-2)}
-table.dt td.k,table.dt th.k{text-align:left;font-family:var(--sans);color:var(--ink)}
-table.dt td{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink)}
-.fwdline{font-size:var(--fs-small);color:var(--ink-2);margin:10px 0 2px;padding:9px 13px;background:var(--paper-2);border-left:3px solid var(--green);border-radius:0 8px 8px 0;line-height:1.5}
-.fwdline b{color:var(--green-d)} .fwdline a{color:var(--green)}
+footer.foot{background:#111214;padding:28px 0 36px;margin-top:56px}
+.foot-row{max-width:var(--page);margin:0 auto;padding:0 20px}
+.foot .fblurb{font-family:var(--mono);font-size:12px;line-height:1.6;color:#86888e;max-width:54ch;margin-top:16px}
+
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

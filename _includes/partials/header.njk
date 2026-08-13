@@ -1,41 +1,12 @@
-{#- The masthead, to the design handoff of 2026-08-02. Sticky, dark, three things in one
-   row: the wordmark, a section indicator written by the homepage's scroll spy, and the
-   menu button. The panel opens directly below that row.
-
-   The handoff's panel has two columns. This site uses them for the quarterly rooms and
-   the small set of permanent site pages. The grid is the handoff's auto-fit and reflows
-   the same way on a phone.
-   THE BRIEF column is _data/footernav.js, which is also what the footer prints, so the
-   menu and the footer cannot drift apart. -#}
+{#- The homepage is the product. Its masthead needs only the name, the promise and the
+    reader-controlled language switch. There is no menu because there are no secondary
+    product pages to advertise. -#}
 <header class="mast">
   <div class="mast-row">
     <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
     {%- set Lh = uiStrings[locale] if locale else uiStrings.en %}
     <span class="mast-tag">{{ Lh.tagline }}</span>
-    <div class="mast-sec" id="mast-sec" aria-live="polite"></div>
-    {#- Language toggle, homepage pair only. A plain link: no JS, no cookie, no
-        redirect guessing — the reader chooses, the URL says so, done. -#}
     {%- if page.url == '/' %}<a class="lang-link" href="/es/" lang="es" hreflang="es">ES</a>
     {%- elif page.url == '/es/' %}<a class="lang-link" href="/" lang="en" hreflang="en">EN</a>{% endif %}
-    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Menu"><span></span><span></span></button>
-  </div>
-  <div class="menu-panel" id="menu-panel" hidden>
-    <div class="menu-grid">
-      {#- The "Jump to" column of homepage anchors came out on 2026-08-03 (Alan). It was
-          six links deep and only ever pointed at one page, so on every other page in the
-          site it was a menu that navigated away to scroll. The homepage is short enough
-          to scroll on its own. -#}
-      <div class="menu-col">
-        <span class="menu-h">Go deeper</span>
-        {%- for group in nav %}{% if group.menu %}{% for block in group.menu %}{% for link in block.links %}
-        <a href="{{ link.href }}">{{ link.label }}</a>{% endfor %}{% endfor %}{% endif %}{% endfor %}
-        <a href="/about.html">About</a>
-      </div>
-      <div class="menu-col menu-col-quiet">
-        <span class="menu-h">The brief</span>
-        {%- for item in footernav %}
-        <a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}
-      </div>
-    </div>
   </div>
 </header>

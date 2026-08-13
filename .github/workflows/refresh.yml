@@ -1,8 +1,6 @@
 name: refresh-data
-# The number path — deterministic code only, no LLM. Fetches every connector,
-# validates + fails closed, commits the refreshed static JSON. The public site
-# (Cloudflare/GitHub Pages) redeploys on the push. IMSS is skipped here (it has
-# its own monthly workflow); its ENABLE_IMSS gate keeps it off this cadence.
+# Refresh the homepage numbers and its news/context inputs. Nothing in this job
+# exists solely for a secondary page.
 
 on:
   schedule:
@@ -41,36 +39,7 @@ jobs:
         working-directory: pipeline
         run: node sync-freshness.js
 
-      - name: Build the Trade section (COMTRADE + World Bank, reconciled to Banxico)
-        working-directory: pipeline
-        continue-on-error: true   # external APIs; reconcile-or-drop keeps last-good, never fails the run
-        run: node fetch-trade.js
-
-      - name: Keep export drill-down aligned with the validated annual basket
-        working-directory: pipeline
-        continue-on-error: true   # cached for 30 days; a failed refresh keeps the last-good detail file
-        run: node fetch-hs4.js
-
-      - name: Build the analysis facts pack (The Read)
-        working-directory: pipeline
-        continue-on-error: true   # deterministic, reads local JSON; a miss keeps last-good
-        run: node build-analysis.js
-
-      - name: Log the historical vintage store (Supabase)
-        working-directory: pipeline
-        continue-on-error: true   # fail-soft; no-op without SUPABASE secrets, never blocks deploy
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          GITHUB_SHA: ${{ github.sha }}
-        run: node db-sync.js
-
-      - name: Build the news wire (Q12)
-        working-directory: pipeline
-        continue-on-error: true   # GDELT is flaky; a miss must not fail the run — the site fail-closes
-        run: node build-news.js
-
-      - name: Collect multi-source news (RSS ledger + wire)
+      - name: Collect multi-source news
         working-directory: pipeline
         continue-on-error: true   # any dead feed is skipped; never fails the run
         run: node collect-news.js
@@ -139,31 +108,6 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node translate-wire.mjs
-
-      - name: Capture article bodies into the store (before links rot)
-        working-directory: pipeline
-        continue-on-error: true   # best-effort; a miss never fails the data run. No-op without the SUPABASE secrets.
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-        run: node archive-bodies.js
-
-      - name: Build the Tariff & USMCA Watch
-        working-directory: pipeline
-        continue-on-error: true   # external feed; a miss keeps last-good, never fails the run
-        run: node build-tariffs.js
-
-      - name: Build US–Mexico trade (Census)
-        working-directory: pipeline
-        continue-on-error: true   # external API; a miss keeps last-good, never fails the run
-        env:
-          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
-        run: node build-trade.js
-
-      - name: Bank today's snapshot (delta history — cannot be backfilled)
-        working-directory: pipeline
-        continue-on-error: true   # never fails the run
-        run: node snapshot.js
 
       - name: Keep the brief's fallback readings aligned with refreshed series
         run: node pipeline/sync-brief-standing.js

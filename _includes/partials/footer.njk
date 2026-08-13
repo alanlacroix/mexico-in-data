@@ -1,9 +1,3 @@
-{#- The footer, kept in lockstep with the masthead (Alan, 2026-08-03: "make sure it
-   is up to date with our header"). The quarterly rooms render from the SAME
-   _data/nav.js entry the header menu prints, so the two can never diverge again —
-   the old hand-kept list had drifted to a single stray room. Utility links stay in
-   _data/footernav.js. Room labels and the blurb localize on /es/ through the same
-   dictionaries as everything else. -#}
 {%- set Lf = uiStrings[locale] if locale else uiStrings.en %}
 <footer class="foot">
   <div class="foot-row">
@@ -11,21 +5,5 @@
       <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
       <p class="fblurb">{{ Lf.tagline }}</p>
     </div>
-    {#- Twelve shouting caps links became "overwhelming" (Alan, 2026-08-03). Same
-        parity with the header, presented the way the header menu itself does it:
-        a quiet group label, sentence-case links, two tidy columns. -#}
-    <nav class="fnav" aria-label="Footer navigation">
-      <div class="fnav-col">
-        <span class="fnav-h">{{ Lf.footSections }}</span>
-        {%- for group in nav %}{% if group.menu %}{% for block in group.menu %}{% for link in block.links %}
-        <a href="{{ link.href }}">{{ uiStrings.maps.cats[link.label] if locale == 'es' else link.label }}</a>{% endfor %}{% endfor %}{% endif %}{% endfor %}
-      </div>
-      <div class="fnav-col">
-        <span class="fnav-h">{{ Lf.footSite }}</span>
-        <a href="/about.html">About</a>
-        {%- for item in footernav %}
-        <a href="{{ item.href }}">{{ item.label }}</a>{% endfor %}
-      </div>
-    </nav>
   </div>
 </footer>

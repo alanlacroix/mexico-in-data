@@ -1,10 +1,7 @@
 // collect-news.js — the news collector. Every run: fetch every RSS/API source in
-// news-sources.json, normalize + dedup, append new items to this week's ledger
-// (data/news/YYYY-Www.json), rebuild the rolling 72h wire (data/news/wire.json)
-// that the site reads, and update health (data/news/health.json). No LLM anywhere;
-// headlines + deks only. Zero dependencies. Fail-soft: one dead feed never stops
-// the run. This is the daily foundation both the site Wire and the weekly email
-// draw from.
+// news-sources.json, normalize + dedup, append new items to this week's ledger,
+// rebuild the rolling 72h wire, and update health. RSS is the one discovery path;
+// the flaky GDELT supplement was removed so stale output cannot re-enter the ledger.
 //
 //   node collect-news.js
 
@@ -201,22 +198,6 @@ async function main() {
     console.log(`  ${ok ? '✓' : '✗'} ${s.id.padEnd(20)} +${n}`);
   }
 
-  // merge GDELT wire (build-news.js output) into the ledger, if present
-  const gdelt = readJson(path.join(ROOT, 'data', 'news.json'), null);
-  if (gdelt && Array.isArray(gdelt.articles)) {
-    for (const a of gdelt.articles) {
-      const url = canonical(a.url); const id = idOf(url);
-      if (seen.has(id)) continue;
-      const publisher = a.domain || domainOf(url);
-      if (!domainTrusted(publisher)) continue;
-      seen.add(id);
-      ledger.push({ id, url, title: a.title, dek: '', source: publisher, sourceName: publisher,
-        tier: 1, beat: a.tag === 'trade' ? 'us-mexico' : (a.tag === 'markets' ? 'economy' : a.tag || 'politics'),
-        lang: 'en', published_at: a.date || now.toISOString(), first_seen: now.toISOString() });
-      added++;
-    }
-  }
-
   ledger.sort((a, b) => String(b.published_at).localeCompare(String(a.published_at)));
   // rolling 72h wire the site reads — shape mirrors the old news.json
   const cutoff = Date.now() - 72 * 3600 * 1000;
@@ -228,7 +209,7 @@ async function main() {
   for (const x of recent) {
     if (wireSeen.has(x.id)) continue;
     if (x.source === 'news.google.com') continue;        // aggregator stays in the ledger, not the public wire
-    const publisherName = /^via gdelt$/i.test(String(x.sourceName || '')) ? x.source : x.sourceName;
+    const publisherName = x.sourceName;
     const registered = SOURCE_BY_NAME.get(publisherName);
     if (!registered && !domainTrusted(x.source)) continue;
     if (!publicHeadlineEligible(x.title)) continue;
@@ -238,7 +219,7 @@ async function main() {
   }
   const publicArticles = articles.slice(0, 60);
   const wire = {
-    meta: { source: 'Multi-source RSS + GDELT', sourceUrl: 'https://mexicobrief.com/sources',
+    meta: { source: 'Multi-source RSS', sourceUrl: 'https://mexicobrief.com/',
       note: 'Headlines from a trusted-source allowlist, last 72 hours, each linked to its origin and unsummarized.',
       cadence: 'continuous', fetchedAt: now.toISOString(), count: publicArticles.length },
     articles: publicArticles,

@@ -75,10 +75,7 @@
       "inLanguage": "{% if locale == 'es' %}es-MX{% else %}en-US{% endif %}",
       "dateModified": "{{ pd.modified if pd else buildTime }}"
     }
-    {#- The daily brief and the quarterly reviews are dated, authored, sourced writing.
-        Declaring them only as WebPage described the container and not the thing, and gave
-        up any article eligibility. articleType is set per template; a page that does not
-        set one (Sources or About) stays a plain WebPage, which is what it is. -#}
+    {#- The daily brief is dated, authored, sourced writing. -#}
     {%- if articleType %},
     {
       "@type": {{ articleType | dump | safe }},
@@ -101,8 +98,6 @@
 <body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
 <a class="skip-link" href="#main">Skip to content</a>
 {% include "partials/header.njk" %}
-{#- Tagline band removed (Alan, 2026-08-03: "takes up a lot of space"). The line
-    now rides inside the masthead row; the footer still carries it in full. -#}
 <div class="data-alert" id="data-alert" role="status" hidden>
   <b>Some data did not load.</b> The rest of the page is still available. Try again in a few minutes.
 </div>
@@ -117,45 +112,7 @@
   };
   window.addEventListener('mb:data-error',function(e){window.reportMexicoDataError(e.detail&&e.detail.resource);});
 })();
-/* Masthead menu: one button, one panel, closed by any link inside it, by a click
-   outside it, or by Escape. */
-(function(){
-  var btn=document.querySelector('.menu-btn'),panel=document.getElementById('menu-panel');
-  if(!btn||!panel)return;
-  var set=function(open){btn.setAttribute('aria-expanded',open?'true':'false');panel.hidden=!open;};
-  document.addEventListener('click',function(e){
-    if(e.target.closest('.menu-btn')){set(panel.hidden);return;}
-    if(e.target.closest('#menu-panel a')){set(false);return;}
-    if(!e.target.closest('#menu-panel'))set(false);
-  });
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!panel.hidden){set(false);btn.focus();}});
-})();
-/* Scroll spy: the masthead says which section is in view. Pages without [data-sec]
-   simply leave the indicator empty. */
-(function(){
-  var out=document.getElementById('mast-sec');
-  var secs=[].slice.call(document.querySelectorAll('[data-sec]'));
-  if(!out||!secs.length||!('IntersectionObserver' in window))return;
-  var io=new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){if(entry.isIntersecting)out.textContent=entry.target.dataset.sec;});
-  },{rootMargin:'-60px 0px -72% 0px'});
-  secs.forEach(function(sec){io.observe(sec);});
-})();
-/* Our own subscribe form -> /api/subscribe (a Cloudflare function that calls beehiiv server-side).
-   Any form.subform on any page: inline result, no popup, no third-party UI. */
-document.addEventListener('submit',function(e){var f=e.target;if(!f.classList||!f.classList.contains('subform'))return;e.preventDefault();
-  var inp=f.querySelector('input[type=email]'),btn=f.querySelector('button'),msg=f.parentNode.querySelector('.submsg');
-  var email=(inp&&inp.value||'').trim(),hp=f.querySelector('input[name=website]');
-  var say=function(t,ok){if(msg){msg.textContent=t;msg.style.color=ok?'var(--green-d)':'var(--red)';}};
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){say('Enter a valid email address.',false);return;}
-  var old=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.textContent='Subscribing…';}
-  fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,website:(hp&&hp.value||'')})})
-    .then(function(r){return r.json().catch(function(){return{ok:r.ok};});})
-    .then(function(d){if(btn){btn.disabled=false;btn.textContent=old;}
-      if(d&&d.ok){f.style.display='none';say('Almost there. Check your inbox to confirm.',true);}
-      else{say((d&&d.error)||'Could not subscribe, please try again.',false);}})
-    .catch(function(){if(btn){btn.disabled=false;btn.textContent=old;}say('Network error, please try again.',false);});
-});</script>
+</script>
 {% if pageScript %}<script type="module">{{ pageScript | safe }}</script>{% endif %}
 </body>
 </html>

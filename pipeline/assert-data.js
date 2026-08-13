@@ -7,22 +7,20 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  PAGE_DATA_CONTRACTS, BUILDER_OWNED_SERIES, assetId,
-  validateSeriesDocument, validateLayerDocument, validateHealthDocument,
-  validateHs4Hierarchy, validateNarrativeText, validateTopicAreasDocument,
+  PAGE_DATA_CONTRACTS, assetId,
+  validateSeriesDocument, validateHealthDocument,
+  validateNarrativeText,
   isSafeHttpUrl, validPeriod,
 } from './lib/publication-contract.js';
 import { freshnessStatus } from './lib/freshness.js';
 import { lintEventReport, lintReportText, lintAnalysisText, analysisNeedsScale, reportContextDistinct } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
-import homeEditorialDate from './lib/home-editorial.cjs';
 import newsWindow from './lib/news-window.cjs';
 import scheduleCoverage from './lib/schedule-coverage.cjs';
 import briefReadinessPolicy from './lib/brief-readiness.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
 
 const { editorialDay } = newsDay;
-const { currentHomeEditorial } = homeEditorialDate;
 const { eventTimestamp } = newsWindow;
 const { validateScheduleCoverage } = scheduleCoverage;
 const { briefReadiness } = briefReadinessPolicy;
@@ -71,35 +69,31 @@ for (const file of fs.readdirSync(seriesDir).filter((name) => name.endsWith('.js
   if (fresh?.stale) warns.push(`${id}: latest observation ${doc.meta.vintage} is older than the ${doc.meta.cadence} release window`);
 }
 
-let registryIds = null;
-try {
-  const registry = read('data/meta/municipios.json');
-  const rows = Array.isArray(registry.m) ? registry.m : Object.entries(registry.m || {}).map(([id, row]) => ({ id, ...row }));
-  registryIds = new Set(rows.map((row) => String(row.cvegeo || row.cve || row.id || '').padStart(5, '0')));
-  if (!registryIds.size) throw new Error('no municipality ids');
-} catch (error) { fails.push(`municipality registry: ${error.message}`); }
-
-const layerDir = path.join(DATA, 'layers');
-for (const file of fs.readdirSync(layerDir).filter((name) => name.endsWith('.json')).sort()) {
-  const id = assetId(file), relative = `data/layers/${file}`;
-  let doc; try { doc = read(relative); } catch { continue; }
-  servedById.set(id, doc);
-  addErrors(relative, validateLayerDocument(doc, id, registryIds));
-  const fresh = freshnessStatus({ cadence: doc.meta?.cadence, thresholds: { freshnessGraceDays: doc.meta?.freshnessGraceDays } }, doc.meta?.vintage);
-  if (fresh?.stale) warns.push(`${id}: latest observation ${doc.meta.vintage} is older than the ${doc.meta.cadence} release window`);
-}
-
 // 4. Health must describe what is actually served. Builder-owned trade series are
 // explicitly classified; any other unmonitored series is an architecture regression.
 let health = null;
 try {
   health = read('data/health.json');
-  addErrors('data/health.json', validateHealthDocument(health, servedById));
-  const tracked = new Set((health.sources || []).map((source) => source.id));
-  for (const id of servedById.keys()) {
-    if (!tracked.has(id) && !BUILDER_OWNED_SERIES.has(id)) fails.push(`${id}: served data has no health record or declared builder owner`);
-  }
-  for (const source of health.sources || []) {
+  // The health ledger may still contain last-good records from a retired product.
+  // Validate only the ten series this homepage actually renders; the next scheduled
+  // run rewrites the ledger with that same set.
+  const homepageSeries = new Set((PAGE_DATA_CONTRACTS.Brief || [])
+    .map((asset) => /^data\/series\/([^/]+)\.json$/.exec(asset)?.[1])
+    .filter(Boolean));
+  const homepageSources = (health.sources || []).filter((source) => homepageSeries.has(source.id));
+  const homepageHealth = {
+    ...health,
+    sources: homepageSources,
+    summary: {
+      ok: homepageSources.filter((source) => source.status === 'ok').length,
+      flagged: homepageSources.filter((source) => source.status === 'ok_flagged').length,
+      failed: homepageSources.filter((source) => source.status === 'failed').length,
+      skipped: homepageSources.filter((source) => source.status === 'skipped').length,
+      darkSources: homepageSources.filter((source) => source.status === 'failed' && source.stale).map((source) => source.id),
+    },
+  };
+  addErrors('data/health.json', validateHealthDocument(homepageHealth, servedById));
+  for (const source of homepageSources) {
     if (!['ok', 'ok_flagged'].includes(source.status) || !source.vintage) continue;
     const current = freshnessStatus({ cadence: source.cadence, thresholds: { freshnessGraceDays: source.freshnessGraceDays } }, source.vintage);
     const hasStale = (source.flags || []).some((flag) => String(flag).startsWith('stale_'));
@@ -108,26 +102,7 @@ try {
   }
 } catch (error) { fails.push(`data/health.json: ${error.message}`); }
 
-// 5. Deterministic facts must agree exactly with their source series. This stops a
-// fresh page from showing an old computed summary after only the raw feed updated.
-try {
-  const facts = read('data/analysis/facts.json');
-  if (!Number.isFinite(Date.parse(facts.generatedAt))) fails.push('facts: generatedAt is invalid');
-  if (!facts.metrics || typeof facts.metrics !== 'object') fails.push('facts: metrics are missing');
-  else for (const [id, metric] of Object.entries(facts.metrics)) {
-    const source = servedById.get(id), latest = source?.data?.at(-1);
-    if (!source) { warns.push(`facts: ${id} has no connector-shaped source file`); continue; }
-    const sourceValue = Number(latest?.value), factValue = Number(metric.value);
-    // The facts pack stores display-ready values rounded to four decimals.
-    const tolerance = Math.max(5e-5, Math.abs(sourceValue) * 1e-6);
-    if (!latest || String(metric.date) !== String(latest.date) || !Number.isFinite(factValue) || Math.abs(factValue - sourceValue) > tolerance) {
-      fails.push(`facts: ${id} does not match the latest served observation`);
-    }
-  }
-  if (dayAge(facts.generatedAt) > 8) warns.push(`facts: generated ${Math.floor(dayAge(facts.generatedAt))} days ago`);
-} catch (error) { fails.push(`data/analysis/facts.json: ${error.message}`); }
-
-// 6. Narrative/context contracts: every public claim row is dated, named, and
+// 5. Narrative/context contracts: every public claim row is dated, named, and
 // linked. Brief references must resolve to the curated event ledger.
 try {
   const happening = read('data/happening.json');
@@ -270,78 +245,6 @@ try {
   for (const live of brief.standing?.live || []) if (!servedById.has(live.series)) fails.push(`brief: standing line needs missing series ${live.series}`);
   if (dayAge(brief.meta?.generatedAt) > 4) warns.push(`brief: generated ${Math.floor(dayAge(brief.meta.generatedAt))} days ago`);
 
-  if (exists('data/home-editorial.json')) {
-    const editorial = read('data/home-editorial.json');
-    if (!validPeriod(editorial.forDate || '')) fails.push('home editorial: forDate is missing or invalid');
-    // homeEditorial.js deliberately ignores a hand-reviewed overlay after `forDate` and
-    // falls back to a current deterministic connection. Validate the overlay only while
-    // it can actually render. Otherwise an expired note eventually loses its backing
-    // event when happening.json rolls forward and blocks every daily refresh even though
-    // the public page no longer uses it.
-    const currentEditorial = currentHomeEditorial(editorial, brief.meta?.editorialDate);
-    if (currentEditorial?.myRead) {
-      checkText('home editorial: myRead.text', currentEditorial.myRead.text);
-      if (!currentEditorial.myRead.text) fails.push('home editorial: myRead.text is required');
-      if (!String(currentEditorial.myRead.storyLabel || '').trim()) fails.push('home editorial: myRead.storyLabel is required');
-      if (!isSafeHttpUrl(currentEditorial.myRead.storyUrl)) fails.push('home editorial: myRead.storyUrl must be a source URL');
-      if (!events.some((event) => event.date === currentEditorial.forDate && event.url === currentEditorial.myRead.storyUrl)) fails.push('home editorial: myRead.storyUrl must point to a story from that editorial day');
-      if (!Array.isArray(currentEditorial.myRead.seriesIds) || !currentEditorial.myRead.seriesIds.length) fails.push('home editorial: myRead needs at least one related series');
-      for (const id of currentEditorial.myRead.seriesIds || []) if (!servedById.has(id)) fails.push(`home editorial: related series ${id} is missing`);
-    }
-    if (currentEditorial?.sourceState) {
-      checkText('home editorial: sourceState.note', currentEditorial.sourceState.note);
-      if (!currentEditorial.sourceState.note) fails.push('home editorial: sourceState.note is required');
-      if (!Array.isArray(currentEditorial.sourceState.sources) || currentEditorial.sourceState.sources.length < 2) fails.push('home editorial: a disagreement needs at least two sources');
-      for (const source of currentEditorial.sourceState.sources || []) if (!isSafeHttpUrl(source.url)) fails.push('home editorial: disagreement source URL is invalid');
-    }
-  }
-
-  if (exists('data/connection-rules.json')) {
-    const connections = read('data/connection-rules.json');
-    const ruleIds = new Set();
-    for (const rule of connections.rules || []) {
-      if (!rule.id || ruleIds.has(rule.id)) fails.push('connection rules: every rule needs a unique id');
-      ruleIds.add(rule.id);
-      try { new RegExp(rule.pattern, 'i'); } catch { fails.push(`connection rules: ${rule.id || 'unknown'} has an invalid pattern`); }
-      checkText(`connection rules: ${rule.id || 'unknown'}.text`, rule.text);
-      if (!String(rule.text || '').trim()) fails.push(`connection rules: ${rule.id || 'unknown'} needs text`);
-      const gate = lintReportText({ text: rule.text, inputs: [rule.text], maxWords: 70, maxSentences: 4 });
-      if (!gate.ok) fails.push(`connection rules: ${rule.id || 'unknown'} fails the public copy gate (${gate.flags.join('; ')})`);
-      if (!Array.isArray(rule.seriesIds) || !rule.seriesIds.length) fails.push(`connection rules: ${rule.id || 'unknown'} needs related series`);
-      for (const id of rule.seriesIds || []) if (!servedById.has(id)) fails.push(`connection rules: related series ${id} is missing`);
-    }
-  }
-
-  const areas = read('data/areas.json');
-  addErrors('areas taxonomy', validateTopicAreasDocument(areas));
-  const areaKeys = new Set();
-  for (const [index, area] of (areas.areas || []).entries()) {
-    if (!area.key || areaKeys.has(area.key)) fails.push(`areas: duplicate or missing key at row ${index}`);
-    areaKeys.add(area.key);
-    for (const key of ['label', 'href']) if (!area[key]) fails.push(`areas: ${area.key || index} missing ${key}`);
-    checkText(`areas: ${area.key || index}.label`, area.label);
-    checkText(`areas: ${area.key || index}.synthesis`, area.synthesis);
-    if (!['reviewed', 'generated-gated', 'unavailable'].includes(area.synthesisStatus)) fails.push(`areas: ${area.key || index} has invalid synthesisStatus`);
-    if (area.synthesisStatus === 'unavailable' && area.synthesis) fails.push(`areas: ${area.key || index} marks a synthesis unavailable but includes one`);
-    if (area.synthesisStatus !== 'unavailable' && !area.synthesis) fails.push(`areas: ${area.key || index} marks a synthesis available but has none`);
-    for (const [headlineIndex, headline] of (area.headlines || []).entries()) {
-      for (const key of ['title', 'source', 'url', 'date']) if (!headline[key]) fails.push(`areas: ${area.key} headline ${headlineIndex + 1} missing ${key}`);
-      for (const key of ['title', 'source']) checkText(`areas: ${area.key} headline ${headlineIndex + 1}.${key}`, headline[key]);
-      if (!validPeriod(headline.date)) fails.push(`areas: ${area.key} headline ${headlineIndex + 1} has invalid date`);
-      if (!isSafeHttpUrl(headline.url)) fails.push(`areas: ${area.key} headline ${headlineIndex + 1} has invalid source URL`);
-      const event = events.find((candidate) => candidate.title === headline.title && candidate.url === headline.url);
-      if (!event) {
-        fails.push(`areas: ${area.key} headline ${headlineIndex + 1} is not backed by the curated event ledger`);
-      } else {
-        const context = String(event.context || '').replace(/\s+/g, ' ').trim();
-        const gate = lintReportText({ text: context, inputs: [event.date, event.title, context], maxWords: 45, maxSentences: 2 });
-        if (!gate.ok) fails.push(`areas: ${area.key} headline ${headlineIndex + 1} lacks reviewed context that passes the report gate (${gate.flags.join('; ')})`);
-      }
-    }
-  }
-  if (!(areas.areas || []).length) fails.push('areas: no topic summaries');
-  if (dayAge(areas.meta?.generatedAt) > 4) warns.push(`areas: generated ${Math.floor(dayAge(areas.meta.generatedAt))} days ago`);
-
   const calendar = read('data/events.json');
   for (const [index, event] of (calendar.events || []).entries()) {
     for (const key of ['date', 'label', 'mechanism', 'source', 'sourceUrl']) if (!event[key]) fails.push(`events: row ${index + 1} missing ${key}`);
@@ -350,12 +253,6 @@ try {
     if (!isSafeHttpUrl(event.sourceUrl)) fails.push(`events: row ${index + 1} has invalid source URL`);
   }
 } catch (error) { fails.push(`narrative contracts: ${error.message}`); }
-
-// 7. Trade hierarchy invariants. A visual hierarchy must conserve the quantity
-// it partitions; otherwise area/length no longer means the stated value.
-try {
-  addErrors('trade HS4 hierarchy', validateHs4Hierarchy(read('data/trade/exports-hs4.json'), read('data/trade/exports-by-product.json')));
-} catch (error) { fails.push(`trade hierarchy: ${error.message}`); }
 
 // No figure reaches a reader without an as-of. This was editorial discipline until
 // 2026-08-02, which is how a block headed "Today" came to carry a three-day-old close

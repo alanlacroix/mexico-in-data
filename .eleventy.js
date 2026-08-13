@@ -1,10 +1,4 @@
-// Eleventy config. All pages are Nunjucks templates that render through
-// _includes/base.njk (one <head>, one masthead component, one footer component,
-// one nav in _data/nav.js). Output is pure static HTML to _site.
-//
-// design/ and runtime data are copied verbatim. Email drafts are private review
-// artifacts and never enter the public build. We do NOT pass through root-level
-// page *.html files: production pages are built from .njk templates.
+// Eleventy config for one product in two languages: / and /es/.
 const fs = require('node:fs');
 const crypto = require('node:crypto');
 const path = require('node:path');
@@ -14,14 +8,13 @@ module.exports = function (ec) {
   // final browser boundary; the few intentional HTML fragments use an explicit | safe.
   ec.setNunjucksEnvironmentOptions({ autoescape: true });
   ec.addPassthroughCopy('design');
-  ec.addPassthroughCopy('assets');   // shared JS toolkit (mb.js) the section pages import
-  // Only runtime data belongs in the public artifact. Email drafts and raw
-  // source snapshots are review/audit material, not website assets.
-  for (const entry of fs.readdirSync('data', { withFileTypes: true })) {
-    if (['email', 'source-snapshots'].includes(entry.name)) continue;
-    ec.addPassthroughCopy(path.join('data', entry.name));
+  ec.addPassthroughCopy('assets/og.png');
+  ec.addPassthroughCopy('assets/og.svg');
+  // The watchdog reads this receipt to verify the exact edition that reached
+  // production. All other data is compiled into the homepage and stays private.
+  for (const file of ['publication-status.json', 'brief.json', 'event-status.json']) {
+    ec.addPassthroughCopy(`data/${file}`);
   }
-  ec.addPassthroughCopy('reports'); // the Mexico overview in web and PDF editions
   ec.addPassthroughCopy('_headers');   // Cloudflare Pages cache policy
   ec.addPassthroughCopy('_redirects'); // retired URLs must follow the same rules in the built site
 

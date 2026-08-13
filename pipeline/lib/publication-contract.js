@@ -1,104 +1,25 @@
-// publication-contract.js — deterministic contracts for every data-backed public page.
-// The connector contract protects one fetch. This file protects the assembled product:
-// every page has the files it needs, every served observation is internally coherent,
-// and a bad derived artifact cannot reach the browser just because its fetch succeeded.
+// Deterministic contracts for the homepage data product.
 
 import path from 'node:path';
 
-// Canonical public topic taxonomy. The homepage, navigation, topic pages, and
-// generated area summaries must use this exact order and destination set.
-// Keeping this next to the publication gate means an old generated areas file
-// cannot quietly restore a retired topic after a successful site build.
-export const PUBLIC_TOPIC_AREAS = Object.freeze([
-  Object.freeze({ key: 'economy', label: 'Economy & money', href: '/economy.html' }),
-  Object.freeze({ key: 'payments', label: 'Payments', href: '/payments.html' }),
-  Object.freeze({ key: 'politics', label: 'Politics', href: '/politics.html' }),
-  Object.freeze({ key: 'society', label: 'Security & society', href: '/society.html' }),
-  Object.freeze({ key: 'usmexico', label: 'US & Mexico', href: '/us-mexico.html' }),
-]);
-
 const SERIES = (id) => `data/series/${id}.json`;
-
-const MONEY = [
-  'banxico-usdmxn-fix', 'banxico-inflacion', 'banxico-inflacion-subyacente',
-  'banxico-tasa-objetivo', 'banxico-reservas', 'banxico-remesas',
-].map(SERIES);
-
-const PAYMENTS = [
-  'banxico-spei-operaciones', 'banxico-spei-monto', 'banxico-codi-operaciones',
-  'banxico-tpv-debito-ops', 'banxico-tpv-debito-monto', 'banxico-tpv-credito-ops',
-  'banxico-tpv-credito-monto', 'banxico-ecommerce-ops', 'banxico-ecommerce-monto',
-  'banxico-cajeros-ops', 'banxico-cajeros-monto', 'banxico-circulante',
-  'banxico-consumo-privado', 'banxico-remesas-electronicas',
-  'banxico-tarjetas-credito', 'banxico-tarjetas-debito',
-].map(SERIES);
-
-const CHARTS = [
-  'banxico-usdmxn-fix', 'banxico-bmv-ipc', 'banxico-cetes-28d',
-  'banxico-tasa-objetivo', 'fred-fedfunds', 'fred-ust10',
-  'banxico-reservas', 'fred-usd-broad', 'banxico-inflacion',
-  'banxico-inflacion-subyacente', 'banxico-salario-minimo', 'banxico-inpc',
-  'cre-gasolina-regular', 'banxico-pib-crecimiento', 'banxico-igae',
-  'banxico-remesas', 'banxico-exports-total', 'banxico-imports-total',
-  'banxico-imports-intermediate', 'banxico-trade-balance', 'fred-us-indpro',
-  'banxico-spei-operaciones', 'banxico-spei-monto', 'banxico-codi-operaciones',
-  'banxico-tpv-debito-ops', 'banxico-tpv-credito-ops', 'banxico-cajeros-ops',
-  'banxico-ecommerce-ops', 'banxico-tarjetas-debito', 'banxico-tarjetas-credito',
-  'banxico-circulante', 'banxico-ecommerce-monto',
-].map(SERIES);
-
-const CONTEXT = ['data/events.json', 'data/happening.json'];
 
 // A required asset may still contain an old official observation. It may not be
 // missing or malformed. Freshness is shown separately, never used to replace a
 // valid last-good value with zero or a made-up fallback.
 export const PAGE_DATA_CONTRACTS = {
   'Brief': [
-    'data/health.json', 'data/brief.json', 'data/areas.json',
-    'data/analysis/facts.json', ...CONTEXT, ...MONEY,
-    SERIES('banxico-bmv-ipc'), SERIES('banxico-cetes-28d'),
-    SERIES('banxico-pib-crecimiento'), SERIES('banxico-igae'),
-    SERIES('wb-gdp-usd'), SERIES('wb-population'), SERIES('wb-gdp-per-capita'),
+    'data/health.json', 'data/brief.json', 'data/event-status.json',
+    'data/events.json', 'data/happening.json',
+    'data/news/translations.json', 'data/es/brief.json',
+    ...[
+      'banxico-usdmxn-fix', 'cre-gasolina-regular', 'banxico-cetes-28d',
+      'fred-ust10', 'banxico-bmv-ipc', 'banxico-inflacion',
+      'banxico-tasa-objetivo', 'banxico-igae', 'banxico-exports-total',
+      'banxico-remesas',
+    ].map(SERIES),
   ],
-  'Charts': CHARTS,
-  'Economy & money': [
-    'data/economy.json', ...CONTEXT, ...MONEY,
-    SERIES('banxico-exports-total'), SERIES('banxico-imports-total'),
-    'data/trade/exports-by-partner.json',
-  ],
-  'Payments': [...CONTEXT, ...PAYMENTS],
-  'Trade': [
-    ...CONTEXT,
-    SERIES('banxico-exports-total'), SERIES('banxico-imports-total'),
-    SERIES('banxico-trade-balance'), SERIES('banxico-exports-oil'),
-    SERIES('banxico-exports-nonoil'), SERIES('banxico-exports-manufactures'),
-    SERIES('banxico-imports-consumer'), SERIES('banxico-imports-intermediate'),
-    SERIES('banxico-imports-capital'),
-    'data/trade/exports-by-product.json', 'data/trade/exports-by-partner.json',
-    'data/trade/exports-hs4.json', 'data/trade/regional.json',
-  ],
-  'Politics': CONTEXT,
-  'Security & society': [
-    ...CONTEXT, SERIES('banxico-salario-minimo'), SERIES('banxico-remesas'),
-    SERIES('cre-gasolina-regular'), SERIES('wb-unemployment'),
-    SERIES('wb-gdp-per-capita'), SERIES('wb-population'),
-    'data/demographics.json', 'data/vitals.json',
-  ],
-  'US & Mexico': [...CONTEXT, ...MONEY, 'data/trade-us.json', 'data/trade/exports-by-partner.json'],
-  'Model': [
-    SERIES('banxico-usdmxn-fix'), SERIES('banxico-inflacion'),
-    SERIES('banxico-tasa-objetivo'), SERIES('banxico-pib-crecimiento'),
-  ],
-  'Sources': ['data/health.json'],
 };
-
-// These files are built by fetch-trade.js rather than the connector harness. They
-// still carry provenance and are checked below, but do not appear in health.json.
-export const BUILDER_OWNED_SERIES = new Set([
-  'banxico-exports-manufactures', 'banxico-exports-nonoil', 'banxico-exports-oil',
-  'banxico-exports-total', 'banxico-imports-capital', 'banxico-imports-consumer',
-  'banxico-imports-intermediate', 'banxico-imports-total', 'banxico-trade-balance',
-]);
 
 const isObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 const present = (value) => value !== undefined && value !== null && value !== '';
@@ -147,22 +68,6 @@ export function validateNarrativeText(value) {
   if (/\b(?:Mexican\s+utility|(?:state(?:-owned)?\s+)?(?:power|electric(?:ity)?)\s+(?:company|utility)|central bank|statistics agency|trade office)\s+(?:Mexico(?:'s|’s)|the US)\s+(?:state(?:-owned)?\s+)?(?:power|electric(?:ity)?|central|statistics|trade)[^.]{0,35}\b(?:company|utility|bank|agency|office)\b/i.test(decoded)) {
     errors.push('contains duplicated institutional label');
   }
-  return errors;
-}
-
-export function validateTopicAreasDocument(doc) {
-  const errors = [];
-  if (!isObject(doc?.meta) || !Array.isArray(doc?.areas)) return ['document needs meta and areas'];
-  if (doc.areas.length !== PUBLIC_TOPIC_AREAS.length) {
-    errors.push(`expected ${PUBLIC_TOPIC_AREAS.length} topics, found ${doc.areas.length}`);
-  }
-  PUBLIC_TOPIC_AREAS.forEach((expected, index) => {
-    const actual = doc.areas[index];
-    if (!actual) { errors.push(`missing topic ${expected.key} at position ${index + 1}`); return; }
-    for (const field of ['key', 'label', 'href']) {
-      if (actual[field] !== expected[field]) errors.push(`topic ${index + 1} ${field} is ${JSON.stringify(actual[field])}, expected ${JSON.stringify(expected[field])}`);
-    }
-  });
   return errors;
 }
 
@@ -270,27 +175,6 @@ export function validateHealthDocument(health, servedById = new Map()) {
   for (const key of ['ok', 'flagged', 'failed', 'skipped']) if (health.summary[key] !== actual[key]) errors.push(`summary.${key} is ${health.summary[key]}, expected ${actual[key]}`);
   const reportedDark = [...(health.summary.darkSources || [])].sort();
   if (JSON.stringify(reportedDark) !== JSON.stringify(actual.darkSources)) errors.push('summary.darkSources does not match failed sources without last-good');
-  return errors;
-}
-
-export function validateHs4Hierarchy(detail, parents) {
-  const errors = [];
-  if (!isObject(detail?.byChapter) || !Array.isArray(parents?.items)) return ['HS4 detail or HS2 parents are missing'];
-  const parentValues = new Map(parents.items.map((item) => [String(item.code).padStart(2, '0'), Number(item.value)]));
-  if (Number(detail.year || detail.referenceYear) !== Number(parents.year || parents.referenceYear)) errors.push('HS4 and HS2 reference years differ');
-  if (Math.abs(Number(detail.total) - Number(parents.total)) / Number(parents.total) > 0.0005) errors.push('HS4 and HS2 grand totals differ');
-  for (const [chapter, children] of Object.entries(detail.byChapter)) {
-    const parent = parentValues.get(String(chapter).padStart(2, '0'));
-    if (!Number.isFinite(parent) || parent <= 0) { errors.push(`chapter ${chapter} has no positive HS2 parent`); continue; }
-    if (!Array.isArray(children) || !children.length) { errors.push(`chapter ${chapter} has no children`); continue; }
-    const total = children.reduce((sum, child) => sum + Number(child.value || 0), 0);
-    if (children.some((child) => !Number.isFinite(child.value) || child.value < 0)) errors.push(`chapter ${chapter} has an invalid child value`);
-    if (total > parent * 1.005) errors.push(`chapter ${chapter} children exceed parent by ${((total / parent - 1) * 100).toFixed(1)}%`);
-    for (const child of children) {
-      const expected = child.value / parent * 100;
-      if (!Number.isFinite(child.shareParent) || Math.abs(child.shareParent - expected) > 0.11) errors.push(`chapter ${chapter} child ${child.code} has an incorrect parent share`);
-    }
-  }
   return errors;
 }
 

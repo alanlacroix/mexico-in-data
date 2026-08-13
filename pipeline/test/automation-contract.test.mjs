@@ -12,9 +12,6 @@ const productionVerifier = fs.readFileSync(path.join(root, 'pipeline', 'verify-p
 const refresh = workflow('refresh.yml');
 const happening = workflow('happening.yml');
 const publicationFallback = workflow('publication-fallback.yml');
-const recordPublishedEmail = workflow('record-published-email.yml');
-const refreshImss = workflow('refresh-imss.yml');
-const sesnsp = workflow('refresh-sesnsp.yml');
 const watchdogRunOnce = fs.readFileSync(path.join(root, 'ops', 'publication-watchdog', 'run-once.mjs'), 'utf8');
 const collectorBlock = happening.match(
   /- name: Refresh the news ledger[\s\S]*?(?=\n      - name: Build the event log)/,
@@ -116,7 +113,7 @@ assert.doesNotMatch(
 );
 assert.match(
   happening,
-  /git add[^\n]*data\/news\.json[^\n]*data\/event-status\.json[^\n]*data\/brief\.json[^\n]*data\/publication-status\.json/,
+  /git add[^\n]*data\/news\/[^\n]*data\/event-status\.json[^\n]*data\/brief\.json[^\n]*data\/publication-status\.json/,
   'the publication commit must contain the refreshed wire, scheduled-outcome audit, brief, and receipt together',
 );
 assert.match(
@@ -156,11 +153,7 @@ assert.match(
 
 const requiredWriterWorkflowNames = [
   'happening.yml',
-  'record-published-email.yml',
-  'refresh-imss.yml',
-  'refresh-sesnsp.yml',
   'refresh.yml',
-  'weekly-read.yml',
 ];
 const discoveredWriterWorkflows = fs.readdirSync(workflowDir)
   .filter((name) => name.endsWith('.yml') && /contents:\s*write/.test(workflow(name)))
@@ -188,7 +181,7 @@ for (const name of discoveredWriterWorkflows) {
   );
 }
 
-for (const name of ['refresh.yml', 'refresh-imss.yml', 'refresh-sesnsp.yml', 'weekly-read.yml']) {
+for (const name of ['refresh.yml']) {
   assert.match(
     workflow(name),
     /git commit -m "\[CF-Pages-Skip\]/,
@@ -212,12 +205,6 @@ assert.match(
   'every completed publication must immediately re-audit the control plane',
 );
 
-assert.match(recordPublishedEmail, /WEEK_INPUT:\s*\$\{\{ inputs\.week \}\}[\s\S]*git commit -m "email: record published \$\{WEEK_INPUT\}"/,
-  'manual workflow input must reach the shell only through an environment variable');
-assert.doesNotMatch(recordPublishedEmail, /git commit[^\n]*\$\{\{\s*inputs\./,
-  'manual input must never be interpolated directly into a shell command');
-assert.doesNotMatch(refreshImss, /issues:\s*write/,
-  'the IMSS data refresh must not receive unused issue-write permission');
 assert.match(
   publicationFallback,
   /permissions:[\s\S]*?actions:\s*write/,
@@ -243,11 +230,5 @@ assert.match(
   /id:\s*incident[\s\S]*new_incident[\s\S]*steps\.incident\.outputs\.new_incident == 'true'/,
   'the fallback must email once per incident instead of failing every repeated audit',
 );
-
-assert.match(sesnsp, /cron:\s*'35 15 21 \* \*'/, 'SESNSP must refresh after the stated day-20 publication deadline');
-assert.match(sesnsp, /ENABLE_SESNSP:\s*'1'/, 'the SESNSP monthly job must explicitly open the heavy-source gate');
-assert.match(sesnsp, /run\.js --only sesnsp-delitos/, 'the SESNSP monthly job must remain scoped to its connector');
-assert.match(sesnsp, /assert-connector\.mjs sesnsp-delitos --max-age-days 45/, 'a failed or publication-late SESNSP run must block its commit');
-assert.match(sesnsp, /git add data\/layers\/sesnsp-delitos\.json data\/health\.json/, 'the monthly job may commit only its layer and merged health record');
 
 console.log('automation-contract tests: ok');

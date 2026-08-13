@@ -34,13 +34,4 @@ eleventyExcludeFromCollections: true
     <summary type="text">{{ story.dek }}</summary>
   </entry>
 {%- endfor %}
-{%- for room in topicRoutes %}
-  <entry>
-    <title>{{ room.label }}: quarterly review</title>
-    <link href="https://mexicobrief.com{{ room.permalink }}"/>
-    <id>https://mexicobrief.com{{ room.permalink }}</id>
-    <updated>{{ pageDates[room.permalink | replace('.html', '')].modified }}</updated>
-    <summary type="text">{{ room.description }}</summary>
-  </entry>
-{%- endfor %}
 </feed>
