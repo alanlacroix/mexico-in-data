@@ -24,7 +24,7 @@ comparisons, sources, and analysis inside them.
 ## Editorial boundary
 
 - Headline and summary: shortest accurate report of what happened.
-- Background: structural fact a newcomer needs.
+- Background: structural fact a newcomer needs, connected to a primary public record.
 - Our view: narrow, evidence-backed judgment.
 - What we’re watching: the next real step and the observable result that would confirm or weaken the view. Do not force a prediction when the evidence supports only the next decision or release.
 - Insider shorthand such as “hawkish” or “dovish” is not public copy.
@@ -38,7 +38,7 @@ translate, and write economic/calendar context. It may not create numbers or dec
 stories rank differently because analysis was easier to produce.
 
 Analysis runs only after the exact factual story order is locked. If any selected story
-lacks a complete, evidence-linked explanation, the new edition does not publish and the
+lacks a complete, primary-record-backed explanation that cleared the separate evidence audit, the new edition does not publish and the
 last complete edition stays live. The pipeline may never demote a story because it is hard
 to explain. A quiet day may contain fewer stories; it may not be padded.
 

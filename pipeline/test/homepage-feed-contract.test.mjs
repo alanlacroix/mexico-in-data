@@ -38,8 +38,9 @@ assert.equal(
 assert.ok(dailyBrief.stories.every((story) => {
   const fields = [story.bg, story.view, story.prediction].filter((value) => String(value || '').trim());
   const refs = ['background', 'view', 'prediction'].every((field) => story.analysisRefs?.[field]?.length);
-  const linked = story.analysisSources?.some((source) => /^https:\/\//i.test(String(source?.url || '')));
-  return story.analysisV >= 8 && fields.length === 3 && refs && linked;
+  const linked = story.analysisSources?.some((source) => source?.kind === 'primary'
+    && /^https:\/\//i.test(String(source?.url || '')));
+  return story.analysisV >= 9 && fields.length === 3 && refs && linked;
 }), 'every selected story must carry one complete, approved, evidence-linked BE unit');
 for (let i = 0; i < dailyBrief.stories.length; i += 1) {
   for (let j = i + 1; j < dailyBrief.stories.length; j += 1) {

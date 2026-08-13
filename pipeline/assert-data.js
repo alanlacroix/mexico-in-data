@@ -123,8 +123,10 @@ try {
     const analysisInputs = [event.date, event.title, event.context, event.why, event.background, event.drivers, event.implications, event.next,
       ...(event.coverage || []).flatMap((source) => [source.title, source.summary])];
     const completeAnalysis = ['background', 'view', 'prediction'].every((field) => String(event[field] || '').trim());
+    // Older complete units may remain in the rolling event archive, but v9 readiness
+    // keeps them off the homepage. Only malformed pre-grounding drafts are invalid here.
     if (completeAnalysis && Number(event.analysisV) < 7) fails.push(`happening: ${event.id || index} has complete but unapproved BE analysis`);
-    if (completeAnalysis && Number(event.analysisV) >= 8) {
+    if (completeAnalysis && Number(event.analysisV) >= 9) {
       for (const field of ['background', 'view', 'prediction']) {
         if (!Array.isArray(event.analysisRefs?.[field]) || !event.analysisRefs[field].some((ref) => String(ref || '').trim())) {
           fails.push(`happening: ${event.id || index}.${field} has no retained evidence reference`);
@@ -132,6 +134,9 @@ try {
       }
       if (!Array.isArray(event.analysisSources) || !event.analysisSources.some((source) => isSafeHttpUrl(source?.url))) {
         fails.push(`happening: ${event.id || index} has no linked Briefly Explained evidence`);
+      }
+      if (!event.analysisSources?.some((source) => source?.kind === 'primary' && isSafeHttpUrl(source?.url))) {
+        fails.push(`happening: ${event.id || index} has no primary record in Briefly Explained evidence`);
       }
       for (const source of event.analysisSources || []) {
         if (!source?.source) fails.push(`happening: ${event.id || index} has an unnamed Briefly Explained source`);
@@ -141,7 +146,7 @@ try {
     if (event.view) {
       const gate = lintAnalysisText({ text: event.view, inputs: analysisInputs, role: 'view', maxWords: 85, maxSentences: 5,
         requireScale: completeAnalysis && analysisNeedsScale([event.title, event.context, event.why]), forbidFirstPerson: completeAnalysis,
-        // analysisV 7 was grounded against the full article text and standing facts
+        // Published analysis was grounded against fetched article text and primary records
         // before it was stored. Those private inputs are not persisted here, so this
         // pass rechecks voice and usefulness without falsely rejecting cited numbers.
         checkNumbers: !completeAnalysis });
@@ -211,8 +216,8 @@ try {
     }
     const claimHasAnalysis = ['background', 'view', 'prediction'].some((field) => String(claim[field] || '').trim());
     const claimHasCompleteAnalysis = ['background', 'view', 'prediction'].every((field) => String(claim[field] || '').trim());
-    if (claimHasAnalysis && (!claimHasCompleteAnalysis || Number(claim.analysisV) < 7)) fails.push(`brief: claim ${index + 1} exposes incomplete or unapproved BE analysis`);
-    if (claimHasCompleteAnalysis && Number(claim.analysisV) >= 8) {
+    if (claimHasAnalysis && (!claimHasCompleteAnalysis || Number(claim.analysisV) < 9)) fails.push(`brief: claim ${index + 1} exposes incomplete or unapproved BE analysis`);
+    if (claimHasCompleteAnalysis && Number(claim.analysisV) >= 9) {
       const refs = claim.analysisRefs || {};
       for (const field of ['background', 'view', 'prediction']) {
         if (!Array.isArray(refs[field]) || !refs[field].some((ref) => String(ref || '').trim())) {
@@ -221,6 +226,9 @@ try {
       }
       if (!Array.isArray(claim.analysisSources) || !claim.analysisSources.some((source) => isSafeHttpUrl(source?.url))) {
         fails.push(`brief: claim ${index + 1} has no linked Briefly Explained evidence`);
+      }
+      if (!claim.analysisSources?.some((source) => source?.kind === 'primary' && isSafeHttpUrl(source?.url))) {
+        fails.push(`brief: claim ${index + 1} has no primary record in Briefly Explained evidence`);
       }
     }
   }

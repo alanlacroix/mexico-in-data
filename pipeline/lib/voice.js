@@ -33,6 +33,7 @@ export const REPORT = `REGISTER: FACTUAL COPY. Write like a careful person expla
 export const ANALYSIS_SHAPE = `ALAN'S APPROVED ANALYSIS PATTERN (HARD PUBLICATION RULE):
 - State the view in the first sentence, in ordinary language.
 - Use a few relevant facts to support the view. Numbers are evidence, not the view itself.
+- Check the current status and procedural stage against a primary record. A news report alone does not settle whether something was alleged, initiated, proposed, approved, preliminary, final, recovered, retained, or lost.
 - Every announcement number needs a denominator or comparison: large compared with what, how much of the system, or how different from the status quo. If the sources do not provide one, do not analyze the number.
 - Add information the visible headline and summary do not contain. Analysis that only says an announcement is good, important, useful, or worth watching does not publish.
 - Distinguish an announcement from financing, permits, construction, operation, and measurable output. Name the stage that has actually been reached.

@@ -367,13 +367,36 @@ ${BAN}`;
 //   view        — a narrow, evidence-backed judgment, explicitly labeled as ours
 //   prediction  — what we expect or the measurable condition that would change the view
 // All three are grounded in retained evidence. Thin evidence blocks publication; it
-// never produces filler and it never changes the factual ranking. ----
-const ANALYSIS_VERSION = 8;
+// never produces filler and it never changes the factual ranking. v9 also requires a
+// primary record and a separate claim-by-claim evidence audit. ----
+const ANALYSIS_VERSION = 9;
 const BG_MAX = 5;             // The Brief itself has a hard cap of five selected stories.
 const BG_FETCH_MAX = 9;       // Failed article fetches must not consume the scarce analysis slots.
 const BG_DAYS = 14;           // recent events earn the analysis fetch
 const BG_MIN_IMP = 5;         // ordinary headlines do not need an analysis layer
 const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
+const sourceHost = (value) => {
+  try { return new URL(String(value || '')).hostname.toLowerCase().replace(/^www\./, ''); }
+  catch { return ''; }
+};
+const sourceKey = (value) => String(value || '').replace(/[?#].*$/, '').replace(/\/$/, '').toLowerCase();
+const primaryRecordUrl = (value) => {
+  const host = sourceHost(value);
+  return Boolean(host && (
+    /(?:^|\.)gob\.mx$/.test(host)
+    || /(?:^|\.)gov$/.test(host)
+    || /(?:^|\.)gov\.[a-z]{2}$/.test(host)
+    || ['banxico.org.mx', 'inegi.org.mx', 'diariooficial.gob.mx', 'ift.org.mx', 'pemex.com', 'cfe.mx',
+      'oecd.org', 'imf.org', 'worldbank.org', 'iadb.org'].some((domain) => host === domain || host.endsWith(`.${domain}`))
+  ));
+};
+const primaryResearchUrl = (value) => {
+  if (primaryRecordUrl(value)) return true;
+  try {
+    const url = new URL(String(value || ''));
+    return /\/(?:investor|investors|investor-relations|inversionistas|filings?|reports?|annual-report|quarterly-results|newsroom|press-releases?|sala-de-prensa)(?:\/|$)/i.test(url.pathname);
+  } catch { return false; }
+};
 
 const SECTION_TOPICS = {
   economy: ['economy', 'trade', 'energy', 'fiscal'],
@@ -420,7 +443,7 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
   const CORE = ['background', 'view', 'prediction'];
   const coreComplete = (e) => CORE.every((f) => stripDashWs(e[f]));
   const refsComplete = (e) => CORE.every((field) => arr(e?.analysisRefs?.[field]).some((ref) => stripDashWs(ref)));
-  const sourcesComplete = (e) => arr(e?.analysisSources).some((source) => /^https:\/\//i.test(String(source?.url || '')));
+  const sourcesComplete = (e) => arr(e?.analysisSources).some((source) => source?.kind === 'primary' && /^https:\/\//i.test(String(source?.url || '')));
   const analysisReady = (e) => Boolean(e && coreComplete(e) && refsComplete(e) && sourcesComplete(e) && e.analysisV === ANALYSIS_VERSION);
   const needsAnalysis = (e) => !analysisReady(e) || totalWords(e) > 190;
   const outcome = (event, reason) => ({ id: event?.id || '', ready: analysisReady(event), reason });
@@ -485,8 +508,50 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
       summary: source.summary || '',
       result: await fetchArticle(source.url).catch(() => ({ ok: false, text: '' })),
     })));
-    return { e, r, secondary };
+    return { e, r, secondary, research: [] };
   }));
+  // A news report can contain the relevant facts and still describe the current stage
+  // incorrectly. That happened with both the FAA Category 1 review and the strawberry
+  // dumping case on 2026-08-13. Discover one primary public record for each selected
+  // non-official article, fetch the record ourselves, and make it part of the closed
+  // evidence set. Search finds the document; it never writes the analysis.
+  const researchTargets = fetched.filter((item) => needsAnalysis(item.e) && !primaryRecordUrl(item.e.url));
+  if (researchTargets.length) {
+    const researchSchema = { type: 'object', additionalProperties: false, required: ['sources'], properties: { sources: {
+      type: 'array', items: { type: 'object', additionalProperties: false,
+        required: ['i', 'url', 'source', 'title'], properties: {
+          i: { type: 'integer' }, url: { type: 'string' }, source: { type: 'string' }, title: { type: 'string' },
+        } },
+    } } };
+    const researched = await askJSON({
+      system: `Find one public PRIMARY RECORD for each supplied Mexico news story. Use web search once per story. Prefer the government agency, regulator, court, legislature, official statistics release, company filing, or company investor-relations document that establishes the current status and procedural stage. Do not return another news article, search result page, social post, Wikipedia page, lobby group, or commentary. The record must help catch a stale or mistaken stage in the article, not merely repeat its headline. Return an empty URL when no primary public record exists. Return JSON only.`,
+      user: JSON.stringify({ stories: researchTargets.map((item, i) => ({
+        i, headline: item.e.title, summary: item.e.why, source: item.e.source, sourceUrl: item.e.url,
+      })) }),
+      schema: researchSchema,
+      maxTokens: 1800,
+      effort: 'low',
+      priority: 'core',
+      returnMeta: true,
+      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: researchTargets.length }],
+    });
+    const returnedBySearch = new Set(arr(researched?.webSources).map((source) => sourceKey(source.url)));
+    const candidates = arr(researched?.data?.sources).filter((source) => {
+      const target = researchTargets[Number(source?.i)];
+      return target && /^https:\/\//i.test(String(source?.url || ''))
+        && returnedBySearch.has(sourceKey(source.url))
+        && primaryResearchUrl(source.url)
+        && sourceHost(source.url) !== sourceHost(target.e.url);
+    });
+    await Promise.all(candidates.map(async (source) => {
+      const target = researchTargets[Number(source.i)];
+      if (target.research.length) return;
+      const result = await fetchArticle(source.url).catch(() => ({ ok: false, text: '' }));
+      if (String(result.text || '').length < 250) return;
+      target.research.push({ source: stripDashWs(source.source) || sourceHost(source.url), title: stripDashWs(source.title), url: source.url, result });
+    }));
+    console.log(`  research: ${fetched.filter((item) => primaryRecordUrl(item.e.url) || item.research.length).length}/${fetched.filter((item) => needsAnalysis(item.e)).length} selected stories have a primary record`);
+  }
   // The article's own link-preview image rides along free with the fetch (unfurl-style
   // thumbnail; https-only). Count every attempt so retries are bounded at IMG_MAX_TRIES.
   for (const x of fetched) {
@@ -505,8 +570,12 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
     };
     const raw = x.e.reportEvidence || {};
     push({
-      id: 'article', kind: 'article', source: x.e.source, url: x.e.url,
+      id: 'article', kind: primaryRecordUrl(x.e.url) ? 'primary' : 'article', source: x.e.source, url: x.e.url,
       text: [raw.title, raw.dek, String(x.r.text || '').slice(0, 1800)].filter(Boolean).join(' '),
+    });
+    for (const [index, source] of x.research.entries()) push({
+      id: `primary:${index + 1}`, kind: 'primary', source: source.source, url: source.url,
+      text: [source.title, String(source.result.text || '').slice(0, 2200)].filter(Boolean).join(' '),
     });
     for (const [index, source] of x.secondary.entries()) {
       const coverage = arr(x.e.coverage).find((item) => item.url && item.url !== x.e.url && item.source === source.source) || {};
@@ -555,7 +624,7 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
   // auditable evidence set. If even that set is empty, the story remains unready.
   const items = fetched.filter((x) => needsAnalysis(x.e)).slice(0, BG_MAX).map((x, i) => ({
     i, e: x.e, evidence: evidenceFor(x),
-  })).filter((item) => item.evidence.length);
+  })).filter((item) => item.evidence.some((source) => source.kind === 'primary'));
   const imgGot = fetched.filter((x) => x.r.image).length;
   console.log(`  fetch: ${want.length} wanted · ${items.length} to analyze · ${imgGot} images grabbed`);
   if (!items.length) return {
@@ -582,7 +651,7 @@ HARD LENGTH LIMITS: background is at most 45 words and 2 sentences. View is at m
 MISSING FIELDS: write only the fields named in missingFields for each item. For every other field return "" and []. This lets one bounded retry repair only what failed without rewriting approved work.
 CORRECTIONS: when an item includes corrections, those are exact deterministic reasons the prior draft failed. Fix each named problem. An unsupported number must either be removed or supported by adding the evidence ID that contains it, without exceeding two references. A word-cap failure must be rewritten below the stated cap, not merely trimmed mid-sentence.
 PREDICTION SHAPE: name the next real step, then use if, unless, whether, confirm, or weaken to state the observable evidence that tests the view. Do not force a probability call when the supplied evidence supports only the next decision or release.
-EVIDENCE REFERENCES: return one or two exact evidence IDs for each field in backgroundRefs, viewRefs, and predictionRefs. Cite only evidence actually supporting that field. A judgment may be an inference, but its mechanism must be supported. Unknown ID, unsupported number, or factual claim not supported by the cited evidence fails publication.
+EVIDENCE REFERENCES: return one or two exact evidence IDs for each field in backgroundRefs, viewRefs, and predictionRefs. Cite only evidence actually supporting that field. Across the complete unit, at least one field must cite evidence whose kind is "primary". A judgment may be an inference, but its mechanism must be supported. Unknown ID, unsupported number, or factual claim not supported by the cited evidence fails publication.
 If the evidence cannot support a field, return "" and [] for that field. That will block publication for review; inventing or padding is worse.
 Briefly Explained is not written in the first person. Do not use I, me, my, we, or our. Start with the actual actor, event, or outcome. Do not mechanically begin predictions with "The base case is" or follow with "That view would change if". Those phrases may appear once in a batch if they are genuinely the clearest wording, but repeated openers are a publication failure. First person is not part of the publication voice.
 Length is a claim about stakes, so make it true. A "this matters less than it looks" verdict should be short. Recent units that read well land roughly 60 to 120 words across all three fields; that is calibration, not a target. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number absent from the cited evidence. Return JSON.
@@ -705,11 +774,18 @@ ${BAN}`;
       approvedThisRun.set(item.e.id, approved);
       const approvedRefs = { ...(approvedRefsThisRun.get(item.e.id) || {}), ...proposedRefs };
       approvedRefsThisRun.set(item.e.id, approvedRefs);
-      // v8: all three fields and their exact evidence references must pass before
-      // anything becomes visible. The fields may come from the first attempt or its one
-      // bounded retry, but never from old prose.
+      // v9: all three fields, their exact references, and at least one primary record
+      // must pass before anything becomes visible. The fields may come from the first
+      // attempt or its one bounded retry, but never from old prose.
       if (CORE.every((field) => approved[field] && arr(approvedRefs[field]).length)) {
         const citedIds = [...new Set(CORE.flatMap((field) => approvedRefs[field]))];
+        if (!citedIds.some((id) => evidenceById.get(id)?.kind === 'primary')) {
+          delete approved.background;
+          delete approvedRefs.background;
+          rememberRejection(item.e.id, 'background', ['the complete unit did not cite the supplied primary record']);
+          console.warn(`  analysis incomplete ${item.e.id}: no primary record cited`);
+          continue;
+        }
         const analysisSources = citedIds.map((id) => evidenceById.get(id))
           .filter((source) => /^https:\/\//i.test(String(source?.url || '')))
           .filter((source, index, sources) => sources.findIndex((other) => other.url === source.url) === index)
@@ -730,13 +806,84 @@ ${BAN}`;
     return true;
   };
 
+  // Numeric-token lint cannot catch a reversed status or stage. On 2026-08-13 a
+  // draft cited an article that said Mexico had recovered FAA Category 1, then wrote
+  // that Mexico was still trying to regain it. A separate copy-desk pass now compares
+  // each field with its cited text and every primary record before the unit can ship.
+  const auditSchema = { type: 'object', additionalProperties: false, required: ['reviews'], properties: { reviews: {
+    type: 'array', items: { type: 'object', additionalProperties: false,
+      required: ['i', 'ok', 'failures'], properties: {
+        i: { type: 'integer' }, ok: { type: 'boolean' }, failures: { type: 'array', items: {
+          type: 'object', additionalProperties: false, required: ['field', 'reason'], properties: {
+            field: { type: 'string', enum: CORE }, reason: { type: 'string' },
+          },
+        } },
+      },
+    },
+  } } };
+  const auditCompleted = async (batch, label) => {
+    const candidates = batch.filter((item) => completed.has(item.e.id));
+    if (!candidates.length) return true;
+    const payload = { items: candidates.map((item) => {
+      const approved = approvedThisRun.get(item.e.id) || {};
+      const refs = approvedRefsThisRun.get(item.e.id) || {};
+      const byId = new Map(item.evidence.map((entry) => [entry.id, entry]));
+      return {
+        i: item.i,
+        headline: item.e.title,
+        summary: item.e.context || item.e.why || '',
+        fields: CORE.map((field) => ({
+          field, text: approved[field], refs: refs[field],
+          evidence: arr(refs[field]).map((id) => byId.get(id)).filter(Boolean),
+        })),
+        primaryRecords: item.evidence.filter((entry) => entry.kind === 'primary'),
+      };
+    }) };
+    const result = await askJSON({
+      system: `You are the independent evidence editor for Briefly Explained. Review every field claim by claim. Return ok true only when: (1) every factual status, stage, date, actor and number is directly supported by that field's cited evidence; (2) no supplied primary record contradicts it; (3) a labeled view is a narrow inference whose mechanism follows from the evidence; and (4) What we're watching names a real next step and an observable test without treating correlation as proof of motive. Pay special attention to words such as alleged, initiated, preliminary, final, proposed, approved, recovered, retained and lost. A source link alone proves nothing. Reject paraphrase that adds no context. For each failure name the field and give one concrete correction. Return exactly one review for every input index and JSON only.`,
+      user: JSON.stringify(payload),
+      schema: auditSchema,
+      maxTokens: 2400,
+      model: models.HAIKU,
+      priority: 'core',
+    });
+    const reviews = new Map(arr(result?.reviews).map((review) => [Number(review.i), review]));
+    let allPassed = true;
+    for (const item of candidates) {
+      const review = reviews.get(item.i);
+      if (review?.ok) continue;
+      allPassed = false;
+      const failures = arr(review?.failures).filter((failure) => CORE.includes(failure?.field));
+      const rejectedFields = failures.length ? [...new Set(failures.map((failure) => failure.field))] : CORE;
+      const approved = approvedThisRun.get(item.e.id) || {};
+      const refs = approvedRefsThisRun.get(item.e.id) || {};
+      for (const field of rejectedFields) {
+        const reasons = failures.filter((failure) => failure.field === field).map((failure) => stripDashWs(failure.reason));
+        rememberRejection(item.e.id, field, reasons.length ? reasons : [`${label} evidence audit did not approve this field`]);
+        delete approved[field];
+        delete refs[field];
+      }
+      approvedThisRun.set(item.e.id, approved);
+      approvedRefsThisRun.set(item.e.id, refs);
+      delete item.e.analysisV;
+      delete item.e.analysisRefs;
+      delete item.e.analysisSources;
+      for (const field of CORE) delete item.e[field];
+      if (completed.delete(item.e.id)) added = Math.max(0, added - 1);
+      console.warn(`  analysis evidence audit reject ${item.e.id}: ${rejectedFields.join(', ')}`);
+    }
+    return allPassed;
+  };
+
   const first = await request(items, 'low', 3500);
   const firstReturned = applyDraft(first, items);
+  if (firstReturned) await auditCompleted(items, 'first-pass');
   const retryItems = items.filter((item) => !completed.has(item.e.id));
   let retryReturned = false;
   if (retryItems.length && budgetStatus('core').available) {
     console.warn(`  analysis retry: ${retryItems.length} selected ${retryItems.length === 1 ? 'story' : 'stories'} did not clear all three fields`);
     retryReturned = applyDraft(await request(retryItems, 'medium', 7000), retryItems);
+    if (retryReturned) await auditCompleted(retryItems, 'final');
   }
   if (!firstReturned && !retryReturned) console.warn('  analysis: no model result — selected stories remain unpublished');
   return {
@@ -878,7 +1025,7 @@ async function main() {
         generatedAt: now.toISOString(),
         count: events.length,
         llm: hasLLM(),
-        analysisTarget: { policy: 'every-selected-story-evidence-linked-v2', ids: selectedIds, ...analysis },
+        analysisTarget: { policy: 'every-selected-story-primary-audited-v3', ids: selectedIds, ...analysis },
       },
       events,
     };

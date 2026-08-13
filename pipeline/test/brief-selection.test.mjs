@@ -14,12 +14,12 @@ const candidate = (id, importance, extra = {}) => ({
   ...extra,
 });
 const approvedAnalysis = (extra = {}) => ({
-  analysisV: 8,
+  analysisV: 9,
   background: 'Complete background.',
   view: 'Complete view because the mechanism is clear.',
   prediction: 'The outcome is likely if the next release confirms it.',
   analysisRefs: { background: ['article'], view: ['article'], prediction: ['article'] },
-  analysisSources: [{ source: 'Example News', url: 'https://example.com/evidence' }],
+  analysisSources: [{ kind: 'primary', source: 'Example agency', url: 'https://agency.gov/evidence' }],
   ...extra,
 });
 const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
@@ -162,7 +162,7 @@ const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
   missingSource.source = '';
   const result = selectDailyBrief([
     candidate('ready', 6, approvedAnalysis()),
-    candidate('partial', 6, { analysisV: 8, background: 'B' }),
+    candidate('partial', 6, { analysisV: 9, background: 'B' }),
     candidate('below-floor', 4),
     missingSource,
   ]);
@@ -179,11 +179,11 @@ const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
 // Optional analysis is atomic: never expose a half-filled disclosure panel.
 {
   const partial = candidate('partial-analysis', 6, {
-    analysisV: 8,
+    analysisV: 9,
     background: 'Background is present.',
     view: 'View is present.',
     analysisRefs: { background: ['article'], view: ['article'] },
-    analysisSources: [{ source: 'Example News', url: 'https://example.com/evidence' }],
+    analysisSources: [{ kind: 'primary', source: 'Example agency', url: 'https://agency.gov/evidence' }],
   });
   assert.equal(optionalAnalysis(partial), null);
   assert.equal(analysisState(partial).state, 'incomplete');
@@ -197,14 +197,14 @@ const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
   assert.equal(optionalAnalysis(unapproved), null);
   assert.equal(analysisState(unapproved).state, 'unapproved');
 
-  const complete = { ...unapproved, analysisV: 8 };
+  const complete = { ...unapproved, analysisV: 9 };
   assert.deepEqual(optionalAnalysis(complete), {
     background: 'Background is present.',
     view: 'View is present.',
     prediction: 'Watch item is present.',
-    analysisV: 8,
+    analysisV: 9,
     analysisRefs: { background: ['article'], view: ['article'], prediction: ['article'] },
-    analysisSources: [{ source: 'Example News', url: 'https://example.com/evidence' }],
+    analysisSources: [{ kind: 'primary', source: 'Example agency', url: 'https://agency.gov/evidence' }],
   });
 }
 

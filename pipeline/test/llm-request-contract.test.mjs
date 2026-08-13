@@ -39,6 +39,31 @@ assert.equal(sent.at(-1).output_config?.effort, 'low',
 await askJSON({ system: 's', user: 'u', model: models.SONNET, priority: 'core' });
 assert.equal(sent.at(-1).priority, undefined, 'internal budget priority must never leak into the provider request');
 
+// Brief research uses one bounded server-side search batch. The helper must pass
+// the tool through, expose only URLs the provider actually returned, and settle the
+// search fee into the same hard monthly ledger as token usage.
+response = () => ({
+  ok: true,
+  json: async () => ({
+    content: [
+      { type: 'web_search_tool_result', content: [{ type: 'web_search_result', url: 'https://agency.gov/record', title: 'Agency record' }] },
+      { type: 'text', text: '{"sources":[]}' },
+    ],
+    usage: { input_tokens: 1, output_tokens: 1, server_tool_use: { web_search_requests: 2 } },
+  }),
+});
+const researchLedgerBefore = Number((JSON.parse(fs.readFileSync(process.env.LLM_LEDGER_PATH, 'utf8')))[new Date().toISOString().slice(0, 7)] || 0);
+const researched = await askJSON({
+  system: 's', user: 'u', model: models.SONNET, priority: 'core', returnMeta: true,
+  schema: { type: 'object', properties: { sources: { type: 'array' } } },
+  tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 2 }],
+});
+assert.equal(sent.at(-1).tools[0].max_uses, 2);
+assert.deepEqual(researched.webSources, [{ url: 'https://agency.gov/record', title: 'Agency record' }]);
+const researchLedgerAfter = Number((JSON.parse(fs.readFileSync(process.env.LLM_LEDGER_PATH, 'utf8')))[new Date().toISOString().slice(0, 7)] || 0);
+assert.ok(researchLedgerAfter - researchLedgerBefore >= 0.02, 'web search fees must count toward the monthly cap');
+response = () => ({ ok: true, json: async () => ({ content: [{ type: 'text', text: '{}' }], usage: { input_tokens: 1, output_tokens: 1 } }) });
+
 // A schema still has to survive alongside a stripped effort.
 await askJSON({ system: 's', user: 'u', effort: 'low', model: models.HAIKU, schema: { type: 'object' } });
 assert.equal(sent.at(-1).output_config?.format?.type, 'json_schema');
@@ -71,6 +96,17 @@ assert.equal(
   'a request whose maximum bill could exceed $5 must be skipped',
 );
 assert.equal(sent.length, sentBeforeCapCheck, 'a cap-blocked request must never reach the provider');
+fs.writeFileSync(process.env.LLM_LEDGER_PATH, `${JSON.stringify({ [new Date().toISOString().slice(0, 7)]: 4.96 })}\n`);
+const sentBeforeSearchCapCheck = sent.length;
+assert.equal(
+  await askJSON({
+    system: 's', user: 'u', model: models.SONNET, priority: 'core', maxTokens: 1,
+    tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }],
+  }),
+  null,
+  'the prospective guard must include the maximum server-side search fee',
+);
+assert.equal(sent.length, sentBeforeSearchCapCheck, 'a search batch that could cross $5 must never reach the provider');
 process.env.LLM_BUDGET_OVERRIDE = '1';
 
 // Permanent request bugs in ranking or Briefly Explained must stop publication.

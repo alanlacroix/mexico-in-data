@@ -92,6 +92,7 @@ const RATES = {
   [SONNET]: { in: 3, out: 15 },
   [HAIKU]: { in: 1, out: 5 },
 };
+const WEB_SEARCH_REQUEST_USD = 0.01;
 
 // Refuse a call before sending it when its worst-case token bill could cross the
 // applicable limit. Checking only the settled ledger lets the final call overshoot:
@@ -102,12 +103,17 @@ function projectedMaximumCost(body, modelId) {
   const rate = RATES[modelId] || RATES[SONNET];
   const inputTokenCeiling = new TextEncoder().encode(JSON.stringify(body)).byteLength + 1024;
   const outputTokenCeiling = Math.max(0, Number(body.max_tokens) || 0);
-  return (inputTokenCeiling / 1e6) * rate.in + (outputTokenCeiling / 1e6) * rate.out;
+  const searchCeiling = (body.tools || [])
+    .filter((tool) => /^web_search_/.test(String(tool?.type || '')))
+    .reduce((sum, tool) => sum + Math.max(0, Number(tool.max_uses) || 1), 0);
+  return (inputTokenCeiling / 1e6) * rate.in + (outputTokenCeiling / 1e6) * rate.out
+    + searchCeiling * WEB_SEARCH_REQUEST_USD;
 }
 
 let _calls = 0;
 let _badRequests = 0;               // permanent request bugs (HTTP 400), reported by usage()
 const _tok = {};                         // model -> { in, out }
+let _serverCostUSD = 0;
 
 export const hasLLM = () => !!KEY;
 export const model = DEFAULT_MODEL;
@@ -126,7 +132,7 @@ export function budgetStatus(priority = 'standard') {
 
 // Cumulative token usage and cost for the run, priced per model.
 export function usage() {
-  let input = 0, output = 0, costUSD = 0;
+  let input = 0, output = 0, costUSD = _serverCostUSD;
   for (const [m, t] of Object.entries(_tok)) {
     const rate = RATES[m] || RATES[SONNET];
     input += t.in;
@@ -153,7 +159,7 @@ export function usage() {
 // This is not a quality knob turned down to save money. Extraction against an explicit
 // rubric is the case where low effort costs nothing real, and Sonnet 5 respects the
 // level strictly, which is exactly what a deterministic pass wants.
-export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL, effort, priority = 'standard' }) {
+export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL, effort, priority = 'standard', tools, returnMeta = false }) {
   if (!KEY) return null;
   if (overBudget(priority)) {
     const status = budgetStatus(priority);
@@ -167,6 +173,7 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
     system,
     messages: [{ role: 'user', content: user }],
   };
+  if (Array.isArray(tools) && tools.length) body.tools = tools;
   if (effort && EFFORT_MODELS.has(modelId)) body.output_config = { ...(body.output_config || {}), effort };
   if (schema) {
     // Anthropic's structured-output subset rejects numeric range keywords such as
@@ -226,15 +233,34 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
   bucket.out += j.usage?.output_tokens || 0;
   {
     const rate = RATES[modelId] || RATES[SONNET];
-    settle(((j.usage?.input_tokens || 0) / 1e6) * rate.in + ((j.usage?.output_tokens || 0) / 1e6) * rate.out);
+    const searchCost = (Number(j.usage?.server_tool_use?.web_search_requests) || 0) * WEB_SEARCH_REQUEST_USD;
+    _serverCostUSD += searchCost;
+    settle(((j.usage?.input_tokens || 0) / 1e6) * rate.in + ((j.usage?.output_tokens || 0) / 1e6) * rate.out + searchCost);
   }
   if (j.stop_reason === 'refusal') { console.warn('  llm: refusal'); return null; }
   const txt = (j.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');
-  try { return JSON.parse(txt); }
+  const webSources = [];
+  for (const block of j.content || []) {
+    if (block?.type === 'web_search_tool_result') {
+      for (const result of Array.isArray(block.content) ? block.content : []) {
+        if (result?.type === 'web_search_result' && /^https:\/\//i.test(String(result.url || ''))) {
+          webSources.push({ url: result.url, title: result.title || '' });
+        }
+      }
+    }
+    for (const citation of Array.isArray(block?.citations) ? block.citations : []) {
+      if (/^https:\/\//i.test(String(citation?.url || ''))) webSources.push({ url: citation.url, title: citation.title || '' });
+    }
+  }
+  const result = (data) => returnMeta ? {
+    data,
+    webSources: webSources.filter((source, index, all) => all.findIndex((other) => other.url === source.url) === index),
+  } : data;
+  try { return result(JSON.parse(txt)); }
   catch {
     // tolerate a stray code fence if structured output wasn't used
     const m = txt.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-    if (m) { try { return JSON.parse(m[0]); } catch { /* fall through */ } }
+    if (m) { try { return result(JSON.parse(m[0])); } catch { /* fall through */ } }
     // Loud on failure: a max_tokens truncation used to fall through silently to the
     // caller's fallback, which is how a capped curation batch became published slop.
     console.warn(`  llm: unparseable JSON (stop_reason=${j.stop_reason}, ${txt.length} chars)${j.stop_reason === 'max_tokens' ? ' — RAISE maxTokens' : ''}`);

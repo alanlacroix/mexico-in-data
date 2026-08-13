@@ -7,9 +7,9 @@
 const DEFAULT_MIN_IMPORTANCE = 5;
 const DEFAULT_SOFT_FLOOR = 3;
 const DEFAULT_CAP = 5;
-// v8 adds retained evidence references. Older v7 prose is never mistaken for the
-// new evidence-linked product when an event returns to the selected five.
-const ANALYSIS_VERSION = 8;
+// v9 adds a separately discovered primary record plus an independent claim audit.
+// Older prose is never mistaken for the current product when an event returns.
+const ANALYSIS_VERSION = 9;
 const ANALYSIS_FIELDS = ['background', 'view', 'prediction'];
 
 const clean = (value) => String(value == null ? '' : value).trim();
@@ -28,7 +28,8 @@ function analysisState(event) {
   const refsComplete = ANALYSIS_FIELDS.every((field) => Array.isArray(event && event.analysisRefs && event.analysisRefs[field])
     && event.analysisRefs[field].some(clean));
   const sourcesComplete = Array.isArray(event && event.analysisSources)
-    && event.analysisSources.some((source) => /^https:\/\//i.test(clean(source && source.url)));
+    && event.analysisSources.some((source) => source && source.kind === 'primary'
+      && /^https:\/\//i.test(clean(source.url)));
   const complete = textComplete && refsComplete && sourcesComplete && version >= ANALYSIS_VERSION;
   let state = 'missing';
   if (complete) state = 'ready';

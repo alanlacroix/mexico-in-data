@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import { extractText } from '../lib/fetch-article.js';
 import { reportContextDistinct, slopFlags } from '../lib/lint.js';
@@ -8,16 +9,17 @@ const { briefReadiness } = require('../lib/brief-readiness.cjs');
 const { evidenceInputs } = require('../lib/report-evidence.cjs');
 const { mergeApprovedAttempt } = require('../lib/analysis-attempts.cjs');
 const interests = require('../../data/interests.json');
+const happeningBuilder = fs.readFileSync(new URL('../build-happening.js', import.meta.url), 'utf8');
 
 const story = (id, ready = false) => ({
   refs: [id],
   headline: id,
-  analysisV: ready ? 8 : 0,
+  analysisV: ready ? 9 : 0,
   background: ready ? 'A structural fact.' : '',
   view: ready ? 'A view because the mechanism is clear.' : '',
   prediction: ready ? 'The result is likely if the next release confirms it.' : '',
   analysisRefs: ready ? { background: ['article'], view: ['article'], prediction: ['article'] } : {},
-  analysisSources: ready ? [{ source: 'Example News', url: `https://example.com/${id}` }] : [],
+  analysisSources: ready ? [{ kind: 'primary', source: 'Example agency', url: `https://agency.gov/${id}` }] : [],
 });
 const brief = (states) => ({ lead: story('lead', states[0]), items: states.slice(1).map((ready, index) => story(`item-${index + 2}`, ready)) });
 
@@ -41,7 +43,19 @@ const missingLink = brief([true]);
 missingLink.lead.analysisSources = [];
 assert.equal(briefReadiness(missingLink).targetMet, false,
   'three polished paragraphs without a reader-accessible evidence link are not ready');
+const missingPrimary = brief([true]);
+missingPrimary.lead.analysisSources = [{ kind: 'article', source: 'Example News', url: 'https://example.com/story' }];
+assert.equal(briefReadiness(missingPrimary).targetMet, false,
+  'a news citation without a primary record and independent evidence audit is not ready');
 assert.equal(briefReadiness({ lead: null, items: [] }).targetMet, true, 'a genuinely quiet edition is a clean no-op');
+assert.match(happeningBuilder, /web_search_20250305[\s\S]*max_uses: researchTargets\.length/,
+  'selected non-official stories must get one bounded primary-record search each');
+assert.match(happeningBuilder, /returnedBySearch\.has\(sourceKey\(source\.url\)\)/,
+  'a model-returned research URL must have appeared in the provider search results');
+assert.match(happeningBuilder, /primaryResearchUrl\(source\.url\)/,
+  'research must resolve to a government, regulator, international body, or corporate filing page');
+assert.match(happeningBuilder, /auditCompleted[\s\S]*initiated[\s\S]*preliminary[\s\S]*final[\s\S]*recovered/,
+  'a separate evidence editor must check the status and procedural stage before publication');
 
 assert.deepEqual(
   mergeApprovedAttempt(
