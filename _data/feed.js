@@ -178,6 +178,9 @@ function buildFeed(locale = 'en') {
     view: story.view || '',
     watch: story.prediction || '',
     why: story.view || story.bg || '',
+    be: Boolean(story.bg && story.view && story.prediction && story.analysisV >= 8
+      && story.analysisSources?.some((source) => /^https:\/\//i.test(String(source?.url || '')))),
+    analysisSources: story.analysisSources || [],
   }));
 
   // ---- This week -----------------------------------------------------------

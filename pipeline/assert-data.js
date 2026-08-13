@@ -124,6 +124,20 @@ try {
       ...(event.coverage || []).flatMap((source) => [source.title, source.summary])];
     const completeAnalysis = ['background', 'view', 'prediction'].every((field) => String(event[field] || '').trim());
     if (completeAnalysis && Number(event.analysisV) < 7) fails.push(`happening: ${event.id || index} has complete but unapproved BE analysis`);
+    if (completeAnalysis && Number(event.analysisV) >= 8) {
+      for (const field of ['background', 'view', 'prediction']) {
+        if (!Array.isArray(event.analysisRefs?.[field]) || !event.analysisRefs[field].some((ref) => String(ref || '').trim())) {
+          fails.push(`happening: ${event.id || index}.${field} has no retained evidence reference`);
+        }
+      }
+      if (!Array.isArray(event.analysisSources) || !event.analysisSources.some((source) => isSafeHttpUrl(source?.url))) {
+        fails.push(`happening: ${event.id || index} has no linked Briefly Explained evidence`);
+      }
+      for (const source of event.analysisSources || []) {
+        if (!source?.source) fails.push(`happening: ${event.id || index} has an unnamed Briefly Explained source`);
+        if (!isSafeHttpUrl(source?.url)) fails.push(`happening: ${event.id || index} has an invalid Briefly Explained source URL`);
+      }
+    }
     if (event.view) {
       const gate = lintAnalysisText({ text: event.view, inputs: analysisInputs, role: 'view', maxWords: 85, maxSentences: 5,
         requireScale: completeAnalysis && analysisNeedsScale([event.title, event.context, event.why]), forbidFirstPerson: completeAnalysis,
@@ -150,7 +164,7 @@ try {
   const explanationReadiness = briefReadiness(brief);
   const expectedContentSig = createHash('sha256').update(JSON.stringify(claims.map((claim) => [
     claim.href, claim.date, claim.h1 || claim.headline, claim.context, claim.source,
-    claim.background, claim.view, claim.prediction, claim.analysisV, claim.implications, claim.next,
+    claim.background, claim.view, claim.prediction, claim.analysisV, claim.analysisRefs, claim.analysisSources, claim.implications, claim.next,
   ]))).digest('hex');
   if (!validPeriod(brief.meta?.editorialDate || '')) fails.push('brief: meta.editorialDate is missing or invalid');
   if (!claims.length && (!brief.meta?.quiet || !String(brief.summary || '').trim())) {
@@ -158,7 +172,7 @@ try {
   }
   if (claims.length && !brief.lead) fails.push('brief: a non-empty day needs a lead');
   if (!explanationReadiness.targetMet) {
-    warns.push(`brief: Briefly Explained target not met (ready ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount}; missing ${explanationReadiness.missingTarget.join(', ')}); publishing the verified factual edition without optional analysis`);
+    fails.push(`brief: every selected story needs an approved, evidence-linked Briefly Explained unit (ready ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount}; missing ${explanationReadiness.missingTarget.join(', ')})`);
   }
   if (brief.meta?.count !== claims.length) fails.push(`brief: meta.count ${brief.meta?.count} does not match ${claims.length} total claims`);
   if (brief.meta?.contentSig !== expectedContentSig) fails.push('brief: content signature does not match the visible story set');
@@ -198,6 +212,17 @@ try {
     const claimHasAnalysis = ['background', 'view', 'prediction'].some((field) => String(claim[field] || '').trim());
     const claimHasCompleteAnalysis = ['background', 'view', 'prediction'].every((field) => String(claim[field] || '').trim());
     if (claimHasAnalysis && (!claimHasCompleteAnalysis || Number(claim.analysisV) < 7)) fails.push(`brief: claim ${index + 1} exposes incomplete or unapproved BE analysis`);
+    if (claimHasCompleteAnalysis && Number(claim.analysisV) >= 8) {
+      const refs = claim.analysisRefs || {};
+      for (const field of ['background', 'view', 'prediction']) {
+        if (!Array.isArray(refs[field]) || !refs[field].some((ref) => String(ref || '').trim())) {
+          fails.push(`brief: claim ${index + 1}.${field} has no retained evidence reference`);
+        }
+      }
+      if (!Array.isArray(claim.analysisSources) || !claim.analysisSources.some((source) => isSafeHttpUrl(source?.url))) {
+        fails.push(`brief: claim ${index + 1} has no linked Briefly Explained evidence`);
+      }
+    }
   }
 
   // Completeness is a separate publication contract from ranking. Exact, high-impact

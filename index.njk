@@ -218,13 +218,15 @@ bodyClass: feed-page
         </div>
         <div class="card-body">
         {%- if story.dek %}<p class="dek">{{ story.dek }}</p>{% endif %}
-        {%- if story.why %}
+        {%- if story.be %}
         <button class="be-btn" type="button" aria-expanded="false" aria-controls="be-{{ story.id }}" data-toggle="be-{{ story.id }}"><span class="be-badge">BE</span><span class="be-label">{{ L.be }}</span></button>
         <div class="be-panel" id="be-{{ story.id }}" hidden>
           {%- if story.bg %}<div class="be-part"><span class="lb-watch">{{ L.background }}</span><p class="bd-watch">{{ story.bg }}</p></div>{% endif %}
           {%- if story.view %}<div class="be-part"><span class="lb-why">{{ L.ourView }}</span><p class="bd-why">{{ story.view }}</p></div>{% endif %}
           {%- if story.watch %}<div class="be-part"><span class="lb-watch">{{ L.watching }}</span><p class="bd-watch">{{ story.watch }}</p></div>{% endif %}
-          <div class="be-part bd-src"><span class="lb-src">{{ L.source }}</span><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} ↗</a></div>
+          <div class="be-part bd-src"><span class="lb-src">{{ L.evidence }}</span>
+            {%- for source in story.analysisSources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source }} ↗</a>{% if not loop.last %}<span aria-hidden="true"> · </span>{% endif %}{%- endfor %}
+          </div>
         </div>
         {%- endif %}
         </div>

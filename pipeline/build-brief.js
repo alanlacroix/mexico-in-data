@@ -213,15 +213,17 @@ async function main() {
     throw new Error(`selected story set changed after analysis enrichment: ${lockedIds.join(',')} -> ${pickedIds.join(',')}`);
   }
   const lead0 = picked[0];
-  const pass4 = (e, rank) => {
-    // Briefly Explained is reserved for the three stories that define the edition.
-    // Lower cards stay fast to scan even if an old event-log row still has analysis.
-    const approved = rank <= 3 ? optionalAnalysis(e) : null;
+  const pass4 = (e) => {
+    // Every selected development carries the same evidence-linked explanatory unit.
+    // Ranking still happens first and never changes to hide an explanation failure.
+    const approved = optionalAnalysis(e);
     return {
       background: approved ? plainExplanation(approved.background) : '',
       view: approved ? plainExplanation(approved.view) : '',
       prediction: approved ? plainExplanation(approved.prediction) : '',
       analysisV: approved ? Number(approved.analysisV) : 0,
+      analysisRefs: approved ? approved.analysisRefs : {},
+      analysisSources: approved ? approved.analysisSources : [],
       drivers: plainExplanation(e.drivers), implications: plainExplanation(e.implications), next: plainExplanation(e.next),
       image: /^https:\/\//i.test(String(e.image || '')) ? String(e.image).trim() : '', publishedAt: String(e.publishedAt || '').trim(), coverage: arr(e.coverage),
     };
@@ -235,9 +237,9 @@ async function main() {
     scheduledEventId: e.scheduledEventId || '',
     reason: e._selectionReason || '',
   });
-  const lead = { h1: plainHeadline(stripDash(lead0.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(lead0)), ...pass4(lead0, 1), refs: [lead0.id],
+  const lead = { h1: plainHeadline(stripDash(lead0.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(lead0)), ...pass4(lead0), refs: [lead0.id],
     href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0), ranking: rankOf(lead0, 0) };
-  const items = picked.slice(1).map((e, i) => ({ headline: plainHeadline(stripDash(e.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(e)), ...pass4(e, i + 2),
+  const items = picked.slice(1).map((e, i) => ({ headline: plainHeadline(stripDash(e.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(e)), ...pass4(e),
     refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', isNew: isNew(e), ranking: rankOf(e, i + 1) }));
   // Last line of defense: a regression upstream must fail the build instead of putting
   // two cards for the same event on the public Brief.
@@ -258,7 +260,7 @@ async function main() {
   // still records the actual build time for operations and health checks.
   const contentSig = fingerprint([lead, ...items].map((it) => [
     it.href, it.date, it.h1 || it.headline, it.context, it.source,
-    it.background, it.view, it.prediction, it.analysisV, it.implications, it.next,
+    it.background, it.view, it.prediction, it.analysisV, it.analysisRefs, it.analysisSources, it.implications, it.next,
   ]));
   const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig && prev.meta.editorialDate === editorialDate;
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();

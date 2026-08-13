@@ -13,7 +13,7 @@ directories, About, Atlas, newsletter pages, and separate topic rooms are retire
 
 1. Edition date and short brief.
 2. Five readings that moved.
-3. Up to five key developments, with optional Briefly Explained context.
+3. Up to five key developments, each with a complete Briefly Explained unit.
 4. This week, filterable by topic.
 5. Scheduled releases and decisions.
 6. Five slower economic readings with named comparisons.
@@ -37,8 +37,10 @@ The model may curate the event log, write the daily brief, explain the selected 
 translate, and write economic/calendar context. It may not create numbers or decide which
 stories rank differently because analysis was easier to produce.
 
-The homepage must still publish factual news when optional analysis fails. A quiet day may
-contain fewer stories; it may not be padded.
+Analysis runs only after the exact factual story order is locked. If any selected story
+lacks a complete, evidence-linked explanation, the new edition does not publish and the
+last complete edition stays live. The pipeline may never demote a story because it is hard
+to explain. A quiet day may contain fewer stories; it may not be padded.
 
 ## Change control
 

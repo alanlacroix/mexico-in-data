@@ -10,29 +10,29 @@ function storyId(story, index) {
 }
 
 function hasApprovedAnalysis(story) {
-  return Number(story && story.analysisV) >= 7
-    && ['background', 'view', 'prediction'].every((field) => text(story && story[field]));
+  const refs = story && story.analysisRefs;
+  return Number(story && story.analysisV) >= 8
+    && ['background', 'view', 'prediction'].every((field) => text(story && story[field]))
+    && ['background', 'view', 'prediction'].every((field) => arr(refs && refs[field]).some(text))
+    && arr(story && story.analysisSources).some((source) => /^https:\/\//i.test(text(source && source.url)));
 }
 
 function briefReadiness(brief) {
   const stories = [brief && brief.lead, ...arr(brief && brief.items)].filter(Boolean);
-  const targetStories = stories.slice(0, Math.min(3, stories.length));
-  const minimumReadyCount = Math.min(2, targetStories.length);
+  const targetStories = stories;
+  const minimumReadyCount = targetStories.length;
   const missingTarget = targetStories
     .map((story, index) => ({ story, index }))
     .filter(({ story }) => !hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
   const readyTargetCount = targetStories.length - missingTarget.length;
-  // Explanation coverage is a quality target, not a publication dependency. The
-  // factual Brief is the product's heartbeat; holding verified news hostage when
-  // the optional model is unavailable makes a degraded extra take down the core.
-  const targetMet = stories.length === 0 || readyTargetCount >= minimumReadyCount;
+  const targetMet = stories.length === 0 || readyTargetCount === minimumReadyCount;
   const readyIds = stories
     .map((story, index) => ({ story, index }))
     .filter(({ story }) => hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
   return {
-    policy: 'two-of-top-three-explained-advisory-v3',
+    policy: 'every-selected-story-evidence-linked-v4',
     storyCount: stories.length,
     targetCount: targetStories.length,
     requiredCount: minimumReadyCount,
@@ -41,7 +41,7 @@ function briefReadiness(brief) {
     readyIds,
     missingTarget,
     targetMet,
-    publicationBlocking: false,
+    publicationBlocking: stories.length > 0 && !targetMet,
   };
 }
 

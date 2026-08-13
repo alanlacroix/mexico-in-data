@@ -13,6 +13,15 @@ const candidate = (id, importance, extra = {}) => ({
   publishedAt: extra.publishedAt || '2026-08-06T12:00:00Z',
   ...extra,
 });
+const approvedAnalysis = (extra = {}) => ({
+  analysisV: 8,
+  background: 'Complete background.',
+  view: 'Complete view because the mechanism is clear.',
+  prediction: 'The outcome is likely if the next release confirms it.',
+  analysisRefs: { background: ['article'], view: ['article'], prediction: ['article'] },
+  analysisSources: [{ source: 'Example News', url: 'https://example.com/evidence' }],
+  ...extra,
+});
 const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
 
 // The August 6 failure mode: optional analysis must never decide whether a
@@ -25,15 +34,12 @@ const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
   });
   const ai = candidate('ai-governance-commentary', 5, {
     interestTags: ['AI'],
-    analysisV: 7,
-    background: 'Complete background.',
-    view: 'Complete view.',
-    prediction: 'Complete watch item.',
+    ...approvedAnalysis(),
     publishedAt: '2026-08-06T16:00:00Z',
   });
   const result = selectDailyBrief([
     ai,
-    candidate('trade', 5, { analysisV: 7, background: 'B', view: 'V', prediction: 'P' }),
+    candidate('trade', 5, approvedAnalysis()),
     candidate('energy', 5),
     banxico,
   ]);
@@ -155,8 +161,8 @@ const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
   const missingSource = candidate('missing-source', 8);
   missingSource.source = '';
   const result = selectDailyBrief([
-    candidate('ready', 6, { analysisV: 7, background: 'B', view: 'V', prediction: 'P' }),
-    candidate('partial', 6, { analysisV: 7, background: 'B' }),
+    candidate('ready', 6, approvedAnalysis()),
+    candidate('partial', 6, { analysisV: 8, background: 'B' }),
     candidate('below-floor', 4),
     missingSource,
   ]);
@@ -173,23 +179,32 @@ const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
 // Optional analysis is atomic: never expose a half-filled disclosure panel.
 {
   const partial = candidate('partial-analysis', 6, {
-    analysisV: 7,
+    analysisV: 8,
     background: 'Background is present.',
     view: 'View is present.',
+    analysisRefs: { background: ['article'], view: ['article'] },
+    analysisSources: [{ source: 'Example News', url: 'https://example.com/evidence' }],
   });
   assert.equal(optionalAnalysis(partial), null);
   assert.equal(analysisState(partial).state, 'incomplete');
 
-  const unapproved = { ...partial, prediction: 'Watch item is present.', analysisV: 6 };
+  const unapproved = {
+    ...partial,
+    prediction: 'Watch item is present.',
+    analysisV: 7,
+    analysisRefs: { ...partial.analysisRefs, prediction: ['article'] },
+  };
   assert.equal(optionalAnalysis(unapproved), null);
   assert.equal(analysisState(unapproved).state, 'unapproved');
 
-  const complete = { ...unapproved, analysisV: 7 };
+  const complete = { ...unapproved, analysisV: 8 };
   assert.deepEqual(optionalAnalysis(complete), {
     background: 'Background is present.',
     view: 'View is present.',
     prediction: 'Watch item is present.',
-    analysisV: 7,
+    analysisV: 8,
+    analysisRefs: { background: ['article'], view: ['article'], prediction: ['article'] },
+    analysisSources: [{ source: 'Example News', url: 'https://example.com/evidence' }],
   });
 }
 

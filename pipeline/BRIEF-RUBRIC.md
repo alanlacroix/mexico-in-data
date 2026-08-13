@@ -24,7 +24,7 @@ An authoritative scheduled decision or release is a new outcome even when the nu
 - **Floor: 3 (soft).** If fewer than 3 clear the threshold, ship what clears it. Never pad to a count.
 - **A fourth or fifth item must earn the extra space.** It needs importance ≥ 6 or a direct match to the stated interest list. A routine importance-5 item does not fill an empty slot.
 - Two reports about the same meeting or decision use one slot and retain both source links.
-- Analysis never changes ranking. A factual, sourced event competes even when its explanation is missing. After the exact story order is locked, the top three are enriched in that order. A non-quiet edition is not publication-ready until all three have a complete, approved Briefly Explained unit. Failure blocks the receipt; it never demotes a fact or promotes a lesser story.
+- Analysis never changes ranking. A factual, sourced event competes even when its explanation is missing. After the exact story order is locked, every selected story is enriched in that order. A non-quiet edition is not publication-ready until every selected story has a complete, approved, evidence-linked Briefly Explained unit. Failure blocks the receipt; it never demotes a fact or promotes a lesser story.
 - Every build writes a receipt for every candidate with its effective importance, final rank, selection or exclusion reason, tags, scheduled status, and analysis state.
 
 ## Calendar completeness
@@ -35,7 +35,7 @@ If an event is postponed, cancelled, or deliberately waived, the calendar row ma
 
 ## Where the context comes from
 
-The visible summary is factual and comes from the linked report. Only the three key developments can open **Briefly explained**, which has a stricter contract:
+The visible summary is factual and comes from the linked report. Every selected key development opens **Briefly explained**, which has a stricter contract:
 
 - **Background:** the structural fact a newcomer needs, drawn from the report, related reporting, and the site's sourced standing facts.
 - **Our view:** a narrow judgment tied to a concrete mechanism or tradeoff. This is analysis, not reported fact.
@@ -45,7 +45,7 @@ Briefly Explained never uses first person. State the likely next outcome directl
 
 Ordinary headlines never get this layer.
 
-The pipeline runs in one fixed order: build the event log without speculative analysis, reconcile scheduled outcomes, lock the Brief selection, explain those exact top-three references, and rebuild without changing their order. The normal and recovery workflows use the same sequence. Explanation coverage is recorded in the publication receipt and warned on when it misses the target. It never blocks verified factual news: a missing model, exhausted budget, failed article fetch, or rejected field degrades the optional panel without taking down the Brief itself.
+The pipeline runs in one fixed order: build the event log without speculative analysis, reconcile scheduled outcomes, lock the Brief selection, explain that exact full selection, and rebuild without changing its order. The normal and recovery workflows use the same sequence. Each field retains the evidence IDs it used, and the panel links the reader to the cited sources. A missing model, exhausted budget, thin evidence, or rejected field blocks the new edition and leaves the last complete edition live. It never changes the ranking to hide the failure.
 
 Factual copy uses ordinary actor-action-fact language. Terms such as “hawkish” and “dovish” are compressed judgments, not report copy. State the rate decision, guidance and reason directly. The source title and dek are retained separately from the rewrite, and the copy gate validates against those inputs rather than allowing generated context to validate itself.
 
@@ -73,6 +73,6 @@ An LLM may pre-draft context into **`context_draft`** from a pasted `excerpt`, b
 ## The law (unchanged)
 
 - Closed world: the only inputs are the curated event log, standing facts, and the live board numbers.
-- No sentence without a link: every shipped line carries its source id, or it's rejected.
+- No sentence without evidence: every Briefly Explained field carries one or two retained evidence IDs, and every unit has at least one reader-accessible source link.
 - The model never does math; every number appears verbatim in a cited input.
 - The Brief may refresh as new reporting arrives, but the selection and analysis contract does not change during the day.

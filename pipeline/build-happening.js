@@ -10,10 +10,11 @@
 // data/happening.json. It never invents: title and why are written only from the item's
 // own headline + dek, and every entry keeps its source link and date.
 //
-// Fail-soft by design: with no ANTHROPIC_API_KEY it falls back to a deterministic pick
-// (top-tier, most-recent, spread across sections) so the log still refreshes — the model
-// only sharpens the selection and the "why". One event keeps one stable id, moves to the
-// newest curated report, and retains other outlets and adjacent-day reports as coverage.
+// The factual event log is fail-soft: with no ANTHROPIC_API_KEY it falls back to a
+// deterministic pick (top-tier, most-recent, spread across sections). Publication is
+// stricter: every selected story must later clear the evidence-linked Briefly Explained
+// gate. One event keeps one stable id, moves to the newest curated report, and retains
+// other outlets and adjacent-day reports as coverage.
 //
 //   node build-happening.js                    # update data/happening.json in place
 //   HAPPENING_OUT=/tmp/h.json node build-happening.js   # write elsewhere (dry test)
@@ -360,18 +361,56 @@ ${BAN}`;
   return events.slice(0, MAX_NEW);
 }
 
-// ---- BRIEFLY EXPLAINED: the value-added layer for likely key developments.
+// ---- BRIEFLY EXPLAINED: the required value-added layer for selected developments.
 // The visible summary remains reported fact. The disclosure adds three distinct things:
 //   background  — the structural facts a newcomer needs
 //   view        — a narrow, evidence-backed judgment, explicitly labeled as ours
 //   prediction  — what we expect or the measurable condition that would change the view
-// All three are grounded in the article, same-thread reporting when available, and the
-// site's standing facts. A thin source yields no analysis, never filler. ----
-const BG_MAX = 5;             // Analysis is optional; at most the five possible Brief stories are drafted.
+// All three are grounded in retained evidence. Thin evidence blocks publication; it
+// never produces filler and it never changes the factual ranking. ----
+const ANALYSIS_VERSION = 8;
+const BG_MAX = 5;             // The Brief itself has a hard cap of five selected stories.
 const BG_FETCH_MAX = 9;       // Failed article fetches must not consume the scarce analysis slots.
 const BG_DAYS = 14;           // recent events earn the analysis fetch
 const BG_MIN_IMP = 5;         // ordinary headlines do not need an analysis layer
 const stripDashWs = (s) => String(s || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
+
+const SECTION_TOPICS = {
+  economy: ['economy', 'trade', 'energy', 'fiscal'],
+  money: ['money', 'payments', 'economy'],
+  politics: ['politics', 'fiscal'],
+  security: ['security', 'politics', 'society'],
+  society: ['society', 'economy'],
+  'us-mexico': ['us-mexico', 'trade', 'migration'],
+};
+const evidenceTokens = (value) => new Set(normTitle(value).split(' ').filter((word) => word.length > 3));
+const tokenOverlap = (left, right) => {
+  const a = evidenceTokens(left), b = evidenceTokens(right);
+  let score = 0;
+  for (const word of a) if (b.has(word)) score++;
+  return score;
+};
+function topicalKeys(event) {
+  const text = `${event.title || ''} ${event.why || ''}`;
+  const keys = new Set(SECTION_TOPICS[event.section] || ['economy']);
+  if (/tariff|trade|export|import|usmca|t-?mec|customs/i.test(text)) keys.add('trade');
+  if (/inflation|rate|banxico|peso|bank|credit|market|stock/i.test(text)) keys.add('money');
+  if (/power|electric|energy|pemex|cfe|gas|water|grid/i.test(text)) keys.add('energy');
+  if (/migration|border|remittance/i.test(text)) keys.add('migration');
+  if (/crime|security|cartel|homicide|extortion/i.test(text)) keys.add('security');
+  return keys;
+}
+function relevantStanding(event, facts, limit = 5) {
+  const keys = topicalKeys(event);
+  const text = `${event.title || ''} ${event.why || ''}`;
+  return facts.map((fact) => ({
+    fact,
+    score: arr(fact.topics).filter((topic) => keys.has(topic)).length * 10 + tokenOverlap(text, fact.fact),
+  })).filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score || String(a.fact.id).localeCompare(String(b.fact.id)))
+    .slice(0, limit).map((item) => item.fact);
+}
+
 async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = false } = {}) {
   const priority = new Set(priorityIds);
   const cutoff = now.getTime() - BG_DAYS * 864e5;
@@ -380,13 +419,16 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
   const IMG_MAX_TRIES = 6;   // a few chances so a late og:image (or a now-unblocked fetch) is caught
   const CORE = ['background', 'view', 'prediction'];
   const coreComplete = (e) => CORE.every((f) => stripDashWs(e[f]));
-  const needsAnalysis = (e) => !coreComplete(e) || totalWords(e) > 190 || e.analysisV !== 7;
-  const outcome = (event, reason) => ({ id: event?.id || '', ready: Boolean(event && coreComplete(event) && event.analysisV === 7), reason });
+  const refsComplete = (e) => CORE.every((field) => arr(e?.analysisRefs?.[field]).some((ref) => stripDashWs(ref)));
+  const sourcesComplete = (e) => arr(e?.analysisSources).some((source) => /^https:\/\//i.test(String(source?.url || '')));
+  const analysisReady = (e) => Boolean(e && coreComplete(e) && refsComplete(e) && sourcesComplete(e) && e.analysisV === ANALYSIS_VERSION);
+  const needsAnalysis = (e) => !analysisReady(e) || totalWords(e) > 190;
+  const outcome = (event, reason) => ({ id: event?.id || '', ready: analysisReady(event), reason });
   if (!hasLLM()) return {
     added: 0,
     outcomes: priorityIds.map((id) => {
       const event = events.find((candidate) => candidate.id === id);
-      return outcome(event, event && coreComplete(event) && event.analysisV === 7 ? 'ready' : 'no-llm');
+      return outcome(event, analysisReady(event) ? 'ready' : 'no-llm');
     }),
   };
   // A fresh article often loads BEFORE its og:image is set (or behind a first-hit consent
@@ -405,32 +447,35 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
     added: 0,
     outcomes: priorityIds.map((id) => {
       const event = events.find((candidate) => candidate.id === id);
-      return outcome(event, event && coreComplete(event) && event.analysisV === 7 ? 'ready' : 'not-eligible');
+      return outcome(event, analysisReady(event) ? 'ready' : 'not-eligible');
     }),
   };
-  const standingText = arr(readJson(D('standing.json'), { facts: [] }).facts).map((f) => f.fact).filter(Boolean).join(' ');
-  const calendarText = arr(readJson(D('events.json'), { events: [] }).events)
+  const standingFacts = arr(readJson(D('standing.json'), { facts: [] }).facts);
+  const calendar = arr(readJson(D('events.json'), { events: [] }).events)
     .filter((event) => event?.date && Date.parse(`${event.date}T12:00:00Z`) >= now.getTime() - 864e5
-      && Date.parse(`${event.date}T12:00:00Z`) <= now.getTime() + (60 * 864e5))
-    .slice(0, 12)
-    .map((event) => `${event.date}: ${event.label || event.title || event.id}`)
-    .join('; ');
-  // The site's own numbers, handed to the writer so "connect the dots" has dots to
-  // connect while staying inside the closed world: these are the figures the
-  // homepage already publishes, so citing one can never introduce a new claim.
+      && Date.parse(`${event.date}T12:00:00Z`) <= now.getTime() + (60 * 864e5));
+  // These are the homepage's own current reference numbers. Each stays attached to
+  // its official source so the writer can connect a story to a dated baseline and the
+  // reader can follow that connection.
   const siteNumbers = [
-    ['banxico-usdmxn-fix', 'peso, MXN per US$'],
-    ['banxico-cetes-28d', 'Cetes 28-day rate, %'],
-    ['banxico-bmv-ipc', 'IPC stock index'],
-    ['fred-ust10', 'US 10-year Treasury, %'],
-    ['banxico-exports-total', 'monthly goods exports, US$M'],
-    ['banxico-inflacion', 'headline inflation, % y/y'],
-    ['banxico-tasa-objetivo', 'Banxico policy rate, %'],
-  ].map(([id, label]) => {
-    const rows = arr(readJson(D(`series/${id}.json`), {}).data).filter((r) => Number.isFinite(Number(r?.value)));
+    ['banxico-usdmxn-fix', 'Peso, MXN per US dollar', /peso|currency|exchange|dollar|export|import|remittance/i],
+    ['banxico-cetes-28d', 'Cetes 28-day rate, percent', /cetes|rate|yield|credit|borrow|bond|financ/i],
+    ['banxico-bmv-ipc', 'IPC stock index', /stock|market|listed|equity|bmv|ipc/i],
+    ['fred-ust10', 'US 10-year Treasury yield, percent', /US rate|treasury|yield|bond|rate gap/i],
+    ['banxico-exports-total', 'Monthly goods exports, US dollars', /trade|tariff|export|manufactur|border|usmca|t-?mec/i],
+    ['banxico-inflacion', 'Headline inflation, percent year over year', /inflation|price|banxico|rate|wage/i],
+    ['banxico-tasa-objetivo', 'Banxico policy rate, percent', /banxico|policy rate|interest|inflation|credit|peso/i],
+    ['banxico-remesas', 'Monthly remittances, US dollars', /remittance|migrant|household|border|peso/i],
+  ].flatMap(([id, label, match]) => {
+    const doc = readJson(D(`series/${id}.json`), {});
+    const rows = arr(doc.data).filter((r) => Number.isFinite(Number(r?.value)));
     const last = rows[rows.length - 1];
-    return last ? `${label}: ${last.value} (as of ${String(last.date).slice(0, 10)})` : '';
-  }).filter(Boolean).join('; ');
+    return last ? [{
+      id: `number:${id}`, kind: 'number', source: doc.meta?.source || label,
+      url: doc.meta?.sourceUrl || '', match,
+      text: `${label}: ${last.value} (as of ${String(last.date).slice(0, 10)})`,
+    }] : [];
+  });
   const fetched = await Promise.all(want.map(async (e) => {
     const r = await fetchArticle(e.url).catch(() => ({ ok: false, text: '', image: '', fetched: false }));
     const related = arr(e.coverage).filter((source) => source.url && source.url !== e.url).slice(0, 1);
@@ -448,40 +493,95 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
     if (x.r.image && !x.e.image) x.e.image = x.r.image;
     x.e.imgTries = (x.e.imgTries || 0) + 1;
   }
-  // Only run the model for stories that actually need analysis — an image-only retry gets its
-  // picture from the fetch above and skips the (paid) model call.
-  const items = fetched.filter((x) => x.r.ok && needsAnalysis(x.e)).slice(0, BG_MAX).map((x, i) => ({
-    i,
-    e: x.e,
-    body: x.r.text.slice(0, 1800),
-    secondary: x.secondary.filter((source) => source.result.ok).map((source) => ({
-      source: source.source,
-      title: source.title,
-      summary: source.summary,
-      text: source.result.text.slice(0, 900),
-    })),
-  }));
+  const evidenceFor = (x) => {
+    const evidence = [];
+    const seenIds = new Set(), seenUrls = new Set();
+    const push = (item) => {
+      const id = stripDashWs(item?.id), text = stripDashWs(item?.text), url = stripDashWs(item?.url);
+      if (!id || !text || seenIds.has(id)) return;
+      if (url && !/^https:\/\//i.test(url)) return;
+      evidence.push({ id, kind: item.kind || 'source', source: stripDashWs(item.source) || 'Source', url, text });
+      seenIds.add(id); if (url) seenUrls.add(url);
+    };
+    const raw = x.e.reportEvidence || {};
+    push({
+      id: 'article', kind: 'article', source: x.e.source, url: x.e.url,
+      text: [raw.title, raw.dek, String(x.r.text || '').slice(0, 1800)].filter(Boolean).join(' '),
+    });
+    for (const [index, source] of x.secondary.entries()) {
+      const coverage = arr(x.e.coverage).find((item) => item.url && item.url !== x.e.url && item.source === source.source) || {};
+      push({
+        id: `report:${index + 1}`, kind: 'report', source: source.source,
+        url: coverage.url || '',
+        text: [source.title, source.summary, String(source.result.text || '').slice(0, 900)].filter(Boolean).join(' '),
+      });
+    }
+    for (const source of arr(x.e.coverage)) {
+      if (!source.url || source.url === x.e.url || seenUrls.has(source.url)) continue;
+      push({
+        id: `coverage:${evidence.length}`, kind: 'report', source: source.source,
+        url: source.url, text: [source.title, source.summary].filter(Boolean).join(' '),
+      });
+    }
+    for (const fact of relevantStanding(x.e, standingFacts)) push({
+      id: `standing:${fact.id}`, kind: 'standing', source: fact.source, url: fact.url, text: fact.fact,
+    });
+    const eventText = `${x.e.title || ''} ${x.e.why || ''}`;
+    for (const number of siteNumbers.filter((item) => item.match.test(eventText)).slice(0, 3)) push(number);
+    const eventKeys = topicalKeys(x.e);
+    const relevantCalendar = calendar.map((item) => ({
+      item,
+      score: tokenOverlap(eventText, `${item.label || ''} ${item.mechanism || ''}`)
+        + (eventKeys.has(item.kind) ? 5 : 0),
+    })).filter((item) => item.score > 0).sort((a, b) => b.score - a.score || String(a.item.date).localeCompare(String(b.item.date))).slice(0, 2);
+    for (const { item } of relevantCalendar) push({
+      id: `calendar:${item.id || `${item.date}:${slug(item.label || item.title)}`}`,
+      kind: 'calendar', source: item.source, url: item.sourceUrl,
+      text: `${item.date}: ${item.label || item.title}. ${item.mechanism || ''}`,
+    });
+    const relatedEvents = events.filter((event) => event.id !== x.e.id && (event.importance || 0) >= 5
+      && Date.parse(event.date) >= now.getTime() - BG_DAYS * 864e5)
+      .map((event) => ({ event, score: (event.section === x.e.section ? 3 : 0) + tokenOverlap(eventText, `${event.title || ''} ${event.why || ''}`) }))
+      .filter((item) => item.score >= 4)
+      .sort((a, b) => b.score - a.score || (Date.parse(b.event.date) || 0) - (Date.parse(a.event.date) || 0)).slice(0, 3);
+    for (const { event } of relatedEvents) push({
+      id: `event:${event.id}`, kind: 'prior-event', source: event.source, url: event.url,
+      text: [event.date, event.reportEvidence?.title || event.title, event.reportEvidence?.dek || event.why].filter(Boolean).join(' '),
+    });
+    return evidence.slice(0, 14);
+  };
+  // A blocked article body is not allowed to take down the explanation by itself.
+  // The retained publisher title/dek and linked contextual evidence are still a closed,
+  // auditable evidence set. If even that set is empty, the story remains unready.
+  const items = fetched.filter((x) => needsAnalysis(x.e)).slice(0, BG_MAX).map((x, i) => ({
+    i, e: x.e, evidence: evidenceFor(x),
+  })).filter((item) => item.evidence.length);
   const imgGot = fetched.filter((x) => x.r.image).length;
   console.log(`  fetch: ${want.length} wanted · ${items.length} to analyze · ${imgGot} images grabbed`);
   if (!items.length) return {
     added: 0,
     outcomes: priorityIds.map((id) => {
       const event = events.find((candidate) => candidate.id === id);
-      const fetch = fetched.find((item) => item.e.id === id);
-      return outcome(event, event && coreComplete(event) && event.analysisV === 7 ? 'ready' : (fetch && !fetch.r.ok ? 'fetch-failed' : 'no-analysis-needed'));
+      return outcome(event, analysisReady(event) ? 'ready' : 'thin-evidence');
     }),
   };
   const FIELD = { type: 'string' };
+  const REFS = { type: 'array', items: { type: 'string' } };
   const schema = { type: 'object', additionalProperties: false, required: ['analyses'], properties: { analyses: { type: 'array', items: {
-    type: 'object', additionalProperties: false, required: ['i', 'background', 'view', 'prediction'], properties: {
-      i: { type: 'integer' }, background: FIELD, view: FIELD, prediction: FIELD } } } } };
-  const system = `You are writing the optional BRIEFLY EXPLAINED layer for The Mexico Brief. The visible summary already reports what happened. Use the ARTICLE, any OTHER REPORTING, the site's STANDING FACTS, board numbers, and scheduled calendar to add three distinct things:
-THE INSIGHT TEST (hard requirement): every field must contain at least one true thing that is NOT in the article — a connection to a standing fact, one of the site numbers below, the calendar, the second source, or an earlier event in the log. Summarizing the article in different words is a publication failure; the reader already has the summary one line up. If you cannot add anything true beyond the article, return "" for that field — an empty panel is honest, a paraphrase is not.
-- background: one or two sentences explaining the institution, agreement, market, or structural fact a newcomer needs. Do not restate the event.
-- view: two or three sentences giving a narrow judgment about what changes in practice and why. This is explicitly labeled "Our view", so take a position. Explain the mechanism, the constraint, and who benefits. If the story leads with money, capacity, jobs, or another announcement number, give it a denominator or a useful comparison. If the supplied evidence has no comparison, return "" instead of calling the number large, nice, useful, or important.
-- prediction: state the most likely next outcome in ordinary language AND the observable condition that would prove it wrong. Distinguish signing, financing, permits, construction and operation. Do not invent a date, number, decision, or certainty.
+    type: 'object', additionalProperties: false,
+    required: ['i', 'background', 'backgroundRefs', 'view', 'viewRefs', 'prediction', 'predictionRefs'], properties: {
+      i: { type: 'integer' }, background: FIELD, backgroundRefs: REFS,
+      view: FIELD, viewRefs: REFS, prediction: FIELD, predictionRefs: REFS,
+    } } } } };
+  const system = `You are writing the required BRIEFLY EXPLAINED unit for every selected story in The Mexico Brief. The headline and summary already report what happened. Use only the numbered EVIDENCE supplied with each story.
+THE VALUE TEST: every field must add something the headline and summary do not already tell the reader. Paraphrase is failure. Connect the story to another report, standing fact, current number, calendar item, or earlier event when the connection is genuinely useful. Do not force a connection just to sound analytical.
+- background: the one institution, rule, market structure, or durable fact a newcomer needs to follow this story. Usually one sentence, two only when the second adds scale.
+- view: verdict first. Explain the practical consequence, the mechanism that produces it, and the relevant tradeoff. Say who is affected. If the story leads with money, capacity, jobs, or another announcement number, use a supplied denominator or comparison. If none exists, do not call the number large, small, good, or important.
+- prediction: the most likely next outcome, followed by one observable event or condition that would confirm or weaken that view. Use a supplied date only when one exists. Distinguish an announcement from financing, permits, construction, enforcement, or operation.
+EVIDENCE REFERENCES: return one or two exact evidence IDs for each field in backgroundRefs, viewRefs, and predictionRefs. Cite only evidence actually supporting that field. A judgment may be an inference, but its mechanism must be supported. Unknown ID, unsupported number, or factual claim not supported by the cited evidence fails publication.
+If the evidence cannot support a field, return "" and [] for that field. That will block publication for review; inventing or padding is worse.
 Briefly Explained is not written in the first person. Do not use I, me, my, we, or our. Start with the actual actor, event, or outcome. Do not mechanically begin predictions with "The base case is" or follow with "That view would change if". Those phrases may appear once in a batch if they are genuinely the clearest wording, but repeated openers are a publication failure. First person is not part of the publication voice.
-Length is a claim about stakes, so make it true: the room a story gets tells the reader how much it matters. Lead Our view with the verdict, because the verdict is what buys the words. A "this matters less than it looks" verdict is nearly done when stated. Recent analyses that read well land roughly 60 to 120 words across all three fields; that is what normal looks like, not a target. Each field must add something the visible summary does not. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number that does not appear in the supplied material. Return all three fields as "" rather than filler. Return JSON.
+Length is a claim about stakes, so make it true. A "this matters less than it looks" verdict should be short. Recent units that read well land roughly 60 to 120 words across all three fields; that is calibration, not a target. Never make the reader decode an acronym: spell it out on first mention. "US" is fine. Calm, direct, normal language. No em dash, semicolon, canned contrast, headline fragments, marketing language, or number absent from the cited evidence. Return JSON.
 
 ${TRUST}
 
@@ -492,13 +592,21 @@ ${ANALYSIS_SHAPE}
 ${EARNED_LINE}
 
 ${BAN}`;
+  // Keep only fields that passed during this exact locked-selection run. A retry sees
+  // identical evidence and the same story, so combining independently approved fields
+  // is still one reviewed unit. Nothing from an earlier edition is carried forward.
+  const approvedThisRun = new Map();
+  const approvedRefsThisRun = new Map();
   const payloadFor = (batch) => ({
-    standingFacts: standingText,
-    scheduledCalendar: calendarText,
-    siteNumbers,
-    items: batch.map((x) => ({ i: x.i, title: x.e.title, summary: x.e.context || x.e.why || '', article: x.body, otherReporting: x.secondary })),
+    items: batch.map((x) => ({
+      i: x.i,
+      headline: x.e.title,
+      summary: x.e.context || x.e.why || '',
+      evidence: x.evidence,
+      missingFields: CORE.filter((field) => !approvedThisRun.get(x.e.id)?.[field]),
+    })),
   });
-  // Start cheaply against the exact top-three set. A single medium-effort retry is
+  // Start cheaply against the exact selected set. A single medium-effort retry is
   // reserved for any story whose three fields fail as a unit; selection never changes
   // to hide an explanation failure.
   const request = (batch, effort, maxTokens) => askJSON({
@@ -512,11 +620,6 @@ ${BAN}`;
   const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
   let added = 0;
   const completed = new Set();
-  // Keep fields that passed during this exact locked-selection run. A retry sees
-  // identical evidence and the same story, so combining its independently approved
-  // field with an approved field from attempt one is still one reviewed unit. Nothing
-  // from an earlier edition or an unapproved field is carried forward.
-  const approvedThisRun = new Map();
   const applyDraft = (out, batch) => {
     if (!out || !Array.isArray(out.analyses)) return false;
     for (const r of out.analyses) {
@@ -524,12 +627,27 @@ ${BAN}`;
       // Treat the disclosure as one editorial unit. Older published prose never enters
       // this object; only fields approved in this run against this locked evidence do.
       const proposed = {};
+      const proposedRefs = {};
+      const evidenceById = new Map(item.evidence.map((entry) => [entry.id, entry]));
       for (const field of CORE) {
+        if (approvedThisRun.get(item.e.id)?.[field]) continue;
         const text = stripDashWs(r[field]);
         if (!text) continue;
+        const refField = `${field}Refs`;
+        const refs = [...new Set(arr(r[refField]).map(stripDashWs).filter(Boolean))];
+        const invalidRefs = refs.filter((ref) => !evidenceById.has(ref));
+        if (!refs.length || refs.length > 2 || invalidRefs.length) {
+          const reason = !refs.length ? 'no evidence reference'
+            : refs.length > 2 ? `${refs.length} evidence references (cap 2)`
+              : `unknown evidence reference ${invalidRefs.join(', ')}`;
+          console.warn(`  analysis reject ${item.e.id}.${field}: ${reason}`);
+          continue;
+        }
         const [maxWords, maxSentences] = CAPS[field];
-        const inputs = [item.e.title, item.e.context || item.e.why, item.body, standingText, calendarText,
-          ...item.secondary.flatMap((source) => [source.title, source.summary, source.text])];
+        // Validate the public claim against only the evidence the draft itself cites.
+        // Including generated copy or the whole research bundle here would let an
+        // unsupported claim appear grounded merely because another source was nearby.
+        const inputs = refs.map((ref) => evidenceById.get(ref).text);
         const gate = field === 'background'
           ? lintReportText({ text, inputs, maxWords, maxSentences })
           : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
@@ -542,13 +660,27 @@ ${BAN}`;
         const priors = [item.e.context || item.e.why, ...Object.values(proposed)].filter(Boolean);
         if (priors.some((p) => jaccard(normTitle(text), normTitle(p)) >= 0.6)) { console.warn(`  analysis drop ${item.e.id}.${field}: repeats the summary or an earlier field`); continue; }
         proposed[field] = text;
+        proposedRefs[field] = refs;
       }
       const approved = mergeApprovedAttempt(approvedThisRun.get(item.e.id), proposed, CORE);
       approvedThisRun.set(item.e.id, approved);
-      // v7: all three fields must pass before anything becomes visible. The fields may
-      // come from the first attempt or its one bounded retry, but never from old prose.
-      if (CORE.every((field) => approved[field])) {
-        Object.assign(item.e, approved, { analysisV: 7 });
+      const approvedRefs = { ...(approvedRefsThisRun.get(item.e.id) || {}), ...proposedRefs };
+      approvedRefsThisRun.set(item.e.id, approvedRefs);
+      // v8: all three fields and their exact evidence references must pass before
+      // anything becomes visible. The fields may come from the first attempt or its one
+      // bounded retry, but never from old prose.
+      if (CORE.every((field) => approved[field] && arr(approvedRefs[field]).length)) {
+        const citedIds = [...new Set(CORE.flatMap((field) => approvedRefs[field]))];
+        const analysisSources = citedIds.map((id) => evidenceById.get(id))
+          .filter((source) => /^https:\/\//i.test(String(source?.url || '')))
+          .filter((source, index, sources) => sources.findIndex((other) => other.url === source.url) === index)
+          .slice(0, 5)
+          .map((source) => ({ id: source.id, kind: source.kind, source: source.source, url: source.url }));
+        if (!analysisSources.length) {
+          console.warn(`  analysis incomplete ${item.e.id}: cited evidence has no reader-accessible source link`);
+          continue;
+        }
+        Object.assign(item.e, approved, { analysisV: ANALYSIS_VERSION, analysisRefs: approvedRefs, analysisSources });
         if (!completed.has(item.e.id)) added++;
         completed.add(item.e.id);
       } else if (Object.keys(approved).length) {
@@ -559,13 +691,13 @@ ${BAN}`;
     return true;
   };
 
-  const first = await request(items, 'low', 7000);
+  const first = await request(items, 'low', 3500);
   const firstReturned = applyDraft(first, items);
   const retryItems = items.filter((item) => !completed.has(item.e.id));
   let retryReturned = false;
   if (retryItems.length && budgetStatus('core').available) {
     console.warn(`  analysis retry: ${retryItems.length} selected ${retryItems.length === 1 ? 'story' : 'stories'} did not clear all three fields`);
-    retryReturned = applyDraft(await request(retryItems, 'medium', 7000), retryItems);
+    retryReturned = applyDraft(await request(retryItems, 'medium', 4000), retryItems);
   }
   if (!firstReturned && !retryReturned) console.warn('  analysis: no model result — selected stories remain unpublished');
   return {
@@ -573,8 +705,8 @@ ${BAN}`;
     outcomes: priorityIds.map((id) => {
       const event = events.find((candidate) => candidate.id === id);
       const fetch = fetched.find((item) => item.e.id === id);
-      if (event && coreComplete(event) && event.analysisV === 7) return outcome(event, 'ready');
-      if (fetch && !fetch.r.ok) return outcome(event, 'fetch-failed');
+      if (analysisReady(event)) return outcome(event, 'ready');
+      if (fetch && !fetch.r.ok && !evidenceFor(fetch).length) return outcome(event, 'fetch-failed');
       if (!budgetStatus('core').available) return outcome(event, 'budget-unavailable');
       if (!firstReturned && !retryReturned) return outcome(event, 'model-unavailable');
       return outcome(event, 'field-rejected');
@@ -632,7 +764,7 @@ function mergeLog(existing, fresh, now) {
         if (freshest[key] !== undefined) merged[key] = freshest[key];
       }
       if (!merged.image && group.event.image) merged.image = group.event.image;
-      for (const key of ['background', 'view', 'prediction', 'drivers', 'implications', 'next', 'analysisV']) delete merged[key];
+      for (const key of ['background', 'view', 'prediction', 'drivers', 'implications', 'next', 'analysisV', 'analysisRefs', 'analysisSources']) delete merged[key];
     }
     if (!merged.reportEvidence) {
       const evidenced = group.members.find((member) => member.reportEvidence);
@@ -686,14 +818,14 @@ async function main() {
       console.log('  targeted analysis: quiet edition, no selected stories');
       return;
     }
-    const selectedIds = [brief.lead, ...arr(brief.items)].slice(0, 3)
+    const selectedIds = [brief.lead, ...arr(brief.items)]
       .map((story) => arr(story?.refs)[0])
       .filter(Boolean);
     if (!selectedIds.length) {
       console.log('  targeted analysis: quiet edition, no selected stories');
       return;
     }
-    const lockedIds = arr(brief?.meta?.selection?.lockedIds).slice(0, 3);
+    const lockedIds = arr(brief?.meta?.selection?.lockedIds);
     if (!lockedIds.length || JSON.stringify(lockedIds) !== JSON.stringify(selectedIds)) {
       throw new Error('targeted analysis requires the exact selection-only lock for this edition');
     }
@@ -707,7 +839,7 @@ async function main() {
         generatedAt: now.toISOString(),
         count: events.length,
         llm: hasLLM(),
-        analysisTarget: { policy: 'selected-brief-v1', ids: selectedIds, ...analysis },
+        analysisTarget: { policy: 'every-selected-story-evidence-linked-v2', ids: selectedIds, ...analysis },
       },
       events,
     };
@@ -734,7 +866,7 @@ async function main() {
       title: "What's happening",
       note: NOTE,
       updated: editorialDay(now),
-      source: 'The Mexico Brief', sourceUrl: 'https://mexicobrief.com/sources',
+      source: 'The Mexico Brief', sourceUrl: 'https://mexicobrief.com/',
       count: events.length, generatedAt: now.toISOString(), llm: hasLLM(),
     },
     events,

@@ -1,13 +1,15 @@
 'use strict';
 
-// Daily Brief selection is deliberately separate from optional story analysis.
+// Daily Brief selection is deliberately separate from story analysis.
 // A factual, publishable event competes on editorial importance even when its
 // Briefly Explained unit is missing, incomplete, or still awaiting approval.
 
 const DEFAULT_MIN_IMPORTANCE = 5;
 const DEFAULT_SOFT_FLOOR = 3;
 const DEFAULT_CAP = 5;
-const ANALYSIS_VERSION = 7;
+// v8 adds retained evidence references. Older v7 prose is never mistaken for the
+// new evidence-linked product when an event returns to the selected five.
+const ANALYSIS_VERSION = 8;
 const ANALYSIS_FIELDS = ['background', 'view', 'prediction'];
 
 const clean = (value) => String(value == null ? '' : value).trim();
@@ -22,12 +24,17 @@ const uniqueStrings = (values) => [...new Set((Array.isArray(values) ? values : 
 function analysisState(event) {
   const version = finiteNumber(event && event.analysisV);
   const present = ANALYSIS_FIELDS.filter((field) => clean(event && event[field]));
-  const complete = present.length === ANALYSIS_FIELDS.length;
+  const textComplete = present.length === ANALYSIS_FIELDS.length;
+  const refsComplete = ANALYSIS_FIELDS.every((field) => Array.isArray(event && event.analysisRefs && event.analysisRefs[field])
+    && event.analysisRefs[field].some(clean));
+  const sourcesComplete = Array.isArray(event && event.analysisSources)
+    && event.analysisSources.some((source) => /^https:\/\//i.test(clean(source && source.url)));
+  const complete = textComplete && refsComplete && sourcesComplete && version >= ANALYSIS_VERSION;
   let state = 'missing';
-  if (complete && version >= ANALYSIS_VERSION) state = 'ready';
-  else if (complete) state = 'unapproved';
+  if (complete) state = 'ready';
+  else if (textComplete && version < ANALYSIS_VERSION) state = 'unapproved';
   else if (present.length || version > 0) state = 'incomplete';
-  return { state, version, complete: state === 'ready' };
+  return { state, version, complete };
 }
 
 // Rendering should be atomic: expose the whole approved analysis unit or no
@@ -40,6 +47,8 @@ function optionalAnalysis(event) {
     view: clean(event.view),
     prediction: clean(event.prediction),
     analysisV: analysis.version,
+    analysisRefs: event.analysisRefs && typeof event.analysisRefs === 'object' ? { ...event.analysisRefs } : {},
+    analysisSources: Array.isArray(event.analysisSources) ? event.analysisSources.map((source) => ({ ...source })) : [],
   };
 }
 

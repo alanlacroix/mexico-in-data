@@ -22,6 +22,9 @@ if (!publicationId) throw new Error('PUBLICATION_ID is required');
 const brief = JSON.parse(fs.readFileSync(briefPath, 'utf8'));
 const eventStatus = JSON.parse(fs.readFileSync(eventStatusPath, 'utf8'));
 const explanationReadiness = briefReadiness(brief);
+if (!explanationReadiness.targetMet) {
+  throw new Error(`Briefly Explained incomplete: ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount} selected stories ready`);
+}
 if (brief.meta?.editorialDate !== editorialDate) {
   throw new Error(`Brief editorial date ${brief.meta?.editorialDate || '(missing)'} does not match ${editorialDate}`);
 }

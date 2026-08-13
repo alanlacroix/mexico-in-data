@@ -48,6 +48,8 @@ function toStory(group) {
     view: plainExplanation(event.view),
     prediction: plainExplanation(event.prediction),
     analysisV: Number(event.analysisV) || 0,
+    analysisRefs: event.analysisRefs && typeof event.analysisRefs === 'object' ? event.analysisRefs : {},
+    analysisSources: Array.isArray(event.analysisSources) ? event.analysisSources : [],
     implications: plainExplanation(event.implications),
     next: plainExplanation(event.next),
     image: /^https:\/\//i.test(clean(event.image)) ? clean(event.image) : '',

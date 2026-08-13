@@ -12,26 +12,35 @@ const interests = require('../../data/interests.json');
 const story = (id, ready = false) => ({
   refs: [id],
   headline: id,
-  analysisV: ready ? 7 : 0,
+  analysisV: ready ? 8 : 0,
   background: ready ? 'A structural fact.' : '',
   view: ready ? 'A view because the mechanism is clear.' : '',
   prediction: ready ? 'The result is likely if the next release confirms it.' : '',
+  analysisRefs: ready ? { background: ['article'], view: ['article'], prediction: ['article'] } : {},
+  analysisSources: ready ? [{ source: 'Example News', url: `https://example.com/${id}` }] : [],
 });
 const brief = (states) => ({ lead: story('lead', states[0]), items: states.slice(1).map((ready, index) => story(`item-${index + 2}`, ready)) });
 
 assert.equal(briefReadiness(brief([false, false, false, true, true])).targetMet, false,
-  'analysis on lower-ranked stories must not disguise an unexplained lead and top three');
-assert.deepEqual(briefReadiness(brief([false, false, false])).missingTarget, ['lead', 'item-2', 'item-3']);
-assert.equal(briefReadiness(brief([false, false, false])).publicationBlocking, false,
-  'missing optional analysis must never stop a verified factual edition');
-assert.equal(briefReadiness(brief([true, true, false, false, false])).targetMet, true,
-  'two complete explanations in the top three meet the editorial target');
+  'analysis on lower-ranked stories must not disguise any unexplained selected story');
+assert.deepEqual(briefReadiness(brief([false, false, false, false, false])).missingTarget,
+  ['lead', 'item-2', 'item-3', 'item-4', 'item-5']);
+assert.equal(briefReadiness(brief([false, false, false])).publicationBlocking, true,
+  'missing analysis must stop a nonquiet edition');
+assert.equal(briefReadiness(brief([true, true, false, false, false])).targetMet, false,
+  'two complete explanations cannot certify a five-story edition');
 assert.deepEqual(briefReadiness(brief([true, true, false])).missingTarget, ['item-3'],
-  'the receipt must still disclose a top-three story that has no approved explanation');
+  'the receipt must disclose every selected story without an approved explanation');
 assert.equal(briefReadiness(brief([true, false, false])).targetMet, false,
   'one explanation cannot satisfy a normal three-story edition');
-assert.equal(briefReadiness(brief([false, true, true])).targetMet, true,
-  'analysis availability must not reorder or demote the factual lead');
+assert.equal(briefReadiness(brief([false, true, true])).targetMet, false,
+  'analysis availability must not let the edition publish around an unexplained lead');
+assert.equal(briefReadiness(brief([true, true, true, true, true])).targetMet, true,
+  'every selected story with complete evidence-linked analysis certifies the edition');
+const missingLink = brief([true]);
+missingLink.lead.analysisSources = [];
+assert.equal(briefReadiness(missingLink).targetMet, false,
+  'three polished paragraphs without a reader-accessible evidence link are not ready');
 assert.equal(briefReadiness({ lead: null, items: [] }).targetMet, true, 'a genuinely quiet edition is a clean no-op');
 
 assert.deepEqual(

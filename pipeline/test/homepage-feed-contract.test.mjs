@@ -37,8 +37,10 @@ assert.equal(
 );
 assert.ok(dailyBrief.stories.every((story) => {
   const fields = [story.bg, story.view, story.prediction].filter((value) => String(value || '').trim());
-  return (story.analysisV >= 7 && fields.length === 3) || (story.analysisV === 0 && fields.length === 0);
-}), 'optional BE analysis must be complete and approved or absent as one atomic unit');
+  const refs = ['background', 'view', 'prediction'].every((field) => story.analysisRefs?.[field]?.length);
+  const linked = story.analysisSources?.some((source) => /^https:\/\//i.test(String(source?.url || '')));
+  return story.analysisV >= 8 && fields.length === 3 && refs && linked;
+}), 'every selected story must carry one complete, approved, evidence-linked BE unit');
 for (let i = 0; i < dailyBrief.stories.length; i += 1) {
   for (let j = i + 1; j < dailyBrief.stories.length; j += 1) {
     assert.equal(sameThread(dailyBrief.stories[i], dailyBrief.stories[j]), false, 'the rendered Brief must never repeat one event');
@@ -389,7 +391,7 @@ assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, compl
 }
 // The brief still comes before the stories it summarises.
 assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf('id="sec-stories"'), 'the Brief must render before key developments');
-assert.doesNotMatch(briefBuilder, /analysisReady\(e\)/, 'optional analysis readiness must never decide whether a story enters key developments');
+assert.doesNotMatch(briefBuilder, /analysisReady\(e\)/, 'analysis readiness must never decide whether a story enters key developments');
 assert.match(briefBuilder, /selectDailyBrief\(candidates/, 'key developments must use the auditable importance-first selector');
 assert.doesNotMatch(briefBuilder, /BIG_MONEY|bigCapital/, 'a dollar-amount regex must not override the audited importance rubric');
 assert.doesNotMatch(briefBuilder, /priorApproved|carriedForward/,
@@ -401,14 +403,17 @@ for (const phrase of [/\bThe base case is\b/i, /\bThat view would change if\b/i]
 }
 assert.match(happeningBuilder, /strictForecast: field === 'prediction'/, 'every generated BE forecast must include a base case and a change-of-mind condition');
 assert.match(happeningBuilder, /const approvedThisRun = new Map\(\)/, 'approved retry fields must be scoped to one locked publication run');
+assert.match(happeningBuilder, /const approvedRefsThisRun = new Map\(\)/, 'each approved field must retain the exact evidence IDs it used');
 assert.match(happeningBuilder, /mergeApprovedAttempt\(approvedThisRun\.get\(item\.e\.id\), proposed, CORE\)/,
   'a bounded retry may complete the same evidence-locked BE unit');
 assert.match(happeningBuilder, /CORE\.every\(\(field\) => approved\[field\]\)/,
   'no BE field may become visible until all three fields have passed their gates');
+assert.doesNotMatch(happeningBuilder, /\[brief\.lead, \.\.\.arr\(brief\.items\)\]\.slice\(0, 3\)/,
+  'targeted explanation must cover the full locked selection, not only the first three stories');
 assert.match(happeningBuilder, /SCHEDULED OUTCOMES \(hard requirement\)[\s\S]*SELECT it[\s\S]*unchanged[\s\S]*not news/i,
   'the curator must treat an unchanged scheduled decision as a required new outcome');
 assert.match(happeningBuilder, /ASSESS EVERY candidate[\s\S]*decisionCoverage\(cands\.length, out\.decisions\)[\s\S]*throw new Error\(`curation decision receipt is incomplete/,
   'the curator must account for every candidate in its bounded batch instead of silently omitting one');
-assert.match(briefBuilder, /optionalAnalysis\(e\)/, 'the brief builder must expose optional analysis atomically');
+assert.match(briefBuilder, /optionalAnalysis\(e\)/, 'the brief builder must expose approved analysis atomically');
 
 console.log('homepage-feed-contract: ok');
