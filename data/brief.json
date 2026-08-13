@@ -4,15 +4,15 @@
     "editorialDate": "2026-08-13",
     "updated": "2026-08-13",
     "asOf": "2026-08-13",
-    "reviewedAt": "2026-08-13T13:32:35.293Z",
+    "reviewedAt": "2026-08-13T16:30:13.134Z",
     "latestItemDate": "2026-08-13",
     "quiet": false,
     "newCount": 0,
-    "generatedAt": "2026-08-13T13:32:35.293Z",
+    "generatedAt": "2026-08-13T16:30:13.134Z",
     "mode": "curated",
     "count": 5,
-    "words": 146,
-    "contentSig": "e8c1f28bfc5a7e1b95e875fffc6133893841ab418aaa8fbbb4b35d79009892f3",
+    "words": 149,
+    "contentSig": "3fa6cd501f76e301f7345e7109209d74e80e2f49de53f6cdeed9c6d09a442bd5",
     "windowHours": 36,
     "selection": {
       "policy": "importance-first-v1",
@@ -63,10 +63,10 @@
           ],
           "scheduledMatch": false,
           "analysisState": "ready",
-          "analysisVersion": 7,
+          "analysisVersion": 8,
           "analysis": {
             "state": "ready",
-            "version": 7,
+            "version": 8,
             "complete": true
           }
         },
@@ -113,10 +113,10 @@
           "tags": [],
           "scheduledMatch": false,
           "analysisState": "ready",
-          "analysisVersion": 7,
+          "analysisVersion": 8,
           "analysis": {
             "state": "ready",
-            "version": 7,
+            "version": 8,
             "complete": true
           }
         },
@@ -164,17 +164,67 @@
             "political-stability"
           ],
           "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
+          "analysisState": "ready",
+          "analysisVersion": 8,
           "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
+            "state": "ready",
+            "version": 8,
+            "complete": true
+          }
+        },
+        {
+          "id": "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12",
+          "rank": 4,
+          "selected": true,
+          "reason": "selected:extension:importance",
+          "effectiveImportance": 7,
+          "rawImportance": 7,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 7,
+            "components": {
+              "nationalConsequence": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "model"
+          },
+          "tags": [],
+          "scheduledMatch": false,
+          "analysisState": "ready",
+          "analysisVersion": 8,
+          "analysis": {
+            "state": "ready",
+            "version": 8,
+            "complete": true
           }
         },
         {
           "id": "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12",
-          "rank": 4,
+          "rank": 5,
           "selected": true,
           "reason": "selected:extension:importance",
           "effectiveImportance": 7,
@@ -214,19 +264,19 @@
           },
           "tags": [],
           "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
+          "analysisState": "ready",
+          "analysisVersion": 8,
           "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
+            "state": "ready",
+            "version": 8,
+            "complete": true
           }
         },
         {
           "id": "n-m-xico-no-tiene-pruebas-de-presuntos-v-nculos-del-ni-2026-08-12",
-          "rank": 5,
-          "selected": true,
-          "reason": "selected:extension:importance",
+          "rank": 6,
+          "selected": false,
+          "reason": "not-selected:cap-reached",
           "effectiveImportance": 6,
           "rawImportance": 6,
           "importanceProvenance": {
@@ -276,7 +326,7 @@
         },
         {
           "id": "n-general-motors-vende-m-s-autos-importados-en-m-xico--2026-08-12",
-          "rank": 6,
+          "rank": 8,
           "selected": false,
           "reason": "not-selected:cap-reached",
           "effectiveImportance": 5,
@@ -298,6 +348,56 @@
               "modelImpact": {
                 "raw": 2,
                 "score": 2,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "model"
+          },
+          "tags": [],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          }
+        },
+        {
+          "id": "n-pulso-diario-san-luis-cae-exportaci-n-de-cerveza-5-2026-08-12",
+          "rank": 7,
+          "selected": false,
+          "reason": "not-selected:cap-reached",
+          "effectiveImportance": 5,
+          "rawImportance": 5,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 5,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 1,
+                "score": 1,
                 "status": "accepted"
               },
               "durability": {
@@ -481,12 +581,12 @@
         "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
         "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
         "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13",
-        "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12",
-        "n-m-xico-no-tiene-pruebas-de-presuntos-v-nculos-del-ni-2026-08-12"
+        "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12",
+        "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12"
       ],
       "scheduledOutcomes": {
         "editorialDate": "2026-08-13",
-        "checkedAt": "2026-08-13T13:32:06.135Z",
+        "checkedAt": "2026-08-13T16:29:00.436Z",
         "count": 14,
         "blockers": 0,
         "ok": true
@@ -497,10 +597,29 @@
   "lead": {
     "h1": "Mexican strawberry exports face US antidumping investigation ahead of US elections",
     "context": "Mexican strawberry shipments are under US investigation on antidumping grounds, with timing sensitivity tied to the US election cycle.",
-    "background": "Mexico's strawberry exports to the United States are a small but concentrated slice of the roughly US$665bn in annual Mexican goods exports, and Florida growers competing with Mexican winter production carry outsized political weight in a state central to US midterm politics.",
-    "view": "The antidumping case is best read as trade friction layered on top of the US-Mexico-Canada Agreement's annual-review structure rather than a stand-alone dispute. A preliminary 18.32% dumping margin on US$853 million of shipments since January 2025 is a real cost, but it is tiny next to Mexico's US$872bn in annual goods trade with the United States, so its significance is political signaling ahead of US midterms rather than a threat to the trade relationship's scale.",
-    "prediction": "A final antidumping determination is likely to follow the US midterm election cycle rather than precede it, given the CNA director's framing of the timing as election-driven. This would be wrong if the Commerce Department issues a final ruling well before the midterms, showing the case moved on a normal investigative timeline rather than a political one.",
-    "analysisV": 7,
+    "background": "Mexico shipped US$853m of strawberries to the United States from January 2025 to June 2026, and the US Commerce Department set a preliminary antidumping margin of 18.32% in March 2026.",
+    "view": "The preliminary 18.32% dumping margin from the US Commerce Department threatens Mexican strawberry exporters, whose shipments to the United States totaled $853 million from January 2025 to June 2026. CNA director Haro says the review is tied to the 2026 US midterms, not trade violations, since Florida's growers carry outsized political weight despite California dominating supply.",
+    "prediction": "The next milestone is the US Commerce Department's final antidumping determination, following March's preliminary 18.32% margin. A higher final duty would confirm election-year pressure shaped the case, while a lowered margin would support Mexico's push for continued market access before the midterms.",
+    "analysisV": 8,
+    "analysisRefs": {
+      "background": [
+        "article"
+      ],
+      "view": [
+        "article"
+      ],
+      "prediction": [
+        "article"
+      ]
+    },
+    "analysisSources": [
+      {
+        "id": "article",
+        "kind": "article",
+        "source": "El CEO",
+        "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/"
+      }
+    ],
     "drivers": "",
     "implications": "",
     "next": "",
@@ -540,10 +659,29 @@
     {
       "headline": "Mexico aviation authority faces FAA safety evaluation",
       "context": "The Mexican civil aviation authority will undergo US FAA assessment this week on safety standards compliance, with potential consequences for Mexico's aviation category ranking.",
-      "background": "The FAA's IASA program checks whether a country's aviation regulator has the staff, rules and oversight capacity required by the International Civil Aviation Organization. Mexico lost its Category 1 rating in 2021 and has been working since 2023 to regain it.",
-      "view": "A one-week visit will not settle the rating either way, since the specialist quoted expects any conclusion to take at least six months. The relevant comparison is Mexico's three-year record since losing Category 1 in 2023, not this week's visit, so the practical test is whether AFAC can show new inspection staffing and updated regulation rather than a single inspection outcome.",
-      "prediction": "AFAC most likely receives a preliminary readout with a formal decision deferred for months, not an immediate category change. That view fails if the FAA issues any determination, positive or negative, within the six-month window the specialist named.",
-      "analysisV": 7,
+      "background": "The FAA's International Aviation Safety Assessment program checks whether a country's civil aviation authority meets ICAO's minimum safety oversight standards. Mexico's AFAC has sought since 2023 to regain the FAA's top Category 1 safety ranking.",
+      "view": "This week's review is only a snapshot, not a verdict. Rodríguez Garduño, a UNAM air law specialist, says a real outcome will take at least six months, so the immediate reporting cannot settle whether Mexico regains Category 1.",
+      "prediction": "The FAA's conclusion, due within roughly six months per the specialist's estimate, will confirm whether AFAC's staffing, inspections and legislation meet ICAO standards or whether Mexico stays below Category 1.",
+      "analysisV": 8,
+      "analysisRefs": {
+        "view": [
+          "article"
+        ],
+        "prediction": [
+          "article"
+        ],
+        "background": [
+          "article"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/mexico-vuelve-a-prueba-en-seguridad-aerea-asi-enfrenta-la-afac-la-evaluacion-de-eu/"
+        }
+      ],
       "drivers": "",
       "implications": "",
       "next": "",
@@ -579,10 +717,43 @@
     {
       "headline": "Mexico's Treasury reforms governmental accounting manual",
       "context": "Official gazette publication of reforms to Mexico's Manual de Contabilidad Gubernamental establishes new accounting and reporting standards for federal entities.",
-      "background": "",
-      "view": "",
-      "prediction": "",
-      "analysisV": 0,
+      "background": "Mexico's Consejo Nacional de Armonización Contable sets the Manual de Contabilidad Gubernamental under the 2008 Ley General de Contabilidad Gubernamental, the rulebook all federal, state and municipal entities must use to record and report public finances.",
+      "view": "A reform to the accounting manual changes reporting rules, not spending itself, so it does not by itself add or cut fiscal space. Its practical effect depends on whether it improves visibility into obligations like Pemex support, which already strains a fiscal position with debt near 53.2% of gross domestic product in 2025.",
+      "prediction": "The reformed manual takes effect as federal entities apply it in coming reporting cycles, alongside the same-day reform to the Conceptual Framework of Governmental Accounting. Confirm adoption by checking whether the next quarterly financial statements follow the new criteria.",
+      "analysisV": 8,
+      "analysisRefs": {
+        "background": [
+          "article"
+        ],
+        "view": [
+          "article",
+          "standing:std-fiscal-path"
+        ],
+        "prediction": [
+          "article",
+          "report:1"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796157&fecha=13/08/2026"
+        },
+        {
+          "id": "standing:std-fiscal-path",
+          "kind": "standing",
+          "source": "SHCP (Hacienda)",
+          "url": "https://www.gob.mx/hacienda"
+        },
+        {
+          "id": "report:1",
+          "kind": "report",
+          "source": "diariooficial.gob.mx",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796158&fecha=13/08/2026"
+        }
+      ],
       "drivers": "",
       "implications": "",
       "next": "",
@@ -626,16 +797,99 @@
       }
     },
     {
-      "headline": "AT&T and Telcel may be barred from intelligent networks spectrum auction due to spectrum concentration",
-      "context": "Mexico's communications regulator has proposed excluding carriers holding more than 20 percent of spectrum in PCS, AWS, 2.3 GHz, 2.5 GHz, 3.3 GHz, and 3.5 GHz bands from accumulating additional spectrum in the intelligent networks auction.",
-      "background": "",
-      "view": "",
-      "prediction": "",
-      "analysisV": 0,
+      "headline": "Pemex doubles atmospheric gas flaring in second quarter 2026 to 778 million cubic feet",
+      "context": "Pemex produced 4,006 million cubic feet of gas from April to June 2026 but flared 778 million cubic feet, double the previous rate, signaling operational or maintenance challenges in Mexico's primary energy company.",
+      "background": "Pemex remains financially entangled with the federal government, whose support for the company is a chief reason Mexico sits on the last investment-grade rung at Moody's.",
+      "view": "Pemex flared 778 million cubic feet per day in the second quarter, nearly a fifth of the 4,006 million cubic feet it produced, up 98.8% from a year earlier. Specialists say gas is not prioritized because crude extraction remains Pemex's core business, deepening reliance on imported US gas that already covers about 70% of domestic consumption.",
+      "prediction": "Pemex's next quarterly production report will show whether flaring keeps rising with output or whether capture infrastructure improves, testing whether the crude-over-gas priority persists.",
+      "analysisV": 8,
+      "analysisRefs": {
+        "background": [
+          "standing:std-fiscal-pemex"
+        ],
+        "prediction": [
+          "article"
+        ],
+        "view": [
+          "article"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "standing:std-fiscal-pemex",
+          "kind": "standing",
+          "source": "Moody's / Hacienda / Pemex",
+          "url": "https://www.gob.mx/hacienda"
+        },
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/pemex-duplica-envio-de-gas-a-la-atmosfera-en-el-segundo-trimestre-del-ano/"
+        }
+      ],
       "drivers": "",
       "implications": "",
       "next": "",
-      "image": "",
+      "image": "https://elceo.com/wp-content/uploads/2026/08/pemex_quema_gas.jpg",
+      "publishedAt": "2026-08-12T18:08:59.000Z",
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/pemex-duplica-envio-de-gas-a-la-atmosfera-en-el-segundo-trimestre-del-ano/",
+          "publishedAt": "2026-08-12T18:08:59.000Z",
+          "date": "2026-08-12",
+          "title": "Pemex doubles atmospheric gas flaring in second quarter 2026 to 778 million cubic feet",
+          "summary": "Pemex produced 4,006 million cubic feet of gas from April to June 2026 but flared 778 million cubic feet, double the previous rate, signaling operational or maintenance challenges in Mexico's primary energy company."
+        }
+      ],
+      "refs": [
+        "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12"
+      ],
+      "href": "https://elceo.com/negocios/pemex-duplica-envio-de-gas-a-la-atmosfera-en-el-segundo-trimestre-del-ano/",
+      "source": "El CEO",
+      "date": "2026-08-12",
+      "section": "economy",
+      "isNew": false,
+      "ranking": {
+        "rank": 4,
+        "importance": 7,
+        "effectiveImportance": 7,
+        "tags": [],
+        "scheduledEventId": "",
+        "reason": "selected:extension:importance"
+      }
+    },
+    {
+      "headline": "AT&T and Telcel may be barred from intelligent networks spectrum auction due to spectrum concentration",
+      "context": "Mexico's communications regulator has proposed excluding carriers holding more than 20 percent of spectrum in PCS, AWS, 2.3 GHz, 2.5 GHz, 3.3 GHz, and 3.5 GHz bands from accumulating additional spectrum in the intelligent networks auction.",
+      "background": "Mexico's Comisión Reguladora de Telecomunicaciones is designing the CRT-RRI-01 auction for spectrum serving industrial radiocommunications, covering sites like mines, ports and oil fields, under the US-Mexico-Canada Agreement Article 18.20.4, which requires telecom spectrum processes to consider competition and market approaches.",
+      "view": "A 20% national spectrum cap would exclude Telcel, at 33.51%, and AT&T, at 26.21%, the only two carriers with national mobile networks, leaving smaller players to win the auction. AT&T argues this reserves the band for third parties and departs from the market-based approach the US-Mexico-Canada Agreement's telecom article requires, a dispute regulators must resolve before bidding begins.",
+      "prediction": "The CRT must finalize the CRT-RRI-01 auction rules after public consultation, deciding whether to keep the 20% cap that excludes Telcel and AT&T. If it survives, AT&T's US-Mexico-Canada trade agreement Article 18.20.4 challenge could escalate into a formal trade dispute.",
+      "analysisV": 8,
+      "analysisRefs": {
+        "background": [
+          "article"
+        ],
+        "view": [
+          "article"
+        ],
+        "prediction": [
+          "article"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/att-y-telcel-podrian-quedar-fuera-de-licitacion-de-espectro-para-redes-inteligentes/"
+        }
+      ],
+      "drivers": "",
+      "implications": "",
+      "next": "",
+      "image": "https://elceo.com/wp-content/uploads/2026/08/Att_telcel_licitacion_espectro.jpg",
       "publishedAt": "2026-08-12T08:00:47.000Z",
       "coverage": [
         {
@@ -656,51 +910,10 @@
       "section": "economy",
       "isNew": false,
       "ranking": {
-        "rank": 4,
+        "rank": 5,
         "importance": 7,
         "effectiveImportance": 7,
         "tags": [],
-        "scheduledEventId": "",
-        "reason": "selected:extension:importance"
-      }
-    },
-    {
-      "headline": "Mexico's security cabinet states no evidence links Castro's grandson to Cuban organized crime network in Quintana Roo",
-      "context": "Mexico's security officials stated they have no evidence of alleged connections between Raúl Castro's grandson and a Cuban mafia network operating in Quintana Roo, responding to New York Times reporting.",
-      "background": "",
-      "view": "",
-      "prediction": "",
-      "analysisV": 0,
-      "drivers": "",
-      "implications": "",
-      "next": "",
-      "image": "",
-      "publishedAt": "2026-08-12T14:22:02.000Z",
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/1208/mexico/mexico-no-tiene-pruebas-sobre-presuntos-vinculos-del-nieto-de-raul-castro-con-red-criminal-seguridad/",
-          "publishedAt": "2026-08-12T14:22:02.000Z",
-          "date": "2026-08-12",
-          "title": "Mexico's security cabinet states no evidence links Castro's grandson to Cuban organized crime network in Quintana Roo",
-          "summary": "Mexico's security officials stated they have no evidence of alleged connections between Raúl Castro's grandson and a Cuban mafia network operating in Quintana Roo, responding to New York Times reporting."
-        }
-      ],
-      "refs": [
-        "n-m-xico-no-tiene-pruebas-de-presuntos-v-nculos-del-ni-2026-08-12"
-      ],
-      "href": "https://aristeguinoticias.com/1208/mexico/mexico-no-tiene-pruebas-sobre-presuntos-vinculos-del-nieto-de-raul-castro-con-red-criminal-seguridad/",
-      "source": "Aristegui Noticias",
-      "date": "2026-08-12",
-      "section": "security",
-      "isNew": false,
-      "ranking": {
-        "rank": 5,
-        "importance": 6,
-        "effectiveImportance": 6,
-        "tags": [
-          "political-stability"
-        ],
         "scheduledEventId": "",
         "reason": "selected:extension:importance"
       }

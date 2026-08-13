@@ -4,18 +4,20 @@
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
     "updated": "2026-08-13",
     "source": "The Mexico Brief",
-    "sourceUrl": "https://mexicobrief.com/sources",
+    "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-13T13:32:06.307Z",
+    "generatedAt": "2026-08-13T16:29:00.630Z",
     "llm": true,
     "analysisTarget": {
-      "policy": "selected-brief-v1",
+      "policy": "every-selected-story-evidence-linked-v2",
       "ids": [
         "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
         "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
-        "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13"
+        "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13",
+        "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12",
+        "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12"
       ],
-      "added": 1,
+      "added": 5,
       "outcomes": [
         {
           "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
@@ -29,8 +31,18 @@
         },
         {
           "id": "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13",
-          "ready": false,
-          "reason": "field-rejected"
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12",
+          "ready": true,
+          "reason": "ready"
         }
       ]
     }
@@ -104,11 +116,30 @@
         "componentSource": "model"
       },
       "image": "https://elceo.com/wp-content/uploads/2026/08/fresa_mexicana_exportaciones_eu_cna.jpg",
-      "imgTries": 1,
-      "background": "Mexico's strawberry exports to the United States are a small but concentrated slice of the roughly US$665bn in annual Mexican goods exports, and Florida growers competing with Mexican winter production carry outsized political weight in a state central to US midterm politics.",
-      "view": "The antidumping case is best read as trade friction layered on top of USMCA's annual-review structure rather than a stand-alone dispute. A preliminary 18.32% dumping margin on US$853 million of shipments since January 2025 is a real cost, but it is tiny next to Mexico's US$872bn in annual goods trade with the United States, so its significance is political signaling ahead of US midterms rather than a threat to the trade relationship's scale.",
-      "prediction": "A final antidumping determination is likely to follow the US midterm election cycle rather than precede it, given the CNA director's framing of the timing as election-driven. This would be wrong if the Commerce Department issues a final ruling well before the midterms, showing the case moved on a normal investigative timeline rather than a political one.",
-      "analysisV": 7
+      "imgTries": 2,
+      "background": "Mexico shipped US$853m of strawberries to the United States from January 2025 to June 2026, and the US Commerce Department set a preliminary antidumping margin of 18.32% in March 2026.",
+      "view": "The preliminary 18.32% dumping margin from the US Commerce Department threatens Mexican strawberry exporters, whose shipments to the United States totaled $853 million from January 2025 to June 2026. CNA director Haro says the review is tied to the 2026 US midterms, not trade violations, since Florida's growers carry outsized political weight despite California dominating supply.",
+      "prediction": "The next milestone is the US Commerce Department's final antidumping determination, following March's preliminary 18.32% margin. A higher final duty would confirm election-year pressure shaped the case, while a lowered margin would support Mexico's push for continued market access before the midterms.",
+      "analysisV": 8,
+      "analysisRefs": {
+        "background": [
+          "article"
+        ],
+        "view": [
+          "article"
+        ],
+        "prediction": [
+          "article"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/"
+        }
+      ]
     },
     {
       "id": "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13",
@@ -185,7 +216,44 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
-      "imgTries": 1
+      "imgTries": 2,
+      "background": "Mexico's Consejo Nacional de Armonización Contable sets the Manual de Contabilidad Gubernamental under the 2008 Ley General de Contabilidad Gubernamental, the rulebook all federal, state and municipal entities must use to record and report public finances.",
+      "view": "A reform to the accounting manual changes reporting rules, not spending itself, so it does not by itself add or cut fiscal space. Its practical effect depends on whether it improves visibility into obligations like Pemex support, which already strains a fiscal position with debt near 53.2% of GDP in 2025.",
+      "prediction": "The reformed manual takes effect as federal entities apply it in coming reporting cycles, alongside the same-day reform to the Conceptual Framework of Governmental Accounting. Confirm adoption by checking whether the next quarterly financial statements follow the new criteria.",
+      "analysisV": 8,
+      "analysisRefs": {
+        "background": [
+          "article"
+        ],
+        "view": [
+          "article",
+          "standing:std-fiscal-path"
+        ],
+        "prediction": [
+          "article",
+          "report:1"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796157&fecha=13/08/2026"
+        },
+        {
+          "id": "standing:std-fiscal-path",
+          "kind": "standing",
+          "source": "SHCP (Hacienda)",
+          "url": "https://www.gob.mx/hacienda"
+        },
+        {
+          "id": "report:1",
+          "kind": "report",
+          "source": "diariooficial.gob.mx",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796158&fecha=13/08/2026"
+        }
+      ]
     },
     {
       "id": "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
@@ -255,11 +323,129 @@
         "componentSource": "model"
       },
       "image": "https://elceo.com/wp-content/uploads/2026/08/AFAC_evaluacion_aviacion.jpg",
+      "imgTries": 2,
+      "background": "The FAA's International Aviation Safety Assessment program checks whether a country's civil aviation authority meets ICAO's minimum safety oversight standards. Mexico's AFAC has sought since 2023 to regain the FAA's top Category 1 safety ranking.",
+      "view": "This week's review is only a snapshot, not a verdict. Rodríguez Garduño, a UNAM air law specialist, says a real outcome will take at least six months, so the immediate reporting cannot settle whether Mexico regains Category 1.",
+      "prediction": "The FAA's conclusion, due within roughly six months per the specialist's estimate, will confirm whether AFAC's staffing, inspections and legislation meet ICAO standards or whether Mexico stays below Category 1.",
+      "analysisV": 8,
+      "analysisRefs": {
+        "view": [
+          "article"
+        ],
+        "prediction": [
+          "article"
+        ],
+        "background": [
+          "article"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/mexico-vuelve-a-prueba-en-seguridad-aerea-asi-enfrenta-la-afac-la-evaluacion-de-eu/"
+        }
+      ]
+    },
+    {
+      "id": "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12",
+      "date": "2026-08-12",
+      "section": "economy",
+      "title": "Pemex doubles atmospheric gas flaring in second quarter 2026 to 778 million cubic feet",
+      "why": "Pemex produced 4,006 million cubic feet of gas from April to June 2026 but flared 778 million cubic feet, double the previous rate, signaling operational or maintenance challenges in Mexico's primary energy company.",
+      "company": "Pemex",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/pemex-duplica-envio-de-gas-a-la-atmosfera-en-el-segundo-trimestre-del-ano/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-12T18:08:59.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Pemex duplica envío de gas a la atmósfera en el segundo trimestre del año",
+        "dek": "Pemex registró una producción de gas de 4,006 millones de pies cúbicos de abril a junio de 2026, pero quemó 778 millones de pies cúbicos. La publicación Pemex duplica envío de gas a la atmósfera en el segundo trimestre del año apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/pemex-duplica-envio-de-gas-a-la-atmosfera-en-el-segundo-trimestre-del-ano/",
+          "publishedAt": "2026-08-12T18:08:59.000Z",
+          "date": "2026-08-12",
+          "title": "Pemex doubles atmospheric gas flaring in second quarter 2026 to 778 million cubic feet",
+          "summary": "Pemex produced 4,006 million cubic feet of gas from April to June 2026 but flared 778 million cubic feet, double the previous rate, signaling operational or maintenance challenges in Mexico's primary energy company."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://elceo.com/wp-content/uploads/2026/08/pemex_quema_gas.jpg",
       "imgTries": 1,
-      "background": "The FAA's IASA program checks whether a country's aviation regulator has the staff, rules and oversight capacity required by the International Civil Aviation Organization. Mexico lost its Category 1 rating in 2021 and has been working since 2023 to regain it.",
-      "view": "A one-week visit will not settle the rating either way, since the specialist quoted expects any conclusion to take at least six months. The relevant comparison is Mexico's three-year record since losing Category 1 in 2023, not this week's visit, so the practical test is whether AFAC can show new inspection staffing and updated regulation rather than a single inspection outcome.",
-      "prediction": "AFAC most likely receives a preliminary readout with a formal decision deferred for months, not an immediate category change. That view fails if the FAA issues any determination, positive or negative, within the six-month window the specialist named.",
-      "analysisV": 7
+      "background": "Pemex remains financially entangled with the federal government, whose support for the company is a chief reason Mexico sits on the last investment-grade rung at Moody's.",
+      "view": "Pemex flared 778 million cubic feet per day in the second quarter, nearly a fifth of the 4,006 million cubic feet it produced, up 98.8% from a year earlier. Specialists say gas is not prioritized because crude extraction remains Pemex's core business, deepening reliance on imported US gas that already covers about 70% of domestic consumption.",
+      "prediction": "Pemex's next quarterly production report will show whether flaring keeps rising with output or whether capture infrastructure improves, testing whether the crude-over-gas priority persists.",
+      "analysisV": 8,
+      "analysisRefs": {
+        "background": [
+          "standing:std-fiscal-pemex"
+        ],
+        "prediction": [
+          "article"
+        ],
+        "view": [
+          "article"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "standing:std-fiscal-pemex",
+          "kind": "standing",
+          "source": "Moody's / Hacienda / Pemex",
+          "url": "https://www.gob.mx/hacienda"
+        },
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/pemex-duplica-envio-de-gas-a-la-atmosfera-en-el-segundo-trimestre-del-ano/"
+        }
+      ]
     },
     {
       "id": "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12",
@@ -327,7 +513,32 @@
         },
         "reportedTotal": null,
         "componentSource": "model"
-      }
+      },
+      "image": "https://elceo.com/wp-content/uploads/2026/08/Att_telcel_licitacion_espectro.jpg",
+      "imgTries": 1,
+      "background": "Mexico's Comisión Reguladora de Telecomunicaciones is designing the CRT-RRI-01 auction for spectrum serving industrial radiocommunications, covering sites like mines, ports and oil fields, under USMCA Article 18.20.4, which requires telecom spectrum processes to consider competition and market approaches.",
+      "view": "A 20% national spectrum cap would exclude Telcel, at 33.51%, and AT&T, at 26.21%, the only two carriers with national mobile networks, leaving smaller players to win the auction. AT&T argues this reserves the band for third parties and departs from the market-based approach USMCA's telecom article requires, a dispute regulators must resolve before bidding begins.",
+      "prediction": "The CRT must finalize the CRT-RRI-01 auction rules after public consultation, deciding whether to keep the 20% cap that excludes Telcel and AT&T. If it survives, AT&T's USMCA Article 18.20.4 challenge could escalate into a formal trade dispute.",
+      "analysisV": 8,
+      "analysisRefs": {
+        "background": [
+          "article"
+        ],
+        "view": [
+          "article"
+        ],
+        "prediction": [
+          "article"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/att-y-telcel-podrian-quedar-fuera-de-licitacion-de-espectro-para-redes-inteligentes/"
+        }
+      ]
     },
     {
       "id": "n-m-xico-no-tiene-pruebas-de-presuntos-v-nculos-del-ni-2026-08-12",
@@ -448,6 +659,74 @@
           "modelImpact": {
             "raw": 2,
             "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-pulso-diario-san-luis-cae-exportaci-n-de-cerveza-5-2026-08-12",
+      "date": "2026-08-12",
+      "section": "economy",
+      "title": "Mexico beer exports fall 5 percent in first half of 2026",
+      "why": "Four of Mexico's most-exported agricultural products recorded declines in the first semester of 2026, including a 5 percent drop in beer shipments, indicating softening demand or increased competition.",
+      "company": "",
+      "source": "Grupo Consultor de Mercados Agrícolas",
+      "url": "https://gcma.com.mx/pulso-diario-san-luis-cae-exportacion-de-cerveza-5/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-12T15:35:54.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Pulso Diario San Luis: Cae exportación de cerveza 5%",
+        "dek": "El Universal | 12 de agosto de 2026. Ciudad de México.- En el primer semestre de este año, cuatro de los agroalimentos más exportados por México registraron caídas, de acuerdo con el Grupo Consultor de Mercados Agrícolas (GCMA). Las ventas de cerveza a otros países cayeron 5% en dicho semestre con respecto al mismo per"
+      },
+      "coverage": [
+        {
+          "source": "Grupo Consultor de Mercados Agrícolas",
+          "url": "https://gcma.com.mx/pulso-diario-san-luis-cae-exportacion-de-cerveza-5/",
+          "publishedAt": "2026-08-12T15:35:54.000Z",
+          "date": "2026-08-12",
+          "title": "Mexico beer exports fall 5 percent in first half of 2026",
+          "summary": "Four of Mexico's most-exported agricultural products recorded declines in the first semester of 2026, including a 5 percent drop in beer shipments, indicating softening demand or increased competition."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
             "status": "accepted"
           },
           "durability": {
@@ -941,6 +1220,74 @@
           "durability": {
             "raw": 2,
             "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-contra-r-publica-exportaciones-de-aguacate-mexicano--2026-08-11",
+      "date": "2026-08-11",
+      "section": "economy",
+      "title": "Mexican avocado exports fall 25 percent in first half of 2026 amid US suspension risk",
+      "why": "Mexican avocado exports dropped nearly 25 percent in the first six months of 2026. Beyond the temporary US suspension, persistent export decline reflects both market pressure and the security threat that triggered the ban.",
+      "company": "",
+      "source": "Grupo Consultor de Mercados Agrícolas",
+      "url": "https://gcma.com.mx/contra-republica-exportaciones-de-aguacate-mexicano-caen-25-en-primer-semestre-de-2026/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-11T15:41:21.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Contra Républica: Exportaciones de aguacate mexicano caen 25% en primer semestre de 2026",
+        "dek": "ContraRéplica | 11 de agosto de 2026. El aguacate mexicano enfrenta un escenario complicado: además de la suspensión temporal de envíos a Estados Unidos, las exportaciones registraron una caída de casi 25% durante la primera mitad de 2026, según cifras del Grupo Consultor de Mercados Agrícolas (GCMA). Entre enero y jun"
+      },
+      "coverage": [
+        {
+          "source": "Grupo Consultor de Mercados Agrícolas",
+          "url": "https://gcma.com.mx/contra-republica-exportaciones-de-aguacate-mexicano-caen-25-en-primer-semestre-de-2026/",
+          "publishedAt": "2026-08-11T15:41:21.000Z",
+          "date": "2026-08-11",
+          "title": "Mexican avocado exports fall 25 percent in first half of 2026 amid US suspension risk",
+          "summary": "Mexican avocado exports dropped nearly 25 percent in the first six months of 2026. Beyond the temporary US suspension, persistent export decline reflects both market pressure and the security threat that triggered the ban."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
             "status": "accepted"
           },
           "officialness": {
@@ -3602,86 +3949,6 @@
           "summary": "Kia is moving assembly of its affordable electric vehicle to Mexico, lowering the price barrier for EV adoption and competing directly with Tesla and other makers to expand the domestic market."
         }
       ]
-    },
-    {
-      "id": "n-mexican-economy-gains-momentum-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Mexican economy expands 6.1 percent annualized in second quarter, reversing first-quarter contraction",
-      "why": "GDP growth rebounded sharply from a 2.4 percent contraction in Q1, signaling economic recovery and moderating concerns about stagnation under the new administration.",
-      "company": "",
-      "source": "Dallas Fed — Research",
-      "url": "https://dallasfed.org/research/update/mex/2026/2605",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-06T20:11:00.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "Dallas Fed — Research",
-          "url": "https://dallasfed.org/research/update/mex/2026/2605",
-          "publishedAt": "2026-08-06T20:11:00.000Z",
-          "date": "2026-08-06",
-          "title": "Mexican economy expands 6.1 percent annualized in second quarter, reversing first-quarter contraction",
-          "summary": "GDP growth rebounded sharply from a 2.4 percent contraction in Q1, signaling economic recovery and moderating concerns about stagnation under the new administration."
-        }
-      ]
-    },
-    {
-      "id": "n-inicia-segunda-fase-de-remodelaci-n-del-aicm-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Mexico City airport enters second phase of renovation",
-      "why": "The Mexico City International Airport begins major modernization work through year-end 2026. This infrastructure upgrade affects connectivity and logistics costs for nearshoring and international commerce.",
-      "company": "",
-      "source": "T21",
-      "url": "https://t21.com.mx/inicia-segunda-fase-de-remodelacion-del-aicm/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-06T13:23:43.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "T21",
-          "url": "https://t21.com.mx/inicia-segunda-fase-de-remodelacion-del-aicm/",
-          "publishedAt": "2026-08-06T13:23:43.000Z",
-          "date": "2026-08-06",
-          "title": "Mexico City airport enters second phase of renovation",
-          "summary": "The Mexico City International Airport begins major modernization work through year-end 2026. This infrastructure upgrade affects connectivity and logistics costs for nearshoring and international commerce."
-        }
-      ],
-      "image": "https://t21.com.mx/wp-content/uploads/2026/08/Sin-titulo1.jpg",
-      "imgTries": 1
-    },
-    {
-      "id": "n-t-mec-digital-el-desaf-o-de-construir-una-gobernanza-2026-08-06",
-      "date": "2026-08-06",
-      "section": "politics",
-      "title": "AI governance challenge emerges as key issue in US-Mexico-Canada trade agreement review",
-      "why": "As the three countries prepare for the trade agreement's review, artificial intelligence regulation and cross-border data governance are emerging as central negotiating topics. Harmonizing AI rules could affect everything from nearshoring investments to data residency requirements.",
-      "company": "",
-      "source": "DPL News",
-      "url": "https://dplnews.com/t-mec-digital-gobernanza-comun-ia-norteamerica/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-06T12:00:00.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "DPL News",
-          "url": "https://dplnews.com/t-mec-digital-gobernanza-comun-ia-norteamerica/",
-          "publishedAt": "2026-08-06T12:00:00.000Z",
-          "date": "2026-08-06",
-          "title": "AI governance challenge emerges as key issue in US-Mexico-Canada trade agreement review",
-          "summary": "As the three countries prepare for the trade agreement's review, artificial intelligence regulation and cross-border data governance are emerging as central negotiating topics. Harmonizing AI rules could affect everything from nearshoring investments to data residency requirements."
-        }
-      ],
-      "image": "https://dplnews.com/wp-content/uploads/2026/07/dplnews_especial-tmec-digital_mc20726.jpeg",
-      "imgTries": 1,
-      "background": "Mexico's Senate AI commission is pushing for a dedicated AI chapter as part of the same annual USMCA review process triggered after the US declined the 16-year extension in July 2026, at a time when the US favors light-touch AI rules, Canada is still building its own framework, and Mexico has not settled on a regulatory path.",
-      "view": "A binding AI chapter is unlikely to emerge from this review round, because Mexico still lacks its own AI law to negotiate from and the three countries start from incompatible regulatory philosophies. The proposal matters mainly as a marker for future rounds, since any data-residency or AI rule eventually adopted would affect how foreign-owned factories store and move production data across the border, a live nearshoring concern given how thin new (as opposed to reinvested) foreign investment has been.",
-      "prediction": "Mexico most likely keeps studying AI governance options without a formal chapter appearing in the 2026 review text. That would be wrong if negotiators announce specific AI provisions or a data-governance annex as part of this year's review outcome.",
-      "analysisV": 7
     }
   ]
 }
