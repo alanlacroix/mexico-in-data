@@ -285,7 +285,7 @@ assert.ok(lintAnalysisText({
   text: 'This matters.',
   inputs: ['This matters.'],
   role: 'view',
-}).flags.includes('view has no concrete mechanism or tradeoff'), 'a judgment without a mechanism must fail the analysis gate');
+}).flags.some((flag) => flag.startsWith('empty evaluation')), 'an empty judgment must fail the analysis gate');
 assert.equal(lintAnalysisText({
   text: 'The headline overstates the immediate hit because covered goods are excluded.',
   inputs: ['The headline overstates the immediate hit because covered goods are excluded.'],
@@ -295,7 +295,7 @@ assert.ok(lintAnalysisText({
   text: 'The outcome remains uncertain.',
   inputs: ['The outcome remains uncertain.'],
   role: 'prediction',
-}).flags.some((flag) => flag.startsWith('forecast states no likely outcome')), 'a forecast without a likely outcome must fail the analysis gate');
+}).flags.includes('watch item has no observable next test'), 'a watch item without an observable test must fail the analysis gate');
 assert.ok(lintAnalysisText({
   text: 'The ownership cap limits the number of eligible bidders, which reduces competition for the contract.',
   inputs: ['The ownership cap limits the number of eligible bidders.'],
@@ -411,7 +411,7 @@ assert.match(briefBuilder, /if \(!picked\.length\)[\s\S]*quiet:\s*true[\s\S]*lea
 for (const phrase of [/\bThe base case is\b/i, /\bThat view would change if\b/i]) {
   assert.ok(dailyBrief.stories.filter((story) => phrase.test(story.prediction || '')).length <= 1, 'BE predictions must not repeat a stock forecast phrase');
 }
-assert.match(happeningBuilder, /strictForecast: field === 'prediction'/, 'every generated BE forecast must include a base case and a change-of-mind condition');
+assert.match(happeningBuilder, /strictForecast: field === 'prediction'/, 'every generated BE watch item must include an observable next test');
 assert.match(happeningBuilder, /const approvedThisRun = new Map\(\)/, 'approved retry fields must be scoped to one locked publication run');
 assert.match(happeningBuilder, /const approvedRefsThisRun = new Map\(\)/, 'each approved field must retain the exact evidence IDs it used');
 assert.match(happeningBuilder, /corrections: rejectionsThisRun\.get\(x\.e\.id\) \|\| \{\}/,

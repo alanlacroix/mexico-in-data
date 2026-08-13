@@ -26,7 +26,7 @@ comparisons, sources, and analysis inside them.
 - Headline and summary: shortest accurate report of what happened.
 - Background: structural fact a newcomer needs.
 - Our view: narrow, evidence-backed judgment.
-- What we’re watching: observable evidence that would confirm or weaken the view.
+- What we’re watching: the next real step and the observable result that would confirm or weaken the view. Do not force a prediction when the evidence supports only the next decision or release.
 - Insider shorthand such as “hawkish” or “dovish” is not public copy.
 - If the source does not support a factual phrase, remove it. The generated sentence may
   never be used as evidence for itself.

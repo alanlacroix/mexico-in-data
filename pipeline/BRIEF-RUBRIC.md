@@ -39,7 +39,7 @@ The visible summary is factual and comes from the linked report. Every selected 
 
 - **Background:** the structural fact a newcomer needs, drawn from the report, related reporting, and the site's sourced standing facts.
 - **Our view:** a narrow judgment tied to a concrete mechanism or tradeoff. This is analysis, not reported fact.
-- **What we're watching:** a specific expectation or observable condition that would confirm or weaken the view.
+- **What we're watching:** the next real decision, release, or result and the observable fork it will resolve. Include a likely outcome only when the evidence supports one.
 
 Briefly Explained never uses first person. State the likely next outcome directly, then name the evidence that would prove it wrong. Start with the actual actor, event, or outcome. Do not repeat "The base case is" or "That view would change if" as a template across stories. First person is not part of the publication voice.
 
