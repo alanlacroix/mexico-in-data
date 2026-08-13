@@ -2,28 +2,23 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-12",
+    "updated": "2026-08-13",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/sources",
     "count": 60,
-    "generatedAt": "2026-08-12T13:32:28.666Z",
+    "generatedAt": "2026-08-13T13:32:06.307Z",
     "llm": true,
     "analysisTarget": {
       "policy": "selected-brief-v1",
       "ids": [
-        "n-us-aluminum-lobby-asks-washington-to-keep-tariffs-ou-2026-08-11",
-        "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
-        "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12"
+        "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
+        "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
+        "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13"
       ],
-      "added": 2,
+      "added": 1,
       "outcomes": [
         {
-          "id": "n-us-aluminum-lobby-asks-washington-to-keep-tariffs-ou-2026-08-11",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
+          "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
           "ready": true,
           "reason": "ready"
         },
@@ -31,11 +26,167 @@
           "id": "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
           "ready": true,
           "reason": "ready"
+        },
+        {
+          "id": "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13",
+          "ready": false,
+          "reason": "field-rejected"
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
+      "date": "2026-08-13",
+      "section": "us-mexico",
+      "title": "Mexican strawberry exports face US antidumping investigation ahead of US elections",
+      "why": "Mexican strawberry shipments are under US investigation on antidumping grounds, with timing sensitivity tied to the US election cycle.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-13T08:00:37.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Fresa mexicana en riesgo ante elecciones de Estados Unidos, señala el CNA",
+        "dek": "La fresa mexicana está bajo observación de Estados Unidos con una investigación antidumping. La publicación Fresa mexicana en riesgo ante elecciones de Estados Unidos, señala el CNA apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/",
+          "publishedAt": "2026-08-13T08:00:37.000Z",
+          "date": "2026-08-13",
+          "title": "Mexican strawberry exports face US antidumping investigation ahead of US elections",
+          "summary": "Mexican strawberry shipments are under US investigation on antidumping grounds, with timing sensitivity tied to the US election cycle."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://elceo.com/wp-content/uploads/2026/08/fresa_mexicana_exportaciones_eu_cna.jpg",
+      "imgTries": 1,
+      "background": "Mexico's strawberry exports to the United States are a small but concentrated slice of the roughly US$665bn in annual Mexican goods exports, and Florida growers competing with Mexican winter production carry outsized political weight in a state central to US midterm politics.",
+      "view": "The antidumping case is best read as trade friction layered on top of USMCA's annual-review structure rather than a stand-alone dispute. A preliminary 18.32% dumping margin on US$853 million of shipments since January 2025 is a real cost, but it is tiny next to Mexico's US$872bn in annual goods trade with the United States, so its significance is political signaling ahead of US midterms rather than a threat to the trade relationship's scale.",
+      "prediction": "A final antidumping determination is likely to follow the US midterm election cycle rather than precede it, given the CNA director's framing of the timing as election-driven. This would be wrong if the Commerce Department issues a final ruling well before the midterms, showing the case moved on a normal investigative timeline rather than a political one.",
+      "analysisV": 7
+    },
+    {
+      "id": "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13",
+      "date": "2026-08-13",
+      "section": "economy",
+      "title": "Mexico's Treasury reforms governmental accounting manual",
+      "why": "Official gazette publication of reforms to Mexico's Manual de Contabilidad Gubernamental establishes new accounting and reporting standards for federal entities.",
+      "company": "",
+      "source": "Diario Oficial de la Federación",
+      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796157&fecha=13/08/2026",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-13T12:00:00.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Acuerdo por el que se reforma y adiciona el Manual de Contabilidad Gubernamental.",
+        "dek": "DOF · PODER EJECUTIVO SECRETARIA DE HACIENDA Y CREDITO PUBLICO"
+      },
+      "coverage": [
+        {
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796157&fecha=13/08/2026",
+          "publishedAt": "2026-08-13T12:00:00.000Z",
+          "date": "2026-08-13",
+          "title": "Mexico's Treasury reforms governmental accounting manual",
+          "summary": "Official gazette publication of reforms to Mexico's Manual de Contabilidad Gubernamental establishes new accounting and reporting standards for federal entities."
+        },
+        {
+          "source": "diariooficial.gob.mx",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796158&fecha=13/08/2026",
+          "publishedAt": "2026-08-13T12:00:00.000Z",
+          "date": "2026-08-13",
+          "title": "Acuerdo por el que se reforma el Marco Conceptual de Contabilidad Gubernamental.",
+          "summary": "DOF · PODER EJECUTIVO SECRETARIA DE HACIENDA Y CREDITO PUBLICO"
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "imgTries": 1
+    },
     {
       "id": "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
       "date": "2026-08-12",
@@ -171,6 +322,210 @@
           "officialness": {
             "raw": 2,
             "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-m-xico-no-tiene-pruebas-de-presuntos-v-nculos-del-ni-2026-08-12",
+      "date": "2026-08-12",
+      "section": "security",
+      "title": "Mexico's security cabinet states no evidence links Castro's grandson to Cuban organized crime network in Quintana Roo",
+      "why": "Mexico's security officials stated they have no evidence of alleged connections between Raúl Castro's grandson and a Cuban mafia network operating in Quintana Roo, responding to New York Times reporting.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/1208/mexico/mexico-no-tiene-pruebas-sobre-presuntos-vinculos-del-nieto-de-raul-castro-con-red-criminal-seguridad/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-12T14:22:02.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México no tiene pruebas de presuntos vínculos del nieto de Raúl Castro con “Mafia Cubana en Quintana Roo”: Seguridad",
+        "dek": "La postura del Gabinete de Seguridad se dio después de que The New York Times publicara una investigación sobre la denominada “Mafia Cubana en Quintana Roo”, una red a la que atribuyó actividades de contrabando de personas y mercancías ilícitas."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/1208/mexico/mexico-no-tiene-pruebas-sobre-presuntos-vinculos-del-nieto-de-raul-castro-con-red-criminal-seguridad/",
+          "publishedAt": "2026-08-12T14:22:02.000Z",
+          "date": "2026-08-12",
+          "title": "Mexico's security cabinet states no evidence links Castro's grandson to Cuban organized crime network in Quintana Roo",
+          "summary": "Mexico's security officials stated they have no evidence of alleged connections between Raúl Castro's grandson and a Cuban mafia network operating in Quintana Roo, responding to New York Times reporting."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-general-motors-vende-m-s-autos-importados-en-m-xico--2026-08-12",
+      "date": "2026-08-12",
+      "section": "economy",
+      "title": "General Motors imports exceed combined sales of 29 other brands in Mexico",
+      "why": "From January through July 2026, General Motors imported vehicles accounted for more sales volume than the next 29 brands combined, with imported vehicles representing 69.7 percent of all Mexico car sales.",
+      "company": "General Motors",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/general-motors-vende-mas-autos-importados-en-mexico-que-29-marcas-juntas/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-12T19:15:13.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "General Motors vende más autos importados en México que 29 marcas juntas",
+        "dek": "Del total de autos comercializados en México entre enero y julio, 69.7% correspondieron a unidades importadas La publicación General Motors vende más autos importados en México que 29 marcas juntas apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/general-motors-vende-mas-autos-importados-en-mexico-que-29-marcas-juntas/",
+          "publishedAt": "2026-08-12T19:15:13.000Z",
+          "date": "2026-08-12",
+          "title": "General Motors imports exceed combined sales of 29 other brands in Mexico",
+          "summary": "From January through July 2026, General Motors imported vehicles accounted for more sales volume than the next 29 brands combined, with imported vehicles representing 69.7 percent of all Mexico car sales."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-busca-cfe-recursos-en-los-mercados-realizar-emisi-n--2026-08-12",
+      "date": "2026-08-12",
+      "section": "economy",
+      "title": "Mexico's Federal Electricity Commission plans debt issuance of 4.5 billion pesos",
+      "why": "The CFE will issue 4.5 billion pesos in debt and CFE Capital seeks authorization for simultaneous public offering in Mexico and private international placement of certificates.",
+      "company": "CFE",
+      "source": "Energía a Debate",
+      "url": "https://energiaadebate.com/busca-cfe-recursos-en-los-mercados-realizara-emision-de-deuda-manana-por-4-5-mil-millones-de-pesos/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-12T20:26:33.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Busca CFE recursos en los mercados; realizará emisión de deuda mañana por 4.5 mil millones de pesos",
+        "dek": "Por su parte, CFE Capital, administradora de la FIBRA-E, pide autorización para oferta pública en México simultánea a una oferta privada internacional de certificados bursátiles"
+      },
+      "coverage": [
+        {
+          "source": "Energía a Debate",
+          "url": "https://energiaadebate.com/busca-cfe-recursos-en-los-mercados-realizara-emision-de-deuda-manana-por-4-5-mil-millones-de-pesos/",
+          "publishedAt": "2026-08-12T20:26:33.000Z",
+          "date": "2026-08-12",
+          "title": "Mexico's Federal Electricity Commission plans debt issuance of 4.5 billion pesos",
+          "summary": "The CFE will issue 4.5 billion pesos in debt and CFE Capital seeks authorization for simultaneous public offering in Mexico and private international placement of certificates."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
             "status": "accepted"
           }
         },
@@ -463,6 +818,142 @@
       "analysisV": 7
     },
     {
+      "id": "n-m-xico-realiza-m-s-importaciones-desde-econom-as-eme-2026-08-11",
+      "date": "2026-08-11",
+      "section": "economy",
+      "title": "Mexico imports more from emerging Asian economies than from United States",
+      "why": "Mexico's accumulated imports from China, Taiwan, Vietnam, and Malaysia exceed imports from the United States, despite recent tariff pressures.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/mexico-realiza-mas-importaciones-desde-economias-emergentes-de-asia-que-de-estados-unidos/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-11T20:50:12.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México realiza más importaciones desde economías emergentes de Asia que de Estados Unidos",
+        "dek": "A pesar de los aranceles, las importaciones acumuladas de México desde China, Taiwán, Vietnam y Malasia fueron mayores frente a las de EU. La publicación México realiza más importaciones desde economías emergentes de Asia que de Estados Unidos apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/mexico-realiza-mas-importaciones-desde-economias-emergentes-de-asia-que-de-estados-unidos/",
+          "publishedAt": "2026-08-11T20:50:12.000Z",
+          "date": "2026-08-11",
+          "title": "Mexico imports more from emerging Asian economies than from United States",
+          "summary": "Mexico's accumulated imports from China, Taiwan, Vietnam, and Malaysia exceed imports from the United States, despite recent tariff pressures."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 0
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-omar-garc-a-harfuch-gana-confianza-en-washington-eu--2026-08-11",
+      "date": "2026-08-11",
+      "section": "us-mexico",
+      "title": "Interior Security Minister Omar García Harfuch gains confidence in Washington, bolsters bilateral ties",
+      "why": "García Harfuch has strengthened US officials' confidence in his role as Interior Security Minister and improved Mexico-US bilateral relations.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/actualidad/omar-garcia-harfuch-gana-confianza-en-washington-eu-respalda-su-papel-en-la-relacion-bilateral/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-11T17:24:39.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Omar García Harfuch gana confianza en Washington; EU respalda su papel en la relación bilateral",
+        "dek": "Omar García Harfuch ha ganado confianza de funcionarios en Estados Unidos, al tiempo en que ha ayudado a mejorar la relación bilateral. La publicación Omar García Harfuch gana confianza en Washington; EU respalda su papel en la relación bilateral apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/actualidad/omar-garcia-harfuch-gana-confianza-en-washington-eu-respalda-su-papel-en-la-relacion-bilateral/",
+          "publishedAt": "2026-08-11T17:24:39.000Z",
+          "date": "2026-08-11",
+          "title": "Interior Security Minister Omar García Harfuch gains confidence in Washington, bolsters bilateral ties",
+          "summary": "García Harfuch has strengthened US officials' confidence in his role as Interior Security Minister and improved Mexico-US bilateral relations."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-perros-deben-pasar-inspecci-n-contra-gusano-barrenad-2026-08-11",
       "date": "2026-08-11",
       "section": "us-mexico",
@@ -727,6 +1218,74 @@
           "officialness": {
             "raw": 1,
             "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-m-xico-m-xico-supera-el-promedio-mundial-en-uso-mult-2026-08-11",
+      "date": "2026-08-11",
+      "section": "economy",
+      "title": "Mexico's ChatGPT users lead global average in multimedia content generation at 10 percent of messages",
+      "why": "About 10 percent of messages sent from Mexico to ChatGPT during the second quarter of 2026 were devoted to generating, analyzing or retrieving multimedia content, exceeding the global average.",
+      "company": "",
+      "source": "DPL News",
+      "url": "https://dplnews.com/mexico-mexico-supera-el-promedio-mundial-en-uso-multimedia-de-chatgpt-con-cerca-de-10-de-los-mensajes/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-11T17:59:35.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "México | México supera el promedio mundial en uso multimedia de ChatGPT con cerca de 10% de los mensajes",
+        "dek": "El Economista Cerca de 10% de los mensajes enviados desde México a ChatGPT durante el segundo trimestre de 2026 estuvo dedicado a generar, analizar o recuperar contenido multimedia, frente a un promedio mundial de 7.8%, según los primeros datos país por país publicados por OpenAI sobre el uso de su plataforma. México s"
+      },
+      "coverage": [
+        {
+          "source": "DPL News",
+          "url": "https://dplnews.com/mexico-mexico-supera-el-promedio-mundial-en-uso-multimedia-de-chatgpt-con-cerca-de-10-de-los-mensajes/",
+          "publishedAt": "2026-08-11T17:59:35.000Z",
+          "date": "2026-08-11",
+          "title": "Mexico's ChatGPT users lead global average in multimedia content generation at 10 percent of messages",
+          "summary": "About 10 percent of messages sent from Mexico to ChatGPT during the second quarter of 2026 were devoted to generating, analyzing or retrieving multimedia content, exceeding the global average."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 0
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 0,
             "status": "accepted"
           }
         },
@@ -3123,248 +3682,6 @@
       "view": "A binding AI chapter is unlikely to emerge from this review round, because Mexico still lacks its own AI law to negotiate from and the three countries start from incompatible regulatory philosophies. The proposal matters mainly as a marker for future rounds, since any data-residency or AI rule eventually adopted would affect how foreign-owned factories store and move production data across the border, a live nearshoring concern given how thin new (as opposed to reinvested) foreign investment has been.",
       "prediction": "Mexico most likely keeps studying AI governance options without a formal chapter appearing in the 2026 review text. That would be wrong if negotiators announce specific AI provisions or a data-governance annex as part of this year's review outcome.",
       "analysisV": 7
-    },
-    {
-      "id": "n-inversi-n-productiva-en-m-xico-liga-2-meses-al-alza--2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Private investment in Mexico rises for two consecutive months on government stimulus",
-      "why": "After weakness earlier in the year, private productive investment is showing renewed momentum. The trend will be watched as a leading indicator of whether government support can sustain business spending amid softer growth.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/06/inversion-productiva-en-mexico-liga-2-meses-al-alza-por-impulso-del-gobierno/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-06T09:51:38.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/06/inversion-productiva-en-mexico-liga-2-meses-al-alza-por-impulso-del-gobierno/",
-          "publishedAt": "2026-08-06T09:51:38.000Z",
-          "date": "2026-08-06",
-          "title": "Private investment in Mexico rises for two consecutive months on government stimulus",
-          "summary": "After weakness earlier in the year, private productive investment is showing renewed momentum. The trend will be watched as a leading indicator of whether government support can sustain business spending amid softer growth."
-        }
-      ]
-    },
-    {
-      "id": "n-an-lisis-aci-worldwide-y-dlocal-abren-oxxo-pay-spei--2026-08-06",
-      "date": "2026-08-06",
-      "section": "money",
-      "title": "ACI Worldwide and dLocal bundle Mexico and Brazil local payment rails for global merchants",
-      "why": "The integration allows businesses to accept OXXO Pay and SPEI (Mexico) and Pix (Brazil) through a single connection, lowering barriers for global merchants to enter the region and enabling faster payment settlement.",
-      "company": "dLocal",
-      "source": "FintechExpert.mx",
-      "url": "https://fintechexpert.mx/p/aci-dlocal-oxxo-spei-pix-pagos-locales-latam",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-06T06:34:11.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "FintechExpert.mx",
-          "url": "https://fintechexpert.mx/p/aci-dlocal-oxxo-spei-pix-pagos-locales-latam",
-          "publishedAt": "2026-08-06T06:34:11.000Z",
-          "date": "2026-08-06",
-          "title": "ACI Worldwide and dLocal bundle Mexico and Brazil local payment rails for global merchants",
-          "summary": "The integration allows businesses to accept OXXO Pay and SPEI (Mexico) and Pix (Brazil) through a single connection, lowering barriers for global merchants to enter the region and enabling faster payment settlement."
-        }
-      ]
-    },
-    {
-      "id": "n-mercado-libre-acelera-en-m-xico-ingresos-crecen-55-e-2026-08-05",
-      "date": "2026-08-05",
-      "section": "economy",
-      "title": "Mercado Libre accelerates in Mexico with 55% revenue growth in second quarter, driven by e-commerce and Mercado Pago",
-      "why": "Mexico's strong performance lifted company-wide results in the quarter. Mercado Pago's expansion in payments processing and the buoyancy of digital commerce reflect sustained consumer spending and fintech adoption.",
-      "company": "Mercado Libre",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/mercado-libre-acelera-en-mexico-ingresos-crecen-55-en-el-2t26-impulsados-por-el-e-commerce-y-mercado-pago/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-05T23:34:56.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/mercado-libre-acelera-en-mexico-ingresos-crecen-55-en-el-2t26-impulsados-por-el-e-commerce-y-mercado-pago/",
-          "publishedAt": "2026-08-05T23:34:56.000Z",
-          "date": "2026-08-05",
-          "title": "Mercado Libre accelerates in Mexico with 55% revenue growth in second quarter, driven by e-commerce and Mercado Pago",
-          "summary": "Mexico's strong performance lifted company-wide results in the quarter. Mercado Pago's expansion in payments processing and the buoyancy of digital commerce reflect sustained consumer spending and fintech adoption."
-        }
-      ]
-    },
-    {
-      "id": "n-exportaciones-de-petr-leo-de-pemex-se-desploman-28-l-2026-08-05",
-      "date": "2026-08-05",
-      "section": "money",
-      "title": "Pemex crude oil exports plummet 28 percent, lowest in 36 years",
-      "why": "Oil exports crashed in the first half of 2026, with the most-sold Maya crude down 30.5 percent and Zapoteco recording zero shipments. Pemex's export collapse signals a structural production crisis and reduces a critical source of federal revenue.",
-      "company": "Pemex",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/exportaciones-de-petroleo-de-pemex-se-desploman-28-las-mas-bajas-en-36-anos/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-05T08:00:55.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/exportaciones-de-petroleo-de-pemex-se-desploman-28-las-mas-bajas-en-36-anos/",
-          "publishedAt": "2026-08-05T08:00:55.000Z",
-          "date": "2026-08-05",
-          "title": "Pemex crude oil exports plummet 28 percent, lowest in 36 years",
-          "summary": "Oil exports crashed in the first half of 2026, with the most-sold Maya crude down 30.5 percent and Zapoteco recording zero shipments. Pemex's export collapse signals a structural production crisis and reduces a critical source of federal revenue."
-        }
-      ],
-      "image": "https://elceo.com/wp-content/uploads/2026/08/pemex_exportaciones_1s26.jpg",
-      "imgTries": 1,
-      "background": "Pemex is not financially separate from the federal government, and its persistent shortfall against Sheinbaum's 1.8 million barrel a day production target is one of the reasons Moody's holds Mexico on the last investment grade rung, citing the cost of propping up the state oil company.",
-      "view": "The export collapse matters less as an oil story than as a fiscal one. Falling exports mean less dollar revenue for a company the state already subsidizes, and every peso spent covering that gap competes with the electricity, water and security spending that new factories need, since broad public debt is already climbing toward near 54.7% of GDP in 2026.",
-      "prediction": "The likely path is more federal support or refinancing for Pemex to offset the lost export revenue, not a near-term production turnaround. That would be wrong if Pemex output moves toward the 1.8 million barrel a day target or exports rebound without additional state backing.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-m-xico-gana-arbitraje-internacional-as-se-salv-de-pa-2026-08-05",
-      "date": "2026-08-05",
-      "section": "us-mexico",
-      "title": "Mexico wins international arbitration case and avoids 219 million dollar payment to US investors",
-      "why": "Mexico prevailed at ICSID against claims by two US investment funds, avoiding a material award. The ruling reinforces Mexico's capacity to defend itself in investor-state disputes.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/05/mexico-gana-arbitraje-internacional-asi-evito-pagar-219-millones-de-dolares-a-fondos-de-eu/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-06T01:03:32.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/05/mexico-gana-arbitraje-internacional-asi-evito-pagar-219-millones-de-dolares-a-fondos-de-eu/",
-          "publishedAt": "2026-08-06T01:03:32.000Z",
-          "date": "2026-08-05",
-          "title": "Mexico wins international arbitration case and avoids 219 million dollar payment to US investors",
-          "summary": "Mexico prevailed at ICSID against claims by two US investment funds, avoiding a material award. The ruling reinforces Mexico's capacity to defend itself in investor-state disputes."
-        }
-      ]
-    },
-    {
-      "id": "n-m-xico-puede-construir-su-modelo-regulatorio-de-ia-r-2026-08-05",
-      "date": "2026-08-05",
-      "section": "politics",
-      "title": "Mexico's Senate advances flexible regulatory framework for artificial intelligence",
-      "why": "Lawmakers are building a domestic AI governance model rather than importing foreign standards. Early adoption of clear rules could position Mexico as a low-friction base for AI infrastructure and R&D within North America.",
-      "company": "",
-      "source": "DPL News",
-      "url": "https://dplnews.com/mexico-construir-modelo-regulatorio-ia-rolando-zapata/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-05T22:36:52.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "DPL News",
-          "url": "https://dplnews.com/mexico-construir-modelo-regulatorio-ia-rolando-zapata/",
-          "publishedAt": "2026-08-05T22:36:52.000Z",
-          "date": "2026-08-05",
-          "title": "Mexico's Senate advances flexible regulatory framework for artificial intelligence",
-          "summary": "Lawmakers are building a domestic AI governance model rather than importing foreign standards. Early adoption of clear rules could position Mexico as a low-friction base for AI infrastructure and R&D within North America."
-        }
-      ]
-    },
-    {
-      "id": "n-pemex-destina-84-millones-de-d-lares-a-coberturas-fi-2026-08-05",
-      "date": "2026-08-05",
-      "section": "money",
-      "title": "Pemex deploys 84 million dollars in financial hedges against oil price and crack spread volatility",
-      "why": "The hedging strategy protects Pemex's cash flow from commodity price swings, a necessary but costly measure that signals management's expectation of continued volatility in crude and fuel markets.",
-      "company": "Pemex",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/05/pemex-destina-84-millones-de-dolares-a-coberturas-financieras-por-volatilidad-de-precios/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-05T22:28:25.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/05/pemex-destina-84-millones-de-dolares-a-coberturas-financieras-por-volatilidad-de-precios/",
-          "publishedAt": "2026-08-05T22:28:25.000Z",
-          "date": "2026-08-05",
-          "title": "Pemex deploys 84 million dollars in financial hedges against oil price and crack spread volatility",
-          "summary": "The hedging strategy protects Pemex's cash flow from commodity price swings, a necessary but costly measure that signals management's expectation of continued volatility in crude and fuel markets."
-        }
-      ]
-    },
-    {
-      "id": "n-filiales-de-pemex-y-cfe-deber-n-transparentar-estado-2026-08-05",
-      "date": "2026-08-05",
-      "section": "politics",
-      "title": "Pemex and CFE subsidiaries must disclose financial statements and contracts",
-      "why": "New transparency rules require state energy companies and their affiliates to publish financial results, procurement contracts, and corporate governance information. The mandate expands accountability in two industries central to Mexico's fiscal health and investment climate.",
-      "company": "Pemex",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/filiales-de-pemex-y-cfe-deberan-transparentar-estados-financieros-y-contratos/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-05T17:39:47.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Filiales de Pemex y CFE deberán transparentar estados financieros y contratos",
-        "dek": "Pemex y CFE deberán publicar estados financieros, contratos e información de gobierno corporativo por nuevas reglas de transparencia. La publicación Filiales de Pemex y CFE deberán transparentar estados financieros y contratos apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/filiales-de-pemex-y-cfe-deberan-transparentar-estados-financieros-y-contratos/",
-          "publishedAt": "2026-08-05T17:39:47.000Z",
-          "date": "2026-08-05",
-          "title": "Pemex and CFE subsidiaries must disclose financial statements and contracts",
-          "summary": "New transparency rules require state energy companies and their affiliates to publish financial results, procurement contracts, and corporate governance information. The mandate expands accountability in two industries central to Mexico's fiscal health and investment climate."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 5,
-        "componentSource": "model"
-      }
     }
   ]
 }
