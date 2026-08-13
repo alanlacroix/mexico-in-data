@@ -578,6 +578,9 @@ THE VALUE TEST: every field must add something the headline and summary do not a
 - background: the one institution, rule, market structure, or durable fact a newcomer needs to follow this story. Usually one sentence, two only when the second adds scale.
 - view: verdict first. Explain the practical consequence, the mechanism that produces it, and the relevant tradeoff. Say who is affected. If the story leads with money, capacity, jobs, or another announcement number, use a supplied denominator or comparison. If none exists, do not call the number large, small, good, or important.
 - prediction: the most likely next outcome, followed by one observable event or condition that would confirm or weaken that view. Use a supplied date only when one exists. Distinguish an announcement from financing, permits, construction, enforcement, or operation.
+HARD LENGTH LIMITS: background is at most 45 words and 2 sentences. View is at most 60 words and 3 sentences. Prediction is at most 45 words and 2 sentences. Aim for 60 to 120 words across the complete unit, not per field.
+MISSING FIELDS: write only the fields named in missingFields for each item. For every other field return "" and []. This lets one bounded retry repair only what failed without rewriting approved work.
+PREDICTION SHAPE: state what is likely to happen, then use if, unless, confirm, or weaken to name the observable evidence that tests it. Both parts are required. Do not merely list what to watch.
 EVIDENCE REFERENCES: return one or two exact evidence IDs for each field in backgroundRefs, viewRefs, and predictionRefs. Cite only evidence actually supporting that field. A judgment may be an inference, but its mechanism must be supported. Unknown ID, unsupported number, or factual claim not supported by the cited evidence fails publication.
 If the evidence cannot support a field, return "" and [] for that field. That will block publication for review; inventing or padding is worse.
 Briefly Explained is not written in the first person. Do not use I, me, my, we, or our. Start with the actual actor, event, or outcome. Do not mechanically begin predictions with "The base case is" or follow with "That view would change if". Those phrases may appear once in a batch if they are genuinely the clearest wording, but repeated openers are a publication failure. First person is not part of the publication voice.
@@ -617,7 +620,7 @@ ${BAN}`;
     effort,
     priority: 'core',
   });
-  const CAPS = { background: [70, 4], view: [85, 5], prediction: [65, 4] };
+  const CAPS = { background: [45, 2], view: [60, 3], prediction: [45, 2] };
   let added = 0;
   const completed = new Set();
   const applyDraft = (out, batch) => {
@@ -697,7 +700,7 @@ ${BAN}`;
   let retryReturned = false;
   if (retryItems.length && budgetStatus('core').available) {
     console.warn(`  analysis retry: ${retryItems.length} selected ${retryItems.length === 1 ? 'story' : 'stories'} did not clear all three fields`);
-    retryReturned = applyDraft(await request(retryItems, 'medium', 4000), retryItems);
+    retryReturned = applyDraft(await request(retryItems, 'medium', 7000), retryItems);
   }
   if (!firstReturned && !retryReturned) console.warn('  analysis: no model result — selected stories remain unpublished');
   return {

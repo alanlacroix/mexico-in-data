@@ -19,6 +19,9 @@ const collectorBlock = happening.match(
 const validationBlock = happening.match(
   /- name: Validate generated editorial claims[\s\S]*?(?=\n      - name: Write this edition's publication receipt)/,
 )?.[0] || '';
+const blockedSpendBlock = happening.match(
+  /- name: Preserve model spend when publication is blocked[\s\S]*?(?=\n      - name: Write this edition's publication receipt)/,
+)?.[0] || '';
 
 const alertWrite = 'fs.writeFileSync(ALERTS, JSON.stringify(alerts, null, 2));';
 assert.equal(run.split(alertWrite).length - 1, 1, 'the current alert ledger must be written exactly once');
@@ -111,6 +114,10 @@ assert.doesNotMatch(
   /git show HEAD:data|build-happening|build-brief|build-areas|build-companies|ANTHROPIC_API_KEY/,
   'validation must never restore old files or launch a second hidden publication pipeline',
 );
+assert.match(blockedSpendBlock, /if: failure\(\)[\s\S]*git add data\/llm-spend\.json/,
+  'a blocked edition must preserve its real model spend before the job exits');
+assert.doesNotMatch(blockedSpendBlock, /git add[^\n]*(?:data\/brief|data\/happening|data\/news)/,
+  'failure accounting must never publish editorial data from a blocked edition');
 assert.match(
   happening,
   /git add[^\n]*data\/news\/[^\n]*data\/event-status\.json[^\n]*data\/brief\.json[^\n]*data\/publication-status\.json/,
