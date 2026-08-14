@@ -1,8 +1,8 @@
 // Build the homepage brief from the latest reviewed events.
 // The optional model may only synthesize the selected titles and context. Every card keeps
 // its source link and event ref; a failed synthesis gets a plain headline fallback. The brief
-// uses a rolling window so it does not become empty at midnight or turn one early article into
-// the whole day. The wider fallback is capped and every story keeps its publication date.
+// separates exact-day reporting from consequential prior-day context. The combined edition
+// is capped at five and every story keeps its publication date and lane.
 
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -13,18 +13,20 @@ import briefStanding from './lib/brief-standing.cjs';
 import { lintReportText, reportContextDistinct } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
-import newsWindow from './lib/news-window.cjs';
 import plainLanguage from './lib/plain-language.cjs';
 import briefSelection from './lib/brief-selection.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
+import freshnessContract from './lib/freshness-contract.cjs';
 
 const { editorialDay } = newsDay;
 const { board, buildStanding } = briefStanding;
 const { groupEvents, sameThread } = newsThreads;
-const { DEFAULT_WINDOW_HOURS, FALLBACK_WINDOW_HOURS, recentEvents } = newsWindow;
+const DEFAULT_WINDOW_HOURS = 36;
+const CARRYOVER_WINDOW_HOURS = 60;
 const { plainExplanation, plainHeadline } = plainLanguage;
-const { optionalAnalysis, selectDailyBrief } = briefSelection;
+const { optionalAnalysis, selectEditionBrief } = briefSelection;
 const { evidenceInputs } = reportEvidence;
+const { curationReadiness } = freshnessContract;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -36,10 +38,10 @@ const fingerprint = (value) => createHash('sha256').update(JSON.stringify(value)
 
 // ---- the referenceable pool: recent events + standing facts + board numbers ----
 function pool(now = new Date()) {
-  const events = arr(readJson(D('happening.json'), { events: [] }).events);
+  const happening = readJson(D('happening.json'), { meta: {}, events: [] });
   return {
-    recent: recentEvents(events, now, DEFAULT_WINDOW_HOURS),
-    fallback: recentEvents(events, now, FALLBACK_WINDOW_HOURS),
+    events: arr(happening.events),
+    curation: happening.meta?.curation || null,
     nums: board(),
   };
 }
@@ -91,13 +93,14 @@ const interestTags = (e) => {
   const hay = `${e.title || ''} ${e.why || ''} ${e.reportEvidence?.title || ''} ${e.reportEvidence?.dek || ''} ${e.section || ''}`;
   return INTERESTS.filter((x) => x.rx.test(hay)).map((x) => x.tag);
 };
-function select(events) {
+function select(events, editorialDate) {
   const candidates = groupEvents(events).map((group) => ({
     ...group.event,
     importance: group.importance,
     coverage: group.coverage,
   }));
-  const result = selectDailyBrief(candidates, {
+  const result = selectEditionBrief(candidates, {
+    editorialDate,
     effectiveImportance: effImp,
     interestTags,
     scheduledMatch: (event) => Boolean(event.scheduledEventId),
@@ -118,8 +121,9 @@ function select(events) {
     _tags: interestTags(event),
     _effectiveImportance: effImp(event),
     _selectionReason: receiptById.get(event.id)?.reason || '',
+    _lane: receiptById.get(event.id)?.lane || 'today',
   }));
-  return { picked, receipt: result.receipt };
+  return { picked, receipt: result.receipt, counts: result.counts, carryoverDate: result.carryoverDate };
 }
 
 function assertUniqueEvents(events) {
@@ -159,23 +163,17 @@ async function main() {
   const editorialDate = editorialDay(now);
   console.log(`\nbuild-brief · ${hasLLM() ? 'llm available (drafts only, gated)' : 'no llm — human context'}`);
   const P = pool(now);
+  const freshness = curationReadiness(P.curation, editorialDate, { allowMissing: true });
+  if (!freshness.ok) throw new Error(`today's curation is incomplete: ${freshness.reason}`);
 
   // The prior brief (the last content-changed version): powers the "new since your last
   // visit" delta and the change-gated clock below.
   const prev = readJson(OUT, null);
   const prevHrefs = new Set([prev && prev.lead && prev.lead.href, ...arr(prev && prev.items).map((i) => i.href)].filter(Boolean));
 
-  let windowHours = DEFAULT_WINDOW_HOURS;
-  let selection = select(P.recent);
-  let picked = selection.picked;
-  if (picked.length < 3) {
-    const wider = select(P.fallback);
-    if (wider.picked.length > picked.length) {
-      selection = wider;
-      picked = wider.picked;
-      windowHours = FALLBACK_WINDOW_HOURS;
-    }
-  }
+  const selection = select(P.events, editorialDate);
+  const picked = selection.picked;
+  const windowHours = selection.counts.keyDevelopments ? CARRYOVER_WINDOW_HOURS : DEFAULT_WINDOW_HOURS;
   if (!picked.length) {
     // A quiet edition says so plainly. Never relabel yesterday's claims as today's:
     // those stories cannot appear in today's selection receipt and must not be certified.
@@ -189,10 +187,12 @@ async function main() {
         generatedAt: now.toISOString(), mode: 'curated', count: 0, words: 8,
         windowHours,
         selection: {
-          policy: 'importance-first-v1',
+          policy: 'exact-day-plus-carryover-v1',
           receipt: selection.receipt,
           lockedIds: [],
           empty: true,
+          lanes: selection.counts,
+          carryoverDate: selection.carryoverDate,
           scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
         },
       },
@@ -238,9 +238,11 @@ async function main() {
     reason: e._selectionReason || '',
   });
   const lead = { h1: plainHeadline(stripDash(lead0.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(lead0)), ...pass4(lead0), refs: [lead0.id],
-    href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', isNew: isNew(lead0), ranking: rankOf(lead0, 0) };
+    href: lead0.url || '', source: lead0.source || '', date: lead0.date || '', section: lead0.section || '', lane: lead0._lane,
+    isNew: isNew(lead0), ranking: rankOf(lead0, 0) };
   const items = picked.slice(1).map((e, i) => ({ headline: plainHeadline(stripDash(e.title)).replace(/\.\s*$/, ''), context: plainExplanation(ctxOf(e)), ...pass4(e),
-    refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', isNew: isNew(e), ranking: rankOf(e, i + 1) }));
+    refs: [e.id], href: e.url || '', source: e.source || '', date: e.date || '', section: e.section || '', lane: e._lane,
+    isNew: isNew(e), ranking: rankOf(e, i + 1) }));
   // Last line of defense: a regression upstream must fail the build instead of putting
   // two cards for the same event on the public Brief.
   assertUniqueEvents([lead, ...items]);
@@ -259,7 +261,7 @@ async function main() {
   // Hold the editorial clock only when every visible story field is unchanged. generatedAt
   // still records the actual build time for operations and health checks.
   const contentSig = fingerprint([lead, ...items].map((it) => [
-    it.href, it.date, it.h1 || it.headline, it.context, it.source,
+    it.href, it.date, it.lane, it.h1 || it.headline, it.context, it.source,
     it.background, it.view, it.prediction, it.analysisV, it.analysisRefs, it.analysisSources, it.implications, it.next,
   ]));
   const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig && prev.meta.editorialDate === editorialDate;
@@ -274,9 +276,11 @@ async function main() {
     generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words, contentSig,
     windowHours,
     selection: {
-      policy: 'importance-first-v1',
+      policy: 'exact-day-plus-carryover-v1',
       receipt: selection.receipt,
       lockedIds: selectionOnly ? pickedIds : (lockedIds.length ? lockedIds : pickedIds),
+      lanes: selection.counts,
+      carryoverDate: selection.carryoverDate,
       scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
     } }, summary, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));

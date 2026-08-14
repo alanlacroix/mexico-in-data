@@ -19,12 +19,14 @@ import newsWindow from './lib/news-window.cjs';
 import scheduleCoverage from './lib/schedule-coverage.cjs';
 import briefReadinessPolicy from './lib/brief-readiness.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
+import freshnessContract from './lib/freshness-contract.cjs';
 
 const { editorialDay } = newsDay;
 const { eventTimestamp } = newsWindow;
 const { validateScheduleCoverage } = scheduleCoverage;
 const { briefReadiness } = briefReadinessPolicy;
 const { evidenceInputs } = reportEvidence;
+const { curationReadiness } = freshnessContract;
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
@@ -167,11 +169,31 @@ try {
   }
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
   const explanationReadiness = briefReadiness(brief);
+  const selectionPolicy = brief.meta?.selection?.policy;
   const expectedContentSig = createHash('sha256').update(JSON.stringify(claims.map((claim) => [
-    claim.href, claim.date, claim.h1 || claim.headline, claim.context, claim.source,
+    claim.href, claim.date,
+    ...(selectionPolicy === 'exact-day-plus-carryover-v1' ? [claim.lane] : []),
+    claim.h1 || claim.headline, claim.context, claim.source,
     claim.background, claim.view, claim.prediction, claim.analysisV, claim.analysisRefs, claim.analysisSources, claim.implications, claim.next,
   ]))).digest('hex');
   if (!validPeriod(brief.meta?.editorialDate || '')) fails.push('brief: meta.editorialDate is missing or invalid');
+  const priorDate = (() => {
+    const date = new Date(`${brief.meta?.editorialDate}T12:00:00Z`);
+    date.setUTCDate(date.getUTCDate() - 1);
+    return Number.isFinite(date.getTime()) ? date.toISOString().slice(0, 10) : '';
+  })();
+  if (selectionPolicy === 'exact-day-plus-carryover-v1') {
+    const curation = happening.meta?.curation;
+    const freshness = curationReadiness(curation, brief.meta?.editorialDate);
+    if (!freshness.ok) fails.push(`brief: fresh-story curation is incomplete (${freshness.reason})`);
+    const laneCounts = brief.meta?.selection?.lanes || {};
+    const actualToday = claims.filter((claim) => claim.lane === 'today').length;
+    const actualKey = claims.filter((claim) => claim.lane === 'key-development').length;
+    if (Number(laneCounts.today) !== actualToday || Number(laneCounts.keyDevelopments) !== actualKey
+        || Number(laneCounts.total) !== claims.length) {
+      fails.push('brief: story-lane counts do not match the visible selection');
+    }
+  }
   if (!claims.length && (!brief.meta?.quiet || !String(brief.summary || '').trim())) {
     fails.push('brief: an empty day must be marked quiet and include an honest empty-state summary');
   }
@@ -197,6 +219,15 @@ try {
     if (!Array.isArray(claim.refs) || !claim.refs.length) fails.push(`brief: claim ${index + 1} has no evidence ref`);
     for (const ref of claim.refs || []) if (!ids.has(ref)) fails.push(`brief: evidence ref ${ref} is absent from happening.json`);
     if (claim.date > brief.meta?.editorialDate) fails.push(`brief: claim ${index + 1} is future-dated ${claim.date}`);
+    if (selectionPolicy === 'exact-day-plus-carryover-v1') {
+      if (claim.lane === 'today' && claim.date !== brief.meta.editorialDate) {
+        fails.push(`brief: today's claim ${index + 1} is dated ${claim.date}`);
+      } else if (claim.lane === 'key-development' && claim.date !== priorDate) {
+        fails.push(`brief: carryover claim ${index + 1} is dated ${claim.date}, expected ${priorDate}`);
+      } else if (!['today', 'key-development'].includes(claim.lane)) {
+        fails.push(`brief: claim ${index + 1} has no valid story lane`);
+      }
+    }
     const builtAt = Date.parse(brief.meta?.generatedAt);
     const maxAge = (Number(brief.meta?.windowHours) || 36) * 60 * 60 * 1000;
     const backedInWindow = (claim.refs || []).some((ref) => {

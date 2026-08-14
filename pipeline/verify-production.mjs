@@ -31,12 +31,20 @@ export async function checkProduction() {
   const brief = await get('/data/brief.json');
   if (brief.meta?.editorialDate !== EXPECTED_DATE) throw new Error(`live brief date is ${brief.meta?.editorialDate || 'missing'}`);
   if (!Array.isArray(brief.items) || brief.items.length > 4) throw new Error('live brief has an invalid story set');
-  if (brief.meta?.selection?.policy !== 'importance-first-v1'
+  if (brief.meta?.selection?.policy !== 'exact-day-plus-carryover-v1'
       || !Array.isArray(brief.meta?.selection?.receipt)) {
     throw new Error('live brief is missing its selection audit');
   }
   if (brief.meta.selection.receipt.some((row) => /analysis/i.test(String(row.reason || '')))) {
     throw new Error('live brief selection still depends on optional analysis');
+  }
+  const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
+  if (claims.some((claim) => claim.lane === 'today' && claim.date !== EXPECTED_DATE)) {
+    throw new Error("live Today's stories include a claim from another date");
+  }
+  const curation = status.curation;
+  if (curation?.editorialDate !== EXPECTED_DATE || curation.complete !== true) {
+    throw new Error('live edition has no complete fresh-story curation receipt');
   }
   const eventStatus = await get('/data/event-status.json');
   if (eventStatus.meta?.editorialDate !== EXPECTED_DATE) throw new Error('live scheduled-outcome audit has the wrong date');

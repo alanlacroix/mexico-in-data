@@ -30,6 +30,16 @@ assert.equal(dailyBrief.editorialDate, briefFile.meta.editorialDate,
   'a carried Brief must keep its actual edition date instead of being relabelled as today');
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
 assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
+assert.ok(dailyBrief.todayStories.every((story) => story.date === dailyBrief.editorialDate),
+  "Today's stories must contain only exact-day reporting");
+assert.equal(dailyBrief.todayStories.length + dailyBrief.keyDevelopments.length, dailyBrief.stories.length,
+  'the two visible lanes must partition the one selected story set');
+if (briefFile.meta?.selection?.policy === 'exact-day-plus-carryover-v1') {
+  const prior = new Date(`${dailyBrief.editorialDate}T12:00:00Z`);
+  prior.setUTCDate(prior.getUTCDate() - 1);
+  assert.ok(dailyBrief.keyDevelopments.every((story) => story.date === prior.toISOString().slice(0, 10)),
+    'new editions may carry only important stories from the immediately preceding day');
+}
 assert.equal(
   dailyBrief.latestItemDate,
   dailyBrief.stories.map((story) => story.date).filter(Boolean).sort().at(-1) || '',
@@ -72,7 +82,10 @@ const nextDay = new Date(`${lastBriefDate}T12:00:00Z`);
 nextDay.setUTCDate(nextDay.getUTCDate() + 1);
 const carriedBrief = dailyBriefFactory(nextDay);
 assert.equal(carriedBrief.carryingLastBrief, true, 'a failed next-day refresh must keep the last successful brief visible');
-assert.ok(carriedBrief.stories.length > 0, 'the last successful brief must not disappear during a short workflow failure');
+assert.equal(carriedBrief.todayStories.length, 0, 'a carried edition must not call any prior story today');
+assert.equal(carriedBrief.keyDevelopments.length, carriedBrief.stories.length, 'a carried edition belongs entirely under Key developments');
+assert.equal(carriedBrief.keyDevelopments.length, dailyBrief.todayStories.length,
+  'only exact-day stories from the prior edition may carry into the next day');
 assert.match(carriedBrief.windowLabel, /Latest brief/, 'carried developments must not be presented as a fresh rolling window');
 const staleNow = new Date('2099-12-31T12:00:00Z');
 const staleBrief = dailyBriefFactory(staleNow);
@@ -393,7 +406,7 @@ assert.match(eleventyConfig, /setNunjucksEnvironmentOptions\(\{\s*autoescape:\s*
 // versioned analysis for it, and the panel does not render without one.
 assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, complete analysis may expose the disclosure');
 // This week is a reading list (Alan, 2026-08-02): wire cards must never render a
-// Briefly explained panel. The analysis layer exists only under Key developments,
+// Briefly explained panel. The analysis layer exists only under the selected story lanes,
 // so the week loop must not reference item.why / item.bg / item.view at all.
 {
   const weekBlock = homepageTemplate.slice(homepageTemplate.indexOf('id="sec-week"'), homepageTemplate.indexOf('id="sec-coming"'));
@@ -401,9 +414,9 @@ assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, compl
   assert.doesNotMatch(weekBlock, /be-btn|be-panel/, 'week cards must not render BE controls');
 }
 // The brief still comes before the stories it summarises.
-assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf('id="sec-stories"'), 'the Brief must render before key developments');
+assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf('for storySection in f.storySections'), 'the Brief must render before the selected stories');
 assert.doesNotMatch(briefBuilder, /analysisReady\(e\)/, 'analysis readiness must never decide whether a story enters key developments');
-assert.match(briefBuilder, /selectDailyBrief\(candidates/, 'key developments must use the auditable importance-first selector');
+assert.match(briefBuilder, /selectEditionBrief\(candidates/, 'the two story lanes must share the auditable importance-first selector');
 assert.doesNotMatch(briefBuilder, /BIG_MONEY|bigCapital/, 'a dollar-amount regex must not override the audited importance rubric');
 assert.doesNotMatch(briefBuilder, /priorApproved|carriedForward/,
   'a quiet edition must never recertify the prior story set as today');
@@ -427,6 +440,10 @@ assert.match(happeningBuilder, /SCHEDULED OUTCOMES \(hard requirement\)[\s\S]*SE
   'the curator must treat an unchanged scheduled decision as a required new outcome');
 assert.match(happeningBuilder, /ASSESS EVERY candidate[\s\S]*decisionCoverage\(cands\.length, out\.decisions\)[\s\S]*throw new Error\(`curation decision receipt is incomplete/,
   'the curator must account for every candidate in its bounded batch instead of silently omitting one');
+assert.match(happeningBuilder, /freshCandidateCount:[\s\S]*complete: Boolean\(details\.complete\)/,
+  'the event log must retain whether fresh exact-day candidates were fully assessed');
+assert.match(briefBuilder, /curationReadiness\(P\.curation, editorialDate[\s\S]*curation is incomplete/,
+  'the Brief must fail closed rather than advance the dateline after failed fresh-story curation');
 assert.match(briefBuilder, /optionalAnalysis\(e\)/, 'the brief builder must expose approved analysis atomically');
 
 console.log('homepage-feed-contract: ok');

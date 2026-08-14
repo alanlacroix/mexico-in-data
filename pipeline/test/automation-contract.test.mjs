@@ -83,6 +83,11 @@ assert.match(
   'a publication receipt must refuse to certify a brief from another editorial day',
 );
 assert.match(
+  receiptWriter,
+  /curationReadiness\(curation, editorialDate\)[\s\S]*Fresh-story curation incomplete/,
+  'a publication receipt must refuse to certify a date whose fresh candidates were not fully assessed',
+);
+assert.match(
   happening,
   /node collect-news\.js[\s\S]*node build-happening\.js[\s\S]*node reconcile-scheduled-events\.mjs[\s\S]*node build-brief\.js/,
   'each editorial pass must refresh the primary RSS ledger before reconsidering the brief',
@@ -140,7 +145,7 @@ assert.match(
 );
 assert.match(
   productionVerifier,
-  /selection\?\.policy !== 'importance-first-v1'[\s\S]*get\('\/data\/event-status\.json'\)[\s\S]*blockers/,
+  /selection\?\.policy !== 'exact-day-plus-carryover-v1'[\s\S]*get\('\/data\/event-status\.json'\)[\s\S]*blockers/,
   'production verification must require the ranking receipt and a blocker-free scheduled-outcome audit',
 );
 // The homepage stopped carrying a data-editorial-date attribute in the 2026-08-02

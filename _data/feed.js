@@ -160,8 +160,8 @@ function buildFeed(locale = 'en') {
     };
   });
 
-  // ---- Key developments ---------------------------------------------------
-  const stories = brief.stories.map((story) => ({
+  // ---- Today's stories + prior-day key developments ----------------------
+  const storyCard = (story) => ({
     id: story.id,
     chip: chipFor(story.title),
     date: monthDay(story.date),
@@ -182,7 +182,14 @@ function buildFeed(locale = 'en') {
       && story.analysisSources?.some((source) => source?.kind !== 'article'
         && /^https:\/\//i.test(String(source?.url || '')))),
     analysisSources: story.analysisSources || [],
-  }));
+  });
+  const todayStories = brief.todayStories.map(storyCard);
+  const keyDevelopments = brief.keyDevelopments.map(storyCard);
+  const stories = [...todayStories, ...keyDevelopments];
+  const storySections = [
+    { id: 'today-stories', kind: 'today', latest: todayStories[0]?.date || '', stories: todayStories },
+    { id: 'key-developments', kind: 'key', latest: keyDevelopments[0]?.date || '', stories: keyDevelopments },
+  ].filter((section) => section.stories.length);
 
   // ---- This week -----------------------------------------------------------
   // This week is a curated reading list, not an analysis surface (Alan,
@@ -312,6 +319,9 @@ function buildFeed(locale = 'en') {
     latestStoryDate: monthDay(brief.latestItemDate),
     numbers,
     stories,
+    todayStories,
+    keyDevelopments,
+    storySections,
     week: weekItems,
     weekLabel: week.weekLabel,
     upcoming,

@@ -7,6 +7,7 @@
 const DEFAULT_MIN_IMPORTANCE = 5;
 const DEFAULT_SOFT_FLOOR = 3;
 const DEFAULT_CAP = 5;
+const DEFAULT_CARRYOVER_MIN_IMPORTANCE = 6;
 // v9 adds separately retained context beyond the original article plus an independent claim audit.
 // Older prose is never mistaken for the current product when an event returns.
 const ANALYSIS_VERSION = 9;
@@ -232,9 +233,80 @@ function selectDailyBrief(candidates, options = {}) {
   };
 }
 
+function previousDay(iso) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(clean(iso))) return '';
+  const date = new Date(`${iso}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() - 1);
+  return date.toISOString().slice(0, 10);
+}
+
+/**
+ * Build one five-story edition without blurring the dateline.
+ *
+ * Exact-day developments get first access to the edition. Only consequential
+ * stories from the immediately preceding day may fill unused slots. Keeping the
+ * two lanes in one locked selection means Briefly Explained still targets every
+ * visible story while the homepage can label each lane honestly.
+ */
+function selectEditionBrief(candidates, options = {}) {
+  const events = Array.isArray(candidates) ? candidates : [];
+  const editorialDate = clean(options.editorialDate);
+  const carryoverDate = previousDay(editorialDate);
+  const cap = Math.max(0, Math.floor(finiteNumber(options.cap, DEFAULT_CAP)));
+  const dateOf = typeof options.dateOf === 'function'
+    ? options.dateOf : (event) => clean(event && event.date);
+  const shared = { ...options };
+  delete shared.editorialDate;
+  delete shared.dateOf;
+  delete shared.carryoverMinImportance;
+
+  const today = selectDailyBrief(events.filter((event) => dateOf(event) === editorialDate), {
+    ...shared,
+    cap,
+    softFloor: Math.min(cap, Math.max(0, Math.floor(finiteNumber(options.softFloor, DEFAULT_SOFT_FLOOR)))),
+  });
+  const remaining = Math.max(0, cap - today.selected.length);
+  const carryover = selectDailyBrief(events.filter((event) => dateOf(event) === carryoverDate), {
+    ...shared,
+    minImportance: finiteNumber(options.carryoverMinImportance, DEFAULT_CARRYOVER_MIN_IMPORTANCE),
+    softFloor: 0,
+    cap: remaining,
+  });
+
+  const selected = [...today.selected, ...carryover.selected];
+  const globalRank = new Map(selected.map((event, index) => [receiptId(event, index), index + 1]));
+  const receipt = [
+    ...today.receipt.map((row) => ({
+      ...row,
+      lane: 'today',
+      laneRank: row.rank,
+      rank: row.selected ? globalRank.get(row.id) : null,
+    })),
+    ...carryover.receipt.map((row) => ({
+      ...row,
+      lane: 'key-development',
+      laneRank: row.rank,
+      rank: row.selected ? globalRank.get(row.id) : null,
+    })),
+  ];
+
+  return {
+    selected,
+    receipt,
+    editorialDate,
+    carryoverDate,
+    counts: {
+      today: today.selected.length,
+      keyDevelopments: carryover.selected.length,
+      total: selected.length,
+    },
+  };
+}
+
 module.exports = {
   ANALYSIS_VERSION,
   analysisState,
   optionalAnalysis,
   selectDailyBrief,
+  selectEditionBrief,
 };

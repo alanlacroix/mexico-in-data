@@ -77,6 +77,7 @@ const KEEP_DAYS = 60;        // the stored log holds a rolling ~60-day window (o
 const MAX_STORE = 60;        // hard cap on stored entries
 const MAX_NEW = 16;          // model returns at most this many new events per run
 const MAX_CANDIDATES = 24;   // small enough for one exhaustive decision per row; attention priority protects consequential older items.
+const CURATION_MAX_TOKENS = 6000; // enough for 24 compact decisions; the old 16k ceiling falsely exhausted the monthly guard.
 
 const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
 
@@ -263,10 +264,42 @@ function curateFallback(cands, now) {
   return out;
 }
 
+function curationResult(cands, now, events, details = {}) {
+  const editorialDate = editorialDay(now);
+  const freshCandidates = cands.filter((candidate) => editorialDay(candidate.published_at) === editorialDate
+    && !candidate._alreadyPublished);
+  return {
+    events,
+    receipt: {
+      policy: 'exact-day-assessment-v1',
+      editorialDate,
+      candidateCount: cands.length,
+      freshCandidateCount: freshCandidates.length,
+      assessedCount: Number(details.assessedCount) || 0,
+      keptCount: events.length,
+      mode: details.mode || 'unknown',
+      complete: Boolean(details.complete),
+      reason: details.reason || '',
+    },
+  };
+}
+
 // ---- assess every candidate, then rank + write, via the model (fail-soft) ----
 async function curate(cands, now) {
-  if (!cands.length) return [];
-  if (!hasLLM()) return curateFallback(cands, now);
+  if (!cands.length) return curationResult(cands, now, [], {
+    mode: 'no-candidates', complete: true, assessedCount: 0,
+  });
+  if (!hasLLM()) {
+    const fallback = curateFallback(cands, now);
+    const freshCount = cands.filter((candidate) => editorialDay(candidate.published_at) === editorialDay(now)
+      && !candidate._alreadyPublished).length;
+    return curationResult(cands, now, fallback, {
+      mode: 'deterministic-fallback',
+      complete: freshCount === 0,
+      assessedCount: 0,
+      reason: freshCount ? 'fresh candidates were not assessed by the curator' : '',
+    });
+  }
   // Anthropic structured outputs reject minimum/maximum on integers. Code clamps
   // every returned component below, so the provider schema only describes shape.
   const SCORE = { type: 'integer' };
@@ -315,8 +348,19 @@ ${BAN}`;
   // The response is deliberately exhaustive. A model omission is a failed curation
   // contract, not an invisible editorial decision. Keeping the input to 24 makes the
   // one-row-per-candidate receipt cheaper than repeatedly rescoring a 50-item backlog.
-  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: 16000, effort: 'low', model: models.HAIKU, priority: 'core' });
-  if (!out || !Array.isArray(out.decisions)) { console.warn('  curate: no model result — deterministic fallback'); return curateFallback(cands, now); }
+  const out = await askJSON({ system, user: JSON.stringify(payload), schema, maxTokens: CURATION_MAX_TOKENS, effort: 'low', model: models.HAIKU, priority: 'core' });
+  if (!out || !Array.isArray(out.decisions)) {
+    console.warn('  curate: no model result — deterministic fallback');
+    const fallback = curateFallback(cands, now);
+    const freshCount = cands.filter((candidate) => editorialDay(candidate.published_at) === editorialDay(now)
+      && !candidate._alreadyPublished).length;
+    return curationResult(cands, now, fallback, {
+      mode: 'deterministic-fallback',
+      complete: freshCount === 0,
+      assessedCount: 0,
+      reason: freshCount ? 'fresh candidates were not assessed by the curator' : '',
+    });
+  }
   const coverage = decisionCoverage(cands.length, out.decisions);
   if (!coverage.ok) {
     throw new Error(`curation decision receipt is incomplete: missing=${coverage.missing.join(',') || 'none'} duplicate=${coverage.duplicates.join(',') || 'none'} invalid=${coverage.invalid.join(',') || 'none'}`);
@@ -358,7 +402,14 @@ ${BAN}`;
     ev.importanceProvenance = scored.importanceProvenance;
     events.push(ev);
   }
-  return events.slice(0, MAX_NEW);
+  const published = events.slice(0, MAX_NEW);
+  const rejectedKeeps = kept.length - published.length;
+  return curationResult(cands, now, published, {
+    mode: 'model',
+    complete: rejectedKeeps === 0,
+    assessedCount: assessed.length,
+    reason: rejectedKeeps ? `${rejectedKeeps} selected event(s) failed the copy gate` : '',
+  });
 }
 
 // ---- BRIEFLY EXPLAINED: the required value-added layer for selected developments.
@@ -1052,7 +1103,8 @@ async function main() {
   const schedule = readJson(D('events.json'), { events: [] });
   const cands = candidates(now, existing.events, schedule);
   console.log(`  candidates ${cands.length} (last ${WINDOW_DAYS}d) · existing log ${arr(existing.events).length}`);
-  const fresh = await curate(cands, now);
+  const curation = await curate(cands, now);
+  const fresh = curation.events;
   console.log(`  curated ${fresh.length} fresh events`);
   const merged = attachScheduledMetadata(mergeLog(existing, fresh, now).events, schedule);
   // Curated framing stays human; referenced values are re-derived from the stored
@@ -1068,6 +1120,7 @@ async function main() {
       updated: editorialDay(now),
       source: 'The Mexico Brief', sourceUrl: 'https://mexicobrief.com/',
       count: events.length, generatedAt: now.toISOString(), llm: hasLLM(),
+      curation: curation.receipt,
     },
     events,
   };

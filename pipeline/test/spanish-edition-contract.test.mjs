@@ -30,7 +30,11 @@ if (!missing.length) {
   assert.equal(spanish.translationCarrying, true,
     'an incomplete translation must carry the last complete Spanish Brief');
   assert.equal(spanish.brief, snapshot.brief);
-  assert.equal(spanish.stories.length, snapshot.stories.length);
+  const visibleIds = new Set(english.stories.map((story) => story.id));
+  const visibleSnapshot = snapshot.editorialDate === english.date
+    ? snapshot.stories.filter((story) => visibleIds.has(story.id)) : snapshot.stories;
+  assert.equal(spanish.stories.length, visibleSnapshot.length,
+    'the Spanish snapshot must obey the same exact-day visibility filter as English');
   assert.equal(spanish.date, snapshot.editorialDate,
     'a carried Spanish Brief must keep its actual edition date');
 }

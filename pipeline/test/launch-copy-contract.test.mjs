@@ -40,14 +40,14 @@ assert.match(home, /data-sec="What moved"/, 'homepage must lead with the reading
 // Same bilingual move as above: the heading lives in uiStrings, the room in the template.
 assert.match(home, /data-sec="The economy"/, 'the slower official readings must keep their own room below the news');
 assert.match(text('_data/uiStrings.js'), /Where the economy stands/, 'the economy room must keep its EN title');
-// The Brief uses a rolling window. The heading must describe editorial importance,
-// never falsely claim that every selected article was published today.
-assert.match(text('_data/uiStrings.js'), /Key developments/, 'homepage must lead readers through the major stories without misdating them');
-assert.doesNotMatch(text('_data/uiStrings.js'), /Today\u2019s stories|storyCount:[^\n]*today/, 'rolling-window stories must never be labelled as today');
+// Exact-day reporting and prior-day context are separate rooms. This prevents a
+// Friday dateline from making a Thursday article look newly published.
+assert.match(text('_data/uiStrings.js'), /Today's stories/, 'homepage must name its exact-day story lane');
+assert.match(text('_data/uiStrings.js'), /Key developments/, 'homepage must keep important prior-day context in a separate lane');
 assert.doesNotMatch(home, /what moved today|lo que se movió hoy|What moved in Mexico: \{\{ editionDate|Qué se movió en México: \{\{ editionDate/i,
   'homepage metadata must not recertify rolling-window stories as today');
-assert.match(home, /\{\{ L\.stories \}\}/, 'the homepage must render the stories heading');
-assert.match(home, /L\.storyCount\(f\.stories\.length, f\.latestStoryDate\)/, 'the story count and newest source date must be derived from the data');
+assert.match(home, /for storySection in f\.storySections/, 'the homepage must render the two data-defined story lanes');
+assert.match(home, /L\.storyCount\(storySection\.stories\.length, storySection\.latest\)/, 'each lane count and date must be derived from its own stories');
 // The block is now labelled "The week" and its All view is the week's five (Alan,
 // 2026-08-02). What must not regress is that the deeper per-section feed still exists
 // on the homepage rather than moving to a separate page.

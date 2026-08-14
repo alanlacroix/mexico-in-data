@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import selection from '../lib/brief-selection.cjs';
 
-const { analysisState, optionalAnalysis, selectDailyBrief } = selection;
+const { analysisState, optionalAnalysis, selectDailyBrief, selectEditionBrief } = selection;
 
 const candidate = (id, importance, extra = {}) => ({
   id,
@@ -23,6 +23,39 @@ const approvedAnalysis = (extra = {}) => ({
   ...extra,
 });
 const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
+
+// An edition has two honest lanes. Exact-day stories get first access; only
+// importance-6+ stories from yesterday can fill unused slots, with five total.
+{
+  const result = selectEditionBrief([
+    candidate('today-a', 5, { date: '2026-08-14', publishedAt: '2026-08-14T13:00:00Z' }),
+    candidate('today-b', 6, { date: '2026-08-14', publishedAt: '2026-08-14T12:00:00Z' }),
+    candidate('yesterday-important', 9, { date: '2026-08-13', publishedAt: '2026-08-13T12:00:00Z' }),
+    candidate('yesterday-routine', 5, { date: '2026-08-13', publishedAt: '2026-08-13T13:00:00Z' }),
+    candidate('two-days-old', 10, { date: '2026-08-12', publishedAt: '2026-08-12T13:00:00Z' }),
+  ], { editorialDate: '2026-08-14' });
+  assert.deepEqual(result.selected.map((event) => event.id), [
+    'today-b', 'today-a', 'yesterday-important',
+  ]);
+  assert.equal(receiptFor(result, 'today-a').lane, 'today');
+  assert.equal(receiptFor(result, 'yesterday-important').lane, 'key-development');
+  assert.equal(receiptFor(result, 'yesterday-routine').selected, false);
+  assert.equal(receiptFor(result, 'two-days-old'), undefined, 'older stories must not leak through a rolling window');
+  assert.deepEqual(result.counts, { today: 2, keyDevelopments: 1, total: 3 });
+}
+
+{
+  const today = Array.from({ length: 4 }, (_, index) => candidate(`today-${index}`, 6, {
+    date: '2026-08-14', publishedAt: `2026-08-14T1${index}:00:00Z`,
+  }));
+  const prior = Array.from({ length: 4 }, (_, index) => candidate(`prior-${index}`, 8 - index, {
+    date: '2026-08-13', publishedAt: `2026-08-13T1${index}:00:00Z`,
+  }));
+  const result = selectEditionBrief([...today, ...prior], { editorialDate: '2026-08-14' });
+  assert.equal(result.selected.length, 5, 'today and carryovers must share one five-story cap');
+  assert.equal(result.counts.today, 4);
+  assert.equal(result.counts.keyDevelopments, 1);
+}
 
 // The August 6 failure mode: optional analysis must never decide whether a
 // factual event gets to compete. The higher-importance Banxico decision wins.

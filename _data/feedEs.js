@@ -43,7 +43,13 @@ const esRel = (rel) => {
 module.exports = function () {
   const f = feed.forLocale('es');
   const briefFeed = resolveSpanishBrief(f, cache, snapshot);
-  const translatedStories = briefFeed.stories.map((s) => ({ ...s, date: esDate(s.date), cat: cat(s.cat) }));
+  const currentVisibleIds = new Set(f.stories.map((story) => story.id));
+  const translatedStories = briefFeed.stories
+    .filter((story) => briefFeed.editorialDate !== f.date || currentVisibleIds.has(story.id))
+    .map((s) => ({ ...s, date: esDate(s.date), cat: cat(s.cat) }));
+  const carrying = Boolean(f.carrying || briefFeed.translationCarrying);
+  const todayStories = carrying ? [] : translatedStories.filter((story) => story.lane === 'today');
+  const keyDevelopments = translatedStories.filter((story) => !todayStories.includes(story));
   const translatedWeek = f.week.map((w) => ({
     ...w,
     date: esDate(w.date),
@@ -57,7 +63,7 @@ module.exports = function () {
     ...f,
     date: briefFeed.editorialDate,
     updated: briefFeed.updated,
-    carrying: Boolean(f.carrying || briefFeed.translationCarrying),
+    carrying,
     translationCarrying: briefFeed.translationCarrying,
     brief: briefFeed.brief,
     briefSources: briefFeed.briefSources || [],
@@ -70,6 +76,12 @@ module.exports = function () {
       why: [ui.maps.meaning[n.id], t(n.compare)].filter(Boolean).join(' '),
     })),
     stories: translatedStories,
+    todayStories,
+    keyDevelopments,
+    storySections: [
+      { id: 'today-stories', kind: 'today', latest: todayStories[0]?.date || '', stories: todayStories },
+      { id: 'key-developments', kind: 'key', latest: keyDevelopments[0]?.date || '', stories: keyDevelopments },
+    ].filter((section) => section.stories.length),
     week: translatedWeek,
     weekLabel: esDate(f.weekLabel),
     upcoming: f.upcoming.map((g) => ({
