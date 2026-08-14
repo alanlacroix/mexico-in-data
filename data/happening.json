@@ -2,14 +2,14 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-13",
+    "updated": "2026-08-14",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-13T16:29:00.630Z",
+    "generatedAt": "2026-08-14T13:50:54.882Z",
     "llm": true,
     "analysisTarget": {
-      "policy": "every-selected-story-evidence-linked-v2",
+      "policy": "every-selected-story-context-audited-v3",
       "ids": [
         "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
         "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
@@ -17,7 +17,7 @@
         "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12",
         "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12"
       ],
-      "added": 5,
+      "added": 0,
       "outcomes": [
         {
           "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
@@ -223,7 +223,7 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
-      "imgTries": 2,
+      "imgTries": 3,
       "background": "Mexico's national accounting council sets a common rulebook for federal, state and municipal public accounts. The official gazette published changes to both the manual and its conceptual framework.",
       "view": "The reform changes how public entities record and report money, not how much they can spend. Its value depends on whether the new statements make obligations and transfers easier to compare across entities, including federal support for Pemex.",
       "prediction": "Watch whether the next quarterly financial statements use the new classifications consistently. Common treatment would show adoption, while different treatment across entities would reveal an implementation gap.",
@@ -261,6 +261,73 @@
           "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796158&fecha=13/08/2026"
         }
       ]
+    },
+    {
+      "id": "n-mining-leads-mexico-s-2025-m-a-2026-08-13",
+      "date": "2026-08-13",
+      "section": "economy",
+      "title": "Mining Leads Mexico’s 2025 M&A",
+      "why": "Mining drove 20.5% of Mexico's 2025 M&A with 33 deals.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/mining/news/mining-leads-mexicos-2025-ma",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-13T18:44:26.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mining Leads Mexico’s 2025 M&A",
+        "dek": "Mining drove 20.5% of Mexico's 2025 M&A with 33 deals. The test now is whether the new owners spend on the assets they bought. In addition, US aluminum producers want Mexico's fabricated goods excluded from any USMCA tariff carveout, arguing origin rules cannot replace Section 232. Ready for more? Here is your weekly r"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/mining/news/mining-leads-mexicos-2025-ma",
+          "publishedAt": "2026-08-13T18:44:26.000Z",
+          "date": "2026-08-13",
+          "title": "Mining Leads Mexico’s 2025 M&A",
+          "summary": "Mining drove 20.5% of Mexico's 2025 M&A with 33 deals."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
     },
     {
       "id": "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
@@ -3951,30 +4018,6 @@
           "date": "2026-08-06",
           "title": "DiDi logs 20 million electric rides in Mexico with 15,000 EV drivers on platform",
           "summary": "DiDi is building out a green transport network in Mexico as part of broader adoption of electric vehicles in ride-hailing, signaling market shift toward cleaner mobility."
-        }
-      ]
-    },
-    {
-      "id": "n-kia-apuesta-por-el-ev3-para-acelerar-su-estrategia-e-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Kia launches EV3 locally in Mexico with 605-kilometer range and 689,700-peso entry price",
-      "why": "Kia is moving assembly of its affordable electric vehicle to Mexico, lowering the price barrier for EV adoption and competing directly with Tesla and other makers to expand the domestic market.",
-      "company": "Kia",
-      "source": "Expansión — Empresas",
-      "url": "https://expansion.mx/empresas/2026/08/06/kia-ev3-suv-electrico-mexico-precio-autonomia",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-07T01:20:28.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "Expansión — Empresas",
-          "url": "https://expansion.mx/empresas/2026/08/06/kia-ev3-suv-electrico-mexico-precio-autonomia",
-          "publishedAt": "2026-08-07T01:20:28.000Z",
-          "date": "2026-08-06",
-          "title": "Kia launches EV3 locally in Mexico with 605-kilometer range and 689,700-peso entry price",
-          "summary": "Kia is moving assembly of its affordable electric vehicle to Mexico, lowering the price barrier for EV adoption and competing directly with Tesla and other makers to expand the domestic market."
         }
       ]
     }
