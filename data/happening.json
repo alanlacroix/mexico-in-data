@@ -2,45 +2,33 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-14",
+    "updated": "2026-08-15",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-14T13:50:54.882Z",
-    "llm": true,
+    "generatedAt": "2026-08-15T15:09:47.751Z",
+    "llm": false,
+    "curation": {
+      "policy": "exact-day-assessment-v1",
+      "editorialDate": "2026-08-15",
+      "candidateCount": 24,
+      "freshCandidateCount": 0,
+      "assessedCount": 24,
+      "keptCount": 1,
+      "rejectedCount": 0,
+      "mode": "editor-reviewed-fallback",
+      "complete": true,
+      "reason": "model unavailable; conservative local assessment plus one editor-reviewed carryover"
+    },
     "analysisTarget": {
       "policy": "every-selected-story-context-audited-v3",
       "ids": [
-        "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
-        "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
-        "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13",
-        "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12",
-        "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12"
+        "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14"
       ],
       "added": 0,
       "outcomes": [
         {
-          "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12",
+          "id": "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14",
           "ready": true,
           "reason": "ready"
         }
@@ -48,6 +36,104 @@
     }
   },
   "events": [
+    {
+      "id": "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14",
+      "date": "2026-08-14",
+      "section": "us-mexico",
+      "title": "Mexico asks the US to pause steel and auto tariffs during the trade-agreement review",
+      "why": "The Mexican government presented a study on how the tariffs affect its auto industry.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/08/14/revision-del-t-mec-mexico-pide-pausa-de-aranceles-al-acero-y-autos-aplicame-un-descuento-pide-ebrard/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-14T09:39:04.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Revisión del T-MEC: México pide pausa de aranceles al acero y autos; ‘aplícame un descuento’, pide Ebrard",
+        "dek": "El gobierno mexicano presentó un estudio sobre el impacto a la industria automotriz de los aranceles en la revisión del T-MEC."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/14/revision-del-t-mec-mexico-pide-pausa-de-aranceles-al-acero-y-autos-aplicame-un-descuento-pide-ebrard/",
+          "publishedAt": "2026-08-14T09:39:04.000Z",
+          "date": "2026-08-14",
+          "title": "Mexico asks the US to pause steel and auto tariffs during the trade-agreement review",
+          "summary": "The Mexican government presented a study on how the tariffs affect its auto industry."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "editor-reviewed-fallback-v1"
+      },
+      "background": "US and Mexican officials have discussed steel, aluminum and automobiles in three review rounds. They scheduled a fourth bilateral round for September.",
+      "view": "Mexico has made tariff relief a negotiating request, not a concession it has won. The practical result depends on whether Washington accepts a pause or offers a narrower reduction.",
+      "prediction": "The September round is the next stated test. Tariff relief in the joint statement would confirm movement. Another statement limited to continued talks would weaken that view.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "primary:ustr-july23"
+        ],
+        "view": [
+          "article",
+          "primary:ustr-july23"
+        ],
+        "prediction": [
+          "primary:ustr-july23"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/14/revision-del-t-mec-mexico-pide-pausa-de-aranceles-al-acero-y-autos-aplicame-un-descuento-pide-ebrard/"
+        },
+        {
+          "id": "primary:ustr-july23",
+          "kind": "primary",
+          "source": "US Trade Representative",
+          "url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/july/joint-statement-ambassador-jamieson-greer-and-mexican-secretary-economy-marcelo-ebrard"
+        }
+      ]
+    },
     {
       "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
       "date": "2026-08-13",
@@ -3994,30 +4080,6 @@
           "date": "2026-08-06",
           "title": "Mexico and Brazil strengthen ties amid rising US-Brazil tensions under Trump",
           "summary": "Mexico's foreign minister meets with Lula to discuss democracy in Latin America and finalize a Petrobras-Pemex cooperation deal, positioning the countries as a bloc during friction with the US."
-        }
-      ]
-    },
-    {
-      "id": "n-didi-suma-20-millones-de-viajes-el-ctricos-en-m-xico-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "DiDi logs 20 million electric rides in Mexico with 15,000 EV drivers on platform",
-      "why": "DiDi is building out a green transport network in Mexico as part of broader adoption of electric vehicles in ride-hailing, signaling market shift toward cleaner mobility.",
-      "company": "DiDi",
-      "source": "DPL News",
-      "url": "https://dplnews.com/didi-20-millones-viajes-electricos-mexico/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-07T01:41:24.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "DPL News",
-          "url": "https://dplnews.com/didi-20-millones-viajes-electricos-mexico/",
-          "publishedAt": "2026-08-07T01:41:24.000Z",
-          "date": "2026-08-06",
-          "title": "DiDi logs 20 million electric rides in Mexico with 15,000 EV drivers on platform",
-          "summary": "DiDi is building out a green transport network in Mexico as part of broader adoption of electric vehicles in ride-hailing, signaling market shift toward cleaner mobility."
         }
       ]
     }
