@@ -9,8 +9,8 @@ const DEFAULTS = Object.freeze({
   graceMinutes: 20,
   recentRunMinutes: 180,
   retryCooldownMinutes: 45,
-  failureWindowMinutes: 180,
-  maxFailures: 3,
+  failureWindowMinutes: 1440,
+  maxFailures: 1,
   heartbeatMaxAgeMinutes: 45,
 });
 

@@ -73,7 +73,7 @@ jobs:
         # Selection must happen before explanation work. Otherwise this step guesses
         # which five stories will matter, spends the analysis slots, and can miss the
         # exact stories the Brief chooses a few seconds later.
-        run: node build-happening.js --skip-analysis
+        run: node build-happening.js --skip-analysis --resume-current-edition
 
       - name: Reconcile scheduled outcomes
         if: steps.timing.outputs.run == 'true'
@@ -81,6 +81,30 @@ jobs:
         env:
           EDITORIAL_DATE: ${{ steps.timing.outputs.editorial_date }}
         run: node reconcile-scheduled-events.mjs
+
+      # A later copy, evidence, translation or release failure must not erase a completed
+      # paid curation pass. This checkpoint is deliberately excluded from Pages deploys;
+      # readers still see only the final atomic edition and its publication receipt.
+      - name: Checkpoint the assessed news
+        if: steps.timing.outputs.run == 'true'
+        env:
+          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
+        run: |
+          git config user.name  "mexico-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/news/ data/happening.json data/llm-spend.json
+          if git diff --cached --quiet; then
+            echo "assessed-news checkpoint is already current"
+            exit 0
+          fi
+          git commit -m "[CF-Pages-Skip] editorial checkpoint: ${PUBLICATION_DATE} assessed news"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            git pull --rebase --autostash origin main || exit 1
+          done
+          exit 1
 
       - name: Lock the homepage story selection
         if: steps.timing.outputs.run == 'true'
@@ -94,12 +118,40 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-happening.js --analysis-for-brief
 
+      # Briefly Explained can complete some stories before another story fails its
+      # evidence gate. Preserve the exact selection and every approved unit so a retry
+      # resumes the missing work instead of paying to rewrite good work.
+      - name: Checkpoint the locked selection and explanations
+        if: steps.timing.outputs.run == 'true'
+        env:
+          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
+        run: |
+          git config user.name  "mexico-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/happening.json data/brief.json data/llm-spend.json
+          if git diff --cached --quiet; then
+            echo "explanation checkpoint is already current"
+            exit 0
+          fi
+          git commit -m "[CF-Pages-Skip] editorial checkpoint: ${PUBLICATION_DATE} explanations"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            git pull --rebase --autostash origin main || exit 1
+          done
+          exit 1
+
       - name: Build the homepage brief
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-brief.js
+
+      - name: Require a complete English Brief before optional translation
+        if: steps.timing.outputs.run == 'true'
+        run: node pipeline/assert-data.js
 
       - name: Translate the new edition for /es/
         if: steps.timing.outputs.run == 'true'
@@ -108,6 +160,24 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node translate-es.mjs --critical
+
+      # Topic-list translations are useful, but they are not allowed to run until the
+      # Brief and its complete Spanish snapshot have had first access to the budget.
+      - name: Translate new topic stories after the Brief
+        if: steps.timing.outputs.run == 'true'
+        working-directory: pipeline
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node translate-wire.mjs
+
+      - name: Fill optional Spanish homepage translations after the Brief
+        if: steps.timing.outputs.run == 'true'
+        working-directory: pipeline
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node translate-es.mjs
 
       - name: Validate generated editorial claims
         if: steps.timing.outputs.run == 'true'

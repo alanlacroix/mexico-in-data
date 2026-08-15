@@ -9,6 +9,7 @@ const workflow = (name) => fs.readFileSync(path.join(workflowDir, name), 'utf8')
 const run = fs.readFileSync(path.join(root, 'pipeline', 'run.js'), 'utf8');
 const receiptWriter = fs.readFileSync(path.join(root, 'pipeline', 'write-publication-status.mjs'), 'utf8');
 const productionVerifier = fs.readFileSync(path.join(root, 'pipeline', 'verify-production.mjs'), 'utf8');
+const editorialGate = fs.readFileSync(path.join(root, 'pipeline', 'editorial-gate.mjs'), 'utf8');
 const refresh = workflow('refresh.yml');
 const happening = workflow('happening.yml');
 const publicationFallback = workflow('publication-fallback.yml');
@@ -58,6 +59,8 @@ assert.match(
   /node pipeline\/editorial-gate\.mjs/,
   'every redundant schedule must pass through the receipt-aware editorial gate',
 );
+assert.match(editorialGate, /analysisTarget[\s\S]*budget-unavailable[\s\S]*terminalBlock/,
+  'hourly schedules must stop after a checkpointed terminal budget failure instead of producing repeated emails');
 assert.match(collectorBlock, /node collect-news\.js/,
   'the core news collector must run before publication');
 assert.doesNotMatch(collectorBlock, /continue-on-error/,
@@ -96,8 +99,23 @@ assert.doesNotMatch(happening, /node build-news\.js/,
   'the flaky optional GDELT supplement belongs in the background refresh, not the publication path');
 assert.match(
   happening,
-  /node build-happening\.js --skip-analysis[\s\S]*node build-brief\.js --selection-only[\s\S]*node build-happening\.js --analysis-for-brief[\s\S]*node build-brief\.js/,
+  /node build-happening\.js --skip-analysis --resume-current-edition[\s\S]*node build-brief\.js --selection-only[\s\S]*node build-happening\.js --analysis-for-brief[\s\S]*node build-brief\.js/,
   'the workflow must lock the ranked stories before spending the explanation budget on those exact stories',
+);
+assert.match(
+  happening,
+  /Checkpoint the assessed news[\s\S]*\[CF-Pages-Skip\] editorial checkpoint:[\s\S]*Lock the homepage story selection/,
+  'a paid curation pass must be checkpointed before any downstream editorial gate can fail',
+);
+assert.match(
+  happening,
+  /Explain the stories that were actually selected[\s\S]*Checkpoint the locked selection and explanations[\s\S]*Build the homepage brief/,
+  'approved explanations and the locked selection must survive a later publication failure',
+);
+assert.match(
+  happening,
+  /Build the homepage brief[\s\S]*Require a complete English Brief before optional translation[\s\S]*Translate the new edition for \/es\/[\s\S]*Translate new topic stories after the Brief/,
+  'optional translation must run only after every selected story has a complete explanation',
 );
 assert.equal(
   (happening.match(/node build-happening\.js --analysis-for-brief/g) || []).length,
@@ -205,7 +223,15 @@ for (const name of ['refresh.yml']) {
     `${name} is a background refresh and must not trigger a full Pages deployment`,
   );
 }
-assert.doesNotMatch(happening, /\[CF-Pages-Skip\]/, 'an editorial publication must trigger production deployment');
+assert.match(happening, /\[CF-Pages-Skip\] editorial checkpoint:/,
+  'intermediate editorial state must never deploy before the atomic publication receipt exists');
+assert.doesNotMatch(
+  happening.match(/- name: Commit and push the edition once[\s\S]*?(?=\n      - name: Require the exact edition to be live)/)?.[0] || '',
+  /\[CF-Pages-Skip\]/,
+  'the final editorial publication must still trigger production deployment',
+);
+assert.doesNotMatch(refresh, /ANTHROPIC_API_KEY|write-context\.mjs|translate-es\.mjs|translate-wire\.mjs/,
+  'background refreshes must not spend the daily Brief model allowance');
 
 assert.match(
   publicationFallback,

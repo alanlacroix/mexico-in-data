@@ -73,10 +73,11 @@ assert.match(workflow, /node translate-es\.mjs --critical/,
 assert.match(fs.readFileSync(path.join(root, '_includes', 'partials', 'header.njk'), 'utf8'),
   /not feedEs\.translationCarrying/,
   'English must not advertise a stale Spanish snapshot as the current translation');
-const englishWeekUrls = new Set(english.week.map((item) => item.url));
+const englishWeekByUrl = new Map(english.week.map((item) => [item.url, item]));
 for (const item of nativeInclusive.week.filter((entry) => entry.lang === 'ES' && entry.title === entry.orig)) {
-  assert.equal(englishWeekUrls.has(item.url), false,
-    'an untranslated Spanish wire item must not appear under the English toggle');
+  const englishItem = englishWeekByUrl.get(item.url);
+  assert.ok(!englishItem || englishItem.title !== item.title,
+    'an untranslated Spanish headline must not appear under the English toggle');
 }
 
 console.log('spanish-edition-contract: ok');

@@ -277,6 +277,7 @@ function curationResult(cands, now, events, details = {}) {
       freshCandidateCount: freshCandidates.length,
       assessedCount: Number(details.assessedCount) || 0,
       keptCount: events.length,
+      rejectedCount: Number(details.rejectedKeeps) || 0,
       mode: details.mode || 'unknown',
       complete: Boolean(details.complete),
       reason: details.reason || '',
@@ -291,13 +292,15 @@ async function curate(cands, now) {
   });
   if (!hasLLM()) {
     const fallback = curateFallback(cands, now);
-    const freshCount = cands.filter((candidate) => editorialDay(candidate.published_at) === editorialDay(now)
-      && !candidate._alreadyPublished).length;
     return curationResult(cands, now, fallback, {
       mode: 'deterministic-fallback',
-      complete: freshCount === 0,
-      assessedCount: 0,
-      reason: freshCount ? 'fresh candidates were not assessed by the curator' : '',
+      // The fallback is an assessment path, not an outage path. It applies the same
+      // source, Mexico-relevance, importance and copy gates locally. Items it cannot
+      // safely translate or frame are quarantined instead of blocking every other
+      // story and the edition itself.
+      complete: true,
+      assessedCount: cands.length,
+      reason: 'model unavailable; conservative deterministic assessment used',
     });
   }
   // Anthropic structured outputs reject minimum/maximum on integers. Code clamps
@@ -352,18 +355,28 @@ ${BAN}`;
   if (!out || !Array.isArray(out.decisions)) {
     console.warn('  curate: no model result — deterministic fallback');
     const fallback = curateFallback(cands, now);
-    const freshCount = cands.filter((candidate) => editorialDay(candidate.published_at) === editorialDay(now)
-      && !candidate._alreadyPublished).length;
     return curationResult(cands, now, fallback, {
       mode: 'deterministic-fallback',
-      complete: freshCount === 0,
-      assessedCount: 0,
-      reason: freshCount ? 'fresh candidates were not assessed by the curator' : '',
+      complete: true,
+      assessedCount: cands.length,
+      reason: 'model request unavailable; conservative deterministic assessment used',
     });
   }
   const coverage = decisionCoverage(cands.length, out.decisions);
   if (!coverage.ok) {
-    throw new Error(`curation decision receipt is incomplete: missing=${coverage.missing.join(',') || 'none'} duplicate=${coverage.duplicates.join(',') || 'none'} invalid=${coverage.invalid.join(',') || 'none'}`);
+    const reason = `model decision receipt incomplete: missing=${coverage.missing.join(',') || 'none'} duplicate=${coverage.duplicates.join(',') || 'none'} invalid=${coverage.invalid.join(',') || 'none'}`;
+    console.warn(`  curate: ${reason} — deterministic fallback`);
+    // The model call has already happened. Retrying the same malformed batch on every
+    // hourly run spends money without improving the edition. Assess the complete set
+    // with the conservative local policy, persist that receipt, and let unsupported or
+    // untranslated items stay quarantined.
+    const fallback = curateFallback(cands, now);
+    return curationResult(cands, now, fallback, {
+      mode: 'deterministic-fallback',
+      complete: true,
+      assessedCount: cands.length,
+      reason,
+    });
   }
   const assessed = out.decisions.map((row) => {
     const x = cands[row.i];
@@ -406,9 +419,13 @@ ${BAN}`;
   const rejectedKeeps = kept.length - published.length;
   return curationResult(cands, now, published, {
     mode: 'model',
-    complete: rejectedKeeps === 0,
+    // Completeness means every candidate received a decision. A generated headline
+    // that fails the copy gate is correctly quarantined; it does not make the other
+    // 23 decisions incomplete or justify rerunning the same paid batch forever.
+    complete: true,
     assessedCount: assessed.length,
-    reason: rejectedKeeps ? `${rejectedKeeps} selected event(s) failed the copy gate` : '',
+    rejectedKeeps,
+    reason: rejectedKeeps ? `${rejectedKeeps} selected event(s) quarantined by the copy gate` : '',
   });
 }
 
@@ -1061,6 +1078,7 @@ async function main() {
   const now = new Date();
   const analysisOnly = process.argv.includes('--analysis-for-brief');
   const skipAnalysis = process.argv.includes('--skip-analysis');
+  const resumeCurrentEdition = process.argv.includes('--resume-current-edition');
   console.log(`\nbuild-happening · model ${hasLLM() ? model : 'none (deterministic fallback)'}`);
   const existing = readJson(D('happening.json'), { meta: {}, events: [] });
   if (analysisOnly) {
@@ -1098,6 +1116,12 @@ async function main() {
     const u = usage();
     console.log(`  targeted analysis: ${analysis.outcomes.filter((item) => item.ready).length}/${selectedIds.length} selected stories ready`);
     console.log(`  llm: ${u.calls} calls · ${u.input}+${u.output} tok · ~$${u.costUSD.toFixed(4)}\n`);
+    return;
+  }
+  if (resumeCurrentEdition
+      && existing.meta?.curation?.editorialDate === editorialDay(now)
+      && existing.meta.curation.complete === true) {
+    console.log('  curation checkpoint is current — reusing the assessed event log');
     return;
   }
   const schedule = readJson(D('events.json'), { events: [] });

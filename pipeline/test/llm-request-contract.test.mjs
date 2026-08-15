@@ -96,6 +96,10 @@ assert.equal(
   'a request whose maximum bill could exceed $5 must be skipped',
 );
 assert.equal(sent.length, sentBeforeCapCheck, 'a cap-blocked request must never reach the provider');
+assert.equal(budgetStatus('core').blockedThisRun, true,
+  'callers must be able to distinguish a prospective budget refusal from a transient model failure');
+assert.equal(budgetStatus('core').available, false,
+  'a blocked essential call must stop lower-value retries in the same run');
 fs.writeFileSync(process.env.LLM_LEDGER_PATH, `${JSON.stringify({ [new Date().toISOString().slice(0, 7)]: 4.96 })}\n`);
 const sentBeforeSearchCapCheck = sent.length;
 assert.equal(

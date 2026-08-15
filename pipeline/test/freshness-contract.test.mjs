@@ -26,4 +26,11 @@ result = curationReadiness({
 }, '2026-08-14');
 assert.equal(result.ok, true, 'one exhaustive exact-day receipt may certify the edition');
 
+result = curationReadiness({
+  editorialDate: '2026-08-14', complete: true,
+  mode: 'deterministic-fallback', freshCandidateCount: 4, assessedCount: 4,
+}, '2026-08-14');
+assert.equal(result.ok, true,
+  'a conservative local assessment may certify a degraded edition when the model is unavailable');
+
 console.log('freshness-contract tests: ok');

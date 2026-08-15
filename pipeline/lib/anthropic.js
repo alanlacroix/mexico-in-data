@@ -83,7 +83,7 @@ function budgetLimit(priority = 'standard') {
 }
 function overBudget(priority = 'standard') {
   if (process.env.LLM_BUDGET_OVERRIDE) return false;
-  return spentThisMonth() >= budgetLimit(priority);
+  return _budgetBlockedPriorities.has(priority) || spentThisMonth() >= budgetLimit(priority);
 }
 const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 
@@ -115,6 +115,7 @@ let _calls = 0;
 let _badRequests = 0;               // permanent request bugs (HTTP 400), reported by usage()
 const _tok = {};                         // model -> { in, out }
 let _serverCostUSD = 0;
+const _budgetBlockedPriorities = new Set();
 
 export const hasLLM = () => !!KEY;
 export const model = DEFAULT_MODEL;
@@ -127,7 +128,9 @@ export function budgetStatus(priority = 'standard') {
     spentUSD,
     limitUSD,
     remainingUSD: Math.max(0, limitUSD - spentUSD),
-    available: Boolean(process.env.LLM_BUDGET_OVERRIDE) || spentUSD < limitUSD,
+    blockedThisRun: _budgetBlockedPriorities.has(priority),
+    available: Boolean(process.env.LLM_BUDGET_OVERRIDE)
+      || (spentUSD < limitUSD && !_budgetBlockedPriorities.has(priority)),
   };
 }
 
@@ -163,6 +166,7 @@ export function usage() {
 export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL, effort, priority = 'standard', tools, returnMeta = false }) {
   if (!KEY) return null;
   if (overBudget(priority)) {
+    _budgetBlockedPriorities.add(priority);
     const status = budgetStatus(priority);
     const reason = priority === 'core' ? 'monthly cap reached' : 'core Brief reserve reached';
     console.warn(`  llm: ${reason} ($${status.spentUSD.toFixed(2)} of $${status.limitUSD.toFixed(2)}) — skipping ${priority} call`);
@@ -192,6 +196,7 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
     const status = budgetStatus(priority);
     const projectedUSD = projectedMaximumCost(body, modelId);
     if (status.spentUSD + projectedUSD > status.limitUSD) {
+      _budgetBlockedPriorities.add(priority);
       console.warn(`  llm: call could exceed ${priority} cap ($${status.spentUSD.toFixed(2)} spent + up to $${projectedUSD.toFixed(2)}; limit $${status.limitUSD.toFixed(2)}) — skipping`);
       return null;
     }

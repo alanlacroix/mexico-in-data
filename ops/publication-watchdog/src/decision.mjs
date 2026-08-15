@@ -4,8 +4,8 @@ const ACTIVE_RUN_STATUSES = new Set(['queued', 'in_progress', 'requested', 'wait
 const DEFAULT_GRACE_MINUTES = 20;
 const DEFAULT_RECENT_RUN_MINUTES = 180;
 const DEFAULT_RETRY_COOLDOWN_MINUTES = 45;
-const DEFAULT_FAILURE_WINDOW_MINUTES = 180;
-const DEFAULT_MAX_FAILURES = 3;
+const DEFAULT_FAILURE_WINDOW_MINUTES = 1440;
+const DEFAULT_MAX_FAILURES = 1;
 const MORNING_MINUTE_ET = 9 * 60;
 
 function positiveNumber(value, fallback) {
@@ -91,9 +91,9 @@ export function recoveryThrottle(runs, now = new Date(), {
     && ageMinutes(run, clock) >= -5 && ageMinutes(run, clock) < positiveNumber(cooldownMinutes, DEFAULT_RETRY_COOLDOWN_MINUTES));
   if (recentDispatch) return { blocked: true, reason: 'a recovery run was dispatched recently', runId: recentDispatch.id ?? null };
 
-  // The circuit breaker counts recovery dispatches, not ordinary scheduled attempts.
-  // Counting every failed hourly run meant the watchdog disabled itself before it had
-  // made three independent recovery attempts—the exact moment it was most needed.
+  // One independent recovery attempt is enough for a given editorial day. The primary
+  // workflow already gets hourly chances, so three identical watchdog dispatches only
+  // repeat spend and notifications when the failure is deterministic.
   const failures = list.filter((run) => run?.event === 'workflow_dispatch'
     && run?.status === 'completed' && run?.conclusion === 'failure'
     && ageMinutes(run, clock) >= 0 && ageMinutes(run, clock) < positiveNumber(failureWindowMinutes, DEFAULT_FAILURE_WINDOW_MINUTES));

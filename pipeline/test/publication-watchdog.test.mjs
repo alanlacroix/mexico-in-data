@@ -70,9 +70,9 @@ assert.equal(
   'the watchdog must not dispatch repeatedly during the recovery cooldown',
 );
 assert.equal(
-  recoveryThrottle([1, 2, 3].map((id) => ({ id, event: 'workflow_dispatch', status: 'completed', conclusion: 'failure', created_at: '2026-07-31T12:00:00Z' })), morningDue).reason,
+  recoveryThrottle([{ id: 1, event: 'workflow_dispatch', status: 'completed', conclusion: 'failure', created_at: '2026-07-31T12:00:00Z' }], morningDue).reason,
   'recovery failure limit reached',
-  'the watchdog must stop a notification-producing failure loop',
+  'one failed independent recovery must stop a notification-producing loop for the day',
 );
 assert.equal(
   recoveryThrottle([1, 2, 3, 4].map((id) => ({ id, event: 'schedule', status: 'completed', conclusion: 'failure', created_at: '2026-07-31T12:00:00Z' })), morningDue).blocked,

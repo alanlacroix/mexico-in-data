@@ -36,6 +36,21 @@ result = decide('2026-07-31T13:37:00Z', {
 });
 assert.equal(result.run, true, 'yesterday’s receipt must not block today’s edition');
 
+const budgetBlock = { editorialDate: '2026-07-31', reason: 'selected-story analysis exhausted the monthly model allowance' };
+result = decide('2026-07-31T14:37:00Z', {
+  status: { ...morningReceipt, editorialDate: '2026-07-30' },
+  terminalBlock: budgetBlock,
+});
+assert.equal(result.run, false, 'hourly schedules must not repeat a known terminal budget failure');
+assert.match(result.reason, /monthly model allowance/);
+
+result = decide('2026-07-31T14:37:00Z', {
+  status: { ...morningReceipt, editorialDate: '2026-07-30' },
+  terminalBlock: budgetBlock,
+  force: true,
+});
+assert.equal(result.run, true, 'a deliberate recovery must remain possible after the underlying blocker changes');
+
 // Old afternoon receipts remain readable during migration, but the gate can never write
 // or request a second edition. Even an evening recovery attempt is still morning.
 const legacyReceipt = { editorialDate: '2026-07-31', slot: 'afternoon', publicationId: 'run-2' };

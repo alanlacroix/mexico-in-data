@@ -44,70 +44,10 @@ jobs:
         continue-on-error: true   # any dead feed is skipped; never fails the run
         run: node collect-news.js
 
-      - name: Decide whether the model runs this refresh
-        id: modelgate
-        # State-based, not clock-based (rewritten 2026-08-04). This used to fire only when
-        # the UTC hour was exactly 12, which quietly meant never: GitHub's scheduler does
-        # not land this workflow near its cron slot. Over 2026-08-01..04 a ':17' cron
-        # actually ran at :51, :34, :54, :12, :03 and :51, and not one run fell in hour 12,
-        # so write-context.mjs had not run on a schedule since. The site kept publishing,
-        # just with the previous day's authored lines, which is exactly the kind of silent
-        # staleness this repo is supposed to refuse.
-        #
-        # So ask the question that actually matters: has the model pass happened today?
-        # The first refresh of each UTC day takes the window, whenever GitHub grants it.
-        # Same one pass a day, same cost, no dependence on a clock we do not control.
-        run: |
-          TODAY=$(date -u +%F)
-          STAMP=$(sed -n 's/.*"date"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' data/model-window.json 2>/dev/null | head -1)
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"; echo "manual dispatch — model jobs on"
-          elif [ "$STAMP" != "$TODAY" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"; echo "first refresh of $TODAY — model jobs on"
-          else
-            echo "run=false" >> "$GITHUB_OUTPUT"; echo "model window already used today ($STAMP) — skipping model jobs"
-          fi
-
-      - name: Write the lines the feed cannot compute
-        id: context
-        working-directory: pipeline
-        if: steps.modelgate.outputs.run == 'true'
-        continue-on-error: true   # a missing sentence never fails a refresh; the feed keeps its factual fallback
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node write-context.mjs
-
-      # The window is recorded as used only once the work actually succeeded. Stamping on
-      # the attempt instead would let one transient API error cost a whole day of authored
-      # lines, which is the staleness this rewrite exists to stop. On failure the next
-      # refresh simply tries again, so a bad day costs at most a few more attempts.
-      - name: Record that today's model window was used
-        if: steps.modelgate.outputs.run == 'true' && steps.context.outcome == 'success'
-        run: printf '{"date":"%s"}\n' "$(date -u +%F)" > data/model-window.json
-
-      # Deliberately NOT behind modelgate. The gate exists for jobs that regenerate the
-      # same content on a daily rhythm, where extra runs buy nothing. These two are
-      # different in kind: they are incremental caches whose work is proportional to what
-      # collect-news just brought in, and collect-news runs on all four daily refreshes.
-      # Gating them meant anything collected at 18:17, 00:17 or 06:17 UTC sat untranslated
-      # for up to 18 hours — English headlines on the Spanish edition, which is what Alan
-      # saw on 2026-08-03. Cost of ungating is the system prompt three more times a day
-      # (~$0.06/month): the strings translated per day are the same either way, only split
-      # into smaller batches. When the cache is current both scripts exit without an API
-      # call, so a quiet refresh still costs nothing.
-      - name: Fill the Spanish edition's translation cache
-        working-directory: pipeline
-        continue-on-error: true   # a miss carries the last complete Spanish Brief and omits optional untranslated copy
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node translate-es.mjs
-
-      - name: Put the wire into English
-        working-directory: pipeline
-        continue-on-error: true   # a miss omits ES items from EN and keeps their native copy on /es/
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node translate-wire.mjs
+      # Background refreshes are factual and model-free. The daily publication owns
+      # the entire model allowance: source-language curation, Briefly Explained, and
+      # translation of the exact Spanish Brief. Optional cache prose can no longer
+      # spend the money required to publish the product itself.
 
       - name: Keep the brief's fallback readings aligned with refreshed series
         run: node pipeline/sync-brief-standing.js

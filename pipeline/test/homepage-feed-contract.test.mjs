@@ -438,10 +438,16 @@ assert.doesNotMatch(happeningBuilder, /\[brief\.lead, \.\.\.arr\(brief\.items\)\
   'targeted explanation must cover the full locked selection, not only the first three stories');
 assert.match(happeningBuilder, /SCHEDULED OUTCOMES \(hard requirement\)[\s\S]*SELECT it[\s\S]*unchanged[\s\S]*not news/i,
   'the curator must treat an unchanged scheduled decision as a required new outcome');
-assert.match(happeningBuilder, /ASSESS EVERY candidate[\s\S]*decisionCoverage\(cands\.length, out\.decisions\)[\s\S]*throw new Error\(`curation decision receipt is incomplete/,
-  'the curator must account for every candidate in its bounded batch instead of silently omitting one');
+assert.match(happeningBuilder, /ASSESS EVERY candidate[\s\S]*decisionCoverage\(cands\.length, out\.decisions\)[\s\S]*model decision receipt incomplete[\s\S]*mode: 'deterministic-fallback'[\s\S]*assessedCount: cands\.length/,
+  'an incomplete paid response must fall back to a complete local assessment instead of being retried hourly');
 assert.match(happeningBuilder, /freshCandidateCount:[\s\S]*complete: Boolean\(details\.complete\)/,
   'the event log must retain whether fresh exact-day candidates were fully assessed');
+assert.match(happeningBuilder, /mode: 'deterministic-fallback',[\s\S]*complete: true,[\s\S]*assessedCount: cands\.length/,
+  'a model outage must use the conservative local assessment instead of freezing the entire Brief');
+assert.match(happeningBuilder, /const rejectedKeeps = kept\.length - published\.length;[\s\S]*complete: true,[\s\S]*rejectedKeeps/,
+  'quarantining unsafe generated copy must not relabel a complete candidate assessment as incomplete');
+assert.match(happeningBuilder, /--resume-current-edition[\s\S]*curation checkpoint is current/,
+  'a retry must reuse the current paid curation checkpoint');
 assert.match(briefBuilder, /curationReadiness\(P\.curation, editorialDate[\s\S]*curation is incomplete/,
   'the Brief must fail closed rather than advance the dateline after failed fresh-story curation');
 assert.match(briefBuilder, /optionalAnalysis\(e\)/, 'the brief builder must expose approved analysis atomically');
