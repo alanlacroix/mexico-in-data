@@ -2,37 +2,23 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-15",
+    "updated": "2026-08-16",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-15T15:09:47.751Z",
-    "llm": false,
+    "generatedAt": "2026-08-16T13:06:07.929Z",
+    "llm": true,
     "curation": {
       "policy": "exact-day-assessment-v1",
-      "editorialDate": "2026-08-15",
+      "editorialDate": "2026-08-16",
       "candidateCount": 24,
-      "freshCandidateCount": 0,
+      "freshCandidateCount": 1,
       "assessedCount": 24,
       "keptCount": 1,
       "rejectedCount": 0,
-      "mode": "editor-reviewed-fallback",
+      "mode": "deterministic-fallback",
       "complete": true,
-      "reason": "model unavailable; conservative local assessment plus one editor-reviewed carryover"
-    },
-    "analysisTarget": {
-      "policy": "every-selected-story-context-audited-v3",
-      "ids": [
-        "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14"
-      ],
-      "added": 0,
-      "outcomes": [
-        {
-          "id": "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14",
-          "ready": true,
-          "reason": "ready"
-        }
-      ]
+      "reason": "model request unavailable; conservative deterministic assessment used"
     }
   },
   "events": [
@@ -133,6 +119,73 @@
           "url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/july/joint-statement-ambassador-jamieson-greer-and-mexican-secretary-economy-marcelo-ebrard"
         }
       ]
+    },
+    {
+      "id": "n-mexico-urges-us-tariff-freeze-and-relief-in-usmca-ta-2026-08-14",
+      "date": "2026-08-14",
+      "section": "economy",
+      "title": "Mexico Urges US Tariff Freeze and Relief in USMCA Talks",
+      "why": "Mexico has formally requested that the United States halt the imposition of new tariffs during ongoing USMCA review talks while pushing for preferential treatment and reduced duties on Mexican automotive and steel exports.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-urges-us-tariff-freeze-and-relief-usmca-talks",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-14T16:04:00.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mexico Urges US Tariff Freeze and Relief in USMCA Talks",
+        "dek": "Mexico has formally requested that the United States halt the imposition of new tariffs during ongoing USMCA review talks while pushing for preferential treatment and reduced duties on Mexican automotive and steel exports."
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-urges-us-tariff-freeze-and-relief-usmca-talks",
+          "publishedAt": "2026-08-14T16:04:00.000Z",
+          "date": "2026-08-14",
+          "title": "Mexico Urges US Tariff Freeze and Relief in USMCA Talks",
+          "summary": "Mexico has formally requested that the United States halt the imposition of new tariffs during ongoing USMCA review talks while pushing for preferential treatment and reduced duties on Mexican automotive and steel exports."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
     },
     {
       "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
@@ -4058,30 +4111,6 @@
       ],
       "image": "https://www.bloomberglinea.com/resizer/v2/3YVKSEALV5CA5ICE2GJZSDS7QU.jpg?auth=b04819fa5fc4f12151c34ef25a499908b6a2fa8906b29f0378b8a8a9f589c8cd&width=1200&height=630&quality=80&smart=true",
       "imgTries": 1
-    },
-    {
-      "id": "n-m-xico-estrecha-los-lazos-con-brasil-en-plena-escala-2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "Mexico and Brazil strengthen ties amid rising US-Brazil tensions under Trump",
-      "why": "Mexico's foreign minister meets with Lula to discuss democracy in Latin America and finalize a Petrobras-Pemex cooperation deal, positioning the countries as a bloc during friction with the US.",
-      "company": "",
-      "source": "El País — México",
-      "url": "https://elpais.com/mexico/2026-08-07/mexico-estrecha-los-lazos-con-brasil-en-plena-escalada-de-la-tension-entre-lula-y-trump.html",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-07T04:00:00.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/2026-08-07/mexico-estrecha-los-lazos-con-brasil-en-plena-escalada-de-la-tension-entre-lula-y-trump.html",
-          "publishedAt": "2026-08-07T04:00:00.000Z",
-          "date": "2026-08-06",
-          "title": "Mexico and Brazil strengthen ties amid rising US-Brazil tensions under Trump",
-          "summary": "Mexico's foreign minister meets with Lula to discuss democracy in Latin America and finalize a Petrobras-Pemex cooperation deal, positioning the countries as a bloc during friction with the US."
-        }
-      ]
     }
   ]
 }
