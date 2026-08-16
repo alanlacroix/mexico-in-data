@@ -14,6 +14,10 @@ const docs = new Map();
 
 for (const sub of ['series', 'layers']) {
   const dir = path.join(DATA, sub);
+  // Secondary products may be retired without disabling the homepage refresh.
+  // The Atlas removal deleted data/layers; treating that optional directory as
+  // mandatory made every six-hour refresh fail before it could collect news.
+  if (!fs.existsSync(dir)) continue;
   for (const name of fs.readdirSync(dir).filter((file) => file.endsWith('.json'))) {
     const file = path.join(dir, name), doc = JSON.parse(fs.readFileSync(file, 'utf8'));
     if (!doc.meta?.id || !doc.meta?.vintage) continue;

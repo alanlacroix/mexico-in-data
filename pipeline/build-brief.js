@@ -184,7 +184,7 @@ async function main() {
       meta: {
         title: 'The brief', editorialDate, updated: editorialDate, asOf: editorialDate,
         reviewedAt, latestItemDate: '', quiet: true, newCount: 0,
-        generatedAt: now.toISOString(), mode: 'curated', count: 0, words: 8,
+        generatedAt: now.toISOString(), mode: 'curated', count: 0, words: 8, contentSig,
         windowHours,
         selection: {
           policy: 'exact-day-plus-carryover-v1',

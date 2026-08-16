@@ -1,27 +1,10 @@
 name: publication-fallback
 
-# This is the repository-side safety net, not the primary clock. The independent
-# Cloudflare Worker checks every 15 minutes. This workflow both verifies that
-# external control plane and makes the same receipt-aware recovery decision when
-# GitHub happens to grant a runner. A push to the recovery code runs it at once,
-# which also makes deploying a fix exercise the recovery path instead of merely
-# changing source files.
+# Manual recovery console. The independent Cloudflare Worker is the one automatic
+# safety net and checks every 15 minutes. Keeping a second scheduled recovery loop
+# in GitHub duplicated the same decision and produced extra failure emails.
 on:
-  schedule:
-    - cron: '11,41 * * * *'
   workflow_dispatch: {}
-  workflow_run:
-    workflows:
-      - happening
-    types:
-      - completed
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/publication-fallback.yml'
-      - 'ops/publication-watchdog/**'
-      - 'pipeline/verify-watchdog-health.mjs'
 
 permissions:
   contents: read

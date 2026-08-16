@@ -6,6 +6,7 @@ const FILE = fileURLToPath(import.meta.url);
 const ROOT = path.resolve(path.dirname(FILE), '..');
 const STATUS_PATH = path.join(ROOT, 'data', 'publication-status.json');
 const HAPPENING_PATH = path.join(ROOT, 'data', 'happening.json');
+const BLOCK_PATH = path.join(ROOT, 'ops', 'publication-block.json');
 const VALID_RECEIPT_SLOTS = new Set(['morning', 'afternoon']); // read legacy receipts; only morning is written now
 
 function zonedParts(date, timeZone) {
@@ -60,19 +61,24 @@ if (process.argv[1] && path.resolve(process.argv[1]) === FILE) {
   try { status = JSON.parse(fs.readFileSync(STATUS_PATH, 'utf8')); } catch { /* first publication */ }
   let happening = null;
   try { happening = JSON.parse(fs.readFileSync(HAPPENING_PATH, 'utf8')); } catch { /* first publication */ }
+  let recordedBlock = null;
+  try { recordedBlock = JSON.parse(fs.readFileSync(BLOCK_PATH, 'utf8')); } catch { /* no blocked run */ }
   const now = process.env.NOW_ISO ? new Date(process.env.NOW_ISO) : new Date();
   const target = happening?.meta?.analysisTarget;
   const budgetBlocked = happening?.meta?.updated === dateKey(now)
     && Array.isArray(target?.outcomes)
     && target.outcomes.some((outcome) => outcome?.ready !== true && outcome?.reason === 'budget-unavailable');
+  const terminalBlock = recordedBlock?.editorialDate === dateKey(now)
+    ? recordedBlock
+    : budgetBlocked ? {
+      editorialDate: dateKey(now),
+      reason: 'selected-story analysis exhausted the monthly model allowance; waiting for a forced recovery or the next budget period',
+    } : null;
   const result = editorialDecision({
     now,
     status,
     force: process.env.FORCE_PUBLICATION === 'true',
-    terminalBlock: budgetBlocked ? {
-      editorialDate: dateKey(now),
-      reason: 'selected-story analysis exhausted the monthly model allowance; waiting for a forced recovery or the next budget period',
-    } : null,
+    terminalBlock,
   });
   writeOutput(result);
 }

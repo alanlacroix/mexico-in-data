@@ -82,30 +82,6 @@ jobs:
           EDITORIAL_DATE: ${{ steps.timing.outputs.editorial_date }}
         run: node reconcile-scheduled-events.mjs
 
-      # A later copy, evidence, translation or release failure must not erase a completed
-      # paid curation pass. This checkpoint is deliberately excluded from Pages deploys;
-      # readers still see only the final atomic edition and its publication receipt.
-      - name: Checkpoint the assessed news
-        if: steps.timing.outputs.run == 'true'
-        env:
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-        run: |
-          git config user.name  "mexico-data-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/news/ data/happening.json data/llm-spend.json
-          if git diff --cached --quiet; then
-            echo "assessed-news checkpoint is already current"
-            exit 0
-          fi
-          git commit -m "[CF-Pages-Skip] editorial checkpoint: ${PUBLICATION_DATE} assessed news"
-          for attempt in 1 2 3 4 5; do
-            if git push origin HEAD:main; then
-              exit 0
-            fi
-            git pull --rebase --autostash origin main || exit 1
-          done
-          exit 1
-
       - name: Lock the homepage story selection
         if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
@@ -117,30 +93,6 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-happening.js --analysis-for-brief
-
-      # Briefly Explained can complete some stories before another story fails its
-      # evidence gate. Preserve the exact selection and every approved unit so a retry
-      # resumes the missing work instead of paying to rewrite good work.
-      - name: Checkpoint the locked selection and explanations
-        if: steps.timing.outputs.run == 'true'
-        env:
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-        run: |
-          git config user.name  "mexico-data-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/happening.json data/brief.json data/llm-spend.json
-          if git diff --cached --quiet; then
-            echo "explanation checkpoint is already current"
-            exit 0
-          fi
-          git commit -m "[CF-Pages-Skip] editorial checkpoint: ${PUBLICATION_DATE} explanations"
-          for attempt in 1 2 3 4 5; do
-            if git push origin HEAD:main; then
-              exit 0
-            fi
-            git pull --rebase --autostash origin main || exit 1
-          done
-          exit 1
 
       - name: Build the homepage brief
         if: steps.timing.outputs.run == 'true'
@@ -197,20 +149,21 @@ jobs:
         if: steps.timing.outputs.run == 'true'
         run: npm run release
 
-      # A blocked edition has still used the model. Preserve only that spend after
-      # every pre-publication gate so any validation or artifact failure cannot make
-      # the $5 monthly cap forget real usage. No editorial file is staged here.
-      - name: Preserve model spend when publication is blocked
+      # One failed run records a durable circuit breaker. Normal hourly schedules then
+      # exit successfully instead of repeating the same failure and email. The external
+      # watchdog still gets one forced recovery attempt; a successful publication clears
+      # the marker in the final atomic commit.
+      - name: Record a blocked publication once
         if: failure() && steps.timing.outputs.run == 'true'
+        env:
+          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
+          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
         run: |
-          if git diff --quiet -- data/llm-spend.json; then
-            echo "no model spend to preserve"
-            exit 0
-          fi
+          node pipeline/record-publication-block.mjs
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/llm-spend.json
-          git commit -m "ops: record model spend from blocked publication"
+          git add data/llm-spend.json ops/publication-block.json
+          git commit -m "ops: block repeated publication failure for ${PUBLICATION_DATE}"
           for attempt in 1 2 3 4 5; do
             if git push origin HEAD:main; then
               exit 0
@@ -225,9 +178,11 @@ jobs:
           PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
           PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
         run: |
+          node pipeline/clear-publication-block.mjs
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/news/ data/happening.json data/event-status.json data/brief.json data/publication-status.json data/llm-spend.json data/es/
+          git add -u ops/
           git commit -m "publication: ${PUBLICATION_DATE} ${PUBLICATION_SLOT} edition"
           # A single push attempt used to lose the whole publication to a non-fast-forward
           # whenever anything else landed on main mid-run (2026-08-02 22:14: the edition

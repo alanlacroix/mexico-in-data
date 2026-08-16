@@ -422,6 +422,8 @@ assert.doesNotMatch(briefBuilder, /priorApproved|carriedForward/,
   'a quiet edition must never recertify the prior story set as today');
 assert.match(briefBuilder, /if \(!picked\.length\)[\s\S]*quiet:\s*true[\s\S]*lead:\s*null[\s\S]*items:\s*\[\]/,
   'a genuinely quiet day must publish an explicit, receipt-compatible empty state');
+assert.match(briefBuilder, /if \(!picked\.length\)[\s\S]*const contentSig = fingerprint\(\[\]\)[\s\S]*words: 8, contentSig/,
+  'a quiet edition must persist the same content signature the publication validator computes');
 for (const phrase of [/\bThe base case is\b/i, /\bThat view would change if\b/i]) {
   assert.ok(dailyBrief.stories.filter((story) => phrase.test(story.prediction || '')).length <= 1, 'BE predictions must not repeat a stock forecast phrase');
 }
