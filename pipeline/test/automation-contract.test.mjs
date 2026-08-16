@@ -158,7 +158,7 @@ assert.match(
 );
 assert.match(
   productionVerifier,
-  /selection\?\.policy !== 'exact-day-plus-carryover-v1'[\s\S]*get\('\/data\/event-status\.json'\)[\s\S]*blockers/,
+  /\['exact-day-plus-carryover-v1', 'weekend-recap-v1'\]\.includes\(selectionPolicy\)[\s\S]*get\('\/data\/event-status\.json'\)[\s\S]*blockers/,
   'production verification must require the ranking receipt and a blocker-free scheduled-outcome audit',
 );
 // The homepage stopped carrying a data-editorial-date attribute in the 2026-08-02

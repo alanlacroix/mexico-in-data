@@ -26,6 +26,10 @@ if (!missing.length) {
     'the current Spanish snapshot must identify the exact visible Brief');
   assert.equal(spanish.stories.length, english.stories.length,
     'the current Spanish Brief must contain the same selected stories as English');
+  assert.equal(spanish.weekend, english.weekend,
+    'a complete Spanish snapshot must preserve the edition type');
+  assert.deepEqual(spanish.stories.map((story) => story.lane), english.stories.map((story) => story.lane),
+    'translation must preserve the honest dated lane for every story');
 } else {
   assert.equal(spanish.translationCarrying, true,
     'an incomplete translation must carry the last complete Spanish Brief');

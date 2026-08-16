@@ -184,7 +184,7 @@ bodyClass: feed-page
   <div class="dateline"><h1>{{ f.date | longDate(locale) }}</h1></div>
   <section class="feed-sec" id="sec-brief" data-sec="The brief">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.brief }}</h2><div class="sec-meta" id="brief-asof" data-date="{{ f.updated }}" data-prefix="{{ L.latestBrief if f.carrying else L.updated }}">{{ L.latestBrief if f.carrying else L.updated }}</div></div>
+    <div class="sec-head"><h2>{{ L.weekendBrief if f.weekend else L.brief }}</h2><div class="sec-meta" id="brief-asof" data-date="{{ f.updated }}" data-prefix="{{ L.latestBrief if f.carrying else L.updated }}">{{ L.latestBrief if f.carrying else L.updated }}</div></div>
     <p class="brief-p">{{ f.brief }}</p>
     <div class="brief-row">
       {%- if f.briefSources.length %}<div class="brief-src"><span>{{ L.sources }}</span>{% for item in f.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
@@ -210,9 +210,9 @@ bodyClass: feed-page
     </div>
   </section>{% endif %}
 
-  {% for storySection in f.storySections %}<section class="feed-sec" id="sec-{{ storySection.id }}" data-sec="{% if storySection.kind == 'today' %}{{ L.todayStories }}{% else %}{{ L.keyDevelopments }}{% endif %}">
+  {% for storySection in f.storySections %}<section class="feed-sec" id="sec-{{ storySection.id }}" data-sec="{% if storySection.kind == 'today' %}{{ L.todayStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{% if storySection.kind == 'today' %}{{ L.todayStories }}{% else %}{{ L.keyDevelopments }}{% endif %}</h2><div class="sec-meta">{{ L.storyCount(storySection.stories.length, storySection.latest) }}</div></div>
+    <div class="sec-head"><h2>{% if storySection.kind == 'today' %}{{ L.todayStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}</h2><div class="sec-meta">{{ L.storyCount(storySection.stories.length, storySection.latest) }}</div></div>
     <div class="cards">
       {%- for story in storySection.stories %}
       <article class="card">

@@ -29,6 +29,7 @@ function translatedBriefSnapshot(feed, cache) {
       version: 1,
       editorialDate: feed.date,
       updated: feed.updated,
+      weekend: Boolean(feed.weekend),
       latestStoryDate: feed.latestStoryDate,
       brief: cached(cache, feed.brief),
       briefSources: feed.briefSources || [],
@@ -44,7 +45,7 @@ function resolveSpanishBrief(feed, cache, lastComplete) {
   const current = translatedBriefSnapshot(feed, cache);
   if (current.ok) return { ...current.snapshot, translationCarrying: false, missingCount: 0 };
   if (lastComplete?.brief && Array.isArray(lastComplete?.stories)) {
-    return { ...lastComplete, translationCarrying: true, missingCount: current.missing.length };
+    return { weekend: false, ...lastComplete, translationCarrying: true, missingCount: current.missing.length };
   }
   // First-run safety: an empty Spanish section is honest; English copy under an
   // ES toggle is not. The next successful translation creates the snapshot.
@@ -52,6 +53,7 @@ function resolveSpanishBrief(feed, cache, lastComplete) {
     version: 1,
     editorialDate: feed.date,
     updated: feed.updated,
+    weekend: false,
     latestStoryDate: '',
     brief: '',
     briefSources: [],

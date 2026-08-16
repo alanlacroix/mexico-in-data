@@ -160,9 +160,10 @@ function buildFeed(locale = 'en') {
     };
   });
 
-  // ---- Today's stories + prior-day key developments ----------------------
+  // ---- The one selected story set, presented in honest dated lanes --------
   const storyCard = (story) => ({
     id: story.id,
+    lane: story.lane,
     chip: chipFor(story.title),
     date: monthDay(story.date),
     cat: story.topic,
@@ -185,11 +186,18 @@ function buildFeed(locale = 'en') {
   });
   const todayStories = brief.todayStories.map(storyCard);
   const keyDevelopments = brief.keyDevelopments.map(storyCard);
-  const stories = [...todayStories, ...keyDevelopments];
-  const storySections = [
+  const weekendStories = brief.weekendStories.map(storyCard);
+  const weekRecapStories = brief.weekRecapStories.map(storyCard);
+  const stories = brief.weekendEdition
+    ? [...weekendStories, ...weekRecapStories]
+    : [...todayStories, ...keyDevelopments];
+  const storySections = (brief.weekendEdition ? [
+    { id: 'new-this-weekend', kind: 'weekend', latest: weekendStories[0]?.date || '', stories: weekendStories },
+    { id: 'week-recap', kind: 'week-recap', latest: weekRecapStories[0]?.date || '', stories: weekRecapStories },
+  ] : [
     { id: 'today-stories', kind: 'today', latest: todayStories[0]?.date || '', stories: todayStories },
     { id: 'key-developments', kind: 'key', latest: keyDevelopments[0]?.date || '', stories: keyDevelopments },
-  ].filter((section) => section.stories.length);
+  ]).filter((section) => section.stories.length);
 
   // ---- This week -----------------------------------------------------------
   // This week is a curated reading list, not an analysis surface (Alan,
@@ -314,6 +322,8 @@ function buildFeed(locale = 'en') {
     date: brief.editorialDate,
     updated: brief.newsThrough,
     carrying: brief.carryingLastBrief,
+    weekend: brief.weekendEdition,
+    briefTitle: brief.briefTitle,
     brief: brief.summaryLead,
     briefSources: brief.briefSources,
     latestStoryDate: monthDay(brief.latestItemDate),
@@ -321,8 +331,12 @@ function buildFeed(locale = 'en') {
     stories,
     todayStories,
     keyDevelopments,
+    weekendStories,
+    weekRecapStories,
     storySections,
-    week: weekItems,
+    // The recap already is the week's reading list. Rendering the separate
+    // "This week" shelf underneath would repeat the same stories and add bloat.
+    week: brief.weekendEdition ? [] : weekItems,
     weekLabel: week.weekLabel,
     upcoming,
     econ,

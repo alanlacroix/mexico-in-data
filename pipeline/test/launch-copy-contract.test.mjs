@@ -44,6 +44,8 @@ assert.match(text('_data/uiStrings.js'), /Where the economy stands/, 'the econom
 // Friday dateline from making a Thursday article look newly published.
 assert.match(text('_data/uiStrings.js'), /Today's stories/, 'homepage must name its exact-day story lane');
 assert.match(text('_data/uiStrings.js'), /Key developments/, 'homepage must keep important prior-day context in a separate lane');
+assert.match(text('_data/uiStrings.js'), /Weekend recap[\s\S]*New this weekend[\s\S]*What mattered this week/,
+  'the weekend catch-up mode must use clear, hand-written labels');
 assert.doesNotMatch(home, /what moved today|lo que se movió hoy|What moved in Mexico: \{\{ editionDate|Qué se movió en México: \{\{ editionDate/i,
   'homepage metadata must not recertify rolling-window stories as today');
 assert.match(home, /for storySection in f\.storySections/, 'the homepage must render the two data-defined story lanes');

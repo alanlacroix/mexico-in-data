@@ -1,8 +1,9 @@
 // Build the homepage brief from the latest reviewed events.
 // The optional model may only synthesize the selected titles and context. Every card keeps
 // its source link and event ref; a failed synthesis gets a plain headline fallback. The brief
-// separates exact-day reporting from consequential prior-day context. The combined edition
-// is capped at five and every story keeps its publication date and lane.
+// separates exact-day reporting from consequential prior-day context. On Saturday and
+// Sunday it instead fills the same five-story cap from the current Monday onward, with
+// new weekend developments first. Every story keeps its publication date and lane.
 
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -23,6 +24,8 @@ const { board, buildStanding } = briefStanding;
 const { groupEvents, sameThread } = newsThreads;
 const DEFAULT_WINDOW_HOURS = 36;
 const CARRYOVER_WINDOW_HOURS = 60;
+const WEEKEND_WINDOW_HOURS = 168;
+const SUMMARY_VERSION = 2;
 const { plainExplanation, plainHeadline } = plainLanguage;
 const { optionalAnalysis, selectEditionBrief } = briefSelection;
 const { evidenceInputs } = reportEvidence;
@@ -47,8 +50,11 @@ function pool(now = new Date()) {
 }
 
 const endPunct = (t) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t && !/[.!?]$/.test(t) ? t + '.' : t; };
-const fallbackSummary = (picked) => picked.slice(0, 3)
-  .map((event) => endPunct(plainExplanation(ctxOf(event)) || plainHeadline(stripDash(event.title))))
+// If synthesis is unavailable, summarize every selected development rather than
+// silently describing only the first three. Five plain sourced headlines are more
+// useful and more honest than a polished paragraph that omits part of the recap.
+const fallbackSummary = (picked) => picked.slice(0, 5)
+  .map((event) => endPunct(plainHeadline(stripDash(event.title)) || plainExplanation(ctxOf(event))))
   .join(' ');
 
 // ---- the Brief: 3-5 rubric-ranked developments, each headline + explained context ----
@@ -123,7 +129,15 @@ function select(events, editorialDate) {
     _selectionReason: receiptById.get(event.id)?.reason || '',
     _lane: receiptById.get(event.id)?.lane || 'today',
   }));
-  return { picked, receipt: result.receipt, counts: result.counts, carryoverDate: result.carryoverDate };
+  return {
+    picked,
+    policy: result.policy,
+    receipt: result.receipt,
+    counts: result.counts,
+    carryoverDate: result.carryoverDate,
+    weekStartDate: result.weekStartDate,
+    weekendStartDate: result.weekendStartDate,
+  };
 }
 
 function assertUniqueEvents(events) {
@@ -173,7 +187,11 @@ async function main() {
 
   const selection = select(P.events, editorialDate);
   const picked = selection.picked;
-  const windowHours = selection.counts.keyDevelopments ? CARRYOVER_WINDOW_HOURS : DEFAULT_WINDOW_HOURS;
+  const weekend = selection.policy === 'weekend-recap-v1';
+  const editionTitle = weekend ? 'Weekend recap' : 'The brief';
+  const windowHours = weekend
+    ? WEEKEND_WINDOW_HOURS
+    : selection.counts.keyDevelopments ? CARRYOVER_WINDOW_HOURS : DEFAULT_WINDOW_HOURS;
   if (!picked.length) {
     // A quiet edition says so plainly. Never relabel yesterday's claims as today's:
     // those stories cannot appear in today's selection receipt and must not be certified.
@@ -182,17 +200,20 @@ async function main() {
     const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
     const out = {
       meta: {
-        title: 'The brief', editorialDate, updated: editorialDate, asOf: editorialDate,
+        title: editionTitle, editorialDate, updated: editorialDate, asOf: editorialDate,
         reviewedAt, latestItemDate: '', quiet: true, newCount: 0,
-        generatedAt: now.toISOString(), mode: 'curated', count: 0, words: 8, contentSig,
+        generatedAt: now.toISOString(), mode: 'curated', editionType: weekend ? 'weekend-recap' : 'daily', summaryV: SUMMARY_VERSION,
+        count: 0, words: 8, contentSig,
         windowHours,
         selection: {
-          policy: 'exact-day-plus-carryover-v1',
+          policy: selection.policy,
           receipt: selection.receipt,
           lockedIds: [],
           empty: true,
           lanes: selection.counts,
           carryoverDate: selection.carryoverDate,
+          weekStartDate: selection.weekStartDate,
+          weekendStartDate: selection.weekendStartDate,
           scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
         },
       },
@@ -264,23 +285,27 @@ async function main() {
     it.href, it.date, it.lane, it.h1 || it.headline, it.context, it.source,
     it.background, it.view, it.prediction, it.analysisV, it.analysisRefs, it.analysisSources, it.implications, it.next,
   ]));
-  const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig && prev.meta.editorialDate === editorialDate;
+  const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig
+    && prev.meta.editorialDate === editorialDate && Number(prev.meta.summaryV) === SUMMARY_VERSION;
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
   // Keep an unchanged summary stable. When the story set changes, a failed model draft gets
   // a deterministic summary of the current headlines, never prose from the previous set.
   const summary = (unchanged && String(prev.summary || '').trim())
     || (!selectionOnly ? await writeSummary(picked) : '')
     || fallbackSummary(picked);
-  const out = { meta: { title: 'The brief', editorialDate, updated: editorialDate, asOf: editorialDate,
+  const out = { meta: { title: editionTitle, editorialDate, updated: editorialDate, asOf: editorialDate,
     reviewedAt, latestItemDate: selectedDates.at(-1) || '', quiet, newCount,
-    generatedAt: now.toISOString(), mode: 'curated', count: 1 + items.length, words, contentSig,
+    generatedAt: now.toISOString(), mode: 'curated', editionType: weekend ? 'weekend-recap' : 'daily', summaryV: SUMMARY_VERSION,
+    count: 1 + items.length, words, contentSig,
     windowHours,
     selection: {
-      policy: 'exact-day-plus-carryover-v1',
+      policy: selection.policy,
       receipt: selection.receipt,
       lockedIds: selectionOnly ? pickedIds : (lockedIds.length ? lockedIds : pickedIds),
       lanes: selection.counts,
       carryoverDate: selection.carryoverDate,
+      weekStartDate: selection.weekStartDate,
+      weekendStartDate: selection.weekendStartDate,
       scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
     } }, summary, lead, items, standing };
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));

@@ -86,15 +86,25 @@ module.exports = function (now = new Date()) {
     return { ...group, coverage: mergeCoverage(group.coverage, related, related.flatMap((event) => event.coverage || [])) };
   });
   const selectedStories = briefGroups.map(toStory).filter((story) => story.title).slice(0, 5);
+  const weekendEdition = meta.selection?.policy === 'weekend-recap-v1';
   // The date, not a rolling-window label, is authoritative. During a carried
   // edition nothing is called "today"; the prior edition remains available as
   // context under Key developments with its original dates intact.
   const prior = new Date(`${editorialDate}T12:00:00Z`);
   prior.setUTCDate(prior.getUTCDate() - 1);
   const priorDate = prior.toISOString().slice(0, 10);
-  const todayStories = carryingLastBrief ? [] : selectedStories.filter((story) => story.date === editorialDate);
-  const keyDevelopments = selectedStories.filter((story) => story.date === priorDate);
-  const stories = [...todayStories, ...keyDevelopments];
+  const todayStories = weekendEdition || carryingLastBrief
+    ? [] : selectedStories.filter((story) => story.date === editorialDate);
+  const keyDevelopments = weekendEdition
+    ? []
+    : selectedStories.filter((story) => carryingLastBrief || story.date === priorDate);
+  const weekendStories = weekendEdition
+    ? selectedStories.filter((story) => story.lane === 'weekend') : [];
+  const weekRecapStories = weekendEdition
+    ? selectedStories.filter((story) => story.lane === 'week-recap') : [];
+  const stories = weekendEdition
+    ? [...weekendStories, ...weekRecapStories]
+    : [...todayStories, ...keyDevelopments];
   const droppedMisdatedStories = stories.length !== selectedStories.length;
   const latestItemDate = stories.map((story) => story.date).filter(Boolean).sort().at(-1) || '';
   const fallback = stories.slice(0, 3).map((story) => sentence(story.title)).join(' ');
@@ -115,6 +125,9 @@ module.exports = function (now = new Date()) {
     currentEditorialDate: editorialDate,
     briefEditorialDate,
     carryingLastBrief,
+    weekendEdition,
+    editionType: weekendEdition ? 'weekend-recap' : 'daily',
+    briefTitle: weekendEdition ? 'Weekend recap' : 'The brief',
     newsThrough: clean(meta.reviewedAt || meta.generatedAt || happening.meta?.generatedAt),
     quiet: !stories.length || !!meta.quiet,
     summaryLead: plainExplanation(!droppedMisdatedStories && (generatedForToday || carryingLastBrief) && clean(brief.summary)
@@ -122,9 +135,13 @@ module.exports = function (now = new Date()) {
     stories,
     todayStories,
     keyDevelopments,
+    weekendStories,
+    weekRecapStories,
     briefSources,
     latestItemDate,
     windowHours: Number(meta.windowHours) || 36,
-    windowLabel: carryingLastBrief ? `Latest brief · ${shortDate(briefEditorialDate)}` : `Past ${Number(meta.windowHours) || 36} hours`,
+    windowLabel: carryingLastBrief
+      ? `Latest brief · ${shortDate(briefEditorialDate)}`
+      : weekendEdition ? `Since ${shortDate(meta.selection?.weekStartDate)}` : `Past ${Number(meta.windowHours) || 36} hours`,
   };
 };

@@ -1,10 +1,19 @@
 {
  "version": 1,
- "editorialDate": "2026-08-15",
- "updated": "2026-08-15T15:09:59.342Z",
+ "editorialDate": "2026-08-16",
+ "updated": "2026-08-16T15:09:18.872Z",
+ "weekend": true,
  "latestStoryDate": "Aug 14",
- "brief": "El gobierno mexicano presentó un estudio sobre cómo afectan los aranceles a su industria automotriz.",
+ "brief": "Las exportaciones mexicanas de fresa enfrentan una investigación antidumping en EE. UU. antes de las elecciones estadounidenses. México pidió a EE. UU. pausar los aranceles al acero y los automóviles durante la revisión del acuerdo comercial. La industria estadounidense del aluminio se opone a exenciones arancelarias para México y Canadá en la renegociación del T-MEC. Una regla estadounidense sobre transferencias de dinero cerca de la frontera con México perjudica a pequeños negocios. La autoridad aeronáutica mexicana enfrenta una evaluación de seguridad de la FAA.",
  "briefSources": [
+  {
+   "source": "El CEO",
+   "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/",
+   "publishedAt": "2026-08-13T08:00:37.000Z",
+   "date": "2026-08-13",
+   "title": "Mexican strawberry exports face US antidumping investigation ahead of US elections",
+   "summary": "Mexican strawberry shipments are under US investigation on antidumping grounds, with timing sensitivity tied to the US election cycle."
+  },
   {
    "source": "El Financiero — Economía",
    "url": "https://elfinanciero.com.mx/economia/2026/08/14/revision-del-t-mec-mexico-pide-pausa-de-aranceles-al-acero-y-autos-aplicame-un-descuento-pide-ebrard/",
@@ -12,11 +21,59 @@
    "date": "2026-08-14",
    "title": "Mexico asks the US to pause steel and auto tariffs during the trade-agreement review",
    "summary": "The Mexican government presented a study on how the tariffs affect its auto industry."
+  },
+  {
+   "source": "Mexico Business News",
+   "url": "https://mexicobusiness.news/mining/news/us-aluminum-lobby-asks-washington-keep-tariffs-out-usmca",
+   "publishedAt": "2026-08-11T16:44:19.000Z",
+   "date": "2026-08-11",
+   "title": "US aluminum industry opposes tariff exemptions for Mexico and Canada in USMCA renegotiation",
+   "summary": "The Coalition for a Prosperous America has urged US Treasury and US trade office to reject downstream aluminum exemptions for Mexico and Canada in the USMCA review and raise tariffs on fabricated products."
+  },
+  {
+   "source": "The Guardian — Mexico",
+   "url": "https://theguardian.com/us-news/2026/aug/11/us-mexico-border-area-money-transfer-rule-change-small-businesses",
+   "publishedAt": "2026-08-11T11:00:02.000Z",
+   "date": "2026-08-11",
+   "title": "US money-transfer rule near Mexico border damages small businesses",
+   "summary": "The Trump administration's April rule targeting cartel money-laundering has caused unintended economic harm to legitimate small companies along the US-Mexico border, affecting business operations and cash flows."
   }
  ],
  "stories": [
   {
+   "id": "mexican-strawberry-exports-face-us-antidumping-investigation-ahead-of-us-elections",
+   "lane": "week-recap",
+   "chip": "Mexican strawberry",
+   "date": "Aug 13",
+   "cat": "US & Mexico",
+   "catKey": "usmexico",
+   "source": "El CEO",
+   "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/",
+   "title": "Las exportaciones de fresa mexicana enfrentan investigación antisubvenciones de EE. UU. antes de elecciones estadounidenses",
+   "dek": "Los envíos de fresa mexicanos están bajo investigación antisubvenciones en EE. UU., con sensibilidad temporal vinculada al ciclo electoral estadounidense.",
+   "bg": "El Departamento de Comercio de EE. UU. abrió el caso en febrero. Su aviso oficial describe el 18.32% como el margen de dumping alegado, no como un arancel definitivo.",
+   "view": "El riesgo inmediato es la incertidumbre para los productores, no un arancel comprobado de 18.32%. La afirmación de que la política electoral impulsó el caso proviene del Consejo Nacional Agropecuario de México. El expediente oficial muestra que productores de Florida presentaron la petición, pero no establece su motivo.",
+   "watch": "Hay que seguir el caso A-201-869 del Departamento de Comercio y su próxima determinación. Un fallo que fije un arancel real convertiría la acusación en un costo comercial. Un margen menor o de cero debilitaría esa preocupación.",
+   "why": "El riesgo inmediato es la incertidumbre para los productores, no un arancel comprobado de 18.32%. La afirmación de que la política electoral impulsó el caso proviene del Consejo Nacional Agropecuario de México. El expediente oficial muestra que productores de Florida presentaron la petición, pero no establece su motivo.",
+   "be": true,
+   "analysisSources": [
+    {
+     "id": "article",
+     "kind": "article",
+     "source": "El CEO",
+     "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/"
+    },
+    {
+     "id": "primary:commerce",
+     "kind": "primary",
+     "source": "US Department of Commerce",
+     "url": "https://www.trade.gov/commerce-initiates-antidumping-duty-investigation-fresh-strawberries-mexico"
+    }
+   ]
+  },
+  {
    "id": "mexico-asks-the-us-to-pause-steel-and-auto-tariffs-during-the-trade-agreement-review",
+   "lane": "week-recap",
    "chip": "Mexico asks",
    "date": "Aug 14",
    "cat": "US & Mexico",
@@ -44,8 +101,107 @@
      "url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/july/joint-statement-ambassador-jamieson-greer-and-mexican-secretary-economy-marcelo-ebrard"
     }
    ]
+  },
+  {
+   "id": "us-aluminum-industry-opposes-tariff-exemptions-for-mexico-and-canada-in-us-mexico-canada-trade-agreement-renegotiation",
+   "lane": "week-recap",
+   "chip": "US aluminum",
+   "date": "Aug 11",
+   "cat": "US & Mexico",
+   "catKey": "usmexico",
+   "source": "Mexico Business News",
+   "url": "https://mexicobusiness.news/mining/news/us-aluminum-lobby-asks-washington-keep-tariffs-out-usmca",
+   "title": "La industria del aluminio de EE. UU. se opone a exenciones arancelarias para México y Canadá en la renegociación del tratado comercial T-MEC.",
+   "dek": "La Coalición por una América Próspera ha exhortado al Tesoro de EE. UU. y a la oficina comercial de EE. UU. a rechazar las exenciones de aluminio integrado para México y Canadá en la revisión del T-MEC e incrementar los aranceles sobre productos fabricados.",
+   "bg": "Los aranceles a los metales de la Sección 232 están fuera de las preferencias habituales del T-MEC. Durante la revisión pública de la oficina comercial de EE. UU., representantes de la industria del aluminio pidieron mantener los aranceles vigentes a menos que México y Canadá armonicen sus aranceles y mecanismos de cumplimiento, incluidos los productos derivados.",
+   "view": "La nueva petición del grupo empresarial es una posición de negociación, no una decisión arancelaria. La oficina comercial de EE. UU. confirmó que el acero y el aluminio ya forman parte de la revisión bilateral, por lo que los productores mexicanos todavía no tienen una vía anunciada para obtener alivio.",
+   "watch": "El próximo comunicado oficial sobre las negociaciones entre México y EE. UU. deberá mostrar si hay una exención, una cuota o un acuerdo específico de cumplimiento. Si no incluye una medida para el aluminio, el trato arancelario vigente seguirá siendo la mejor referencia. Una exención o cuota explícita cambiaría esa lectura.",
+   "why": "La nueva petición del grupo empresarial es una posición de negociación, no una decisión arancelaria. La oficina comercial de EE. UU. confirmó que el acero y el aluminio ya forman parte de la revisión bilateral, por lo que los productores mexicanos todavía no tienen una vía anunciada para obtener alivio.",
+   "be": true,
+   "analysisSources": [
+    {
+     "kind": "article",
+     "source": "Mexico Business News",
+     "url": "https://mexicobusiness.news/mining/news/us-aluminum-lobby-asks-washington-keep-tariffs-out-usmca"
+    },
+    {
+     "kind": "primary",
+     "source": "US trade office hearing transcript",
+     "url": "https://ustr.gov/sites/default/files/files/Press/Releases/2025/December%204%20Hearing%20Transcript.pdf"
+    },
+    {
+     "kind": "primary",
+     "source": "US trade office",
+     "url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/may/united-states-and-mexico-conclude-first-bilateral-round-related-joint-review-usmca"
+    }
+   ]
+  },
+  {
+   "id": "us-money-transfer-rule-near-mexico-border-damages-small-businesses",
+   "lane": "week-recap",
+   "chip": "US money-transfer",
+   "date": "Aug 11",
+   "cat": "US & Mexico",
+   "catKey": "usmexico",
+   "source": "The Guardian — Mexico",
+   "url": "https://theguardian.com/us-news/2026/aug/11/us-mexico-border-area-money-transfer-rule-change-small-businesses",
+   "title": "Norma estadounidense de transferencias de dinero cerca de frontera mexicana daña pequeños negocios",
+   "dek": "La norma de abril de la administración Trump enfocada en combatir el lavado de dinero del crimen organizado ha causado daño económico no intencional a pequeñas empresas legítimas en la frontera entre Estados Unidos y México, afectando operaciones comerciales y flujos de efectivo.",
+   "bg": "La orden de marzo de 2025 de FinCEN cubría operaciones en efectivo superiores a $200 e inferiores a $10,000 en negocios seleccionados de servicios monetarios de la frontera. La agencia elevó después el mínimo a $1,000. Un tribunal federal de apelaciones señaló que un negocio calculó 14 horas adicionales de reportes al día y perdió 50-60% de sus clientes durante la primera semana de la regla.",
+   "view": "El expediente judicial demuestra una carga real de cumplimiento, pero la evidencia se concentra en un solo negocio y la orden judicial cubre únicamente el sur de California. No demuestra que todos los negocios fronterizos sufrieran el mismo daño ni mide si los reportes frenaron el lavado de dinero.",
+   "watch": "Habrá que observar si FinCEN prorroga o modifica la orden vigente después del 2 de septiembre de 2026. Si el Tesoro eleva el umbral o un tribunal amplía la orden judicial, la carga disminuiría. Una renovación con los mismos términos la mantendría.",
+   "why": "El expediente judicial demuestra una carga real de cumplimiento, pero la evidencia se concentra en un solo negocio y la orden judicial cubre únicamente el sur de California. No demuestra que todos los negocios fronterizos sufrieran el mismo daño ni mide si los reportes frenaron el lavado de dinero.",
+   "be": true,
+   "analysisSources": [
+    {
+     "kind": "article",
+     "source": "The Guardian",
+     "url": "https://theguardian.com/us-news/2026/aug/11/us-mexico-border-area-money-transfer-rule-change-small-businesses"
+    },
+    {
+     "kind": "primary",
+     "source": "US Court of Appeals for the Ninth Circuit",
+     "url": "https://cdn.ca9.uscourts.gov/datastore/opinions/2026/07/13/25-4238.pdf"
+    },
+    {
+     "kind": "primary",
+     "source": "Federal Register",
+     "url": "https://www.federalregister.gov/documents/2026/03/10/2026-04641/geographic-targeting-order-imposing-recordkeeping-and-reporting-requirements-on-certain-money"
+    }
+   ]
+  },
+  {
+   "id": "mexico-aviation-authority-faces-faa-safety-evaluation",
+   "lane": "week-recap",
+   "chip": "Mexico aviation",
+   "date": "Aug 12",
+   "cat": "Security & society",
+   "catKey": "society",
+   "source": "El CEO",
+   "url": "https://elceo.com/negocios/mexico-vuelve-a-prueba-en-seguridad-aerea-asi-enfrenta-la-afac-la-evaluacion-de-eu/",
+   "title": "Autoridad de aviación mexicana enfrenta evaluación de seguridad de la FAA.",
+   "dek": "La autoridad de aviación civil mexicana se someterá esta semana a una evaluación de la FAA de EE. UU. sobre cumplimiento de normas de seguridad, con posibles consecuencias para la clasificación de categoría de aviación de México.",
+   "bg": "La FAA devolvió a México la Categoría 1 en septiembre de 2023. Esta revisión evalúa si la autoridad aeronáutica todavía cumple las normas internacionales de supervisión de seguridad. México no está intentando recuperar la categoría actualmente.",
+   "view": "El riesgo es una degradación futura, no una restricción actual de Categoría 2. La Categoría 1 permite a las aerolíneas mexicanas añadir rutas a EE. UU. y acuerdos de código compartido, así que la pregunta útil es si la autoridad ha mantenido personal, reglas y supervisión desde 2023.",
+   "watch": "Hay que seguir la lista de categorías de la FAA y cualquier aviso formal después de la revisión. Mantener la Categoría 1 confirmaría el cumplimiento continuo. Una degradación volvería a limitar nuevas rutas y códigos compartidos con EE. UU.",
+   "why": "El riesgo es una degradación futura, no una restricción actual de Categoría 2. La Categoría 1 permite a las aerolíneas mexicanas añadir rutas a EE. UU. y acuerdos de código compartido, así que la pregunta útil es si la autoridad ha mantenido personal, reglas y supervisión desde 2023.",
+   "be": true,
+   "analysisSources": [
+    {
+     "id": "article",
+     "kind": "article",
+     "source": "El CEO",
+     "url": "https://elceo.com/negocios/mexico-vuelve-a-prueba-en-seguridad-aerea-asi-enfrenta-la-afac-la-evaluacion-de-eu/"
+    },
+    {
+     "id": "primary:faa",
+     "kind": "primary",
+     "source": "US Federal Aviation Administration",
+     "url": "https://www.faa.gov/newsroom/federal-aviation-administration-returns-mexico-highest-aviation-safety-status"
+    }
+   ]
   }
  ],
- "contentSig": "1a6f40f9e92ab9fb620d24284e512bdea08665f713f278ba8467672fb02a1d50",
- "savedAt": "2026-08-15T15:10:39.487Z"
+ "contentSig": "3e6d99c1c8fed7fd02155241bd3d39d94c973cc5591dd14cf5fd903d5f481553",
+ "savedAt": "2026-08-16T15:10:41.730Z"
 }

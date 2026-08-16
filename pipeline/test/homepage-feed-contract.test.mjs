@@ -32,13 +32,21 @@ assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.par
 assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
 assert.ok(dailyBrief.todayStories.every((story) => story.date === dailyBrief.editorialDate),
   "Today's stories must contain only exact-day reporting");
-assert.equal(dailyBrief.todayStories.length + dailyBrief.keyDevelopments.length, dailyBrief.stories.length,
+assert.equal(dailyBrief.todayStories.length + dailyBrief.keyDevelopments.length
+  + dailyBrief.weekendStories.length + dailyBrief.weekRecapStories.length, dailyBrief.stories.length,
   'the two visible lanes must partition the one selected story set');
 if (briefFile.meta?.selection?.policy === 'exact-day-plus-carryover-v1') {
   const prior = new Date(`${dailyBrief.editorialDate}T12:00:00Z`);
   prior.setUTCDate(prior.getUTCDate() - 1);
   assert.ok(dailyBrief.keyDevelopments.every((story) => story.date === prior.toISOString().slice(0, 10)),
     'new editions may carry only important stories from the immediately preceding day');
+} else if (briefFile.meta?.selection?.policy === 'weekend-recap-v1') {
+  const { weekStartDate, weekendStartDate } = briefFile.meta.selection;
+  assert.equal(dailyBrief.weekendEdition, true);
+  assert.ok(dailyBrief.weekendStories.every((story) => story.date >= weekendStartDate
+    && story.date <= dailyBrief.editorialDate), 'New this weekend must contain only Saturday and Sunday developments');
+  assert.ok(dailyBrief.weekRecapStories.every((story) => story.date >= weekStartDate
+    && story.date < weekendStartDate), 'What mattered this week must contain only the current Monday-Friday window');
 }
 assert.equal(
   dailyBrief.latestItemDate,
@@ -83,9 +91,9 @@ nextDay.setUTCDate(nextDay.getUTCDate() + 1);
 const carriedBrief = dailyBriefFactory(nextDay);
 assert.equal(carriedBrief.carryingLastBrief, true, 'a failed next-day refresh must keep the last successful brief visible');
 assert.equal(carriedBrief.todayStories.length, 0, 'a carried edition must not call any prior story today');
-assert.equal(carriedBrief.keyDevelopments.length, carriedBrief.stories.length, 'a carried edition belongs entirely under Key developments');
-assert.equal(carriedBrief.keyDevelopments.length, dailyBrief.todayStories.length,
-  'only exact-day stories from the prior edition may carry into the next day');
+assert.equal(carriedBrief.keyDevelopments.length + carriedBrief.weekendStories.length
+  + carriedBrief.weekRecapStories.length, carriedBrief.stories.length,
+  'a carried edition must preserve its prior, honestly named story lanes');
 assert.match(carriedBrief.windowLabel, /Latest brief/, 'carried developments must not be presented as a fresh rolling window');
 const staleNow = new Date('2099-12-31T12:00:00Z');
 const staleBrief = dailyBriefFactory(staleNow);
@@ -415,6 +423,14 @@ assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, compl
 }
 // The brief still comes before the stories it summarises.
 assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf('for storySection in f.storySections'), 'the Brief must render before the selected stories');
+assert.match(homepageTemplate, /L\.weekendBrief if f\.weekend else L\.brief/,
+  'Saturday and Sunday must identify the catch-up product as the Weekend recap');
+assert.match(homepageTemplate, /storySection\.kind == 'weekend'[\s\S]*L\.newThisWeekend[\s\S]*storySection\.kind == 'week-recap'[\s\S]*L\.weekRecap/,
+  'weekend stories must be visibly separated from the Monday-Friday recap');
+assert.match(feedData, /week: brief\.weekendEdition \? \[\] : weekItems/,
+  'the separate This week shelf must disappear when the selected Brief already is the weekly recap');
+assert.match(feedData, /lane: story\.lane/,
+  'language snapshots and renderers must retain each story’s dated selection lane');
 assert.doesNotMatch(briefBuilder, /analysisReady\(e\)/, 'analysis readiness must never decide whether a story enters key developments');
 assert.match(briefBuilder, /selectEditionBrief\(candidates/, 'the two story lanes must share the auditable importance-first selector');
 assert.doesNotMatch(briefBuilder, /BIG_MONEY|bigCapital/, 'a dollar-amount regex must not override the audited importance rubric');

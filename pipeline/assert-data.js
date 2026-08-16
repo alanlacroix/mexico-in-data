@@ -170,9 +170,10 @@ try {
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
   const explanationReadiness = briefReadiness(brief);
   const selectionPolicy = brief.meta?.selection?.policy;
+  const auditedSelection = ['exact-day-plus-carryover-v1', 'weekend-recap-v1'].includes(selectionPolicy);
   const expectedContentSig = createHash('sha256').update(JSON.stringify(claims.map((claim) => [
     claim.href, claim.date,
-    ...(selectionPolicy === 'exact-day-plus-carryover-v1' ? [claim.lane] : []),
+    ...(auditedSelection ? [claim.lane] : []),
     claim.h1 || claim.headline, claim.context, claim.source,
     claim.background, claim.view, claim.prediction, claim.analysisV, claim.analysisRefs, claim.analysisSources, claim.implications, claim.next,
   ]))).digest('hex');
@@ -182,16 +183,28 @@ try {
     date.setUTCDate(date.getUTCDate() - 1);
     return Number.isFinite(date.getTime()) ? date.toISOString().slice(0, 10) : '';
   })();
-  if (selectionPolicy === 'exact-day-plus-carryover-v1') {
+  if (auditedSelection) {
     const curation = happening.meta?.curation;
     const freshness = curationReadiness(curation, brief.meta?.editorialDate);
     if (!freshness.ok) fails.push(`brief: fresh-story curation is incomplete (${freshness.reason})`);
     const laneCounts = brief.meta?.selection?.lanes || {};
-    const actualToday = claims.filter((claim) => claim.lane === 'today').length;
-    const actualKey = claims.filter((claim) => claim.lane === 'key-development').length;
-    if (Number(laneCounts.today) !== actualToday || Number(laneCounts.keyDevelopments) !== actualKey
+    const expectedLaneCounts = selectionPolicy === 'weekend-recap-v1'
+      ? {
+        weekend: claims.filter((claim) => claim.lane === 'weekend').length,
+        weekRecap: claims.filter((claim) => claim.lane === 'week-recap').length,
+      }
+      : {
+        today: claims.filter((claim) => claim.lane === 'today').length,
+        keyDevelopments: claims.filter((claim) => claim.lane === 'key-development').length,
+      };
+    if (Object.entries(expectedLaneCounts).some(([lane, count]) => Number(laneCounts[lane]) !== count)
         || Number(laneCounts.total) !== claims.length) {
       fails.push('brief: story-lane counts do not match the visible selection');
+    }
+    if (selectionPolicy === 'weekend-recap-v1'
+        && (!validPeriod(brief.meta?.selection?.weekStartDate || '')
+          || !validPeriod(brief.meta?.selection?.weekendStartDate || ''))) {
+      fails.push('brief: weekend recap is missing its Monday and Saturday boundaries');
     }
   }
   if (!claims.length && (!brief.meta?.quiet || !String(brief.summary || '').trim())) {
@@ -226,6 +239,16 @@ try {
         fails.push(`brief: carryover claim ${index + 1} is dated ${claim.date}, expected ${priorDate}`);
       } else if (!['today', 'key-development'].includes(claim.lane)) {
         fails.push(`brief: claim ${index + 1} has no valid story lane`);
+      }
+    } else if (selectionPolicy === 'weekend-recap-v1') {
+      const weekStartDate = brief.meta?.selection?.weekStartDate;
+      const weekendStartDate = brief.meta?.selection?.weekendStartDate;
+      if (claim.lane === 'weekend' && (claim.date < weekendStartDate || claim.date > brief.meta.editorialDate)) {
+        fails.push(`brief: weekend claim ${index + 1} is dated ${claim.date}`);
+      } else if (claim.lane === 'week-recap' && (claim.date < weekStartDate || claim.date >= weekendStartDate)) {
+        fails.push(`brief: weekly recap claim ${index + 1} is dated ${claim.date}`);
+      } else if (!['weekend', 'week-recap'].includes(claim.lane)) {
+        fails.push(`brief: claim ${index + 1} has no valid weekend lane`);
       }
     }
     const builtAt = Date.parse(brief.meta?.generatedAt);

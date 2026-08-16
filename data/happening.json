@@ -6,8 +6,8 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-16T13:06:07.929Z",
-    "llm": true,
+    "generatedAt": "2026-08-16T15:11:15.613Z",
+    "llm": false,
     "curation": {
       "policy": "exact-day-assessment-v1",
       "editorialDate": "2026-08-16",
@@ -19,6 +19,44 @@
       "mode": "deterministic-fallback",
       "complete": true,
       "reason": "model request unavailable; conservative deterministic assessment used"
+    },
+    "analysisTarget": {
+      "policy": "every-selected-story-context-audited-v3",
+      "ids": [
+        "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
+        "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14",
+        "n-us-aluminum-lobby-asks-washington-to-keep-tariffs-ou-2026-08-11",
+        "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
+        "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12"
+      ],
+      "added": 0,
+      "outcomes": [
+        {
+          "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-us-aluminum-lobby-asks-washington-to-keep-tariffs-ou-2026-08-11",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
+          "ready": true,
+          "reason": "ready"
+        }
+      ]
     }
   },
   "events": [
@@ -1251,10 +1289,39 @@
       },
       "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/aluminum-zheng-ji-sxtClAGwRck-unsplash.jpg?h=b5955f22&itok=PRg8tzyI",
       "imgTries": 1,
-      "background": "Section 232 tariffs on metals sit outside USMCA and can theoretically be applied regardless of the trade pact's origin rules, which is why the aluminum lobby wants the two kept separate rather than allowing USMCA-qualified Mexican extrusions to bypass the 50% metals duty.",
-      "view": "The Coalition's own numbers show why this fight matters to producers: a landed cost gap of US$2.39 versus US$3.88 per pound, about 38%, would price US extrusion makers out of contracts if Mexico wins an exemption. Mexico's ask is not free, either, since exporters have already paid close to US$23 billion in tariffs in the year through April 2026, so an exemption would reverse a cost that has been real and recent, not hypothetical.",
-      "prediction": "The more likely outcome is a narrower compromise, such as quotas or partial relief tied to origin verification, rather than a full exemption or a full rejection. That expectation would be wrong if USTR or Treasury issues a blanket ruling either exempting Mexican and Canadian aluminum entirely or explicitly rejecting any relief.",
-      "analysisV": 7
+      "background": "Section 232 metal tariffs sit outside normal USMCA preferences. During the US trade office's public review, aluminum-industry testimony asked to keep existing tariffs unless Mexico and Canada align their tariffs and enforcement, including for derivative products.",
+      "view": "The latest lobby request is a negotiating position, not a tariff decision. The US trade office has confirmed that steel and aluminum are already part of the bilateral review, so Mexican producers still lack an announced path to relief.",
+      "prediction": "Watch the next official US-Mexico negotiating statement for a specific exemption, quota or enforcement deal. If it contains no measure for aluminum, current tariff treatment remains the best guide. A named exemption or quota would change that.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "ustr-usmca-hearing-2025-12-04"
+        ],
+        "view": [
+          "ustr-bilateral-round-2026-05-29",
+          "article"
+        ],
+        "prediction": [
+          "ustr-bilateral-round-2026-05-29"
+        ]
+      },
+      "analysisSources": [
+        {
+          "kind": "article",
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/mining/news/us-aluminum-lobby-asks-washington-keep-tariffs-out-usmca"
+        },
+        {
+          "kind": "primary",
+          "source": "US trade office hearing transcript",
+          "url": "https://ustr.gov/sites/default/files/files/Press/Releases/2025/December%204%20Hearing%20Transcript.pdf"
+        },
+        {
+          "kind": "primary",
+          "source": "US trade office",
+          "url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/may/united-states-and-mexico-conclude-first-bilateral-round-related-joint-review-usmca"
+        }
+      ]
     },
     {
       "id": "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
@@ -1325,10 +1392,39 @@
       },
       "image": "https://i.guim.co.uk/img/media/8cd92cf7f4265cd4c21a5f8d0c4e663bccb68164/731_0_10925_8742/master/10925.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&precrop=40:21,offset-x50,offset-y0&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdGctZGVmYXVsdC5wbmc&enable=upscale&s=edcd479f94b1f4e5cc8b6be40e01fc71",
       "imgTries": 1,
-      "background": "The rule cut the cash-transaction reporting threshold for financial-services businesses near the border from $10,000 to $200, sweeping in ordinary grocery-store transfer counters used by immigrant families to pay bills and send money home.",
-      "view": "The mechanism is a data-collection net built for cartel laundering that instead catches small legal businesses lacking compliance staff to handle reporting at that volume. Remittances brought Mexico about $62.47bn in 2025, more than foreign direct investment, and that flow depends on cheap, accessible transfer points like Nachita's staying open. A rule that raises the cost of running those counters shrinks the informal channels households use to move money, without a public estimate of how much cartel activity it actually stops.",
-      "prediction": "Small transfer businesses near the border likely keep absorbing compliance costs or shut down transfer services rather than fight the rule, since litigation is slow and Congress has not acted. That would be wrong if the Treasury narrows the threshold back up or exempts small retailers, which has not been reported.",
-      "analysisV": 7
+      "background": "FinCEN's March 2025 order covered cash transactions above $200 and below $10,000 at selected border money businesses. The agency later raised the minimum to $1,000. A federal appeals court said one store estimated 14 extra reporting hours a day and lost 50-60% of customers during the rule's first week.",
+      "view": "The court record shows a real compliance burden, but the evidence centers on one business and the injunction covers only Southern California. It does not prove that every border business suffered the same harm or measure whether the reports stopped money laundering.",
+      "prediction": "Watch whether FinCEN extends or changes the current order after September 2, 2026. If Treasury raises the threshold or a court broadens the injunction, the burden would shrink. A renewed order with the same terms would preserve it.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "ninth-circuit-25-4238",
+          "federal-register-2026-04641"
+        ],
+        "view": [
+          "ninth-circuit-25-4238"
+        ],
+        "prediction": [
+          "federal-register-2026-04641"
+        ]
+      },
+      "analysisSources": [
+        {
+          "kind": "article",
+          "source": "The Guardian",
+          "url": "https://theguardian.com/us-news/2026/aug/11/us-mexico-border-area-money-transfer-rule-change-small-businesses"
+        },
+        {
+          "kind": "primary",
+          "source": "US Court of Appeals for the Ninth Circuit",
+          "url": "https://cdn.ca9.uscourts.gov/datastore/opinions/2026/07/13/25-4238.pdf"
+        },
+        {
+          "kind": "primary",
+          "source": "Federal Register",
+          "url": "https://www.federalregister.gov/documents/2026/03/10/2026-04641/geographic-targeting-order-imposing-recordkeeping-and-reporting-requirements-on-certain-money"
+        }
+      ]
     },
     {
       "id": "n-m-xico-realiza-m-s-importaciones-desde-econom-as-eme-2026-08-11",

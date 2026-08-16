@@ -10,9 +10,10 @@ module.exports = {
   en: {
     lang: 'en', htmlLang: 'en', otherUrl: '/es/', otherLabel: 'ES',
     tagline: 'Mexico’s economic, political, security and business news, all in one place.',
-    brief: 'The brief', updated: 'Updated', latestBrief: 'Latest brief',
+    brief: 'The brief', weekendBrief: 'Weekend recap', updated: 'Updated', latestBrief: 'Latest brief',
     moved: 'What moved since the day before', line30: 'Line: 30 days', why: 'WHY +', hide: 'HIDE −',
     stories: 'Key developments', todayStories: "Today's stories", keyDevelopments: 'Key developments',
+    newThisWeekend: 'New this weekend', weekRecap: 'What mattered this week',
     storyCount: (n, latest) => `${n} ${n === 1 ? 'story' : 'stories'}${latest ? ` · ${latest}` : ''}`,
     be: 'Briefly explained', beHide: 'Hide', background: 'Background', ourView: 'Our view',
     watching: 'What we’re watching', source: 'Source', sources: 'Sources', evidence: 'Evidence',
@@ -29,9 +30,10 @@ module.exports = {
   es: {
     lang: 'es', htmlLang: 'es-MX', otherUrl: '/', otherLabel: 'EN',
     tagline: 'La economía, la política y la seguridad de México, en un solo lugar.',
-    brief: 'El resumen', updated: 'Actualizado', latestBrief: 'Último resumen',
+    brief: 'El resumen', weekendBrief: 'Resumen del fin de semana', updated: 'Actualizado', latestBrief: 'Último resumen',
     moved: 'Qué se movió desde el día anterior', line30: 'Línea: 30 días', why: 'POR QUÉ +', hide: 'OCULTAR −',
     stories: 'Historias clave', todayStories: 'Historias de hoy', keyDevelopments: 'Acontecimientos clave',
+    newThisWeekend: 'Nuevo este fin de semana', weekRecap: 'Lo más importante de la semana',
     storyCount: (n, latest) => `${n} ${n === 1 ? 'historia' : 'historias'}${latest ? ` · ${latest}` : ''}`,
     be: 'En breve', beHide: 'Ocultar', background: 'Contexto', ourView: 'Nuestra lectura',
     watching: 'Qué estamos siguiendo', source: 'Fuente', sources: 'Fuentes', evidence: 'Fuentes del análisis',

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import selection from '../lib/brief-selection.cjs';
 
-const { analysisState, optionalAnalysis, selectDailyBrief, selectEditionBrief } = selection;
+const { analysisState, optionalAnalysis, selectDailyBrief, selectEditionBrief, weekDates } = selection;
 
 const candidate = (id, importance, extra = {}) => ({
   id,
@@ -23,6 +23,52 @@ const approvedAnalysis = (extra = {}) => ({
   ...extra,
 });
 const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
+
+assert.deepEqual(weekDates('2026-08-16'), {
+  weekend: true,
+  weekStartDate: '2026-08-10',
+  weekendStartDate: '2026-08-15',
+}, 'Sunday must use the current Monday-through-Sunday editorial week');
+
+// Saturday and Sunday are one evolving recap. Qualifying weekend developments
+// lead, and consequential Monday-Friday stories fill the remaining five slots.
+{
+  const result = selectEditionBrief([
+    candidate('sunday-new', 5, { date: '2026-08-16', publishedAt: '2026-08-16T14:00:00Z' }),
+    candidate('saturday-new', 6, { date: '2026-08-15', publishedAt: '2026-08-15T14:00:00Z' }),
+    candidate('friday-major', 9, { date: '2026-08-14', publishedAt: '2026-08-14T14:00:00Z' }),
+    candidate('thursday-major', 8, { date: '2026-08-13', publishedAt: '2026-08-13T14:00:00Z' }),
+    candidate('wednesday-major', 7, { date: '2026-08-12', publishedAt: '2026-08-12T14:00:00Z' }),
+    candidate('tuesday-major', 7, { date: '2026-08-11', publishedAt: '2026-08-11T14:00:00Z' }),
+    candidate('weekday-routine', 5, { date: '2026-08-10', publishedAt: '2026-08-10T14:00:00Z' }),
+    candidate('previous-sunday', 10, { date: '2026-08-09', publishedAt: '2026-08-09T14:00:00Z' }),
+  ], { editorialDate: '2026-08-16' });
+  assert.equal(result.policy, 'weekend-recap-v1');
+  assert.deepEqual(result.selected.map((event) => event.id), [
+    'saturday-new', 'sunday-new', 'friday-major', 'thursday-major', 'wednesday-major',
+  ]);
+  assert.deepEqual(result.selected.map((event) => event.date), [
+    '2026-08-15', '2026-08-16', '2026-08-14', '2026-08-13', '2026-08-12',
+  ], 'the recap must retain every development’s real date');
+  assert.equal(receiptFor(result, 'saturday-new').lane, 'weekend');
+  assert.equal(receiptFor(result, 'friday-major').lane, 'week-recap');
+  assert.equal(receiptFor(result, 'weekday-routine').selected, false);
+  assert.equal(receiptFor(result, 'previous-sunday'), undefined, 'the recap must reset at Monday');
+  assert.deepEqual(result.counts, { weekend: 2, weekRecap: 3, total: 5 });
+}
+
+// Monday immediately returns to the normal daily product; Friday’s recap does
+// not leak through merely because it appeared during the weekend.
+{
+  const result = selectEditionBrief([
+    candidate('monday-new', 5, { date: '2026-08-17', publishedAt: '2026-08-17T14:00:00Z' }),
+    candidate('sunday-important', 8, { date: '2026-08-16', publishedAt: '2026-08-16T14:00:00Z' }),
+    candidate('friday-important', 10, { date: '2026-08-14', publishedAt: '2026-08-14T14:00:00Z' }),
+  ], { editorialDate: '2026-08-17' });
+  assert.equal(result.policy, 'exact-day-plus-carryover-v1');
+  assert.deepEqual(result.selected.map((event) => event.id), ['monday-new', 'sunday-important']);
+  assert.equal(receiptFor(result, 'friday-important'), undefined);
+}
 
 // An edition has two honest lanes. Exact-day stories get first access; only
 // importance-6+ stories from yesterday can fill unused slots, with five total.

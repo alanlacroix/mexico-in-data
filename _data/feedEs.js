@@ -48,8 +48,15 @@ module.exports = function () {
     .filter((story) => briefFeed.editorialDate !== f.date || currentVisibleIds.has(story.id))
     .map((s) => ({ ...s, date: esDate(s.date), cat: cat(s.cat) }));
   const carrying = Boolean(f.carrying || briefFeed.translationCarrying);
-  const todayStories = carrying ? [] : translatedStories.filter((story) => story.lane === 'today');
-  const keyDevelopments = translatedStories.filter((story) => !todayStories.includes(story));
+  const visibleWeekend = Boolean(briefFeed.weekend);
+  const weekendStories = visibleWeekend
+    ? translatedStories.filter((story) => story.lane === 'weekend') : [];
+  const weekRecapStories = visibleWeekend
+    ? translatedStories.filter((story) => story.lane === 'week-recap') : [];
+  const todayStories = carrying || visibleWeekend
+    ? [] : translatedStories.filter((story) => story.lane === 'today');
+  const keyDevelopments = visibleWeekend
+    ? [] : translatedStories.filter((story) => !todayStories.includes(story));
   const translatedWeek = f.week.map((w) => ({
     ...w,
     date: esDate(w.date),
@@ -64,6 +71,7 @@ module.exports = function () {
     date: briefFeed.editorialDate,
     updated: briefFeed.updated,
     carrying,
+    weekend: visibleWeekend,
     translationCarrying: briefFeed.translationCarrying,
     brief: briefFeed.brief,
     briefSources: briefFeed.briefSources || [],
@@ -78,10 +86,15 @@ module.exports = function () {
     stories: translatedStories,
     todayStories,
     keyDevelopments,
-    storySections: [
+    weekendStories,
+    weekRecapStories,
+    storySections: (visibleWeekend ? [
+      { id: 'new-this-weekend', kind: 'weekend', latest: weekendStories[0]?.date || '', stories: weekendStories },
+      { id: 'week-recap', kind: 'week-recap', latest: weekRecapStories[0]?.date || '', stories: weekRecapStories },
+    ] : [
       { id: 'today-stories', kind: 'today', latest: todayStories[0]?.date || '', stories: todayStories },
       { id: 'key-developments', kind: 'key', latest: keyDevelopments[0]?.date || '', stories: keyDevelopments },
-    ].filter((section) => section.stories.length),
+    ]).filter((section) => section.stories.length),
     week: translatedWeek,
     weekLabel: esDate(f.weekLabel),
     upcoming: f.upcoming.map((g) => ({

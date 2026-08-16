@@ -8,6 +8,7 @@ const DEFAULT_MIN_IMPORTANCE = 5;
 const DEFAULT_SOFT_FLOOR = 3;
 const DEFAULT_CAP = 5;
 const DEFAULT_CARRYOVER_MIN_IMPORTANCE = 6;
+const WEEKEND_RECAP_MIN_IMPORTANCE = 6;
 // v9 adds separately retained context beyond the original article plus an independent claim audit.
 // Older prose is never mistaken for the current product when an event returns.
 const ANALYSIS_VERSION = 9;
@@ -240,6 +241,102 @@ function previousDay(iso) {
   return date.toISOString().slice(0, 10);
 }
 
+function addDays(iso, amount) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(clean(iso))) return '';
+  const date = new Date(`${iso}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + amount);
+  return date.toISOString().slice(0, 10);
+}
+
+function weekDates(iso) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(clean(iso))) {
+    return { weekend: false, weekStartDate: '', weekendStartDate: '' };
+  }
+  const date = new Date(`${iso}T12:00:00Z`);
+  const day = date.getUTCDay();
+  const daysSinceMonday = (day + 6) % 7;
+  const weekStartDate = addDays(iso, -daysSinceMonday);
+  return {
+    weekend: day === 0 || day === 6,
+    weekStartDate,
+    weekendStartDate: addDays(weekStartDate, 5),
+  };
+}
+
+function rankedLaneRows(selection, lane, selected) {
+  const globalRank = new Map(selected.map((event, index) => [receiptId(event, index), index + 1]));
+  return selection.receipt.map((row) => ({
+    ...row,
+    lane,
+    laneRank: row.rank,
+    rank: row.selected ? globalRank.get(row.id) || row.rank : null,
+  }));
+}
+
+/**
+ * The weekend edition is a catch-up product, not an empty daily feed.
+ *
+ * Developments dated Saturday or Sunday get first access to the same five-story
+ * cap used on weekdays. Remaining slots go to importance-6+ developments dated
+ * Monday through Friday. Every candidate retains its real event date and the two
+ * lanes make the presentation explicit: new this weekend, then what mattered.
+ */
+function selectWeekendBrief(candidates, options = {}) {
+  const events = Array.isArray(candidates) ? candidates : [];
+  const editorialDate = clean(options.editorialDate);
+  const dates = weekDates(editorialDate);
+  const cap = Math.max(0, Math.floor(finiteNumber(options.cap, DEFAULT_CAP)));
+  const dateOf = typeof options.dateOf === 'function'
+    ? options.dateOf : (event) => clean(event && event.date);
+  const shared = { ...options };
+  delete shared.editorialDate;
+  delete shared.dateOf;
+  delete shared.carryoverMinImportance;
+  delete shared.weekendRecapMinImportance;
+
+  const inWindow = (event) => {
+    const date = dateOf(event);
+    return date >= dates.weekStartDate && date <= editorialDate;
+  };
+  const newThisWeekend = selectDailyBrief(events.filter((event) => {
+    const date = dateOf(event);
+    return inWindow(event) && date >= dates.weekendStartDate;
+  }), {
+    ...shared,
+    cap,
+    softFloor: Math.min(cap, Math.max(0, Math.floor(finiteNumber(options.softFloor, DEFAULT_SOFT_FLOOR)))),
+  });
+  const remaining = Math.max(0, cap - newThisWeekend.selected.length);
+  const weekRecap = selectDailyBrief(events.filter((event) => {
+    const date = dateOf(event);
+    return inWindow(event) && date < dates.weekendStartDate;
+  }), {
+    ...shared,
+    minImportance: finiteNumber(options.weekendRecapMinImportance, WEEKEND_RECAP_MIN_IMPORTANCE),
+    softFloor: 0,
+    cap: remaining,
+  });
+
+  const selected = [...newThisWeekend.selected, ...weekRecap.selected];
+  const receipt = [
+    ...rankedLaneRows(newThisWeekend, 'weekend', selected),
+    ...rankedLaneRows(weekRecap, 'week-recap', selected),
+  ];
+  return {
+    selected,
+    receipt,
+    policy: 'weekend-recap-v1',
+    editorialDate,
+    weekStartDate: dates.weekStartDate,
+    weekendStartDate: dates.weekendStartDate,
+    counts: {
+      weekend: newThisWeekend.selected.length,
+      weekRecap: weekRecap.selected.length,
+      total: selected.length,
+    },
+  };
+}
+
 /**
  * Build one five-story edition without blurring the dateline.
  *
@@ -251,6 +348,7 @@ function previousDay(iso) {
 function selectEditionBrief(candidates, options = {}) {
   const events = Array.isArray(candidates) ? candidates : [];
   const editorialDate = clean(options.editorialDate);
+  if (weekDates(editorialDate).weekend) return selectWeekendBrief(events, options);
   const carryoverDate = previousDay(editorialDate);
   const cap = Math.max(0, Math.floor(finiteNumber(options.cap, DEFAULT_CAP)));
   const dateOf = typeof options.dateOf === 'function'
@@ -293,6 +391,7 @@ function selectEditionBrief(candidates, options = {}) {
   return {
     selected,
     receipt,
+    policy: 'exact-day-plus-carryover-v1',
     editorialDate,
     carryoverDate,
     counts: {
@@ -309,4 +408,6 @@ module.exports = {
   optionalAnalysis,
   selectDailyBrief,
   selectEditionBrief,
+  selectWeekendBrief,
+  weekDates,
 };
