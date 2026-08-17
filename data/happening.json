@@ -5,8 +5,8 @@
     "updated": "2026-08-17",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
-    "count": 60,
-    "generatedAt": "2026-08-17T13:12:29.895Z",
+    "count": 63,
+    "generatedAt": "2026-08-17T15:30:00.000Z",
     "llm": true,
     "curation": {
       "policy": "exact-day-assessment-v1",
@@ -14,14 +14,247 @@
       "candidateCount": 24,
       "freshCandidateCount": 7,
       "assessedCount": 24,
-      "keptCount": 2,
+      "keptCount": 3,
       "rejectedCount": 0,
-      "mode": "deterministic-fallback",
+      "mode": "manual-budget-safe-recovery",
       "complete": true,
-      "reason": "model request unavailable; conservative deterministic assessment used"
+      "reason": "The model budget was unavailable. Three material reports were reviewed against the source ledger and primary context without exceeding the $5 cap."
     }
   },
   "events": [
+    {
+      "id": "n-mexico-us-drones-antidrone-security-2026-08-17",
+      "date": "2026-08-17",
+      "section": "us-mexico",
+      "title": "Mexico will buy US drones and anti-drone systems for security operations",
+      "why": "The United States announced that Mexico will be able to buy the equipment at competitive prices.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/1708/mexico/aristegui-en-vivo-mexico-comprara-drones-y-antidrones-a-ee-uu-ministro-israeli-llama-al-asesinato-de-palestinos-17-08-2026/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-17T12:37:29.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Aristegui en Vivo: México comprará drones y antidrones a EE.UU.; ministro israelí llama al asesinato de palestinos (17/08/2026)",
+        "dek": "Este lunes: Estados Unidos anunció que México le comprará drones y sistemas antidrones ‘a precios competitivos’."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/1708/mexico/aristegui-en-vivo-mexico-comprara-drones-y-antidrones-a-ee-uu-ministro-israeli-llama-al-asesinato-de-palestinos-17-08-2026/",
+          "publishedAt": "2026-08-17T12:37:29.000Z",
+          "date": "2026-08-17",
+          "title": "Mexico will buy US drones and anti-drone systems for security operations",
+          "summary": "The United States announced that Mexico will be able to buy the equipment at competitive prices."
+        },
+        {
+          "source": "El País — México",
+          "url": "https://elpais.com/mexico/2026-08-17/mexico-y-estados-unidos-encarrilan-su-relacion-en-seguridad-pese-a-la-fractura-por-la-visa-de-andy-lopez-beltran.html",
+          "publishedAt": "2026-08-17T04:00:00.000Z",
+          "date": "2026-08-16",
+          "title": "Mexico and the United States advance security cooperation",
+          "summary": "US Ambassador Ronald Johnson announced access to drones, while Omar García Harfuch plans to attend a DEA conference in Argentina."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": { "raw": 2, "score": 2, "status": "accepted" },
+          "usMexicoStakes": { "raw": 2, "score": 2, "status": "accepted" },
+          "modelImpact": { "raw": 1, "score": 1, "status": "accepted" },
+          "durability": { "raw": 2, "score": 2, "status": "accepted" },
+          "officialness": { "raw": 1, "score": 1, "status": "accepted" }
+        },
+        "reportedTotal": null,
+        "componentSource": "manual-source-review"
+      },
+      "background": "Drones can extend surveillance over difficult terrain. Anti-drone systems serve a different purpose: they detect, track or disrupt unauthorized aircraft. The announcement covers both capabilities but does not identify models, quantities or delivery dates.",
+      "view": "This is a procurement opening, not yet proof of a new operational capability. Its value will depend on what Mexico buys, how quickly it arrives and which agencies can use it under clear rules.",
+      "prediction": "Watch for a contract or official delivery notice that names the equipment and quantity. That would show the announcement has moved from access to an actual purchase.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": ["article", "primary:crs-counter-uas"],
+        "view": ["article", "corroboration:elpais"],
+        "prediction": ["article"]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/1708/mexico/aristegui-en-vivo-mexico-comprara-drones-y-antidrones-a-ee-uu-ministro-israeli-llama-al-asesinato-de-palestinos-17-08-2026/"
+        },
+        {
+          "id": "corroboration:elpais",
+          "kind": "context",
+          "source": "El País — México",
+          "url": "https://elpais.com/mexico/2026-08-17/mexico-y-estados-unidos-encarrilan-su-relacion-en-seguridad-pese-a-la-fractura-por-la-visa-de-andy-lopez-beltran.html"
+        },
+        {
+          "id": "primary:crs-counter-uas",
+          "kind": "primary",
+          "source": "US Congressional Research Service",
+          "url": "https://www.congress.gov/crs-product/IF11480"
+        }
+      ]
+    },
+    {
+      "id": "n-manufacturing-employment-june-rebound-2026-08-17",
+      "date": "2026-08-17",
+      "section": "business",
+      "title": "Manufacturing employment edges up 0.1% in June after four monthly declines",
+      "why": "The increase ended a four-month slide, but factory employment remained below a year earlier for a 40th consecutive month. Computer-equipment manufacturing was the exception.",
+      "company": "",
+      "source": "El Economista",
+      "url": "https://eleconomista.com.mx/empresas/empleo-manufacturero-leve-repunte-junio-cuatro-meses-20260817-828627.html",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-17T13:48:47.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Empleo manufacturero tiene leve repunte en junio, después de cuatro meses",
+        "dek": "Creció 0.1% y rompió una racha de cuatro meses de contracciones, aunque de forma interanual se mantiene en rojo e hiló 40 meses en contracción; empleo en la industria de cómputo es la excepción a la tendencia."
+      },
+      "coverage": [
+        {
+          "source": "El Economista",
+          "url": "https://eleconomista.com.mx/empresas/empleo-manufacturero-leve-repunte-junio-cuatro-meses-20260817-828627.html",
+          "publishedAt": "2026-08-17T13:48:47.000Z",
+          "date": "2026-08-17",
+          "title": "Manufacturing employment edges up 0.1% in June after four monthly declines",
+          "summary": "The increase ended a four-month slide, but factory employment remained below a year earlier for a 40th consecutive month. Computer-equipment manufacturing was the exception."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": { "raw": 2, "score": 2, "status": "accepted" },
+          "usMexicoStakes": { "raw": 0, "score": 0, "status": "accepted" },
+          "modelImpact": { "raw": 2, "score": 2, "status": "accepted" },
+          "durability": { "raw": 2, "score": 2, "status": "accepted" },
+          "officialness": { "raw": 1, "score": 1, "status": "accepted" }
+        },
+        "reportedTotal": null,
+        "componentSource": "manual-source-review"
+      },
+      "background": "INEGI's manufacturing survey tracks payroll employment across the factory sector. A 0.1% monthly rise shows that June was better than May, but it does not erase 40 straight months of year-over-year declines.",
+      "view": "The split matters more than the small monthly gain. Factory hiring is still weak across the sector, while computer equipment is growing with demand for data-center hardware. That is a narrow pocket of strength, not a broad manufacturing recovery.",
+      "prediction": "Watch the July survey for another monthly increase and fewer year-over-year losses across industries. If computer equipment remains the main exception, the recovery is still narrow.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": ["article", "primary:inegi-emim"],
+        "view": ["article", "context:computer-exports"],
+        "prediction": ["primary:inegi-emim"]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El Economista",
+          "url": "https://eleconomista.com.mx/empresas/empleo-manufacturero-leve-repunte-junio-cuatro-meses-20260817-828627.html"
+        },
+        {
+          "id": "primary:inegi-emim",
+          "kind": "primary",
+          "source": "INEGI manufacturing survey",
+          "url": "https://www.inegi.org.mx/programas/emim/2018/"
+        },
+        {
+          "id": "context:computer-exports",
+          "kind": "context",
+          "source": "El Economista",
+          "url": "https://eleconomista.com.mx/tecnologia/industria-tic-mexico-crece-4-6-precios-exportaciones-computo-avanzan-20260817-828632.html"
+        }
+      ]
+    },
+    {
+      "id": "n-afac-faa-results-within-60-days-2026-08-16",
+      "date": "2026-08-16",
+      "section": "business",
+      "title": "Mexico's aviation regulator says FAA review results are due within 60 days",
+      "why": "AFAC said it answered all questions in the review and that the FAA thanked it for providing the requested information. The US regulator has not announced a result.",
+      "company": "",
+      "source": "El Economista",
+      "url": "https://eleconomista.com.mx/empresas/afac-informo-resultados-evaluacion-aerea-estaran-60-dias-20260816-828545.html",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-17T04:05:42.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "La AFAC informó que los resultados de la evaluación aérea estarán en 60 días",
+        "dek": "La AFAC detalló en un comunicado emitido el sábado que ‘las preguntas requeridas fueron contestadas en su totalidad y la FAA agradeció a la Agencia por entregar la información solicitada’."
+      },
+      "coverage": [
+        {
+          "source": "El Economista",
+          "url": "https://eleconomista.com.mx/empresas/afac-informo-resultados-evaluacion-aerea-estaran-60-dias-20260816-828545.html",
+          "publishedAt": "2026-08-17T04:05:42.000Z",
+          "date": "2026-08-16",
+          "title": "Mexico's aviation regulator says FAA review results are due within 60 days",
+          "summary": "AFAC said it answered all questions in the review and that the FAA thanked it for providing the requested information. The US regulator has not announced a result."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": { "raw": 2, "score": 2, "status": "accepted" },
+          "usMexicoStakes": { "raw": 2, "score": 2, "status": "accepted" },
+          "modelImpact": { "raw": 1, "score": 1, "status": "accepted" },
+          "durability": { "raw": 1, "score": 1, "status": "accepted" },
+          "officialness": { "raw": 2, "score": 2, "status": "accepted" }
+        },
+        "reportedTotal": null,
+        "componentSource": "manual-source-review"
+      },
+      "background": "The FAA restored Mexico to Category 1 in September 2023. That status lets Mexican airlines add US routes and codeshares. The latest review tests whether Mexico's regulator still meets international safety-oversight standards.",
+      "view": "The on-site review is finished, but the safety finding is not. Mexico remains Category 1 while it waits. The business risk begins only if the FAA finds that oversight has slipped and changes the rating.",
+      "prediction": "Watch the FAA's country-rating list or a formal notice by mid-October. Category 1 staying in place would confirm continued compliance. A downgrade would again limit new US routes and codeshares.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": ["primary:faa"],
+        "view": ["article", "primary:faa"],
+        "prediction": ["article", "primary:faa"]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El Economista",
+          "url": "https://eleconomista.com.mx/empresas/afac-informo-resultados-evaluacion-aerea-estaran-60-dias-20260816-828545.html"
+        },
+        {
+          "id": "primary:faa",
+          "kind": "primary",
+          "source": "US Federal Aviation Administration",
+          "url": "https://www.faa.gov/newsroom/federal-aviation-administration-returns-mexico-highest-aviation-safety-status"
+        }
+      ]
+    },
     {
       "id": "n-mexican-national-allegedly-smuggled-children-across--2026-08-15",
       "date": "2026-08-15",

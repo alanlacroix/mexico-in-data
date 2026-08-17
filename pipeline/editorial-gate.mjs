@@ -33,7 +33,12 @@ export function editorialDecision({ now = new Date(), status = null, force = fal
     return { run: false, slot, editorialDate, reason: `not due before ${dueHour}:00 Eastern` };
   }
 
-  const alreadyPublished = status?.editorialDate === editorialDate && VALID_RECEIPT_SLOTS.has(status?.slot);
+  // A deferred receipt means the workflow checked, found no complete replacement,
+  // and deliberately left the last good edition live. It satisfies the watchdog,
+  // but not this editorial gate: the hourly schedule must keep looking for news.
+  const alreadyPublished = status?.state !== 'deferred'
+    && status?.editorialDate === editorialDate
+    && VALID_RECEIPT_SLOTS.has(status?.slot);
   if (!force && alreadyPublished) {
     return { run: false, slot, editorialDate, reason: `${status.slot} edition already published` };
   }

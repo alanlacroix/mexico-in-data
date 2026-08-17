@@ -24,6 +24,7 @@ async function get(path, type = 'json') {
 export async function checkProduction() {
   assertExpectedInputs();
   const status = await get('/data/publication-status.json');
+  if (status.state === 'deferred') throw new Error('production still serves a deferred publication receipt');
   if (status.publicationId !== EXPECTED_ID) throw new Error(`production still serves ${status.publicationId || 'no publication receipt'}`);
   if (status.editorialDate !== EXPECTED_DATE) throw new Error(`production editorial date is ${status.editorialDate || 'missing'}`);
   if ((SLOT_RANK[status.slot] || 0) < SLOT_RANK[EXPECTED_SLOT]) throw new Error(`production slot is ${status.slot || 'missing'}`);
@@ -40,6 +41,7 @@ export async function checkProduction() {
     throw new Error('live brief selection still depends on optional analysis');
   }
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
+  if (claims.length === 0) throw new Error('live Brief has no stories');
   if (claims.some((claim) => claim.lane === 'today' && claim.date !== EXPECTED_DATE)) {
     throw new Error("live Today's stories include a claim from another date");
   }

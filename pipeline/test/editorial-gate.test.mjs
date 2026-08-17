@@ -28,6 +28,11 @@ result = decide('2026-07-31T13:37:00Z', { status: morningReceipt });
 assert.equal(result.run, false, 'a same-day receipt must stop a duplicate edition');
 assert.match(result.reason, /already published/);
 
+result = decide('2026-07-31T14:37:00Z', {
+  status: { ...morningReceipt, state: 'deferred', contentEditorialDate: '2026-07-30' },
+});
+assert.equal(result.run, true, 'a deferred check must keep retrying until a complete edition exists');
+
 result = decide('2026-07-31T13:37:00Z', { status: morningReceipt, force: true });
 assert.equal(result.run, true, 'the watchdog must be able to repair stale production');
 

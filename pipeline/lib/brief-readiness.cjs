@@ -27,7 +27,10 @@ function briefReadiness(brief) {
     .filter(({ story }) => !hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
   const readyTargetCount = targetStories.length - missingTarget.length;
-  const targetMet = stories.length === 0 || readyTargetCount === minimumReadyCount;
+  // Zero stories is not a publishable edition. A quiet or temporarily unworkable
+  // news cycle must preserve the last complete Brief instead of certifying an
+  // empty homepage as "0 of 0 ready".
+  const targetMet = stories.length > 0 && readyTargetCount === minimumReadyCount;
   const readyIds = stories
     .map((story, index) => ({ story, index }))
     .filter(({ story }) => hasApprovedAnalysis(story))
@@ -42,7 +45,7 @@ function briefReadiness(brief) {
     readyIds,
     missingTarget,
     targetMet,
-    publicationBlocking: stories.length > 0 && !targetMet,
+    publicationBlocking: !targetMet,
   };
 }
 

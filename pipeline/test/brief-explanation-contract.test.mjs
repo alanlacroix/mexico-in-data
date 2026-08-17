@@ -47,7 +47,9 @@ const missingPrimary = brief([true]);
 missingPrimary.lead.analysisSources = [{ kind: 'article', source: 'Example News', url: 'https://example.com/story' }];
 assert.equal(briefReadiness(missingPrimary).targetMet, false,
   'a news citation without a primary record and independent evidence audit is not ready');
-assert.equal(briefReadiness({ lead: null, items: [] }).targetMet, true, 'a genuinely quiet edition is a clean no-op');
+const emptyReadiness = briefReadiness({ lead: null, items: [] });
+assert.equal(emptyReadiness.targetMet, false, 'an empty Brief must never certify itself as ready');
+assert.equal(emptyReadiness.publicationBlocking, true, 'an empty Brief must preserve the last complete edition');
 assert.match(happeningBuilder, /for \(const target of researchTargets\)[\s\S]*web_search_20250305[\s\S]*max_uses: 1/,
   'selected non-official stories must get one bounded primary-record search each');
 assert.match(happeningBuilder, /searched\.find\(\(source\) => sourceKey\(source\.url\) === sourceKey\(proposed\.url\)\)/,

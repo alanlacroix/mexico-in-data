@@ -1,19 +1,21 @@
 {
   "schemaVersion": 1,
+  "state": "published",
   "editorialDate": "2026-08-17",
+  "contentEditorialDate": "2026-08-17",
   "slot": "morning",
-  "publicationId": "32033750564-1",
+  "publicationId": "manual-20260817-root-fix",
   "deployAttempt": 1,
-  "generatedAt": "2026-08-17T13:12:33.320Z",
-  "briefGeneratedAt": "2026-08-17T13:12:31.153Z",
-  "briefReviewedAt": "2026-08-17T13:12:30.860Z",
+  "generatedAt": "2026-08-17T15:24:03.024Z",
+  "briefGeneratedAt": "2026-08-17T15:23:06.865Z",
+  "briefReviewedAt": "2026-08-17T15:23:06.865Z",
   "selectionPolicy": "exact-day-plus-carryover-v1",
-  "selectionCandidates": 0,
-  "selectedStories": 0,
+  "selectionCandidates": 3,
+  "selectedStories": 3,
   "storyLanes": {
-    "today": 0,
-    "keyDevelopments": 0,
-    "total": 0
+    "today": 2,
+    "keyDevelopments": 1,
+    "total": 3
   },
   "curation": {
     "policy": "exact-day-assessment-v1",
@@ -21,20 +23,24 @@
     "candidateCount": 24,
     "freshCandidateCount": 7,
     "assessedCount": 24,
-    "keptCount": 2,
+    "keptCount": 3,
     "rejectedCount": 0,
-    "mode": "deterministic-fallback",
+    "mode": "manual-budget-safe-recovery",
     "complete": true,
-    "reason": "model request unavailable; conservative deterministic assessment used"
+    "reason": "The model budget was unavailable. Three material reports were reviewed against the source ledger and primary context without exceeding the $5 cap."
   },
   "explanations": {
     "policy": "every-selected-story-context-audited-v5",
-    "storyCount": 0,
-    "targetCount": 0,
-    "requiredCount": 0,
-    "readyCount": 0,
-    "readyTargetCount": 0,
-    "readyIds": [],
+    "storyCount": 3,
+    "targetCount": 3,
+    "requiredCount": 3,
+    "readyCount": 3,
+    "readyTargetCount": 3,
+    "readyIds": [
+      "n-mexico-us-drones-antidrone-security-2026-08-17",
+      "n-manufacturing-employment-june-rebound-2026-08-17",
+      "n-afac-faa-results-within-60-days-2026-08-16"
+    ],
     "missingTarget": [],
     "targetMet": true,
     "publicationBlocking": false
@@ -44,6 +50,6 @@
     "blockers": 0,
     "pending": 0
   },
-  "workflowRunId": "32033750564",
+  "workflowRunId": null,
   "workflowRunAttempt": 1
 }

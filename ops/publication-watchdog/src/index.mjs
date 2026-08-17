@@ -299,7 +299,9 @@ export async function checkHealth(env, now = new Date()) {
     errors,
     heartbeat,
     livePublication: livePublication ? {
+      state: livePublication.state || 'published',
       editorialDate: livePublication.editorialDate || null,
+      contentEditorialDate: livePublication.contentEditorialDate || livePublication.editorialDate || null,
       slot: livePublication.slot || null,
       publicationId: livePublication.publicationId || null,
     } : null,

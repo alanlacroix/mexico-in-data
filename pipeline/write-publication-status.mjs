@@ -29,6 +29,10 @@ const curation = happening.meta?.curation;
 const freshness = curationReadiness(curation, editorialDate);
 if (!freshness.ok) throw new Error(`Fresh-story curation incomplete for ${editorialDate}: ${freshness.reason}`);
 const explanationReadiness = briefReadiness(brief);
+const selectedStories = [brief.lead, ...(brief.items || [])].filter(Boolean).length;
+if (selectedStories === 0) {
+  throw new Error('Refusing to certify an empty Brief; preserve the last complete edition instead');
+}
 if (!explanationReadiness.targetMet) {
   throw new Error(`Briefly Explained incomplete: ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount} selected stories ready`);
 }
@@ -38,7 +42,9 @@ if (brief.meta?.editorialDate !== editorialDate) {
 
 const status = {
   schemaVersion: 1,
+  state: 'published',
   editorialDate,
+  contentEditorialDate: editorialDate,
   slot,
   publicationId,
   deployAttempt,
@@ -47,7 +53,7 @@ const status = {
   briefReviewedAt: brief.meta?.reviewedAt || null,
   selectionPolicy: brief.meta?.selection?.policy || null,
   selectionCandidates: Array.isArray(brief.meta?.selection?.receipt) ? brief.meta.selection.receipt.length : 0,
-  selectedStories: [brief.lead, ...(brief.items || [])].filter(Boolean).length,
+  selectedStories,
   storyLanes: brief.meta?.selection?.lanes || { today: 0, keyDevelopments: 0, total: 0 },
   curation,
   explanations: explanationReadiness,
