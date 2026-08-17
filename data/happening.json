@@ -2,64 +2,160 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-16",
+    "updated": "2026-08-17",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-16T15:11:15.613Z",
-    "llm": false,
+    "generatedAt": "2026-08-17T13:12:29.895Z",
+    "llm": true,
     "curation": {
       "policy": "exact-day-assessment-v1",
-      "editorialDate": "2026-08-16",
+      "editorialDate": "2026-08-17",
       "candidateCount": 24,
-      "freshCandidateCount": 1,
+      "freshCandidateCount": 7,
       "assessedCount": 24,
-      "keptCount": 1,
+      "keptCount": 2,
       "rejectedCount": 0,
       "mode": "deterministic-fallback",
       "complete": true,
       "reason": "model request unavailable; conservative deterministic assessment used"
-    },
-    "analysisTarget": {
-      "policy": "every-selected-story-context-audited-v3",
-      "ids": [
-        "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
-        "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14",
-        "n-us-aluminum-lobby-asks-washington-to-keep-tariffs-ou-2026-08-11",
-        "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
-        "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12"
-      ],
-      "added": 0,
-      "outcomes": [
-        {
-          "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-us-aluminum-lobby-asks-washington-to-keep-tariffs-ou-2026-08-11",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-the-us-tried-to-stop-cartel-money-laundering-it-deva-2026-08-11",
-          "ready": true,
-          "reason": "ready"
-        },
-        {
-          "id": "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
-          "ready": true,
-          "reason": "ready"
-        }
-      ]
     }
   },
   "events": [
+    {
+      "id": "n-mexican-national-allegedly-smuggled-children-across--2026-08-15",
+      "date": "2026-08-15",
+      "section": "us-mexico",
+      "title": "Mexican national allegedly smuggled children across border",
+      "why": "The U.S. Attorney's Office for the Western District of Texas announced charges against several individuals, including a Mexican national accused of juvenile smuggling and a Cuban migrant with a significant criminal history, as part of 292 new immigration-related criminal cases.",
+      "company": "",
+      "source": "Border Report",
+      "url": "https://borderreport.com/regions/texas/mexican-national-allegedly-smuggled-children-across-border/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-16T02:23:00.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mexican national allegedly smuggled children across border",
+        "dek": "The U.S. Attorney's Office for the Western District of Texas announced charges against several individuals, including a Mexican national accused of juvenile smuggling and a Cuban migrant with a significant criminal history, as part of 292 new immigration-related criminal cases."
+      },
+      "coverage": [
+        {
+          "source": "Border Report",
+          "url": "https://borderreport.com/regions/texas/mexican-national-allegedly-smuggled-children-across-border/",
+          "publishedAt": "2026-08-16T02:23:00.000Z",
+          "date": "2026-08-15",
+          "title": "Mexican national allegedly smuggled children across border",
+          "summary": "The U.S. Attorney's Office for the Western District of Texas announced charges against several individuals, including a Mexican national accused of juvenile smuggling and a Cuban migrant with a significant criminal history, as part of 292 new immigration-related criminal cases."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
+    },
+    {
+      "id": "n-fda-green-lights-more-screwworm-medications-should-y-2026-08-15",
+      "date": "2026-08-15",
+      "section": "us-mexico",
+      "title": "FDA green lights more screwworm medications: Should you give them to your pets?",
+      "why": "The Food and Drug Administration has granted emergency use authorizations for more medications that can prevent and treat infestations of the flesh-eating New World screwworm spreading along the U.S.-Mexico border.",
+      "company": "",
+      "source": "Border Report",
+      "url": "https://borderreport.com/news/health/fda-green-lights-more-screwworm-medications-should-you-give-them-to-your-pets/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-16T02:21:24.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "FDA green lights more screwworm medications: Should you give them to your pets?",
+        "dek": "The Food and Drug Administration has granted emergency use authorizations for more medications that can prevent and treat infestations of the flesh-eating New World screwworm spreading along the U.S.-Mexico border."
+      },
+      "coverage": [
+        {
+          "source": "Border Report",
+          "url": "https://borderreport.com/news/health/fda-green-lights-more-screwworm-medications-should-you-give-them-to-your-pets/",
+          "publishedAt": "2026-08-16T02:21:24.000Z",
+          "date": "2026-08-15",
+          "title": "FDA green lights more screwworm medications: Should you give them to your pets?",
+          "summary": "The Food and Drug Administration has granted emergency use authorizations for more medications that can prevent and treat infestations of the flesh-eating New World screwworm spreading along the U.S.-Mexico border."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
+    },
     {
       "id": "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14",
       "date": "2026-08-14",
@@ -4143,70 +4239,6 @@
       "view": "The letter raises negotiating pressure, but it does not change tariffs or treaty rules. Existing factories keep their current access. The practical cost is uncertainty for companies considering investments that take years to repay.",
       "prediction": "The demands are likely to matter only if they appear in formal US negotiating objectives or draft text. Specific Mexican commitments on market access or outside-country investment would confirm that the letter is shaping the review.",
       "analysisV": 7
-    },
-    {
-      "id": "n-la-demanda-futura-de-electricidad-amenaza-al-nearsho-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Mexico's power system may not meet demand from new factories and data centers",
-      "why": "The report says limited power supply is a bottleneck for new factories, data centers and artificial-intelligence infrastructure.",
-      "company": "",
-      "source": "Energía a Debate",
-      "url": "https://energiaadebate.com/la-demanda-futura-de-electricidad-amenaza-al-nearshoring-y-a-la-inteligencia-artificial-en-mexico/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-06T14:00:26.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "La demanda futura de electricidad amenaza al nearshoring y a la inteligencia artificial en México",
-        "dek": "El apetito por invertir en México enfrenta un cuello de botella severo: la falta de energía eléctrica. El país busca atraer cadenas de suministro, centros de datos e inteligencia artificial."
-      },
-      "coverage": [
-        {
-          "source": "Energía a Debate",
-          "url": "https://energiaadebate.com/la-demanda-futura-de-electricidad-amenaza-al-nearshoring-y-a-la-inteligencia-artificial-en-mexico/",
-          "publishedAt": "2026-08-06T14:00:26.000Z",
-          "date": "2026-08-06",
-          "title": "Mexico's power system may not meet demand from new factories and data centers",
-          "summary": "The report says limited power supply is a bottleneck for new factories, data centers and artificial-intelligence infrastructure."
-        }
-      ],
-      "image": "https://energiaadebate.com/file/logo.png",
-      "imgTries": 1,
-      "background": "A new project needs more than generation. It also needs transmission capacity, a grid connection and reliable power at its site.",
-      "view": "For investors, the immediate risk is whether power will be available at the chosen location and on the investment schedule. Data centers alone could need about 1.5 gigawatts by 2030, while permits and grid connections already slow new supply.",
-      "prediction": "The bottleneck is likely to persist until transmission projects and grid connections move from plans into construction. More completed connection studies and new capacity entering service would weaken that view.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-mecanismo-laboral-del-t-mec-tendr-cambios-modestos-f-2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "US labor official expects only modest changes to the trade agreement's factory complaint process",
-      "why": "The official said only modest changes are expected, and a fourth round of talks may take place in September.",
-      "company": "",
-      "source": "Bloomberg Línea",
-      "url": "https://bloomberglinea.com/latinoamerica/mexico/mecanismo-laboral-del-t-mec-tendra-cambios-modestos-funcionario-de-eeuu/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-06T12:03:52.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Mecanismo Laboral del T-MEC tendrá cambios modestos: funcionario de EE.UU.",
-        "dek": "El agregado laboral de la Embajada de EE.UU. en México dijo que en Washington ya hay una posible fecha para la cuarta ronda de negociaciones bilaterales en septiembre."
-      },
-      "coverage": [
-        {
-          "source": "Bloomberg Línea",
-          "url": "https://bloomberglinea.com/latinoamerica/mexico/mecanismo-laboral-del-t-mec-tendra-cambios-modestos-funcionario-de-eeuu/",
-          "publishedAt": "2026-08-06T12:03:52.000Z",
-          "date": "2026-08-06",
-          "title": "US labor official expects only modest changes to the trade agreement's factory complaint process",
-          "summary": "The official said only modest changes are expected, and a fourth round of talks may take place in September."
-        }
-      ],
-      "image": "https://www.bloomberglinea.com/resizer/v2/3YVKSEALV5CA5ICE2GJZSDS7QU.jpg?auth=b04819fa5fc4f12151c34ef25a499908b6a2fa8906b29f0378b8a8a9f589c8cd&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 1
     }
   ]
 }
