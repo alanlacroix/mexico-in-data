@@ -2,23 +2,43 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-17",
+    "updated": "2026-08-18",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
-    "count": 63,
-    "generatedAt": "2026-08-17T15:30:00.000Z",
+    "count": 60,
+    "generatedAt": "2026-08-18T13:15:32.526Z",
     "llm": true,
     "curation": {
       "policy": "exact-day-assessment-v1",
-      "editorialDate": "2026-08-17",
+      "editorialDate": "2026-08-18",
       "candidateCount": 24,
-      "freshCandidateCount": 7,
+      "freshCandidateCount": 5,
       "assessedCount": 24,
-      "keptCount": 3,
+      "keptCount": 2,
       "rejectedCount": 0,
-      "mode": "manual-budget-safe-recovery",
+      "mode": "deterministic-fallback",
       "complete": true,
-      "reason": "The model budget was unavailable. Three material reports were reviewed against the source ledger and primary context without exceeding the $5 cap."
+      "reason": "model request unavailable; conservative deterministic assessment used"
+    },
+    "analysisTarget": {
+      "policy": "every-selected-story-context-audited-v3",
+      "ids": [
+        "n-mexico-us-drones-antidrone-security-2026-08-17",
+        "n-manufacturing-employment-june-rebound-2026-08-17"
+      ],
+      "added": 0,
+      "outcomes": [
+        {
+          "id": "n-mexico-us-drones-antidrone-security-2026-08-17",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-manufacturing-employment-june-rebound-2026-08-17",
+          "ready": true,
+          "reason": "ready"
+        }
+      ]
     }
   },
   "events": [
@@ -68,11 +88,31 @@
         "rubricVersion": "five-component-v1",
         "calculatedTotal": 8,
         "components": {
-          "nationalConsequence": { "raw": 2, "score": 2, "status": "accepted" },
-          "usMexicoStakes": { "raw": 2, "score": 2, "status": "accepted" },
-          "modelImpact": { "raw": 1, "score": 1, "status": "accepted" },
-          "durability": { "raw": 2, "score": 2, "status": "accepted" },
-          "officialness": { "raw": 1, "score": 1, "status": "accepted" }
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
         },
         "reportedTotal": null,
         "componentSource": "manual-source-review"
@@ -82,9 +122,17 @@
       "prediction": "Watch for a contract or official delivery notice that names the equipment and quantity. That would show the announcement has moved from access to an actual purchase.",
       "analysisV": 9,
       "analysisRefs": {
-        "background": ["article", "primary:crs-counter-uas"],
-        "view": ["article", "corroboration:elpais"],
-        "prediction": ["article"]
+        "background": [
+          "article",
+          "primary:crs-counter-uas"
+        ],
+        "view": [
+          "article",
+          "corroboration:elpais"
+        ],
+        "prediction": [
+          "article"
+        ]
       },
       "analysisSources": [
         {
@@ -105,7 +153,151 @@
           "source": "US Congressional Research Service",
           "url": "https://www.congress.gov/crs-product/IF11480"
         }
-      ]
+      ],
+      "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/08/ben-gvir-israel-rts-17082026.jpg",
+      "imgTries": 1
+    },
+    {
+      "id": "n-mexico-to-access-us-army-drone-technology-2026-08-17",
+      "date": "2026-08-17",
+      "section": "economy",
+      "title": "Mexico to Access US Army Drone Technology",
+      "why": "Under a new defense agreement, Mexico will be able to acquire unmanned aircraft systems and counter-drone technology from the US Army’s digital marketplace.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/tech/news/mexico-access-us-army-drone-technology",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-17T17:57:51.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mexico to Access US Army Drone Technology",
+        "dek": "Under a new defense agreement, Mexico will be able to acquire unmanned aircraft systems and counter-drone technology from the US Army’s digital marketplace. This move aims to strengthen Mexico’s capabilities against organized crime and address shared security challenges. Mexico and the United States are expanding defen"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/tech/news/mexico-access-us-army-drone-technology",
+          "publishedAt": "2026-08-17T17:57:51.000Z",
+          "date": "2026-08-17",
+          "title": "Mexico to Access US Army Drone Technology",
+          "summary": "Under a new defense agreement, Mexico will be able to acquire unmanned aircraft systems and counter-drone technology from the US Army’s digital marketplace."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
+    },
+    {
+      "id": "n-omnilife-invests-us-64-million-in-first-us-manufactu-2026-08-17",
+      "date": "2026-08-17",
+      "section": "economy",
+      "title": "Omnilife Invests US$64 Million in First US Manufacturing Plant",
+      "why": "Grupo Omnilife invested US$64 million in its first manufacturing plant in the United States.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/talent/news/omnilife-invests-us64-million-first-us-manufacturing-plant",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-17T17:39:50.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Omnilife Invests US$64 Million in First US Manufacturing Plant",
+        "dek": "Grupo Omnilife invested US$64 million in its first manufacturing plant in the United States. The move affects the direct-selling and dietary supplement industry and signals a broader shift among Mexico-based multinationals toward dual-market manufacturing strategies. It also reflects growing demand from the US Hispanic"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/talent/news/omnilife-invests-us64-million-first-us-manufacturing-plant",
+          "publishedAt": "2026-08-17T17:39:50.000Z",
+          "date": "2026-08-17",
+          "title": "Omnilife Invests US$64 Million in First US Manufacturing Plant",
+          "summary": "Grupo Omnilife invested US$64 million in its first manufacturing plant in the United States."
+        },
+        {
+          "source": "mexicobusiness.news",
+          "url": "https://mexicobusiness.news/health/news/omnilife-invests-us64-million-first-us-manufacturing-plant",
+          "publishedAt": "2026-08-17T17:39:50.000Z",
+          "date": "2026-08-17",
+          "title": "Omnilife Invests US$64 Million in First US Manufacturing Plant",
+          "summary": "Grupo Omnilife invested US$64 million in its first manufacturing plant in the United States. The move affects the direct-selling and dietary supplement industry and signals a broader shift among Mexico-based multinationals toward dual-market manufacturing strategies. It also reflects growing demand from the US Hispanic"
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
     },
     {
       "id": "n-manufacturing-employment-june-rebound-2026-08-17",
@@ -145,11 +337,31 @@
         "rubricVersion": "five-component-v1",
         "calculatedTotal": 7,
         "components": {
-          "nationalConsequence": { "raw": 2, "score": 2, "status": "accepted" },
-          "usMexicoStakes": { "raw": 0, "score": 0, "status": "accepted" },
-          "modelImpact": { "raw": 2, "score": 2, "status": "accepted" },
-          "durability": { "raw": 2, "score": 2, "status": "accepted" },
-          "officialness": { "raw": 1, "score": 1, "status": "accepted" }
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
         },
         "reportedTotal": null,
         "componentSource": "manual-source-review"
@@ -159,9 +371,17 @@
       "prediction": "Watch the July survey for another monthly increase and fewer year-over-year losses across industries. If computer equipment remains the main exception, the recovery is still narrow.",
       "analysisV": 9,
       "analysisRefs": {
-        "background": ["article", "primary:inegi-emim"],
-        "view": ["article", "context:computer-exports"],
-        "prediction": ["primary:inegi-emim"]
+        "background": [
+          "article",
+          "primary:inegi-emim"
+        ],
+        "view": [
+          "article",
+          "context:computer-exports"
+        ],
+        "prediction": [
+          "primary:inegi-emim"
+        ]
       },
       "analysisSources": [
         {
@@ -182,7 +402,9 @@
           "source": "El Economista",
           "url": "https://eleconomista.com.mx/tecnologia/industria-tic-mexico-crece-4-6-precios-exportaciones-computo-avanzan-20260817-828632.html"
         }
-      ]
+      ],
+      "image": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2025/07/17/687894db81d74.jpeg",
+      "imgTries": 1
     },
     {
       "id": "n-afac-faa-results-within-60-days-2026-08-16",
@@ -222,11 +444,31 @@
         "rubricVersion": "five-component-v1",
         "calculatedTotal": 8,
         "components": {
-          "nationalConsequence": { "raw": 2, "score": 2, "status": "accepted" },
-          "usMexicoStakes": { "raw": 2, "score": 2, "status": "accepted" },
-          "modelImpact": { "raw": 1, "score": 1, "status": "accepted" },
-          "durability": { "raw": 1, "score": 1, "status": "accepted" },
-          "officialness": { "raw": 2, "score": 2, "status": "accepted" }
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
         },
         "reportedTotal": null,
         "componentSource": "manual-source-review"
@@ -236,9 +478,17 @@
       "prediction": "Watch the FAA's country-rating list or a formal notice by mid-October. Category 1 staying in place would confirm continued compliance. A downgrade would again limit new US routes and codeshares.",
       "analysisV": 9,
       "analysisRefs": {
-        "background": ["primary:faa"],
-        "view": ["article", "primary:faa"],
-        "prediction": ["article", "primary:faa"]
+        "background": [
+          "primary:faa"
+        ],
+        "view": [
+          "article",
+          "primary:faa"
+        ],
+        "prediction": [
+          "article",
+          "primary:faa"
+        ]
       },
       "analysisSources": [
         {
@@ -4167,310 +4417,6 @@
       "background": "Banxico uses the overnight policy rate to influence borrowing and spending. A rate above inflation can slow prices, but it also makes credit more expensive.",
       "view": "July's inflation report explains the wait. Headline inflation is close to target, but underlying inflation is falling more slowly. Banxico is waiting for that underlying measure to improve before making credit cheaper again.",
       "prediction": "The next tests will be the September 9 inflation release and the September 24 rate decision. If underlying inflation falls again, a cut becomes more likely. If it reverses, another hold becomes more likely.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-threat-prompts-us-to-suspend-avocado-inspections-in--2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "US suspends government operations in Michoacán over threat to US interests",
-      "why": "The United States suspended all federal operations in Michoacán, including avocado inspections, citing a threat to US interests. This preceded Mexico's military deployment to restore safety.",
-      "company": "",
-      "source": "Border Report",
-      "url": "https://borderreport.com/hot-topics/threat-prompts-us-to-suspend-avocado-inspections-in-michoacan/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-06T22:36:40.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Threat prompts US to suspend avocado inspections in Michoacan",
-        "dek": "The United States announced Wednesday that it had suspended all government operations in the Mexican state of Michoacan because of a \"threat to U.S. interests,\" including a halt to the inspections of avocados required for their export."
-      },
-      "coverage": [
-        {
-          "source": "Border Report",
-          "url": "https://borderreport.com/hot-topics/threat-prompts-us-to-suspend-avocado-inspections-in-michoacan/",
-          "publishedAt": "2026-08-06T22:36:40.000Z",
-          "date": "2026-08-06",
-          "title": "US suspends government operations in Michoacán over threat to US interests",
-          "summary": "The United States suspended all federal operations in Michoacán, including avocado inspections, citing a threat to US interests. This preceded Mexico's military deployment to restore safety."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-los-lugares-de-m-xico-donde-no-se-podr-hacer-frackin-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Mexico's expert committee maps regions banned from fracking operations",
-      "why": "A government-appointed panel of 54 scientists and experts identified areas where fracking is prohibited based on environmental, social, and economic factors, as part of President Sheinbaum's energy policy review.",
-      "company": "",
-      "source": "Expansión — Empresas",
-      "url": "https://expansion.mx/empresas/2026/08/06/mapa-fracking-mexico-estados-donde-se-debe-prohibir",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-06T17:43:45.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Los lugares de México donde no se podrá hacer fracking de acuerdo con el comité de expertos de Sheinbaum",
-        "dek": "Un grupo de 54 científicos y expertos asesoran al gobierno sobre la viabilidad del uso de fracking. Se analizaron diversos factores como ambientales, sociales y económicos."
-      },
-      "coverage": [
-        {
-          "source": "Expansión — Empresas",
-          "url": "https://expansion.mx/empresas/2026/08/06/mapa-fracking-mexico-estados-donde-se-debe-prohibir",
-          "publishedAt": "2026-08-06T17:43:45.000Z",
-          "date": "2026-08-06",
-          "title": "Mexico's expert committee maps regions banned from fracking operations",
-          "summary": "A government-appointed panel of 54 scientists and experts identified areas where fracking is prohibited based on environmental, social, and economic factors, as part of President Sheinbaum's energy policy review."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 1,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-preparan-carnaval-petrolero-acuerdo-pemex-petrobras--2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Pemex and Petrobras enter execution phase of cooperation agreement",
-      "why": "Mexico's state oil company and Brazil's Petrobras have begun implementing a bilateral energy cooperation accord. The agreement includes joint ventures and knowledge-sharing aimed at improving hydro­carbon development across the two countries' operations.",
-      "company": "Pemex",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/06/acuerdo-pemex-petrobras-ya-esta-en-fase-de-ejecucion-anuncia-canciller/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-06T22:57:24.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Preparan ‘carnaval petrolero’: Acuerdo Pemex-Petrobras ya está en fase de ejecución, anuncia canciller",
-        "dek": "Pemex y Petrobras inician la ejecución de su acuerdo de cooperación. México y Brasil también firmaron convenios en ciencia y educación y reforzaron su agenda bilateral."
-      },
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/06/acuerdo-pemex-petrobras-ya-esta-en-fase-de-ejecucion-anuncia-canciller/",
-          "publishedAt": "2026-08-06T22:57:24.000Z",
-          "date": "2026-08-06",
-          "title": "Pemex and Petrobras enter execution phase of cooperation agreement",
-          "summary": "Mexico's state oil company and Brazil's Petrobras have begun implementing a bilateral energy cooperation accord. The agreement includes joint ventures and knowledge-sharing aimed at improving hydro­carbon development across the two countries' operations."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 7,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-industria-del-aluminio-de-eu-exige-a-trump-mantener--2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "US aluminum industry demands Trump maintain tariffs on Mexico outside USMCA",
-      "why": "The US Aluminum Association urged the administration to preserve and increase tariffs on Mexican and Canadian aluminum and toughen rules of origin during the USMCA review. The push comes as Mexico and Canada prepare for the agreement's review process, widening the trade dispute beyond agriculture and standard goods.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/06/industria-del-aluminio-de-eu-exige-a-trump-mantener-aranceles-a-mexico-al-margen-del-t-mec/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-06T20:48:13.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Industria del aluminio de EU exige a Trump mantener aranceles a México al margen del T-MEC",
-        "dek": "La CPA propuso a Estados Unidos conservar y aumentar los aranceles al aluminio de México y Canadá, además de endurecer las reglas de origen durante la revisión del T-MEC."
-      },
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/06/industria-del-aluminio-de-eu-exige-a-trump-mantener-aranceles-a-mexico-al-margen-del-t-mec/",
-          "publishedAt": "2026-08-06T20:48:13.000Z",
-          "date": "2026-08-06",
-          "title": "US aluminum industry demands Trump maintain tariffs on Mexico outside USMCA",
-          "summary": "The US Aluminum Association urged the administration to preserve and increase tariffs on Mexican and Canadian aluminum and toughen rules of origin during the USMCA review. The push comes as Mexico and Canada prepare for the agreement's review process, widening the trade dispute beyond agriculture and standard goods."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 2,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 8,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-congresistas-de-eu-exigen-cambios-al-t-mec-y-aumenta-2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
-      "why": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-06T23:46:48.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Congresistas de EU exigen cambios al T-MEC y aumentan la presión sobre México",
-        "dek": "Congresistas de EU respaldan endurecer la revisión del T-MEC y piden priorizar resultados para fortalecer comercio y competitividad."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
-          "publishedAt": "2026-08-06T23:46:48.000Z",
-          "date": "2026-08-06",
-          "title": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
-          "summary": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness."
-        }
-      ],
-      "background": "The agreement remains in force without a new extension. Because the three countries did not agree to a 16-year extension in July, they will return to the review every year and the treaty can continue through 2036.",
-      "view": "The letter raises negotiating pressure, but it does not change tariffs or treaty rules. Existing factories keep their current access. The practical cost is uncertainty for companies considering investments that take years to repay.",
-      "prediction": "The demands are likely to matter only if they appear in formal US negotiating objectives or draft text. Specific Mexican commitments on market access or outside-country investment would confirm that the letter is shaping the review.",
       "analysisV": 7
     }
   ]
