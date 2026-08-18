@@ -14,6 +14,7 @@ const { recentEvents } = require(path.join(root, 'pipeline/lib/news-window.cjs')
 const dailyBriefFactory = require(path.join(root, '_data/dailyBrief.js'));
 const latestStoriesFactory = require(path.join(root, '_data/latestStories.js'));
 const dailyBrief = dailyBriefFactory();
+const feed = require(path.join(root, '_data/feed.js'))();
 const latestStories = latestStoriesFactory();
 const nowBoard = require(path.join(root, '_data/nowBoard.js'))();
 const boards = require(path.join(root, '_data/boards.js'))();
@@ -35,7 +36,7 @@ assert.ok(dailyBrief.todayStories.every((story) => story.date === dailyBrief.edi
 assert.equal(dailyBrief.todayStories.length + dailyBrief.keyDevelopments.length
   + dailyBrief.weekendStories.length + dailyBrief.weekRecapStories.length, dailyBrief.stories.length,
   'the two visible lanes must partition the one selected story set');
-if (briefFile.meta?.selection?.policy === 'exact-day-plus-carryover-v1') {
+if (briefFile.meta?.selection?.policy === 'exact-day-plus-carryover-v1' && !dailyBrief.carryingLastBrief) {
   const prior = new Date(`${dailyBrief.editorialDate}T12:00:00Z`);
   prior.setUTCDate(prior.getUTCDate() - 1);
   assert.ok(dailyBrief.keyDevelopments.every((story) => story.date === prior.toISOString().slice(0, 10)),
@@ -101,6 +102,9 @@ assert.equal(staleBrief.editorialDate, '2099-12-31', 'the wall-clock Mexico City
 assert.equal(staleBrief.stories.length, 0, 'an old brief must not be carried indefinitely');
 assert.match(staleBrief.summaryLead, /No major developments/i);
 assert.equal(latestStoriesFactory(staleNow).length, 0, 'old headlines must still expire from the recent-news window');
+assert.ok(feed.week.every((item, index, items) => index === 0
+  || String(items[index - 1].publishedAt) >= String(item.publishedAt)),
+'the combined This week shelf must read newest-to-oldest instead of jumping between topic-room dates');
 
 const midnightWindow = recentEvents([
   { date: '2026-07-22', publishedAt: '2026-07-23T03:30:00Z', title: 'Useful report from the prior evening' },
@@ -436,6 +440,8 @@ assert.match(briefBuilder, /selectEditionBrief\(candidates/, 'the two story lane
 assert.doesNotMatch(briefBuilder, /BIG_MONEY|bigCapital/, 'a dollar-amount regex must not override the audited importance rubric');
 assert.doesNotMatch(briefBuilder, /priorApproved|carriedForward/,
   'a quiet edition must never recertify the prior story set as today');
+assert.match(briefBuilder, /prev\.meta\.summaryMode !== 'selection-placeholder'[\s\S]*await writeSummary\(picked\)[\s\S]*summaryMode/,
+  'the final build must replace the selection lock placeholder with finished Brief copy');
 assert.match(briefBuilder, /if \(!picked\.length\)[\s\S]*quiet:\s*true[\s\S]*lead:\s*null[\s\S]*items:\s*\[\]/,
   'a genuinely quiet day must publish an explicit, receipt-compatible empty state');
 assert.match(briefBuilder, /if \(!picked\.length\)[\s\S]*const contentSig = fingerprint\(\[\]\)[\s\S]*words: 8, contentSig/,
@@ -464,8 +470,10 @@ assert.match(happeningBuilder, /mode: 'deterministic-fallback',[\s\S]*complete: 
   'a model outage must use the conservative local assessment instead of freezing the entire Brief');
 assert.match(happeningBuilder, /const rejectedKeeps = kept\.length - published\.length;[\s\S]*complete: true,[\s\S]*rejectedKeeps/,
   'quarantining unsafe generated copy must not relabel a complete candidate assessment as incomplete');
-assert.match(happeningBuilder, /--resume-current-edition[\s\S]*curation checkpoint is current/,
-  'a retry must reuse the current paid curation checkpoint');
+assert.match(happeningBuilder, /--resume-current-edition[\s\S]*canReuseCuration[\s\S]*checkpoint still matches the source ledger/,
+  'a retry may reuse paid curation only while the eligible source ledger is unchanged');
+assert.match(happeningBuilder, /new eligible reporting arrived[\s\S]*invalidating the earlier curation checkpoint/,
+  'new reporting must force the hourly retry to reassess the edition');
 assert.match(briefBuilder, /curationReadiness\(P\.curation, editorialDate[\s\S]*curation is incomplete/,
   'the Brief must fail closed rather than advance the dateline after failed fresh-story curation');
 assert.match(briefBuilder, /optionalAnalysis\(e\)/, 'the brief builder must expose approved analysis atomically');

@@ -20,6 +20,7 @@ import scheduleCoverage from './lib/schedule-coverage.cjs';
 import briefReadinessPolicy from './lib/brief-readiness.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
 import freshnessContract from './lib/freshness-contract.cjs';
+import briefSummary from './lib/brief-summary.cjs';
 
 const { editorialDay } = newsDay;
 const { eventTimestamp } = newsWindow;
@@ -27,6 +28,7 @@ const { validateScheduleCoverage } = scheduleCoverage;
 const { briefReadiness } = briefReadinessPolicy;
 const { evidenceInputs } = reportEvidence;
 const { curationReadiness } = freshnessContract;
+const { isHeadlineOnly } = briefSummary;
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
@@ -211,6 +213,10 @@ try {
     fails.push('brief: an empty day must be marked quiet and include an honest empty-state summary');
   }
   if (claims.length && !brief.lead) fails.push('brief: a non-empty day needs a lead');
+  if (selectionPolicy === 'exact-day-plus-carryover-v1'
+      && !claims.some((claim) => claim.lane === 'today' && claim.date === brief.meta?.editorialDate)) {
+    fails.push('brief: a weekday edition cannot advance its dateline without a same-day story');
+  }
   if (!explanationReadiness.targetMet) {
     fails.push(`brief: every selected story needs an approved, evidence-linked Briefly Explained unit (ready ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount}; missing ${explanationReadiness.missingTarget.join(', ')})`);
   }
@@ -224,6 +230,14 @@ try {
       maxSentences: 5,
     });
     if (!summaryGate.ok) fails.push(`brief: opening summary fails the public copy gate (${summaryGate.flags.join('; ')})`);
+    if (claims.length > 1 && isHeadlineOnly(brief.summary, claims.map((claim) => ({
+      title: claim.h1 || claim.headline,
+    })))) {
+      fails.push('brief: opening summary is only a list of headlines and adds no orientation');
+    }
+    if (brief.meta?.summaryMode === 'selection-placeholder') {
+      fails.push('brief: selection-only summary reached the final publication gate');
+    }
   }
   for (const [index, claim] of claims.entries()) {
     for (const key of [index ? 'headline' : 'h1', 'context', 'href', 'source']) if (!claim[key]) fails.push(`brief: claim ${index + 1} missing ${key}`);

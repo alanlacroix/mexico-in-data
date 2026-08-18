@@ -6,6 +6,14 @@ const TIMEOUT_MS = Number(process.env.LIVE_VERIFY_TIMEOUT_MS || 8 * 60 * 1000);
 const INTERVAL_MS = Number(process.env.LIVE_VERIFY_INTERVAL_MS || 15000);
 const SLOT_RANK = { morning: 1, afternoon: 2 };
 
+function assertDatedEdition(brief, expectedDate) {
+  const claims = [brief?.lead, ...(Array.isArray(brief?.items) ? brief.items : [])].filter(Boolean);
+  if (brief?.meta?.selection?.policy === 'exact-day-plus-carryover-v1'
+      && !claims.some((claim) => claim?.lane === 'today' && claim?.date === expectedDate)) {
+    throw new Error('live weekday Brief has no same-day story');
+  }
+}
+
 function assertExpectedInputs() {
   if (!EXPECTED_ID || !EXPECTED_DATE || !SLOT_RANK[EXPECTED_SLOT]) {
     throw new Error('PUBLICATION_ID, PUBLICATION_DATE and PUBLICATION_SLOT are required');
@@ -42,6 +50,7 @@ export async function checkProduction() {
   }
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
   if (claims.length === 0) throw new Error('live Brief has no stories');
+  assertDatedEdition(brief, EXPECTED_DATE);
   if (claims.some((claim) => claim.lane === 'today' && claim.date !== EXPECTED_DATE)) {
     throw new Error("live Today's stories include a claim from another date");
   }

@@ -20,7 +20,8 @@ const longDate = (iso, locale) => {
 module.exports = function () {
   let iso = new Date().toISOString().slice(0, 10);
   try {
-    iso = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'publication-status.json'), 'utf8')).editorialDate || iso;
+    const receipt = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'publication-status.json'), 'utf8'));
+    iso = (receipt.state === 'deferred' ? receipt.contentEditorialDate : receipt.editorialDate) || iso;
   } catch { /* fall back to today */ }
   return { iso, en: longDate(iso, 'en'), es: longDate(iso, 'es') };
 };

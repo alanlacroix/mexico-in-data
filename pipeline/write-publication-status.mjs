@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import briefReadinessPolicy from './lib/brief-readiness.cjs';
 import freshnessContract from './lib/freshness-contract.cjs';
+import { publicationReadiness } from './check-publication-readiness.mjs';
 
 const { briefReadiness } = briefReadinessPolicy;
 const { curationReadiness } = freshnessContract;
@@ -30,8 +31,9 @@ const freshness = curationReadiness(curation, editorialDate);
 if (!freshness.ok) throw new Error(`Fresh-story curation incomplete for ${editorialDate}: ${freshness.reason}`);
 const explanationReadiness = briefReadiness(brief);
 const selectedStories = [brief.lead, ...(brief.items || [])].filter(Boolean).length;
-if (selectedStories === 0) {
-  throw new Error('Refusing to certify an empty Brief; preserve the last complete edition instead');
+const contentReadiness = publicationReadiness(brief, editorialDate);
+if (!contentReadiness.publish) {
+  throw new Error(`Refusing to certify this Brief: ${contentReadiness.reason}`);
 }
 if (!explanationReadiness.targetMet) {
   throw new Error(`Briefly Explained incomplete: ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount} selected stories ready`);

@@ -12,6 +12,7 @@
 // across sections. Short weeks say so instead of padding.
 const fs = require('node:fs');
 const path = require('node:path');
+const { editorialDay } = require('../pipeline/lib/news-day.cjs');
 const latestStories = require('./latestStories.js');
 const dailyBrief = require('./dailyBrief.js');
 
@@ -112,12 +113,14 @@ module.exports = function () {
   const themePool = rank(showable.filter((x) => fresh(x.published_at, 14)));
   const ledgerItem = (raw) => {
     const x = englished(raw);
+    const localDate = editorialDay(x.published_at);
     return {
     title: x.title,
     // Kept as data for the Spanish edition; the English card shows only its English title.
     originalTitle: x.originalTitle || '', sourceLang: String(x.lang || '').toLowerCase(),
     url: x.url, sourceName: x.sourceName || x.source, domain: x.source, dek: trim(x.dek),
-    date: x.published_at, dateLabel: dateLabel(x.published_at), dayLabel: dayLabel(x.published_at),
+    date: localDate, publishedAt: x.published_at,
+    dateLabel: dateLabel(localDate), dayLabel: dayLabel(localDate),
     curated: false, bg: '', drivers: '', implications: '',
     view: '', next: '',
     be: false,
@@ -171,6 +174,7 @@ module.exports = function () {
       source: it.sourceName,
       summary: it.dek,
       date: String(it.date || '').slice(0, 10),
+      publishedAt: it.publishedAt || `${String(it.date || '').slice(0, 10)}T12:00:00Z`,
     }));
     items.forEach((it) => { sectionOf.set(it.url, sec.label); claimed.add(it.url); });
     rooms[sec.key] = { items, summary: null, curatedCount: curated.length };

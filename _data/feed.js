@@ -232,9 +232,15 @@ function buildFeed(locale = 'en') {
         url: item.url,
         title: item.title,
         dek: item.dek || '',
+        publishedAt: item.publishedAt || `${String(item.date || '').slice(0, 10)}T12:00:00Z`,
       });
     }
   }
+  // Topic rooms decide inclusion, not reading order. The combined "All" shelf must
+  // read newest-to-oldest; concatenating room order made dates jump backward and
+  // forward as the reader scrolled.
+  weekItems.sort((left, right) => String(right.publishedAt).localeCompare(String(left.publishedAt))
+    || String(left.title).localeCompare(String(right.title)));
 
   // ---- Coming up -----------------------------------------------------------
   const groupsByWhen = new Map();

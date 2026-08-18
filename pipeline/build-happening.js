@@ -39,6 +39,7 @@ import importanceRubric from './lib/importance-rubric.cjs';
 import candidatePriority from './lib/candidate-priority.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
 import analysisAttempts from './lib/analysis-attempts.cjs';
+import curationCheckpoint from './lib/curation-checkpoint.cjs';
 
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
@@ -47,6 +48,7 @@ const { applyScheduledImportanceFloor, normalizeModelImportanceRow, scoreImporta
 const { attentionSignal, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates } = candidatePriority;
 const { evidenceInputs } = reportEvidence;
 const { mergeApprovedAttempt } = analysisAttempts;
+const { candidateSignature, canReuseCuration } = curationCheckpoint;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -117,7 +119,7 @@ function weekKey(dt) {
   const ys = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   return d.getUTCFullYear() + '-W' + String(Math.ceil((((d - ys) / 864e5) + 1) / 7)).padStart(2, '0');
 }
-function candidates(now, existingEvents = [], schedule = []) {
+function candidatePool(now, existingEvents = [], schedule = []) {
   const seen = new Set(), all = [];
   for (let i = 0; i <= 5; i++) {                         // last ~6 ISO-week files cover a 30-day window
     const w = weekKey(new Date(now.getTime() - i * 7 * 864e5));
@@ -152,9 +154,8 @@ function candidates(now, existingEvents = [], schedule = []) {
   // The input cap is a cost control, never an editorial policy. Exact scheduled outcomes
   // and reports the log has not processed get first access to the curator. Old recurring
   // commentary can no longer crowd a central-bank decision out before it is even scored.
-  return prioritizeCandidates(grouped).slice(0, MAX_CANDIDATES);
+  return grouped;
 }
-
 // ---- shape an event-log entry from a news item ----
 const clampImp = (n) => Math.max(0, Math.min(10, Math.round(+n || 5)));   // 0-10 Brief rubric (see BRIEF-RUBRIC.md)
 const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 52);
@@ -274,6 +275,7 @@ function curationResult(cands, now, events, details = {}) {
       policy: 'exact-day-assessment-v1',
       editorialDate,
       candidateCount: cands.length,
+      candidateSig: details.candidateSig || candidateSignature(cands),
       freshCandidateCount: freshCandidates.length,
       assessedCount: Number(details.assessedCount) || 0,
       keptCount: events.length,
@@ -1118,16 +1120,26 @@ async function main() {
     console.log(`  llm: ${u.calls} calls · ${u.input}+${u.output} tok · ~$${u.costUSD.toFixed(4)}\n`);
     return;
   }
-  if (resumeCurrentEdition
-      && existing.meta?.curation?.editorialDate === editorialDay(now)
-      && existing.meta.curation.complete === true) {
-    console.log('  curation checkpoint is current — reusing the assessed event log');
+  const schedule = readJson(D('events.json'), { events: [] });
+  const universe = candidatePool(now, existing.events, schedule);
+  const signature = candidateSignature(universe);
+  const publicationStatus = readJson(D('publication-status.json'), {});
+  const persistedCheckpoint = publicationStatus.state === 'deferred'
+    && publicationStatus.editorialDate === editorialDay(now)
+    ? publicationStatus.curation : null;
+  const checkpoint = existing.meta?.curation?.editorialDate === editorialDay(now)
+    ? existing.meta.curation : persistedCheckpoint;
+  if (resumeCurrentEdition && canReuseCuration(checkpoint, editorialDay(now), signature)) {
+    console.log('  curation checkpoint still matches the source ledger — reusing the assessed event log');
     return;
   }
-  const schedule = readJson(D('events.json'), { events: [] });
-  const cands = candidates(now, existing.events, schedule);
+  if (resumeCurrentEdition && checkpoint?.editorialDate === editorialDay(now)) {
+    console.log('  new eligible reporting arrived — invalidating the earlier curation checkpoint');
+  }
+  const cands = prioritizeCandidates(universe).slice(0, MAX_CANDIDATES);
   console.log(`  candidates ${cands.length} (last ${WINDOW_DAYS}d) · existing log ${arr(existing.events).length}`);
   const curation = await curate(cands, now);
+  curation.receipt.candidateSig = signature;
   const fresh = curation.events;
   console.log(`  curated ${fresh.length} fresh events`);
   const merged = attachScheduledMetadata(mergeLog(existing, fresh, now).events, schedule);

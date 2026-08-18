@@ -10,15 +10,27 @@ export function publicationReadiness(brief, editorialDate) {
   if (brief?.meta?.editorialDate !== editorialDate) {
     throw new Error(`Brief editorial date ${brief?.meta?.editorialDate || '(missing)'} does not match ${editorialDate}`);
   }
-  return stories.length
-    ? { publish: true, storyCount: stories.length, reason: `${stories.length} selected stories` }
-    : { publish: false, storyCount: 0, reason: 'no selected stories; preserve the last complete edition and retry hourly' };
+  const policy = brief?.meta?.selection?.policy;
+  const todayCount = stories.filter((story) => story?.lane === 'today' && story?.date === editorialDate).length;
+  if (!stories.length) {
+    return { publish: false, storyCount: 0, todayCount, reason: 'no selected stories; preserve the last complete edition and retry hourly' };
+  }
+  if (policy === 'exact-day-plus-carryover-v1' && todayCount === 0) {
+    return {
+      publish: false,
+      storyCount: stories.length,
+      todayCount,
+      reason: 'weekday edition has no same-day stories; preserve the last complete edition and retry when new reporting arrives',
+    };
+  }
+  return { publish: true, storyCount: stories.length, todayCount, reason: `${stories.length} selected stories` };
 }
 
 function writeOutput(result) {
   const lines = [
     `publish=${result.publish}`,
     `story_count=${result.storyCount}`,
+    `today_count=${result.todayCount}`,
     `reason=${result.reason}`,
   ].join('\n');
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, `${lines}\n`);

@@ -18,6 +18,7 @@ import plainLanguage from './lib/plain-language.cjs';
 import briefSelection from './lib/brief-selection.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
 import freshnessContract from './lib/freshness-contract.cjs';
+import briefSummary from './lib/brief-summary.cjs';
 
 const { editorialDay } = newsDay;
 const { board, buildStanding } = briefStanding;
@@ -25,11 +26,12 @@ const { groupEvents, sameThread } = newsThreads;
 const DEFAULT_WINDOW_HOURS = 36;
 const CARRYOVER_WINDOW_HOURS = 60;
 const WEEKEND_WINDOW_HOURS = 168;
-const SUMMARY_VERSION = 2;
+const SUMMARY_VERSION = 3;
 const { plainExplanation, plainHeadline } = plainLanguage;
 const { optionalAnalysis, selectEditionBrief } = briefSelection;
 const { evidenceInputs } = reportEvidence;
 const { curationReadiness } = freshnessContract;
+const { contextDigest } = briefSummary;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -49,13 +51,14 @@ function pool(now = new Date()) {
   };
 }
 
-const endPunct = (t) => { t = String(t || '').replace(/\s+/g, ' ').trim(); return t && !/[.!?]$/.test(t) ? t + '.' : t; };
-// If synthesis is unavailable, summarize every selected development rather than
-// silently describing only the first three. Five plain sourced headlines are more
-// useful and more honest than a polished paragraph that omits part of the recap.
-const fallbackSummary = (picked) => picked.slice(0, 5)
-  .map((event) => endPunct(plainHeadline(stripDash(event.title)) || plainExplanation(ctxOf(event))))
-  .join(' ');
+// If synthesis is unavailable, retain every selected development and add as much
+// already-audited factual context as the paragraph cap permits. The old headline-only
+// fallback made the Brief read like a list and accidentally became permanent when the
+// selection-lock artifact was mistaken for the final build.
+const fallbackSummary = (picked) => contextDigest(picked.slice(0, 5).map((event) => ({
+  title: plainHeadline(stripDash(event.title)) || plainExplanation(ctxOf(event)),
+  context: plainExplanation(ctxOf(event)),
+})));
 
 // ---- the Brief: 3-5 rubric-ranked developments, each headline + explained context ----
 const stripDash = (t) => String(t || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();  // voice law: no em-dash
@@ -288,14 +291,21 @@ async function main() {
   const unchanged = prev && prev.meta && prev.meta.contentSig === contentSig
     && prev.meta.editorialDate === editorialDate && Number(prev.meta.summaryV) === SUMMARY_VERSION;
   const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
-  // Keep an unchanged summary stable. When the story set changes, a failed model draft gets
-  // a deterministic summary of the current headlines, never prose from the previous set.
-  const summary = (unchanged && String(prev.summary || '').trim())
-    || (!selectionOnly ? await writeSummary(picked) : '')
-    || fallbackSummary(picked);
+  // A selection-only build is a lock, not finished editorial copy. On a new story set it
+  // writes a clearly marked placeholder. The final build must replace that placeholder;
+  // this distinction was missing, so the model never got a chance to synthesize the Brief.
+  const priorSummaryIsFinal = unchanged
+    && prev.meta.summaryMode !== 'selection-placeholder'
+    && String(prev.summary || '').trim();
+  const generatedSummary = !selectionOnly && !priorSummaryIsFinal ? await writeSummary(picked) : '';
+  const summary = priorSummaryIsFinal || generatedSummary || fallbackSummary(picked);
+  const summaryMode = priorSummaryIsFinal
+    ? (prev.meta.summaryMode || 'legacy-final')
+    : generatedSummary ? 'model-synthesis'
+      : selectionOnly ? 'selection-placeholder' : 'context-digest';
   const out = { meta: { title: editionTitle, editorialDate, updated: editorialDate, asOf: editorialDate,
     reviewedAt, latestItemDate: selectedDates.at(-1) || '', quiet, newCount,
-    generatedAt: now.toISOString(), mode: 'curated', editionType: weekend ? 'weekend-recap' : 'daily', summaryV: SUMMARY_VERSION,
+    generatedAt: now.toISOString(), mode: 'curated', editionType: weekend ? 'weekend-recap' : 'daily', summaryV: SUMMARY_VERSION, summaryMode,
     count: 1 + items.length, words, contentSig,
     windowHours,
     selection: {

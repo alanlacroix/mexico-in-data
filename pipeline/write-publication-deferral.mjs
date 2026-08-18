@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import briefReadinessPolicy from './lib/brief-readiness.cjs';
+import { publicationReadiness } from './check-publication-readiness.mjs';
 
 const { briefReadiness } = briefReadinessPolicy;
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -17,16 +18,21 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(editorialDate || '')) throw new Error(`Invalid p
 let prior = {};
 try { prior = JSON.parse(fs.readFileSync(statusPath, 'utf8')); } catch { /* first run */ }
 
-// The same hourly result should be a no-op: one status commit and one deployment
-// are enough while the workflow keeps checking privately for a complete edition.
-if (prior.state === 'deferred' && prior.editorialDate === editorialDate && prior.slot === slot) {
-  console.log(`publication deferral already recorded: ${editorialDate} ${slot}`);
-  process.exit(0);
-}
-
 const happening = JSON.parse(fs.readFileSync(happeningPath, 'utf8'));
 const attemptedBrief = JSON.parse(fs.readFileSync(briefPath, 'utf8'));
+const attempted = publicationReadiness(attemptedBrief, editorialDate);
 const contentEditorialDate = prior.contentEditorialDate || prior.editorialDate || null;
+const curation = happening.meta?.curation || null;
+// The same assessed source universe is a true no-op. When new reporting changes the
+// candidate signature, persist the new checkpoint once so the next hourly runner can
+// distinguish "nothing changed" from "new articles need review" without publishing
+// partial editorial files.
+if (prior.state === 'deferred' && prior.editorialDate === editorialDate && prior.slot === slot
+    && prior.curation?.candidateSig && prior.curation.candidateSig === curation?.candidateSig
+    && Number(prior.selectedStories) === attempted.storyCount) {
+  console.log(`publication deferral already records this candidate set: ${editorialDate} ${slot}`);
+  process.exit(0);
+}
 const status = {
   schemaVersion: 1,
   state: 'deferred',
@@ -35,10 +41,11 @@ const status = {
   slot,
   publicationId: `deferred-${editorialDate}-${slot}`,
   generatedAt: new Date().toISOString(),
-  reason: 'No complete replacement Brief was ready. The last complete edition remains live while the hourly workflow retries.',
+  reason: `${attempted.reason}. The last complete edition remains live while the hourly workflow retries.`,
   priorPublicationId: prior.publicationId || null,
-  selectedStories: 0,
-  curation: happening.meta?.curation || null,
+  selectedStories: attempted.storyCount,
+  storyLanes: attemptedBrief.meta?.selection?.lanes || null,
+  curation,
   explanations: briefReadiness(attemptedBrief),
   workflowRunId: process.env.GITHUB_RUN_ID || null,
   workflowRunAttempt: Number(process.env.GITHUB_RUN_ATTEMPT || 1),

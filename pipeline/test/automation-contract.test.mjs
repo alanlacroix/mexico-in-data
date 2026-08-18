@@ -91,8 +91,8 @@ assert.match(
 );
 assert.match(
   receiptWriter,
-  /selectedStories === 0[\s\S]*Refusing to certify an empty Brief/,
-  'the publication receipt must reject zero stories even if the workflow condition regresses',
+  /publicationReadiness\(brief, editorialDate\)[\s\S]*!contentReadiness\.publish[\s\S]*Refusing to certify this Brief/,
+  'the publication receipt must reject empty and carryover-only weekdays even if the workflow condition regresses',
 );
 assert.match(
   editorialGate,
@@ -130,6 +130,11 @@ assert.doesNotMatch(
   deferredPublicationBlock,
   /git add[^\n]*(?:data\/brief|data\/happening|data\/news)/,
   'a deferral commit must never contain the empty generated Brief or partial editorial inputs',
+);
+assert.match(
+  fs.readFileSync(path.join(root, 'pipeline', 'write-publication-deferral.mjs'), 'utf8'),
+  /prior\.curation\?\.candidateSig[\s\S]*curation\?\.candidateSig/,
+  'a deferred receipt must persist the assessed candidate signature without publishing partial editorial data',
 );
 assert.doesNotMatch(happening, /Checkpoint the assessed news|Checkpoint the locked selection|editorial checkpoint:/,
   'intermediate public-data commits must not leave main in a half-built editorial state');
