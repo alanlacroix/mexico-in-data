@@ -5,13 +5,9 @@
   "contentEditorialDate": "2026-08-17",
   "slot": "morning",
   "publicationId": "deferred-2026-08-18-morning",
-  "deployAttempt": 1,
-  "generatedAt": "2026-08-18T14:50:33Z",
-  "briefGeneratedAt": "2026-08-17T15:30:00.000Z",
-  "briefReviewedAt": "2026-08-17T15:30:00.000Z",
-  "reason": "The attempted weekday edition had no same-day stories. The complete August 17 edition remains live while the hourly workflow retries newly arrived reporting.",
-  "selectionPolicy": "exact-day-plus-carryover-v1",
-  "selectionCandidates": 4,
+  "generatedAt": "2026-08-18T14:59:08.438Z",
+  "reason": "weekday edition has no same-day stories; preserve the last complete edition and retry when new reporting arrives. The last complete edition remains live while the hourly workflow retries.",
+  "priorPublicationId": "deferred-2026-08-18-morning",
   "selectedStories": 2,
   "storyLanes": {
     "today": 0,
@@ -22,7 +18,8 @@
     "policy": "exact-day-assessment-v1",
     "editorialDate": "2026-08-18",
     "candidateCount": 24,
-    "freshCandidateCount": 5,
+    "candidateSig": "89f4af11673cf935a682d6584fa051f4f821fd427794154c10f426a79a2c4cf6",
+    "freshCandidateCount": 8,
     "assessedCount": 24,
     "keptCount": 2,
     "rejectedCount": 0,
@@ -45,11 +42,6 @@
     "targetMet": true,
     "publicationBlocking": false
   },
-  "scheduledOutcomes": {
-    "checkedAt": "2026-08-18T13:15:32.253Z",
-    "blockers": 0,
-    "pending": 0
-  },
-  "workflowRunId": "32141203269",
+  "workflowRunId": "32151514569",
   "workflowRunAttempt": 1
 }
