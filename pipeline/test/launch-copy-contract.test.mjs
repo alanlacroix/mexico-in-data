@@ -21,7 +21,11 @@ const latestSeriesValue = (id) => json(`data/series/${id}.json`).data
 // still stamps itself with the current editorial day rather than an undated edition.
 // `f` is the per-locale feed since the Spanish edition (2026-08-03); the promise is
 // unchanged — the page stamps the current editorial day, in the reader's language.
-assert.match(home, /class="dateline"><h1>\{\{ f\.date \| longDate\(locale\) \}\}/, 'homepage must remain a daily starting point without expiring after noon');
+assert.match(
+  home,
+  /class="dateline"><h1 id="edition-date" data-iso="\{\{ f\.date \}\}" data-locale="\{\{ locale \}\}">\{\{ f\.date \| longDate\(locale\) \}\}/,
+  'homepage must remain a dated daily starting point and expose the edition date to the stale-content guard',
+);
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
 // The page is now grouped by timeframe (Alan, 2026-08-02): the brief, the numbers and
 // the day's headlines are one "Today" section, because they all describe today. The
