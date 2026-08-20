@@ -35,6 +35,8 @@ const TIER_W = { 1: 3, specialist: 3, 2: 2 };
 // Roughly five a section. A soft rule: the point of the week is a read, not the archive.
 const SECTION_CAP = 5;
 const CHINA = /\bchinas?\b|\bchinos?\b|\bchina\b|beijing|\bbyd\b|transbordo|triangulaci[oó]n/i;
+const SPANISH_WORD = /\b(?:de|del|la|las|el|los|una|para|con|por|que|su|sus|más|año|años|desde|entre|sobre|tras|ante|hacia|según|mientras)\b/gi;
+const looksSpanish = (item) => (`${item.title || ''} ${item.dek || ''}`.match(SPANISH_WORD) || []).length >= 3;
 
 const isoWeek = (dt) => {
   const d = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate()));
@@ -114,10 +116,13 @@ module.exports = function () {
   const ledgerItem = (raw) => {
     const x = englished(raw);
     const localDate = editorialDay(x.published_at);
+    const translated = Boolean(x.originalTitle && x.title !== x.originalTitle);
+    const sourceLang = translated ? 'es'
+      : (String(x.lang || '').toLowerCase() === 'es' || looksSpanish(x) ? 'es' : String(x.lang || '').toLowerCase());
     return {
     title: x.title,
     // Kept as data for the Spanish edition; the English card shows only its English title.
-    originalTitle: x.originalTitle || '', sourceLang: String(x.lang || '').toLowerCase(),
+    originalTitle: x.originalTitle || '', sourceLang,
     url: x.url, sourceName: x.sourceName || x.source, domain: x.source, dek: trim(x.dek),
     date: localDate, publishedAt: x.published_at,
     dateLabel: dateLabel(localDate), dayLabel: dayLabel(localDate),

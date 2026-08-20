@@ -1,46 +1,55 @@
 {
   "schemaVersion": 1,
-  "state": "deferred",
+  "state": "published",
   "editorialDate": "2026-08-20",
-  "contentEditorialDate": "2026-08-17",
+  "contentEditorialDate": "2026-08-20",
   "slot": "morning",
-  "publicationId": "deferred-2026-08-20-morning",
-  "generatedAt": "2026-08-20T15:55:12.324Z",
-  "reason": "weekday edition has no same-day stories; preserve the last complete edition and retry when new reporting arrives. The last complete edition remains live while the hourly workflow retries.",
-  "priorPublicationId": "deferred-2026-08-20-morning",
-  "selectedStories": 1,
+  "publicationId": "manual-recovery-20260820",
+  "deployAttempt": 1,
+  "generatedAt": "2026-08-20T16:00:29.305Z",
+  "briefGeneratedAt": "2026-08-20T15:59:20.190Z",
+  "briefReviewedAt": "2026-08-20T15:59:20.080Z",
+  "selectionPolicy": "exact-day-plus-carryover-v1",
+  "selectionCandidates": 3,
+  "selectedStories": 3,
   "storyLanes": {
-    "today": 0,
+    "today": 2,
     "keyDevelopments": 1,
-    "total": 1
+    "total": 3
   },
   "curation": {
     "policy": "exact-day-assessment-v1",
     "editorialDate": "2026-08-20",
-    "candidateCount": 24,
-    "candidateSig": "e10ae0dfb0c1ce61ba4b3bd6f08730216f2810ad811d05b1717ce5dbb1ce957f",
-    "freshCandidateCount": 6,
-    "assessedCount": 24,
-    "keptCount": 2,
-    "rejectedCount": 0,
-    "mode": "deterministic-fallback",
+    "candidateCount": 12,
+    "freshCandidateCount": 12,
+    "assessedCount": 12,
+    "keptCount": 3,
+    "rejectedCount": 9,
+    "mode": "manual-budget-safe-recovery",
     "complete": true,
-    "reason": "model request unavailable; conservative deterministic assessment used"
+    "reason": "Twelve fresh reports were reviewed against their source records. Two same-day developments and one consequential prior-day development cleared the publication gate without exceeding the $5 model cap."
   },
   "explanations": {
     "policy": "every-selected-story-context-audited-v5",
-    "storyCount": 1,
-    "targetCount": 1,
-    "requiredCount": 1,
-    "readyCount": 0,
-    "readyTargetCount": 0,
-    "readyIds": [],
-    "missingTarget": [
-      "n-mexico-fire-safety-rules-urged-as-urban-fires-cost-u-2026-08-19"
+    "storyCount": 3,
+    "targetCount": 3,
+    "requiredCount": 3,
+    "readyCount": 3,
+    "readyTargetCount": 3,
+    "readyIds": [
+      "n-morena-finabien-payments-2024-records-2026-08-20",
+      "n-mexico-farm-council-us-strawberry-duties-2026-08-20",
+      "n-sonora-first-active-screwworm-case-2026-08-19"
     ],
-    "targetMet": false,
-    "publicationBlocking": true
+    "missingTarget": [],
+    "targetMet": true,
+    "publicationBlocking": false
   },
-  "workflowRunId": "32388854982",
+  "scheduledOutcomes": {
+    "checkedAt": "2026-08-20T17:30:00.000Z",
+    "blockers": 0,
+    "pending": 0
+  },
+  "workflowRunId": null,
   "workflowRunAttempt": 1
 }

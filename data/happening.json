@@ -2,26 +2,264 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-17",
+    "updated": "2026-08-20",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
-    "count": 63,
-    "generatedAt": "2026-08-17T15:30:00.000Z",
-    "llm": true,
+    "count": 66,
+    "generatedAt": "2026-08-20T15:59:19.981Z",
+    "llm": false,
     "curation": {
       "policy": "exact-day-assessment-v1",
-      "editorialDate": "2026-08-17",
-      "candidateCount": 24,
-      "freshCandidateCount": 7,
-      "assessedCount": 24,
+      "editorialDate": "2026-08-20",
+      "candidateCount": 12,
+      "freshCandidateCount": 12,
+      "assessedCount": 12,
       "keptCount": 3,
-      "rejectedCount": 0,
+      "rejectedCount": 9,
       "mode": "manual-budget-safe-recovery",
       "complete": true,
-      "reason": "The model budget was unavailable. Three material reports were reviewed against the source ledger and primary context without exceeding the $5 cap."
+      "reason": "Twelve fresh reports were reviewed against their source records. Two same-day developments and one consequential prior-day development cleared the publication gate without exceeding the $5 model cap."
     }
   },
   "events": [
+    {
+      "id": "n-morena-finabien-payments-2024-records-2026-08-20",
+      "date": "2026-08-20",
+      "section": "politics",
+      "title": "Investigation finds Morena sent MX$134.9 million through a state financial service in 2024",
+      "why": "Mexico Against Corruption says Finabien records show 252,901 payments and that the money does not appear in Morena's 2024 campaign filings. Finabien denies acting improperly, and no electoral authority has ruled that the payments were illegal.",
+      "company": "",
+      "source": "Mexicanos Contra la Corrupción",
+      "url": "https://contralacorrupcion.mx/morenagate-en-la-vispera-de-la-eleccion-de-2024-morena-disperso-135-millones-en-252-mil-apoyos/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-20T12:50:00.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "#MorenaGate: En la víspera de la elección de 2024, Morena dispersó $134.9 millones en 252,901 apoyos",
+        "dek": "Para 2024 se repartieron 134.9 millones de pesos en 252,901 pagos, cerca de 533 pesos por pago. Finabien rechazó cualquier actuación irregular. El monto no aparece en los informes de gastos de campaña."
+      },
+      "coverage": [
+        {
+          "source": "Mexicanos Contra la Corrupción",
+          "url": "https://contralacorrupcion.mx/morenagate-en-la-vispera-de-la-eleccion-de-2024-morena-disperso-135-millones-en-252-mil-apoyos/",
+          "publishedAt": "2026-08-20T12:50:00.000Z",
+          "date": "2026-08-20",
+          "title": "Investigation finds Morena sent MX$134.9 million through a state financial service in 2024",
+          "summary": "Mexico Against Corruption says Finabien records show 252,901 payments and that the money does not appear in Morena's 2024 campaign filings. Finabien denies acting improperly, and no electoral authority has ruled that the payments were illegal."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 3,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "reportedTotal": null,
+        "componentSource": "manual-source-review"
+      },
+      "background": "Mexico's election agency audits how parties receive and spend money. Its online system is where parties record income and expenses. The documents cited by Mexico Against Corruption show that payments were made. They do not by themselves show why recipients were chosen.",
+      "view": "The MX$134.9 million total covered 252,901 payments, about MX$533 each. The unresolved question is accounting. The investigation says it could not find the amount in Morena's filings, which warrants an official explanation but does not establish vote-buying.",
+      "prediction": "Watch for a response from Morena or the election agency that identifies the account, purpose and reporting category. A clean reconciliation would weaken the concern. An audit finding of unreported spending would strengthen it.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "article",
+          "primary:ine-fiscalization"
+        ],
+        "view": [
+          "article",
+          "primary:ine-fiscalization"
+        ],
+        "prediction": [
+          "article",
+          "primary:ine-fiscalization"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "Mexicanos Contra la Corrupción",
+          "url": "https://contralacorrupcion.mx/morenagate-en-la-vispera-de-la-eleccion-de-2024-morena-disperso-135-millones-en-252-mil-apoyos/"
+        },
+        {
+          "id": "primary:ine-fiscalization",
+          "kind": "primary",
+          "source": "Instituto Nacional Electoral",
+          "url": "https://www.ine.mx/voto-y-elecciones/fiscalizacion/"
+        }
+      ]
+    },
+    {
+      "id": "n-mexico-farm-council-us-strawberry-duties-2026-08-20",
+      "date": "2026-08-20",
+      "section": "us-mexico",
+      "title": "Mexico's farm council challenges preliminary US strawberry duties",
+      "why": "The US Commerce Department's preliminary dumping margin averages 4.83% for winter strawberries from Mexico. A final decision is due January 8, 2027, and Mexico's farm council says the method could extend to other seasonal produce.",
+      "company": "",
+      "source": "El Economista",
+      "url": "https://www.eleconomista.com.mx/empresas/castigo-fresa-mexicana-sienta-mal-precedente-comercio-eu-cna-20260820-829226.html",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-20T06:33:49.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Castigo a fresa mexicana sienta mal precedente en el comercio con EU: CNA",
+        "dek": "La entidad estadounidense calculó un promedio de dumping de 4.83%. La determinación final está programada para el 8 de enero de 2027. El margen alegado era 18.32%."
+      },
+      "coverage": [
+        {
+          "source": "El Economista",
+          "url": "https://www.eleconomista.com.mx/empresas/castigo-fresa-mexicana-sienta-mal-precedente-comercio-eu-cna-20260820-829226.html",
+          "publishedAt": "2026-08-20T06:33:49.000Z",
+          "date": "2026-08-20",
+          "title": "Mexico's farm council challenges preliminary US strawberry duties",
+          "summary": "The US Commerce Department's preliminary dumping margin averages 4.83% for winter strawberries from Mexico. A final decision is due January 8, 2027, and Mexico's farm council says the method could extend to other seasonal produce."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 0
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "reportedTotal": null,
+        "componentSource": "manual-source-review"
+      },
+      "background": "Antidumping cases have two separate tests: the Commerce Department estimates whether imports were sold below fair value, and the US International Trade Commission decides whether the domestic industry was injured. A preliminary margin is not the final result.",
+      "view": "The immediate cost is narrower than the farm council's warning. The case applies to winter strawberries, and the 4.83% average is well below the 18.32% alleged at the start. Any broader precedent depends on the final reasoning, not only the rate.",
+      "prediction": "Watch the Commerce Department's final determination on January 8, followed by the injury decision. Lower or zero final margins would weaken the case. Similar margins and a final injury finding would put the duties on firmer ground.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "article",
+          "primary:commerce",
+          "primary:usitc"
+        ],
+        "view": [
+          "article",
+          "primary:commerce"
+        ],
+        "prediction": [
+          "article",
+          "primary:usitc"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El Economista",
+          "url": "https://www.eleconomista.com.mx/empresas/castigo-fresa-mexicana-sienta-mal-precedente-comercio-eu-cna-20260820-829226.html"
+        },
+        {
+          "id": "primary:commerce",
+          "kind": "primary",
+          "source": "US Department of Commerce",
+          "url": "https://www.trade.gov/commerce-initiates-antidumping-duty-investigation-fresh-strawberries-mexico"
+        },
+        {
+          "id": "primary:usitc",
+          "kind": "primary",
+          "source": "US International Trade Commission",
+          "url": "https://www.usitc.gov/fed_reg_notices/antidumpingcountervailing_duty/701731/fresh_winter_strawberries_mexico_031026.htm"
+        }
+      ]
+    },
+    {
+      "id": "n-sonora-first-active-screwworm-case-2026-08-19",
+      "date": "2026-08-19",
+      "section": "us-mexico",
+      "title": "Screwworm reaches Sonora days before a cattle-export crossing is due to reopen",
+      "why": "Mexico's animal-health agency listed Sonora's first active case in Álamos. The US Agriculture Department has scheduled the Douglas, Arizona, cattle crossing to reopen on August 24, subject to Mexico following the joint control plan.",
+      "company": "",
+      "source": "RTN Medios",
+      "url": "https://rtnmedios.com/slider/sonora-registra-primer-caso-activo-de-gusano-barrenador/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-19T18:00:00.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Sonora registra primer caso activo de Gusano Barrenador",
+        "dek": "Sonora registró su primer caso activo de Gusano Barrenador del Ganado. La detección ocurre cinco días antes de la reapertura de la frontera, programada para el 24 de agosto."
+      },
+      "coverage": [
+        {
+          "source": "RTN Medios",
+          "url": "https://rtnmedios.com/slider/sonora-registra-primer-caso-activo-de-gusano-barrenador/",
+          "publishedAt": "2026-08-19T18:00:00.000Z",
+          "date": "2026-08-19",
+          "title": "Screwworm reaches Sonora days before a cattle-export crossing is due to reopen",
+          "summary": "Mexico's animal-health agency listed Sonora's first active case in Álamos. The US Agriculture Department has scheduled the Douglas, Arizona, cattle crossing to reopen on August 24, subject to Mexico following the joint control plan."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 3,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "reportedTotal": null,
+        "componentSource": "manual-source-review"
+      },
+      "background": "New World screwworm larvae feed on living tissue. The US Agriculture Department has tied the border reopening to the joint control plan and inspection of every animal entering through Douglas.",
+      "view": "One confirmed case does not by itself cancel the reopening. Sonora had been one of the northern states kept free of the pest, so the case tests whether the control plan can contain an isolated detection without another trade closure.",
+      "prediction": "Watch the US Agriculture Department's import page and Mexico's animal-health updates before August 24. If the crossing reopens on schedule with the case contained, that would support the control plan. A delay or more northern cases would show the trade risk is rising.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "article",
+          "primary:usda-screwworm"
+        ],
+        "view": [
+          "article",
+          "primary:usda-reopening"
+        ],
+        "prediction": [
+          "primary:usda-reopening",
+          "primary:senasica"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "RTN Medios",
+          "url": "https://rtnmedios.com/slider/sonora-registra-primer-caso-activo-de-gusano-barrenador/"
+        },
+        {
+          "id": "primary:usda-reopening",
+          "kind": "primary",
+          "source": "US Department of Agriculture",
+          "url": "https://direct.aphis.usda.gov/news/agency-announcements/usda-announces-phased-reopening-southern-ports-livestock-trade-0"
+        },
+        {
+          "id": "primary:usda-screwworm",
+          "kind": "primary",
+          "source": "US Department of Agriculture",
+          "url": "https://direct.aphis.usda.gov/live-animal-import/cattle-bison-germplasm/mexico"
+        },
+        {
+          "id": "primary:senasica",
+          "kind": "primary",
+          "source": "SENASICA",
+          "url": "https://www.gob.mx/agricultura/acciones-y-programas/gusano-barrenador-del-ganado-gbg-429472"
+        }
+      ]
+    },
     {
       "id": "n-mexico-us-drones-antidrone-security-2026-08-17",
       "date": "2026-08-17",
@@ -68,11 +306,31 @@
         "rubricVersion": "five-component-v1",
         "calculatedTotal": 8,
         "components": {
-          "nationalConsequence": { "raw": 2, "score": 2, "status": "accepted" },
-          "usMexicoStakes": { "raw": 2, "score": 2, "status": "accepted" },
-          "modelImpact": { "raw": 1, "score": 1, "status": "accepted" },
-          "durability": { "raw": 2, "score": 2, "status": "accepted" },
-          "officialness": { "raw": 1, "score": 1, "status": "accepted" }
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
         },
         "reportedTotal": null,
         "componentSource": "manual-source-review"
@@ -82,9 +340,17 @@
       "prediction": "Watch for a contract or official delivery notice that names the equipment and quantity. That would show the announcement has moved from access to an actual purchase.",
       "analysisV": 9,
       "analysisRefs": {
-        "background": ["article", "primary:crs-counter-uas"],
-        "view": ["article", "corroboration:elpais"],
-        "prediction": ["article"]
+        "background": [
+          "article",
+          "primary:crs-counter-uas"
+        ],
+        "view": [
+          "article",
+          "corroboration:elpais"
+        ],
+        "prediction": [
+          "article"
+        ]
       },
       "analysisSources": [
         {
@@ -145,11 +411,31 @@
         "rubricVersion": "five-component-v1",
         "calculatedTotal": 7,
         "components": {
-          "nationalConsequence": { "raw": 2, "score": 2, "status": "accepted" },
-          "usMexicoStakes": { "raw": 0, "score": 0, "status": "accepted" },
-          "modelImpact": { "raw": 2, "score": 2, "status": "accepted" },
-          "durability": { "raw": 2, "score": 2, "status": "accepted" },
-          "officialness": { "raw": 1, "score": 1, "status": "accepted" }
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
         },
         "reportedTotal": null,
         "componentSource": "manual-source-review"
@@ -159,9 +445,17 @@
       "prediction": "Watch the July survey for another monthly increase and fewer year-over-year losses across industries. If computer equipment remains the main exception, the recovery is still narrow.",
       "analysisV": 9,
       "analysisRefs": {
-        "background": ["article", "primary:inegi-emim"],
-        "view": ["article", "context:computer-exports"],
-        "prediction": ["primary:inegi-emim"]
+        "background": [
+          "article",
+          "primary:inegi-emim"
+        ],
+        "view": [
+          "article",
+          "context:computer-exports"
+        ],
+        "prediction": [
+          "primary:inegi-emim"
+        ]
       },
       "analysisSources": [
         {
@@ -222,11 +516,31 @@
         "rubricVersion": "five-component-v1",
         "calculatedTotal": 8,
         "components": {
-          "nationalConsequence": { "raw": 2, "score": 2, "status": "accepted" },
-          "usMexicoStakes": { "raw": 2, "score": 2, "status": "accepted" },
-          "modelImpact": { "raw": 1, "score": 1, "status": "accepted" },
-          "durability": { "raw": 1, "score": 1, "status": "accepted" },
-          "officialness": { "raw": 2, "score": 2, "status": "accepted" }
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
         },
         "reportedTotal": null,
         "componentSource": "manual-source-review"
@@ -236,9 +550,17 @@
       "prediction": "Watch the FAA's country-rating list or a formal notice by mid-October. Category 1 staying in place would confirm continued compliance. A downgrade would again limit new US routes and codeshares.",
       "analysisV": 9,
       "analysisRefs": {
-        "background": ["primary:faa"],
-        "view": ["article", "primary:faa"],
-        "prediction": ["article", "primary:faa"]
+        "background": [
+          "primary:faa"
+        ],
+        "view": [
+          "article",
+          "primary:faa"
+        ],
+        "prediction": [
+          "article",
+          "primary:faa"
+        ]
       },
       "analysisSources": [
         {

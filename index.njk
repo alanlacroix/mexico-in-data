@@ -113,7 +113,6 @@ bodyClass: feed-page
   .bd-src{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
   .bd-src .lb-src{flex:0 0 100%;margin-bottom:0}
   .bd-src a{color:#0B6E4F;font-family:var(--mono);font-size:12px}
-  .bd-src a+a::before{content:"·";color:#86888E;margin-right:10px}
 
   .week-tools{display:flex;align-items:center;justify-content:space-between;gap:10px 20px;flex-wrap:wrap;padding-bottom:18px}
   .chips{display:flex;flex-wrap:wrap;gap:7px}
@@ -181,7 +180,7 @@ bodyClass: feed-page
 </style>
 
 <div class="feed">
-  <div class="dateline"><h1>{{ f.date | longDate(locale) }}</h1></div>
+  <div class="dateline"><h1 id="edition-date" data-iso="{{ f.date }}" data-locale="{{ locale }}">{{ f.date | longDate(locale) }}</h1></div>
   <section class="feed-sec" id="sec-brief" data-sec="The brief">
     <div class="sec-rule"></div>
     <div class="sec-head"><h2>{{ L.weekendBrief if f.weekend else L.brief }}</h2><div class="sec-meta" id="brief-asof" data-date="{{ f.updated }}" data-prefix="{{ L.latestBrief if f.carrying else L.updated }}">{{ L.latestBrief if f.carrying else L.updated }}</div></div>
@@ -210,7 +209,7 @@ bodyClass: feed-page
     </div>
   </section>{% endif %}
 
-  {% for storySection in f.storySections %}<section class="feed-sec" id="sec-{{ storySection.id }}" data-sec="{% if storySection.kind == 'today' %}{{ L.todayStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}">
+  {% for storySection in f.storySections %}<section class="feed-sec" id="sec-{{ storySection.id }}" data-edition-stories data-sec="{% if storySection.kind == 'today' %}{{ L.todayStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}">
     <div class="sec-rule"></div>
     <div class="sec-head"><h2>{% if storySection.kind == 'today' %}{{ L.todayStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}</h2><div class="sec-meta">{{ L.storyCount(storySection.stories.length, storySection.latest) }}</div></div>
     <div class="cards">
@@ -310,6 +309,7 @@ const I18N = {
   why: {{ L.why | dump | safe }}, hide: {{ L.hide | dump | safe }},
   all: {{ L.all | dump | safe }}, showMoreTpl: {{ L.showMoreTpl | dump | safe }},
   showLess: {{ L.showLess | dump | safe }}, contextLinkTpl: {{ L.contextLinkTpl | dump | safe }},
+  quietToday: {{ L.quietToday | dump | safe }},
 };
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -338,6 +338,28 @@ if (asof) {
   const when = new Date(asof.dataset.date);
   asof.textContent = Number.isNaN(when.getTime()) ? asof.dataset.prefix
     : `${asof.dataset.prefix} ${when.toLocaleTimeString('en-US', { timeZone: 'America/Mexico_City', hour: 'numeric', minute: '2-digit' })}`;
+}
+
+// Last-resort freshness guard. The normal workflow publishes a current dated edition,
+// including an explicit quiet state. If both deployment controls fail, a previously
+// built static page must still never present old cards as today's news.
+const editionDate = $('#edition-date');
+if (editionDate) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Mexico_City', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(new Date());
+  const part = (type) => parts.find((item) => item.type === type)?.value || '';
+  const mexicoToday = `${part('year')}-${part('month')}-${part('day')}`;
+  if (editionDate.dataset.iso !== mexicoToday) {
+    editionDate.textContent = new Intl.DateTimeFormat(editionDate.dataset.locale === 'es' ? 'es-MX' : 'en-US', {
+      timeZone: 'America/Mexico_City', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    }).format(new Date());
+    $('.brief-p').textContent = I18N.quietToday;
+    const sources = $('.brief-row');
+    if (sources) sources.hidden = true;
+    if (asof) asof.hidden = true;
+    $$('[data-edition-stories]').forEach((section) => { section.hidden = true; });
+  }
 }
 
 // This week: chips derived from the categories actually present, with live counts.

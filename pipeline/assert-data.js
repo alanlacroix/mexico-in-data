@@ -213,7 +213,7 @@ try {
     fails.push('brief: an empty day must be marked quiet and include an honest empty-state summary');
   }
   if (claims.length && !brief.lead) fails.push('brief: a non-empty day needs a lead');
-  if (selectionPolicy === 'exact-day-plus-carryover-v1'
+  if (claims.length && selectionPolicy === 'exact-day-plus-carryover-v1'
       && !claims.some((claim) => claim.lane === 'today' && claim.date === brief.meta?.editorialDate)) {
     fails.push('brief: a weekday edition cannot advance its dateline without a same-day story');
   }
@@ -223,6 +223,9 @@ try {
   if (brief.meta?.count !== claims.length) fails.push(`brief: meta.count ${brief.meta?.count} does not match ${claims.length} total claims`);
   if (brief.meta?.contentSig !== expectedContentSig) fails.push('brief: content signature does not match the visible story set');
   if (String(brief.summary || '').trim()) {
+    if (/\b(?:the|this|latest) brief\b/i.test(brief.summary)) {
+      fails.push('brief: opening summary refers to the product instead of explaining the news');
+    }
     const summaryGate = lintReportText({
       text: brief.summary,
       inputs: claims.flatMap((claim) => [claim.h1 || claim.headline, claim.context]),

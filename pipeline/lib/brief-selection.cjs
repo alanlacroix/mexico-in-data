@@ -363,7 +363,10 @@ function selectEditionBrief(candidates, options = {}) {
     cap,
     softFloor: Math.min(cap, Math.max(0, Math.floor(finiteNumber(options.softFloor, DEFAULT_SOFT_FLOOR)))),
   });
-  const remaining = Math.max(0, cap - today.selected.length);
+  // Prior-day context may extend a real current edition, but it may never become the
+  // edition by itself. If nothing from today clears the bar, publish an honest quiet
+  // state instead of building a new dateline out of yesterday's stories.
+  const remaining = today.selected.length ? Math.max(0, cap - today.selected.length) : 0;
   const carryover = selectDailyBrief(events.filter((event) => dateOf(event) === carryoverDate), {
     ...shared,
     minImportance: finiteNumber(options.carryoverMinImportance, DEFAULT_CARRYOVER_MIN_IMPORTANCE),

@@ -70,6 +70,17 @@ assert.deepEqual(weekDates('2026-08-16'), {
   assert.equal(receiptFor(result, 'friday-important'), undefined);
 }
 
+// Prior-day reporting may add context to a real current edition; it may never
+// manufacture an edition when nothing from today cleared the factual gate.
+{
+  const result = selectEditionBrief([
+    candidate('yesterday-important', 9, { date: '2026-08-19', publishedAt: '2026-08-19T14:00:00Z' }),
+  ], { editorialDate: '2026-08-20' });
+  assert.deepEqual(result.selected, []);
+  assert.deepEqual(result.counts, { today: 0, keyDevelopments: 0, total: 0 });
+  assert.equal(receiptFor(result, 'yesterday-important').selected, false);
+}
+
 // An edition has two honest lanes. Exact-day stories get first access; only
 // importance-6+ stories from yesterday can fill unused slots, with five total.
 {

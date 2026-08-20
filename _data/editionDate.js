@@ -5,8 +5,7 @@
 // English inside eleventyComputed, where the frontmatter is rendered by a different
 // Nunjucks pass. Rather than depend on that behaviour, format it here once, in plain
 // JavaScript, where it is deterministic and testable.
-const fs = require('node:fs');
-const path = require('node:path');
+const { editorialDay } = require('../pipeline/lib/news-day.cjs');
 
 const longDate = (iso, locale) => {
   const parsed = new Date(`${String(iso).slice(0, 10)}T12:00:00Z`);
@@ -18,10 +17,9 @@ const longDate = (iso, locale) => {
 };
 
 module.exports = function () {
-  let iso = new Date().toISOString().slice(0, 10);
-  try {
-    const receipt = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'publication-status.json'), 'utf8'));
-    iso = (receipt.state === 'deferred' ? receipt.contentEditorialDate : receipt.editorialDate) || iso;
-  } catch { /* fall back to today */ }
+  // The homepage is a daily surface, so its structured dateline follows the same
+  // Mexico City editorial clock as the visible page. Operational receipts must not
+  // be able to pin the public date to an older edition.
+  const iso = editorialDay(new Date());
   return { iso, en: longDate(iso, 'en'), es: longDate(iso, 'es') };
 };

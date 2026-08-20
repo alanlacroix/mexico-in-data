@@ -8,6 +8,7 @@ const SLOT_RANK = { morning: 1, afternoon: 2 };
 
 function assertDatedEdition(brief, expectedDate) {
   const claims = [brief?.lead, ...(Array.isArray(brief?.items) ? brief.items : [])].filter(Boolean);
+  if (brief?.meta?.quiet === true && claims.length === 0) return;
   if (brief?.meta?.selection?.policy === 'exact-day-plus-carryover-v1'
       && !claims.some((claim) => claim?.lane === 'today' && claim?.date === expectedDate)) {
     throw new Error('live weekday Brief has no same-day story');
@@ -39,7 +40,7 @@ export async function checkProduction() {
 
   const brief = await get('/data/brief.json');
   if (brief.meta?.editorialDate !== EXPECTED_DATE) throw new Error(`live brief date is ${brief.meta?.editorialDate || 'missing'}`);
-  if (!Array.isArray(brief.items) || brief.items.length > 4) throw new Error('live brief has an invalid story set');
+  if (!Array.isArray(brief.items) || brief.items.length > 2) throw new Error('live brief has an invalid story set');
   const selectionPolicy = brief.meta?.selection?.policy;
   if (!['exact-day-plus-carryover-v1', 'weekend-recap-v1'].includes(selectionPolicy)
       || !Array.isArray(brief.meta?.selection?.receipt)) {
@@ -49,7 +50,9 @@ export async function checkProduction() {
     throw new Error('live brief selection still depends on optional analysis');
   }
   const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
-  if (claims.length === 0) throw new Error('live Brief has no stories');
+  if (claims.length === 0 && brief.meta?.quiet !== true) {
+    throw new Error('live Brief has no stories and is not marked quiet');
+  }
   assertDatedEdition(brief, EXPECTED_DATE);
   if (claims.some((claim) => claim.lane === 'today' && claim.date !== EXPECTED_DATE)) {
     throw new Error("live Today's stories include a claim from another date");

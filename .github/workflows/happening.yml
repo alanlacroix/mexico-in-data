@@ -87,67 +87,40 @@ jobs:
         working-directory: pipeline
         run: node build-brief.js --selection-only
 
-      # An empty generated Brief is an incomplete attempt, not an edition. Stop before
-      # model work and keep the last complete homepage in the eventual commit tree.
-      - name: Decide whether this attempt can replace the live Brief
-        id: content
-        if: steps.timing.outputs.run == 'true'
-        env:
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-        run: node pipeline/check-publication-readiness.mjs
-
       - name: Explain the stories that were actually selected
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
+        if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-happening.js --analysis-for-brief
 
       - name: Build the homepage brief
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
+        if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node build-brief.js
 
       - name: Require a complete English Brief before optional translation
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
+        if: steps.timing.outputs.run == 'true'
         run: node pipeline/assert-data.js
 
       - name: Translate the new edition for /es/
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
+        if: steps.timing.outputs.run == 'true'
         working-directory: pipeline
         continue-on-error: true   # a miss carries the last complete Spanish Brief; it never mixes languages
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: node translate-es.mjs --critical
 
-      # Topic-list translations are useful, but they are not allowed to run until the
-      # Brief and its complete Spanish snapshot have had first access to the budget.
-      - name: Translate new topic stories after the Brief
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
-        working-directory: pipeline
-        continue-on-error: true
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node translate-wire.mjs
-
-      - name: Fill optional Spanish homepage translations after the Brief
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
-        working-directory: pipeline
-        continue-on-error: true
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node translate-es.mjs
-
       - name: Validate generated editorial claims
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
+        if: steps.timing.outputs.run == 'true'
         run: |
           node pipeline/assert-data.js
           node pipeline/test/homepage-feed-contract.test.mjs
 
       - name: Write this edition's publication receipt
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
+        if: steps.timing.outputs.run == 'true'
         env:
           PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
           PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
@@ -155,33 +128,8 @@ jobs:
         run: node pipeline/write-publication-status.mjs
 
       - name: Build and validate the exact production artifact
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
+        if: steps.timing.outputs.run == 'true'
         run: npm run release
-
-      - name: Preserve the last complete Brief when this attempt is empty
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'false'
-        env:
-          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-        run: |
-          node pipeline/write-publication-deferral.mjs
-          node pipeline/clear-publication-block.mjs
-          git config user.name  "mexico-data-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/publication-status.json
-          git add -u ops/
-          if git diff --cached --quiet; then
-            echo "deferral already recorded; the hourly retry will continue"
-            exit 0
-          fi
-          git commit -m "publication: defer ${PUBLICATION_DATE} until a story clears"
-          for attempt in 1 2 3 4 5; do
-            if git push origin HEAD:main; then
-              exit 0
-            fi
-            git pull --rebase --autostash origin main || exit 1
-          done
-          exit 1
 
       # One failed run records a durable circuit breaker. Normal hourly schedules then
       # exit successfully instead of repeating the same failure and email. The external
@@ -207,7 +155,7 @@ jobs:
           exit 1
 
       - name: Commit and push the edition once
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
+        if: steps.timing.outputs.run == 'true'
         env:
           PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
           PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
@@ -235,7 +183,7 @@ jobs:
           exit 1
 
       - name: Require the exact edition to be live
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true'
+        if: steps.timing.outputs.run == 'true'
         id: live
         continue-on-error: true
         env:
@@ -245,7 +193,7 @@ jobs:
         run: node pipeline/verify-production.mjs
 
       - name: Retrigger deployment once if production is stale
-        if: steps.timing.outputs.run == 'true' && steps.content.outputs.publish == 'true' && steps.live.outcome == 'failure'
+        if: steps.timing.outputs.run == 'true' && steps.live.outcome == 'failure'
         env:
           PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
           PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}

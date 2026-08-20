@@ -440,7 +440,7 @@ ${BAN}`;
 // never produces filler and it never changes the factual ranking. v9 also requires a
 // primary record and a separate claim-by-claim evidence audit. ----
 const ANALYSIS_VERSION = 9;
-const BG_MAX = 5;             // The Brief itself has a hard cap of five selected stories.
+const BG_MAX = 3;             // Match the homepage cap: never research stories readers will not see.
 const BG_FETCH_MAX = 9;       // Failed article fetches must not consume the scarce analysis slots.
 const BG_DAYS = 14;           // recent events earn the analysis fetch
 const BG_MIN_IMP = 5;         // ordinary headlines do not need an analysis layer

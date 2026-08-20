@@ -35,15 +35,20 @@ const WINDOW_DAYS = 8;
 // edition then skips it as already-Spanish and prints English. One Spanish word in an
 // English dek was enough to do it (InSight Crime, seen live 2026-08-03).
 const SPANISH = /\b(de|del|la|las|el|los|una|para|con|por|que|su|sus|más|año|años|millones|desde|entre|sobre|tras|ante|hacia|según|mientras|pesos)\b/i;
+const SPANISH_GLOBAL = /\b(de|del|la|las|el|los|una|para|con|por|que|su|sus|más|año|años|millones|desde|entre|sobre|tras|ante|hacia|según|mientras|pesos)\b/gi;
 
 // pipeline/news-sources.json declares a language for every registered source, and
 // collect-news.js stamps it onto each ledger item. That declaration beats any guess made
 // from the text, so an English source is never sent to the English translator.
 const isSpanish = (item) => {
   const declared = String(item.lang || '').toLowerCase();
-  if (declared === 'en') return false;
+  // A few bilingual newsletters declare the feed English while publishing individual
+  // Spanish posts. Trust the item text when it has several unmistakable Spanish
+  // function words; otherwise the English page leaks exactly those raw headlines.
+  const strongTextSignal = (`${item.title || ''} ${item.dek || ''}`.match(SPANISH_GLOBAL) || []).length >= 3;
+  if (declared === 'en') return strongTextSignal;
   if (declared === 'es') return true;
-  return SPANISH.test(`${item.title} ${item.dek || ''}`);
+  return strongTextSignal || SPANISH.test(`${item.title} ${item.dek || ''}`);
 };
 
 const isoWeek = (dt) => {

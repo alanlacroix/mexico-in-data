@@ -13,14 +13,17 @@ export function publicationReadiness(brief, editorialDate) {
   const policy = brief?.meta?.selection?.policy;
   const todayCount = stories.filter((story) => story?.lane === 'today' && story?.date === editorialDate).length;
   if (!stories.length) {
-    return { publish: false, storyCount: 0, todayCount, reason: 'no selected stories; preserve the last complete edition and retry hourly' };
+    if (brief?.meta?.quiet === true) {
+      return { publish: true, storyCount: 0, todayCount, reason: 'current dated quiet edition' };
+    }
+    return { publish: false, storyCount: 0, todayCount, reason: 'zero stories without an explicit quiet state' };
   }
   if (policy === 'exact-day-plus-carryover-v1' && todayCount === 0) {
     return {
       publish: false,
       storyCount: stories.length,
       todayCount,
-      reason: 'weekday edition has no same-day stories; preserve the last complete edition and retry when new reporting arrives',
+      reason: 'weekday edition has no same-day stories; publish a current dated quiet edition instead',
     };
   }
   return { publish: true, storyCount: stories.length, todayCount, reason: `${stories.length} selected stories` };

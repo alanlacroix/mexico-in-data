@@ -2,7 +2,7 @@
 // The optional model may only synthesize the selected titles and context. Every card keeps
 // its source link and event ref; a failed synthesis gets a plain headline fallback. The brief
 // separates exact-day reporting from consequential prior-day context. On Saturday and
-// Sunday it instead fills the same five-story cap from the current Monday onward, with
+// Sunday it instead fills the same three-story cap from the current Monday onward, with
 // new weekend developments first. Every story keeps its publication date and lane.
 
 import fs from 'node:fs';
@@ -18,7 +18,6 @@ import plainLanguage from './lib/plain-language.cjs';
 import briefSelection from './lib/brief-selection.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
 import freshnessContract from './lib/freshness-contract.cjs';
-import briefSummary from './lib/brief-summary.cjs';
 
 const { editorialDay } = newsDay;
 const { board, buildStanding } = briefStanding;
@@ -26,12 +25,12 @@ const { groupEvents, sameThread } = newsThreads;
 const DEFAULT_WINDOW_HOURS = 36;
 const CARRYOVER_WINDOW_HOURS = 60;
 const WEEKEND_WINDOW_HOURS = 168;
+const STORY_CAP = 3;
 const SUMMARY_VERSION = 3;
 const { plainExplanation, plainHeadline } = plainLanguage;
 const { optionalAnalysis, selectEditionBrief } = briefSelection;
 const { evidenceInputs } = reportEvidence;
 const { curationReadiness } = freshnessContract;
-const { contextDigest } = briefSummary;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -55,12 +54,17 @@ function pool(now = new Date()) {
 // already-audited factual context as the paragraph cap permits. The old headline-only
 // fallback made the Brief read like a list and accidentally became permanent when the
 // selection-lock artifact was mistaken for the final build.
-const fallbackSummary = (picked) => contextDigest(picked.slice(0, 5).map((event) => ({
-  title: plainHeadline(stripDash(event.title)) || plainExplanation(ctxOf(event)),
-  context: plainExplanation(ctxOf(event)),
-})));
+const firstSentence = (value) => {
+  const text = plainExplanation(value);
+  const match = text.match(/^.*?[.!?](?:\s|$)/);
+  return (match ? match[0] : text).trim();
+};
+const fallbackSummary = (picked) => picked.slice(0, STORY_CAP)
+  .map((event) => firstSentence(ctxOf(event)) || firstSentence(plainHeadline(stripDash(event.title))))
+  .filter(Boolean)
+  .join(' ');
 
-// ---- the Brief: 3-5 rubric-ranked developments, each headline + explained context ----
+// ---- the Brief: up to three rubric-ranked developments, each headline + explained context ----
 const stripDash = (t) => String(t || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();  // voice law: no em-dash
 const WORDS = (t) => stripDash(t).split(/\s+/).filter(Boolean).length;
 // The event's shipped context is its `context` field, or the curator's `why` when no
@@ -110,6 +114,7 @@ function select(events, editorialDate) {
   }));
   const result = selectEditionBrief(candidates, {
     editorialDate,
+    cap: STORY_CAP,
     effectiveImportance: effImp,
     interestTags,
     scheduledMatch: (event) => Boolean(event.scheduledEventId),
@@ -160,11 +165,15 @@ async function writeSummary(picked) {
   if (!hasLLM()) return '';
   const items = picked.map((e) => ({ section: e.section, title: e.title, context: shippedContext(e) }));
   const schema = { type: 'object', additionalProperties: false, required: ['summary'], properties: { summary: { type: 'string' } } };
-  const system = `Write THE BRIEF: the 2-4 sentence paragraph that opens The Mexico Brief, explaining the latest key developments for someone tracking Mexico. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Use named actors and concrete verbs. State what happened before explaining the consequence. Connect stories only when the items support the connection. Never make the reader decode an acronym: write the institution, agreement or indicator in plain English on first mention (for example, "US trade office", "US-Mexico-Canada Agreement", and "Mexico's statistics agency"). "US" is fine. Do not use vague phrases such as "losing momentum", "fiscal room", "welfare commitments", "signals a broader shift", or "raises questions". No opinion, forecasts, em-dash, semicolon, "meanwhile", or marketing language. Maximum 80 words. Return JSON: {summary}.`;
-  const out = await askJSON({ system, user: JSON.stringify(items), schema, maxTokens: 2500, effort: 'low' });
+  const system = `Write the 2-4 sentence opening summary for someone tracking Mexico. Do not call it a brief and do not name the publication. Use ONLY the facts in the items provided; any number must appear verbatim in an item. Use named actors and concrete verbs. State what happened before explaining the consequence. Connect stories only when the items support the connection. Never make the reader decode an acronym: write the institution, agreement or indicator in plain English on first mention (for example, "US trade office", "US-Mexico-Canada Agreement", and "Mexico's statistics agency"). "US" is fine. Do not use vague phrases such as "losing momentum", "fiscal room", "welfare commitments", "signals a broader shift", or "raises questions". No opinion, forecasts, em-dash, semicolon, "meanwhile", or marketing language. Maximum 80 words. Return JSON: {summary}.`;
+  const out = await askJSON({ system, user: JSON.stringify(items), schema, maxTokens: 400, model: models.HAIKU, priority: 'core' });
   const raw = String(out && out.summary || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
   const text = plainExplanation(raw);
   if (!text) return '';
+  if (/\b(?:the|this|latest) brief\b/i.test(text)) {
+    console.warn('  summary rejected: self-referential product language');
+    return '';
+  }
   // Headroom over the ~80-word target: the model routinely overshoots by a few words, and
   // a 2-word overage must not throw away the whole paragraph (Alan 2026-07-17: the brief
   // collapsed to a one-line headline because a 92-word summary hit a 90 cap). maxSentences
@@ -220,7 +229,7 @@ async function main() {
           scheduledOutcomes: readJson(D('event-status.json'), null)?.meta || null,
         },
       },
-      summary: 'No major developments have cleared the brief yet.',
+      summary: 'No major developments yet today.',
       lead: null,
       items: [],
       standing: buildStanding(P.nums),

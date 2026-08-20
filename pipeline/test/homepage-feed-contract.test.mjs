@@ -27,10 +27,10 @@ assert.equal(editorialDay('2026-07-21T03:00:00Z'), '2026-07-20', 'the editorial 
 assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial day must follow Mexico City');
 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
-assert.equal(dailyBrief.editorialDate, briefFile.meta.editorialDate,
-  'a carried Brief must keep its actual edition date instead of being relabelled as today');
+assert.equal(dailyBrief.editorialDate, editorialDay(new Date()),
+  'the page dateline must always be the current Mexico City editorial day');
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
-assert.ok(dailyBrief.stories.length <= 5, 'the brief must never show more than five key developments');
+assert.ok(dailyBrief.stories.length <= 3, 'the homepage must never show more than three key developments');
 assert.ok(dailyBrief.todayStories.every((story) => story.date === dailyBrief.editorialDate),
   "Today's stories must contain only exact-day reporting");
 assert.equal(dailyBrief.todayStories.length + dailyBrief.keyDevelopments.length
@@ -66,7 +66,15 @@ for (let i = 0; i < dailyBrief.stories.length; i += 1) {
     assert.equal(sameThread(dailyBrief.stories[i], dailyBrief.stories[j]), false, 'the rendered Brief must never repeat one event');
   }
 }
-assert.ok(dailyBrief.summaryLead && dailyBrief.summaryLead.trim().length >= 40, 'the homepage must always contain a substantive Brief');
+if (dailyBrief.stories.length) {
+  assert.ok(dailyBrief.summaryLead && dailyBrief.summaryLead.trim().length >= 40,
+    'a populated edition must contain a substantive summary');
+} else {
+  assert.equal(dailyBrief.summaryLead, 'No major developments yet today.',
+    'an empty edition must be explicit, current, and concise');
+}
+assert.doesNotMatch(dailyBrief.summaryLead, /\b(?:the|this|latest) brief\b/i,
+  'the summary must explain the news without referring to the product itself');
 const renderedBriefCopy = [
   dailyBrief.summaryLead,
   ...dailyBrief.stories.flatMap((story) => [story.title, story.summary, story.bg, story.view, story.prediction]),
@@ -90,12 +98,10 @@ const lastBriefDate = dailyBrief.briefEditorialDate;
 const nextDay = new Date(`${lastBriefDate}T12:00:00Z`);
 nextDay.setUTCDate(nextDay.getUTCDate() + 1);
 const carriedBrief = dailyBriefFactory(nextDay);
-assert.equal(carriedBrief.carryingLastBrief, true, 'a failed next-day refresh must keep the last successful brief visible');
-assert.equal(carriedBrief.todayStories.length, 0, 'a carried edition must not call any prior story today');
-assert.equal(carriedBrief.keyDevelopments.length + carriedBrief.weekendStories.length
-  + carriedBrief.weekRecapStories.length, carriedBrief.stories.length,
-  'a carried edition must preserve its prior, honestly named story lanes');
-assert.match(carriedBrief.windowLabel, /Latest brief/, 'carried developments must not be presented as a fresh rolling window');
+assert.equal(carriedBrief.carryingLastBrief, false, 'a failed refresh must never carry an old edition into a new day');
+assert.equal(carriedBrief.editorialDate, nextDay.toISOString().slice(0, 10));
+assert.equal(carriedBrief.stories.length, 0, 'a stale stored Brief must render as an honest current-day quiet state');
+assert.equal(carriedBrief.summaryLead, 'No major developments yet today.');
 const staleNow = new Date('2099-12-31T12:00:00Z');
 const staleBrief = dailyBriefFactory(staleNow);
 assert.equal(staleBrief.editorialDate, '2099-12-31', 'the wall-clock Mexico City day must be authoritative');
@@ -105,6 +111,8 @@ assert.equal(latestStoriesFactory(staleNow).length, 0, 'old headlines must still
 assert.ok(feed.week.every((item, index, items) => index === 0
   || String(items[index - 1].publishedAt) >= String(item.publishedAt)),
 'the combined This week shelf must read newest-to-oldest instead of jumping between topic-room dates');
+assert.equal(feed.week.some((item) => /\b(?:la|el)\s+graduaci[oó]n\b/i.test(item.title || '')), false,
+  'a source-level English label must not leak an obviously Spanish individual story into the English shelf');
 
 const midnightWindow = recentEvents([
   { date: '2026-07-22', publishedAt: '2026-07-23T03:30:00Z', title: 'Useful report from the prior evening' },
@@ -427,6 +435,8 @@ assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, compl
 }
 // The brief still comes before the stories it summarises.
 assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf('for storySection in f.storySections'), 'the Brief must render before the selected stories');
+assert.match(homepageTemplate, /data-iso="\{\{ f\.date \}\}"[\s\S]*data-edition-stories[\s\S]*America\/Mexico_City/,
+  'the static page must hide stale edition cards if deployment is unavailable on a new day');
 assert.match(homepageTemplate, /L\.weekendBrief if f\.weekend else L\.brief/,
   'Saturday and Sunday must identify the catch-up product as the Weekend recap');
 assert.match(homepageTemplate, /storySection\.kind == 'weekend'[\s\S]*L\.newThisWeekend[\s\S]*storySection\.kind == 'week-recap'[\s\S]*L\.weekRecap/,

@@ -19,10 +19,6 @@ const SECTIONS = {
 };
 
 const clean = (value) => String(value || '').trim();
-const dayDistance = (from, to) => {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return Infinity;
-  return Math.round((Date.parse(`${to}T12:00:00Z`) - Date.parse(`${from}T12:00:00Z`)) / 86400000);
-};
 const shortDate = (value) => {
   const date = new Date(`${value}T12:00:00Z`);
   return Number.isFinite(date.getTime()) ? date.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }) : value;
@@ -72,32 +68,30 @@ module.exports = function (now = new Date()) {
   const editorialDate = editorialDay(clock);
   const claims = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])].filter(Boolean);
   const briefEditorialDate = clean(meta.editorialDate);
-  const briefAgeDays = dayDistance(briefEditorialDate, editorialDate);
   const generatedForToday = briefEditorialDate === editorialDate;
-  // Keep the last successful edition visible through weekends and short workflow
-  // failures. Its actual date is exposed to the template; it is never called today's.
-  const carryingLastBrief = !generatedForToday && briefAgeDays > 0 && briefAgeDays <= 3;
-  const visibleClaims = generatedForToday || carryingLastBrief ? claims : [];
-  // A carried edition keeps its real dateline. Relabelling yesterday's Brief
-  // with today's calendar date makes stale content look newly published.
-  const visibleEditionDate = visibleClaims.length ? briefEditorialDate : editorialDate;
+  // A daily product must never lead with a prior edition. If today's publication has
+  // not completed, the page shows today's honest empty state while the current wire,
+  // numbers and calendar continue below. Carrying an old edition was the mechanism
+  // that left August 17 at the top of the site for three days.
+  const carryingLastBrief = false;
+  const visibleClaims = generatedForToday ? claims : [];
+  const visibleEditionDate = editorialDate;
   const briefGroups = groupEvents(visibleClaims).map((group) => {
     const related = (happening.events || []).filter((event) => sameThread(group.event, event));
     return { ...group, coverage: mergeCoverage(group.coverage, related, related.flatMap((event) => event.coverage || [])) };
   });
-  const selectedStories = briefGroups.map(toStory).filter((story) => story.title).slice(0, 5);
+  const selectedStories = briefGroups.map(toStory).filter((story) => story.title).slice(0, 3);
   const weekendEdition = meta.selection?.policy === 'weekend-recap-v1';
-  // The date, not a rolling-window label, is authoritative. During a carried
-  // edition nothing is called "today"; the prior edition remains available as
-  // context under Key developments with its original dates intact.
+  // The date is authoritative. A prior-day development may extend a real current
+  // edition, but prior reporting can never create an edition on its own.
   const prior = new Date(`${editorialDate}T12:00:00Z`);
   prior.setUTCDate(prior.getUTCDate() - 1);
   const priorDate = prior.toISOString().slice(0, 10);
-  const todayStories = weekendEdition || carryingLastBrief
+  const todayStories = weekendEdition
     ? [] : selectedStories.filter((story) => story.date === editorialDate);
   const keyDevelopments = weekendEdition
     ? []
-    : selectedStories.filter((story) => carryingLastBrief || story.date === priorDate);
+    : selectedStories.filter((story) => story.date === priorDate);
   const weekendStories = weekendEdition
     ? selectedStories.filter((story) => story.lane === 'weekend') : [];
   const weekRecapStories = weekendEdition
@@ -108,7 +102,7 @@ module.exports = function (now = new Date()) {
   const droppedMisdatedStories = stories.length !== selectedStories.length;
   const latestItemDate = stories.map((story) => story.date).filter(Boolean).sort().at(-1) || '';
   const fallback = stories.slice(0, 3).map((story) => sentence(story.title)).join(' ');
-  const quietCopy = 'No major developments have cleared the brief yet.';
+  const quietCopy = 'No major developments yet today.';
 
   const briefSources = [];
   for (const story of stories) {
@@ -130,7 +124,7 @@ module.exports = function (now = new Date()) {
     briefTitle: weekendEdition ? 'Weekend recap' : 'The brief',
     newsThrough: clean(meta.reviewedAt || meta.generatedAt || happening.meta?.generatedAt),
     quiet: !stories.length || !!meta.quiet,
-    summaryLead: plainExplanation(!droppedMisdatedStories && (generatedForToday || carryingLastBrief) && clean(brief.summary)
+    summaryLead: plainExplanation(!droppedMisdatedStories && generatedForToday && clean(brief.summary)
       ? clean(brief.summary) : (fallback || quietCopy)),
     stories,
     todayStories,
@@ -140,8 +134,6 @@ module.exports = function (now = new Date()) {
     briefSources,
     latestItemDate,
     windowHours: Number(meta.windowHours) || 36,
-    windowLabel: carryingLastBrief
-      ? `Latest brief · ${shortDate(briefEditorialDate)}`
-      : weekendEdition ? `Since ${shortDate(meta.selection?.weekStartDate)}` : `Past ${Number(meta.windowHours) || 36} hours`,
+    windowLabel: weekendEdition ? `Since ${shortDate(meta.selection?.weekStartDate)}` : `Past ${Number(meta.windowHours) || 36} hours`,
   };
 };

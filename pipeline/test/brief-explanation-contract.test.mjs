@@ -49,7 +49,10 @@ assert.equal(briefReadiness(missingPrimary).targetMet, false,
   'a news citation without a primary record and independent evidence audit is not ready');
 const emptyReadiness = briefReadiness({ lead: null, items: [] });
 assert.equal(emptyReadiness.targetMet, false, 'an empty Brief must never certify itself as ready');
-assert.equal(emptyReadiness.publicationBlocking, true, 'an empty Brief must preserve the last complete edition');
+assert.equal(emptyReadiness.publicationBlocking, true, 'an unmarked empty Brief must not certify itself');
+const quietReadiness = briefReadiness({ meta: { quiet: true }, lead: null, items: [] });
+assert.equal(quietReadiness.targetMet, true, 'an explicit current-day quiet state needs no explanation panels');
+assert.equal(quietReadiness.publicationBlocking, false);
 assert.match(happeningBuilder, /for \(const target of researchTargets\)[\s\S]*web_search_20250305[\s\S]*max_uses: 1/,
   'selected non-official stories must get one bounded primary-record search each');
 assert.match(happeningBuilder, /searched\.find\(\(source\) => sourceKey\(source\.url\) === sourceKey\(proposed\.url\)\)/,

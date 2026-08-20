@@ -87,7 +87,7 @@ async function main() {
       // editorial work rather than open-ended model reasoning.
       model: models.HAIKU,
       effort: 'low',
-      // The five selected stories are part of the product, not optional polish.
+      // Every selected story is part of the product, not optional polish.
       // Broad wire/context translation keeps the lower standard budget priority.
       priority: criticalOnly ? 'core' : 'standard',
     });

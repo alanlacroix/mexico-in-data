@@ -27,10 +27,11 @@ function briefReadiness(brief) {
     .filter(({ story }) => !hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
   const readyTargetCount = targetStories.length - missingTarget.length;
-  // Zero stories is not a publishable edition. A quiet or temporarily unworkable
-  // news cycle must preserve the last complete Brief instead of certifying an
-  // empty homepage as "0 of 0 ready".
-  const targetMet = stories.length > 0 && readyTargetCount === minimumReadyCount;
+  // A dated quiet edition is a valid, honest state. It contains no explanation
+  // controls, so "0 of 0" is complete only when the Brief explicitly says it is quiet.
+  const targetMet = stories.length
+    ? readyTargetCount === minimumReadyCount
+    : brief?.meta?.quiet === true;
   const readyIds = stories
     .map((story, index) => ({ story, index }))
     .filter(({ story }) => hasApprovedAnalysis(story))

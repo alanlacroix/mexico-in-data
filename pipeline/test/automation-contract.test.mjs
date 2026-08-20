@@ -24,9 +24,6 @@ const validationBlock = happening.match(
 const blockedPublicationBlock = happening.match(
   /- name: Record a blocked publication once[\s\S]*?(?=\n      - name: Commit and push the edition once)/,
 )?.[0] || '';
-const deferredPublicationBlock = happening.match(
-  /- name: Preserve the last complete Brief when this attempt is empty[\s\S]*?(?=\n      - name: Record a blocked publication once)/,
-)?.[0] || '';
 
 const alertWrite = 'fs.writeFileSync(ALERTS, JSON.stringify(alerts, null, 2));';
 assert.equal(run.split(alertWrite).length - 1, 1, 'the current alert ledger must be written exactly once');
@@ -92,7 +89,7 @@ assert.match(
 assert.match(
   receiptWriter,
   /publicationReadiness\(brief, editorialDate\)[\s\S]*!contentReadiness\.publish[\s\S]*Refusing to certify this Brief/,
-  'the publication receipt must reject empty and carryover-only weekdays even if the workflow condition regresses',
+  'the publication receipt must reject unmarked empty and carryover-only weekdays even if the workflow condition regresses',
 );
 assert.match(
   editorialGate,
@@ -118,31 +115,23 @@ assert.match(
 );
 assert.match(
   happening,
-  /Lock the homepage story selection[\s\S]*id: content[\s\S]*check-publication-readiness\.mjs[\s\S]*Explain the stories that were actually selected/,
-  'an empty selection must be intercepted before explanation work or publication',
-);
-assert.match(
-  deferredPublicationBlock,
-  /steps\.content\.outputs\.publish == 'false'[\s\S]*write-publication-deferral\.mjs[\s\S]*git add data\/publication-status\.json/,
-  'an empty attempt must record a stable deferral while leaving the last complete Brief live',
+  /Lock the homepage story selection[\s\S]*Explain the stories that were actually selected/,
+  'selection must remain locked before explanation work',
 );
 assert.doesNotMatch(
-  deferredPublicationBlock,
-  /git add[^\n]*(?:data\/brief|data\/happening|data\/news)/,
-  'a deferral commit must never contain the empty generated Brief or partial editorial inputs',
-);
-assert.match(
-  fs.readFileSync(path.join(root, 'pipeline', 'write-publication-deferral.mjs'), 'utf8'),
-  /prior\.curation\?\.candidateSig[\s\S]*curation\?\.candidateSig/,
-  'a deferred receipt must persist the assessed candidate signature without publishing partial editorial data',
+  happening,
+  /id: content|steps\.content\.outputs|write-publication-deferral/,
+  'there must be no separate deferral path that can leave an old edition live',
 );
 assert.doesNotMatch(happening, /Checkpoint the assessed news|Checkpoint the locked selection|editorial checkpoint:/,
   'intermediate public-data commits must not leave main in a half-built editorial state');
 assert.match(
   happening,
-  /Build the homepage brief[\s\S]*Require a complete English Brief before optional translation[\s\S]*Translate the new edition for \/es\/[\s\S]*Translate new topic stories after the Brief/,
-  'optional translation must run only after every selected story has a complete explanation',
+  /Build the homepage brief[\s\S]*Require a complete English Brief before optional translation[\s\S]*Translate the new edition for \/es\/[\s\S]*Validate generated editorial claims/,
+  'the only optional translation pass must run after every selected story has a complete explanation',
 );
+assert.doesNotMatch(happening, /translate-wire|Translate new topic stories/,
+  'the publication path must not spend budget on broad optional feed translation');
 assert.equal(
   (happening.match(/node build-happening\.js --analysis-for-brief/g) || []).length,
   1,
