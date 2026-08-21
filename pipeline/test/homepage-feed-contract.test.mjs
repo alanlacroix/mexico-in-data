@@ -28,7 +28,7 @@ assert.equal(editorialDay('2026-07-21T07:00:00Z'), '2026-07-21', 'the editorial 
 
 assert.match(dailyBrief.editorialDate, /^\d{4}-\d{2}-\d{2}$/);
 assert.equal(dailyBrief.editorialDate, editorialDay(new Date()),
-  'the page dateline must always be the current Mexico City editorial day');
+  'a successfully generated edition must use the current Mexico City editorial day');
 assert.ok(dailyBrief.stories.every((story) => Date.parse(story.date) <= Date.parse(dailyBrief.editorialDate)), 'the brief must not contain future-dated stories');
 assert.ok(dailyBrief.stories.length <= 3, 'the homepage must never show more than three key developments');
 assert.ok(dailyBrief.todayStories.every((story) => story.date === dailyBrief.editorialDate),
@@ -98,15 +98,17 @@ const lastBriefDate = dailyBrief.briefEditorialDate;
 const nextDay = new Date(`${lastBriefDate}T12:00:00Z`);
 nextDay.setUTCDate(nextDay.getUTCDate() + 1);
 const carriedBrief = dailyBriefFactory(nextDay);
-assert.equal(carriedBrief.carryingLastBrief, false, 'a failed refresh must never carry an old edition into a new day');
-assert.equal(carriedBrief.editorialDate, nextDay.toISOString().slice(0, 10));
-assert.equal(carriedBrief.stories.length, 0, 'a stale stored Brief must render as an honest current-day quiet state');
-assert.equal(carriedBrief.summaryLead, 'No major developments yet today.');
+assert.equal(carriedBrief.carryingLastBrief, true, 'a failed refresh must be identified as a delayed update');
+assert.equal(carriedBrief.editorialDate, lastBriefDate, 'a failed refresh must retain the last certified dateline');
+assert.equal(carriedBrief.stories.length, 0, 'a delayed update must not relabel old cards as current news');
+assert.match(carriedBrief.summaryLead, /update is delayed/i);
 const staleNow = new Date('2099-12-31T12:00:00Z');
 const staleBrief = dailyBriefFactory(staleNow);
-assert.equal(staleBrief.editorialDate, '2099-12-31', 'the wall-clock Mexico City day must be authoritative');
+assert.equal(staleBrief.editorialDate, lastBriefDate, 'an outage must retain the last certified dateline');
 assert.equal(staleBrief.stories.length, 0, 'an old brief must not be carried indefinitely');
-assert.match(staleBrief.summaryLead, /No major developments/i);
+assert.match(staleBrief.summaryLead, /update is delayed/i);
+assert.doesNotMatch(staleBrief.summaryLead, /No major developments/i,
+  'an infrastructure outage must never masquerade as a quiet editorial day');
 assert.equal(latestStoriesFactory(staleNow).length, 0, 'old headlines must still expire from the recent-news window');
 assert.ok(feed.week.every((item, index, items) => index === 0
   || String(items[index - 1].publishedAt) >= String(item.publishedAt)),
@@ -435,8 +437,10 @@ assert.match(feedData, /why: story\.view \|\| story\.bg/, 'only versioned, compl
 }
 // The brief still comes before the stories it summarises.
 assert.ok(homepageTemplate.indexOf('class="brief-p"') < homepageTemplate.indexOf('for storySection in f.storySections'), 'the Brief must render before the selected stories');
-assert.match(homepageTemplate, /data-iso="\{\{ f\.date \}\}"[\s\S]*data-edition-stories[\s\S]*America\/Mexico_City/,
-  'the static page must hide stale edition cards if deployment is unavailable on a new day');
+assert.match(homepageTemplate, /data-iso="\{\{ f\.date \}\}"[\s\S]*data-edition-stories[\s\S]*I18N\.updateDelayed/,
+  'a stale deployment must say the update is delayed and hide stale edition cards');
+assert.doesNotMatch(homepageTemplate, /editionDate\.textContent\s*=.*quietToday/,
+  'the client must never rewrite an outage into a current quiet edition');
 assert.match(homepageTemplate, /L\.weekendBrief if f\.weekend else L\.brief/,
   'Saturday and Sunday must identify the catch-up product as the Weekend recap');
 assert.match(homepageTemplate, /storySection\.kind == 'weekend'[\s\S]*L\.newThisWeekend[\s\S]*storySection\.kind == 'week-recap'[\s\S]*L\.weekRecap/,
@@ -445,7 +449,8 @@ assert.match(feedData, /week: brief\.weekendEdition \? \[\] : weekItems/,
   'the separate This week shelf must disappear when the selected Brief already is the weekly recap');
 assert.match(feedData, /lane: story\.lane/,
   'language snapshots and renderers must retain each story’s dated selection lane');
-assert.doesNotMatch(briefBuilder, /analysisReady\(e\)/, 'analysis readiness must never decide whether a story enters key developments');
+assert.match(briefBuilder, /retainExplainedStories\(rankedPicked\)/,
+  'ranking must happen first, then incomplete Briefly Explained units must degrade the edition instead of breaking publication');
 assert.match(briefBuilder, /selectEditionBrief\(candidates/, 'the two story lanes must share the auditable importance-first selector');
 assert.doesNotMatch(briefBuilder, /BIG_MONEY|bigCapital/, 'a dollar-amount regex must not override the audited importance rubric');
 assert.doesNotMatch(briefBuilder, /priorApproved|carriedForward/,

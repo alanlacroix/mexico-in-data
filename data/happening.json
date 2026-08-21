@@ -2,26 +2,122 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-20",
+    "updated": "2026-08-21",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
-    "count": 66,
-    "generatedAt": "2026-08-20T15:59:19.981Z",
+    "count": 60,
+    "generatedAt": "2026-08-21T15:53:39.297Z",
     "llm": false,
     "curation": {
       "policy": "exact-day-assessment-v1",
-      "editorialDate": "2026-08-20",
-      "candidateCount": 12,
-      "freshCandidateCount": 12,
-      "assessedCount": 12,
-      "keptCount": 3,
-      "rejectedCount": 9,
-      "mode": "manual-budget-safe-recovery",
+      "editorialDate": "2026-08-21",
+      "candidateCount": 24,
+      "candidateSig": "3dfe59d4295273629df56f72bb7a66b9d0e572f71df9c979e4584c69c2843adc",
+      "freshCandidateCount": 1,
+      "assessedCount": 24,
+      "keptCount": 2,
+      "rejectedCount": 0,
+      "mode": "deterministic-fallback",
       "complete": true,
-      "reason": "Twelve fresh reports were reviewed against their source records. Two same-day developments and one consequential prior-day development cleared the publication gate without exceeding the $5 model cap."
+      "reason": "model unavailable; conservative deterministic assessment used"
+    },
+    "analysisTarget": {
+      "policy": "every-selected-story-context-audited-v3",
+      "ids": [
+        "n-morena-finabien-payments-2024-records-2026-08-20",
+        "n-mexico-farm-council-us-strawberry-duties-2026-08-20"
+      ],
+      "added": 0,
+      "outcomes": [
+        {
+          "id": "n-morena-finabien-payments-2024-records-2026-08-20",
+          "ready": true,
+          "reason": "ready"
+        },
+        {
+          "id": "n-mexico-farm-council-us-strawberry-duties-2026-08-20",
+          "ready": true,
+          "reason": "ready"
+        }
+      ]
     }
   },
   "events": [
+    {
+      "id": "n-mexican-migrant-job-losses-in-us-raise-remittance-ri-2026-08-20",
+      "date": "2026-08-20",
+      "section": "economy",
+      "title": "Mexican Migrant Job Losses in US Raise Remittance Risks",
+      "why": "Mexican immigrant employment in the United States fell 8.9% year-over-year in 1Q26, a loss of 664,589 jobs concentrated in construction, professional services, and manufacturing, according to CEMLA.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/talent/news/mexican-migrant-job-losses-us-raise-remittance-risks",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-20T18:24:33.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mexican Migrant Job Losses in US Raise Remittance Risks",
+        "dek": "Mexican immigrant employment in the United States fell 8.9% year-over-year in 1Q26, a loss of 664,589 jobs concentrated in construction, professional services, and manufacturing, according to CEMLA. The contraction, linked to intensified US immigration enforcement, threatens the wage base that funds remittances to Mexi"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/talent/news/mexican-migrant-job-losses-us-raise-remittance-risks",
+          "publishedAt": "2026-08-20T18:24:33.000Z",
+          "date": "2026-08-20",
+          "title": "Mexican Migrant Job Losses in US Raise Remittance Risks",
+          "summary": "Mexican immigrant employment in the United States fell 8.9% year-over-year in 1Q26, a loss of 664,589 jobs concentrated in construction, professional services, and manufacturing, according to CEMLA."
+        },
+        {
+          "source": "mexicobusiness.news",
+          "url": "https://mexicobusiness.news/talent/news/mexican-migrant-job-losses-united-states-threaten-remittances",
+          "publishedAt": "2026-08-20T18:24:33.000Z",
+          "date": "2026-08-20",
+          "title": "Mexican Migrant Job Losses in United States Threaten Remittances",
+          "summary": "Mexican immigrant employment in the United States fell 8.9% year-over-year in 1Q26, a loss of 664,589 jobs concentrated in construction, professional services, and manufacturing, according to CEMLA. The contraction, linked to intensified US immigration enforcement, threatens the wage base that funds remittances to Mexi"
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
+    },
     {
       "id": "n-morena-finabien-payments-2024-records-2026-08-20",
       "date": "2026-08-20",
@@ -174,6 +270,73 @@
           "url": "https://www.usitc.gov/fed_reg_notices/antidumpingcountervailing_duty/701731/fresh_winter_strawberries_mexico_031026.htm"
         }
       ]
+    },
+    {
+      "id": "n-pemex-petrobras-to-explore-ultra-deep-pre-salt-forma-2026-08-20",
+      "date": "2026-08-20",
+      "section": "economy",
+      "title": "PEMEX, Petrobras to Explore Ultra-Deep Pre-Salt Formations",
+      "why": "Petróleos Mexicanos (PEMEX) and Petróleo Brasileiro (Petrobras) have signed a two-year Memorandum of Understanding to evaluate ultra-deep pre-salt formations and mature basins off the coast of Campeche.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/oilandgas/news/pemex-petrobras-explore-ultra-deep-pre-salt-formations",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-20T19:09:16.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "PEMEX, Petrobras to Explore Ultra-Deep Pre-Salt Formations",
+        "dek": "Petróleos Mexicanos (PEMEX) and Petróleo Brasileiro (Petrobras) have signed a two-year Memorandum of Understanding to evaluate ultra-deep pre-salt formations and mature basins off the coast of Campeche. The strategic collaboration provides PEMEX with access to Petrobras’ specialized subsea engineering and deepwater tec"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/oilandgas/news/pemex-petrobras-explore-ultra-deep-pre-salt-formations",
+          "publishedAt": "2026-08-20T19:09:16.000Z",
+          "date": "2026-08-20",
+          "title": "PEMEX, Petrobras to Explore Ultra-Deep Pre-Salt Formations",
+          "summary": "Petróleos Mexicanos (PEMEX) and Petróleo Brasileiro (Petrobras) have signed a two-year Memorandum of Understanding to evaluate ultra-deep pre-salt formations and mature basins off the coast of Campeche."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
     },
     {
       "id": "n-sonora-first-active-screwworm-case-2026-08-19",
@@ -4293,507 +4456,6 @@
         "reportedTotal": 5,
         "componentSource": "model"
       }
-    },
-    {
-      "id": "n-finsus-cambia-modelo-de-riesgo-para-prestar-a-conduc-2026-08-07",
-      "date": "2026-08-07",
-      "section": "money",
-      "title": "Finsus enters ride-hail lending market with mobile-secured credit product",
-      "why": "The Mexican fintech partnered with OCN to offer loans to platform drivers, using collateral monitoring and automated repayment tied to driver income as risk controls.",
-      "company": "Finsus",
-      "source": "iupana",
-      "url": "https://iupana.com/2026/08/07/finsus-cambia-modelo-riesgo-prestar-conductores-plataformas/",
-      "importance": 2,
-      "kind": "event",
-      "publishedAt": "2026-08-07T20:29:54.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Finsus cambia modelo de riesgo para prestar a conductores de plataformas",
-        "dek": "La financiera mexicana hizo una alianza con OCN para otorgar créditos a conductores de plataformas de movilidad, un nuevo negocio apalancado en garantía móvil, monitoreo de los ingresos y el cobro automático. ... Leer más..."
-      },
-      "coverage": [
-        {
-          "source": "iupana",
-          "url": "https://iupana.com/2026/08/07/finsus-cambia-modelo-riesgo-prestar-conductores-plataformas/",
-          "publishedAt": "2026-08-07T20:29:54.000Z",
-          "date": "2026-08-07",
-          "title": "Finsus enters ride-hail lending market with mobile-secured credit product",
-          "summary": "The Mexican fintech partnered with OCN to offer loans to platform drivers, using collateral monitoring and automated repayment tied to driver income as risk controls."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 0
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 2,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 5,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-toyota-redise-a-la-hilux-y-elimina-la-versi-n-de-cab-2026-08-07",
-      "date": "2026-08-07",
-      "section": "economy",
-      "title": "Toyota redesigns Hilux and eliminates single-cabin option in Mexico",
-      "why": "Mexico's bestselling pickup truck gets a new generation with dual-cabin focus, emphasizing safety and technology upgrades to maintain market leadership.",
-      "company": "Toyota",
-      "source": "Expansión — Empresas",
-      "url": "https://expansion.mx/empresas/2026/08/07/toyota-hilux-2027-doble-cabina",
-      "importance": 2,
-      "kind": "event",
-      "publishedAt": "2026-08-07T20:15:13.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Toyota rediseña la Hilux y elimina la versión de cabina sencilla en México para enfocarse en la doble cabina",
-        "dek": "La pickup más vendida de la marca en el país estrena generación con mejoras en desempeño, seguridad y tecnología, mientras concentra su oferta únicamente en configuraciones de doble cabina."
-      },
-      "coverage": [
-        {
-          "source": "Expansión — Empresas",
-          "url": "https://expansion.mx/empresas/2026/08/07/toyota-hilux-2027-doble-cabina",
-          "publishedAt": "2026-08-07T20:15:13.000Z",
-          "date": "2026-08-07",
-          "title": "Toyota redesigns Hilux and eliminates single-cabin option in Mexico",
-          "summary": "Mexico's bestselling pickup truck gets a new generation with dual-cabin focus, emphasizing safety and technology upgrades to maintain market leadership."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 0
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 2,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 5,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-banxico-deja-con-tres-candados-la-tasa-de-inter-s-qu-2026-08-06",
-      "date": "2026-08-06",
-      "section": "money",
-      "title": "Banxico holds its policy rate at 6.50 percent",
-      "why": "The board left the rate unchanged and said it expects inflation to reach its target in the fourth quarter of 2027.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/06/tasa-de-interes-del-banxico-en-que-nivel-quedo-hoy-6-de-agosto-de-2026/",
-      "importance": 9,
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 2
-      },
-      "scheduledEventId": "banxico-policy-2026-08-06",
-      "scheduledImportanceFloor": 8,
-      "requiredForBrief": true,
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "reportedTotal": 6,
-        "componentSource": "code-reviewed",
-        "scheduledOutcome": {
-          "applied": true,
-          "id": "banxico-policy-2026-08-06",
-          "kind": "decision",
-          "isNewOutcome": true,
-          "changed": false,
-          "importanceFloor": {
-            "requested": 8,
-            "before": 6,
-            "after": 8,
-            "applied": true
-          }
-        }
-      },
-      "kind": "event",
-      "publishedAt": "2026-08-06T19:40:22.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Banxico deja ‘con tres candados’ la tasa de interés: Queda sin cambios en 6.50%",
-        "dek": "La Junta de Gobierno consideró que la inflación llegará a su meta objetivo hasta el cuarto trimestre de 2027."
-      },
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/06/tasa-de-interes-del-banxico-en-que-nivel-quedo-hoy-6-de-agosto-de-2026/",
-          "publishedAt": "2026-08-06T19:40:22.000Z",
-          "date": "2026-08-06",
-          "title": "Banxico holds its policy rate at 6.50 percent",
-          "summary": "The board left the rate unchanged and said it expects inflation to reach its target in the fourth quarter of 2027."
-        }
-      ],
-      "background": "Banxico uses the overnight policy rate to influence borrowing and spending. A rate above inflation can slow prices, but it also makes credit more expensive.",
-      "view": "July's inflation report explains the wait. Headline inflation is close to target, but underlying inflation is falling more slowly. Banxico is waiting for that underlying measure to improve before making credit cheaper again.",
-      "prediction": "The next tests will be the September 9 inflation release and the September 24 rate decision. If underlying inflation falls again, a cut becomes more likely. If it reverses, another hold becomes more likely.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-threat-prompts-us-to-suspend-avocado-inspections-in--2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "US suspends government operations in Michoacán over threat to US interests",
-      "why": "The United States suspended all federal operations in Michoacán, including avocado inspections, citing a threat to US interests. This preceded Mexico's military deployment to restore safety.",
-      "company": "",
-      "source": "Border Report",
-      "url": "https://borderreport.com/hot-topics/threat-prompts-us-to-suspend-avocado-inspections-in-michoacan/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-06T22:36:40.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Threat prompts US to suspend avocado inspections in Michoacan",
-        "dek": "The United States announced Wednesday that it had suspended all government operations in the Mexican state of Michoacan because of a \"threat to U.S. interests,\" including a halt to the inspections of avocados required for their export."
-      },
-      "coverage": [
-        {
-          "source": "Border Report",
-          "url": "https://borderreport.com/hot-topics/threat-prompts-us-to-suspend-avocado-inspections-in-michoacan/",
-          "publishedAt": "2026-08-06T22:36:40.000Z",
-          "date": "2026-08-06",
-          "title": "US suspends government operations in Michoacán over threat to US interests",
-          "summary": "The United States suspended all federal operations in Michoacán, including avocado inspections, citing a threat to US interests. This preceded Mexico's military deployment to restore safety."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-los-lugares-de-m-xico-donde-no-se-podr-hacer-frackin-2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Mexico's expert committee maps regions banned from fracking operations",
-      "why": "A government-appointed panel of 54 scientists and experts identified areas where fracking is prohibited based on environmental, social, and economic factors, as part of President Sheinbaum's energy policy review.",
-      "company": "",
-      "source": "Expansión — Empresas",
-      "url": "https://expansion.mx/empresas/2026/08/06/mapa-fracking-mexico-estados-donde-se-debe-prohibir",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-06T17:43:45.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Los lugares de México donde no se podrá hacer fracking de acuerdo con el comité de expertos de Sheinbaum",
-        "dek": "Un grupo de 54 científicos y expertos asesoran al gobierno sobre la viabilidad del uso de fracking. Se analizaron diversos factores como ambientales, sociales y económicos."
-      },
-      "coverage": [
-        {
-          "source": "Expansión — Empresas",
-          "url": "https://expansion.mx/empresas/2026/08/06/mapa-fracking-mexico-estados-donde-se-debe-prohibir",
-          "publishedAt": "2026-08-06T17:43:45.000Z",
-          "date": "2026-08-06",
-          "title": "Mexico's expert committee maps regions banned from fracking operations",
-          "summary": "A government-appointed panel of 54 scientists and experts identified areas where fracking is prohibited based on environmental, social, and economic factors, as part of President Sheinbaum's energy policy review."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 1,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-preparan-carnaval-petrolero-acuerdo-pemex-petrobras--2026-08-06",
-      "date": "2026-08-06",
-      "section": "economy",
-      "title": "Pemex and Petrobras enter execution phase of cooperation agreement",
-      "why": "Mexico's state oil company and Brazil's Petrobras have begun implementing a bilateral energy cooperation accord. The agreement includes joint ventures and knowledge-sharing aimed at improving hydro­carbon development across the two countries' operations.",
-      "company": "Pemex",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/06/acuerdo-pemex-petrobras-ya-esta-en-fase-de-ejecucion-anuncia-canciller/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-06T22:57:24.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Preparan ‘carnaval petrolero’: Acuerdo Pemex-Petrobras ya está en fase de ejecución, anuncia canciller",
-        "dek": "Pemex y Petrobras inician la ejecución de su acuerdo de cooperación. México y Brasil también firmaron convenios en ciencia y educación y reforzaron su agenda bilateral."
-      },
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/06/acuerdo-pemex-petrobras-ya-esta-en-fase-de-ejecucion-anuncia-canciller/",
-          "publishedAt": "2026-08-06T22:57:24.000Z",
-          "date": "2026-08-06",
-          "title": "Pemex and Petrobras enter execution phase of cooperation agreement",
-          "summary": "Mexico's state oil company and Brazil's Petrobras have begun implementing a bilateral energy cooperation accord. The agreement includes joint ventures and knowledge-sharing aimed at improving hydro­carbon development across the two countries' operations."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 7,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-industria-del-aluminio-de-eu-exige-a-trump-mantener--2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "US aluminum industry demands Trump maintain tariffs on Mexico outside USMCA",
-      "why": "The US Aluminum Association urged the administration to preserve and increase tariffs on Mexican and Canadian aluminum and toughen rules of origin during the USMCA review. The push comes as Mexico and Canada prepare for the agreement's review process, widening the trade dispute beyond agriculture and standard goods.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/06/industria-del-aluminio-de-eu-exige-a-trump-mantener-aranceles-a-mexico-al-margen-del-t-mec/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-06T20:48:13.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Industria del aluminio de EU exige a Trump mantener aranceles a México al margen del T-MEC",
-        "dek": "La CPA propuso a Estados Unidos conservar y aumentar los aranceles al aluminio de México y Canadá, además de endurecer las reglas de origen durante la revisión del T-MEC."
-      },
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/06/industria-del-aluminio-de-eu-exige-a-trump-mantener-aranceles-a-mexico-al-margen-del-t-mec/",
-          "publishedAt": "2026-08-06T20:48:13.000Z",
-          "date": "2026-08-06",
-          "title": "US aluminum industry demands Trump maintain tariffs on Mexico outside USMCA",
-          "summary": "The US Aluminum Association urged the administration to preserve and increase tariffs on Mexican and Canadian aluminum and toughen rules of origin during the USMCA review. The push comes as Mexico and Canada prepare for the agreement's review process, widening the trade dispute beyond agriculture and standard goods."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 2,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 8,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-congresistas-de-eu-exigen-cambios-al-t-mec-y-aumenta-2026-08-06",
-      "date": "2026-08-06",
-      "section": "us-mexico",
-      "title": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
-      "why": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-06T23:46:48.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Congresistas de EU exigen cambios al T-MEC y aumentan la presión sobre México",
-        "dek": "Congresistas de EU respaldan endurecer la revisión del T-MEC y piden priorizar resultados para fortalecer comercio y competitividad."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/internacional/congresistas-de-eu-exigen-cambios-al-t-mec-y-aumentan-la-presion-sobre-mexico/",
-          "publishedAt": "2026-08-06T23:46:48.000Z",
-          "date": "2026-08-06",
-          "title": "US lawmakers call for a tougher review of the US-Mexico-Canada trade agreement",
-          "summary": "The lawmakers asked the US trade representative to prioritize measurable changes that strengthen trade and competitiveness."
-        }
-      ],
-      "background": "The agreement remains in force without a new extension. Because the three countries did not agree to a 16-year extension in July, they will return to the review every year and the treaty can continue through 2036.",
-      "view": "The letter raises negotiating pressure, but it does not change tariffs or treaty rules. Existing factories keep their current access. The practical cost is uncertainty for companies considering investments that take years to repay.",
-      "prediction": "The demands are likely to matter only if they appear in formal US negotiating objectives or draft text. Specific Mexican commitments on market access or outside-country investment would confirm that the letter is shaping the review.",
-      "analysisV": 7
     }
   ]
 }

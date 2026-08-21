@@ -33,13 +33,17 @@ function explicitResolution(value, id) {
   return { status, source, url, note: stableId(value.note) };
 }
 
-function reconcileExpectedOutcomes({ schedule = [], events = [], editorialDate } = {}) {
+function reconcileExpectedOutcomes({ schedule = [], events = [], priorOutcomes = [], editorialDate } = {}) {
   const currentDay = day(editorialDate);
   if (!currentDay) throw new TypeError('editorialDate must be an ISO date (YYYY-MM-DD)');
 
   const scheduled = rows(schedule);
   const observed = rows(events);
+  const prior = rows(priorOutcomes);
   const observedByScheduleId = new Map();
+  const priorByScheduleId = new Map(prior
+    .filter((item) => stableId(item?.id))
+    .map((item) => [stableId(item.id), item]));
 
   for (const event of observed) {
     const scheduledEventId = stableId(event?.scheduledEventId);
@@ -72,11 +76,18 @@ function reconcileExpectedOutcomes({ schedule = [], events = [], editorialDate }
     const watchOnly = scheduledEvent.watch === true;
     const required = optedIn && !approximate && !watchOnly;
     const matchedEvent = observedByScheduleId.get(id) || null;
+    const priorOutcome = priorByScheduleId.get(id) || null;
+    const durablySatisfied = priorOutcome?.status === 'satisfied'
+      && day(priorOutcome?.date) === scheduledDay
+      && stableId(priorOutcome?.matchedEventId)
+      && Array.isArray(priorOutcome?.evidence)
+      && priorOutcome.evidence.some((item) => /^https?:\/\//i.test(stableId(item?.url)));
     const resolution = explicitResolution(scheduledEvent.resolution, id);
 
     let status;
     if (matchedEvent) status = 'satisfied';
     else if (resolution) status = resolution.status;
+    else if (durablySatisfied) status = 'satisfied';
     else if (scheduledDay > currentDay) status = 'upcoming';
     else if (scheduledDay === currentDay) status = 'pending';
     else status = required ? 'missing' : 'pending';
@@ -92,6 +103,7 @@ function reconcileExpectedOutcomes({ schedule = [], events = [], editorialDate }
       required,
       hardBlock: required && status === 'missing',
       matchedEvent,
+      priorOutcome: durablySatisfied ? priorOutcome : null,
       resolution,
     });
   }

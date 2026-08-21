@@ -73,7 +73,7 @@ module.exports = function () {
     carrying,
     weekend: visibleWeekend,
     translationCarrying: briefFeed.translationCarrying,
-    brief: briefFeed.brief,
+    brief: f.carrying ? ui.es.updateDelayed : briefFeed.brief,
     briefSources: briefFeed.briefSources || [],
     latestStoryDate: esDate(briefFeed.latestStoryDate),
     numbers: f.numbers.map((n) => ({

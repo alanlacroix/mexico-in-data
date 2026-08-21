@@ -27,9 +27,11 @@ const now = process.env.EDITORIAL_NOW ? new Date(process.env.EDITORIAL_NOW) : ne
 if (!Number.isFinite(now.getTime())) throw new Error('EDITORIAL_NOW is not a valid date');
 const editorialDate = process.env.EDITORIAL_DATE || editorialDay(now);
 const schedule = read('events.json', { events: [] });
+const priorStatus = read('event-status.json', { outcomes: [] });
 const result = reconcileExpectedOutcomes({
   schedule,
   events: read('happening.json', { events: [] }),
+  priorOutcomes: priorStatus.outcomes,
   editorialDate,
 });
 
@@ -46,13 +48,14 @@ const outcomes = result.items.map((item) => ({
   importanceFloor: Number(item.matchedEvent?.scheduledImportanceFloor
     || schedule.events?.find((event) => event.id === item.id)?.importanceFloor) || 0,
   hardBlock: item.hardBlock,
-  matchedEventId: item.matchedEvent?.id || null,
+  matchedEventId: item.matchedEvent?.id || item.priorOutcome?.matchedEventId || null,
   evidence: item.matchedEvent ? [{
     kind: 'curated-report',
     source: item.matchedEvent.source || '',
     url: item.matchedEvent.url || '',
     publishedAt: item.matchedEvent.publishedAt || '',
-  }] : item.resolution ? [{ kind: 'schedule-resolution', ...item.resolution }] : [],
+  }] : item.resolution ? [{ kind: 'schedule-resolution', ...item.resolution }]
+    : Array.isArray(item.priorOutcome?.evidence) ? item.priorOutcome.evidence : [],
 }));
 
 const out = {

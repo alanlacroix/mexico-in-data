@@ -69,13 +69,12 @@ module.exports = function (now = new Date()) {
   const claims = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])].filter(Boolean);
   const briefEditorialDate = clean(meta.editorialDate);
   const generatedForToday = briefEditorialDate === editorialDate;
-  // A daily product must never lead with a prior edition. If today's publication has
-  // not completed, the page shows today's honest empty state while the current wire,
-  // numbers and calendar continue below. Carrying an old edition was the mechanism
-  // that left August 17 at the top of the site for three days.
-  const carryingLastBrief = false;
+  // Never disguise a deployment outage as an editorial judgment. A stale build keeps
+  // the last certified dateline, hides its cards, and says the update is delayed. Only
+  // a current edition with meta.quiet may claim there were no major developments.
+  const carryingLastBrief = !generatedForToday;
   const visibleClaims = generatedForToday ? claims : [];
-  const visibleEditionDate = editorialDate;
+  const visibleEditionDate = generatedForToday ? editorialDate : (briefEditorialDate || editorialDate);
   const briefGroups = groupEvents(visibleClaims).map((group) => {
     const related = (happening.events || []).filter((event) => sameThread(group.event, event));
     return { ...group, coverage: mergeCoverage(group.coverage, related, related.flatMap((event) => event.coverage || [])) };
@@ -123,9 +122,11 @@ module.exports = function (now = new Date()) {
     editionType: weekendEdition ? 'weekend-recap' : 'daily',
     briefTitle: weekendEdition ? 'Weekend recap' : 'The brief',
     newsThrough: clean(meta.reviewedAt || meta.generatedAt || happening.meta?.generatedAt),
-    quiet: !stories.length || !!meta.quiet,
-    summaryLead: plainExplanation(!droppedMisdatedStories && generatedForToday && clean(brief.summary)
-      ? clean(brief.summary) : (fallback || quietCopy)),
+    quiet: generatedForToday && (!stories.length || !!meta.quiet),
+    summaryLead: carryingLastBrief
+      ? "Today's update is delayed. The date above is the last complete edition."
+      : plainExplanation(!droppedMisdatedStories && clean(brief.summary)
+        ? clean(brief.summary) : (fallback || quietCopy)),
     stories,
     todayStories,
     keyDevelopments,

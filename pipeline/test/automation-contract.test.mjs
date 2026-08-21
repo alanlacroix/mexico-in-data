@@ -10,6 +10,8 @@ const run = fs.readFileSync(path.join(root, 'pipeline', 'run.js'), 'utf8');
 const receiptWriter = fs.readFileSync(path.join(root, 'pipeline', 'write-publication-status.mjs'), 'utf8');
 const productionVerifier = fs.readFileSync(path.join(root, 'pipeline', 'verify-production.mjs'), 'utf8');
 const editorialGate = fs.readFileSync(path.join(root, 'pipeline', 'editorial-gate.mjs'), 'utf8');
+const outcomeReconciler = fs.readFileSync(path.join(root, 'pipeline', 'reconcile-scheduled-events.mjs'), 'utf8');
+const blockRecorder = fs.readFileSync(path.join(root, 'pipeline', 'record-publication-block.mjs'), 'utf8');
 const syncFreshness = fs.readFileSync(path.join(root, 'pipeline', 'sync-freshness.js'), 'utf8');
 const refresh = workflow('refresh.yml');
 const happening = workflow('happening.yml');
@@ -89,7 +91,17 @@ assert.match(
 assert.match(
   receiptWriter,
   /publicationReadiness\(brief, editorialDate\)[\s\S]*!contentReadiness\.publish[\s\S]*Refusing to certify this Brief/,
-  'the publication receipt must reject unmarked empty and carryover-only weekdays even if the workflow condition regresses',
+  'the publication receipt must reject an unmarked empty edition even if the workflow condition regresses',
+);
+assert.match(
+  outcomeReconciler,
+  /priorStatus[\s\S]*priorOutcomes:[^\n]*priorStatus\.outcomes/,
+  'a satisfied scheduled outcome must survive after its source event rolls out of the capped event log',
+);
+assert.match(
+  blockRecorder,
+  /event-status\.json[\s\S]*scheduledBlockers[\s\S]*scheduled outcome missing/,
+  'a publication block must preserve the named scheduled outcome instead of hiding it behind a generic failure',
 );
 assert.match(
   editorialGate,

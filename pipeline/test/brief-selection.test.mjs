@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import selection from '../lib/brief-selection.cjs';
 
-const { analysisState, optionalAnalysis, selectDailyBrief, selectEditionBrief, weekDates } = selection;
+const { analysisState, optionalAnalysis, retainExplainedStories, selectDailyBrief, selectEditionBrief, weekDates } = selection;
 
 const candidate = (id, importance, extra = {}) => ({
   id,
@@ -23,6 +23,15 @@ const approvedAnalysis = (extra = {}) => ({
   ...extra,
 });
 const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
+
+assert.deepEqual(
+  retainExplainedStories([
+    candidate('ready', 7, approvedAnalysis()),
+    candidate('budget-unavailable', 8),
+  ]).map((event) => event.id),
+  ['ready'],
+  'after ranking and enrichment, only complete Briefly Explained stories may reach publication',
+);
 
 assert.deepEqual(weekDates('2026-08-16'), {
   weekend: true,
@@ -70,15 +79,18 @@ assert.deepEqual(weekDates('2026-08-16'), {
   assert.equal(receiptFor(result, 'friday-important'), undefined);
 }
 
-// Prior-day reporting may add context to a real current edition; it may never
-// manufacture an edition when nothing from today cleared the factual gate.
+// When nothing clears today, yesterday's published Brief remains useful under the
+// explicitly dated Key developments lane. A late report that was never in yesterday's
+// edition cannot enter through this continuity path.
 {
   const result = selectEditionBrief([
     candidate('yesterday-important', 9, { date: '2026-08-19', publishedAt: '2026-08-19T14:00:00Z' }),
-  ], { editorialDate: '2026-08-20' });
-  assert.deepEqual(result.selected, []);
-  assert.deepEqual(result.counts, { today: 0, keyDevelopments: 0, total: 0 });
-  assert.equal(receiptFor(result, 'yesterday-important').selected, false);
+    candidate('late-yesterday-report', 10, { date: '2026-08-19', publishedAt: '2026-08-19T23:00:00Z' }),
+  ], { editorialDate: '2026-08-20', carryoverIds: ['yesterday-important'] });
+  assert.deepEqual(result.selected.map((event) => event.id), ['yesterday-important']);
+  assert.deepEqual(result.counts, { today: 0, keyDevelopments: 1, total: 1 });
+  assert.equal(receiptFor(result, 'yesterday-important').lane, 'key-development');
+  assert.equal(receiptFor(result, 'late-yesterday-report'), undefined);
 }
 
 // An edition has two honest lanes. Exact-day stories get first access; only

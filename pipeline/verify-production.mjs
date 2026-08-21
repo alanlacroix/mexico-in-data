@@ -9,9 +9,15 @@ const SLOT_RANK = { morning: 1, afternoon: 2 };
 function assertDatedEdition(brief, expectedDate) {
   const claims = [brief?.lead, ...(Array.isArray(brief?.items) ? brief.items : [])].filter(Boolean);
   if (brief?.meta?.quiet === true && claims.length === 0) return;
-  if (brief?.meta?.selection?.policy === 'exact-day-plus-carryover-v1'
-      && !claims.some((claim) => claim?.lane === 'today' && claim?.date === expectedDate)) {
-    throw new Error('live weekday Brief has no same-day story');
+  if (brief?.meta?.selection?.policy === 'exact-day-plus-carryover-v1') {
+    const prior = new Date(`${expectedDate}T12:00:00Z`);
+    prior.setUTCDate(prior.getUTCDate() - 1);
+    const priorDate = prior.toISOString().slice(0, 10);
+    if (claims.some((claim) => (claim?.lane === 'today' && claim?.date !== expectedDate)
+      || (claim?.lane === 'key-development' && claim?.date !== priorDate)
+      || !['today', 'key-development'].includes(claim?.lane))) {
+      throw new Error('live weekday Brief has a story in the wrong dated lane');
+    }
   }
 }
 

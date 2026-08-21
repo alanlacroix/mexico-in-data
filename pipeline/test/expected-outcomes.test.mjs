@@ -39,6 +39,52 @@ assert.equal(result.items[0].status, 'satisfied', 'a zero-change decision is sti
 assert.equal(result.items[0].matchedEvent, rateHold, 'the exact scheduledEventId must close the expected outcome');
 assert.equal(result.satisfied.length, 1);
 
+result = reconcileExpectedOutcomes({
+  schedule: [rateDecision],
+  events: [],
+  priorOutcomes: [{
+    id: RATE_DECISION_ID,
+    date: '2026-08-06',
+    status: 'satisfied',
+    matchedEventId: rateHold.id,
+    evidence: [{ kind: 'curated-report', source: 'Banco de México', url: 'https://banxico.example/decision' }],
+  }],
+  editorialDate: '2026-08-21',
+});
+assert.equal(result.items[0].status, 'satisfied', 'a certified outcome must not become missing when its event rolls out of the capped log');
+assert.equal(result.items[0].matchedEvent, null);
+assert.equal(result.items[0].priorOutcome.matchedEventId, rateHold.id);
+assert.equal(result.blockers.length, 0);
+
+result = reconcileExpectedOutcomes({
+  schedule: [rateDecision],
+  events: [],
+  priorOutcomes: [{
+    id: RATE_DECISION_ID,
+    date: '2026-08-05',
+    status: 'satisfied',
+    matchedEventId: rateHold.id,
+    evidence: [{ kind: 'curated-report', url: 'https://banxico.example/old-decision' }],
+  }],
+  editorialDate: '2026-08-21',
+});
+assert.equal(result.items[0].status, 'missing', 'a reused ID or corrected calendar date cannot inherit satisfaction from another day');
+assert.equal(result.blockers.length, 1);
+
+result = reconcileExpectedOutcomes({
+  schedule: [rateDecision],
+  events: [],
+  priorOutcomes: [{
+    id: RATE_DECISION_ID,
+    date: '2026-08-06',
+    status: 'satisfied',
+    matchedEventId: rateHold.id,
+    evidence: [],
+  }],
+  editorialDate: '2026-08-21',
+});
+assert.equal(result.items[0].status, 'missing', 'a prior status without linked evidence is not a durable certification');
+
 const commentary = {
   id: 'n-banxico-commentary-2026-08-07',
   date: '2026-08-07',

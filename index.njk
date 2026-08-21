@@ -310,6 +310,7 @@ const I18N = {
   all: {{ L.all | dump | safe }}, showMoreTpl: {{ L.showMoreTpl | dump | safe }},
   showLess: {{ L.showLess | dump | safe }}, contextLinkTpl: {{ L.contextLinkTpl | dump | safe }},
   quietToday: {{ L.quietToday | dump | safe }},
+  updateDelayed: {{ L.updateDelayed | dump | safe }},
 };
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
@@ -351,10 +352,7 @@ if (editionDate) {
   const part = (type) => parts.find((item) => item.type === type)?.value || '';
   const mexicoToday = `${part('year')}-${part('month')}-${part('day')}`;
   if (editionDate.dataset.iso !== mexicoToday) {
-    editionDate.textContent = new Intl.DateTimeFormat(editionDate.dataset.locale === 'es' ? 'es-MX' : 'en-US', {
-      timeZone: 'America/Mexico_City', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-    }).format(new Date());
-    $('.brief-p').textContent = I18N.quietToday;
+    $('.brief-p').textContent = I18N.updateDelayed;
     const sources = $('.brief-row');
     if (sources) sources.hidden = true;
     if (asof) asof.hidden = true;

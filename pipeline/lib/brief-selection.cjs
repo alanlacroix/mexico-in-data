@@ -40,8 +40,9 @@ function analysisState(event) {
   return { state, version, complete };
 }
 
-// Rendering should be atomic: expose the whole approved analysis unit or no
-// analysis control at all. The selected factual story itself is never removed.
+// Rendering is atomic: a public story includes the whole approved analysis unit.
+// Ranking stays independent of analysis; this filter is applied only after the
+// selected stories have had their targeted enrichment attempt.
 function optionalAnalysis(event) {
   const analysis = analysisState(event);
   if (!analysis.complete) return null;
@@ -53,6 +54,10 @@ function optionalAnalysis(event) {
     analysisRefs: event.analysisRefs && typeof event.analysisRefs === 'object' ? { ...event.analysisRefs } : {},
     analysisSources: Array.isArray(event.analysisSources) ? event.analysisSources.map((source) => ({ ...source })) : [],
   };
+}
+
+function retainExplainedStories(events) {
+  return (Array.isArray(events) ? events : []).filter((event) => optionalAnalysis(event));
 }
 
 function defaultCandidateGate(event) {
@@ -353,21 +358,26 @@ function selectEditionBrief(candidates, options = {}) {
   const cap = Math.max(0, Math.floor(finiteNumber(options.cap, DEFAULT_CAP)));
   const dateOf = typeof options.dateOf === 'function'
     ? options.dateOf : (event) => clean(event && event.date);
+  const restrictCarryover = Array.isArray(options.carryoverIds);
+  const carryoverIds = new Set((options.carryoverIds || []).map(clean).filter(Boolean));
   const shared = { ...options };
   delete shared.editorialDate;
   delete shared.dateOf;
   delete shared.carryoverMinImportance;
+  delete shared.carryoverIds;
 
   const today = selectDailyBrief(events.filter((event) => dateOf(event) === editorialDate), {
     ...shared,
     cap,
     softFloor: Math.min(cap, Math.max(0, Math.floor(finiteNumber(options.softFloor, DEFAULT_SOFT_FLOOR)))),
   });
-  // Prior-day context may extend a real current edition, but it may never become the
-  // edition by itself. If nothing from today clears the bar, publish an honest quiet
-  // state instead of building a new dateline out of yesterday's stories.
-  const remaining = today.selected.length ? Math.max(0, cap - today.selected.length) : 0;
-  const carryover = selectDailyBrief(events.filter((event) => dateOf(event) === carryoverDate), {
+  // Prior-day context is allowed even when no exact-day story clears the bar, but only
+  // from the edition readers were already shown yesterday. That keeps a quiet morning
+  // useful without letting a late, never-reviewed article manufacture a new dateline.
+  // The lane and the real event date remain explicit on every card.
+  const remaining = Math.max(0, cap - today.selected.length);
+  const carryover = selectDailyBrief(events.filter((event, index) => dateOf(event) === carryoverDate
+    && (!restrictCarryover || carryoverIds.has(receiptId(event, index)))), {
     ...shared,
     minImportance: finiteNumber(options.carryoverMinImportance, DEFAULT_CARRYOVER_MIN_IMPORTANCE),
     softFloor: 0,
@@ -409,6 +419,7 @@ module.exports = {
   ANALYSIS_VERSION,
   analysisState,
   optionalAnalysis,
+  retainExplainedStories,
   selectDailyBrief,
   selectEditionBrief,
   selectWeekendBrief,

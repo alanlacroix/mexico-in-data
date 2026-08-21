@@ -18,15 +18,10 @@ export function publicationReadiness(brief, editorialDate) {
     }
     return { publish: false, storyCount: 0, todayCount, reason: 'zero stories without an explicit quiet state' };
   }
-  if (policy === 'exact-day-plus-carryover-v1' && todayCount === 0) {
-    return {
-      publish: false,
-      storyCount: stories.length,
-      todayCount,
-      reason: 'weekday edition has no same-day stories; publish a current dated quiet edition instead',
-    };
-  }
-  return { publish: true, storyCount: stories.length, todayCount, reason: `${stories.length} selected stories` };
+  const reason = policy === 'exact-day-plus-carryover-v1' && todayCount === 0
+    ? `${stories.length} one-day key developments; no same-day story cleared the gate`
+    : `${stories.length} selected stories`;
+  return { publish: true, storyCount: stories.length, todayCount, reason };
 }
 
 function writeOutput(result) {

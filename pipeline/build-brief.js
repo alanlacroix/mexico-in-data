@@ -28,7 +28,7 @@ const WEEKEND_WINDOW_HOURS = 168;
 const STORY_CAP = 3;
 const SUMMARY_VERSION = 3;
 const { plainExplanation, plainHeadline } = plainLanguage;
-const { optionalAnalysis, selectEditionBrief } = briefSelection;
+const { optionalAnalysis, retainExplainedStories, selectEditionBrief } = briefSelection;
 const { evidenceInputs } = reportEvidence;
 const { curationReadiness } = freshnessContract;
 
@@ -106,7 +106,7 @@ const interestTags = (e) => {
   const hay = `${e.title || ''} ${e.why || ''} ${e.reportEvidence?.title || ''} ${e.reportEvidence?.dek || ''} ${e.section || ''}`;
   return INTERESTS.filter((x) => x.rx.test(hay)).map((x) => x.tag);
 };
-function select(events, editorialDate) {
+function select(events, editorialDate, carryoverIds = []) {
   const candidates = groupEvents(events).map((group) => ({
     ...group.event,
     importance: group.importance,
@@ -118,6 +118,7 @@ function select(events, editorialDate) {
     effectiveImportance: effImp,
     interestTags,
     scheduledMatch: (event) => Boolean(event.scheduledEventId),
+    carryoverIds,
     candidateGate: (event) => {
       if (!event?.url) return { ok: false, reason: 'missing-url' };
       if (!event?.source) return { ok: false, reason: 'missing-source' };
@@ -196,17 +197,54 @@ async function main() {
   // visit" delta and the change-gated clock below.
   const prev = readJson(OUT, null);
   const prevHrefs = new Set([prev && prev.lead && prev.lead.href, ...arr(prev && prev.items).map((i) => i.href)].filter(Boolean));
+  const lockedIds = arr(prev?.meta?.selection?.lockedIds);
+  const priorDate = (() => {
+    const date = new Date(`${editorialDate}T12:00:00Z`);
+    date.setUTCDate(date.getUTCDate() - 1);
+    return date.toISOString().slice(0, 10);
+  })();
+  const carryoverIds = prev?.meta?.editorialDate === editorialDate && lockedIds.length
+    ? lockedIds
+    : prev?.meta?.editorialDate === priorDate
+      ? [prev.lead, ...arr(prev.items)].filter(Boolean).flatMap((story) => arr(story.refs)).filter(Boolean)
+      : [];
 
-  const selection = select(P.events, editorialDate);
-  const picked = selection.picked;
+  const selection = select(P.events, editorialDate, carryoverIds);
+  const rankedPicked = selection.picked;
+  const rankedIds = rankedPicked.map((event) => event.id).filter(Boolean);
+  if (!selectionOnly && prev?.meta?.editorialDate === editorialDate && lockedIds.length
+      && JSON.stringify(lockedIds) !== JSON.stringify(rankedIds)) {
+    throw new Error(`selected story set changed after analysis enrichment: ${lockedIds.join(',')} -> ${rankedIds.join(',')}`);
+  }
+  // Explanation failure is content scarcity, not an infrastructure failure. Ranking is
+  // locked before enrichment; the final edition then exposes only complete v9 units.
+  // This keeps the user's product rule (every visible story is explained) without
+  // allowing an exhausted model budget to block the whole daily publication.
+  const picked = selectionOnly ? rankedPicked : retainExplainedStories(rankedPicked);
+  const pickedIds = picked.map((event) => event.id).filter(Boolean);
+  if (!selectionOnly && picked.length !== rankedPicked.length) {
+    const omitted = rankedIds.filter((id) => !pickedIds.includes(id));
+    console.warn(`  ${omitted.length} selected ${omitted.length === 1 ? 'story' : 'stories'} held: Briefly Explained incomplete (${omitted.join(', ')})`);
+  }
+  const selectedCounts = selection.policy === 'weekend-recap-v1'
+    ? {
+      weekend: picked.filter((event) => event._lane === 'weekend').length,
+      weekRecap: picked.filter((event) => event._lane === 'week-recap').length,
+      total: picked.length,
+    }
+    : {
+      today: picked.filter((event) => event._lane === 'today').length,
+      keyDevelopments: picked.filter((event) => event._lane === 'key-development').length,
+      total: picked.length,
+    };
   const weekend = selection.policy === 'weekend-recap-v1';
   const editionTitle = weekend ? 'Weekend recap' : 'The brief';
   const windowHours = weekend
     ? WEEKEND_WINDOW_HOURS
-    : selection.counts.keyDevelopments ? CARRYOVER_WINDOW_HOURS : DEFAULT_WINDOW_HOURS;
+    : selectedCounts.keyDevelopments ? CARRYOVER_WINDOW_HOURS : DEFAULT_WINDOW_HOURS;
   if (!picked.length) {
-    // A quiet edition says so plainly. Never relabel yesterday's claims as today's:
-    // those stories cannot appear in today's selection receipt and must not be certified.
+    // A quiet edition says so plainly. It is reached only when neither today's
+    // reporting nor one-day-old stories from the prior published edition clear the gate.
     const contentSig = fingerprint([]);
     const unchanged = prev?.meta?.contentSig === contentSig && prev?.meta?.editorialDate === editorialDate;
     const reviewedAt = unchanged ? (prev.meta.reviewedAt || now.toISOString()) : now.toISOString();
@@ -220,9 +258,10 @@ async function main() {
         selection: {
           policy: selection.policy,
           receipt: selection.receipt,
-          lockedIds: [],
+          lockedIds: selectionOnly ? rankedIds : (lockedIds.length ? lockedIds : rankedIds),
+          publishedIds: [],
           empty: true,
-          lanes: selection.counts,
+          lanes: selectedCounts,
           carryoverDate: selection.carryoverDate,
           weekStartDate: selection.weekStartDate,
           weekendStartDate: selection.weekendStartDate,
@@ -239,12 +278,6 @@ async function main() {
     return;
   }
   const isNew = (e) => !prevHrefs.has(e.url || '');
-  const pickedIds = picked.map((event) => event.id).filter(Boolean);
-  const lockedIds = arr(prev?.meta?.selection?.lockedIds);
-  if (!selectionOnly && prev?.meta?.editorialDate === editorialDate && lockedIds.length
-      && JSON.stringify(lockedIds) !== JSON.stringify(pickedIds)) {
-    throw new Error(`selected story set changed after analysis enrichment: ${lockedIds.join(',')} -> ${pickedIds.join(',')}`);
-  }
   const lead0 = picked[0];
   const pass4 = (e) => {
     // Every selected development carries the same evidence-linked explanatory unit.
@@ -320,8 +353,9 @@ async function main() {
     selection: {
       policy: selection.policy,
       receipt: selection.receipt,
-      lockedIds: selectionOnly ? pickedIds : (lockedIds.length ? lockedIds : pickedIds),
-      lanes: selection.counts,
+      lockedIds: selectionOnly ? rankedIds : (lockedIds.length ? lockedIds : rankedIds),
+      publishedIds: pickedIds,
+      lanes: selectedCounts,
       carryoverDate: selection.carryoverDate,
       weekStartDate: selection.weekStartDate,
       weekendStartDate: selection.weekendStartDate,

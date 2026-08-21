@@ -23,10 +23,10 @@ const carryoverOnly = publicationReadiness({
   lead: { headline: 'Yesterday remains important', lane: 'key-development', date: '2026-08-17' },
   items: [],
 }, '2026-08-18');
-assert.equal(carryoverOnly.publish, false);
+assert.equal(carryoverOnly.publish, true);
 assert.equal(carryoverOnly.storyCount, 1);
 assert.equal(carryoverOnly.todayCount, 0);
-assert.match(carryoverOnly.reason, /no same-day stories/);
+assert.match(carryoverOnly.reason, /one-day key developments/);
 
 const weekendRecap = publicationReadiness({
   meta: { editorialDate: '2026-08-16', selection: { policy: 'weekend-recap-v1' } },

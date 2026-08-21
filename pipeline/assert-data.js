@@ -213,10 +213,6 @@ try {
     fails.push('brief: an empty day must be marked quiet and include an honest empty-state summary');
   }
   if (claims.length && !brief.lead) fails.push('brief: a non-empty day needs a lead');
-  if (claims.length && selectionPolicy === 'exact-day-plus-carryover-v1'
-      && !claims.some((claim) => claim.lane === 'today' && claim.date === brief.meta?.editorialDate)) {
-    fails.push('brief: a weekday edition cannot advance its dateline without a same-day story');
-  }
   if (!explanationReadiness.targetMet) {
     fails.push(`brief: every selected story needs an approved, evidence-linked Briefly Explained unit (ready ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount}; missing ${explanationReadiness.missingTarget.join(', ')})`);
   }
