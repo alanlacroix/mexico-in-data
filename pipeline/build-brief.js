@@ -16,6 +16,7 @@ import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
 import plainLanguage from './lib/plain-language.cjs';
 import briefSelection from './lib/brief-selection.cjs';
+import briefSummary from './lib/brief-summary.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
 import freshnessContract from './lib/freshness-contract.cjs';
 
@@ -26,9 +27,10 @@ const DEFAULT_WINDOW_HOURS = 36;
 const CARRYOVER_WINDOW_HOURS = 60;
 const WEEKEND_WINDOW_HOURS = 168;
 const STORY_CAP = 3;
-const SUMMARY_VERSION = 3;
+const SUMMARY_VERSION = 4;
 const { plainExplanation, plainHeadline } = plainLanguage;
 const { optionalAnalysis, retainExplainedStories, selectEditionBrief } = briefSelection;
+const { contextDigest } = briefSummary;
 const { evidenceInputs } = reportEvidence;
 const { curationReadiness } = freshnessContract;
 
@@ -50,19 +52,13 @@ function pool(now = new Date()) {
   };
 }
 
-// If synthesis is unavailable, retain every selected development and add as much
-// already-audited factual context as the paragraph cap permits. The old headline-only
-// fallback made the Brief read like a list and accidentally became permanent when the
-// selection-lock artifact was mistaken for the final build.
-const firstSentence = (value) => {
-  const text = plainExplanation(value);
-  const match = text.match(/^.*?[.!?](?:\s|$)/);
-  return (match ? match[0] : text).trim();
-};
-const fallbackSummary = (picked) => picked.slice(0, STORY_CAP)
-  .map((event) => firstSentence(ctxOf(event)) || firstSentence(plainHeadline(stripDash(event.title))))
-  .filter(Boolean)
-  .join(' ');
+// The no-model path uses the same tested digest as the publication gate: state what
+// happened, then add the card's sourced context. The old local fallback kept only the
+// first context sentence, which stripped out the amount, dispute, and next decision.
+const fallbackSummary = (picked) => contextDigest(picked.slice(0, STORY_CAP).map((event) => ({
+  title: plainHeadline(stripDash(event.title)),
+  context: ctxOf(event),
+})), { maxWords: 105 });
 
 // ---- the Brief: up to three rubric-ranked developments, each headline + explained context ----
 const stripDash = (t) => String(t || '').replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();  // voice law: no em-dash
