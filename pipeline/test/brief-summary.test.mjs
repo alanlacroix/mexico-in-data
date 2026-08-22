@@ -1,8 +1,16 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import fs from 'node:fs';
 
 const require = createRequire(import.meta.url);
 const { contextDigest, headlineDigest, isHeadlineOnly } = require('../lib/brief-summary.cjs');
+
+// Production has ANTHROPIC_API_KEY set even when the monthly budget is exhausted.
+// That key-present path must have every symbol it touches imported; on 2026-08-22 an
+// undeclared `models` crashed the final Brief build while local no-key runs passed.
+const builder = fs.readFileSync(new URL('../build-brief.js', import.meta.url), 'utf8');
+assert.match(builder, /import\s*\{[^}]*\bmodels\b[^}]*\}\s*from\s*['"]\.\/lib\/anthropic\.js['"]/,
+  'the key-present summary path must import the model registry');
 
 const stories = [
   {

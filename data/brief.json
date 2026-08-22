@@ -1,30 +1,136 @@
 {
   "meta": {
-    "title": "The brief",
-    "editorialDate": "2026-08-21",
-    "updated": "2026-08-21",
-    "asOf": "2026-08-21",
-    "reviewedAt": "2026-08-21T16:54:57.273Z",
-    "latestItemDate": "2026-08-20",
+    "title": "Weekend recap",
+    "editorialDate": "2026-08-22",
+    "updated": "2026-08-22",
+    "asOf": "2026-08-22",
+    "reviewedAt": "2026-08-22T15:10:25.475Z",
+    "latestItemDate": "2026-08-19",
     "quiet": false,
     "newCount": 0,
-    "generatedAt": "2026-08-21T16:54:57.273Z",
+    "generatedAt": "2026-08-22T15:10:25.475Z",
     "mode": "curated",
-    "editionType": "daily",
+    "editionType": "weekend-recap",
     "summaryV": 4,
-    "summaryMode": "editorial",
+    "summaryMode": "context-digest",
     "count": 2,
-    "words": 88,
-    "contentSig": "f4686533b216fbe59713d752466ae0950f689c65e6dc391cfb71d17fe6e7814f",
-    "windowHours": 60,
+    "words": 67,
+    "contentSig": "caeffcbec136cd53ec55f47252e0551ea9dadb200364adf77e1a9be0e0480e4e",
+    "windowHours": 168,
     "selection": {
-      "policy": "exact-day-plus-carryover-v1",
+      "policy": "weekend-recap-v1",
       "receipt": [
         {
-          "id": "n-morena-finabien-payments-2024-records-2026-08-20",
-          "rank": 1,
+          "id": "n-us-treasury-sanctions-ecuador-to-us-cocaine-traffick-2026-08-21",
+          "rank": null,
+          "selected": false,
+          "reason": "ineligible:below-importance-floor",
+          "effectiveImportance": 5,
+          "rawImportance": 5,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 5,
+            "components": {
+              "nationalConsequence": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "componentSource": "deterministic-fallback-v1"
+          },
+          "tags": [
+            "us-relationship"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          },
+          "lane": "week-recap",
+          "laneRank": null
+        },
+        {
+          "id": "n-mexican-migrant-job-losses-in-us-raise-remittance-ri-2026-08-20",
+          "rank": 3,
           "selected": true,
           "reason": "selected:extension:importance",
+          "effectiveImportance": 7,
+          "rawImportance": 7,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 7,
+            "components": {
+              "nationalConsequence": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "componentSource": "deterministic-fallback-v1"
+          },
+          "tags": [
+            "growth"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          },
+          "lane": "week-recap",
+          "laneRank": 3
+        },
+        {
+          "id": "n-morena-finabien-payments-2024-records-2026-08-20",
+          "rank": null,
+          "selected": false,
+          "reason": "not-selected:cap-reached",
           "effectiveImportance": 7,
           "rawImportance": 7,
           "importanceProvenance": {
@@ -44,14 +150,14 @@
             "version": 9,
             "complete": true
           },
-          "lane": "key-development",
-          "laneRank": 1
+          "lane": "week-recap",
+          "laneRank": 4
         },
         {
           "id": "n-mexico-farm-council-us-strawberry-duties-2026-08-20",
-          "rank": 2,
-          "selected": true,
-          "reason": "selected:extension:importance",
+          "rank": null,
+          "selected": false,
+          "reason": "not-selected:cap-reached",
           "effectiveImportance": 6,
           "rawImportance": 6,
           "importanceProvenance": {
@@ -71,99 +177,299 @@
             "version": 9,
             "complete": true
           },
-          "lane": "key-development",
+          "lane": "week-recap",
+          "laneRank": 6
+        },
+        {
+          "id": "n-pemex-petrobras-to-explore-ultra-deep-pre-salt-forma-2026-08-20",
+          "rank": null,
+          "selected": false,
+          "reason": "ineligible:copy-gate:context repeats the headline without adding a sourced fact",
+          "effectiveImportance": 4,
+          "rawImportance": 4,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 4,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "componentSource": "deterministic-fallback-v1"
+          },
+          "tags": [],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          },
+          "lane": "week-recap",
+          "laneRank": null
+        },
+        {
+          "id": "n-sonora-first-active-screwworm-case-2026-08-19",
+          "rank": 1,
+          "selected": true,
+          "reason": "selected:extension:importance",
+          "effectiveImportance": 8,
+          "rawImportance": 8,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 8,
+            "reportedTotal": null,
+            "componentSource": "manual-source-review"
+          },
+          "tags": [
+            "us-relationship"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "ready",
+          "analysisVersion": 9,
+          "analysis": {
+            "state": "ready",
+            "version": 9,
+            "complete": true
+          },
+          "lane": "week-recap",
+          "laneRank": 1
+        },
+        {
+          "id": "n-mexico-us-drones-antidrone-security-2026-08-17",
+          "rank": 2,
+          "selected": true,
+          "reason": "selected:extension:importance",
+          "effectiveImportance": 8,
+          "rawImportance": 8,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 8,
+            "components": {
+              "nationalConsequence": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "manual-source-review"
+          },
+          "tags": [
+            "us-relationship"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "ready",
+          "analysisVersion": 9,
+          "analysis": {
+            "state": "ready",
+            "version": 9,
+            "complete": true
+          },
+          "lane": "week-recap",
           "laneRank": 2
+        },
+        {
+          "id": "n-manufacturing-employment-june-rebound-2026-08-17",
+          "rank": null,
+          "selected": false,
+          "reason": "not-selected:cap-reached",
+          "effectiveImportance": 7,
+          "rawImportance": 7,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 7,
+            "components": {
+              "nationalConsequence": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "manual-source-review"
+          },
+          "tags": [
+            "growth"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "ready",
+          "analysisVersion": 9,
+          "analysis": {
+            "state": "ready",
+            "version": 9,
+            "complete": true
+          },
+          "lane": "week-recap",
+          "laneRank": 5
         }
       ],
       "lockedIds": [
-        "n-morena-finabien-payments-2024-records-2026-08-20",
-        "n-mexico-farm-council-us-strawberry-duties-2026-08-20"
+        "n-sonora-first-active-screwworm-case-2026-08-19",
+        "n-mexico-us-drones-antidrone-security-2026-08-17",
+        "n-mexican-migrant-job-losses-in-us-raise-remittance-ri-2026-08-20"
       ],
       "publishedIds": [
-        "n-morena-finabien-payments-2024-records-2026-08-20",
-        "n-mexico-farm-council-us-strawberry-duties-2026-08-20"
+        "n-sonora-first-active-screwworm-case-2026-08-19",
+        "n-mexico-us-drones-antidrone-security-2026-08-17"
       ],
       "lanes": {
-        "today": 0,
-        "keyDevelopments": 2,
+        "weekend": 0,
+        "weekRecap": 2,
         "total": 2
       },
-      "carryoverDate": "2026-08-20",
+      "weekStartDate": "2026-08-17",
+      "weekendStartDate": "2026-08-22",
       "scheduledOutcomes": {
-        "editorialDate": "2026-08-21",
-        "checkedAt": "2026-08-21T15:53:39.176Z",
+        "editorialDate": "2026-08-22",
+        "checkedAt": "2026-08-22T15:06:42.714Z",
         "count": 14,
         "blockers": 0,
         "ok": true
       }
     }
   },
-  "summary": "An investigation by Mexicanos Contra la Corrupción says Morena distributed MX$134.9 million through the state financial service Finabien before the 2024 election. The money does not appear in the party's campaign filings, but no authority has ruled the payments illegal. The unanswered question is where Morena reported them. Separately, the US calculated a preliminary 4.83% dumping margin on Mexican winter strawberries. It is not a final duty, and the next decision is due January 8, 2027.",
+  "summary": "Screwworm reaches Sonora days before a cattle-export crossing is due to reopen. Mexico's animal-health agency listed Sonora's first active case in Álamos. The US Agriculture Department has scheduled the Douglas, Arizona, cattle crossing to reopen on August 24, subject to Mexico following the joint control plan. Mexico will buy US drones and anti-drone systems for security operations. The United States announced that Mexico will be able to buy the equipment at competitive prices.",
   "lead": {
-    "h1": "Investigation finds Morena sent 134.9 million pesos through a state financial service in 2024",
-    "context": "Mexico Against Corruption says Finabien records show 252,901 payments and that the money does not appear in Morena's 2024 campaign filings. Finabien denies acting improperly, and no electoral authority has ruled that the payments were illegal.",
-    "background": "Mexico's election agency audits how parties receive and spend money. Its online system is where parties record income and expenses. The documents cited by Mexico Against Corruption show that payments were made. They do not by themselves show why recipients were chosen.",
-    "view": "The 134.9 million pesos total covered 252,901 payments, about MX$533 each. The unresolved question is accounting. The investigation says it could not find the amount in Morena's filings, which warrants an official explanation but does not establish vote-buying.",
-    "prediction": "Watch for a response from Morena or the election agency that identifies the account, purpose and reporting category. A clean reconciliation would weaken the concern. An audit finding of unreported spending would strengthen it.",
+    "h1": "Screwworm reaches Sonora days before a cattle-export crossing is due to reopen",
+    "context": "Mexico's animal-health agency listed Sonora's first active case in Álamos. The US Agriculture Department has scheduled the Douglas, Arizona, cattle crossing to reopen on August 24, subject to Mexico following the joint control plan.",
+    "background": "New World screwworm larvae feed on living tissue. The US Agriculture Department has tied the border reopening to the joint control plan and inspection of every animal entering through Douglas.",
+    "view": "One confirmed case does not by itself cancel the reopening. Sonora had been one of the northern states kept free of the pest, so the case tests whether the control plan can contain an isolated detection without another trade closure.",
+    "prediction": "Watch the US Agriculture Department's import page and Mexico's animal-health updates before August 24. If the crossing reopens on schedule with the case contained, that would support the control plan. A delay or more northern cases would show the trade risk is rising.",
     "analysisV": 9,
     "analysisRefs": {
       "background": [
         "article",
-        "primary:ine-fiscalization"
+        "primary:usda-screwworm"
       ],
       "view": [
         "article",
-        "primary:ine-fiscalization"
+        "primary:usda-reopening"
       ],
       "prediction": [
-        "article",
-        "primary:ine-fiscalization"
+        "primary:usda-reopening",
+        "primary:senasica"
       ]
     },
     "analysisSources": [
       {
         "id": "article",
         "kind": "article",
-        "source": "Mexicanos Contra la Corrupción",
-        "url": "https://contralacorrupcion.mx/morenagate-en-la-vispera-de-la-eleccion-de-2024-morena-disperso-135-millones-en-252-mil-apoyos/"
+        "source": "RTN Medios",
+        "url": "https://rtnmedios.com/slider/sonora-registra-primer-caso-activo-de-gusano-barrenador/"
       },
       {
-        "id": "primary:ine-fiscalization",
+        "id": "primary:usda-reopening",
         "kind": "primary",
-        "source": "Instituto Nacional Electoral",
-        "url": "https://www.ine.mx/voto-y-elecciones/fiscalizacion/"
+        "source": "US Department of Agriculture",
+        "url": "https://direct.aphis.usda.gov/news/agency-announcements/usda-announces-phased-reopening-southern-ports-livestock-trade-0"
+      },
+      {
+        "id": "primary:usda-screwworm",
+        "kind": "primary",
+        "source": "US Department of Agriculture",
+        "url": "https://direct.aphis.usda.gov/live-animal-import/cattle-bison-germplasm/mexico"
+      },
+      {
+        "id": "primary:senasica",
+        "kind": "primary",
+        "source": "SENASICA",
+        "url": "https://www.gob.mx/agricultura/acciones-y-programas/gusano-barrenador-del-ganado-gbg-429472"
       }
     ],
     "drivers": "",
     "implications": "",
     "next": "",
     "image": "",
-    "publishedAt": "2026-08-20T12:50:00.000Z",
+    "publishedAt": "2026-08-19T18:00:00.000Z",
     "coverage": [
       {
-        "source": "Mexicanos Contra la Corrupción",
-        "url": "https://contralacorrupcion.mx/morenagate-en-la-vispera-de-la-eleccion-de-2024-morena-disperso-135-millones-en-252-mil-apoyos/",
-        "publishedAt": "2026-08-20T12:50:00.000Z",
-        "date": "2026-08-20",
-        "title": "Investigation finds Morena sent MX$134.9 million through a state financial service in 2024",
-        "summary": "Mexico Against Corruption says Finabien records show 252,901 payments and that the money does not appear in Morena's 2024 campaign filings. Finabien denies acting improperly, and no electoral authority has ruled that the payments were illegal."
+        "source": "RTN Medios",
+        "url": "https://rtnmedios.com/slider/sonora-registra-primer-caso-activo-de-gusano-barrenador/",
+        "publishedAt": "2026-08-19T18:00:00.000Z",
+        "date": "2026-08-19",
+        "title": "Screwworm reaches Sonora days before a cattle-export crossing is due to reopen",
+        "summary": "Mexico's animal-health agency listed Sonora's first active case in Álamos. The US Agriculture Department has scheduled the Douglas, Arizona, cattle crossing to reopen on August 24, subject to Mexico following the joint control plan."
       }
     ],
     "refs": [
-      "n-morena-finabien-payments-2024-records-2026-08-20"
+      "n-sonora-first-active-screwworm-case-2026-08-19"
     ],
-    "href": "https://contralacorrupcion.mx/morenagate-en-la-vispera-de-la-eleccion-de-2024-morena-disperso-135-millones-en-252-mil-apoyos/",
-    "source": "Mexicanos Contra la Corrupción",
-    "date": "2026-08-20",
-    "section": "politics",
-    "lane": "key-development",
+    "href": "https://rtnmedios.com/slider/sonora-registra-primer-caso-activo-de-gusano-barrenador/",
+    "source": "RTN Medios",
+    "date": "2026-08-19",
+    "section": "us-mexico",
+    "lane": "week-recap",
     "isNew": false,
     "ranking": {
       "rank": 1,
-      "importance": 7,
-      "effectiveImportance": 7,
+      "importance": 8,
+      "effectiveImportance": 8,
       "tags": [
-        "political-stability"
+        "us-relationship"
       ],
       "scheduledEventId": "",
       "reason": "selected:extension:importance"
@@ -171,75 +477,81 @@
   },
   "items": [
     {
-      "headline": "Mexico's farm council challenges preliminary US strawberry duties",
-      "context": "The US Commerce Department's preliminary dumping margin averages 4.83% for winter strawberries from Mexico. A final decision is due January 8, 2027, and Mexico's farm council says the method could extend to other seasonal produce.",
-      "background": "Antidumping cases have two separate tests: the Commerce Department estimates whether imports were sold below fair value, and the US International Trade Commission decides whether the domestic industry was injured. A preliminary margin is not the final result.",
-      "view": "The immediate cost is narrower than the farm council's warning. The case applies to winter strawberries, and the 4.83% average is well below the 18.32% alleged at the start. Any broader precedent depends on the final reasoning, not only the rate.",
-      "prediction": "Watch the Commerce Department's final determination on January 8, followed by the injury decision. Lower or zero final margins would weaken the case. Similar margins and a final injury finding would put the duties on firmer ground.",
+      "headline": "Mexico will buy US drones and anti-drone systems for security operations",
+      "context": "The United States announced that Mexico will be able to buy the equipment at competitive prices.",
+      "background": "Drones can extend surveillance over difficult terrain. Anti-drone systems serve a different purpose: they detect, track or disrupt unauthorized aircraft. The announcement covers both capabilities but does not identify models, quantities or delivery dates.",
+      "view": "This is a procurement opening, not yet proof of a new operational capability. Its value will depend on what Mexico buys, how quickly it arrives and which agencies can use it under clear rules.",
+      "prediction": "Watch for a contract or official delivery notice that names the equipment and quantity. That would show the announcement has moved from access to an actual purchase.",
       "analysisV": 9,
       "analysisRefs": {
         "background": [
           "article",
-          "primary:commerce",
-          "primary:usitc"
+          "primary:crs-counter-uas"
         ],
         "view": [
           "article",
-          "primary:commerce"
+          "corroboration:elpais"
         ],
         "prediction": [
-          "article",
-          "primary:usitc"
+          "article"
         ]
       },
       "analysisSources": [
         {
           "id": "article",
           "kind": "article",
-          "source": "El Economista",
-          "url": "https://www.eleconomista.com.mx/empresas/castigo-fresa-mexicana-sienta-mal-precedente-comercio-eu-cna-20260820-829226.html"
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/1708/mexico/aristegui-en-vivo-mexico-comprara-drones-y-antidrones-a-ee-uu-ministro-israeli-llama-al-asesinato-de-palestinos-17-08-2026/"
         },
         {
-          "id": "primary:commerce",
-          "kind": "primary",
-          "source": "US Department of Commerce",
-          "url": "https://www.trade.gov/commerce-initiates-antidumping-duty-investigation-fresh-strawberries-mexico"
+          "id": "corroboration:elpais",
+          "kind": "context",
+          "source": "El País — México",
+          "url": "https://elpais.com/mexico/2026-08-17/mexico-y-estados-unidos-encarrilan-su-relacion-en-seguridad-pese-a-la-fractura-por-la-visa-de-andy-lopez-beltran.html"
         },
         {
-          "id": "primary:usitc",
+          "id": "primary:crs-counter-uas",
           "kind": "primary",
-          "source": "US International Trade Commission",
-          "url": "https://www.usitc.gov/fed_reg_notices/antidumpingcountervailing_duty/701731/fresh_winter_strawberries_mexico_031026.htm"
+          "source": "US Congressional Research Service",
+          "url": "https://www.congress.gov/crs-product/IF11480"
         }
       ],
       "drivers": "",
       "implications": "",
       "next": "",
       "image": "",
-      "publishedAt": "2026-08-20T06:33:49.000Z",
+      "publishedAt": "2026-08-17T12:37:29.000Z",
       "coverage": [
         {
-          "source": "El Economista",
-          "url": "https://www.eleconomista.com.mx/empresas/castigo-fresa-mexicana-sienta-mal-precedente-comercio-eu-cna-20260820-829226.html",
-          "publishedAt": "2026-08-20T06:33:49.000Z",
-          "date": "2026-08-20",
-          "title": "Mexico's farm council challenges preliminary US strawberry duties",
-          "summary": "The US Commerce Department's preliminary dumping margin averages 4.83% for winter strawberries from Mexico. A final decision is due January 8, 2027, and Mexico's farm council says the method could extend to other seasonal produce."
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/1708/mexico/aristegui-en-vivo-mexico-comprara-drones-y-antidrones-a-ee-uu-ministro-israeli-llama-al-asesinato-de-palestinos-17-08-2026/",
+          "publishedAt": "2026-08-17T12:37:29.000Z",
+          "date": "2026-08-17",
+          "title": "Mexico will buy US drones and anti-drone systems for security operations",
+          "summary": "The United States announced that Mexico will be able to buy the equipment at competitive prices."
+        },
+        {
+          "source": "El País — México",
+          "url": "https://elpais.com/mexico/2026-08-17/mexico-y-estados-unidos-encarrilan-su-relacion-en-seguridad-pese-a-la-fractura-por-la-visa-de-andy-lopez-beltran.html",
+          "publishedAt": "2026-08-17T04:00:00.000Z",
+          "date": "2026-08-16",
+          "title": "Mexico and the United States advance security cooperation",
+          "summary": "US Ambassador Ronald Johnson announced access to drones, while Omar García Harfuch plans to attend a DEA conference in Argentina."
         }
       ],
       "refs": [
-        "n-mexico-farm-council-us-strawberry-duties-2026-08-20"
+        "n-mexico-us-drones-antidrone-security-2026-08-17"
       ],
-      "href": "https://www.eleconomista.com.mx/empresas/castigo-fresa-mexicana-sienta-mal-precedente-comercio-eu-cna-20260820-829226.html",
-      "source": "El Economista",
-      "date": "2026-08-20",
+      "href": "https://aristeguinoticias.com/1708/mexico/aristegui-en-vivo-mexico-comprara-drones-y-antidrones-a-ee-uu-ministro-israeli-llama-al-asesinato-de-palestinos-17-08-2026/",
+      "source": "Aristegui Noticias",
+      "date": "2026-08-17",
       "section": "us-mexico",
-      "lane": "key-development",
+      "lane": "week-recap",
       "isNew": false,
       "ranking": {
         "rank": 2,
-        "importance": 6,
-        "effectiveImportance": 6,
+        "importance": 8,
+        "effectiveImportance": 8,
         "tags": [
           "us-relationship"
         ],

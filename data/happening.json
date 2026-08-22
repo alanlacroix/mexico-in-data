@@ -2,20 +2,20 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-21",
+    "updated": "2026-08-22",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-21T15:53:39.297Z",
+    "generatedAt": "2026-08-22T15:06:42.833Z",
     "llm": false,
     "curation": {
       "policy": "exact-day-assessment-v1",
-      "editorialDate": "2026-08-21",
+      "editorialDate": "2026-08-22",
       "candidateCount": 24,
-      "candidateSig": "3dfe59d4295273629df56f72bb7a66b9d0e572f71df9c979e4584c69c2843adc",
-      "freshCandidateCount": 1,
+      "candidateSig": "03a7d63c560a6ae887f8a7788ea00d7b48854e3d124c99b60c10951a7735acfc",
+      "freshCandidateCount": 0,
       "assessedCount": 24,
-      "keptCount": 2,
+      "keptCount": 1,
       "rejectedCount": 0,
       "mode": "deterministic-fallback",
       "complete": true,
@@ -24,25 +24,98 @@
     "analysisTarget": {
       "policy": "every-selected-story-context-audited-v3",
       "ids": [
-        "n-morena-finabien-payments-2024-records-2026-08-20",
-        "n-mexico-farm-council-us-strawberry-duties-2026-08-20"
+        "n-sonora-first-active-screwworm-case-2026-08-19",
+        "n-mexico-us-drones-antidrone-security-2026-08-17",
+        "n-mexican-migrant-job-losses-in-us-raise-remittance-ri-2026-08-20"
       ],
       "added": 0,
       "outcomes": [
         {
-          "id": "n-morena-finabien-payments-2024-records-2026-08-20",
+          "id": "n-sonora-first-active-screwworm-case-2026-08-19",
           "ready": true,
           "reason": "ready"
         },
         {
-          "id": "n-mexico-farm-council-us-strawberry-duties-2026-08-20",
+          "id": "n-mexico-us-drones-antidrone-security-2026-08-17",
           "ready": true,
           "reason": "ready"
+        },
+        {
+          "id": "n-mexican-migrant-job-losses-in-us-raise-remittance-ri-2026-08-20",
+          "ready": false,
+          "reason": "no-llm"
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "n-us-treasury-sanctions-ecuador-to-us-cocaine-traffick-2026-08-21",
+      "date": "2026-08-21",
+      "section": "economy",
+      "title": "US Treasury sanctions Ecuador-to-US cocaine trafficking network",
+      "why": "The U.S. Treasury on Thursday sanctioned 15 people for their involvement in a network that allegedly shipped thousands of kilograms of cocaine per month from Ecuador through Mexico, destined for the United States.",
+      "company": "",
+      "source": "Border Report",
+      "url": "https://borderreport.com/border-report-tour/border-crime/us-treasury-sanctions-ecuador-to-us-cocaine-trafficking-network/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-21T18:06:36.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "US Treasury sanctions Ecuador-to-US cocaine trafficking network",
+        "dek": "The U.S. Treasury on Thursday sanctioned 15 people for their involvement in a network that allegedly shipped thousands of kilograms of cocaine per month from Ecuador through Mexico, destined for the United States."
+      },
+      "coverage": [
+        {
+          "source": "Border Report",
+          "url": "https://borderreport.com/border-report-tour/border-crime/us-treasury-sanctions-ecuador-to-us-cocaine-trafficking-network/",
+          "publishedAt": "2026-08-21T18:06:36.000Z",
+          "date": "2026-08-21",
+          "title": "US Treasury sanctions Ecuador-to-US cocaine trafficking network",
+          "summary": "The U.S. Treasury on Thursday sanctioned 15 people for their involvement in a network that allegedly shipped thousands of kilograms of cocaine per month from Ecuador through Mexico, destined for the United States."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      }
+    },
     {
       "id": "n-mexican-migrant-job-losses-in-us-raise-remittance-ri-2026-08-20",
       "date": "2026-08-20",
@@ -4377,74 +4450,6 @@
           "durability": {
             "raw": 1,
             "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 5,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-cofepris-niega-v-nculo-de-lechugas-con-ciclosporiasi-2026-08-07",
-      "date": "2026-08-07",
-      "section": "society",
-      "title": "Cofepris denies Mexican lettuce link to US cyclosporiasis outbreak",
-      "why": "Mexico's health regulator denied that lettuce was the source, though it is investigating a possible link between Mexican serrano chiles and a salmonella outbreak in the United States.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/0708/mexico/cofepris-niega-vinculo-de-lechugas-con-ciclosporiasis-en-ee-uu/",
-      "importance": 3,
-      "kind": "event",
-      "publishedAt": "2026-08-07T19:55:53.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Cofepris niega vínculo de lechugas con ciclosporiasis en EE.UU.",
-        "dek": "Las autoridades sanitarias mexicanas investigan un posible vínculo entre chiles serranos mexicanos y un brote de salmonela en Estados Unidos."
-      },
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/0708/mexico/cofepris-niega-vinculo-de-lechugas-con-ciclosporiasis-en-ee-uu/",
-          "publishedAt": "2026-08-07T19:55:53.000Z",
-          "date": "2026-08-07",
-          "title": "Cofepris denies Mexican lettuce link to US cyclosporiasis outbreak",
-          "summary": "Mexico's health regulator denied that lettuce was the source, though it is investigating a possible link between Mexican serrano chiles and a salmonella outbreak in the United States."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 0,
-        "durability": 0,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 3,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 0,
-            "score": 0,
             "status": "accepted"
           },
           "officialness": {

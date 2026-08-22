@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { askJSON, hasLLM } from './lib/anthropic.js';
+import { askJSON, hasLLM, models } from './lib/anthropic.js';
 import briefStanding from './lib/brief-standing.cjs';
 import { lintReportText, reportContextDistinct } from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
