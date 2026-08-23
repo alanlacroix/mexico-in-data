@@ -2,24 +2,24 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-22",
+    "updated": "2026-08-23",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-22T15:06:42.833Z",
-    "llm": false,
+    "generatedAt": "2026-08-23T13:07:28.343Z",
+    "llm": true,
     "curation": {
       "policy": "exact-day-assessment-v1",
-      "editorialDate": "2026-08-22",
+      "editorialDate": "2026-08-23",
       "candidateCount": 24,
-      "candidateSig": "03a7d63c560a6ae887f8a7788ea00d7b48854e3d124c99b60c10951a7735acfc",
-      "freshCandidateCount": 0,
+      "candidateSig": "f3e1a5bb9a5d47a5d33dbb3817d682bcee12b7402904c882a58215ff30f8b268",
+      "freshCandidateCount": 2,
       "assessedCount": 24,
-      "keptCount": 1,
+      "keptCount": 0,
       "rejectedCount": 0,
       "mode": "deterministic-fallback",
       "complete": true,
-      "reason": "model unavailable; conservative deterministic assessment used"
+      "reason": "model request unavailable; conservative deterministic assessment used"
     },
     "analysisTarget": {
       "policy": "every-selected-story-context-audited-v3",
@@ -43,7 +43,7 @@
         {
           "id": "n-mexican-migrant-job-losses-in-us-raise-remittance-ri-2026-08-20",
           "ready": false,
-          "reason": "no-llm"
+          "reason": "budget-unavailable"
         }
       ]
     }
@@ -189,7 +189,9 @@
           }
         },
         "componentSource": "deterministic-fallback-v1"
-      }
+      },
+      "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/nils-huenerfuerst-os3aXzC6Dy8-unsplash.jpg?h=c6577a3f&itok=I16whWMO",
+      "imgTries": 1
     },
     {
       "id": "n-morena-finabien-payments-2024-records-2026-08-20",
@@ -494,7 +496,9 @@
           "source": "SENASICA",
           "url": "https://www.gob.mx/agricultura/acciones-y-programas/gusano-barrenador-del-ganado-gbg-429472"
         }
-      ]
+      ],
+      "image": "https://rtnmedios.com/wp-content/uploads/2026/08/WhatsApp-Image-2026-08-19-at-3.52.55-PM.webp",
+      "imgTries": 1
     },
     {
       "id": "n-mexico-us-drones-antidrone-security-2026-08-17",
@@ -607,7 +611,8 @@
           "source": "US Congressional Research Service",
           "url": "https://www.congress.gov/crs-product/IF11480"
         }
-      ]
+      ],
+      "imgTries": 1
     },
     {
       "id": "n-manufacturing-employment-june-rebound-2026-08-17",
