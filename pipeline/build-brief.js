@@ -222,6 +222,9 @@ async function main() {
     const omitted = rankedIds.filter((id) => !pickedIds.includes(id));
     console.warn(`  ${omitted.length} selected ${omitted.length === 1 ? 'story' : 'stories'} held: Briefly Explained incomplete (${omitted.join(', ')})`);
   }
+  if (!selectionOnly && rankedPicked.length && !picked.length) {
+    throw new Error('selected reporting exists, but no story has a complete Briefly Explained unit');
+  }
   const selectedCounts = selection.policy === 'weekend-recap-v1'
     ? {
       weekend: picked.filter((event) => event._lane === 'weekend').length,

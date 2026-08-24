@@ -45,9 +45,10 @@ const EFFORT_MODELS = new Set([SONNET]);
 // Alan's ceiling is $5/month, hard. Estimates have been wrong twice this session,
 // so the ceiling is code: every call settles into a committed ledger
 // (data/llm-spend.json, pushed by the same CI steps that commit data/), and once
-// the balance reaches the cap—or cannot safely fit the next call—askJSON returns null. Every caller already
-// treats null as "keep last-good content" — the pipeline was built fail-soft, so
-// a capped month degrades to a slightly staler site, never a broken one.
+// the balance reaches the cap—or cannot safely fit the next call—askJSON returns null.
+// Optional callers keep last-good content. The daily Brief may use a complete local
+// assessment, but it must block publication when fresh reporting cannot be resolved;
+// model unavailability can never be relabelled as an editorially quiet day.
 // The guard opens again on the 1st. Manual override for debugging:
 // LLM_BUDGET_OVERRIDE=1.
 import fs from 'node:fs';
@@ -64,7 +65,20 @@ const CORE_RESERVE_USD = 2.5;
 const LEDGER = process.env.LLM_LEDGER_PATH
   || path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'data', 'llm-spend.json');
 
-const monthKey = () => new Date().toISOString().slice(0, 7);   // "2026-08"
+// Pace the fixed monthly allowance instead of treating all $5 as available on day one.
+// The old pooled cap was technically correct but operationally useless: repeated failed
+// publications spent almost the entire month by August 15, leaving the core product
+// unable to read Spanish reporting. Unused allowance still rolls forward inside the
+// month; only spending ahead of the calendar is refused.
+const budgetNow = () => new Date(process.env.LLM_BUDGET_DATE || Date.now());
+const monthKey = () => budgetNow().toISOString().slice(0, 7);   // "2026-08"
+function pacedBudgetLimit(priority = 'standard') {
+  const now = budgetNow();
+  const year = now.getUTCFullYear();
+  const month = now.getUTCMonth();
+  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  return budgetLimit(priority) * (now.getUTCDate() / daysInMonth);
+}
 function readLedger() {
   try { return JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch { return {}; }
 }
@@ -83,7 +97,7 @@ function budgetLimit(priority = 'standard') {
 }
 function overBudget(priority = 'standard') {
   if (process.env.LLM_BUDGET_OVERRIDE) return false;
-  return _budgetBlockedPriorities.has(priority) || spentThisMonth() >= budgetLimit(priority);
+  return _budgetBlockedPriorities.has(priority) || spentThisMonth() >= pacedBudgetLimit(priority);
 }
 const ENDPOINT = 'https://api.anthropic.com/v1/messages';
 
@@ -123,14 +137,18 @@ export const models = { SONNET, HAIKU };
 export function budgetStatus(priority = 'standard') {
   const spentUSD = spentThisMonth();
   const limitUSD = budgetLimit(priority);
+  const pacedLimitUSD = pacedBudgetLimit(priority);
   return {
     priority,
+    period: monthKey(),
     spentUSD,
     limitUSD,
+    pacedLimitUSD,
     remainingUSD: Math.max(0, limitUSD - spentUSD),
+    pacedRemainingUSD: Math.max(0, pacedLimitUSD - spentUSD),
     blockedThisRun: _budgetBlockedPriorities.has(priority),
     available: Boolean(process.env.LLM_BUDGET_OVERRIDE)
-      || (spentUSD < limitUSD && !_budgetBlockedPriorities.has(priority)),
+      || (spentUSD < pacedLimitUSD && !_budgetBlockedPriorities.has(priority)),
   };
 }
 
@@ -168,8 +186,10 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
   if (overBudget(priority)) {
     _budgetBlockedPriorities.add(priority);
     const status = budgetStatus(priority);
-    const reason = priority === 'core' ? 'monthly cap reached' : 'core Brief reserve reached';
-    console.warn(`  llm: ${reason} ($${status.spentUSD.toFixed(2)} of $${status.limitUSD.toFixed(2)}) — skipping ${priority} call`);
+    const reason = status.spentUSD >= status.limitUSD
+      ? 'monthly cap reached'
+      : `${priority} monthly pace reached`;
+    console.warn(`  llm: ${reason} ($${status.spentUSD.toFixed(2)} spent; $${status.pacedLimitUSD.toFixed(2)} available by today) — skipping ${priority} call`);
     return null;
   }
   const body = {
@@ -195,9 +215,9 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
   if (!process.env.LLM_BUDGET_OVERRIDE) {
     const status = budgetStatus(priority);
     const projectedUSD = projectedMaximumCost(body, modelId);
-    if (status.spentUSD + projectedUSD > status.limitUSD) {
+    if (status.spentUSD + projectedUSD > status.pacedLimitUSD) {
       _budgetBlockedPriorities.add(priority);
-      console.warn(`  llm: call could exceed ${priority} cap ($${status.spentUSD.toFixed(2)} spent + up to $${projectedUSD.toFixed(2)}; limit $${status.limitUSD.toFixed(2)}) — skipping`);
+      console.warn(`  llm: call could exceed ${priority} monthly pace ($${status.spentUSD.toFixed(2)} spent + up to $${projectedUSD.toFixed(2)}; $${status.pacedLimitUSD.toFixed(2)} available by today) — skipping`);
       return null;
     }
   }

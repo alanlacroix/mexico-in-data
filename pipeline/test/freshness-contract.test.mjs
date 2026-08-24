@@ -28,9 +28,22 @@ assert.equal(result.ok, true, 'one exhaustive exact-day receipt may certify the 
 
 result = curationReadiness({
   editorialDate: '2026-08-14', complete: true,
-  mode: 'deterministic-fallback', freshCandidateCount: 4, assessedCount: 4,
+  mode: 'deterministic-fallback', freshCandidateCount: 4, assessedCount: 4, keptCount: 0,
 }, '2026-08-14');
-assert.equal(result.ok, true,
-  'a conservative local assessment may certify a degraded edition when the model is unavailable');
+assert.equal(result.ok, false,
+  'unresolved fresh reporting must not be relabelled as a quiet editorial day');
+assert.match(result.reason, /could not be resolved/);
+
+result = curationReadiness({
+  editorialDate: '2026-08-14', complete: true,
+  mode: 'deterministic-fallback', freshCandidateCount: 0, assessedCount: 4, keptCount: 0,
+}, '2026-08-14');
+assert.equal(result.ok, true, 'a fallback may certify quiet only when there is no fresh reporting');
+
+result = curationReadiness({
+  editorialDate: '2026-08-14', complete: true,
+  mode: 'deterministic-fallback', freshCandidateCount: 2, assessedCount: 4, keptCount: 1,
+}, '2026-08-14');
+assert.equal(result.ok, true, 'a fallback may certify an edition when it retained a fresh report');
 
 console.log('freshness-contract tests: ok');

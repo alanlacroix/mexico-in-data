@@ -226,7 +226,13 @@ function scheduledObligation(x) {
 const JUNK_RX = /¿(qui[eé]n|c[óo]mo|qu[eé]|cu[áa]l)|vs\.?\s|los? m[áa]s (barat|car|vendid)|entre l[ao]s \d+ m[áa]s|la historia de|as[íi] (abre|cierra)|busca rescatar|(d[óo]lar|tipo de cambio) hoy|precio del d[óo]lar|recorte de expectativas|pase vip|saltar fila|\branking\b|paso a paso|hor[óo]scopo|receta|qu[eé] ver|streaming|nfl|nba|mlb|liga mx|fichaje|premios|celebr|tel[ei]nov|checa (las|los)|te decimos|aqu[íi] (los|las)/i;
 const RAW_HEADLINE_RX = /^[“"'‘].{0,100}[”"'’]:|\b(batman|mother courage|avenging|bombshell|nightmare|you won.t believe|shocking|stunning|slams?|blasts?)\b|\bmarks? the end\b|\b(?:tariff|crime|migration) wave\b|[!?]{2,}/i;
 function firstWholeSentence(text, max = 280) {
-  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  const clean = String(text || '')
+    // Wire copy often begins with an AP/Reuters dateline. It is not part of the fact,
+    // and the em dash used after it previously caused an otherwise usable English
+    // report to be quarantined when the model was unavailable.
+    .replace(/^[A-Z][A-Z .,'-]{2,40}\s+\((?:AP|REUTERS)\)\s*[—-]\s*/i, '')
+    .replace(/\s*[—–]\s*/g, ', ')
+    .replace(/\s+/g, ' ').trim();
   const match = clean.match(/^(.{30,280}?[.!?])(?:\s|$)/);
   if (match && match[1].length <= max) return match[1];
   return clean.length <= max && /[.!?]$/.test(clean) ? clean : '';

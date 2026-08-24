@@ -10,6 +10,7 @@ const { evidenceInputs } = require('../lib/report-evidence.cjs');
 const { mergeApprovedAttempt } = require('../lib/analysis-attempts.cjs');
 const interests = require('../../data/interests.json');
 const happeningBuilder = fs.readFileSync(new URL('../build-happening.js', import.meta.url), 'utf8');
+const briefBuilder = fs.readFileSync(new URL('../build-brief.js', import.meta.url), 'utf8');
 
 const story = (id, ready = false) => ({
   refs: [id],
@@ -65,6 +66,9 @@ assert.match(happeningBuilder, /auditCompleted[\s\S]*initiated[\s\S]*preliminary
   'a separate evidence editor must check the status and procedural stage before publication');
 assert.match(happeningBuilder, /const request = \(batch, effort, maxTokens\) => askJSON\(\{[\s\S]*?model: models\.HAIKU,[\s\S]*?priority: 'core'/,
   'evidence-locked drafting must use the bounded model tier so daily all-story coverage fits the monthly cap');
+assert.match(briefBuilder,
+  /rankedPicked\.length && !picked\.length[\s\S]*selected reporting exists, but no story has a complete Briefly Explained unit/,
+  'a failed explanation pass must block publication instead of converting found reporting into a quiet edition');
 
 assert.deepEqual(
   mergeApprovedAttempt(

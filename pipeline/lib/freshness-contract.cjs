@@ -14,6 +14,14 @@ function curationReadiness(receipt, editorialDate, options = {}) {
   if (receipt.complete !== true) {
     return { ok: false, legacy: false, reason: clean(receipt.reason) || 'fresh candidates were not fully assessed' };
   }
+  // A model-free pass may safely certify a genuinely empty feed, or publish facts it
+  // could process. It may not turn unreadable fresh reporting into an editorial claim
+  // that nothing happened. That exact false success produced the empty Aug. 24 Brief.
+  if (clean(receipt.mode) === 'deterministic-fallback'
+      && Number(receipt.freshCandidateCount) > 0
+      && Number(receipt.keptCount) === 0) {
+    return { ok: false, legacy: false, reason: 'fresh reporting exists but could not be resolved without the model' };
+  }
   return { ok: true, legacy: false, reason: '' };
 }
 

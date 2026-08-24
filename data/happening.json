@@ -6,20 +6,20 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-24T13:27:08.198Z",
-    "llm": true,
+    "generatedAt": "2026-08-24T16:24:23.000Z",
+    "llm": false,
     "curation": {
       "policy": "exact-day-assessment-v1",
       "editorialDate": "2026-08-24",
       "candidateCount": 24,
-      "candidateSig": "f711de27ad792b5e98f67111a2e441f0863e566dddac5283b9cda68e05c44693",
+      "candidateSig": "f70418721a6240a83855d6f7f9422dc1792e055ed692d038405d0653931efc8f",
       "freshCandidateCount": 3,
       "assessedCount": 24,
-      "keptCount": 0,
       "rejectedCount": 0,
-      "mode": "deterministic-fallback",
+      "keptCount": 1,
+      "mode": "manual-source-review",
       "complete": true,
-      "reason": "model request unavailable; conservative deterministic assessment used"
+      "reason": "one current development retained after direct source review"
     }
   },
   "events": [
@@ -4374,72 +4374,90 @@
       }
     },
     {
-      "id": "n-mantiene-hacienda-alto-el-apoyo-fiscal-para-el-di-se-2026-08-07",
-      "date": "2026-08-07",
-      "section": "economy",
-      "title": "Mexico maintains high fuel tax subsidy for diesel at 65%",
-      "why": "The Finance Ministry continued an elevated IEPS discount for diesel fuel in the coming week, reflecting ongoing support for transport-dependent sectors amid inflation pressures.",
+      "id": "n-sheinbaum-sinaloa-interim-governor-october-2027-2026-08-24",
+      "date": "2026-08-24",
+      "section": "politics",
+      "title": "Sheinbaum says Sinaloa's interim governor should serve through October 2027",
+      "why": "Sinaloa's Congress is due to name a replacement Monday after granting Rubén Rocha Moya a second indefinite leave. Rocha had returned to office for about a day and a half while facing a US criminal case.",
       "company": "",
-      "source": "Energía a Debate",
-      "url": "https://energiaadebate.com/mantiene-hacienda-alto-el-apoyo-fiscal-para-el-diesel/",
-      "importance": 3,
+      "source": "El País",
+      "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html",
+      "importance": 8,
       "kind": "event",
-      "publishedAt": "2026-08-08T02:33:55.000Z",
-      "sourceTier": "specialist",
+      "publishedAt": "2026-08-24T15:26:00.000Z",
+      "sourceTier": 1,
       "reportEvidence": {
-        "title": "Mantiene Hacienda alto el apoyo fiscal para el diésel",
-        "dek": "Para la semana que entra, Hacienda concederá un descuento de 65 % al IEPS aplicable al diésel"
+        "title": "Sheinbaum, sobre el regreso de Rocha Moya: 'No me parecía pertinente, por decir lo menos'",
+        "dek": "La presidenta afirmó que la persona designada como gobernadora interina debe permanecer en el cargo hasta el 31 de octubre de 2027. El Congreso de Sinaloa debe elegir a la sustituta o sustituto tras la segunda licencia indefinida de Rocha."
       },
       "coverage": [
         {
-          "source": "Energía a Debate",
-          "url": "https://energiaadebate.com/mantiene-hacienda-alto-el-apoyo-fiscal-para-el-diesel/",
-          "publishedAt": "2026-08-08T02:33:55.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico maintains high fuel tax subsidy for diesel at 65%",
-          "summary": "The Finance Ministry continued an elevated IEPS discount for diesel fuel in the coming week, reflecting ongoing support for transport-dependent sectors amid inflation pressures."
+          "source": "El País",
+          "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html",
+          "publishedAt": "2026-08-24T15:26:00.000Z",
+          "date": "2026-08-24",
+          "title": "Sheinbaum says Sinaloa's interim governor should serve through October 2027",
+          "summary": "Sinaloa's Congress is due to name a replacement Monday after granting Rubén Rocha Moya a second indefinite leave."
+        },
+        {
+          "source": "Associated Press",
+          "url": "https://apnews.com/article/8daea70ca6c4148b65ab3acf2d81c6ee",
+          "publishedAt": "2026-08-23T18:00:00.000Z",
+          "date": "2026-08-23",
+          "title": "Mexican governor indicted by US seeks leave again after contentious return to office",
+          "summary": "Rocha sought a second indefinite leave about a day and a half after returning to office."
         }
       ],
       "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
         "modelImpact": 0,
-        "durability": 1,
-        "officialness": 1
+        "durability": 2,
+        "officialness": 2
       },
       "importanceProvenance": {
         "rubricVersion": "five-component-v1",
-        "calculatedTotal": 3,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
+        "calculatedTotal": 8,
+        "reportedTotal": null,
+        "componentSource": "manual-source-review"
+      },
+      "background": "Sinaloa's constitution requires Congress to appoint an interim governor when an absence lasts more than 30 days. The appointment requires an absolute majority.",
+      "view": "The second leave turns a brief return into a longer succession decision. If Congress appoints someone through October 2027, that person, not Rocha, will run the state while the US case proceeds.",
+      "prediction": "Congress's appointment will show whether the handover lasts through October 2027. A shorter term would leave the succession open.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "primary:sinaloa-constitution"
+        ],
+        "view": [
+          "article",
+          "report:ap"
+        ],
+        "prediction": [
+          "article",
+          "primary:sinaloa-constitution"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El País",
+          "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html"
         },
-        "reportedTotal": 5,
-        "componentSource": "model"
-      }
+        {
+          "id": "report:ap",
+          "kind": "report",
+          "source": "Associated Press",
+          "url": "https://apnews.com/article/8daea70ca6c4148b65ab3acf2d81c6ee"
+        },
+        {
+          "id": "primary:sinaloa-constitution",
+          "kind": "primary",
+          "source": "Congress of Sinaloa",
+          "url": "https://iip.congresosinaloa.gob.mx/docs/ref_le/007/089.pdf"
+        }
+      ]
     }
   ]
 }
