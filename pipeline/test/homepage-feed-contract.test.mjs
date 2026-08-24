@@ -263,11 +263,21 @@ assert.ok(nowBoard.every((item) => !/atlas/i.test(item.href || '')), 'no number 
 assert.ok(nowBoard.filter((item) => item.id !== 'banxico-usdmxn-fix').every((item) => item.actionLabel === 'Open source' && item.external), 'non-peso number cards must open their official sources');
 assert.equal(nowBoard.find((item) => item.id === 'banxico-tasa-objetivo')?.updateLabel, 'Can change at policy meetings', 'the policy rate must not imply that it changes daily');
 
-// The homepage has two rooms: what changed since yesterday, and what is true. A number
+// The homepage has two rooms: a weekly market check, and what is true. A number
 // belongs to exactly one of them, and the daily strip may only carry series that a
 // trading day actually moves. A monthly reading up there would be a lie of placement.
 assert.ok(boards.today.length >= 4, 'the daily strip needs enough numbers to read as a strip');
 assert.ok(boards.today.every((item) => item.cadence === 'daily'), 'the daily strip must only carry series that move on a trading day');
+assert.ok(boards.today.every((item) => item.comparisonDate && Number.isFinite(Number(item.moveValue))),
+  'every market tile must have a real seven-day reference and change');
+assert.ok(boards.today.every((item) => {
+  const days = Math.round((Date.parse(item.date) - Date.parse(item.comparisonDate)) / 86_400_000);
+  return days >= 5 && days <= 9;
+}), 'the market comparison must stay close to seven calendar days across weekends and holidays');
+assert.ok(boards.today.every((item) => /seven days earlier/i.test(item.compare)),
+  'the expanded market explanation must name its comparison window');
+assert.ok(feed.numbers.every((item) => /^7D (?:[↑↓→] |—)/.test(item.delta)),
+  'every market delta must visibly identify the seven-day window');
 assert.ok(boards.economy.every((item) => item.cadence !== 'daily'), 'the economy board must not repeat a daily series');
 assert.equal(
   boards.today.filter((item) => boards.economy.some((other) => other.id === item.id)).length, 0,

@@ -87,10 +87,15 @@ const monthName = (iso) => {
     : d.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long' });
 };
 
-// A polyline over the last 30 observations, normalised into the handoff's 0 0 100 26 box
-// with y inverted. Flat series collapse to the middle rather than dividing by zero.
-const sparkline = (series, count = 30) => {
-  const rows = (series || []).slice(-count).filter((r) => Number.isFinite(Number(r.value)));
+// A polyline over the last 30 calendar days, normalised into the handoff's
+// 0 0 100 26 box with y inverted. Calling 30 trading observations "30 days"
+// quietly overstated the range by about two weeks.
+const sparkline = (series, days = 30) => {
+  const clean = (series || []).filter((r) => Number.isFinite(Number(r.value)) && !Number.isNaN(Date.parse(r.date)));
+  const newest = clean.at(-1);
+  const cutoff = newest ? Date.parse(newest.date) - (days - 1) * 86_400_000 : 0;
+  const window = clean.filter((r) => Date.parse(r.date) >= cutoff);
+  const rows = window.length >= 2 ? window : clean.slice(-days);
   if (rows.length < 2) return '';
   const values = rows.map((r) => Number(r.value));
   const low = Math.min(...values), high = Math.max(...values), span = high - low;
@@ -129,10 +134,7 @@ function buildFeed(locale = 'en') {
   // ---- Numbers -------------------------------------------------------------
   const numbers = board.today.map((card) => {
     const rows = seriesOf(card.id);
-    const latest = rows.at(-1), prior = rows.at(-2);
-    const change = latest && prior ? Number(latest.value) - Number(prior.value) : null;
-    const pct = latest && prior && Number(prior.value) !== 0
-      ? (Number(latest.value) / Number(prior.value) - 1) * 100 : null;
+    const change = Number.isFinite(Number(card.moveValue)) ? Number(card.moveValue) : null;
     const rule = VERDICT[card.id];
     const band = FLAT_BAND[card.id];
     let tag = FLAT[0], mood = FLAT[1];
@@ -145,7 +147,7 @@ function buildFeed(locale = 'en') {
       value: card.display,
       unit: card.unit,
       asOf: card.observed,
-      delta: card.delta || card.move,
+      delta: card.delta ? `7D ${card.delta}` : '7D —',
       tag, mood, tone: TONE[mood],
       points: sparkline(rows),
       // Meaning first, arithmetic second. The meaning line is hand-written once

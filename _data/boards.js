@@ -1,7 +1,7 @@
 // boards.js — splits the number set into the homepage's two rooms.
 //
-// Top of the page is what changed since yesterday, so it only carries series that
-// genuinely move on a trading day. Bottom of the page is what is true, so it
+// Top of the page is a weekly market check, so it only carries series that
+// genuinely move through the week. Bottom of the page is what is true, so it
 // carries the monthly and meeting-cadence readings that deserve a sentence.
 // A number appears in exactly one room. Order here is the order on the page.
 
@@ -23,10 +23,8 @@ const ECONOMY = [
   'banxico-remesas',
 ];
 
-// A strip headed "Today" has to say when its readings are actually from. Markets close
-// on different days and the fuel average refreshes through the day, so these five rarely
-// share one vintage. The block states the newest date it holds, and any reading older
-// than that carries its own date, so the shared line can never paper over a mixed set.
+// Markets close on different days and the fuel average refreshes through the day, so
+// these five rarely share one vintage. Each tile always carries its own observation date.
 const dayLabel = (iso) => {
   const parsed = new Date(`${iso}T12:00:00Z`);
   return Number.isNaN(parsed.getTime()) ? iso

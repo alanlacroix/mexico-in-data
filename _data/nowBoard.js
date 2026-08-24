@@ -11,6 +11,21 @@ const readSeries = (id) => {
 
 const latest = (series) => series && series.data.at(-1);
 const previous = (series) => series && series.data.at(-2);
+const DAY_MS = 86_400_000;
+// Markets do not all publish on the same calendar. Compare each latest reading with
+// the observation closest to seven calendar days earlier, so weekends and holidays
+// do not turn a Friday close into a misleading "daily" move on Monday.
+const weekAgo = (series) => {
+  const current = latest(series);
+  if (!current) return null;
+  const target = Date.parse(current.date) - 7 * DAY_MS;
+  let best = null, distance = Infinity;
+  for (const row of series.data.slice(0, -1)) {
+    const nextDistance = Math.abs(Date.parse(row.date) - target);
+    if (nextDistance < distance) { best = row; distance = nextDistance; }
+  }
+  return distance <= 3 * DAY_MS ? best : null;
+};
 const yearAgo = (series) => {
   const current = latest(series);
   if (!current) return null;
@@ -30,25 +45,26 @@ const number = (value, digits = 2) => Number(value).toLocaleString('en-US', {
 const movementFromPrior = (value) => value === 0
   ? 'Unchanged from the prior reading'
   : `${number(Math.abs(value), 2)} pp ${value > 0 ? 'higher' : 'lower'} than the prior reading`;
+const movementFromWeek = (value) => value === 0
+  ? 'Unchanged from seven days earlier'
+  : `${number(Math.abs(value), 2)} pp ${value > 0 ? 'higher' : 'lower'} than seven days earlier`;
 const percentVsYear = (value, higher, lower) => value === 0
   ? 'Unchanged from a year ago'
   : `${number(Math.abs(value), 1)}% ${value > 0 ? higher : lower} than a year ago`;
-const percentFromPrior = (value) => value === 0
-  ? 'Unchanged from the prior reading'
-  : `${number(Math.abs(value), 2)}% ${value > 0 ? 'higher' : 'lower'} than the prior reading`;
+const percentFromWeek = (value, higher = 'higher', lower = 'lower') => value === 0
+  ? 'Unchanged from seven days earlier'
+  : `${number(Math.abs(value), 2)}% ${value > 0 ? higher : lower} than seven days earlier`;
 const relativeTo = (value, reference) => value === 0
   ? `In line with ${reference}`
   : `${number(Math.abs(value), 2)} pp ${value > 0 ? 'above' : 'below'} ${reference}`;
-// The daily strip prints the change as a short signed figure rather than a sentence:
-// the sentences there were pure comparison, and a delta cannot wrap on a phone the way
-// "0.16% lower than the prior reading" does. Where a line carries a driver rather than a
-// comparison it keeps its words: `move` and `compare` are untouched.
+// The market strip prints the seven-day change as a short signed figure rather than a
+// sentence, so it stays readable on a phone.
 // Direction is stated three ways that all say the same thing: an arrow, a sign, and the
 // word in the comparison line. None of them is colour, because colour on these would be
 // read as good and bad, and a falling MXN/US$ is the peso getting stronger.
 const arrow = (value) => value > 0 ? '↑' : value < 0 ? '↓' : '→';
-const signedPercent = (value) => value === 0 ? 'No change' : `${arrow(value)} ${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)}%`;
-const signedPoints = (value) => value === 0 ? 'No change' : `${arrow(value)} ${value > 0 ? '+' : '−'}${number(Math.abs(value), 2)} pp`;
+const signedPercent = (value) => `${arrow(value)} ${value > 0 ? '+' : value < 0 ? '−' : ''}${number(Math.abs(value), 2)}%`;
+const signedPoints = (value) => `${arrow(value)} ${value > 0 ? '+' : value < 0 ? '−' : ''}${number(Math.abs(value), 2)} pp`;
 const percentChange = (current, prior) => prior ? (current / prior - 1) * 100 : null;
 const sourceAction = (series) => {
   const href = series?.meta?.sourceUrl || '/';
@@ -84,58 +100,58 @@ module.exports = function () {
   const cards = [];
 
   if (peso) {
-    const current = latest(peso), prior = previous(peso), priorYear = yearAgo(peso);
-    const change = percentChange(current.value, priorYear?.value);
-    const dayChange = percentChange(current.value, prior?.value);
+    const current = latest(peso), reference = weekAgo(peso);
+    const change = percentChange(current.value, reference?.value);
     cards.push({ id: peso.id, label: 'Peso', display: number(current.value), unit: 'MXN/US$',
-      compare: change == null ? 'Latest official fixing' : percentVsYear(change, 'weaker', 'stronger'),
-      move: dayChange == null ? 'Latest official fixing' : percentFromPrior(dayChange),
-      delta: dayChange == null ? null : signedPercent(dayChange),
+      compare: change == null ? 'Latest official fixing' : percentFromWeek(change, 'weaker', 'stronger'),
+      delta: change == null ? null : signedPercent(change), moveValue: reference ? current.value - reference.value : null,
+      comparisonDate: reference?.date || null,
       date: current.date, cadence: 'daily', dateLead: 'Official fixing', updateLabel: 'New fixing each trading day',
       source: 'Banco de México', href: LIVE_PESO_URL, actionLabel: 'Open live quote', external: true });
   }
 
   // Station-level national average, refreshed every four hours. The most felt number here.
   if (fuel) {
-    const current = latest(fuel), prior = previous(fuel);
-    const dayChange = percentChange(current.value, prior?.value);
+    const current = latest(fuel), reference = weekAgo(fuel);
+    const change = percentChange(current.value, reference?.value);
     cards.push({ id: fuel.id, label: 'Gasoline', display: number(current.value), unit: 'MXN/L',
-      compare: dayChange == null ? 'Latest national average' : percentFromPrior(dayChange),
-      delta: dayChange == null ? null : signedPercent(dayChange),
+      compare: change == null ? 'Latest national average' : percentFromWeek(change, 'more expensive', 'cheaper'),
+      delta: change == null ? null : signedPercent(change), moveValue: reference ? current.value - reference.value : null,
+      comparisonDate: reference?.date || null,
       date: current.date, cadence: 'daily', dateLead: 'National average', updateLabel: 'Refreshed through the day',
       source: 'Mexico energy regulator', ...sourceAction(fuel) });
   }
 
   if (cetes) {
-    const current = latest(cetes), prior = previous(cetes), rateNow = latest(rate);
-    const gap = rateNow ? current.value - rateNow.value : null;
+    const current = latest(cetes), reference = weekAgo(cetes);
+    const change = reference ? current.value - reference.value : null;
     cards.push({ id: cetes.id, label: 'Cetes 28-day', display: number(current.value), unit: '%',
-      compare: gap == null ? 'Latest yield' : relativeTo(gap, 'the policy rate'),
-      move: prior ? movementFromPrior(current.value - prior.value) : 'Latest yield',
-      delta: prior ? signedPoints(current.value - prior.value) : null,
+      compare: change == null ? 'Latest yield' : movementFromWeek(change),
+      delta: change == null ? null : signedPoints(change), moveValue: change,
+      comparisonDate: reference?.date || null,
       date: current.date, cadence: 'daily', dateLead: 'Latest yield', updateLabel: 'New reading each trading day',
       source: 'Banco de México', ...sourceAction(cetes) });
   }
 
   // Not a Mexican number, but on most days it is why the peso moved.
   if (ust10) {
-    const current = latest(ust10), prior = previous(ust10), priorYear = yearAgo(ust10);
+    const current = latest(ust10), reference = weekAgo(ust10);
+    const change = reference ? current.value - reference.value : null;
     cards.push({ id: ust10.id, label: 'US 10-year', display: number(current.value), unit: '%',
-      compare: priorYear ? relativeTo(current.value - priorYear.value, 'a year ago') : 'Latest close',
-      move: prior ? movementFromPrior(current.value - prior.value) : 'Latest close',
-      delta: prior ? signedPoints(current.value - prior.value) : null,
+      compare: change == null ? 'Latest close' : movementFromWeek(change),
+      delta: change == null ? null : signedPoints(change), moveValue: change,
+      comparisonDate: reference?.date || null,
       date: current.date, cadence: 'daily', dateLead: 'Latest close', updateLabel: 'New close each trading day',
       source: 'US Federal Reserve', ...sourceAction(ust10) });
   }
 
   if (ipc) {
-    const current = latest(ipc), prior = previous(ipc), priorYear = yearAgo(ipc);
-    const change = percentChange(current.value, priorYear?.value);
-    const dayChange = percentChange(current.value, prior?.value);
+    const current = latest(ipc), reference = weekAgo(ipc);
+    const change = percentChange(current.value, reference?.value);
     cards.push({ id: ipc.id, label: 'Stock market', display: number(current.value, 0), unit: 'IPC',
-      compare: change == null ? 'Latest close' : percentVsYear(change, 'higher', 'lower'),
-      move: dayChange == null ? 'Latest close' : percentFromPrior(dayChange),
-      delta: dayChange == null ? null : signedPercent(dayChange),
+      compare: change == null ? 'Latest close' : percentFromWeek(change),
+      delta: change == null ? null : signedPercent(change), moveValue: reference ? current.value - reference.value : null,
+      comparisonDate: reference?.date || null,
       date: current.date, cadence: 'daily', dateLead: 'Latest close', updateLabel: 'New close each trading day',
       source: 'Banco de México', ...sourceAction(ipc) });
   }

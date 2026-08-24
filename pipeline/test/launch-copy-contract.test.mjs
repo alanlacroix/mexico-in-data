@@ -27,19 +27,16 @@ assert.match(
   'homepage must remain a dated daily starting point and expose the edition date to the stale-content guard',
 );
 assert.doesNotMatch(home, /since your last visit/i, 'homepage must not pretend to track a reader visit');
-// The page is now grouped by timeframe (Alan, 2026-08-02): the brief, the numbers and
-// the day's headlines are one "Today" section, because they all describe today. The
-// guarantee is unchanged: the daily readings lead, and the slower official ones keep a
-// separate room further down.
-assert.match(home, /data-sec="What moved"/, 'homepage must lead with the readings that move on a trading day');
-// The literal string moved into _data/uiStrings.js when the homepage went bilingual
-// (2026-08-03); the promise — comparison window in the title — is asserted there,
-// in both languages, since that file is now the single source of the heading.
+// The market strip shows the current known reading for each source. Its explicit
+// seven-day comparison stays useful across weekends without pretending every market
+// published on the edition date.
+assert.match(home, /data-sec="Market check"/, 'homepage must retain the weekly market check');
 {
   const ui = text('_data/uiStrings.js');
-  assert.match(ui, /What moved since the day before/, 'the comparison window belongs in the EN title, not a legend');
-  assert.match(ui, /Qué se movió desde el día anterior/, 'the comparison window belongs in the ES title, not a legend');
+  assert.match(ui, /Market check[\s\S]*Latest available · 7-day change · 30-day line/, 'EN must explain the three time references');
+  assert.match(ui, /Pulso de mercados[\s\S]*Último dato · cambio a 7 días · línea de 30 días/, 'ES must explain the three time references');
   assert.match(home, /\{\{ L\.moved \}\}/, 'the homepage must render the shared heading');
+  assert.match(home, /class="tile-date">\{\{ n\.asOf \}\}/, 'each market tile must print its own observation date');
 }
 // Same bilingual move as above: the heading lives in uiStrings, the room in the template.
 assert.match(home, /data-sec="The economy"/, 'the slower official readings must keep their own room below the news');

@@ -190,9 +190,9 @@ bodyClass: feed-page
     </div>
   </section>
 
-  {% if f.numbers.length %}<section class="feed-sec" id="sec-numbers" data-sec="What moved">
+  {% if f.numbers.length %}<section class="feed-sec" id="sec-numbers" data-sec="Market check">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.moved }}</h2><div class="sec-meta">{{ L.line30 }}</div></div>
+    <div class="sec-head"><h2>{{ L.moved }}</h2><div class="sec-meta">{{ L.marketMeta }}</div></div>
     <div class="tiles">
       {%- for n in f.numbers %}
       <div class="tile-cell">
