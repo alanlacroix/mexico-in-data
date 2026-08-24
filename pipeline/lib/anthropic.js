@@ -42,7 +42,7 @@ const KEY = process.env.ANTHROPIC_API_KEY || '';
 const EFFORT_MODELS = new Set([SONNET]);
 
 // ---- The budget, enforced rather than hoped for -----------------------------
-// Alan's ceiling is $5/month, hard. Estimates have been wrong twice this session,
+// Alan's ceiling is $6/month, hard. Estimates have been wrong twice this session,
 // so the ceiling is code: every call settles into a committed ledger
 // (data/llm-spend.json, pushed by the same CI steps that commit data/), and once
 // the balance reaches the cap—or cannot safely fit the next call—askJSON returns null.
@@ -55,25 +55,30 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const MONTHLY_CAP_USD = 5.0;
+const MONTHLY_CAP_USD = 6.0;
 // Preserve most of the small budget for the two jobs that define the product:
 // selecting the Brief and explaining its top stories. Translation, topic synthesis
 // and other fail-soft polish stop first. This changes allocation, never Alan's cap.
-const CORE_RESERVE_USD = 2.5;
+const CORE_RESERVE_USD = 3.0;
 // LLM_LEDGER_PATH redirects the ledger so a test can exercise the real settle path
 // without spending against Alan's actual monthly cap. Only tests set it.
 const LEDGER = process.env.LLM_LEDGER_PATH
   || path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'data', 'llm-spend.json');
 
-// Pace the fixed monthly allowance instead of treating all $5 as available on day one.
+// Pace the fixed monthly allowance instead of treating all $6 as available on day one.
 // The old pooled cap was technically correct but operationally useless: repeated failed
 // publications spent almost the entire month by August 15, leaving the core product
 // unable to read Spanish reporting. Unused allowance still rolls forward inside the
 // month; only spending ahead of the calendar is refused.
 const budgetNow = () => new Date(process.env.LLM_BUDGET_DATE || Date.now());
 const monthKey = () => budgetNow().toISOString().slice(0, 7);   // "2026-08"
+// The ceiling changed with one week left in August. Make the newly approved difference
+// usable now without rewriting the real spend ledger; pacing begins with the first full
+// $6 month and remains the normal rule after that.
+const PACE_START_MONTH = '2026-09';
 function pacedBudgetLimit(priority = 'standard') {
   const now = budgetNow();
+  if (now.toISOString().slice(0, 7) < PACE_START_MONTH) return budgetLimit(priority);
   const year = now.getUTCFullYear();
   const month = now.getUTCMonth();
   const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
@@ -111,7 +116,7 @@ const WEB_SEARCH_REQUEST_USD = 0.01;
 
 // Refuse a call before sending it when its worst-case token bill could cross the
 // applicable limit. Checking only the settled ledger lets the final call overshoot:
-// $4.99 is technically under a $5 cap, but it is not enough room for another request.
+// $5.99 is technically under a $6 cap, but it is not enough room for another request.
 // UTF-8 bytes are a conservative ceiling for input tokens; the extra 1,024-token
 // allowance covers provider framing that is not represented in our JSON body.
 function projectedMaximumCost(body, modelId) {
