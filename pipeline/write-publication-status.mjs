@@ -18,10 +18,52 @@ const slot = process.env.PUBLICATION_SLOT;
 const editorialDate = process.env.PUBLICATION_DATE;
 const publicationId = process.env.PUBLICATION_ID;
 const deployAttempt = Number(process.env.DEPLOY_ATTEMPT || 1);
+const state = process.env.PUBLICATION_STATE || 'published';
+const reason = String(process.env.PUBLICATION_REASON || '').trim();
 
 if (slot !== 'morning') throw new Error(`Invalid publication slot: ${slot || '(missing)'}`);
 if (!/^\d{4}-\d{2}-\d{2}$/.test(editorialDate || '')) throw new Error(`Invalid publication date: ${editorialDate || '(missing)'}`);
 if (!publicationId) throw new Error('PUBLICATION_ID is required');
+if (!['published', 'deferred', 'blocked'].includes(state)) throw new Error(`Invalid publication state: ${state}`);
+
+// One receipt owns publication coordination. A content deferral keeps retrying on the
+// normal hourly schedule; a code/infrastructure block stops automatic retries until a
+// forced recovery. Neither state may certify the partially generated files in this
+// worktree as public content, so both retain the last published content date.
+if (state !== 'published') {
+  const prior = (() => {
+    try { return JSON.parse(fs.readFileSync(statusPath, 'utf8')); }
+    catch { return {}; }
+  })();
+  const next = {
+    schemaVersion: 1,
+    state,
+    editorialDate,
+    contentEditorialDate: prior.contentEditorialDate || prior.editorialDate || null,
+    slot,
+    publicationId,
+    deployAttempt,
+    generatedAt: new Date().toISOString(),
+    contentGeneratedAt: prior.contentGeneratedAt || prior.briefGeneratedAt || prior.generatedAt || null,
+    reason: reason || (state === 'deferred'
+      ? 'a complete edition is not ready yet'
+      : 'publication failed before a valid edition was produced'),
+    workflowRunId: process.env.GITHUB_RUN_ID || null,
+    workflowRunAttempt: Number(process.env.GITHUB_RUN_ATTEMPT || 1),
+  };
+  const priorIsCurrentPublication = prior.editorialDate === editorialDate
+    && (!prior.state || prior.state === 'published');
+  const status = priorIsCurrentPublication
+    ? prior
+    : prior.state === state
+    && prior.editorialDate === editorialDate
+    && prior.reason === next.reason
+    ? prior
+    : next;
+  fs.writeFileSync(statusPath, `${JSON.stringify(status, null, 2)}\n`);
+  console.log(`publication receipt: ${editorialDate} ${slot} ${status.publicationId || publicationId} ${status.state || 'published'}${priorIsCurrentPublication ? ' (retained)' : ''}`);
+  process.exit(0);
+}
 
 const brief = JSON.parse(fs.readFileSync(briefPath, 'utf8'));
 const happening = JSON.parse(fs.readFileSync(happeningPath, 'utf8'));

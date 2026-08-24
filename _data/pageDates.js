@@ -36,11 +36,14 @@ module.exports = function () {
       return {};
     }
   })();
-  const editionAt = receipt.generatedAt || new Date().toISOString();
+  const editionAt = receipt.state && receipt.state !== 'published'
+    ? (receipt.contentGeneratedAt || receipt.briefGeneratedAt || receipt.generatedAt)
+    : receipt.generatedAt;
+  const publishedAt = editionAt || new Date().toISOString();
 
   const out = {
-    '/': { modified: editionAt, published: editionAt, daily: true },
-    '/es/': { modified: editionAt, published: editionAt, daily: true },
+    '/': { modified: publishedAt, published: publishedAt, daily: true },
+    '/es/': { modified: publishedAt, published: publishedAt, daily: true },
   };
   return out;
 };

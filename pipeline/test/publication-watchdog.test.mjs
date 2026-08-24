@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {
   dueEdition,
   publicationCoversEdition,
+  publicationStopsRecovery,
   recentActiveRun,
   recoveryThrottle,
   watchdogDecision,
@@ -37,6 +38,22 @@ assert.equal(
   ),
   true,
   'an afternoon receipt also covers the morning edition',
+);
+assert.equal(
+  publicationCoversEdition(
+    { state: 'deferred', editorialDate: '2026-07-31', slot: 'morning' },
+    { editorialDate: '2026-07-31', slot: 'morning' },
+  ),
+  false,
+  'a deferral is not a published edition',
+);
+assert.equal(
+  publicationStopsRecovery(
+    { state: 'deferred', editorialDate: '2026-07-31', slot: 'morning' },
+    { editorialDate: '2026-07-31', slot: 'morning' },
+  ),
+  true,
+  'a current deferral must let the normal hourly publisher retry without a duplicate watchdog dispatch',
 );
 assert.equal(
   publicationCoversEdition(
@@ -88,6 +105,18 @@ assert.deepEqual(
   {
     action: 'none',
     reason: 'publication is current',
+    due: { editorialDate: '2026-07-31', slot: 'morning' },
+  },
+);
+
+assert.deepEqual(
+  watchdogDecision({
+    now: morningDue,
+    status: { state: 'blocked', editorialDate: '2026-07-31', slot: 'morning' },
+  }),
+  {
+    action: 'none',
+    reason: 'publication is blocked',
     due: { editorialDate: '2026-07-31', slot: 'morning' },
   },
 );

@@ -60,130 +60,54 @@ jobs:
         if: steps.timing.outputs.run == 'true'
         run: npm ci
 
-      - name: Refresh the news ledger
+      - name: Produce and validate one atomic edition
         if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
-        run: node collect-news.js
-
-      - name: Build the event log
-        if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
+        id: edition
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        # Selection must happen before explanation work. Otherwise this step guesses
-        # which five stories will matter, spends the analysis slots, and can miss the
-        # exact stories the Brief chooses a few seconds later.
-        run: node build-happening.js --skip-analysis --resume-current-edition
-
-      - name: Reconcile scheduled outcomes
-        if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
-        env:
-          EDITORIAL_DATE: ${{ steps.timing.outputs.editorial_date }}
-        run: node reconcile-scheduled-events.mjs
-
-      - name: Lock the homepage story selection
-        if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
-        run: node build-brief.js --selection-only
-
-      - name: Explain the stories that were actually selected
-        if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node build-happening.js --analysis-for-brief
-
-      - name: Build the homepage brief
-        if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node build-brief.js
-
-      - name: Require a complete English Brief before optional translation
-        if: steps.timing.outputs.run == 'true'
-        run: node pipeline/assert-data.js
-
-      - name: Translate the new edition for /es/
-        if: steps.timing.outputs.run == 'true'
-        working-directory: pipeline
-        continue-on-error: true   # a miss carries the last complete Spanish Brief; it never mixes languages
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node translate-es.mjs --critical
-
-      - name: Validate generated editorial claims
-        if: steps.timing.outputs.run == 'true'
-        run: |
-          node pipeline/assert-data.js
-          node pipeline/test/homepage-feed-contract.test.mjs
-
-      - name: Write this edition's publication receipt
-        if: steps.timing.outputs.run == 'true'
-        env:
           PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
           PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
           PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
-        run: node pipeline/write-publication-status.mjs
+        run: node pipeline/publish-edition.mjs
 
-      - name: Build and validate the exact production artifact
+      - name: Commit the one publication result
         if: steps.timing.outputs.run == 'true'
-        run: npm run release
-
-      # One failed run records a durable circuit breaker. Normal hourly schedules then
-      # exit successfully instead of repeating the same failure and email. The external
-      # watchdog still gets one forced recovery attempt; a successful publication clears
-      # the marker in the final atomic commit.
-      - name: Record a blocked publication once
-        if: failure() && steps.timing.outputs.run == 'true'
         env:
+          PUBLICATION_STATE: ${{ steps.edition.outputs.state }}
+          STAGING_SAFE: ${{ steps.edition.outputs.staging_safe }}
           PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
         run: |
-          node pipeline/record-publication-block.mjs
           git config user.name  "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/llm-spend.json ops/publication-block.json
-          git commit -m "ops: block repeated publication failure for ${PUBLICATION_DATE}"
+          if [ "$PUBLICATION_STATE" = "published" ]; then
+            git add data/news/ data/happening.json data/event-status.json data/brief.json data/publication-status.json data/llm-spend.json data/es/
+          elif [ "$PUBLICATION_STATE" = "deferred" ] && [ "$STAGING_SAFE" = "true" ]; then
+            git add data/news/ data/happening.json data/event-status.json data/publication-status.json data/llm-spend.json
+          else
+            git add data/publication-status.json data/llm-spend.json
+          fi
+          if git diff --cached --quiet; then
+            echo "no publication-state change"
+            exit 0
+          fi
+          git commit -m "publication: ${PUBLICATION_DATE} ${PUBLICATION_STATE}"
           for attempt in 1 2 3 4 5; do
             if git push origin HEAD:main; then
               exit 0
             fi
-            git pull --rebase --autostash origin main || exit 1
-          done
-          exit 1
-
-      - name: Commit and push the edition once
-        if: steps.timing.outputs.run == 'true'
-        env:
-          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-        run: |
-          node pipeline/clear-publication-block.mjs
-          git config user.name  "mexico-data-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/news/ data/happening.json data/event-status.json data/brief.json data/publication-status.json data/llm-spend.json data/es/
-          git add -u ops/
-          git commit -m "publication: ${PUBLICATION_DATE} ${PUBLICATION_SLOT} edition"
-          # A single push attempt used to lose the whole publication to a non-fast-forward
-          # whenever anything else landed on main mid-run (2026-08-02 22:14: the edition
-          # published, then the run died here). The machine owns these paths, so rebasing
-          # onto whatever arrived and trying again is always right.
-          for attempt in 1 2 3 4 5; do
-            if git push origin HEAD:main; then
-              echo "pushed on attempt $attempt"
-              exit 0
-            fi
-            echo "push rejected, rebasing onto origin/main (attempt $attempt)"
             git pull --rebase --autostash origin main || exit 1
             sleep 5
           done
-          echo "could not push the edition after 5 attempts"
           exit 1
 
-      - name: Require the exact edition to be live
-        if: steps.timing.outputs.run == 'true'
+      # A blocked receipt is committed first. The hourly gate and independent watchdog
+      # then stop repeating the same code or infrastructure failure. This is the one alert.
+      - name: Report a code or infrastructure block once
+        if: steps.timing.outputs.run == 'true' && steps.edition.outputs.state == 'blocked'
+        run: exit 1
+
+      - name: Require the exact published edition to be live
+        if: steps.timing.outputs.run == 'true' && steps.edition.outputs.state == 'published'
         id: live
         continue-on-error: true
         env:
@@ -192,16 +116,13 @@ jobs:
           PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
         run: node pipeline/verify-production.mjs
 
-      - name: Retrigger deployment once if production is stale
-        if: steps.timing.outputs.run == 'true' && steps.live.outcome == 'failure'
+      - name: Retrigger one stale deployment
+        if: steps.timing.outputs.run == 'true' && steps.edition.outputs.state == 'published' && steps.live.outcome == 'failure'
         env:
           PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
           PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
           PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
-          DEPLOY_ATTEMPT: '2'
         run: |
-          node pipeline/write-publication-status.mjs
-          git add data/publication-status.json
-          git commit -m "publication: retry ${PUBLICATION_DATE} ${PUBLICATION_SLOT} deployment"
+          git commit --allow-empty -m "publication: retry ${PUBLICATION_DATE} deployment"
           git push origin HEAD:main
           node pipeline/verify-production.mjs

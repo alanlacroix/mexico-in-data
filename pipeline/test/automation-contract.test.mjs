@@ -2,30 +2,22 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { terminalAnalysisDeferral } from '../publish-edition.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const workflowDir = path.join(root, '.github', 'workflows');
 const workflow = (name) => fs.readFileSync(path.join(workflowDir, name), 'utf8');
 const run = fs.readFileSync(path.join(root, 'pipeline', 'run.js'), 'utf8');
 const receiptWriter = fs.readFileSync(path.join(root, 'pipeline', 'write-publication-status.mjs'), 'utf8');
+const editionPublisher = fs.readFileSync(path.join(root, 'pipeline', 'publish-edition.mjs'), 'utf8');
 const productionVerifier = fs.readFileSync(path.join(root, 'pipeline', 'verify-production.mjs'), 'utf8');
 const editorialGate = fs.readFileSync(path.join(root, 'pipeline', 'editorial-gate.mjs'), 'utf8');
 const outcomeReconciler = fs.readFileSync(path.join(root, 'pipeline', 'reconcile-scheduled-events.mjs'), 'utf8');
-const blockRecorder = fs.readFileSync(path.join(root, 'pipeline', 'record-publication-block.mjs'), 'utf8');
 const syncFreshness = fs.readFileSync(path.join(root, 'pipeline', 'sync-freshness.js'), 'utf8');
 const refresh = workflow('refresh.yml');
 const happening = workflow('happening.yml');
 const publicationFallback = workflow('publication-fallback.yml');
 const watchdogRunOnce = fs.readFileSync(path.join(root, 'ops', 'publication-watchdog', 'run-once.mjs'), 'utf8');
-const collectorBlock = happening.match(
-  /- name: Refresh the news ledger[\s\S]*?(?=\n      - name: Build the event log)/,
-)?.[0] || '';
-const validationBlock = happening.match(
-  /- name: Validate generated editorial claims[\s\S]*?(?=\n      - name: Write this edition's publication receipt)/,
-)?.[0] || '';
-const blockedPublicationBlock = happening.match(
-  /- name: Record a blocked publication once[\s\S]*?(?=\n      - name: Commit and push the edition once)/,
-)?.[0] || '';
 
 const alertWrite = 'fs.writeFileSync(ALERTS, JSON.stringify(alerts, null, 2));';
 assert.equal(run.split(alertWrite).length - 1, 1, 'the current alert ledger must be written exactly once');
@@ -62,12 +54,12 @@ assert.match(
   /node pipeline\/editorial-gate\.mjs/,
   'every redundant schedule must pass through the receipt-aware editorial gate',
 );
-assert.match(editorialGate, /BLOCK_PATH[\s\S]*recordedBlock[\s\S]*terminalBlock/,
-  'hourly schedules must stop after a recorded publication failure instead of producing repeated emails');
-assert.match(collectorBlock, /node collect-news\.js/,
-  'the core news collector must run before publication');
-assert.doesNotMatch(collectorBlock, /continue-on-error/,
-  'a catastrophic collector failure must stop publication instead of looking green');
+assert.match(editorialGate, /state === 'blocked'/,
+  'hourly schedules must stop after the one publication receipt records a code or infrastructure block');
+assert.doesNotMatch(editorialGate, /HAPPENING_PATH|BLOCK_PATH|publication-block|analysisTarget/,
+  'the editorial gate must decide from one publication receipt, not several hidden state files');
+assert.match(editionPublisher, /node\('Collect news', 'collect-news\.js'/,
+  'the core news collector must run inside the one edition command');
 assert.match(
   happening,
   /FORCE_PUBLICATION:[^\n]*github\.event\.inputs\.force/,
@@ -80,8 +72,8 @@ assert.doesNotMatch(
 );
 assert.match(
   happening,
-  /node pipeline\/write-publication-status\.mjs[\s\S]*git add[^\n]*data\/publication-status\.json/,
-  'the exact edition receipt must be committed with the generated brief',
+  /node pipeline\/publish-edition\.mjs[\s\S]*git add[^\n]*data\/publication-status\.json/,
+  'the one edition command must write the exact receipt committed with its result',
 );
 assert.match(
   receiptWriter,
@@ -99,35 +91,36 @@ assert.match(
   'a satisfied scheduled outcome must survive after its source event rolls out of the capped event log',
 );
 assert.match(
-  blockRecorder,
-  /event-status\.json[\s\S]*scheduledBlockers[\s\S]*scheduled outcome missing/,
-  'a publication block must preserve the named scheduled outcome instead of hiding it behind a generic failure',
-);
-assert.match(
   editorialGate,
-  /status\?\.state !== 'deferred'/,
+  /state === 'published'[\s\S]*state === 'blocked'/,
   'a deferred operational receipt must not stop the next hourly editorial retry',
 );
+assert.match(receiptWriter, /\['published', 'deferred', 'blocked'\]/,
+  'one finite-state receipt must represent every publication result');
+assert.match(receiptWriter, /state !== 'published'[\s\S]*contentEditorialDate[\s\S]*contentGeneratedAt/,
+  'a non-published receipt must preserve the date and timestamp of the last complete edition');
+assert.match(receiptWriter, /priorIsCurrentPublication[\s\S]*\? prior/,
+  'a failed forced republish must not downgrade a complete current edition');
 assert.match(
   receiptWriter,
   /curationReadiness\(curation, editorialDate\)[\s\S]*Fresh-story curation incomplete/,
   'a publication receipt must refuse to certify a date whose fresh candidates were not fully assessed',
 );
 assert.match(
-  happening,
-  /node collect-news\.js[\s\S]*node build-happening\.js[\s\S]*node reconcile-scheduled-events\.mjs[\s\S]*node build-brief\.js/,
+  editionPublisher,
+  /'Collect news'[\s\S]*'Curate current events'[\s\S]*'Reconcile scheduled outcomes'[\s\S]*'Lock ranked stories'/,
   'each editorial pass must refresh the primary RSS ledger before reconsidering the brief',
 );
-assert.doesNotMatch(happening, /node build-news\.js/,
+assert.doesNotMatch(editionPublisher, /build-news\.js/,
   'the flaky optional GDELT supplement belongs in the background refresh, not the publication path');
 assert.match(
-  happening,
-  /node build-happening\.js --skip-analysis --resume-current-edition[\s\S]*node build-brief\.js --selection-only[\s\S]*node build-happening\.js --analysis-for-brief[\s\S]*node build-brief\.js/,
+  editionPublisher,
+  /'build-happening\.js', \['--skip-analysis', '--resume-current-edition'\][\s\S]*'build-brief\.js', \['--selection-only'\][\s\S]*'build-happening\.js', \['--analysis-for-brief'\][\s\S]*'build-brief\.js', \[\]/,
   'the workflow must lock the ranked stories before spending the explanation budget on those exact stories',
 );
 assert.match(
-  happening,
-  /Lock the homepage story selection[\s\S]*Explain the stories that were actually selected/,
+  editionPublisher,
+  /'Lock ranked stories'[\s\S]*'Explain ranked stories'/,
   'selection must remain locked before explanation work',
 );
 assert.doesNotMatch(
@@ -138,43 +131,63 @@ assert.doesNotMatch(
 assert.doesNotMatch(happening, /Checkpoint the assessed news|Checkpoint the locked selection|editorial checkpoint:/,
   'intermediate public-data commits must not leave main in a half-built editorial state');
 assert.match(
-  happening,
-  /Build the homepage brief[\s\S]*Require a complete English Brief before optional translation[\s\S]*Translate the new edition for \/es\/[\s\S]*Validate generated editorial claims/,
+  editionPublisher,
+  /'Build final English edition'[\s\S]*'Validate editorial data'[\s\S]*'Translate selected edition'[\s\S]*'Validate final homepage'/,
   'the only optional translation pass must run after every selected story has a complete explanation',
 );
-assert.doesNotMatch(happening, /translate-wire|Translate new topic stories/,
+assert.doesNotMatch(editionPublisher, /translate-wire|Translate new topic stories/,
   'the publication path must not spend budget on broad optional feed translation');
 assert.equal(
-  (happening.match(/node build-happening\.js --analysis-for-brief/g) || []).length,
+  (editionPublisher.match(/'build-happening\.js', \['--analysis-for-brief'\]/g) || []).length,
   1,
   'one publication run must have exactly one targeted explanation pass',
 );
 assert.equal(
-  (happening.match(/node reconcile-scheduled-events\.mjs/g) || []).length,
+  (editionPublisher.match(/'reconcile-scheduled-events\.mjs'/g) || []).length,
   1,
   'one publication run must reconcile scheduled outcomes exactly once',
 );
 assert.match(
-  validationBlock,
-  /node pipeline\/assert-data\.js[\s\S]*node pipeline\/test\/homepage-feed-contract\.test\.mjs/,
+  editionPublisher,
+  /'assert-data\.js'[\s\S]*'test\/homepage-feed-contract\.test\.mjs'/,
   'validation must check the one generated edition before it can be certified',
 );
 assert.doesNotMatch(
-  validationBlock,
-  /git show HEAD:data|build-happening|build-brief|build-areas|build-companies|ANTHROPIC_API_KEY/,
+  editionPublisher,
+  /git show HEAD:data|build-areas|build-companies/,
   'validation must never restore old files or launch a second hidden publication pipeline',
 );
-assert.match(blockedPublicationBlock, /if: failure\(\)[\s\S]*record-publication-block\.mjs[\s\S]*git add data\/llm-spend\.json ops\/publication-block\.json/,
-  'a failed edition must preserve spend and one durable circuit breaker');
-assert.doesNotMatch(blockedPublicationBlock, /git add[^\n]*(?:data\/brief|data\/happening|data\/news)/,
-  'failure accounting must never publish editorial data from a blocked edition');
-assert.ok(
-  happening.indexOf('Build and validate the exact production artifact') < happening.indexOf('Record a blocked publication once')
-    && happening.indexOf('Record a blocked publication once') < happening.indexOf('Commit and push the edition once'),
-  'the circuit breaker must run after every pre-publication gate and before the edition commit',
+assert.equal((happening.match(/node pipeline\/publish-edition\.mjs/g) || []).length, 1,
+  'the workflow must invoke exactly one publication coordinator');
+assert.doesNotMatch(
+  happening,
+  /node (?:pipeline\/)?(?:collect-news|build-happening|build-brief|reconcile-scheduled-events|translate-es|assert-data|write-publication-status)/,
+  'the workflow must not duplicate editorial stages outside the one edition command',
 );
-assert.match(happening, /Commit and push the edition once[\s\S]*clear-publication-block\.mjs[\s\S]*git add -u ops\//,
-  'a successful atomic publication must clear the prior failure marker');
+assert.doesNotMatch(happening, /record-publication-block|clear-publication-block|ops\/publication-block/,
+  'publication failure state must not live in a second circuit-breaker file');
+assert.match(
+  happening,
+  /if \[ "\$PUBLICATION_STATE" = "published" \]; then[\s\S]*elif \[ "\$PUBLICATION_STATE" = "deferred" \] && \[ "\$STAGING_SAFE" = "true" \]; then[\s\S]*else\s+git add data\/publication-status\.json data\/llm-spend\.json/,
+  'only a fully assessed deferral may persist its reusable news staging; a blocked run must commit no partial editorial data',
+);
+assert.match(editionPublisher, /\['budget-unavailable', 'field-rejected'\][\s\S]*throw new DeferredEdition/,
+  'an unchanged explanation failure must not spend again on every hourly schedule');
+const lockedBrief = { meta: { selection: { lockedIds: ['lead'] } } };
+assert.match(
+  terminalAnalysisDeferral(lockedBrief, { meta: { analysisTarget: {
+    ids: ['lead'], outcomes: [{ id: 'lead', ready: false, reason: 'budget-unavailable' }],
+  } } }),
+  /model budget/,
+  'the exact locked story must not repeat a known terminal model attempt',
+);
+assert.equal(
+  terminalAnalysisDeferral(lockedBrief, { meta: { analysisTarget: {
+    ids: ['different'], outcomes: [{ id: 'different', ready: false, reason: 'field-rejected' }],
+  } } }),
+  '',
+  'new reporting and a new story selection must receive a fresh explanation attempt',
+);
 assert.match(
   happening,
   /git add[^\n]*data\/news\/[^\n]*data\/event-status\.json[^\n]*data\/brief\.json[^\n]*data\/publication-status\.json/,
@@ -206,7 +219,7 @@ assert.match(
 );
 assert.match(
   happening,
-  /steps\.live\.outcome == 'failure'[\s\S]*DEPLOY_ATTEMPT:\s*'2'[\s\S]*git push origin HEAD:main[\s\S]*node pipeline\/verify-production\.mjs/,
+  /steps\.live\.outcome == 'failure'[\s\S]*git commit --allow-empty[\s\S]*git push origin HEAD:main[\s\S]*node pipeline\/verify-production\.mjs/,
   'a stale production deployment must be retriggered once and verified again',
 );
 assert.match(
@@ -257,7 +270,7 @@ for (const name of ['refresh.yml']) {
 assert.doesNotMatch(happening, /\[CF-Pages-Skip\] editorial checkpoint:/,
   'the Brief must have one atomic publication commit, not intermediate public-data commits');
 assert.doesNotMatch(
-  happening.match(/- name: Commit and push the edition once[\s\S]*?(?=\n      - name: Require the exact edition to be live)/)?.[0] || '',
+  happening.match(/- name: Commit the one publication result[\s\S]*?(?=\n      - name: Report a code or infrastructure block once)/)?.[0] || '',
   /\[CF-Pages-Skip\]/,
   'the final editorial publication must still trigger production deployment',
 );

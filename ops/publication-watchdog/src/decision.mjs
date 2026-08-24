@@ -53,6 +53,14 @@ export function dueEdition(now = new Date(), graceMinutes = DEFAULT_GRACE_MINUTE
 export function publicationCoversEdition(status, due) {
   if (!due || !status || typeof status !== 'object') return false;
   if (status.editorialDate !== due.editorialDate) return false;
+  if (status.state && status.state !== 'published') return false;
+  return (SLOT_RANK[status.slot] || 0) >= (SLOT_RANK[due.slot] || Infinity);
+}
+
+export function publicationStopsRecovery(status, due) {
+  if (!due || !status || typeof status !== 'object') return false;
+  if (status.editorialDate !== due.editorialDate) return false;
+  if (!['deferred', 'blocked'].includes(status.state)) return false;
   return (SLOT_RANK[status.slot] || 0) >= (SLOT_RANK[due.slot] || Infinity);
 }
 
@@ -115,6 +123,9 @@ export function watchdogDecision({
 
   if (publicationCoversEdition(status, due)) {
     return { action: 'none', reason: 'publication is current', due };
+  }
+  if (publicationStopsRecovery(status, due)) {
+    return { action: 'none', reason: `publication is ${status.state}`, due };
   }
 
   const activeRun = recentActiveRun(runs, now, recentRunMinutes);

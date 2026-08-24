@@ -1,4 +1,4 @@
-import { publicationCoversEdition, dueEdition, recentActiveRun, recoveryThrottle } from './decision.mjs';
+import { publicationCoversEdition, publicationStopsRecovery, dueEdition, recentActiveRun, recoveryThrottle } from './decision.mjs';
 
 const DEFAULTS = Object.freeze({
   publicationStatusUrl: 'https://mexicobrief.com/data/publication-status.json',
@@ -145,6 +145,14 @@ export async function runWatchdog(env, now = new Date()) {
       publicationId: status.publicationId || null,
     });
     return { action: 'none', reason: 'publication is current', due };
+  }
+  if (publicationStopsRecovery(status, due)) {
+    log(status.state === 'blocked' ? 'error' : 'info', `publication_${status.state}`, {
+      due,
+      publicationId: status.publicationId || null,
+      reason: status.reason || null,
+    });
+    return { action: 'none', reason: `publication is ${status.state}`, due };
   }
 
   if (!env.GITHUB_TOKEN) throw new Error('GITHUB_TOKEN secret is not configured');

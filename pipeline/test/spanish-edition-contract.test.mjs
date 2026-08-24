@@ -16,7 +16,7 @@ const cache = JSON.parse(fs.readFileSync(path.join(root, 'data', 'es', 'strings.
 const snapshot = JSON.parse(fs.readFileSync(path.join(root, 'data', 'es', 'brief.json'), 'utf8'));
 const brief = JSON.parse(fs.readFileSync(path.join(root, 'data', 'brief.json'), 'utf8'));
 const source = fs.readFileSync(path.join(root, '_data', 'feedEs.js'), 'utf8');
-const workflow = fs.readFileSync(path.join(root, '.github', 'workflows', 'happening.yml'), 'utf8');
+const publisher = fs.readFileSync(path.join(root, 'pipeline', 'publish-edition.mjs'), 'utf8');
 
 const missing = missingCritical(english, cache);
 if (!missing.length) {
@@ -72,8 +72,8 @@ assert.doesNotMatch(source, /cache\[[^\]]+\]\s*\|\|\s*clean/,
   'Spanish free text must never silently fall back to English');
 assert.match(source, /\.filter\(\(w\) => w\.title\)/,
   'optional untranslated wire items must be omitted from Spanish');
-assert.match(workflow, /node translate-es\.mjs --critical/,
-  'the publication workflow must translate the exact selected Brief before release');
+assert.match(publisher, /'translate-es\.mjs', \['--critical'\]/,
+  'the one edition command must translate the exact selected Brief before release');
 assert.match(fs.readFileSync(path.join(root, '_includes', 'partials', 'header.njk'), 'utf8'),
   /not feedEs\.translationCarrying/,
   'English must not advertise a stale Spanish snapshot as the current translation');
