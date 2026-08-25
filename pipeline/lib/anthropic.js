@@ -46,9 +46,9 @@ const EFFORT_MODELS = new Set([SONNET]);
 // so the ceiling is code: every call settles into a committed ledger
 // (data/llm-spend.json, pushed by the same CI steps that commit data/), and once
 // the balance reaches the cap—or cannot safely fit the next call—askJSON returns null.
-// Optional callers keep last-good content. The daily Brief may use a complete local
-// assessment, but it must block publication when fresh reporting cannot be resolved;
-// model unavailability can never be relabelled as an editorially quiet day.
+// Optional callers keep last-good content. The factual Brief remains publishable when
+// the model is unavailable; only complete model-produced layers are shown, and model
+// unavailability can never be relabelled as an editorially quiet day.
 // The guard opens again on the 1st. Manual override for debugging:
 // LLM_BUDGET_OVERRIDE=1.
 import fs from 'node:fs';
