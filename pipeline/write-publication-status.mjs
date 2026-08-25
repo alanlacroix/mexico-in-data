@@ -1,10 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import briefReadinessPolicy from './lib/brief-readiness.cjs';
 import freshnessContract from './lib/freshness-contract.cjs';
 import { publicationReadiness } from './check-publication-readiness.mjs';
 
+const require = createRequire(import.meta.url);
+const { PIPELINE_VERSION } = require('./lib/edition-contract.cjs');
 const { briefReadiness } = briefReadinessPolicy;
 const { curationReadiness } = freshnessContract;
 
@@ -37,6 +40,7 @@ if (state !== 'published') {
   })();
   const next = {
     schemaVersion: 1,
+    pipelineVersion: PIPELINE_VERSION,
     state,
     editorialDate,
     contentEditorialDate: prior.contentEditorialDate || prior.editorialDate || null,
@@ -83,6 +87,7 @@ if (brief.meta?.editorialDate !== editorialDate) {
 
 const status = {
   schemaVersion: 1,
+  pipelineVersion: PIPELINE_VERSION,
   state: 'published',
   editorialDate,
   contentEditorialDate: editorialDate,

@@ -5,6 +5,10 @@ name: happening
 # group below, so a data refresh cannot race this commit again.
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'pipeline/**'
   schedule:
     # Run hourly and let the gate decide. This is deliberate, and it replaced four
     # precise cron minutes on 2026-08-04 after Alan hit a third late morning in a row.

@@ -1,7 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
+const require = createRequire(import.meta.url);
+const { PIPELINE_VERSION } = require('./lib/edition-contract.cjs');
 const FILE = fileURLToPath(import.meta.url);
 const ROOT = path.resolve(path.dirname(FILE), '..');
 const STATUS_PATH = path.join(ROOT, 'data', 'publication-status.json');
@@ -35,6 +38,9 @@ export function editorialDecision({ now = new Date(), status = null, force = fal
     && VALID_RECEIPT_SLOTS.has(status?.slot);
   const state = status?.state || 'published';
   if (!force && sameDay && state === 'published') {
+    if (Number(status?.pipelineVersion) !== PIPELINE_VERSION) {
+      return { run: true, slot, editorialDate, reason: 'published artifact uses an older pipeline contract' };
+    }
     return { run: false, slot, editorialDate, reason: `${status.slot} edition already published` };
   }
   if (!force && sameDay && state === 'blocked') {

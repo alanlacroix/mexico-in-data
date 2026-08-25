@@ -33,15 +33,15 @@ assert.match(run, /if \(only && records\.some\(\(record\) => record\.status === 
 // repo near its cron slots (a ':17' cron ran at :51, :34, :54, :12, :03 and :51 over
 // four days, and the morning edition was dropped outright twice), so precision was
 // buying nothing and costing Alan his morning. The workflow now attempts hourly and
-// the receipt-aware gate decides. The gate has one morning state; there is no second
-// slot, publisher-on-push path, or wall-clock shell branch to drift independently.
+// the receipt-aware gate decides. The gate has one morning state; a pipeline-only push
+// may enter that same gate so a bumped artifact contract can be migrated once.
 assert.match(
   happening,
   /cron:\s*'\d+ \* \* \* \*'/,
   'the edition must attempt hourly, because the cron minute cannot be relied on',
 );
-assert.doesNotMatch(happening, /\n  push:/,
-  'editing the publisher must not launch a receipt-gated no-op publication run');
+assert.match(happening, /\n  push:[\s\S]*branches: \[main\][\s\S]*- 'pipeline\/\*\*'/,
+  'a pipeline-contract change must get one immediate receipt-gated migration attempt');
 assert.doesNotMatch(happening, /REQUESTED_SLOT|SCHEDULE:|\n\s+- afternoon\s*$/m,
   'the publisher must not retain a second edition-selection path');
 assert.doesNotMatch(
@@ -56,6 +56,8 @@ assert.match(
 );
 assert.match(editorialGate, /state === 'blocked'/,
   'hourly schedules must stop after the one publication receipt records a code or infrastructure block');
+assert.match(editorialGate, /status\?\.pipelineVersion[\s\S]*PIPELINE_VERSION/,
+  'a current dateline must not hide an artifact built by an obsolete pipeline contract');
 assert.doesNotMatch(editorialGate, /HAPPENING_PATH|BLOCK_PATH|publication-block|analysisTarget/,
   'the editorial gate must decide from one publication receipt, not several hidden state files');
 assert.match(editionPublisher, /node\('Collect news', 'collect-news\.js'/,
