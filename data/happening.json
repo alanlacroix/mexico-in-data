@@ -6,30 +6,35 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-25T13:25:22.785Z",
+    "generatedAt": "2026-08-25T14:31:51.251Z",
     "llm": true,
     "curation": {
       "policy": "exact-day-assessment-v1",
       "editorialDate": "2026-08-25",
       "candidateCount": 24,
-      "candidateSig": "a71ae992eab9d1e052952955c8e65adc8f4b1c5fc8ff09192ca8d37eca3f6205",
-      "freshCandidateCount": 3,
+      "candidateSig": "ac6f2a2577e3654f134f1b8af932d0347ad650eb45ee8ba5ea4df5ed4e926fb7",
+      "freshCandidateCount": 6,
       "assessedCount": 24,
-      "keptCount": 10,
-      "rejectedCount": 2,
+      "keptCount": 6,
+      "rejectedCount": 1,
       "mode": "model",
       "complete": true,
-      "reason": "2 selected event(s) quarantined by the copy gate"
+      "reason": "1 selected event(s) quarantined by the copy gate"
     },
     "analysisTarget": {
       "policy": "every-selected-story-context-audited-v3",
       "ids": [
+        "n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25",
         "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
-        "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25",
-        "n-sheinbaum-sinaloa-interim-governor-october-2027-2026-08-24"
+        "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25"
       ],
-      "added": 0,
+      "added": 1,
       "outcomes": [
+        {
+          "id": "n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25",
+          "ready": true,
+          "reason": "ready"
+        },
         {
           "id": "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
           "ready": false,
@@ -39,16 +44,113 @@
           "id": "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25",
           "ready": false,
           "reason": "field-rejected"
-        },
-        {
-          "id": "n-sheinbaum-sinaloa-interim-governor-october-2027-2026-08-24",
-          "ready": true,
-          "reason": "ready"
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25",
+      "date": "2026-08-25",
+      "section": "us-mexico",
+      "title": "US embassy in Mexicali suspends operations and issues security alert",
+      "why": "The US suspended consular activities in Mexicali on 25 August over unspecified threats and instructed US citizens to avoid Mexican government buildings. The alert reflects rising security tensions at a major border crossing and signals diplomatic concern over conditions in the state.",
+      "company": "",
+      "source": "El País — México",
+      "url": "https://elpais.com/mexico/2026-08-25/estados-unidos-emite-una-alerta-de-seguridad-y-suspende-sus-actividades-en-mexicali-por-amenazas.html",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-25T13:59:36.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Estados Unidos emite una alerta de seguridad y suspende sus actividades en Mexicali por “amenazas”",
+        "dek": "El consulado en Tijuana pide a los estadounidenses que eviten los edificios de Gobierno. Las autoridades mexicanas incautaron la semana pasada en la ciudad fronteriza cuatro millones de dosis de fentanilo con información de la DEA"
+      },
+      "coverage": [
+        {
+          "source": "El País — México",
+          "url": "https://elpais.com/mexico/2026-08-25/estados-unidos-emite-una-alerta-de-seguridad-y-suspende-sus-actividades-en-mexicali-por-amenazas.html",
+          "publishedAt": "2026-08-25T13:59:36.000Z",
+          "date": "2026-08-25",
+          "title": "US embassy in Mexicali suspends operations and issues security alert",
+          "summary": "The US suspended consular activities in Mexicali on 25 August over unspecified threats and instructed US citizens to avoid Mexican government buildings. The alert reflects rising security tensions at a major border crossing and signals diplomatic concern over conditions in the state."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://imagenes.elpais.com/resizer/v2/OJYK56J5P5FGTLQUQWYPOK4WZA.jpg?auth=df1d42b6c3a26ecdf905ab7a8ed2ee09eaf54dd5ebd9bb7626681b4522bb7185&width=1200",
+      "imgTries": 1,
+      "background": "The US Consulate in Tijuana oversees consular services across Baja California, including Mexicali, a major border crossing where Mexican authorities seized 4 million fentanilo doses the week before with DEA coordination.",
+      "view": "A suspension signals the consulate assessed a direct threat serious enough to interrupt visa processing and official movement in a major trade crossing. The practical consequence is delays for US citizens seeking entry documents and disruption to routine diplomatic engagement at a border city of economic importance, though the alert does not disclose the threat's nature or duration.",
+      "prediction": "The consulate will either resume operations within days if the threat is contained or clarified, or issue a travel advisory upgrade if conditions worsen. Observable evidence would be a formal status update from the US State Department naming the threat type or confirming the all-clear.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "view": [
+          "article",
+          "primary:1"
+        ],
+        "prediction": [
+          "primary:1",
+          "article"
+        ],
+        "background": [
+          "article",
+          "primary:1"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El País, México",
+          "url": "https://elpais.com/mexico/2026-08-25/estados-unidos-emite-una-alerta-de-seguridad-y-suspende-sus-actividades-en-mexicali-por-amenazas.html"
+        },
+        {
+          "id": "primary:1",
+          "kind": "primary",
+          "source": "U.S. Embassy & Consulates in Mexico",
+          "url": "https://mx.usembassy.gov/security-alert-august-25-threat-in-mexicali/"
+        }
+      ]
+    },
     {
       "id": "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
       "date": "2026-08-25",
@@ -117,7 +219,7 @@
         "componentSource": "model"
       },
       "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/08/bandera-estados-unidos-pexels-25082026.jpg",
-      "imgTries": 1
+      "imgTries": 2
     },
     {
       "id": "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25",
@@ -186,7 +288,7 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
-      "imgTries": 1
+      "imgTries": 2
     },
     {
       "id": "n-sheinbaum-conf-a-en-alcanzar-acuerdo-comercial-con-e-2026-08-24",
@@ -249,6 +351,142 @@
           "officialness": {
             "raw": 2,
             "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-us-mexico-tariff-negotiations-higher-education-2026--2026-08-24",
+      "date": "2026-08-24",
+      "section": "us-mexico",
+      "title": "President Sheinbaum expresses optimism on US-Mexico tariff negotiations to avert steel, aluminum, and auto duties",
+      "why": "President Claudia Sheinbaum stated optimism regarding trade negotiations with the United States to prevent unilateral tariffs of 50 percent on steel and aluminum. The negotiations are central to Mexico's trade standing under USMCA.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/policyandeconomy/news/us-mexico-tariff-negotiations-higher-education-2026-platform",
+      "importance": 10,
+      "kind": "event",
+      "publishedAt": "2026-08-24T16:33:11.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "US-Mexico Tariff Negotiations / Higher Education 2026 Platform",
+        "dek": "US-Mexico Tariff Negotiations. President Claudia Sheinbaum expressed optimism regarding trade negotiations with the United States, aiming to avert unilateral tariffs of 50% on steel and aluminum and 25% on vehicles. Minister of Economy Marcelo Ebrard traveled to the United States to hold meetings intended to protect cr"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/policyandeconomy/news/us-mexico-tariff-negotiations-higher-education-2026-platform",
+          "publishedAt": "2026-08-24T16:33:11.000Z",
+          "date": "2026-08-24",
+          "title": "President Sheinbaum expresses optimism on US-Mexico tariff negotiations to avert steel, aluminum, and auto duties",
+          "summary": "President Claudia Sheinbaum stated optimism regarding trade negotiations with the United States to prevent unilateral tariffs of 50 percent on steel and aluminum. The negotiations are central to Mexico's trade standing under USMCA."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 10,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-m-xico-mira-con-incertidumbre-la-tensi-n-comercial-e-2026-08-24",
+      "date": "2026-08-24",
+      "section": "us-mexico",
+      "title": "Mexico navigates tariff uncertainty as US-Canada trade tensions grow under USMCA review",
+      "why": "Mexico faces rising uncertainty over its trade conditions as tensions between the US and Canada intensify, with the future of the US-Mexico-Canada trade agreement in question. The country is negotiating its own tariff terms amid the broader commercial dispute.",
+      "company": "",
+      "source": "El País — México",
+      "url": "https://elpais.com/mexico/economia/2026-08-25/mexico-mira-con-incertidumbre-la-tension-comercial-entre-estados-unidos-y-canada.html",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-25T04:00:00.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México mira con incertidumbre la tensión comercial entre Estados Unidos y Canadá",
+        "dek": "El país latinoamericano negocia sus condiciones arancelarias mientras navega el incierto futuro del TMEC"
+      },
+      "coverage": [
+        {
+          "source": "El País — México",
+          "url": "https://elpais.com/mexico/economia/2026-08-25/mexico-mira-con-incertidumbre-la-tension-comercial-entre-estados-unidos-y-canada.html",
+          "publishedAt": "2026-08-25T04:00:00.000Z",
+          "date": "2026-08-24",
+          "title": "Mexico navigates tariff uncertainty as US-Canada trade tensions grow under USMCA review",
+          "summary": "Mexico faces rising uncertainty over its trade conditions as tensions between the US and Canada intensify, with the future of the US-Mexico-Canada trade agreement in question. The country is negotiating its own tariff terms amid the broader commercial dispute."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
             "status": "accepted"
           }
         },
@@ -413,6 +651,74 @@
       "imgTries": 1
     },
     {
+      "id": "n-mexican-ranchers-prepare-to-resume-livestock-sales-t-2026-08-24",
+      "date": "2026-08-24",
+      "section": "us-mexico",
+      "title": "US resumes livestock imports from Mexico under screwworm controls beginning Monday at Douglas crossing",
+      "why": "The US is set to resume Mexican livestock imports starting Monday at the Douglas, Arizona border crossing following completion of controls over screwworm risk. The resumption marks a reopening of a bilateral trade channel after a restriction.",
+      "company": "",
+      "source": "Border Report",
+      "url": "https://borderreport.com/news/trade/mexican-ranchers-prepare-to-resume-livestock-sales-to-us-under-tight-controls-over-screwworm-risk/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-24T20:43:33.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mexican ranchers prepare to resume livestock sales to US under tight controls over screwworm risk",
+        "dek": "The U.S. is set to resume livestock imports from Mexico beginning Monday at the Douglas, Arizona, border crossing, which borders Agua Prieta in Mexico’s Sonora state."
+      },
+      "coverage": [
+        {
+          "source": "Border Report",
+          "url": "https://borderreport.com/news/trade/mexican-ranchers-prepare-to-resume-livestock-sales-to-us-under-tight-controls-over-screwworm-risk/",
+          "publishedAt": "2026-08-24T20:43:33.000Z",
+          "date": "2026-08-24",
+          "title": "US resumes livestock imports from Mexico under screwworm controls beginning Monday at Douglas crossing",
+          "summary": "The US is set to resume Mexican livestock imports starting Monday at the Douglas, Arizona border crossing following completion of controls over screwworm risk. The resumption marks a reopening of a bilateral trade channel after a restriction."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-banca-presta-m-s-a-mipymes-pero-cae-el-acceso-al-cr--2026-08-24",
       "date": "2026-08-24",
       "section": "money",
@@ -573,6 +879,82 @@
           "date": "2026-08-24",
           "title": "Mexico to remove 25 million inactive phone lines from registry",
           "summary": "Mexico's telecommunications regulator will purge 25 million phone numbers from its database as part of an ongoing registry cleanup, affecting inactive lines currently held in government records."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-inflaci-n-repunta-a-3-26-en-agosto-cebolla-se-encare-2026-08-24",
+      "date": "2026-08-24",
+      "section": "money",
+      "title": "Mexico inflation rises to 3.26 percent in first half of August as onion prices jump 67 percent",
+      "why": "The inflation rate accelerated to 3.26 percent in the first fortnight of August 2026, marking the second consecutive acceleration. Onion prices surged 67 percent and potato prices climbed nearly 50 percent.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/inflacion-repunta-a-3-26-en-agosto-cebolla-se-encarece-67-y-papa-casi-50/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-24T16:01:54.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Inflación repunta a 3.26% en agosto; cebolla se encarece 67% y papa casi 50%",
+        "dek": "La tasa de inflación en México se aceleró por segunda quincena consecutiva al escalar hasta 3.26% en la primera mitad de agosto de 2026. La publicación Inflación repunta a 3.26% en agosto; cebolla se encarece 67% y papa casi 50% apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/inflacion-repunta-a-3-26-en-agosto-cebolla-se-encarece-67-y-papa-casi-50/",
+          "publishedAt": "2026-08-24T16:01:54.000Z",
+          "date": "2026-08-24",
+          "title": "Mexico inflation rises to 3.26 percent in first half of August as onion prices jump 67 percent",
+          "summary": "The inflation rate accelerated to 3.26 percent in the first fortnight of August 2026, marking the second consecutive acceleration. Onion prices surged 67 percent and potato prices climbed nearly 50 percent."
+        },
+        {
+          "source": "elfinanciero.com.mx",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/24/inflacion-en-mexico-acelera-a-326-en-primera-quincena-de-agosto-que-productos-subieron-de-precio/",
+          "publishedAt": "2026-08-24T14:10:02.000Z",
+          "date": "2026-08-24",
+          "title": "Inflación en México acelera a 3.26% en primera quincena de agosto: ¿Qué productos subieron de precio?",
+          "summary": "La inflación en México se aceleró durante la primera quincena de agosto y alcanzó una tasa anual de 3.26 por ciento, desde el 3.14 por ciento en la quincena previa."
         }
       ],
       "importanceComponents": {
@@ -813,6 +1195,74 @@
           "officialness": {
             "raw": 0,
             "score": 0,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-rub-n-rocha-moya-pide-licencia-nuevamente-como-gober-2026-08-22",
+      "date": "2026-08-22",
+      "section": "politics",
+      "title": "Sinaloa Governor Rubén Rocha Moya requests leave again after brief return to post",
+      "why": "Governor Rocha Moya requested another leave of absence from the Sinaloa governorship on 22 August, having only recently resumed the role. President Sheinbaum learned of the decision through social media.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/politica/ruben-rocha-moya-pide-licencia-nuevamente-como-gobernador-de-sinaloa/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-23T01:31:11.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Rubén Rocha Moya pide licencia nuevamente como gobernador de Sinaloa",
+        "dek": "La presidenta Claudia Sheinbaum declaró que se enteró de la decisión de Rubén Rocha Moya de retomar su cargo por redes sociales. La publicación Rubén Rocha Moya pide licencia nuevamente como gobernador de Sinaloa apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/politica/ruben-rocha-moya-pide-licencia-nuevamente-como-gobernador-de-sinaloa/",
+          "publishedAt": "2026-08-23T01:31:11.000Z",
+          "date": "2026-08-22",
+          "title": "Sinaloa Governor Rubén Rocha Moya requests leave again after brief return to post",
+          "summary": "Governor Rocha Moya requested another leave of absence from the Sinaloa governorship on 22 August, having only recently resumed the role. President Sheinbaum learned of the decision through social media."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
             "status": "accepted"
           }
         },
@@ -4208,399 +4658,6 @@
         },
         "reportedTotal": null,
         "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-sat-iniciar-la-visita-a-domicilios-ante-sospechas-co-2026-08-10",
-      "date": "2026-08-10",
-      "section": "money",
-      "title": "Tax authority gains authority to conduct home inspections under reformed tax code",
-      "why": "Reforms to Mexico's Tax Code now authorize the SAT to conduct home and workplace inspections to verify taxpayer information based on documented suspicions.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/tu-cartera/sat-podria-visitar-domicilios-ante-sospechas-contra-los-contribuyentes-estas-son-las-causas-que-generarian-la-medida/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-10T23:22:00.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "SAT iniciará la visita a domicilios ante sospechas contra los contribuyentes",
-        "dek": "Con las reformas que se hicieron al Código Fiscal de la Federación, el SAT podrá realizar visitas para verificar información de los contribuyentes. La publicación SAT iniciará la visita a domicilios ante sospechas contra los contribuyentes apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/tu-cartera/sat-podria-visitar-domicilios-ante-sospechas-contra-los-contribuyentes-estas-son-las-causas-que-generarian-la-medida/",
-          "publishedAt": "2026-08-10T23:22:00.000Z",
-          "date": "2026-08-10",
-          "title": "Tax authority gains authority to conduct home inspections under reformed tax code",
-          "summary": "Reforms to Mexico's Tax Code now authorize the SAT to conduct home and workplace inspections to verify taxpayer information based on documented suspicions."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-us-security-agreements-resume-avocado-operations-2026-08-08",
-      "date": "2026-08-08",
-      "section": "us-mexico",
-      "title": "US ambassador says security agreements will resume avocado operations in Michoacán",
-      "why": "Ronald Johnson said the commitments would strengthen security and allow US government activities to resume immediately in phases.",
-      "company": "",
-      "source": "El Economista",
-      "url": "https://eleconomista.com.mx/empresas/aguacate-mexicano-estados-unidos-destaca-acuerdos-seguridad-reanudar-operaciones-michoacan-20260808-827306.html",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-08T21:36:33.000Z",
-      "sourceTier": "1",
-      "reportEvidence": {
-        "title": "Aguacate mexicano: Estados Unidos destaca acuerdos de seguridad para reanudar operaciones en Michoacán",
-        "dek": "De acuerdo con el embajador Ronald Johnson, estos compromisos permitirán “fortalecer rápidamente la seguridad en Michoacán” y avanzar en la reanudación inmediata y por fases de las actividades del gobierno estadounidense."
-      },
-      "coverage": [
-        {
-          "source": "El Economista",
-          "url": "https://eleconomista.com.mx/empresas/aguacate-mexicano-estados-unidos-destaca-acuerdos-seguridad-reanudar-operaciones-michoacan-20260808-827306.html",
-          "publishedAt": "2026-08-08T21:36:33.000Z",
-          "date": "2026-08-08",
-          "title": "US ambassador says security agreements will resume avocado operations in Michoacán",
-          "summary": "Ronald Johnson said the commitments would strengthen security and allow US government activities to resume immediately in phases."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "componentSource": "code-reviewed"
-      },
-      "image": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/08/06/6a756d0ae26cf.jpeg",
-      "imgTries": 2,
-      "background": "Michoacán is Mexico's main avocado export state, and US Department of Agriculture inspectors normally certify orchards there before fruit can cross the border, which is why a security-related suspension halts the trade until Washington judges it safe to send staff back. Avocados sit within the broader US-Mexico goods relationship where about 80% of Mexico's exports go to the United States.",
-      "view": "This is a security concession, not a trade agreement, and it addresses federal-state coordination rather than the extortion and cargo theft that INEGI data shows go unreported 93.2% of the time and fall hardest on small producers who cannot pay for protection. The government's claim of a 46% drop in daily homicides since September 2024 is still preliminary prosecutor data, so a security commitment announced this week rests on figures that could be revised once final death certificates arrive.",
-      "prediction": "US personnel most likely resume avocado-related activity in Michoacán in stages over the coming weeks, with no fixed date given. That would be disproven if Washington re-suspends operations following a new violence alert, which is the same trigger that halted the activity this time.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-gwm-cambia-la-estrategia-de-ora-en-m-xico-y-lanza-el-2026-08-08",
-      "date": "2026-08-08",
-      "section": "economy",
-      "title": "GWM launches Ora 5 in Mexico with gasoline, hybrid and electric options",
-      "why": "The Chinese automaker is expanding its Ora brand entry with a B-segment SUV starting at 449,900 pesos, offering three powertrain choices to broaden its addressable market in Mexico.",
-      "company": "GWM",
-      "source": "Expansión — Empresas",
-      "url": "https://expansion.mx/empresas/2026/08/08/gwm-cambia-estrategia-lanza-ora-5-gasolina-hibrido-electrico",
-      "importance": 3,
-      "kind": "event",
-      "publishedAt": "2026-08-08T16:43:11.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "GWM cambia la estrategia de Ora en México y lanza el ORA 5 con gasolina, híbrido y eléctrico",
-        "dek": "El fabricante chino busca ampliar el mercado de Ora en México con un SUV-B que ofrece tres alternativas de propulsión y precios desde 449,900 pesos."
-      },
-      "coverage": [
-        {
-          "source": "Expansión — Empresas",
-          "url": "https://expansion.mx/empresas/2026/08/08/gwm-cambia-estrategia-lanza-ora-5-gasolina-hibrido-electrico",
-          "publishedAt": "2026-08-08T16:43:11.000Z",
-          "date": "2026-08-08",
-          "title": "GWM launches Ora 5 in Mexico with gasoline, hybrid and electric options",
-          "summary": "The Chinese automaker is expanding its Ora brand entry with a B-segment SUV starting at 449,900 pesos, offering three powertrain choices to broaden its addressable market in Mexico."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 0
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 3,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 6,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-la-inflaci-n-en-m-xico-desaceler-a-3-12-en-julio-su--2026-08-07",
-      "date": "2026-08-07",
-      "section": "money",
-      "title": "Mexico's inflation falls to 3.12% in July",
-      "why": "The headline rate is close to Banxico's target, but underlying inflation remained more persistent.",
-      "company": "",
-      "source": "Grupo Consultor de Mercados Agrícolas",
-      "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
-      "importance": 8,
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "componentSource": "code-reviewed"
-      },
-      "scheduledEventId": "inegi-cpi-2026-08-07",
-      "scheduledImportanceFloor": 7,
-      "requiredForBrief": true,
-      "kind": "event",
-      "publishedAt": "2026-08-07T20:34:46.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "La inflación en México desaceleró a 3.12% en julio, su menor nivel desde 2020",
-        "dek": "La inflación interanual de México se moderó en julio en línea con lo previsto, aunque la persistencia de presiones en el componente subyacente respaldaba la postura cautelosa del Banco de México (Banxico)."
-      },
-      "coverage": [
-        {
-          "source": "Grupo Consultor de Mercados Agrícolas",
-          "url": "https://gcma.com.mx/el-sol-de-mexico-inflacion-desacelera-a-3-12-en-julio/",
-          "publishedAt": "2026-08-07T20:34:46.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico's inflation falls to 3.12% in July",
-          "summary": "The headline rate is close to Banxico's target, but underlying inflation remained more persistent."
-        },
-        {
-          "source": "El Economista",
-          "url": "https://eleconomista.com.mx/economia/inflacion-mexico-desacelero-3-12-julio-menor-nivel-20260807-827157.html",
-          "publishedAt": "2026-08-07T13:15:39.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico's annual inflation falls to 3.12 percent in July, its lowest rate since 2020",
-          "summary": "The headline rate is close to Banxico's target, but underlying inflation remained more persistent."
-        }
-      ],
-      "image": "https://imagenes.eleconomista.com.mx/files/image_1200_600/uploads/2026/05/07/69fd1ec0a2138.webp",
-      "imgTries": 1
-    },
-    {
-      "id": "n-m-xico-gana-arbitraje-contra-fondos-estadounidenses--2026-08-07",
-      "date": "2026-08-07",
-      "section": "us-mexico",
-      "title": "Mexico wins USMCA arbitration against US investment funds over TV Azteca debt",
-      "why": "A USMCA tribunal rejected a 219 million dollar claim by Cyrus and Contrarian funds against Mexico, ruling the investors were not protected by the trade agreement. The decision spares Mexico from paying disputed bondholder claims.",
-      "company": "TV Azteca",
-      "source": "Expansión — Empresas",
-      "url": "https://expansion.mx/empresas/2026/08/07/mexico-no-tendra-pagar-deuda-tv-azteca",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-07T19:14:07.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "México gana arbitraje contra fondos estadounidenses por deuda de TV Azteca",
-        "dek": "El tribunal del CIADI concluyó que los fondos Cyrus y Contrarian no estaban protegidos por el T-MEC, por lo que desechó su reclamación de 219 millones de dólares contra México por el impago de bonos de TV Azteca."
-      },
-      "coverage": [
-        {
-          "source": "Expansión — Empresas",
-          "url": "https://expansion.mx/empresas/2026/08/07/mexico-no-tendra-pagar-deuda-tv-azteca",
-          "publishedAt": "2026-08-07T19:14:07.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico wins USMCA arbitration against US investment funds over TV Azteca debt",
-          "summary": "A USMCA tribunal rejected a 219 million dollar claim by Cyrus and Contrarian funds against Mexico, ruling the investors were not protected by the trade agreement. The decision spares Mexico from paying disputed bondholder claims."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 7,
-        "componentSource": "model"
-      },
-      "imgTries": 5,
-      "background": "USMCA contains an investor-state dispute mechanism that lets foreign investors sue a member government before an independent tribunal if they believe treaty protections were violated, separate from Mexico's domestic courts.",
-      "view": "The ruling closes one specific claim rather than settling how USMCA investor protections apply to sovereign debt disputes generally, since it turned on whether these particular bondholders qualified for protection at all. It also matters for public finances: Mexico is already on the last investment-grade rung at Moody's partly because of Pemex support costs, so avoiding a $219 million payout keeps one more claim off a debt load that rose to 53.2% of GDP in 2025.",
-      "prediction": "The funds are likely to explore appeal routes or alternative legal claims rather than drop the matter, since $219 million is a large sum to abandon after losing on jurisdiction rather than merits. That view would be wrong if Cyrus and Contrarian publicly confirm they are not pursuing further action.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-m-xico-y-per-restablecen-las-relaciones-diplom-ticas-2026-08-07",
-      "date": "2026-08-07",
-      "section": "us-mexico",
-      "title": "Mexico and Peru restore diplomatic relations after four-year dispute",
-      "why": "Mexico granted a safe passage document to Peru's former Prime Minister Betssy Chávez, resolving a standoff that began when Peru blocked her asylum request four years ago and has now triggered internal pressure on Peru's government.",
-      "company": "",
-      "source": "El País — México",
-      "url": "https://elpais.com/america/2026-08-08/la-reconciliacion-de-mexico-y-peru-fin-a-cuatro-anos-de-alta-tension-y-primer-choque-interno-de-fujimori.html",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-08T04:00:00.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/america/2026-08-08/la-reconciliacion-de-mexico-y-peru-fin-a-cuatro-anos-de-alta-tension-y-primer-choque-interno-de-fujimori.html",
-          "publishedAt": "2026-08-08T04:00:00.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico and Peru restore diplomatic relations after four-year dispute",
-          "summary": "Mexico granted a safe passage document to Peru's former Prime Minister Betssy Chávez, resolving a standoff that began when Peru blocked her asylum request four years ago and has now triggered internal pressure on Peru's government."
-        },
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/politica/mexico-y-peru-reanudan-relaciones-diplomaticas-esta-fue-la-medida-que-impulso-la-conciliacion/",
-          "publishedAt": "2026-08-07T16:17:45.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico and Peru restore diplomatic relations",
-          "summary": "Mexico and Peru reestablished full diplomatic ties after a period of strain dating to 2022. The renewal reflects broader Latin American consolidation and removes a diplomatic friction point."
-        },
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/2026-08-07/mexico-y-peru-restablecen-las-relaciones-diplomaticas-tras-cuatro-anos-de-choques.html",
-          "publishedAt": "2026-08-07T13:14:34.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico and Peru restore diplomatic ties after four years of rupture",
-          "summary": "Mexico is normalizing relations with Peru after years of tension over support for ousted president Pedro Castillo, signaling a diplomatic reset under Sheinbaum with Peru's newly elected government."
-        }
-      ],
-      "imgTries": 1,
-      "reportEvidence": {
-        "title": "La reconciliación de México y Perú: fin a cuatro años de alta tensión y primer choque interno de Fujimori",
-        "dek": "La entrega del salvoconducto a Betssy Chávez, la ex primera ministra condenada por conspiración, ha provocado la crítica de fuerzas afines al fujimorismo"
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 6,
-        "componentSource": "model"
-      },
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
       }
     }
   ]
