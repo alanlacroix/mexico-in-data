@@ -6,20 +6,20 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-25T15:11:49.567Z",
+    "generatedAt": "2026-08-25T15:35:51.847Z",
     "llm": true,
     "curation": {
       "policy": "exact-day-assessment-v1",
       "editorialDate": "2026-08-25",
       "candidateCount": 24,
-      "candidateSig": "6baa22081693cdee01f6a86c21578a78d1e678b052c965851bfb2b3a8b6ceabc",
+      "candidateSig": "c8bc5e7bd305f33d4cc67a8d2e76a4afe3e74a7ce1866c1e8d4d4619a8f197a1",
       "freshCandidateCount": 6,
       "assessedCount": 24,
-      "keptCount": 0,
-      "rejectedCount": 3,
+      "keptCount": 1,
+      "rejectedCount": 2,
       "mode": "model",
       "complete": true,
-      "reason": "3 selected event(s) quarantined by the copy gate"
+      "reason": "2 selected event(s) quarantined by the copy gate"
     },
     "analysisTarget": {
       "policy": "every-selected-story-context-audited-v3",
@@ -28,7 +28,7 @@
         "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
         "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25"
       ],
-      "added": 0,
+      "added": 2,
       "outcomes": [
         {
           "id": "n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25",
@@ -37,13 +37,13 @@
         },
         {
           "id": "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
-          "ready": false,
-          "reason": "field-rejected"
+          "ready": true,
+          "reason": "ready"
         },
         {
           "id": "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25",
-          "ready": false,
-          "reason": "field-rejected"
+          "ready": true,
+          "reason": "ready"
         }
       ]
     }
@@ -219,7 +219,37 @@
         "componentSource": "model"
       },
       "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/08/bandera-estados-unidos-pexels-25082026.jpg",
-      "imgTries": 3
+      "imgTries": 4,
+      "background": "US consulates issue security alerts when threats to staff or facilities reach a level that requires operational changes, suspension of normal business signals heightened concern but does not indicate the threat's nature or current status.",
+      "view": "The suspension is a precautionary operational measure, not an indication of imminent attack. It affects US government personnel and consulate functions in Mexicali only, not US citizens' ability to remain in or transit through the city. The alert directs citizens to monitor surroundings and follow Mexican police instructions, placing responsibility on individuals rather than declaring the area unsafe for commerce or residence.",
+      "prediction": "The consulate will announce either a lifting of the suspension or an extension when the threat assessment changes. The observable test is whether normal activities resume within days (threat deemed temporary or contained) or extend into weeks (authorities assess ongoing risk).",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "article",
+          "event:n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25"
+        ],
+        "view": [
+          "article"
+        ],
+        "prediction": [
+          "article"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2508/mexico/ee-uu-suspende-actividades-y-viajes-de-su-personal-en-mexicali-por-amenaza/"
+        },
+        {
+          "id": "event:n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25",
+          "kind": "prior-event",
+          "source": "El País, México",
+          "url": "https://elpais.com/mexico/2026-08-25/estados-unidos-emite-una-alerta-de-seguridad-y-suspende-sus-actividades-en-mexicali-por-amenazas.html"
+        }
+      ]
     },
     {
       "id": "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25",
@@ -288,7 +318,43 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
-      "imgTries": 3
+      "imgTries": 4,
+      "background": "Mexico's judicial system underwent fundamental restructuring in 2024, replacing appointment with election for much of the federal judiciary, the new Supreme Court took office in September 2025, and practical tests now center on case resolution speed, enforcement, and independence when government or powerful interests are involved.",
+      "view": "The amendment formalizes transparency and data-protection procedures for the reformed judiciary. Publication in the Official Federal Gazette makes the new rules binding on federal courts. The substance of the changes is not disclosed in available sources, so the practical effect on case disclosure, financial filings, or judicial independence cannot be determined from this announcement alone.",
+      "prediction": "Courts will apply the revised rules to information requests and personnel records immediately. Whether the amendment strengthens or weakens public access depends on specific provisions not yet detailed in public reporting, that detail will emerge when transparency organizations or media test the new procedures against specific cases or records requests.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "view": [
+          "article"
+        ],
+        "prediction": [
+          "article"
+        ],
+        "background": [
+          "standing:std-judicial-reform",
+          "standing:std-political-system"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "standing:std-judicial-reform",
+          "kind": "standing",
+          "source": "OAS / Suprema Corte",
+          "url": "https://www.scjn.gob.mx/"
+        },
+        {
+          "id": "standing:std-political-system",
+          "kind": "standing",
+          "source": "INE / Constitución",
+          "url": "https://www.ine.mx/"
+        },
+        {
+          "id": "article",
+          "kind": "primary",
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797042&fecha=25/08/2026"
+        }
+      ]
     },
     {
       "id": "n-sheinbaum-conf-a-en-alcanzar-acuerdo-comercial-con-e-2026-08-24",
@@ -550,6 +616,74 @@
           "durability": {
             "raw": 2,
             "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-ied-en-m-xico-pierde-fuerza-nuevas-inversiones-caen--2026-08-24",
+      "date": "2026-08-24",
+      "section": "economy",
+      "title": "Mexico's new foreign investment falls 13.4 percent while reinvestment gains ground in first half 2026",
+      "why": "New foreign direct investment into Mexico totaled 2.726 billion dollars in the first half of 2026, down 13.43 percent from the same period in 2025, as reinvested earnings play an increasing role in total inflows.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/nueva-ied-captada-por-mexico-se-contrae-13-43-en-el-primer-semestre-de-2026/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-24T22:27:12.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "IED en México pierde fuerza: nuevas inversiones caen 13.4% y las reinversiones ganan terreno",
+        "dek": "México atrajo 2,726 mdd en nuevas inversiones respecto al total de la IED en el primer semestre del año, cifra 13.43% menor que en 2025. La publicación IED en México pierde fuerza: nuevas inversiones caen 13.4% y las reinversiones ganan terreno apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/nueva-ied-captada-por-mexico-se-contrae-13-43-en-el-primer-semestre-de-2026/",
+          "publishedAt": "2026-08-24T22:27:12.000Z",
+          "date": "2026-08-24",
+          "title": "Mexico's new foreign investment falls 13.4 percent while reinvestment gains ground in first half 2026",
+          "summary": "New foreign direct investment into Mexico totaled 2.726 billion dollars in the first half of 2026, down 13.43 percent from the same period in 2025, as reinvested earnings play an increasing role in total inflows."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
             "status": "accepted"
           },
           "officialness": {
@@ -4585,74 +4719,6 @@
           "officialness": {
             "raw": 2,
             "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-inicia-construcci-n-de-central-la-esperanza-solar-en-2026-08-10",
-      "date": "2026-08-10",
-      "section": "economy",
-      "title": "Construction begins on La Esperanza Solar plant in Campeche with 420 MW generation and 150 MW storage",
-      "why": "Copenhagen Infrastructure Partners and CFE Calificados are building a hybrid solar and battery storage facility in Campeche with 420 megawatts of generation capacity and 150 megawatts of energy storage.",
-      "company": "Copenhagen Infrastructure Partners",
-      "source": "Energía a Debate",
-      "url": "https://energiaadebate.com/inicia-construccion-de-central-la-esperanza-solar-en-campeche-con-participacion-de-cfe-calificados/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-11T02:58:15.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Inicia construcción de central “La Esperanza Solar” en Campeche con participación de CFE Calificados",
-        "dek": "La central, que combina generación solar con almacenamiento, es desarrollada por Copenhagen Infrastructure Partners y tendrá 420 MW de capacidad de generación más 150 MW de almacenamiento"
-      },
-      "coverage": [
-        {
-          "source": "Energía a Debate",
-          "url": "https://energiaadebate.com/inicia-construccion-de-central-la-esperanza-solar-en-campeche-con-participacion-de-cfe-calificados/",
-          "publishedAt": "2026-08-11T02:58:15.000Z",
-          "date": "2026-08-10",
-          "title": "Construction begins on La Esperanza Solar plant in Campeche with 420 MW generation and 150 MW storage",
-          "summary": "Copenhagen Infrastructure Partners and CFE Calificados are building a hybrid solar and battery storage facility in Campeche with 420 megawatts of generation capacity and 150 megawatts of energy storage."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
             "status": "accepted"
           }
         },

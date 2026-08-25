@@ -1,14 +1,56 @@
 {
   "schemaVersion": 1,
-  "state": "deferred",
+  "state": "published",
   "editorialDate": "2026-08-25",
-  "contentEditorialDate": "2026-08-24",
+  "contentEditorialDate": "2026-08-25",
   "slot": "morning",
-  "publicationId": "32859899473-1",
+  "publicationId": "32866190830-1",
   "deployAttempt": 1,
-  "generatedAt": "2026-08-25T14:32:24.626Z",
-  "contentGeneratedAt": "2026-08-24T16:28:29.704Z",
-  "reason": "Briefly Explained is not ready for 2 selected stories (field-rejected)",
-  "workflowRunId": "32859899473",
+  "generatedAt": "2026-08-25T15:36:25.230Z",
+  "briefGeneratedAt": "2026-08-25T15:36:10.944Z",
+  "briefReviewedAt": "2026-08-25T15:36:10.944Z",
+  "selectionPolicy": "exact-day-plus-carryover-v1",
+  "selectionCandidates": 3,
+  "selectedStories": 3,
+  "storyLanes": {
+    "today": 3,
+    "keyDevelopments": 0,
+    "total": 3
+  },
+  "curation": {
+    "policy": "exact-day-assessment-v1",
+    "editorialDate": "2026-08-25",
+    "candidateCount": 24,
+    "candidateSig": "c8bc5e7bd305f33d4cc67a8d2e76a4afe3e74a7ce1866c1e8d4d4619a8f197a1",
+    "freshCandidateCount": 6,
+    "assessedCount": 24,
+    "keptCount": 1,
+    "rejectedCount": 2,
+    "mode": "model",
+    "complete": true,
+    "reason": "2 selected event(s) quarantined by the copy gate"
+  },
+  "explanations": {
+    "policy": "every-selected-story-context-audited-v5",
+    "storyCount": 3,
+    "targetCount": 3,
+    "requiredCount": 3,
+    "readyCount": 3,
+    "readyTargetCount": 3,
+    "readyIds": [
+      "n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25",
+      "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
+      "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25"
+    ],
+    "missingTarget": [],
+    "targetMet": true,
+    "publicationBlocking": false
+  },
+  "scheduledOutcomes": {
+    "checkedAt": "2026-08-25T15:35:51.610Z",
+    "blockers": 0,
+    "pending": 0
+  },
+  "workflowRunId": "32866190830",
   "workflowRunAttempt": 1
 }
