@@ -1,14 +1,15 @@
 {
   "schemaVersion": 1,
+  "pipelineVersion": 2,
   "state": "published",
   "editorialDate": "2026-08-25",
   "contentEditorialDate": "2026-08-25",
   "slot": "morning",
-  "publicationId": "32866190830-1",
+  "publicationId": "32870094148-1",
   "deployAttempt": 1,
-  "generatedAt": "2026-08-25T15:36:25.230Z",
-  "briefGeneratedAt": "2026-08-25T15:36:10.944Z",
-  "briefReviewedAt": "2026-08-25T15:36:10.944Z",
+  "generatedAt": "2026-08-25T16:09:38.248Z",
+  "briefGeneratedAt": "2026-08-25T16:09:32.305Z",
+  "briefReviewedAt": "2026-08-25T16:09:16.332Z",
   "selectionPolicy": "exact-day-plus-carryover-v1",
   "selectionCandidates": 3,
   "selectedStories": 3,
@@ -21,8 +22,8 @@
     "policy": "exact-day-assessment-v1",
     "editorialDate": "2026-08-25",
     "candidateCount": 24,
-    "candidateSig": "c8bc5e7bd305f33d4cc67a8d2e76a4afe3e74a7ce1866c1e8d4d4619a8f197a1",
-    "freshCandidateCount": 6,
+    "candidateSig": "dba4191901b3851d12071a56fb28b9d4130b1e030cc04009e6e0cbc1f99a2823",
+    "freshCandidateCount": 8,
     "assessedCount": 24,
     "keptCount": 1,
     "rejectedCount": 2,
@@ -31,26 +32,27 @@
     "reason": "2 selected event(s) quarantined by the copy gate"
   },
   "explanations": {
-    "policy": "every-selected-story-context-audited-v5",
+    "policy": "all-selected-analysis-target-v6",
     "storyCount": 3,
     "targetCount": 3,
     "requiredCount": 3,
-    "readyCount": 3,
-    "readyTargetCount": 3,
+    "readyCount": 2,
+    "readyTargetCount": 2,
     "readyIds": [
       "n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25",
-      "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
       "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25"
     ],
-    "missingTarget": [],
-    "targetMet": true,
+    "missingTarget": [
+      "n-el-congreso-de-sinaloa-designa-a-graciela-dom-nguez--2026-08-25"
+    ],
+    "targetMet": false,
     "publicationBlocking": false
   },
   "scheduledOutcomes": {
-    "checkedAt": "2026-08-25T15:35:51.610Z",
+    "checkedAt": "2026-08-25T16:09:16.238Z",
     "blockers": 0,
     "pending": 0
   },
-  "workflowRunId": "32866190830",
+  "workflowRunId": "32870094148",
   "workflowRunAttempt": 1
 }
