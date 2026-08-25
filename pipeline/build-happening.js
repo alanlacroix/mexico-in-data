@@ -1136,7 +1136,26 @@ async function main() {
   const checkpoint = existing.meta?.curation?.editorialDate === editorialDay(now)
     ? existing.meta.curation : persistedCheckpoint;
   if (resumeCurrentEdition && canReuseCuration(checkpoint, editorialDay(now), signature)) {
-    console.log('  curation checkpoint still matches the source ledger — reusing the assessed event log');
+    // Reuse means "do not buy the same curation again," not "skip deterministic
+    // maintenance." New clustering, copy, or retention rules must repair the stored
+    // ledger even when no source URL has changed; otherwise old bad state becomes
+    // impossible to migrate and can keep the release gate failing forever.
+    const regrouped = attachScheduledMetadata(mergeLog(existing, [], now).events, schedule);
+    const healed = reconcileHappeningFactCopy(regrouped, { tradeUS: readJson(D('trade-us.json'), null) });
+    if (JSON.stringify(healed) !== JSON.stringify(arr(existing.events))) {
+      const meta = {
+        ...existing.meta,
+        updated: editorialDay(now),
+        generatedAt: now.toISOString(),
+        count: healed.length,
+        curation: checkpoint,
+      };
+      delete meta.analysisTarget;
+      fs.writeFileSync(OUT, JSON.stringify({ ...existing, meta, events: healed }, null, 2));
+      console.log(`  curation checkpoint still matches — reused assessment and self-healed the event log (${arr(existing.events).length} -> ${healed.length})`);
+    } else {
+      console.log('  curation checkpoint still matches the source ledger — reusing the assessed event log');
+    }
     return;
   }
   if (resumeCurrentEdition && checkpoint?.editorialDate === editorialDay(now)) {

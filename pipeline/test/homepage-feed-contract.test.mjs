@@ -510,6 +510,8 @@ assert.match(happeningBuilder, /const rejectedKeeps = kept\.length - published\.
   'quarantining unsafe generated copy must not relabel a complete candidate assessment as incomplete');
 assert.match(happeningBuilder, /--resume-current-edition[\s\S]*canReuseCuration[\s\S]*checkpoint still matches the source ledger/,
   'a retry may reuse paid curation only while the eligible source ledger is unchanged');
+assert.match(happeningBuilder, /canReuseCuration\(checkpoint[\s\S]*mergeLog\(existing, \[\], now\)[\s\S]*self-healed the event log/,
+  'checkpoint reuse must still run deterministic event-log self-healing before returning');
 assert.match(happeningBuilder, /new eligible reporting arrived[\s\S]*invalidating the earlier curation checkpoint/,
   'new reporting must force the hourly retry to reassess the edition');
 assert.match(briefBuilder, /curationReadiness\(P\.curation, editorialDate[\s\S]*curation is incomplete/,
