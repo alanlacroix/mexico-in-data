@@ -2,27 +2,824 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-24",
+    "updated": "2026-08-25",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-24T16:24:23.000Z",
-    "llm": false,
+    "generatedAt": "2026-08-25T13:25:22.785Z",
+    "llm": true,
     "curation": {
       "policy": "exact-day-assessment-v1",
-      "editorialDate": "2026-08-24",
+      "editorialDate": "2026-08-25",
       "candidateCount": 24,
-      "candidateSig": "f70418721a6240a83855d6f7f9422dc1792e055ed692d038405d0653931efc8f",
+      "candidateSig": "a71ae992eab9d1e052952955c8e65adc8f4b1c5fc8ff09192ca8d37eca3f6205",
       "freshCandidateCount": 3,
       "assessedCount": 24,
-      "rejectedCount": 0,
-      "keptCount": 1,
-      "mode": "manual-source-review",
+      "keptCount": 10,
+      "rejectedCount": 2,
+      "mode": "model",
       "complete": true,
-      "reason": "one current development retained after direct source review"
+      "reason": "2 selected event(s) quarantined by the copy gate"
+    },
+    "analysisTarget": {
+      "policy": "every-selected-story-context-audited-v3",
+      "ids": [
+        "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
+        "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25",
+        "n-sheinbaum-sinaloa-interim-governor-october-2027-2026-08-24"
+      ],
+      "added": 0,
+      "outcomes": [
+        {
+          "id": "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
+          "ready": false,
+          "reason": "field-rejected"
+        },
+        {
+          "id": "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25",
+          "ready": false,
+          "reason": "field-rejected"
+        },
+        {
+          "id": "n-sheinbaum-sinaloa-interim-governor-october-2027-2026-08-24",
+          "ready": true,
+          "reason": "ready"
+        }
+      ]
     }
   },
   "events": [
+    {
+      "id": "n-ee-uu-suspende-actividades-y-viajes-de-su-personal-e-2026-08-25",
+      "date": "2026-08-25",
+      "section": "us-mexico",
+      "title": "US suspends consular activities in Mexicali over threat",
+      "why": "The US Consulate in Tijuana instructed personnel to suspend activity and travel in Mexicali, directing staff and citizens to avoid government buildings and monitor surroundings in response to an unspecified threat.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/2508/mexico/ee-uu-suspende-actividades-y-viajes-de-su-personal-en-mexicali-por-amenaza/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-25T08:59:40.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "EE.UU. suspende actividades y viajes de su personal en Mexicali por amenaza",
+        "dek": "El Consulado de EE.UU. en Tijuana pidió a sus ciudadanos evitar edificios gubernamentales, mantenerse atentos a su entorno y seguir las instrucciones de las autoridades mexicanas ante un eventual incidente."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2508/mexico/ee-uu-suspende-actividades-y-viajes-de-su-personal-en-mexicali-por-amenaza/",
+          "publishedAt": "2026-08-25T08:59:40.000Z",
+          "date": "2026-08-25",
+          "title": "US suspends consular activities in Mexicali over threat",
+          "summary": "The US Consulate in Tijuana instructed personnel to suspend activity and travel in Mexicali, directing staff and citizens to avoid government buildings and monitor surroundings in response to an unspecified threat."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/08/bandera-estados-unidos-pexels-25082026.jpg",
+      "imgTries": 1
+    },
+    {
+      "id": "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25",
+      "date": "2026-08-25",
+      "section": "politics",
+      "title": "Mexico's Judiciary reforms transparency and public information rules",
+      "why": "The Judicial Administration Board has amended its transparency and public-information agreement, a formal action published in the Official Federal Gazette.",
+      "company": "",
+      "source": "Diario Oficial de la Federación",
+      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797042&fecha=25/08/2026",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-25T12:00:00.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Acuerdo General del Pleno del Órgano de Administración Judicial que reforma el similar que establece las disposiciones en materia de transparencia, acceso a la información pública y protección de…",
+        "dek": "DOF · PODER JUDICIAL ORGANO DE ADMINISTRACION JUDICIAL"
+      },
+      "coverage": [
+        {
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797042&fecha=25/08/2026",
+          "publishedAt": "2026-08-25T12:00:00.000Z",
+          "date": "2026-08-25",
+          "title": "Mexico's Judiciary reforms transparency and public information rules",
+          "summary": "The Judicial Administration Board has amended its transparency and public-information agreement, a formal action published in the Official Federal Gazette."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "imgTries": 1
+    },
+    {
+      "id": "n-sheinbaum-conf-a-en-alcanzar-acuerdo-comercial-con-e-2026-08-24",
+      "date": "2026-08-24",
+      "section": "us-mexico",
+      "title": "Mexico aims for US trade agreement after Canada rupture",
+      "why": "Marcelo Ebrard, Mexico's chief trade negotiator and Economy Secretary, traveled to the United States for one week to pursue a bilateral agreement, signaling an attempt to secure a deal as the three-country pact faces strain.",
+      "company": "",
+      "source": "Bloomberg Línea",
+      "url": "https://bloomberglinea.com/latinoamerica/mexico/sheinbaum-confia-en-alcanzar-acuerdo-comercial-con-eeuu-tras-ruptura-de-canada/",
+      "importance": 10,
+      "kind": "event",
+      "publishedAt": "2026-08-24T21:43:17.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Sheinbaum confía en alcanzar acuerdo comercial con EE.UU. tras ruptura de Canadá",
+        "dek": "Marcelo Ebrard, principal negociador comercial y el Secretario de Economía de México, viajó a Estados Unidos donde se quedará durante una semana con el objetivo de alcanzar un acuerdo."
+      },
+      "coverage": [
+        {
+          "source": "Bloomberg Línea",
+          "url": "https://bloomberglinea.com/latinoamerica/mexico/sheinbaum-confia-en-alcanzar-acuerdo-comercial-con-eeuu-tras-ruptura-de-canada/",
+          "publishedAt": "2026-08-24T21:43:17.000Z",
+          "date": "2026-08-24",
+          "title": "Mexico aims for US trade agreement after Canada rupture",
+          "summary": "Marcelo Ebrard, Mexico's chief trade negotiator and Economy Secretary, traveled to the United States for one week to pursue a bilateral agreement, signaling an attempt to secure a deal as the three-country pact faces strain."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 10,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-arizona-livestock-port-1st-to-reopen-to-mexican-catt-2026-08-24",
+      "date": "2026-08-24",
+      "section": "us-mexico",
+      "title": "Douglas Arizona livestock port reopens to Mexican cattle as screwworm cases decline",
+      "why": "The first U.S. border crossing to resume imports of live cattle from Mexico opened on Monday at Douglas, Arizona, following a reduction in New World screwworm cases that had previously blocked the trade.",
+      "company": "",
+      "source": "Border Report",
+      "url": "https://borderreport.com/news/environment/arizona-livestock-port-1st-to-reopen-to-mexican-cattle-as-screwworm-cases-decline/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-24T23:38:14.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Arizona livestock port 1st to reopen to Mexican cattle as screwworm cases decline",
+        "dek": "The U.S. livestock port in Douglas, Arizona, became the first along the Southwest border to reopen to Mexican cattle on Monday, but the threat of New World screwworm still remains elsewhere and that means restrictions are still in place."
+      },
+      "coverage": [
+        {
+          "source": "Border Report",
+          "url": "https://borderreport.com/news/environment/arizona-livestock-port-1st-to-reopen-to-mexican-cattle-as-screwworm-cases-decline/",
+          "publishedAt": "2026-08-24T23:38:14.000Z",
+          "date": "2026-08-24",
+          "title": "Douglas Arizona livestock port reopens to Mexican cattle as screwworm cases decline",
+          "summary": "The first U.S. border crossing to resume imports of live cattle from Mexico opened on Monday at Douglas, Arizona, following a reduction in New World screwworm cases that had previously blocked the trade."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-sheinbaum-sinaloa-interim-governor-october-2027-2026-08-24",
+      "date": "2026-08-24",
+      "section": "politics",
+      "title": "Sheinbaum says Sinaloa's interim governor should serve through October 2027",
+      "why": "Sinaloa's Congress is due to name a replacement Monday after granting Rubén Rocha Moya a second indefinite leave. Rocha had returned to office for about a day and a half while facing a US criminal case.",
+      "company": "",
+      "source": "El País",
+      "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-24T15:26:00.000Z",
+      "sourceTier": 1,
+      "reportEvidence": {
+        "title": "Sheinbaum, sobre el regreso de Rocha Moya: 'No me parecía pertinente, por decir lo menos'",
+        "dek": "La presidenta afirmó que la persona designada como gobernadora interina debe permanecer en el cargo hasta el 31 de octubre de 2027. El Congreso de Sinaloa debe elegir a la sustituta o sustituto tras la segunda licencia indefinida de Rocha."
+      },
+      "coverage": [
+        {
+          "source": "El País",
+          "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html",
+          "publishedAt": "2026-08-24T15:26:00.000Z",
+          "date": "2026-08-24",
+          "title": "Sheinbaum says Sinaloa's interim governor should serve through October 2027",
+          "summary": "Sinaloa's Congress is due to name a replacement Monday after granting Rubén Rocha Moya a second indefinite leave. Rocha had returned to office for about a day and a half while facing a US criminal case."
+        },
+        {
+          "source": "Associated Press",
+          "url": "https://apnews.com/article/8daea70ca6c4148b65ab3acf2d81c6ee",
+          "publishedAt": "2026-08-23T18:00:00.000Z",
+          "date": "2026-08-23",
+          "title": "Mexican governor indicted by US seeks leave again after contentious return to office",
+          "summary": "Rocha sought a second indefinite leave about a day and a half after returning to office."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "reportedTotal": null,
+        "componentSource": "manual-source-review"
+      },
+      "background": "Sinaloa's constitution requires Congress to appoint an interim governor when an absence lasts more than 30 days. The appointment requires an absolute majority.",
+      "view": "The second leave turns a brief return into a longer succession decision. If Congress appoints someone through October 2027, that person, not Rocha, will run the state while the US case proceeds.",
+      "prediction": "Congress's appointment will show whether the handover lasts through October 2027. A shorter term would leave the succession open.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "primary:sinaloa-constitution"
+        ],
+        "view": [
+          "article",
+          "report:ap"
+        ],
+        "prediction": [
+          "article",
+          "primary:sinaloa-constitution"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El País",
+          "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html"
+        },
+        {
+          "id": "report:ap",
+          "kind": "report",
+          "source": "Associated Press",
+          "url": "https://apnews.com/article/8daea70ca6c4148b65ab3acf2d81c6ee"
+        },
+        {
+          "id": "primary:sinaloa-constitution",
+          "kind": "primary",
+          "source": "Congress of Sinaloa",
+          "url": "https://iip.congresosinaloa.gob.mx/docs/ref_le/007/089.pdf"
+        }
+      ],
+      "image": "https://imagenes.elpais.com/resizer/v2/SEJWTPYCSNDKVH3VOQNGOQGKKE.png?auth=b640870211b3a4af7ef9c423e5198d4a40e0b827510ab604d5a10c6ed173fac6",
+      "imgTries": 1
+    },
+    {
+      "id": "n-banca-presta-m-s-a-mipymes-pero-cae-el-acceso-al-cr--2026-08-24",
+      "date": "2026-08-24",
+      "section": "money",
+      "title": "Bank lending to small firms rises but access falls for smallest companies",
+      "why": "Mexico's central bank data from the second quarter of 2026 shows that 22.7 percent of firms with up to 100 employees cited commercial bank financing as a source, indicating tightening access at the smallest end of the small-business sector.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/banca-presta-mas-a-mipymes-pero-cae-el-acceso-al-credito-entre-las-empresas-mas-pequenas/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-24T23:16:57.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Banca presta más a mipymes, pero cae el acceso al crédito entre las empresas más pequeñas",
+        "dek": "Datos de Banxico arrojan que, en el segundo trimestre de 2026, el porcentaje de empresas de hasta 100 empleados que señaló como fuente de financiamiento la banca comercial fue de 22.7%. La publicación Banca presta más a mipymes, pero cae el acceso al crédito entre las empresas más pequeñas apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/banca-presta-mas-a-mipymes-pero-cae-el-acceso-al-credito-entre-las-empresas-mas-pequenas/",
+          "publishedAt": "2026-08-24T23:16:57.000Z",
+          "date": "2026-08-24",
+          "title": "Bank lending to small firms rises but access falls for smallest companies",
+          "summary": "Mexico's central bank data from the second quarter of 2026 shows that 22.7 percent of firms with up to 100 employees cited commercial bank financing as a source, indicating tightening access at the smallest end of the small-business sector."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-apoyos-de-hacienda-a-pemex-cuestan-1-162-pesos-por-c-2026-08-24",
+      "date": "2026-08-24",
+      "section": "money",
+      "title": "Mexican government transfers to state oil company cost 1,162 pesos per taxpayer",
+      "why": "Government subsidies to Pemex amount to roughly one third of the state oil company's recorded revenue, calculating to 1,162 pesos per individual taxpayer.",
+      "company": "Pemex",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/apoyos-de-hacienda-a-pemex-cuestan-1162-pesos-por-cada-contribuyente-del-sat/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-24T08:00:31.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Apoyos de Hacienda a Pemex cuestan 1,162 pesos por cada contribuyente del SAT",
+        "dek": "Aunque las transferencias gubernamentales a Pemex han disminuido respecto al año pasado, todavía representan prácticamente una tercera parte de los ingresos registrados por la empresa. La publicación Apoyos de Hacienda a Pemex cuestan 1,162 pesos por cada contribuyente del SAT apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/apoyos-de-hacienda-a-pemex-cuestan-1162-pesos-por-cada-contribuyente-del-sat/",
+          "publishedAt": "2026-08-24T08:00:31.000Z",
+          "date": "2026-08-24",
+          "title": "Mexican government transfers to state oil company cost 1,162 pesos per taxpayer",
+          "summary": "Government subsidies to Pemex amount to roughly one third of the state oil company's recorded revenue, calculating to 1,162 pesos per individual taxpayer."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-m-xico-25-millones-de-l-neas-podr-an-desaparecer-del-2026-08-24",
+      "date": "2026-08-24",
+      "section": "economy",
+      "title": "Mexico to remove 25 million inactive phone lines from registry",
+      "why": "Mexico's telecommunications regulator will purge 25 million phone numbers from its database as part of an ongoing registry cleanup, affecting inactive lines currently held in government records.",
+      "company": "",
+      "source": "DPL News",
+      "url": "https://dplnews.com/mexico-25-millones-de-lineas-podrian-desaparecer-del-registro-la-crt-explica-cuales-seran-depuradas/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-24T22:17:13.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "México | 25 millones de líneas podrían desaparecer del registro: la CRT explica cuáles serán depuradas",
+        "dek": "Expansión El registro de líneas telefónicas en México avanza, pero no todos los números celulares que actualmente aparecen en las bases de datos llegarán al final del proceso, de acuerdo a la Comisión Reguladora de Telecomunicaciones (CRT) alrededor de 25 millones de líneas serán depuradas del registro nacional. Leer m"
+      },
+      "coverage": [
+        {
+          "source": "DPL News",
+          "url": "https://dplnews.com/mexico-25-millones-de-lineas-podrian-desaparecer-del-registro-la-crt-explica-cuales-seran-depuradas/",
+          "publishedAt": "2026-08-24T22:17:13.000Z",
+          "date": "2026-08-24",
+          "title": "Mexico to remove 25 million inactive phone lines from registry",
+          "summary": "Mexico's telecommunications regulator will purge 25 million phone numbers from its database as part of an ongoing registry cleanup, affecting inactive lines currently held in government records."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-bait-se-al-a-con-oxxo-para-ampliar-recargas-a-sus-26-2026-08-24",
+      "date": "2026-08-24",
+      "section": "economy",
+      "title": "Bait and OXXO partner to expand mobile payment reloads at 24,000 locations",
+      "why": "Digital payments platform Bait, serving 26.8 million users, secured distribution through OXXO's 24,000-plus convenience stores and Spin platform to allow customers to reload accounts in person.",
+      "company": "Bait",
+      "source": "Expansión — Empresas",
+      "url": "https://expansion.mx/empresas/2026/08/24/bait-alia-oxxo-recargas",
+      "importance": 3,
+      "kind": "event",
+      "publishedAt": "2026-08-24T18:05:40.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Bait se alía con OXXO para ampliar recargas a sus 26.8 millones de usuarios",
+        "dek": "Los clientes de Bait tendrán nuevos puntos para realizar recargas gracias a un acuerdo con OXXO, que suma más de 24,000 establecimientos y la plataforma Spin by OXXO."
+      },
+      "coverage": [
+        {
+          "source": "Expansión — Empresas",
+          "url": "https://expansion.mx/empresas/2026/08/24/bait-alia-oxxo-recargas",
+          "publishedAt": "2026-08-24T18:05:40.000Z",
+          "date": "2026-08-24",
+          "title": "Bait and OXXO partner to expand mobile payment reloads at 24,000 locations",
+          "summary": "Digital payments platform Bait, serving 26.8 million users, secured distribution through OXXO's 24,000-plus convenience stores and Spin platform to allow customers to reload accounts in person."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 3,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-bbva-santander-y-otros-bancos-pagar-an-86-4-mdd-por--2026-08-23",
+      "date": "2026-08-23",
+      "section": "money",
+      "title": "Seven major banks including BBVA and Santander face 86.4 million dollar penalty for bond-market collusion",
+      "why": "BBVA, Santander and five other Mexican banks are subject to an 86.4 million dollar penalty for allegedly fixing spreads, margins and timing of government bond sales.",
+      "company": "BBVA, Santander",
+      "source": "El CEO",
+      "url": "https://elceo.com/mercados/bbva-santander-y-otros-bancos-pagarian-86-4-mdd-por-caso-de-bonos-mexicanos/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-23T13:00:23.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "BBVA, Santander y otros bancos pagarían 86.4 mdd por caso de bonos mexicanos",
+        "dek": "A principios del año pasado, EL CEO publicó como siete de los bancos más importantes del país se habrían coludido para fijar posturas, márgenes y momentos de venta. La publicación BBVA, Santander y otros bancos pagarían 86.4 mdd por caso de bonos mexicanos apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/mercados/bbva-santander-y-otros-bancos-pagarian-86-4-mdd-por-caso-de-bonos-mexicanos/",
+          "publishedAt": "2026-08-23T13:00:23.000Z",
+          "date": "2026-08-23",
+          "title": "Seven major banks including BBVA and Santander face 86.4 million dollar penalty for bond-market collusion",
+          "summary": "BBVA, Santander and five other Mexican banks are subject to an 86.4 million dollar penalty for allegedly fixing spreads, margins and timing of government bond sales."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-bancos-whatsapp-y-sms-13-5-millones-de-mexicanos-cae-2026-08-23",
+      "date": "2026-08-23",
+      "section": "society",
+      "title": "13.5 million Mexicans fall victim to phishing fraud averaging 8,750 pesos per victim",
+      "why": "Cybercriminals used bank-impersonation calls in 35.8 percent of phishing cases and WhatsApp or SMS messages in 22.2 percent, reaching 13.5 million Mexicans and stealing an average of 8,750 pesos each.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/tecnologia/bancos-whatsapp-y-sms-13-5-millones-de-mexicanos-caen-fraudes-de-phishing-y-les-roban-8750-pesos-en-promedio/",
+      "importance": 3,
+      "kind": "event",
+      "publishedAt": "2026-08-23T16:00:20.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Bancos, WhatsApp y SMS: 13.5 millones de mexicanos caen en fraudes de phishing y les roban 8,750 pesos en promedio",
+        "dek": "Los ciberdelincuentes usan llamadas que suplantan a bancos en 35.8% de los casos y mensajes de WhatsApp o SMS en 22.2% de los fraudes. La publicación Bancos, WhatsApp y SMS: 13.5 millones de mexicanos caen en fraudes de phishing y les roban 8,750 pesos en promedio apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/tecnologia/bancos-whatsapp-y-sms-13-5-millones-de-mexicanos-caen-fraudes-de-phishing-y-les-roban-8750-pesos-en-promedio/",
+          "publishedAt": "2026-08-23T16:00:20.000Z",
+          "date": "2026-08-23",
+          "title": "13.5 million Mexicans fall victim to phishing fraud averaging 8,750 pesos per victim",
+          "summary": "Cybercriminals used bank-impersonation calls in 35.8 percent of phishing cases and WhatsApp or SMS messages in 22.2 percent, reaching 13.5 million Mexicans and stealing an average of 8,750 pesos each."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 0
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 3,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
     {
       "id": "n-us-treasury-sanctions-ecuador-to-us-cocaine-traffick-2026-08-21",
       "date": "2026-08-21",
@@ -3805,659 +4602,6 @@
         "durability": 1,
         "officialness": 1
       }
-    },
-    {
-      "id": "n-pemex-y-petrobras-negocian-un-segundo-acuerdo-de-coo-2026-08-07",
-      "date": "2026-08-07",
-      "section": "economy",
-      "title": "Pemex and Petrobras negotiate expanded refining partnership",
-      "why": "Pemex and Brazil's Petrobras are negotiating a second agreement to deepen cooperation in refining, fuels, biofuels, and petrochemicals in Mexico. The deal would expand the companies' existing alliance to cover downstream operations.",
-      "company": "Pemex",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/07/pemex-y-petrobras-negocian-un-segundo-acuerdo-de-cooperacion-de-refinacion-y-venta-de-combustibles/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-07T23:46:19.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Pemex y Petrobras negocian un segundo acuerdo de cooperación de refinación y venta de combustibles",
-        "dek": "Pemex y Petrobras negocian ampliar su alianza al refino, combustibles, biocombustibles y petroquímica en México."
-      },
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/07/pemex-y-petrobras-negocian-un-segundo-acuerdo-de-cooperacion-de-refinacion-y-venta-de-combustibles/",
-          "publishedAt": "2026-08-07T23:46:19.000Z",
-          "date": "2026-08-07",
-          "title": "Pemex and Petrobras negotiate expanded refining partnership",
-          "summary": "Pemex and Brazil's Petrobras are negotiating a second agreement to deepen cooperation in refining, fuels, biofuels, and petrochemicals in Mexico. The deal would expand the companies' existing alliance to cover downstream operations."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 2,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 6,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-production-of-the-kia-ev3-electric-vehicle-has-begun-2026-08-07",
-      "date": "2026-08-07",
-      "section": "economy",
-      "title": "Kia begins production of EV3 electric vehicle in Nuevo León",
-      "why": "Kia Mexico has started manufacturing the EV3, its first fully electric vehicle produced domestically. The move signals automakers' shift toward EV production in Mexico amid global electrification trends.",
-      "company": "Kia",
-      "source": "MEXICONOW",
-      "url": "https://mexico-now.com/production-of-the-kia-ev3-electric-vehicle-has-begun-in-nuevo-leon/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-07T21:00:00.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Production of the KIA EV3 electric vehicle has begun in Nuevo León.",
-        "dek": "KIA Mexico has begun production of the EV3, the brand’s first 100% electric vehicle manufactured in the country, at its..."
-      },
-      "coverage": [
-        {
-          "source": "MEXICONOW",
-          "url": "https://mexico-now.com/production-of-the-kia-ev3-electric-vehicle-has-begun-in-nuevo-leon/",
-          "publishedAt": "2026-08-07T21:00:00.000Z",
-          "date": "2026-08-07",
-          "title": "Kia begins production of EV3 electric vehicle in Nuevo León",
-          "summary": "Kia Mexico has started manufacturing the EV3, its first fully electric vehicle produced domestically. The move signals automakers' shift toward EV production in Mexico amid global electrification trends."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 2,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 6,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-house-gop-backs-greer-s-strategy-to-delay-usmca-rene-2026-08-07",
-      "date": "2026-08-07",
-      "section": "us-mexico",
-      "title": "House Republicans back US trade office strategy to delay US-Mexico-Canada trade agreement review",
-      "why": "A coalition of 167 House Republicans formally endorsed the US Trade Representative's decision to extend the joint review of the USMCA, delaying the agreement's renewal timeline beyond its scheduled completion date.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/automotive/news/house-gop-backs-greers-strategy-delay-usmca-renewal",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-07T18:59:15.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "House GOP Backs Greer’s Strategy to Delay USMCA Renewal",
-        "dek": "A coalition of 167 House Republicans, led by Rep. Rudy Yakym, R-Ind., has formally signaled support for US Trade Representative Jamieson Greer’s decision to prolong the joint review of the USMCA and condition its extension on specific policy concessions from Mexico and Canada. In a letter sent to Greer, lawmakers from"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/automotive/news/house-gop-backs-greers-strategy-delay-usmca-renewal",
-          "publishedAt": "2026-08-07T18:59:15.000Z",
-          "date": "2026-08-07",
-          "title": "House Republicans back US trade office strategy to delay US-Mexico-Canada trade agreement review",
-          "summary": "A coalition of 167 House Republicans formally endorsed the US Trade Representative's decision to extend the joint review of the USMCA, delaying the agreement's renewal timeline beyond its scheduled completion date."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 6,
-        "componentSource": "model"
-      },
-      "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/500px-Jamieson_Greer_in_2025_%28cropped%29.jpg?h=1445155f&itok=JyYdl8ph",
-      "imgTries": 4,
-      "background": "Under Article 34.7 of the USMCA, the first joint review took place on 1 July 2026 and the US Trade Representative can extend that review process rather than accept the treaty's default 16-year renewal, keeping the pact's future rules unsettled year to year.",
-      "view": "This letter is a signal, not a policy change: 167 House Republicans are backing an extended review, but the review already reverted to annual cycles after the US declined the 16-year extension on 1 July, so the practical trading rules for existing Mexican factories do not shift yet. The people affected are exporters weighing new, long-payback plants, since about 80% of Mexico's exports already depend on the US market and any delay just prolongs the uncertainty they face on future rules of origin.",
-      "prediction": "The joint review process likely continues on its annual track without a firm renewal date, since Congress has no binding vote here, only influence over the Trade Representative's negotiating posture. That would be wrong if Greer's office sets a concrete new review deadline or Mexico and Canada agree to specific concessions this year.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-acuerdo-por-el-que-se-modifican-las-reglas-de-car-ct-2026-08-07",
-      "date": "2026-08-07",
-      "section": "money",
-      "title": "Mexico updates anti-money-laundering inspection rules for illicit-proceeds detection",
-      "why": "The Treasury Department published updated general rules for enforcement under Mexico's law on prevention and identification of illegal money flows (LSPII). The change tightens oversight of accounts and transactions linked to undocumented workers remitting earnings, following June guidance from the US Financial Crimes Enforcement Network (FinCEN).",
-      "company": "",
-      "source": "Diario Oficial de la Federación",
-      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5795797&fecha=07/08/2026",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-07T12:00:00.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Acuerdo por el que se modifican las Reglas de carácter general a que se refiere la Ley Federal para la Prevención e Identificación de Operaciones con Recursos de Procedencia Ilícita.",
-        "dek": "DOF · PODER EJECUTIVO SECRETARIA DE HACIENDA Y CREDITO PUBLICO"
-      },
-      "coverage": [
-        {
-          "source": "Diario Oficial de la Federación",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5795797&fecha=07/08/2026",
-          "publishedAt": "2026-08-07T12:00:00.000Z",
-          "date": "2026-08-07",
-          "title": "Mexico updates anti-money-laundering inspection rules for illicit-proceeds detection",
-          "summary": "The Treasury Department published updated general rules for enforcement under Mexico's law on prevention and identification of illegal money flows (LSPII). The change tightens oversight of accounts and transactions linked to undocumented workers remitting earnings, following June guidance from the US Financial Crimes Enforcement Network (FinCEN)."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 6,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-gobierno-abre-la-puerta-al-fracking-prometen-cuidado-2026-08-07",
-      "date": "2026-08-07",
-      "section": "economy",
-      "title": "Government opens door to hydraulic fracturing with water and wastewater protocols",
-      "why": "President Sheinbaum reversed campaign opposition to fracking, setting conditions for extracting gas and oil using saltwater and residual water instead of freshwater to ease environmental and public concerns.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/07/gobierno-abre-la-puerta-al-fracking-prometen-cuidado-del-agua-y-consultas-ciudadanas/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-07T10:00:39.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/07/gobierno-abre-la-puerta-al-fracking-prometen-cuidado-del-agua-y-consultas-ciudadanas/",
-          "publishedAt": "2026-08-07T10:00:39.000Z",
-          "date": "2026-08-07",
-          "title": "Government opens door to hydraulic fracturing with water and wastewater protocols",
-          "summary": "President Sheinbaum reversed campaign opposition to fracking, setting conditions for extracting gas and oil using saltwater and residual water instead of freshwater to ease environmental and public concerns."
-        }
-      ],
-      "image": "https://www.elfinanciero.com.mx/resizer/v2/SAA7AIRZGVBPXHBSG5IWBMQVI4.jpg?smart=true&auth=17d6f85b23f00caedc2215ea8aa941e7b5723277d4d393ccb10de63becc3ba01&width=1200&height=630",
-      "imgTries": 1
-    },
-    {
-      "id": "n-resoluci-n-que-modifica-las-disposiciones-de-car-cte-2026-08-07",
-      "date": "2026-08-07",
-      "section": "money",
-      "title": "Treasury modifies investment fund rules and service-provider regulations",
-      "why": "A DOF decree adjusts the regulatory framework governing mutual funds and intermediaries, affecting how investment vehicles operate in Mexico's financial system.",
-      "company": "",
-      "source": "Diario Oficial de la Federación",
-      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5795722&fecha=07/08/2026",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-07T12:00:00.000Z",
-      "sourceTier": "specialist",
-      "coverage": [
-        {
-          "source": "Diario Oficial de la Federación",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5795722&fecha=07/08/2026",
-          "publishedAt": "2026-08-07T12:00:00.000Z",
-          "date": "2026-08-07",
-          "title": "Treasury modifies investment fund rules and service-provider regulations",
-          "summary": "A DOF decree adjusts the regulatory framework governing mutual funds and intermediaries, affecting how investment vehicles operate in Mexico's financial system."
-        }
-      ],
-      "imgTries": 1
-    },
-    {
-      "id": "n-inversi-n-f-sica-del-gobierno-presenta-rezago-de-15--2026-08-07",
-      "date": "2026-08-07",
-      "section": "politics",
-      "title": "Government physical investment lags 15.2 percent, stalling Plan Mexico",
-      "why": "Public capital spending is undershooting targets, with education and health receiving minimal funds while housing and Pemex capture most investment, signaling misalignment with stated development priorities.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/inversion-fisica-del-gobierno-presenta-rezago-de-15-2-y-estanca-al-plan-mexico/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-07T08:00:12.000Z",
-      "sourceTier": 2,
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/inversion-fisica-del-gobierno-presenta-rezago-de-15-2-y-estanca-al-plan-mexico/",
-          "publishedAt": "2026-08-07T08:00:12.000Z",
-          "date": "2026-08-07",
-          "title": "Government physical investment lags 15.2 percent, stalling Plan Mexico",
-          "summary": "Public capital spending is undershooting targets, with education and health receiving minimal funds while housing and Pemex capture most investment, signaling misalignment with stated development priorities."
-        }
-      ],
-      "image": "https://elceo.com/wp-content/uploads/2026/08/Inversion_fisica_se_estanca_-1.jpg",
-      "imgTries": 1
-    },
-    {
-      "id": "n-us-police-officer-accused-of-killing-three-people-in-2026-08-07",
-      "date": "2026-08-07",
-      "section": "security",
-      "title": "Texas police officer arrested at border for killings in Saltillo",
-      "why": "Chad Eberle of the Texas police was arrested in Mexico and charged with killing three people in Saltillo in a shooting authorities attribute to a custody dispute, raising questions about cross-border law enforcement accountability.",
-      "company": "",
-      "source": "The Guardian — Mexico",
-      "url": "https://theguardian.com/us-news/2026/aug/07/chad-eberle-arrested-police-killings",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-07T20:49:24.000Z",
-      "sourceTier": 1,
-      "reportEvidence": {
-        "title": "US police officer accused of killing three people in Mexico arrested at border",
-        "dek": "Chad Eberle of Texas charged over deadly shooting in Saltillo that officials say stemmed from custody dispute A Texas police officer has been arrested in Mexico after authorities there accused him of killing three people and critically injuring the mother of his child in what investigators say stemmed from a dispute ov"
-      },
-      "coverage": [
-        {
-          "source": "The Guardian — Mexico",
-          "url": "https://theguardian.com/us-news/2026/aug/07/chad-eberle-arrested-police-killings",
-          "publishedAt": "2026-08-07T20:49:24.000Z",
-          "date": "2026-08-07",
-          "title": "Texas police officer arrested at border for killings in Saltillo",
-          "summary": "Chad Eberle of the Texas police was arrested in Mexico and charged with killing three people in Saltillo in a shooting authorities attribute to a custody dispute, raising questions about cross-border law enforcement accountability."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 6,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-el-ceo-cerveza-mexicana-pierde-espuma-caen-producci--2026-08-07",
-      "date": "2026-08-07",
-      "section": "economy",
-      "title": "Mexican beer industry faces slower growth as production and exports decline",
-      "why": "Mexico's beer sector is experiencing slower production, sales, and export growth following its pandemic recovery, with Heineken and Modelo accelerating investments to adapt to weaker demand and inflation pressures.",
-      "company": "",
-      "source": "Grupo Consultor de Mercados Agrícolas",
-      "url": "https://gcma.com.mx/el-ceo-cerveza-mexicana-pierde-espuma-caen-produccion-ventas-y-exportaciones-heineken-y-modelo-aceleran-inversiones/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-07T20:27:03.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "El CEO: Cerveza mexicana pierde espuma: caen producción, ventas y exportaciones; Heineken y Modelo aceleran inversiones",
-        "dek": "Fernanda Celis | 07 de agosto de 2026. La industria cervecera mexicana enfrenta un periodo de menor crecimiento después del impulso que dejó la recuperación tras la pandemia. En 2025, la producción y las ventas regresaron a terreno negativo, mientras que las exportaciones también retrocedieron y mantuvieron esa tendenc"
-      },
-      "coverage": [
-        {
-          "source": "Grupo Consultor de Mercados Agrícolas",
-          "url": "https://gcma.com.mx/el-ceo-cerveza-mexicana-pierde-espuma-caen-produccion-ventas-y-exportaciones-heineken-y-modelo-aceleran-inversiones/",
-          "publishedAt": "2026-08-07T20:27:03.000Z",
-          "date": "2026-08-07",
-          "title": "Mexican beer industry faces slower growth as production and exports decline",
-          "summary": "Mexico's beer sector is experiencing slower production, sales, and export growth following its pandemic recovery, with Heineken and Modelo accelerating investments to adapt to weaker demand and inflation pressures."
-        },
-        {
-          "source": "elceo.com",
-          "url": "https://elceo.com/negocios/cerveza-mexicana-pierde-espuma-caen-produccion-ventas-y-exportaciones-heineken-y-modelo-aceleran-inversiones/",
-          "publishedAt": "2026-08-07T08:00:16.000Z",
-          "date": "2026-08-07",
-          "title": "Cerveza mexicana pierde espuma: caen producción, ventas y exportaciones; Heineken y Modelo aceleran inversiones",
-          "summary": "A seis años de la pandemia, el entorno económico, las condiciones comerciales y los cambios en los patrones de consumo volvieron a presionar al sector cervecero. La publicación Cerveza mexicana pierde espuma: caen producción, ventas y exportaciones; Heineken y Modelo aceleran inversiones apareció primero en EL CEO ."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 0
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 6,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-ai-cybersecurity-anchor-mexico-s-2026-tech-spending-2026-08-07",
-      "date": "2026-08-07",
-      "section": "economy",
-      "title": "Mexican companies to spend 776 million dollars on AI and 1.48 billion on cybersecurity in 2026",
-      "why": "Mexican firms are directing record spending toward AI software and cybersecurity as technology budgets shift from hardware to cloud services and advanced software capabilities.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/tech/news/ai-cybersecurity-anchor-mexicos-2026-tech-spending",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-07T19:07:37.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "AI, Cybersecurity Anchor Mexico's 2026 Tech Spending",
-        "dek": "Mexican companies will direct US$776 million to AI software and services and US$1.48 billion to cybersecurity in 2026, as IDC and Select data show technology budgets shifting from hardware toward cloud-based, automation-driven models. However, the country faces a shortage of 77,000 cybersecurity specialists, low securi"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/tech/news/ai-cybersecurity-anchor-mexicos-2026-tech-spending",
-          "publishedAt": "2026-08-07T19:07:37.000Z",
-          "date": "2026-08-07",
-          "title": "Mexican companies to spend 776 million dollars on AI and 1.48 billion on cybersecurity in 2026",
-          "summary": "Mexican firms are directing record spending toward AI software and cybersecurity as technology budgets shift from hardware to cloud services and advanced software capabilities."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 1,
-        "officialness": 0
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": 6,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-sheinbaum-sinaloa-interim-governor-october-2027-2026-08-24",
-      "date": "2026-08-24",
-      "section": "politics",
-      "title": "Sheinbaum says Sinaloa's interim governor should serve through October 2027",
-      "why": "Sinaloa's Congress is due to name a replacement Monday after granting Rubén Rocha Moya a second indefinite leave. Rocha had returned to office for about a day and a half while facing a US criminal case.",
-      "company": "",
-      "source": "El País",
-      "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-24T15:26:00.000Z",
-      "sourceTier": 1,
-      "reportEvidence": {
-        "title": "Sheinbaum, sobre el regreso de Rocha Moya: 'No me parecía pertinente, por decir lo menos'",
-        "dek": "La presidenta afirmó que la persona designada como gobernadora interina debe permanecer en el cargo hasta el 31 de octubre de 2027. El Congreso de Sinaloa debe elegir a la sustituta o sustituto tras la segunda licencia indefinida de Rocha."
-      },
-      "coverage": [
-        {
-          "source": "El País",
-          "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html",
-          "publishedAt": "2026-08-24T15:26:00.000Z",
-          "date": "2026-08-24",
-          "title": "Sheinbaum says Sinaloa's interim governor should serve through October 2027",
-          "summary": "Sinaloa's Congress is due to name a replacement Monday after granting Rubén Rocha Moya a second indefinite leave."
-        },
-        {
-          "source": "Associated Press",
-          "url": "https://apnews.com/article/8daea70ca6c4148b65ab3acf2d81c6ee",
-          "publishedAt": "2026-08-23T18:00:00.000Z",
-          "date": "2026-08-23",
-          "title": "Mexican governor indicted by US seeks leave again after contentious return to office",
-          "summary": "Rocha sought a second indefinite leave about a day and a half after returning to office."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 2,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "reportedTotal": null,
-        "componentSource": "manual-source-review"
-      },
-      "background": "Sinaloa's constitution requires Congress to appoint an interim governor when an absence lasts more than 30 days. The appointment requires an absolute majority.",
-      "view": "The second leave turns a brief return into a longer succession decision. If Congress appoints someone through October 2027, that person, not Rocha, will run the state while the US case proceeds.",
-      "prediction": "Congress's appointment will show whether the handover lasts through October 2027. A shorter term would leave the succession open.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "primary:sinaloa-constitution"
-        ],
-        "view": [
-          "article",
-          "report:ap"
-        ],
-        "prediction": [
-          "article",
-          "primary:sinaloa-constitution"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El País",
-          "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html"
-        },
-        {
-          "id": "report:ap",
-          "kind": "report",
-          "source": "Associated Press",
-          "url": "https://apnews.com/article/8daea70ca6c4148b65ab3acf2d81c6ee"
-        },
-        {
-          "id": "primary:sinaloa-constitution",
-          "kind": "primary",
-          "source": "Congress of Sinaloa",
-          "url": "https://iip.congresosinaloa.gob.mx/docs/ref_le/007/089.pdf"
-        }
-      ]
     }
   ]
 }
