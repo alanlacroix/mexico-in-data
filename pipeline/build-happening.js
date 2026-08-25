@@ -11,10 +11,10 @@
 // own headline + dek, and every entry keeps its source link and date.
 //
 // The factual event log is fail-soft: with no ANTHROPIC_API_KEY it falls back to a
-// deterministic pick (top-tier, most-recent, spread across sections). Publication is
-// stricter: every selected story must later clear the evidence-linked Briefly Explained
-// gate. One event keeps one stable id, moves to the newest curated report, and retains
-// other outlets and adjacent-day reports as coverage.
+// deterministic pick (top-tier, most-recent, spread across sections). Every selected
+// story gets one bounded Briefly Explained attempt, but that optional layer never blocks
+// the facts. One event keeps one stable id, moves to the newest curated report, and
+// retains other outlets and adjacent-day reports as coverage.
 //
 //   node build-happening.js                    # update data/happening.json in place
 //   HAPPENING_OUT=/tmp/h.json node build-happening.js   # write elsewhere (dry test)

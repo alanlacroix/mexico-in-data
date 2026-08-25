@@ -40,9 +40,8 @@ function analysisState(event) {
   return { state, version, complete };
 }
 
-// Rendering is atomic: a public story includes the whole approved analysis unit.
-// Ranking stays independent of analysis; this filter is applied only after the
-// selected stories have had their targeted enrichment attempt.
+// Rendering is atomic: a public story includes the whole approved analysis unit or
+// none of it. Ranking and factual publication stay independent of analysis.
 function optionalAnalysis(event) {
   const analysis = analysisState(event);
   if (!analysis.complete) return null;
@@ -54,10 +53,6 @@ function optionalAnalysis(event) {
     analysisRefs: event.analysisRefs && typeof event.analysisRefs === 'object' ? { ...event.analysisRefs } : {},
     analysisSources: Array.isArray(event.analysisSources) ? event.analysisSources.map((source) => ({ ...source })) : [],
   };
-}
-
-function retainExplainedStories(events) {
-  return (Array.isArray(events) ? events : []).filter((event) => optionalAnalysis(event));
 }
 
 function defaultCandidateGate(event) {
@@ -419,7 +414,6 @@ module.exports = {
   ANALYSIS_VERSION,
   analysisState,
   optionalAnalysis,
-  retainExplainedStories,
   selectDailyBrief,
   selectEditionBrief,
   selectWeekendBrief,

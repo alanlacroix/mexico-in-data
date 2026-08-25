@@ -214,7 +214,7 @@ try {
   }
   if (claims.length && !brief.lead) fails.push('brief: a non-empty day needs a lead');
   if (!explanationReadiness.targetMet) {
-    fails.push(`brief: every selected story needs an approved, evidence-linked Briefly Explained unit (ready ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount}; missing ${explanationReadiness.missingTarget.join(', ')})`);
+    warns.push(`brief: Briefly Explained coverage ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount}; missing ${explanationReadiness.missingTarget.join(', ')}`);
   }
   if (brief.meta?.count !== claims.length) fails.push(`brief: meta.count ${brief.meta?.count} does not match ${claims.length} total claims`);
   if (brief.meta?.contentSig !== expectedContentSig) fails.push('brief: content signature does not match the visible story set');

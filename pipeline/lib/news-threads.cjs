@@ -17,6 +17,8 @@ const STOPWORDS = new Set([
 const ALIASES = [
   [/\b(?:united states of america|united states|estados unidos|ee\s*uu|eua|u\s*s\s*a?)\b/g, ' usa '],
   [/\b(?:mexican[oa]?s?|mexicanos?|mexicanas?)\b/g, ' mexico '],
+  [/\b(?:embass(?:y|ies)|consulates?|consular)\b/g, ' consulate '],
+  [/\b(?:operations?|activities|activity|actividades|actividad)\b/g, ' activity '],
   [/\b(?:usmca|t\s*mec|tmec)\b/g, ' usmca '],
   [/\b(?:lifts?|lifted|removes?|removed|eases?|eased)\s+(?:the\s+)?(?:ban|restrictions?)\b/g, ' reopen '],
   [/\b(?:reopens?|reopened|reopening|opens?|opened|opening|resumes?|resumed|resuming|restores?|restored|reabre|reabrio|reanuda|reanudo|retoma|retomo)\b/g, ' reopen '],

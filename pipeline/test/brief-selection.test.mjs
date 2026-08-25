@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import selection from '../lib/brief-selection.cjs';
 
-const { analysisState, optionalAnalysis, retainExplainedStories, selectDailyBrief, selectEditionBrief, weekDates } = selection;
+const { analysisState, optionalAnalysis, selectDailyBrief, selectEditionBrief, weekDates } = selection;
 
 const candidate = (id, importance, extra = {}) => ({
   id,
@@ -23,15 +23,6 @@ const approvedAnalysis = (extra = {}) => ({
   ...extra,
 });
 const receiptFor = (result, id) => result.receipt.find((row) => row.id === id);
-
-assert.deepEqual(
-  retainExplainedStories([
-    candidate('ready', 7, approvedAnalysis()),
-    candidate('budget-unavailable', 8),
-  ]).map((event) => event.id),
-  ['ready'],
-  'after ranking and enrichment, only complete Briefly Explained stories may reach publication',
-);
 
 assert.deepEqual(weekDates('2026-08-16'), {
   weekend: true,

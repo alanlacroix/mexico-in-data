@@ -24,7 +24,7 @@ An authoritative scheduled decision or release is a new outcome even when the nu
 - **Floor: 3 (soft).** If fewer than 3 clear the threshold, ship what clears it. Never pad to a count.
 - **A fourth or fifth item must earn the extra space.** It needs importance ≥ 6 or a direct match to the stated interest list. A routine importance-5 item does not fill an empty slot.
 - Two reports about the same meeting or decision use one slot and retain both source links.
-- Analysis never changes ranking. A factual, sourced event competes even when its explanation is missing. After the exact story order is locked, every selected story is enriched in that order. A non-quiet edition is not publication-ready until every selected story has a complete, approved, evidence-linked Briefly Explained unit. Failure blocks the receipt; it never demotes a fact or promotes a lesser story.
+- Analysis never changes ranking. A factual, sourced event competes and publishes even when its explanation is missing. After the exact story order is locked, every selected story gets one bounded enrichment attempt in that order. Only a complete, approved, evidence-linked Briefly Explained unit is shown; failure omits that panel without blocking, demoting, or replacing the factual story.
 - Every build writes a receipt for every candidate with its effective importance, final rank, selection or exclusion reason, tags, scheduled status, and analysis state.
 
 ## Calendar completeness
@@ -45,7 +45,7 @@ Briefly Explained never uses first person. State the likely next outcome directl
 
 Ordinary headlines never get this layer.
 
-The pipeline runs in one fixed order: build the event log without speculative analysis, reconcile scheduled outcomes, lock the Brief selection, look for a primary record for each selected non-official report, explain that exact full selection with evidence beyond the original article, audit each claim against its cited evidence, and rebuild without changing its order. The normal and recovery workflows use the same sequence. Each field retains the evidence IDs it used, and the panel links the reader to the cited sources. A missing model, exhausted budget, thin evidence, failed context, or rejected field blocks the new edition and leaves the last complete edition live. It never changes the ranking to hide the failure.
+The pipeline runs in one fixed order: build the event log without speculative analysis, reconcile scheduled outcomes, lock the Brief selection, look for a primary record for each selected non-official report, make one bounded attempt to explain that exact selection, audit each claim against its cited evidence, and rebuild without changing its order. The normal and recovery workflows use the same sequence. Each accepted field retains the evidence IDs it used, and the panel links the reader to the cited sources. A missing model, exhausted budget, thin evidence, failed context, or rejected field removes that incomplete panel; it never blocks, demotes, or replaces the factual story.
 
 Factual copy uses ordinary actor-action-fact language. Terms such as “hawkish” and “dovish” are compressed judgments, not report copy. State the rate decision, guidance and reason directly. The source title and dek are retained separately from the rewrite, and the copy gate validates against those inputs rather than allowing generated context to validate itself.
 

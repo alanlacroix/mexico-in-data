@@ -77,9 +77,6 @@ const contentReadiness = publicationReadiness(brief, editorialDate);
 if (!contentReadiness.publish) {
   throw new Error(`Refusing to certify this Brief: ${contentReadiness.reason}`);
 }
-if (!explanationReadiness.targetMet) {
-  throw new Error(`Briefly Explained incomplete: ${explanationReadiness.readyTargetCount}/${explanationReadiness.requiredCount} selected stories ready`);
-}
 if (brief.meta?.editorialDate !== editorialDate) {
   throw new Error(`Brief editorial date ${brief.meta?.editorialDate || '(missing)'} does not match ${editorialDate}`);
 }

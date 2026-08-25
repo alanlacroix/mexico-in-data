@@ -37,7 +37,7 @@ function briefReadiness(brief) {
     .filter(({ story }) => hasApprovedAnalysis(story))
     .map(({ story, index }) => storyId(story, index));
   return {
-    policy: 'every-selected-story-context-audited-v5',
+    policy: 'all-selected-analysis-target-v6',
     storyCount: stories.length,
     targetCount: targetStories.length,
     requiredCount: minimumReadyCount,
@@ -46,7 +46,9 @@ function briefReadiness(brief) {
     readyIds,
     missingTarget,
     targetMet,
-    publicationBlocking: !targetMet,
+    // Coverage is a quality metric, not a publication dependency. The only blocking
+    // state represented here is an unmarked empty edition; content readiness owns it.
+    publicationBlocking: stories.length === 0 && brief?.meta?.quiet !== true,
   };
 }
 

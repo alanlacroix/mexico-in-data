@@ -29,7 +29,7 @@ const WEEKEND_WINDOW_HOURS = 168;
 const STORY_CAP = 3;
 const SUMMARY_VERSION = 4;
 const { plainExplanation, plainHeadline } = plainLanguage;
-const { optionalAnalysis, retainExplainedStories, selectEditionBrief } = briefSelection;
+const { optionalAnalysis, selectEditionBrief } = briefSelection;
 const { contextDigest } = briefSummary;
 const { evidenceInputs } = reportEvidence;
 const { curationReadiness } = freshnessContract;
@@ -212,19 +212,11 @@ async function main() {
       && JSON.stringify(lockedIds) !== JSON.stringify(rankedIds)) {
     throw new Error(`selected story set changed after analysis enrichment: ${lockedIds.join(',')} -> ${rankedIds.join(',')}`);
   }
-  // Explanation failure is content scarcity, not an infrastructure failure. Ranking is
-  // locked before enrichment; the final edition then exposes only complete v9 units.
-  // This keeps the user's product rule (every visible story is explained) without
-  // allowing an exhausted model budget to block the whole daily publication.
-  const picked = selectionOnly ? rankedPicked : retainExplainedStories(rankedPicked);
+  // Explanation is an optional layer on the selected facts. Ranking is locked before
+  // enrichment, and an incomplete unit is omitted atomically by optionalAnalysis below.
+  // It must never remove a factual story or turn real reporting into a stale/quiet day.
+  const picked = rankedPicked;
   const pickedIds = picked.map((event) => event.id).filter(Boolean);
-  if (!selectionOnly && picked.length !== rankedPicked.length) {
-    const omitted = rankedIds.filter((id) => !pickedIds.includes(id));
-    console.warn(`  ${omitted.length} selected ${omitted.length === 1 ? 'story' : 'stories'} held: Briefly Explained incomplete (${omitted.join(', ')})`);
-  }
-  if (!selectionOnly && rankedPicked.length && !picked.length) {
-    throw new Error('selected reporting exists, but no story has a complete Briefly Explained unit');
-  }
   const selectedCounts = selection.policy === 'weekend-recap-v1'
     ? {
       weekend: picked.filter((event) => event._lane === 'weekend').length,

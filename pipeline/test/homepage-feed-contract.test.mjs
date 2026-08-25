@@ -59,8 +59,8 @@ assert.ok(dailyBrief.stories.every((story) => {
   const refs = ['background', 'view', 'prediction'].every((field) => story.analysisRefs?.[field]?.length);
   const linked = story.analysisSources?.some((source) => source?.kind !== 'article'
     && /^https:\/\//i.test(String(source?.url || '')));
-  return story.analysisV >= 9 && fields.length === 3 && refs && linked;
-}), 'every selected story must carry one complete, approved, evidence-linked BE unit');
+  return fields.length === 0 || (story.analysisV >= 9 && fields.length === 3 && refs && linked);
+}), 'each story must expose either one complete approved BE unit or no analysis at all');
 for (let i = 0; i < dailyBrief.stories.length; i += 1) {
   for (let j = i + 1; j < dailyBrief.stories.length; j += 1) {
     assert.equal(sameThread(dailyBrief.stories[i], dailyBrief.stories[j]), false, 'the rendered Brief must never repeat one event');
@@ -146,6 +146,19 @@ const sameInflationRelease = groupEvents([
 ]);
 assert.equal(sameInflationRelease.length, 1, 'two same-day reports of the same official indicator value must use one story slot');
 assert.equal(sameInflationRelease[0].sourceCount, 2, 'the merged release must retain both source links');
+
+const sameMexicaliAlert = groupEvents([
+  {
+    date: '2026-08-25', publishedAt: '2026-08-25T13:59:36Z', source: 'Outlet A',
+    url: 'https://example.com/mexicali-a', title: 'US embassy in Mexicali suspends operations and issues security alert',
+  },
+  {
+    date: '2026-08-25', publishedAt: '2026-08-25T08:59:40Z', source: 'Outlet B',
+    url: 'https://example.com/mexicali-b', title: 'US suspends consular activities in Mexicali over threat',
+  },
+]);
+assert.equal(sameMexicaliAlert.length, 1, 'two reports of the same consular suspension must use one story slot');
+assert.equal(sameMexicaliAlert[0].sourceCount, 2, 'the merged security alert must retain both source links');
 
 const relatedButDistinct = groupEvents([
   { date: '2026-07-21', title: 'Mexico and the US launch the first annual USMCA review', source: 'Outlet A', url: 'https://example.com/review' },
@@ -459,8 +472,8 @@ assert.match(feedData, /week: brief\.weekendEdition \? \[\] : weekItems/,
   'the separate This week shelf must disappear when the selected Brief already is the weekly recap');
 assert.match(feedData, /lane: story\.lane/,
   'language snapshots and renderers must retain each story’s dated selection lane');
-assert.match(briefBuilder, /retainExplainedStories\(rankedPicked\)/,
-  'ranking must happen first, then incomplete Briefly Explained units must degrade the edition instead of breaking publication');
+assert.match(briefBuilder, /const picked = rankedPicked/,
+  'optional analysis must never remove or reorder the locked factual selection');
 assert.match(briefBuilder, /selectEditionBrief\(candidates/, 'the two story lanes must share the auditable importance-first selector');
 assert.doesNotMatch(briefBuilder, /BIG_MONEY|bigCapital/, 'a dollar-amount regex must not override the audited importance rubric');
 assert.doesNotMatch(briefBuilder, /priorApproved|carriedForward/,

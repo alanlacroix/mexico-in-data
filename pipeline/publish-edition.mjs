@@ -10,7 +10,6 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
-const { analysisState } = require('./lib/brief-selection.cjs');
 const { curationReadiness } = require('./lib/freshness-contract.cjs');
 
 const FILE = fileURLToPath(import.meta.url);
@@ -93,28 +92,11 @@ function requireScheduledOutcomes() {
   }
 }
 
-function requireSelectedExplanations() {
-  const brief = read('brief.json');
-  const happening = read('happening.json', { events: [] });
-  const selectedIds = Array.isArray(brief.meta?.selection?.lockedIds)
-    ? brief.meta.selection.lockedIds : [];
-  const byId = new Map((happening.events || []).map((event) => [event.id, event]));
-  const missing = selectedIds.filter((id) => !analysisState(byId.get(id)).complete);
-  if (missing.length) {
-    const target = happening.meta?.analysisTarget;
-    const reasons = (target?.outcomes || [])
-      .filter((outcome) => missing.includes(outcome.id) && outcome.ready !== true)
-      .map((outcome) => outcome.reason)
-      .filter(Boolean);
-    throw new DeferredEdition(`Briefly Explained is not ready for ${missing.length} selected ${missing.length === 1 ? 'story' : 'stories'}${reasons.length ? ` (${[...new Set(reasons)].join(', ')})` : ''}`);
-  }
-}
-
 // A field-rejected or budget-blocked explanation already received its one bounded
 // attempt against this exact locked selection. When the source ledger is unchanged,
-// another hourly run would buy the same work again. New reporting rebuilds happening.json
-// without the old analysis target, so materially new evidence still gets one clean try.
-export function terminalAnalysisDeferral(brief, happening) {
+// another run would buy the same work again. The factual edition still publishes;
+// incomplete analysis is simply omitted from that story.
+export function priorTerminalAnalysisAttempt(brief, happening) {
   const selectedIds = Array.isArray(brief.meta?.selection?.lockedIds)
     ? brief.meta.selection.lockedIds : [];
   const target = happening.meta?.analysisTarget;
@@ -123,12 +105,7 @@ export function terminalAnalysisDeferral(brief, happening) {
   const terminal = (target.outcomes || []).filter((outcome) => outcome?.ready !== true
     && ['budget-unavailable', 'field-rejected'].includes(outcome?.reason));
   if (!terminal.length) return '';
-  return `Briefly Explained is waiting for new evidence or model budget (${[...new Set(terminal.map((outcome) => outcome.reason))].join(', ')})`;
-}
-
-function requireNoRepeatedTerminalAnalysisAttempt() {
-  const reason = terminalAnalysisDeferral(read('brief.json'), read('happening.json'));
-  if (reason) throw new DeferredEdition(reason);
+  return `prior attempt cannot produce a complete panel (${[...new Set(terminal.map((outcome) => outcome.reason))].join(', ')})`;
 }
 
 function validateInputs() {
@@ -152,9 +129,9 @@ function buildEdition() {
     requireScheduledOutcomes();
 
     node('Lock ranked stories', 'build-brief.js', ['--selection-only'], { cwd: PIPELINE });
-    requireNoRepeatedTerminalAnalysisAttempt();
-    node('Explain ranked stories', 'build-happening.js', ['--analysis-for-brief'], { cwd: PIPELINE });
-    requireSelectedExplanations();
+    const priorAttempt = priorTerminalAnalysisAttempt(read('brief.json'), read('happening.json'));
+    if (priorAttempt) console.log(`\n== Explain ranked stories ==\n  skipped: ${priorAttempt}`);
+    else node('Explain ranked stories', 'build-happening.js', ['--analysis-for-brief'], { cwd: PIPELINE });
     node('Build final English edition', 'build-brief.js', [], { cwd: PIPELINE });
 
     node('Validate editorial data', 'assert-data.js');

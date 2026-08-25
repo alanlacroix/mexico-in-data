@@ -28,8 +28,8 @@ assert.equal(briefReadiness(brief([false, false, false, true, true])).targetMet,
   'analysis on lower-ranked stories must not disguise any unexplained selected story');
 assert.deepEqual(briefReadiness(brief([false, false, false, false, false])).missingTarget,
   ['lead', 'item-2', 'item-3', 'item-4', 'item-5']);
-assert.equal(briefReadiness(brief([false, false, false])).publicationBlocking, true,
-  'missing analysis must stop a nonquiet edition');
+assert.equal(briefReadiness(brief([false, false, false])).publicationBlocking, false,
+  'missing analysis must not stop a factual nonquiet edition');
 assert.equal(briefReadiness(brief([true, true, false, false, false])).targetMet, false,
   'two complete explanations cannot certify a five-story edition');
 assert.deepEqual(briefReadiness(brief([true, true, false])).missingTarget, ['item-3'],
@@ -66,9 +66,10 @@ assert.match(happeningBuilder, /auditCompleted[\s\S]*initiated[\s\S]*preliminary
   'a separate evidence editor must check the status and procedural stage before publication');
 assert.match(happeningBuilder, /const request = \(batch, effort, maxTokens\) => askJSON\(\{[\s\S]*?model: models\.HAIKU,[\s\S]*?priority: 'core'/,
   'evidence-locked drafting must use the bounded model tier so daily all-story coverage fits the monthly cap');
-assert.match(briefBuilder,
-  /rankedPicked\.length && !picked\.length[\s\S]*selected reporting exists, but no story has a complete Briefly Explained unit/,
-  'a failed explanation pass must block publication instead of converting found reporting into a quiet edition');
+assert.match(briefBuilder, /const picked = rankedPicked/,
+  'a failed explanation pass must preserve every selected factual story');
+assert.doesNotMatch(briefBuilder, /selected reporting exists, but no story has a complete Briefly Explained unit/,
+  'analysis scarcity must never block factual publication');
 
 assert.deepEqual(
   mergeApprovedAttempt(

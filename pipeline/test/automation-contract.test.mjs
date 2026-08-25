@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { terminalAnalysisDeferral } from '../publish-edition.mjs';
+import { priorTerminalAnalysisAttempt } from '../publish-edition.mjs';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const workflowDir = path.join(root, '.github', 'workflows');
@@ -133,7 +133,7 @@ assert.doesNotMatch(happening, /Checkpoint the assessed news|Checkpoint the lock
 assert.match(
   editionPublisher,
   /'Build final English edition'[\s\S]*'Validate editorial data'[\s\S]*'Translate selected edition'[\s\S]*'Validate final homepage'/,
-  'the only optional translation pass must run after every selected story has a complete explanation',
+  'the final factual edition must be validated and translated after the bounded explanation attempt',
 );
 assert.doesNotMatch(editionPublisher, /translate-wire|Translate new topic stories/,
   'the publication path must not spend budget on broad optional feed translation');
@@ -171,18 +171,22 @@ assert.match(
   /if \[ "\$PUBLICATION_STATE" = "published" \]; then[\s\S]*elif \[ "\$PUBLICATION_STATE" = "deferred" \] && \[ "\$STAGING_SAFE" = "true" \]; then[\s\S]*else\s+git add data\/publication-status\.json data\/llm-spend\.json/,
   'only a fully assessed deferral may persist its reusable news staging; a blocked run must commit no partial editorial data',
 );
-assert.match(editionPublisher, /\['budget-unavailable', 'field-rejected'\][\s\S]*throw new DeferredEdition/,
-  'an unchanged explanation failure must not spend again on every hourly schedule');
+assert.match(editionPublisher, /const priorAttempt = priorTerminalAnalysisAttempt[\s\S]*if \(priorAttempt\)[\s\S]*else node\('Explain ranked stories'/,
+  'an unchanged explanation failure must skip repeat spend without blocking the factual edition');
+assert.doesNotMatch(editionPublisher, /requireSelectedExplanations|Briefly Explained is not ready/,
+  'optional analysis must not be a publication gate');
+assert.doesNotMatch(receiptWriter, /throw new Error\(`Briefly Explained incomplete/,
+  'the publication receipt must report explanation coverage without requiring it');
 const lockedBrief = { meta: { selection: { lockedIds: ['lead'] } } };
 assert.match(
-  terminalAnalysisDeferral(lockedBrief, { meta: { analysisTarget: {
+  priorTerminalAnalysisAttempt(lockedBrief, { meta: { analysisTarget: {
     ids: ['lead'], outcomes: [{ id: 'lead', ready: false, reason: 'budget-unavailable' }],
   } } }),
-  /model budget/,
+  /complete panel \(budget-unavailable\)/,
   'the exact locked story must not repeat a known terminal model attempt',
 );
 assert.equal(
-  terminalAnalysisDeferral(lockedBrief, { meta: { analysisTarget: {
+  priorTerminalAnalysisAttempt(lockedBrief, { meta: { analysisTarget: {
     ids: ['different'], outcomes: [{ id: 'different', ready: false, reason: 'field-rejected' }],
   } } }),
   '',
