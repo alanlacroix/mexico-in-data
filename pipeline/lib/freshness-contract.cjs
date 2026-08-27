@@ -14,12 +14,38 @@ function curationReadiness(receipt, editorialDate, options = {}) {
   if (receipt.complete !== true) {
     return { ok: false, legacy: false, reason: clean(receipt.reason) || 'fresh candidates were not fully assessed' };
   }
+  // Decision coverage is not publication readiness. On Aug. 27 every model row had
+  // a decision, but the only selected current-day facts failed the copy gate. Calling
+  // that complete turned a processing failure into “No major developments.”
+  if (receipt.policy === 'edition-window-assessment-v2') {
+    if (Number(receipt.selectedCount) !== Number(receipt.keptCount) + Number(receipt.rejectedCount)) {
+      return { ok: false, legacy: false, reason: 'selected-report accounting does not reconcile' };
+    }
+    if (Number(receipt.freshSelectedCount) !== Number(receipt.freshKeptCount) + Number(receipt.freshRejectedCount)) {
+      return { ok: false, legacy: false, reason: 'current-day selected-report accounting does not reconcile' };
+    }
+    if (Number(receipt.unassessedFreshCandidateCount) > 0) {
+      return { ok: false, legacy: false, reason: `${Number(receipt.unassessedFreshCandidateCount)} current-day candidate(s) did not enter the bounded assessment` };
+    }
+    if (Number(receipt.freshRejectedCount) > 0) {
+      return { ok: false, legacy: false, reason: `${Number(receipt.freshRejectedCount)} selected current-day report(s) did not clear the final copy gate` };
+    }
+    if (clean(receipt.mode) === 'deterministic-fallback'
+        && Number(receipt.freshCandidateCount) > 0
+        && Number(receipt.freshKeptCount) === 0) {
+      return { ok: false, legacy: false, reason: 'fresh reporting exists but could not be resolved without the model' };
+    }
+    if (receipt.currentDayResolved !== true) {
+      return { ok: false, legacy: false, reason: clean(receipt.reason) || 'the current-day candidate ledger is unresolved' };
+    }
+  }
   // A model-free pass may safely certify a genuinely empty feed, or publish facts it
   // could process. It may not turn unreadable fresh reporting into an editorial claim
   // that nothing happened. That exact false success produced the empty Aug. 24 Brief.
   if (clean(receipt.mode) === 'deterministic-fallback'
       && Number(receipt.freshCandidateCount) > 0
-      && Number(receipt.keptCount) === 0) {
+      && Number(receipt.policy === 'edition-window-assessment-v2'
+        ? receipt.freshKeptCount : receipt.keptCount) === 0) {
     return { ok: false, legacy: false, reason: 'fresh reporting exists but could not be resolved without the model' };
   }
   return { ok: true, legacy: false, reason: '' };

@@ -19,15 +19,15 @@ const beforeAfternoonGrace = new Date('2026-07-31T21:34:00Z'); // 5:34 PM EDT
 const afternoonDue = new Date('2026-07-31T21:35:00Z'); // 5:35 PM EDT
 
 assert.equal(dueEdition(morningBeforeGrace), null, 'morning must wait through its grace period');
-assert.deepEqual(dueEdition(morningDue), { editorialDate: '2026-07-31', slot: 'morning' });
+assert.deepEqual(dueEdition(morningDue), { editorialDate: '2026-07-31', slot: 'morning', quietRecheck: false });
 assert.deepEqual(
   dueEdition(beforeAfternoonGrace),
-  { editorialDate: '2026-07-31', slot: 'morning' },
+  { editorialDate: '2026-07-31', slot: 'morning', quietRecheck: true },
   'the morning edition remains the only edition due later in the day',
 );
 assert.deepEqual(
   dueEdition(afternoonDue),
-  { editorialDate: '2026-07-31', slot: 'morning' },
+  { editorialDate: '2026-07-31', slot: 'morning', quietRecheck: true },
   'the watchdog must never invent a second afternoon edition',
 );
 
@@ -52,8 +52,8 @@ assert.equal(
     { state: 'deferred', editorialDate: '2026-07-31', slot: 'morning' },
     { editorialDate: '2026-07-31', slot: 'morning' },
   ),
-  true,
-  'a current deferral must let the normal hourly publisher retry without a duplicate watchdog dispatch',
+  false,
+  'a current deferral remains eligible for one throttled independent recovery attempt',
 );
 assert.equal(
   publicationCoversEdition(
@@ -105,7 +105,7 @@ assert.deepEqual(
   {
     action: 'none',
     reason: 'publication is current',
-    due: { editorialDate: '2026-07-31', slot: 'morning' },
+    due: { editorialDate: '2026-07-31', slot: 'morning', quietRecheck: false },
   },
 );
 
@@ -117,7 +117,7 @@ assert.deepEqual(
   {
     action: 'none',
     reason: 'publication is blocked',
-    due: { editorialDate: '2026-07-31', slot: 'morning' },
+    due: { editorialDate: '2026-07-31', slot: 'morning', quietRecheck: false },
   },
 );
 
@@ -130,7 +130,7 @@ assert.deepEqual(
   {
     action: 'none',
     reason: 'workflow is already queued or in progress',
-    due: { editorialDate: '2026-07-31', slot: 'morning' },
+    due: { editorialDate: '2026-07-31', slot: 'morning', quietRecheck: false },
     activeRunId: 42,
   },
 );
@@ -144,9 +144,28 @@ assert.deepEqual(
   {
     action: 'dispatch',
     reason: 'publication is stale and no active run exists',
-    due: { editorialDate: '2026-07-31', slot: 'morning' },
+    due: { editorialDate: '2026-07-31', slot: 'morning', quietRecheck: true },
   },
 );
+
+assert.deepEqual(
+  watchdogDecision({
+    now: afternoonDue,
+    status: { editorialDate: '2026-07-31', slot: 'morning', quiet: true, quietFinal: false },
+    runs: [],
+  }),
+  {
+    action: 'dispatch',
+    reason: 'publication is stale and no active run exists',
+    due: { editorialDate: '2026-07-31', slot: 'morning', quietRecheck: true },
+  },
+  'the independent watchdog must reopen one provisional quiet morning at noon',
+);
+
+assert.equal(publicationCoversEdition(
+  { editorialDate: '2026-07-31', slot: 'morning', quiet: true, quietFinal: true },
+  { editorialDate: '2026-07-31', slot: 'morning', quietRecheck: true },
+), true, 'the final quiet recheck must stop further dispatches');
 
 const originalFetch = globalThis.fetch;
 const heartbeatStore = new Map();

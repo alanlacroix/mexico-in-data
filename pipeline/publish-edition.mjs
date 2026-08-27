@@ -118,10 +118,14 @@ function buildEdition() {
   let stagingSafe = false;
   node('Collect news', 'collect-news.js', [], { cwd: PIPELINE });
   node('Curate current events', 'build-happening.js', ['--skip-analysis', '--resume-current-edition'], { cwd: PIPELINE });
-  requireFreshCuration();
+  // The reviewed source ledger is safe to persist even when it proves the edition is
+  // not publishable yet. Keeping that checkpoint prevents an unchanged copy rejection
+  // from rebuying the full curation call every hour; new reporting changes its signature
+  // and naturally reopens assessment.
   stagingSafe = true;
 
   try {
+    requireFreshCuration();
     node('Reconcile scheduled outcomes', 'reconcile-scheduled-events.mjs', [], {
       cwd: PIPELINE,
       env: { EDITORIAL_DATE: editorialDate },

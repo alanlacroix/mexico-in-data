@@ -3,6 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { priorTerminalAnalysisAttempt } from '../publish-edition.mjs';
+import publicationTransition from '../lib/publication-transition.cjs';
+
+const { nonPublishedTransition } = publicationTransition;
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const workflowDir = path.join(root, '.github', 'workflows');
@@ -84,7 +87,7 @@ assert.match(
 );
 assert.match(
   receiptWriter,
-  /publicationReadiness\(brief, editorialDate\)[\s\S]*!contentReadiness\.publish[\s\S]*Refusing to certify this Brief/,
+  /publicationReadiness\(brief, editorialDate, \{ curation \}\)[\s\S]*!contentReadiness\.publish[\s\S]*Refusing to certify this Brief/,
   'the publication receipt must reject an unmarked empty edition even if the workflow condition regresses',
 );
 assert.match(
@@ -101,8 +104,24 @@ assert.match(receiptWriter, /\['published', 'deferred', 'blocked'\]/,
   'one finite-state receipt must represent every publication result');
 assert.match(receiptWriter, /state !== 'published'[\s\S]*contentEditorialDate[\s\S]*contentGeneratedAt/,
   'a non-published receipt must preserve the date and timestamp of the last complete edition');
-assert.match(receiptWriter, /priorIsCurrentPublication[\s\S]*\? prior/,
+assert.match(receiptWriter, /nonPublishedTransition\(prior, next\)/,
   'a failed forced republish must not downgrade a complete current edition');
+{
+  const next = { state: 'deferred', editorialDate: '2026-08-27', reason: 'fresh copy unresolved' };
+  const factual = { state: 'published', editorialDate: '2026-08-27', quiet: false, publicationId: 'facts' };
+  const quiet = { state: 'published', editorialDate: '2026-08-27', quiet: true, publicationId: 'empty' };
+  factual.selectedStories = 2;
+  assert.deepEqual(nonPublishedTransition(factual, next), { status: factual, retained: true },
+    'a later optional failure must not take down a complete factual edition');
+  assert.deepEqual(nonPublishedTransition(quiet, next), { status: next, retained: false },
+    'a noon contradiction must replace the provisional quiet receipt with an honest deferral');
+  const legacyQuiet = {
+    state: 'published', pipelineVersion: 2, editorialDate: '2026-08-27', selectedStories: 0,
+    publicationId: 'legacy-empty',
+  };
+  assert.deepEqual(nonPublishedTransition(legacyQuiet, next), { status: next, retained: false },
+    'a legacy zero-story receipt without a quiet flag must remain provisional during migration');
+}
 assert.match(
   receiptWriter,
   /curationReadiness\(curation, editorialDate\)[\s\S]*Fresh-story curation incomplete/,
@@ -112,6 +131,11 @@ assert.match(
   editionPublisher,
   /'Collect news'[\s\S]*'Curate current events'[\s\S]*'Reconcile scheduled outcomes'[\s\S]*'Lock ranked stories'/,
   'each editorial pass must refresh the primary RSS ledger before reconsidering the brief',
+);
+assert.match(
+  editionPublisher,
+  /'Curate current events'[\s\S]*stagingSafe = true;[\s\S]*requireFreshCuration\(\)/,
+  'an unresolved but safe curation checkpoint must persist so unchanged inputs never rebuy the same failed copy',
 );
 assert.doesNotMatch(editionPublisher, /build-news\.js/,
   'the flaky optional GDELT supplement belongs in the background refresh, not the publication path');

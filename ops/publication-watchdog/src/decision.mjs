@@ -7,6 +7,7 @@ const DEFAULT_RETRY_COOLDOWN_MINUTES = 45;
 const DEFAULT_FAILURE_WINDOW_MINUTES = 1440;
 const DEFAULT_MAX_FAILURES = 1;
 const MORNING_MINUTE_ET = 9 * 60;
+const QUIET_RECHECK_MINUTE_ET = 12 * 60;
 
 function positiveNumber(value, fallback) {
   const parsed = Number(value);
@@ -45,7 +46,7 @@ export function dueEdition(now = new Date(), graceMinutes = DEFAULT_GRACE_MINUTE
   const editorialDate = `${parts.year}-${parts.month}-${parts.day}`;
 
   if (minuteOfDay >= MORNING_MINUTE_ET + grace) {
-    return { editorialDate, slot: 'morning' };
+    return { editorialDate, slot: 'morning', quietRecheck: minuteOfDay >= QUIET_RECHECK_MINUTE_ET };
   }
   return null;
 }
@@ -54,13 +55,17 @@ export function publicationCoversEdition(status, due) {
   if (!due || !status || typeof status !== 'object') return false;
   if (status.editorialDate !== due.editorialDate) return false;
   if (status.state && status.state !== 'published') return false;
+  if (due.quietRecheck === true && status.quiet === true && status.quietFinal !== true) return false;
   return (SLOT_RANK[status.slot] || 0) >= (SLOT_RANK[due.slot] || Infinity);
 }
 
 export function publicationStopsRecovery(status, due) {
   if (!due || !status || typeof status !== 'object') return false;
   if (status.editorialDate !== due.editorialDate) return false;
-  if (!['deferred', 'blocked'].includes(status.state)) return false;
+  // A content deferral remains retryable. Only an explicit infrastructure/code block
+  // stops the independent recovery path; its throttle still permits at most one
+  // watchdog dispatch, so this cannot recreate the old alert/spend loop.
+  if (status.state !== 'blocked') return false;
   return (SLOT_RANK[status.slot] || 0) >= (SLOT_RANK[due.slot] || Infinity);
 }
 

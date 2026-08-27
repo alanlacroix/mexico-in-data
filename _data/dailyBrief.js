@@ -60,15 +60,18 @@ function toStory(group) {
   };
 }
 
-module.exports = function (now = new Date()) {
-  const brief = read('brief.json') || {};
-  const happening = read('happening.json') || {};
+module.exports = function (now = new Date(), sources = {}) {
+  const brief = sources.brief || read('brief.json') || {};
+  const happening = sources.happening || read('happening.json') || {};
+  const publicationStatus = sources.publicationStatus || read('publication-status.json') || {};
   const meta = brief.meta || {};
   const clock = now instanceof Date || typeof now === 'string' || typeof now === 'number' ? now : new Date();
   const editorialDate = editorialDay(clock);
   const claims = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])].filter(Boolean);
   const briefEditorialDate = clean(meta.editorialDate);
-  const generatedForToday = briefEditorialDate === editorialDate;
+  const publicationInterrupted = publicationStatus.editorialDate === editorialDate
+    && ['deferred', 'blocked'].includes(publicationStatus.state);
+  const generatedForToday = briefEditorialDate === editorialDate && !publicationInterrupted;
   // Never disguise a deployment outage as an editorial judgment. A stale build keeps
   // the last certified dateline, hides its cards, and says the update is delayed. Only
   // a current edition with meta.quiet may claim there were no major developments.
@@ -118,12 +121,15 @@ module.exports = function (now = new Date()) {
     currentEditorialDate: editorialDate,
     briefEditorialDate,
     carryingLastBrief,
+    publicationInterrupted,
     weekendEdition,
     editionType: weekendEdition ? 'weekend-recap' : 'daily',
     briefTitle: weekendEdition ? 'Weekend recap' : 'The brief',
     newsThrough: clean(meta.reviewedAt || meta.generatedAt || happening.meta?.generatedAt),
     quiet: generatedForToday && (!stories.length || !!meta.quiet),
-    summaryLead: carryingLastBrief
+    summaryLead: publicationInterrupted
+      ? "Today's update is delayed while reported developments are being checked."
+      : carryingLastBrief
       ? "Today's update is delayed. The date above is the last complete edition."
       : plainExplanation(!droppedMisdatedStories && clean(brief.summary)
         ? clean(brief.summary) : (fallback || quietCopy)),

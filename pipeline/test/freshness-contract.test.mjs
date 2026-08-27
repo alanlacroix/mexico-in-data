@@ -46,4 +46,44 @@ result = curationReadiness({
 }, '2026-08-14');
 assert.equal(result.ok, true, 'a fallback may certify an edition when it retained a fresh report');
 
+result = curationReadiness({
+  policy: 'edition-window-assessment-v2', editorialDate: '2026-08-14', complete: true,
+  mode: 'deterministic-fallback', freshCandidateCount: 2, eligibleFreshCandidateCount: 2,
+  selectedCount: 1, keptCount: 1, rejectedCount: 0,
+  freshSelectedCount: 0, freshKeptCount: 0,
+  unassessedFreshCandidateCount: 0, freshRejectedCount: 0, currentDayResolved: false,
+}, '2026-08-14');
+assert.equal(result.ok, false,
+  'an accepted prior-day fallback item must not falsely certify unresolved current-day reporting');
+assert.match(result.reason, /could not be resolved/);
+
+result = curationReadiness({
+  policy: 'edition-window-assessment-v2', editorialDate: '2026-08-14', complete: true,
+  freshCandidateCount: 5, eligibleFreshCandidateCount: 5,
+  selectedCount: 1, keptCount: 0, rejectedCount: 1,
+  freshSelectedCount: 1, freshKeptCount: 0,
+  unassessedFreshCandidateCount: 0, freshRejectedCount: 1, currentDayResolved: false,
+}, '2026-08-14');
+assert.equal(result.ok, false, 'a selected current-day fact rejected by the copy gate must never become a quiet success');
+assert.match(result.reason, /final copy gate/);
+
+result = curationReadiness({
+  policy: 'edition-window-assessment-v2', editorialDate: '2026-08-14', complete: true,
+  freshCandidateCount: 5, eligibleFreshCandidateCount: 7,
+  selectedCount: 0, keptCount: 0, rejectedCount: 0,
+  freshSelectedCount: 0, freshKeptCount: 0,
+  unassessedFreshCandidateCount: 2, freshRejectedCount: 0, currentDayResolved: false,
+}, '2026-08-14');
+assert.equal(result.ok, false, 'uncapped same-day reporting must not disappear behind the input cap');
+assert.match(result.reason, /did not enter/);
+
+result = curationReadiness({
+  policy: 'edition-window-assessment-v2', editorialDate: '2026-08-14', complete: true,
+  freshCandidateCount: 5, eligibleFreshCandidateCount: 5,
+  selectedCount: 1, keptCount: 1, rejectedCount: 0,
+  freshSelectedCount: 1, freshKeptCount: 1,
+  unassessedFreshCandidateCount: 0, freshRejectedCount: 0, currentDayResolved: true,
+}, '2026-08-14');
+assert.equal(result.ok, true, 'a fully resolved current-day ledger may certify facts or a genuine quiet state');
+
 console.log('freshness-contract tests: ok');

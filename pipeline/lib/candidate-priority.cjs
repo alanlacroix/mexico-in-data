@@ -36,10 +36,21 @@ function fallbackImportanceComponents(candidate) {
   };
 }
 
-function prioritizeCandidates(candidates) {
+function prioritizeCandidates(candidates, options = {}) {
+  const editorialDate = String(options.editorialDate || '').trim();
+  const dateOf = typeof options.dateOf === 'function'
+    ? options.dateOf
+    : (candidate) => String(candidate?._editorialDate || candidate?.date || '').trim();
   return (Array.isArray(candidates) ? candidates : []).slice().sort((a, b) =>
     Number(Boolean(b?._scheduled)) - Number(Boolean(a?._scheduled))
     || Number(Boolean(a?._alreadyPublished)) - Number(Boolean(b?._alreadyPublished))
+    // The curator's bounded input is first a daily-edition budget. Exact-day rows
+    // cannot be crowded out by an older three-day backlog before they are assessed.
+    || (editorialDate
+      ? Number(dateOf(b) === editorialDate) - Number(dateOf(a) === editorialDate)
+      : 0)
+    // Inside each date lane, obvious weather/how-to/sports volume remains last.
+    || Number(attentionSignal(b) >= 0) - Number(attentionSignal(a) >= 0)
     || attentionSignal(b) - attentionSignal(a)
     || (Date.parse(b?.published_at || b?.publishedAt || '') || 0)
       - (Date.parse(a?.published_at || a?.publishedAt || '') || 0));

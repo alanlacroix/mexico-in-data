@@ -70,18 +70,18 @@ assert.deepEqual(weekDates('2026-08-16'), {
   assert.equal(receiptFor(result, 'friday-important'), undefined);
 }
 
-// When nothing clears today, yesterday's published Brief remains useful under the
-// explicitly dated Key developments lane. A late report that was never in yesterday's
-// edition cannot enter through this continuity path.
+// When nothing clears today, yesterday's consequential reviewed reporting remains
+// useful under the explicitly dated Key developments lane. This includes a late report
+// that arrived after yesterday's edition and was first reviewed today.
 {
   const result = selectEditionBrief([
     candidate('yesterday-important', 9, { date: '2026-08-19', publishedAt: '2026-08-19T14:00:00Z' }),
     candidate('late-yesterday-report', 10, { date: '2026-08-19', publishedAt: '2026-08-19T23:00:00Z' }),
   ], { editorialDate: '2026-08-20', carryoverIds: ['yesterday-important'] });
-  assert.deepEqual(result.selected.map((event) => event.id), ['yesterday-important']);
-  assert.deepEqual(result.counts, { today: 0, keyDevelopments: 1, total: 1 });
+  assert.deepEqual(result.selected.map((event) => event.id), ['late-yesterday-report', 'yesterday-important']);
+  assert.deepEqual(result.counts, { today: 0, keyDevelopments: 2, total: 2 });
   assert.equal(receiptFor(result, 'yesterday-important').lane, 'key-development');
-  assert.equal(receiptFor(result, 'late-yesterday-report'), undefined);
+  assert.equal(receiptFor(result, 'late-yesterday-report').lane, 'key-development');
 }
 
 // An edition has two honest lanes. Exact-day stories get first access; only

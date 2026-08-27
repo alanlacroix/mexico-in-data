@@ -8,6 +8,7 @@ import { publicationReadiness } from './check-publication-readiness.mjs';
 
 const require = createRequire(import.meta.url);
 const { PIPELINE_VERSION } = require('./lib/edition-contract.cjs');
+const { nonPublishedTransition } = require('./lib/publication-transition.cjs');
 const { briefReadiness } = briefReadinessPolicy;
 const { curationReadiness } = freshnessContract;
 
@@ -23,6 +24,8 @@ const publicationId = process.env.PUBLICATION_ID;
 const deployAttempt = Number(process.env.DEPLOY_ATTEMPT || 1);
 const state = process.env.PUBLICATION_STATE || 'published';
 const reason = String(process.env.PUBLICATION_REASON || '').trim();
+const publicationNow = process.env.PUBLICATION_NOW_ISO
+  ? new Date(process.env.PUBLICATION_NOW_ISO) : new Date();
 
 if (slot !== 'morning') throw new Error(`Invalid publication slot: ${slot || '(missing)'}`);
 if (!/^\d{4}-\d{2}-\d{2}$/.test(editorialDate || '')) throw new Error(`Invalid publication date: ${editorialDate || '(missing)'}`);
@@ -55,17 +58,14 @@ if (state !== 'published') {
     workflowRunId: process.env.GITHUB_RUN_ID || null,
     workflowRunAttempt: Number(process.env.GITHUB_RUN_ATTEMPT || 1),
   };
-  const priorIsCurrentPublication = prior.editorialDate === editorialDate
-    && (!prior.state || prior.state === 'published');
-  const status = priorIsCurrentPublication
-    ? prior
-    : prior.state === state
-    && prior.editorialDate === editorialDate
-    && prior.reason === next.reason
-    ? prior
-    : next;
+  // Keep a complete factual edition live if a later optional refresh fails. An empty
+  // morning edition is only provisional: if the noon review finds unresolved news,
+  // retaining that receipt would keep asserting that nothing happened after we know
+  // that claim is no longer supportable.
+  const transition = nonPublishedTransition(prior, next);
+  const { status } = transition;
   fs.writeFileSync(statusPath, `${JSON.stringify(status, null, 2)}\n`);
-  console.log(`publication receipt: ${editorialDate} ${slot} ${status.publicationId || publicationId} ${status.state || 'published'}${priorIsCurrentPublication ? ' (retained)' : ''}`);
+  console.log(`publication receipt: ${editorialDate} ${slot} ${status.publicationId || publicationId} ${status.state || 'published'}${transition.retained ? ' (retained)' : ''}`);
   process.exit(0);
 }
 
@@ -77,7 +77,7 @@ const freshness = curationReadiness(curation, editorialDate);
 if (!freshness.ok) throw new Error(`Fresh-story curation incomplete for ${editorialDate}: ${freshness.reason}`);
 const explanationReadiness = briefReadiness(brief);
 const selectedStories = [brief.lead, ...(brief.items || [])].filter(Boolean).length;
-const contentReadiness = publicationReadiness(brief, editorialDate);
+const contentReadiness = publicationReadiness(brief, editorialDate, { curation });
 if (!contentReadiness.publish) {
   throw new Error(`Refusing to certify this Brief: ${contentReadiness.reason}`);
 }
@@ -94,12 +94,16 @@ const status = {
   slot,
   publicationId,
   deployAttempt,
-  generatedAt: new Date().toISOString(),
+  generatedAt: publicationNow.toISOString(),
   briefGeneratedAt: brief.meta?.generatedAt || null,
   briefReviewedAt: brief.meta?.reviewedAt || null,
   selectionPolicy: brief.meta?.selection?.policy || null,
   selectionCandidates: Array.isArray(brief.meta?.selection?.receipt) ? brief.meta.selection.receipt.length : 0,
   selectedStories,
+  quiet: brief.meta?.quiet === true,
+  quietFinal: brief.meta?.quiet === true && Number(new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', hour: '2-digit', hourCycle: 'h23',
+  }).format(publicationNow)) >= 12,
   storyLanes: brief.meta?.selection?.lanes || { today: 0, keyDevelopments: 0, total: 0 },
   curation,
   explanations: explanationReadiness,

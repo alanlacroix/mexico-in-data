@@ -28,6 +28,7 @@ export function editorialDecision({ now = new Date(), status = null, force = fal
   const slot = 'morning';
   const easternHour = Number(zonedParts(now, 'America/New_York').hour);
   const dueHour = 9;
+  const quietRecheckHour = 12;
   const editorialDate = dateKey(now);
 
   if (easternHour < dueHour) {
@@ -40,6 +41,12 @@ export function editorialDecision({ now = new Date(), status = null, force = fal
   if (!force && sameDay && state === 'published') {
     if (Number(status?.pipelineVersion) !== PIPELINE_VERSION) {
       return { run: true, slot, editorialDate, reason: 'published artifact uses an older pipeline contract' };
+    }
+    // A zero-story morning review is provisional. One noon recheck lets reporting
+    // that arrived after the early collection enter the same daily edition. A factual
+    // edition is final immediately; a second quiet review is final too.
+    if (status?.quiet === true && status?.quietFinal !== true && easternHour >= quietRecheckHour) {
+      return { run: true, slot, editorialDate, reason: 'quiet morning edition is due one final source recheck' };
     }
     return { run: false, slot, editorialDate, reason: `${status.slot} edition already published` };
   }

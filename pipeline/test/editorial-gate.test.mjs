@@ -23,7 +23,7 @@ result = decide('2026-12-15T14:07:00Z');
 assert.equal(result.run, true, 'the EST 9 AM occurrence must publish');
 assert.equal(result.editorialDate, '2026-12-15');
 
-const morningReceipt = { pipelineVersion: 2, editorialDate: '2026-07-31', slot: 'morning', publicationId: 'run-1' };
+const morningReceipt = { pipelineVersion: 3, editorialDate: '2026-07-31', slot: 'morning', publicationId: 'run-1' };
 result = decide('2026-07-31T13:37:00Z', { status: morningReceipt });
 assert.equal(result.run, false, 'a same-day receipt must stop a duplicate edition');
 assert.match(result.reason, /already published/);
@@ -33,6 +33,22 @@ result = decide('2026-07-31T13:37:00Z', {
 });
 assert.equal(result.run, true, 'an older same-day artifact must be rebuilt once under a newer pipeline contract');
 assert.match(result.reason, /older pipeline contract/);
+
+result = decide('2026-07-31T15:37:00Z', {
+  status: { ...morningReceipt, quiet: true, quietFinal: false },
+});
+assert.equal(result.run, false, 'a provisional quiet morning waits until the single noon recheck');
+
+result = decide('2026-07-31T16:07:00Z', {
+  status: { ...morningReceipt, quiet: true, quietFinal: false },
+});
+assert.equal(result.run, true, 'a provisional quiet morning must be reviewed once at noon');
+assert.match(result.reason, /final source recheck/);
+
+result = decide('2026-07-31T17:07:00Z', {
+  status: { ...morningReceipt, quiet: true, quietFinal: true },
+});
+assert.equal(result.run, false, 'a second genuinely quiet review is final for the daily product');
 
 result = decide('2026-07-31T14:37:00Z', {
   status: { ...morningReceipt, state: 'deferred', contentEditorialDate: '2026-07-30' },
@@ -61,7 +77,7 @@ assert.equal(result.run, true, 'a deliberate recovery must remain possible after
 
 // Old afternoon receipts remain readable during migration, but the gate can never write
 // or request a second edition. Even an evening recovery attempt is still morning.
-const legacyReceipt = { pipelineVersion: 2, editorialDate: '2026-07-31', slot: 'afternoon', publicationId: 'run-2' };
+const legacyReceipt = { pipelineVersion: 3, editorialDate: '2026-07-31', slot: 'afternoon', publicationId: 'run-2' };
 result = decide('2026-07-31T22:22:00Z', { status: legacyReceipt });
 assert.equal(result.run, false, 'a legacy same-day receipt must stop a duplicate edition');
 

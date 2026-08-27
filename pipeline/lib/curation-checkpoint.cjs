@@ -18,10 +18,11 @@ function candidateSignature(candidates) {
   return createHash('sha256').update(JSON.stringify(rows)).digest('hex');
 }
 
-function canReuseCuration(receipt, editorialDate, signature) {
+function canReuseCuration(receipt, editorialDate, signature, policy = '') {
   return Boolean(receipt
     && receipt.editorialDate === editorialDate
     && receipt.complete === true
+    && (!clean(policy) || receipt.policy === policy)
     && clean(receipt.candidateSig)
     && receipt.candidateSig === signature);
 }

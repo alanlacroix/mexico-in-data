@@ -6,6 +6,17 @@ assert.equal(empty.publish, true);
 assert.equal(empty.storyCount, 0);
 assert.match(empty.reason, /current dated quiet edition/);
 
+const falseQuiet = publicationReadiness(
+  { meta: { editorialDate: '2026-08-17', quiet: true }, lead: null, items: [] },
+  '2026-08-17',
+  { curation: {
+    policy: 'edition-window-assessment-v2', currentDayResolved: false,
+    freshRejectedCount: 1, unassessedFreshCandidateCount: 0,
+  } },
+);
+assert.equal(falseQuiet.publish, false, 'an unresolved selected fact must contradict, not certify, a quiet edition');
+assert.match(falseQuiet.reason, /contradicted/);
+
 const ambiguousEmpty = publicationReadiness({ meta: { editorialDate: '2026-08-17' }, lead: null, items: [] }, '2026-08-17');
 assert.equal(ambiguousEmpty.publish, false, 'only an explicit quiet edition may publish without stories');
 

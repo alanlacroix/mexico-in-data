@@ -102,7 +102,7 @@ const interestTags = (e) => {
   const hay = `${e.title || ''} ${e.why || ''} ${e.reportEvidence?.title || ''} ${e.reportEvidence?.dek || ''} ${e.section || ''}`;
   return INTERESTS.filter((x) => x.rx.test(hay)).map((x) => x.tag);
 };
-function select(events, editorialDate, carryoverIds = []) {
+function select(events, editorialDate) {
   const candidates = groupEvents(events).map((group) => ({
     ...group.event,
     importance: group.importance,
@@ -114,7 +114,6 @@ function select(events, editorialDate, carryoverIds = []) {
     effectiveImportance: effImp,
     interestTags,
     scheduledMatch: (event) => Boolean(event.scheduledEventId),
-    carryoverIds,
     candidateGate: (event) => {
       if (!event?.url) return { ok: false, reason: 'missing-url' };
       if (!event?.source) return { ok: false, reason: 'missing-source' };
@@ -194,18 +193,7 @@ async function main() {
   const prev = readJson(OUT, null);
   const prevHrefs = new Set([prev && prev.lead && prev.lead.href, ...arr(prev && prev.items).map((i) => i.href)].filter(Boolean));
   const lockedIds = arr(prev?.meta?.selection?.lockedIds);
-  const priorDate = (() => {
-    const date = new Date(`${editorialDate}T12:00:00Z`);
-    date.setUTCDate(date.getUTCDate() - 1);
-    return date.toISOString().slice(0, 10);
-  })();
-  const carryoverIds = prev?.meta?.editorialDate === editorialDate && lockedIds.length
-    ? lockedIds
-    : prev?.meta?.editorialDate === priorDate
-      ? [prev.lead, ...arr(prev.items)].filter(Boolean).flatMap((story) => arr(story.refs)).filter(Boolean)
-      : [];
-
-  const selection = select(P.events, editorialDate, carryoverIds);
+  const selection = select(P.events, editorialDate);
   const rankedPicked = selection.picked;
   const rankedIds = rankedPicked.map((event) => event.id).filter(Boolean);
   if (!selectionOnly && prev?.meta?.editorialDate === editorialDate && lockedIds.length

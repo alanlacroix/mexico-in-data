@@ -22,6 +22,26 @@ assert.equal(ranked[1].id, 'unseen', 'new reporting must precede recurring stori
 assert.ok(ranked.slice(0, 24).some((candidate) => candidate.id === 'scheduled-outcome'), 'the scheduled outcome must remain inside the exhaustive 24-item batch');
 assert.equal(prioritizeCandidates([unseen, scheduled]).length, 2, 'priority sorting must not mutate or discard candidates');
 
+const olderEqualSignal = Array.from({ length: 30 }, (_, index) => ({
+  id: `older-${index}`,
+  title: 'Mexico government approves a new national policy',
+  published_at: `2026-08-26T${String(index % 20).padStart(2, '0')}:00:00Z`,
+  _editorialDate: '2026-08-26',
+  _alreadyPublished: false,
+}));
+const todayEqualSignal = Array.from({ length: 6 }, (_, index) => ({
+  id: `today-${index}`,
+  title: 'Mexico government approves a new national policy',
+  published_at: `2026-08-27T${String(12 + index).padStart(2, '0')}:00:00Z`,
+  _editorialDate: '2026-08-27',
+  _alreadyPublished: false,
+}));
+const dailyBatch = prioritizeCandidates([...olderEqualSignal, ...todayEqualSignal], {
+  editorialDate: '2026-08-27',
+});
+assert.ok(todayEqualSignal.every((candidate) => dailyBatch.slice(0, 24).some((row) => row.id === candidate.id)),
+  'every same-day equal-signal report must enter the bounded batch before the old backlog');
+
 const routineMorning = Array.from({ length: 60 }, (_, index) => ({
   id: `routine-${index}`,
   title: index % 2 ? 'How to save on school supplies this weekend' : 'Weather in Mexico this Sunday',

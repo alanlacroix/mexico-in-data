@@ -8,6 +8,7 @@ const DEFAULT_MIN_IMPORTANCE = 5;
 const DEFAULT_SOFT_FLOOR = 3;
 const DEFAULT_CAP = 5;
 const DEFAULT_CARRYOVER_MIN_IMPORTANCE = 6;
+const DEFAULT_CARRYOVER_CAP = 2;
 const WEEKEND_RECAP_MIN_IMPORTANCE = 6;
 // v9 adds separately retained context beyond the original article plus an independent claim audit.
 // Older prose is never mistaken for the current product when an event returns.
@@ -292,6 +293,7 @@ function selectWeekendBrief(candidates, options = {}) {
   delete shared.editorialDate;
   delete shared.dateOf;
   delete shared.carryoverMinImportance;
+  delete shared.carryoverCap;
   delete shared.weekendRecapMinImportance;
 
   const inWindow = (event) => {
@@ -353,30 +355,27 @@ function selectEditionBrief(candidates, options = {}) {
   const cap = Math.max(0, Math.floor(finiteNumber(options.cap, DEFAULT_CAP)));
   const dateOf = typeof options.dateOf === 'function'
     ? options.dateOf : (event) => clean(event && event.date);
-  const restrictCarryover = Array.isArray(options.carryoverIds);
-  const carryoverIds = new Set((options.carryoverIds || []).map(clean).filter(Boolean));
   const shared = { ...options };
   delete shared.editorialDate;
   delete shared.dateOf;
   delete shared.carryoverMinImportance;
-  delete shared.carryoverIds;
 
   const today = selectDailyBrief(events.filter((event) => dateOf(event) === editorialDate), {
     ...shared,
     cap,
     softFloor: Math.min(cap, Math.max(0, Math.floor(finiteNumber(options.softFloor, DEFAULT_SOFT_FLOOR)))),
   });
-  // Prior-day context is allowed even when no exact-day story clears the bar, but only
-  // from the edition readers were already shown yesterday. That keeps a quiet morning
-  // useful without letting a late, never-reviewed article manufacture a new dateline.
-  // The lane and the real event date remain explicit on every card.
+  // Prior-day context is allowed even when no exact-day story clears the bar. This is
+  // specifically where a consequential report that arrived after yesterday's edition
+  // belongs: it is reviewed now and shown under Key developments with its real date.
+  // Restricting this lane to yesterday's already-published IDs discarded the very late
+  // developments the lane exists to recover.
   const remaining = Math.max(0, cap - today.selected.length);
-  const carryover = selectDailyBrief(events.filter((event, index) => dateOf(event) === carryoverDate
-    && (!restrictCarryover || carryoverIds.has(receiptId(event, index)))), {
+  const carryover = selectDailyBrief(events.filter((event) => dateOf(event) === carryoverDate), {
     ...shared,
     minImportance: finiteNumber(options.carryoverMinImportance, DEFAULT_CARRYOVER_MIN_IMPORTANCE),
     softFloor: 0,
-    cap: remaining,
+    cap: Math.min(remaining, Math.max(0, Math.floor(finiteNumber(options.carryoverCap, DEFAULT_CARRYOVER_CAP)))),
   });
 
   const selected = [...today.selected, ...carryover.selected];

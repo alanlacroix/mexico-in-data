@@ -94,6 +94,23 @@ assert.equal(groupEvents(happening.events || []).length, (happening.events || []
 assert.equal(happening.meta?.count, (happening.events || []).length, 'the event-log count must match its records');
 assert.equal(dailyBriefFactory({}).editorialDate, dailyBrief.editorialDate, 'Eleventy’s data argument must not be mistaken for a clock');
 
+const interruptedQuietBrief = dailyBriefFactory(new Date('2026-08-27T18:00:00Z'), {
+  brief: {
+    meta: { editorialDate: '2026-08-27', quiet: true, generatedAt: '2026-08-27T13:00:00Z' },
+    summary: 'No major developments yet today.', lead: null, items: [],
+  },
+  happening: { meta: {}, events: [] },
+  publicationStatus: {
+    state: 'deferred', editorialDate: '2026-08-27', contentEditorialDate: '2026-08-27',
+  },
+});
+assert.equal(interruptedQuietBrief.publicationInterrupted, true);
+assert.equal(interruptedQuietBrief.quiet, false,
+  'a contradicted quiet receipt must stop making the editorial claim that nothing happened');
+assert.equal(interruptedQuietBrief.stories.length, 0);
+assert.match(interruptedQuietBrief.summaryLead, /delayed.*being checked/i);
+assert.doesNotMatch(interruptedQuietBrief.summaryLead, /No major developments/i);
+
 const lastBriefDate = dailyBrief.briefEditorialDate;
 const nextDay = new Date(`${lastBriefDate}T12:00:00Z`);
 nextDay.setUTCDate(nextDay.getUTCDate() + 1);
@@ -506,8 +523,12 @@ assert.match(happeningBuilder, /freshCandidateCount:[\s\S]*complete: Boolean\(de
   'the event log must retain whether fresh exact-day candidates were fully assessed');
 assert.match(happeningBuilder, /mode: 'deterministic-fallback',[\s\S]*complete: true,[\s\S]*assessedCount: cands\.length/,
   'a model outage must use the conservative local assessment instead of freezing the entire Brief');
-assert.match(happeningBuilder, /const rejectedKeeps = kept\.length - published\.length;[\s\S]*complete: true,[\s\S]*rejectedKeeps/,
-  'quarantining unsafe generated copy must not relabel a complete candidate assessment as incomplete');
+assert.match(happeningBuilder, /repairPayload = rejected\.map[\s\S]*This is a copy repair only: do not change which item was selected[\s\S]*repaired generated event/,
+  'a selected factual report gets exactly one evidence-locked copy repair instead of disappearing');
+assert.doesNotMatch(happeningBuilder, /rejectedTitle|rejectedWhy/,
+  'copy repair must use source evidence rather than repeating prose that already failed the gate');
+assert.match(happeningBuilder, /rejectedSelected = rejected\.map[\s\S]*freshRejectedCount[\s\S]*currentDayResolved: freshRejectedCount === 0/,
+  'unresolved selected current-day facts must remain visible in the receipt and block a false quiet day');
 assert.match(happeningBuilder, /--resume-current-edition[\s\S]*canReuseCuration[\s\S]*checkpoint still matches the source ledger/,
   'a retry may reuse paid curation only while the eligible source ledger is unchanged');
 assert.match(happeningBuilder, /canReuseCuration\(checkpoint[\s\S]*mergeLog\(existing, \[\], now\)[\s\S]*self-healed the event log/,

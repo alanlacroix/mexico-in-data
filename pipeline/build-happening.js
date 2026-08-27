@@ -80,6 +80,7 @@ const MAX_STORE = 60;        // hard cap on stored entries
 const MAX_NEW = 16;          // model returns at most this many new events per run
 const MAX_CANDIDATES = 24;   // small enough for one exhaustive decision per row; attention priority protects consequential older items.
 const CURATION_MAX_TOKENS = 6000; // enough for 24 compact decisions; the old 16k ceiling falsely exhausted the monthly guard.
+const CURATION_POLICY = 'edition-window-assessment-v2';
 
 const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
 
@@ -275,17 +276,31 @@ function curationResult(cands, now, events, details = {}) {
   const editorialDate = editorialDay(now);
   const freshCandidates = cands.filter((candidate) => editorialDay(candidate.published_at) === editorialDate
     && !candidate._alreadyPublished);
+  const freshEvents = events.filter((event) => event.date === editorialDate);
+  const count = (key, fallback = 0) => Number.isFinite(Number(details[key]))
+    ? Number(details[key]) : fallback;
   return {
     events,
     receipt: {
-      policy: 'exact-day-assessment-v1',
+      policy: CURATION_POLICY,
       editorialDate,
       candidateCount: cands.length,
       candidateSig: details.candidateSig || candidateSignature(cands),
       freshCandidateCount: freshCandidates.length,
-      assessedCount: Number(details.assessedCount) || 0,
+      assessedCount: count('assessedCount'),
+      selectedCount: count('selectedCount', events.length),
+      freshSelectedCount: count('freshSelectedCount', freshEvents.length),
       keptCount: events.length,
-      rejectedCount: Number(details.rejectedKeeps) || 0,
+      freshKeptCount: count('freshKeptCount', freshEvents.length),
+      rejectedCount: count('rejectedKeeps'),
+      freshRejectedCount: count('freshRejectedCount'),
+      rejectedSelected: arr(details.rejectedSelected),
+      eligibleFreshCandidateCount: count('eligibleFreshCandidateCount', freshCandidates.length),
+      unassessedFreshCandidateCount: count('unassessedFreshCandidateCount'),
+      currentDayResolved: details.currentDayResolved !== false
+        && !(details.mode === 'deterministic-fallback'
+          && freshCandidates.length > 0
+          && freshEvents.length === 0),
       mode: details.mode || 'unknown',
       complete: Boolean(details.complete),
       reason: details.reason || '',
@@ -405,26 +420,95 @@ ${BAN}`;
       || Number(Boolean(b.x._scheduled)) - Number(Boolean(a.x._scheduled))
       || a.row.i - b.row.i)
     .slice(0, MAX_NEW);
-  const events = [];
-  for (const { row: r, x, scored } of kept) {
+  const materialize = (item, decision = item.row) => {
+    const { x, scored } = item;
+    const r = decision;
     const sec = SECTIONS.includes(r.section) ? r.section : beatSection(x);
-    if (RAW_HEADLINE_RX.test(String(r.title || ''))) {
-      console.warn(`  reject generated event ${r.i}: headline is not neutral`);
-      continue;
-    }
     const ev = mkEvent(x, sec, scored.importance, r.title, r.why, r.company);
+    const neutralFlags = RAW_HEADLINE_RX.test(String(r.title || '')) ? ['headline is not neutral'] : [];
     const gate = lintEventReport({ event: ev, inputs: evidenceInputs(ev) });
-    if (!gate.ok) {
-      console.warn(`  reject generated event ${r.i}: ${gate.flags.join('; ')}`);
-      continue;
-    }
+    const flags = [...new Set([...neutralFlags, ...gate.flags])];
+    if (flags.length) return { ev, flags };
     ev.importance = scored.importance;
     ev.importanceComponents = scored.importanceComponents;
     ev.importanceProvenance = scored.importanceProvenance;
-    events.push(ev);
+    return { ev, flags: [] };
+  };
+
+  const accepted = new Map();
+  let rejected = [];
+  for (const item of kept) {
+    const result = materialize(item);
+    if (result.flags.length) {
+      console.warn(`  reject generated event ${item.row.i}: ${result.flags.join('; ')}`);
+      rejected.push({ item, draft: result.ev, flags: result.flags });
+    } else accepted.set(item.row.i, result.ev);
   }
-  const published = events.slice(0, MAX_NEW);
-  const rejectedKeeps = kept.length - published.length;
+
+  // Selection and copy are separate contracts. One bad phrase must not erase a real
+  // development and then masquerade as “nothing happened.” Give only the rejected
+  // selected rows one bounded, evidence-locked correction pass; selection and scores
+  // cannot change. If a row still fails, the receipt blocks a false quiet publication.
+  if (rejected.length) {
+    const repairSchema = { type: 'object', additionalProperties: false, required: ['repairs'], properties: {
+      repairs: { type: 'array', items: { type: 'object', additionalProperties: false,
+        required: ['i', 'title', 'why'], properties: {
+          i: { type: 'integer' }, title: { type: 'string' }, why: { type: 'string' },
+        } } },
+    } };
+    const repairPayload = rejected.map(({ item, flags }, i) => ({
+      i,
+      sourceTitle: item.x.title,
+      sourceDek: String(item.x.dek || '').slice(0, 260),
+      rejectionReasons: flags,
+    }));
+    const repaired = await askJSON({
+      system: `Repair factual report copy that failed a deterministic publication gate. Return exactly one repair for every input i. Use only sourceTitle and sourceDek. Do not add, round, or infer numbers. Keep the actor, action, and outcome concrete. Write a short plain-English title and one or two complete sentences of useful context. Remove the stated rejection problem. No em dash, semicolon, hype, insider labels, vague newsroom language, or unsupported judgment. This is a copy repair only: do not change which item was selected.\n\n${REPORT}\n\n${BAN}`,
+      user: JSON.stringify(repairPayload),
+      schema: repairSchema,
+      maxTokens: Math.min(2400, 300 + repairPayload.length * 240),
+      effort: 'low', model: models.HAIKU, priority: 'core',
+    });
+    const repairs = Array.isArray(repaired?.repairs) ? repaired.repairs : [];
+    const coverage = decisionCoverage(repairPayload.length, repairs);
+    if (!coverage.ok) {
+      console.warn(`  copy repair receipt incomplete: missing=${coverage.missing.join(',') || 'none'} duplicate=${coverage.duplicates.join(',') || 'none'} invalid=${coverage.invalid.join(',') || 'none'}`);
+    }
+    const stillRejected = [];
+    for (let i = 0; i < rejected.length; i++) {
+      const rejectedRow = rejected[i];
+      const repair = repairs.find((row) => Number(row.i) === i);
+      if (!repair) { stillRejected.push(rejectedRow); continue; }
+      const result = materialize(rejectedRow.item, {
+        ...rejectedRow.item.row,
+        title: repair.title,
+        why: repair.why,
+      });
+      if (result.flags.length) {
+        console.warn(`  reject repaired event ${rejectedRow.item.row.i}: ${result.flags.join('; ')}`);
+        stillRejected.push({ ...rejectedRow, draft: result.ev, flags: result.flags });
+      } else {
+        accepted.set(rejectedRow.item.row.i, result.ev);
+        console.log(`  repaired generated event ${rejectedRow.item.row.i}`);
+      }
+    }
+    rejected = stillRejected;
+  }
+  for (const row of rejected) quarantine(row.draft, row.flags);
+  const published = kept.flatMap((item) => accepted.has(item.row.i) ? [accepted.get(item.row.i)] : []).slice(0, MAX_NEW);
+  const rejectedKeeps = rejected.length;
+  const isFresh = (item) => editorialDay(item.x.published_at) === editorialDay(now) && !item.x._alreadyPublished;
+  const freshSelectedCount = kept.filter(isFresh).length;
+  const freshKeptCount = kept.filter((item) => isFresh(item) && accepted.has(item.row.i)).length;
+  const freshRejectedCount = kept.filter((item) => isFresh(item) && !accepted.has(item.row.i)).length;
+  const rejectedSelected = rejected.map(({ item, draft, flags }) => ({
+    id: draft.id,
+    candidateIndex: item.row.i,
+    date: editorialDay(item.x.published_at),
+    source: item.x.sourceName || item.x.source || '',
+    url: item.x.url,
+    flags,
+  }));
   return curationResult(cands, now, published, {
     mode: 'model',
     // Completeness means every candidate received a decision. A generated headline
@@ -432,7 +516,13 @@ ${BAN}`;
     // 23 decisions incomplete or justify rerunning the same paid batch forever.
     complete: true,
     assessedCount: assessed.length,
+    selectedCount: kept.length,
+    freshSelectedCount,
+    freshKeptCount,
     rejectedKeeps,
+    freshRejectedCount,
+    rejectedSelected,
+    currentDayResolved: freshRejectedCount === 0,
     reason: rejectedKeeps ? `${rejectedKeeps} selected event(s) quarantined by the copy gate` : '',
   });
 }
@@ -1135,7 +1225,7 @@ async function main() {
     ? publicationStatus.curation : null;
   const checkpoint = existing.meta?.curation?.editorialDate === editorialDay(now)
     ? existing.meta.curation : persistedCheckpoint;
-  if (resumeCurrentEdition && canReuseCuration(checkpoint, editorialDay(now), signature)) {
+  if (resumeCurrentEdition && canReuseCuration(checkpoint, editorialDay(now), signature, CURATION_POLICY)) {
     // Reuse means "do not buy the same curation again," not "skip deterministic
     // maintenance." New clustering, copy, or retention rules must repair the stored
     // ledger even when no source URL has changed; otherwise old bad state becomes
@@ -1161,10 +1251,23 @@ async function main() {
   if (resumeCurrentEdition && checkpoint?.editorialDate === editorialDay(now)) {
     console.log('  new eligible reporting arrived — invalidating the earlier curation checkpoint');
   }
-  const cands = prioritizeCandidates(universe).slice(0, MAX_CANDIDATES);
+  const cands = prioritizeCandidates(universe, {
+    editorialDate: editorialDay(now),
+    dateOf: (candidate) => editorialDay(candidate.published_at),
+  }).slice(0, MAX_CANDIDATES);
   console.log(`  candidates ${cands.length} (last ${WINDOW_DAYS}d) · existing log ${arr(existing.events).length}`);
   const curation = await curate(cands, now);
   curation.receipt.candidateSig = signature;
+  const eligibleFreshCandidateCount = universe.filter((candidate) =>
+    editorialDay(candidate.published_at) === editorialDay(now) && !candidate._alreadyPublished).length;
+  curation.receipt.eligibleFreshCandidateCount = eligibleFreshCandidateCount;
+  curation.receipt.unassessedFreshCandidateCount = Math.max(0,
+    eligibleFreshCandidateCount - Number(curation.receipt.freshCandidateCount || 0));
+  curation.receipt.currentDayResolved = curation.receipt.currentDayResolved === true
+    && curation.receipt.unassessedFreshCandidateCount === 0;
+  if (!curation.receipt.currentDayResolved && !curation.receipt.reason) {
+    curation.receipt.reason = 'the current-day candidate ledger was not fully resolved';
+  }
   const fresh = curation.events;
   console.log(`  curated ${fresh.length} fresh events`);
   const merged = attachScheduledMetadata(mergeLog(existing, fresh, now).events, schedule);
