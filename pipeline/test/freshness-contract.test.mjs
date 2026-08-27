@@ -58,7 +58,7 @@ assert.equal(result.ok, false,
 assert.match(result.reason, /could not be resolved/);
 
 result = curationReadiness({
-  policy: 'edition-window-assessment-v3', editorialDate: '2026-08-14', complete: true,
+  policy: 'edition-window-assessment-v4', editorialDate: '2026-08-14', complete: true,
   freshCandidateCount: 5, eligibleFreshCandidateCount: 5,
   selectedCount: 1, keptCount: 0, rejectedCount: 1,
   freshSelectedCount: 1, freshKeptCount: 0,
@@ -95,5 +95,15 @@ result = curationReadiness({
   unassessedFreshCandidateCount: 0, freshRejectedCount: 0, currentDayResolved: true,
 }, '2026-08-14');
 assert.equal(result.ok, true, 'the current evidence-fidelity policy may certify a fully resolved current-day ledger');
+
+result = curationReadiness({
+  policy: 'edition-window-assessment-v4', editorialDate: '2026-08-14', complete: true,
+  mode: 'model', freshCandidateCount: 24, eligibleFreshCandidateCount: 44,
+  selectedCount: 4, keptCount: 3, rejectedCount: 1,
+  freshSelectedCount: 4, freshKeptCount: 3,
+  unassessedFreshCandidateCount: 20, freshRejectedCount: 1, currentDayResolved: false,
+}, '2026-08-14');
+assert.equal(result.ok, true,
+  'one quarantined card must not suppress other verified current-day developments');
 
 console.log('freshness-contract tests: ok');

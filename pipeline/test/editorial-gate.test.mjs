@@ -23,7 +23,7 @@ result = decide('2026-12-15T14:07:00Z');
 assert.equal(result.run, true, 'the EST 9 AM occurrence must publish');
 assert.equal(result.editorialDate, '2026-12-15');
 
-const morningReceipt = { pipelineVersion: 4, editorialDate: '2026-07-31', slot: 'morning', publicationId: 'run-1' };
+const morningReceipt = { pipelineVersion: 5, editorialDate: '2026-07-31', slot: 'morning', publicationId: 'run-1' };
 result = decide('2026-07-31T13:37:00Z', { status: morningReceipt });
 assert.equal(result.run, false, 'a same-day receipt must stop a duplicate edition');
 assert.match(result.reason, /already published/);
@@ -77,7 +77,7 @@ assert.equal(result.run, true, 'a deliberate recovery must remain possible after
 
 // Old afternoon receipts remain readable during migration, but the gate can never write
 // or request a second edition. Even an evening recovery attempt is still morning.
-const legacyReceipt = { pipelineVersion: 4, editorialDate: '2026-07-31', slot: 'afternoon', publicationId: 'run-2' };
+const legacyReceipt = { pipelineVersion: 5, editorialDate: '2026-07-31', slot: 'afternoon', publicationId: 'run-2' };
 result = decide('2026-07-31T22:22:00Z', { status: legacyReceipt });
 assert.equal(result.run, false, 'a legacy same-day receipt must stop a duplicate edition');
 

@@ -371,6 +371,30 @@ assert.ok(lintEventReport({
   inputs: ['El nuevo anteproyecto implica una reducción y el tope de crédito queda en 1.3%'],
 }).flags.some((flag) => flag.includes('proposal or draft')),
 'a draft must not be rewritten as an action already taken');
+assert.ok(lintEventReport({
+  event: {
+    title: 'Banking regulators soften the fee cap',
+    why: 'The new ceiling is 1.3 percent.',
+    url: 'https://example.com/soften-draft', date: '2026-08-27',
+  },
+  inputs: ['El nuevo anteproyecto suaviza el tope y plantea 1.3%.'],
+}).flags.some((flag) => flag.includes('proposal or draft')),
+'soften must not disguise a draft as a completed regulatory change');
+for (const title of [
+  'Congress approves the fee cap',
+  'The regulator is implementing the fee cap',
+  'Regulators are softening the fee cap',
+]) {
+  assert.ok(lintEventReport({
+    event: {
+      title,
+      why: 'The ceiling would be 1.3 percent.',
+      url: 'https://example.com/draft-inflection', date: '2026-08-27',
+    },
+    inputs: ['El nuevo anteproyecto plantea un tope de 1.3%.'],
+  }).flags.some((flag) => flag.includes('proposal or draft')),
+  `present and progressive completed-action wording must preserve draft status: ${title}`);
+}
 assert.equal(lintEventReport({
   event: {
     title: 'Lawmakers approve the proposed banking rule',
@@ -379,6 +403,45 @@ assert.equal(lintEventReport({
   },
   inputs: ['Lawmakers approved the proposed banking rule and its new fee ceiling.'],
 }).ok, true, 'evidence that records enactment must not remain frozen at the proposal stage');
+for (const evidence of [
+  'The draft asks Congress to approve the cap.',
+  'La iniciativa plantea que el Congreso apruebe el tope.',
+  'La propuesta busca aprobar el tope.',
+]) {
+  assert.ok(lintEventReport({
+    event: {
+      title: 'Congress approves the cap',
+      why: 'The cap is now in force.',
+      url: 'https://example.com/proposal-evidence', date: '2026-08-27',
+    },
+    inputs: [evidence],
+  }).flags.some((flag) => flag.includes('proposal or draft')),
+  `proposal grammar must not be mistaken for enactment evidence: ${evidence}`);
+}
+assert.equal(lintEventReport({
+  event: {
+    title: 'Congress approves the cap',
+    why: 'The approved cap is now in force.',
+    url: 'https://example.com/enacted-evidence', date: '2026-08-27',
+  },
+  inputs: ['Congress approved the cap. El Congreso aprobó el tope.'],
+}).ok, true, 'an actual completed approval in retained evidence must support final wording');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Lawmakers approve the proposed cap after a final vote',
+    why: 'The approved cap is now in force.',
+    url: 'https://example.com/plural-enactment', date: '2026-08-27',
+  },
+  inputs: ['Lawmakers approve the proposed cap after a final vote.'],
+}).ok, true, 'a plural public actor plus an indicative base verb must count as enactment evidence');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Congress approves the cap',
+    why: 'Congress approved it today.',
+    url: 'https://example.com/separate-evidence-rows', date: '2026-08-27',
+  },
+  inputs: ['Draft would lower fees.', 'Congress approved it today.'],
+}).ok, true, 'modality in one retained evidence row must not bleed into a separate enacted report');
 assert.ok(lintEventReport({
   event: {
     title: 'Mexico adds over 1 million informal workers',
@@ -399,12 +462,46 @@ assert.ok(lintEventReport({
 'a lower or smaller comparison must not support a highest or largest claim');
 assert.equal(lintEventReport({
   event: {
-    title: 'Sheinbaum proposes a constitutional reform',
-    why: 'The draft would require officeholders to renounce another citizenship.',
+    title: 'Sheinbaum proposes constitutional reform to bar dual citizens from presidency and governorships',
+    why: 'Mexico\'s president introduced a draft constitutional reform requiring officeholders to renounce another citizenship and blocking dual citizens during their term.',
     url: 'https://example.com/reform', date: '2026-08-27',
   },
   inputs: ['Sheinbaum presenta iniciativa. La reforma plantea una renuncia a otra ciudadanía.'],
 }).ok, true, 'copy that preserves a proposal’s procedural stage must pass');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Regulators propose reducing the card fee cap',
+    why: 'The draft would set a 1.3 percent ceiling.',
+    url: 'https://example.com/propose-reducing', date: '2026-08-27',
+  },
+  inputs: ['El nuevo anteproyecto plantea reducir el tope a 1.3%.'],
+}).ok, true, 'a proposal verb plus its proposed action must remain publishable');
+assert.ok(lintEventReport({
+  event: {
+    title: 'Congress approves the proposed card fee cap',
+    why: 'The ceiling is 1.3 percent.',
+    url: 'https://example.com/approve-proposed', date: '2026-08-27',
+  },
+  inputs: ['El nuevo anteproyecto plantea un tope de 1.3%.'],
+}).flags.some((flag) => flag.includes('proposal or draft')),
+'calling a cap proposed must not excuse an unsupported claim that Congress approved it');
+assert.ok(lintEventReport({
+  event: {
+    title: 'Congress approves the proposal, which would reduce the cap',
+    why: 'The draft describes a 1.3 percent ceiling.',
+    url: 'https://example.com/subordinate-modal', date: '2026-08-27',
+  },
+  inputs: ['El anteproyecto plantea reducir el tope a 1.3%.'],
+}).flags.some((flag) => flag.includes('proposal or draft')),
+'a modal in a subordinate clause must not excuse an unsupported final approval');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Congress would approve the proposal under the draft timetable',
+    why: 'The draft describes a 1.3 percent ceiling.',
+    url: 'https://example.com/governing-modal', date: '2026-08-27',
+  },
+  inputs: ['El anteproyecto plantea que el Congreso aprobaría la propuesta y fija un tope de 1.3%.'],
+}).ok, true, 'a modal that directly governs the approval must preserve proposal status');
 assert.equal(lintEventReport({
   event: {
     title: 'Sinaloa Congress appoints Graciela Domínguez interim governor',

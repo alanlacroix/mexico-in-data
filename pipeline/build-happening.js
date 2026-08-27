@@ -80,7 +80,7 @@ const MAX_STORE = 60;        // hard cap on stored entries
 const MAX_NEW = 16;          // model returns at most this many new events per run
 const MAX_CANDIDATES = 24;   // small enough for one exhaustive decision per row; attention priority protects consequential older items.
 const CURATION_MAX_TOKENS = 6000; // enough for 24 compact decisions; the old 16k ceiling falsely exhausted the monthly guard.
-const CURATION_POLICY = 'edition-window-assessment-v3';
+const CURATION_POLICY = 'edition-window-assessment-v4';
 
 const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
 

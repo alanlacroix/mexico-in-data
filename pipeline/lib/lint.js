@@ -76,9 +76,15 @@ const contextTokens = (value) => String(value || '').toLowerCase()
   .filter((token) => token && !CONTEXT_STOP.has(token));
 
 const PROPOSAL_EVIDENCE = /\b(?:anteproyecto|propuesta|iniciativa|plantea|propone|draft|proposal|proposed|would|seeks?|plans? to)\b/i;
-const PROPOSAL_COPY = /\b(?:anteproyecto|proposal|propos\w*|draft|would|seeks?|plans?|aims?|calls? for|asks?|files?|submits?)\b/i;
-const COMPLETED_ACTION = /\b(?:approved?|passed?|enacted?|adopted?|implemented?|reduced?|eased?|sets?|banned?|barred?|required?|eliminated?|raised?|cuts?|launched?|created?)\b/i;
-const ENACTMENT_EVIDENCE = /\b(?:approved?|passed?|enacted?|adopted?|implemented?|enters? into force|aprueb\w*|aprob\w*|adopt\w*|implement\w*|promulg\w*|entra en vigor|publica (?:el |un )?decreto)\b/i;
+const MODAL_ACTION = /\b(?:would|could|may|might|seeks? to|plans? to|aims? to|is expected to)\b/i;
+const PROPOSAL_VERB_ACTION = /\bpropos(?:e|es|ed|ing)\b(?:\s+\w+ing\b|[^.;]{0,90}\b(?:to|that)\b)|\b(?:calls? for|asks?)\b[^.;]{0,90}\bto\b/i;
+const PROPOSAL_SUBJECT_ACTION = /\b(?:proposal|draft|anteproyecto|reform)\b[^.;]{0,90}\b(?:set(?:s|ting)?|requir(?:e|es|ed|ing)|reduc(?:e|es|ed|ing)|eas(?:e|es|ed|ing)|soften(?:s|ed|ing)?|lower(?:s|ed|ing)?|ban(?:s|ned|ning)?|bar(?:s|red|ring)?|block(?:s|ed|ing)?|eliminat(?:e|es|ed|ing)|rais(?:e|es|ed|ing)|cut(?:s|ting)?|creat(?:e|es|ed|ing))\b/i;
+const FINALIZING_DRAFT = /\b(?:approv(?:e|es|ed|ing)|pass(?:es|ed|ing)?|enact(?:s|ed|ing)?|adopt(?:s|ed|ing)?|implement(?:s|ed|ing)?)\b[^.;]{0,50}\b(?:the |a |an )?(?:proposal|draft|anteproyecto|reform)\b/i;
+const MODAL_GOVERNS_FINALIZING = /\b(?:would|could|may|might|plans? to|aims? to|is expected to)\s*$/i;
+const PROPOSAL_GOVERNS_FINALIZING = /\b(?:propos(?:e|es|ed|ing)|asks?)\b(?:[^.;]{0,80}\bto)?\s*$/i;
+const COMPLETED_ACTION = /\b(?:approv(?:e|es|ed|ing)|pass(?:es|ed|ing)?|enact(?:s|ed|ing)?|adopt(?:s|ed|ing)?|implement(?:s|ed|ing)?|reduc(?:e|es|ed|ing)|eas(?:e|es|ed|ing)|soften(?:s|ed|ing)?|lower(?:s|ed|ing)?|revis(?:e|es|ed|ing)|set(?:s|ting)?|ban(?:s|ned|ning)?|bar(?:s|red|ring)?|block(?:s|ed|ing)?|requir(?:e|es|ed|ing)|eliminat(?:e|es|ed|ing)|rais(?:e|es|ed|ing)|cut(?:s|ting)?|launch(?:es|ed|ing)?|creat(?:e|es|ed|ing))\b/i;
+const ENACTMENT_ASSERTION = /\b(?:(?:lawmakers|regulators|legislators|deputies|senators|authorities|officials|members|boards?|committees?|agencies|Congress|Senate|House)\s+(?:approve|pass|enact|adopt|implement)|approved|approves|passed|passes|enacted|enacts|adopted|adopts|implemented|implements|entered into force|enters into force|took effect|takes effect|is in force|aprobó|aprobaron|aprobado|aprobada|aprueba|aprueban|adoptó|adoptaron|implementó|implementaron|promulgó|promulgaron|entró en vigor|entra en vigor|publicó (?:el |un )?decreto)\b/gi;
+const NONFINAL_EVIDENCE_PREFIX = /\b(?:would|could|may|might|will|if|unless|expected to|podr[ií]a|podr[ií]an|será|serían|deber[ií]a|deber[ií]an|si)\b[^.;]{0,45}$/i;
 const ROLE_FAMILIES = [
   { copy: /\bpresident\b/i, evidence: /\b(?:president|president[ea])\b/i },
   { copy: /\bminister\b/i, evidence: /\b(?:minister|ministr[oa])\b/i },
@@ -111,13 +117,36 @@ function evidenceSupportsCurrentRole(evidence, family) {
   return false;
 }
 
+function evidenceShowsEnactment(evidenceRows) {
+  for (const row of evidenceRows) {
+    for (const sentence of sentences(row)) {
+      ENACTMENT_ASSERTION.lastIndex = 0;
+      for (const match of sentence.matchAll(ENACTMENT_ASSERTION)) {
+        const prefix = sentence.slice(Math.max(0, match.index - 55), match.index);
+        if (!NONFINAL_EVIDENCE_PREFIX.test(prefix)) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function nonfinalActionClaim(claim) {
+  const finalizing = claim.match(FINALIZING_DRAFT);
+  if (finalizing) {
+    const before = claim.slice(0, finalizing.index);
+    return MODAL_GOVERNS_FINALIZING.test(before) || PROPOSAL_GOVERNS_FINALIZING.test(before);
+  }
+  if (MODAL_ACTION.test(claim) || PROPOSAL_VERB_ACTION.test(claim)) return true;
+  return PROPOSAL_SUBJECT_ACTION.test(claim);
+}
+
 function evidenceFidelityFlags({ title = '', context = '', inputs = [] }) {
   const flags = [];
   const evidenceRows = inputs.map((value) => String(value || '').trim()).filter(Boolean);
   const evidence = evidenceRows.join(' ');
-  if (PROPOSAL_EVIDENCE.test(evidence) && !ENACTMENT_EVIDENCE.test(evidence)) {
+  if (PROPOSAL_EVIDENCE.test(evidence) && !evidenceShowsEnactment(evidenceRows)) {
     for (const claim of [title, ...sentences(context)]) {
-      if (COMPLETED_ACTION.test(claim) && !PROPOSAL_COPY.test(claim)) {
+      if (COMPLETED_ACTION.test(claim) && !nonfinalActionClaim(claim)) {
         flags.push('proposal or draft described as a completed action');
         break;
       }

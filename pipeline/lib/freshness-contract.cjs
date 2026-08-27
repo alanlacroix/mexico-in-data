@@ -3,7 +3,7 @@
 const clean = (value) => String(value || '').trim();
 
 function editionWindowAssessment(receipt) {
-  return /^edition-window-assessment-v(?:2|3)$/.test(clean(receipt?.policy));
+  return /^edition-window-assessment-v(?:2|3|4)$/.test(clean(receipt?.policy));
 }
 
 function curationReadiness(receipt, editorialDate, options = {}) {
@@ -35,7 +35,10 @@ function curationReadiness(receipt, editorialDate, options = {}) {
         && Number(receipt.freshKeptCount) === 0) {
       return { ok: false, legacy: false, reason: `${Number(receipt.unassessedFreshCandidateCount)} current-day candidate(s) did not enter the bounded assessment` };
     }
-    if (Number(receipt.freshRejectedCount) > 0) {
+    // A failed copy remains quarantined, but it must not take verified facts down with
+    // it. Rejections block only an otherwise empty edition; quiet readiness below is
+    // always exhaustive and still rejects any unresolved selected fact.
+    if (Number(receipt.freshRejectedCount) > 0 && Number(receipt.freshKeptCount) === 0) {
       return { ok: false, legacy: false, reason: `${Number(receipt.freshRejectedCount)} selected current-day report(s) did not clear the final copy gate` };
     }
     if (clean(receipt.mode) === 'deterministic-fallback'
