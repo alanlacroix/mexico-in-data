@@ -2,47 +2,239 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-26",
+    "updated": "2026-08-27",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-26T13:30:37.695Z",
+    "generatedAt": "2026-08-27T13:31:54.665Z",
     "llm": true,
     "curation": {
       "policy": "exact-day-assessment-v1",
-      "editorialDate": "2026-08-26",
+      "editorialDate": "2026-08-27",
       "candidateCount": 24,
-      "candidateSig": "51b6bc5e9fcc3aedc45b08ce666e977c48d19cfaa1db571549af829eed7875cd",
-      "freshCandidateCount": 3,
+      "candidateSig": "23daa62e8e98a51f5f0e143e6f2e17bb6ddbe53f3cbfef28da2b747096dd0167",
+      "freshCandidateCount": 5,
       "assessedCount": 24,
-      "keptCount": 5,
-      "rejectedCount": 3,
+      "keptCount": 3,
+      "rejectedCount": 2,
       "mode": "model",
       "complete": true,
-      "reason": "3 selected event(s) quarantined by the copy gate"
-    },
-    "analysisTarget": {
-      "policy": "every-selected-story-context-audited-v3",
-      "ids": [
-        "n-el-congreso-de-sinaloa-designa-a-graciela-dom-nguez--2026-08-25",
-        "n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25"
-      ],
-      "added": 0,
-      "outcomes": [
-        {
-          "id": "n-el-congreso-de-sinaloa-designa-a-graciela-dom-nguez--2026-08-25",
-          "ready": false,
-          "reason": "field-rejected"
-        },
-        {
-          "id": "n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25",
-          "ready": true,
-          "reason": "ready"
-        }
-      ]
+      "reason": "2 selected event(s) quarantined by the copy gate"
     }
   },
   "events": [
+    {
+      "id": "n-mexican-ranchers-prepare-to-resume-livestock-sales-t-2026-08-24",
+      "date": "2026-08-26",
+      "section": "us-mexico",
+      "title": "United States to resume imports of Mexican cattle",
+      "why": "The U.S. Secretary of Agriculture approved the reopening of cattle imports from Mexico on a phased basis, ending restrictions that had blocked the trade.",
+      "company": "",
+      "source": "MEXICONOW",
+      "url": "https://mexico-now.com/the-u-s-will-resume-imports-of-mexican-cattle/",
+      "importance": 9,
+      "kind": "event",
+      "publishedAt": "2026-08-26T15:10:16.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "The United States will resume imports of Mexican cattle.",
+        "dek": "The U.S. Secretary of Agriculture has decided to resume imports of Mexican cattle, paving the way for the gradual reopening..."
+      },
+      "coverage": [
+        {
+          "source": "MEXICONOW",
+          "url": "https://mexico-now.com/the-u-s-will-resume-imports-of-mexican-cattle/",
+          "publishedAt": "2026-08-26T15:10:16.000Z",
+          "date": "2026-08-26",
+          "title": "United States to resume imports of Mexican cattle",
+          "summary": "The U.S. Secretary of Agriculture approved the reopening of cattle imports from Mexico on a phased basis, ending restrictions that had blocked the trade."
+        },
+        {
+          "source": "Border Report",
+          "url": "https://borderreport.com/news/trade/mexican-ranchers-prepare-to-resume-livestock-sales-to-us-under-tight-controls-over-screwworm-risk/",
+          "publishedAt": "2026-08-24T20:43:33.000Z",
+          "date": "2026-08-24",
+          "title": "US resumes livestock imports from Mexico under screwworm controls beginning Monday at Douglas crossing",
+          "summary": "The US is set to resume Mexican livestock imports starting Monday at the Douglas, Arizona border crossing following completion of controls over screwworm risk. The resumption marks a reopening of a bilateral trade channel after a restriction."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 9,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-cheap-drones-are-a-costly-problem-for-governments-in-2026-08-26",
+      "date": "2026-08-26",
+      "section": "security",
+      "title": "Mexico and United States sign declaration on counter-drone cooperation",
+      "why": "Mexico and the United States signed a non-binding declaration of intent deepening security cooperation around counter-drone efforts, addressing the use of low-cost drones by criminal organizations across Latin America.",
+      "company": "",
+      "source": "InSight Crime — Mexico",
+      "url": "https://insightcrime.org/news/cheap-drones-are-a-costly-problem-for-governments-in-latin-america/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-26T18:53:24.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Cheap Drones Are A Costly Problem For Governments in Latin America",
+        "dek": "Cheap Drones Are A Costly Problem For Governments in Latin America Mexico and the United States recently signed a non-binding “declaration of intent” deepening security cooperation around counter-drone technology, as governments across Latin America race to adapt to how criminal organizations are transforming the inexp"
+      },
+      "coverage": [
+        {
+          "source": "InSight Crime — Mexico",
+          "url": "https://insightcrime.org/news/cheap-drones-are-a-costly-problem-for-governments-in-latin-america/",
+          "publishedAt": "2026-08-26T18:53:24.000Z",
+          "date": "2026-08-26",
+          "title": "Mexico and United States sign declaration on counter-drone cooperation",
+          "summary": "Mexico and the United States signed a non-binding declaration of intent deepening security cooperation around counter-drone efforts, addressing the use of low-cost drones by criminal organizations across Latin America."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-banxico-muestra-optimismo-eleva-tasa-de-crecimiento--2026-08-26",
+      "date": "2026-08-26",
+      "section": "economy",
+      "title": "Mexico's central bank raises 2026 growth forecast to 1.5 percent",
+      "why": "Banxico revised its full-year GDP estimate upward, citing stronger economic activity. The forecast now stands at 1.5 percent for 2026.",
+      "company": "",
+      "source": "T21",
+      "url": "https://t21.com.mx/banxico-muestra-optimismo-eleva-tasa-de-crecimiento-para-economia-mexicana-en-2026/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-26T22:07:05.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Banxico muestra optimismo; eleva tasa de crecimiento para economía mexicana en 2026",
+        "dek": "Debido a un mayor dinamismo de la actividad económica, el Banco de México (Banxico) anticipó un crecimiento de 1.5% del Producto Interno Bruto (PIB) para 2026, tasa mayor a la estimada hace tres meses, la cual era de 1.1 por ciento. En su Informe Trimestral abril-junio 2026, publicado este 26 de agosto, el banco centra"
+      },
+      "coverage": [
+        {
+          "source": "T21",
+          "url": "https://t21.com.mx/banxico-muestra-optimismo-eleva-tasa-de-crecimiento-para-economia-mexicana-en-2026/",
+          "publishedAt": "2026-08-26T22:07:05.000Z",
+          "date": "2026-08-26",
+          "title": "Mexico's central bank raises 2026 growth forecast to 1.5 percent",
+          "summary": "Banxico revised its full-year GDP estimate upward, citing stronger economic activity. The forecast now stands at 1.5 percent for 2026."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
     {
       "id": "n-canada-announces-retaliatory-tariffs-of-up-to-50-aga-2026-08-25",
       "date": "2026-08-25",
@@ -1103,74 +1295,6 @@
       ],
       "image": "https://imagenes.elpais.com/resizer/v2/SEJWTPYCSNDKVH3VOQNGOQGKKE.png?auth=b640870211b3a4af7ef9c423e5198d4a40e0b827510ab604d5a10c6ed173fac6",
       "imgTries": 1
-    },
-    {
-      "id": "n-mexican-ranchers-prepare-to-resume-livestock-sales-t-2026-08-24",
-      "date": "2026-08-24",
-      "section": "us-mexico",
-      "title": "US resumes livestock imports from Mexico under screwworm controls beginning Monday at Douglas crossing",
-      "why": "The US is set to resume Mexican livestock imports starting Monday at the Douglas, Arizona border crossing following completion of controls over screwworm risk. The resumption marks a reopening of a bilateral trade channel after a restriction.",
-      "company": "",
-      "source": "Border Report",
-      "url": "https://borderreport.com/news/trade/mexican-ranchers-prepare-to-resume-livestock-sales-to-us-under-tight-controls-over-screwworm-risk/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-24T20:43:33.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Mexican ranchers prepare to resume livestock sales to US under tight controls over screwworm risk",
-        "dek": "The U.S. is set to resume livestock imports from Mexico beginning Monday at the Douglas, Arizona, border crossing, which borders Agua Prieta in Mexico’s Sonora state."
-      },
-      "coverage": [
-        {
-          "source": "Border Report",
-          "url": "https://borderreport.com/news/trade/mexican-ranchers-prepare-to-resume-livestock-sales-to-us-under-tight-controls-over-screwworm-risk/",
-          "publishedAt": "2026-08-24T20:43:33.000Z",
-          "date": "2026-08-24",
-          "title": "US resumes livestock imports from Mexico under screwworm controls beginning Monday at Douglas crossing",
-          "summary": "The US is set to resume Mexican livestock imports starting Monday at the Douglas, Arizona border crossing following completion of controls over screwworm risk. The resumption marks a reopening of a bilateral trade channel after a restriction."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
     },
     {
       "id": "n-banca-presta-m-s-a-mipymes-pero-cae-el-acceso-al-cr--2026-08-24",
@@ -4530,148 +4654,6 @@
           "officialness": {
             "raw": 0,
             "score": 0,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-m-xico-busca-frenar-arancel-de-hasta-51-6-de-china-a-2026-08-10",
-      "date": "2026-08-10",
-      "section": "us-mexico",
-      "title": "China imposes preliminary 51.6 percent tariff on Mexican pecan exports",
-      "why": "China's Ministry of Commerce imposed the tariff on Mexican pecan exports citing dumping. Mexico is working to block the measure, which threatens a key agricultural export.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/mexico-busca-frenar-arancel-de-hasta-51-6-de-china-a-la-nuez-pecana/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-10T19:05:35.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "México busca frenar arancel de hasta 51.6% de China a la nuez pecana",
-        "dek": "El Ministerio de Comercio Chino impuso un arancel preliminar a las exportaciones de nuez pecana mexicana por dumping. La publicación México busca frenar arancel de hasta 51.6% de China a la nuez pecana apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/mexico-busca-frenar-arancel-de-hasta-51-6-de-china-a-la-nuez-pecana/",
-          "publishedAt": "2026-08-10T19:05:35.000Z",
-          "date": "2026-08-10",
-          "title": "China imposes preliminary 51.6 percent tariff on Mexican pecan exports",
-          "summary": "China's Ministry of Commerce imposed the tariff on Mexican pecan exports citing dumping. Mexico is working to block the measure, which threatens a key agricultural export."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "image": "https://elceo.com/wp-content/uploads/2026/08/SE_responde_arancel_chino_nuez_pecana.jpg",
-      "imgTries": 1,
-      "background": "Mexico exported about $9.1bn total to China in 2024 against $129.5bn in imports, so pecans are a rare Mexican export line into a market where Mexico normally buys, not sells.",
-      "view": "The tariff matters less for Mexico's overall trade, since direct pecan exports to China were $21.9m in 2024, a rounding error next to the roughly $665bn in total Mexican goods exports in 2025 and dwarfed by the $872bn in US-Mexico goods trade. The real exposure is reexports through the United States, which the preliminary ruling explicitly targets by hitting US exporters with a higher 54.3% rate, suggesting China is trying to close a triangulation route rather than punish Mexican producers directly.",
-      "prediction": "Mexico's economy ministry likely negotiates a reduced final rate before the investigation closes, since it has ten days to respond and is already coordinating with the Chinese embassy. That expectation fails if Beijing finalizes rates at or above the 51.6% preliminary level despite the talks.",
-      "analysisV": 7
-    },
-    {
-      "id": "n-kia-ev3-launch-puts-mexico-plant-on-track-for-record-2026-08-10",
-      "date": "2026-08-10",
-      "section": "economy",
-      "title": "Kia Mexico plant on track for 300,000 units following 649 million dollar EV3 investment",
-      "why": "Kia's Pesquería plant in Mexico is projected to exceed 300,000 annual units by end of 2026, driven by a 649 million dollar investment to produce the all-electric EV3 compact SUV.",
-      "company": "Kia",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/automotive/news/kia-ev3-launch-puts-mexico-plant-track-record-300k",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-10T16:12:58.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Kia EV3 Launch Puts Mexico Plant on Track for Record 300K",
-        "dek": "Driven by a US$649 million investment to produce the all-electric EV3 compact SUV, Kia’s Pesquería plant in Mexico is projected to surpass 300,000 units by the end of 2026, reaching a annual volume milestone in its 10-year operating history while supporting national efforts to build out local supply chains."
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/automotive/news/kia-ev3-launch-puts-mexico-plant-track-record-300k",
-          "publishedAt": "2026-08-10T16:12:58.000Z",
-          "date": "2026-08-10",
-          "title": "Kia Mexico plant on track for 300,000 units following 649 million dollar EV3 investment",
-          "summary": "Kia's Pesquería plant in Mexico is projected to exceed 300,000 annual units by end of 2026, driven by a 649 million dollar investment to produce the all-electric EV3 compact SUV."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
             "status": "accepted"
           }
         },
