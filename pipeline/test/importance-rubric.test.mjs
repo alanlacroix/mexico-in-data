@@ -7,6 +7,8 @@ const {
   scoreImportance,
   applyScheduledImportanceFloor,
   normalizeModelImportanceRow,
+  officialnessEvidence,
+  overrideOfficialness,
 } = require('../lib/importance-rubric.cjs');
 
 assert.deepEqual(COMPONENT_KEYS, [
@@ -43,6 +45,43 @@ assert.equal(normalized.importanceProvenance.components.usMexicoStakes.status, '
 assert.equal(normalized.importanceProvenance.components.modelImpact.status, 'coerced');
 assert.equal(normalized.importanceProvenance.components.durability.status, 'invalid-defaulted');
 assert.equal(normalized.importanceProvenance.components.officialness.status, 'rounded');
+
+const pressEvidence = officialnessEvidence({ url: 'https://elceo.com/economia/report', tier: 2 });
+const pressScored = normalizeModelImportanceRow({
+  importanceComponents: {
+    nationalConsequence: 2, usMexicoStakes: 1, modelImpact: 1, durability: 2, officialness: 2,
+  },
+}, { officialnessEvidence: pressEvidence });
+assert.equal(pressScored.importanceComponents.officialness, 1,
+  'a model may not assign primary-source credit to a press report');
+assert.equal(pressScored.importance, 7, 'the evidence-owned component must change the calculated total');
+assert.equal(pressScored.importanceProvenance.components.officialness.modelScore, 2);
+assert.equal(pressScored.importanceProvenance.components.officialness.status, 'evidence-override');
+
+const officialEvidence = officialnessEvidence({ url: 'https://www.banxico.org.mx/publicaciones/decision.html', tier: 2 });
+const officialScored = normalizeModelImportanceRow({
+  importanceComponents: {
+    nationalConsequence: 2, usMexicoStakes: 0, modelImpact: 0, durability: 2, officialness: 0,
+  },
+}, { officialnessEvidence: officialEvidence });
+assert.equal(officialScored.importanceComponents.officialness, 2,
+  'an authoritative primary domain receives primary-source credit even when the model omits it');
+assert.equal(officialScored.importance, 6);
+
+const migratedPress = overrideOfficialness({
+  importance: 9,
+  importanceComponents: {
+    nationalConsequence: 2, usMexicoStakes: 1, modelImpact: 2, durability: 2, officialness: 2,
+  },
+  importanceProvenance: {
+    calculatedTotal: 9,
+    components: { officialness: { raw: 2, score: 2, status: 'accepted' } },
+  },
+}, pressEvidence);
+assert.equal(migratedPress.importance, 8,
+  'stored press reports must lose inflated primary-source credit during deterministic maintenance');
+assert.equal(migratedPress.importanceProvenance.components.officialness.modelScore, 2,
+  'the original model score remains auditable after migration');
 
 const unchangedOutcome = applyScheduledImportanceFloor(scoreImportance({
   nationalConsequence: 2,
@@ -143,7 +182,7 @@ assert.equal(trustedReport.importanceComponents.durability, 2, 'an observed sche
 assert.equal(trustedReport.importanceComponents.officialness, 0, 'second-hand reporting must not be mislabeled as primary-source evidence');
 assert.equal(trustedReport.importance, 7, 'an exact matched obligation may still use its separately audited editorial floor');
 
-const helperSource = require('node:fs').readFileSync(new URL('../lib/importance-rubric.cjs', import.meta.url), 'utf8');
-assert.doesNotMatch(helperSource, /banxico/i, 'the scheduled-outcome rule must apply to any authoritative decision or release');
+assert.doesNotMatch(applyScheduledImportanceFloor.toString(), /banxico/i,
+  'the scheduled-outcome rule must apply to any authoritative decision or release');
 
 console.log('importance-rubric: ok');

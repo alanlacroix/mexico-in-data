@@ -56,6 +56,71 @@ function sumComponents(components) {
   return COMPONENT_KEYS.reduce((total, key) => total + components[key], 0);
 }
 
+function officialnessEvidence(candidate = {}) {
+  const scheduledFloor = candidate?.importanceProvenance?.scheduledOutcome?.componentFloors?.officialness;
+  if (Number(scheduledFloor?.score) === 2) {
+    return { score: 2, source: 'scheduled-authoritative-evidence', hostname: '' };
+  }
+  let hostname = '';
+  try { hostname = new URL(String(candidate.url || '')).hostname.toLowerCase(); } catch { /* invalid URL */ }
+  const primary = hostname.endsWith('.gob.mx')
+    || hostname.endsWith('.gov')
+    || ['banxico.org.mx', 'www.banxico.org.mx', 'inegi.org.mx', 'www.inegi.org.mx',
+      'ine.mx', 'www.ine.mx', 'cfe.mx', 'www.cfe.mx', 'pemex.com', 'www.pemex.com'].includes(hostname);
+  if (primary) return { score: 2, source: 'authoritative-domain', hostname };
+  const tier = candidate.tier ?? candidate.sourceTier;
+  const press = tier === 1 || tier === 2 || tier === '1' || tier === '2' || tier === 'specialist';
+  return { score: press ? 1 : 0, source: press ? 'publishable-press' : 'unsupported-source', hostname };
+}
+
+function overrideOfficialness(scored, evidence) {
+  if (!scored?.importanceComponents || !evidence || !Number.isFinite(Number(evidence.score))) return scored;
+  const score = Math.max(0, Math.min(2, Math.round(Number(evidence.score))));
+  const previous = Number(scored.importanceComponents.officialness) || 0;
+  const priorCalculated = Number(scored.importanceProvenance?.calculatedTotal);
+  const calculatedTotal = (Number.isFinite(priorCalculated)
+    ? priorCalculated : sumComponents(scored.importanceComponents)) - previous + score;
+  const requestedFloor = normalizeImportanceFloor(
+    scored.importanceProvenance?.scheduledOutcome?.importanceFloor?.requested,
+  );
+  const importance = requestedFloor === null
+    ? calculatedTotal : Math.max(calculatedTotal, requestedFloor);
+  const priorComponent = scored.importanceProvenance?.components?.officialness || {};
+  const scheduledOutcome = scored.importanceProvenance?.scheduledOutcome;
+  return {
+    ...scored,
+    importance,
+    importanceComponents: { ...scored.importanceComponents, officialness: score },
+    importanceProvenance: {
+      ...(scored.importanceProvenance || {}),
+      calculatedTotal,
+      components: {
+        ...(scored.importanceProvenance?.components || {}),
+        officialness: {
+          ...priorComponent,
+          modelScore: priorComponent.modelScore ?? previous,
+          score,
+          status: 'evidence-override',
+          evidence,
+        },
+      },
+      ...(scheduledOutcome ? {
+        scheduledOutcome: {
+          ...scheduledOutcome,
+          ...(scheduledOutcome.importanceFloor ? {
+            importanceFloor: {
+              ...scheduledOutcome.importanceFloor,
+              before: calculatedTotal,
+              after: importance,
+              applied: requestedFloor !== null && requestedFloor > calculatedTotal,
+            },
+          } : {}),
+        },
+      } : {}),
+    },
+  };
+}
+
 function scoreImportance(input = {}, provenance = {}) {
   const normalized = normalizeImportanceComponents(input);
   const rubricTotal = sumComponents(normalized.components);
@@ -201,10 +266,11 @@ function normalizeModelImportanceRow(row = {}, options = {}) {
   const componentInput = safeRow.importanceComponents
     || safeRow.importance_components
     || safeRow;
-  const scored = scoreImportance(componentInput, {
+  let scored = scoreImportance(componentInput, {
     reportedTotal: own(safeRow, 'importance') ? safeRow.importance : null,
     componentSource: 'model',
   });
+  scored = overrideOfficialness(scored, options.officialnessEvidence);
   const normalized = options.scheduledObligation
     ? applyScheduledImportanceFloor(scored, options.scheduledObligation)
     : scored;
@@ -220,4 +286,6 @@ module.exports = {
   scheduledOutcomeValidation,
   applyScheduledImportanceFloor,
   normalizeModelImportanceRow,
+  officialnessEvidence,
+  overrideOfficialness,
 };

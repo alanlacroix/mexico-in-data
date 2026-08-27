@@ -7,13 +7,13 @@ const { candidateSignature, canReuseCuration } = require('../lib/curation-checkp
 const morning = [{ url: 'https://example.com/a', published_at: '2026-08-18T12:00:00Z', title: 'Morning report', dek: 'A complete sentence.' }];
 const later = [...morning, { url: 'https://example.com/b', published_at: '2026-08-18T15:00:00Z', title: 'Later report', dek: 'Another complete sentence.' }];
 const receipt = {
-  policy: 'edition-window-assessment-v2',
+  policy: 'edition-window-assessment-v3',
   editorialDate: '2026-08-18', complete: true, candidateSig: candidateSignature(morning),
 };
 
 assert.equal(canReuseCuration(receipt, '2026-08-18', candidateSignature(morning)), true);
-assert.equal(canReuseCuration(receipt, '2026-08-18', candidateSignature(morning), 'edition-window-assessment-v2'), true);
-assert.equal(canReuseCuration({ ...receipt, policy: 'exact-day-assessment-v1' }, '2026-08-18', candidateSignature(morning), 'edition-window-assessment-v2'), false,
+assert.equal(canReuseCuration(receipt, '2026-08-18', candidateSignature(morning), 'edition-window-assessment-v3'), true);
+assert.equal(canReuseCuration({ ...receipt, policy: 'edition-window-assessment-v2' }, '2026-08-18', candidateSignature(morning), 'edition-window-assessment-v3'), false,
   'a changed publication contract must invalidate an old paid checkpoint once');
 assert.equal(canReuseCuration(receipt, '2026-08-18', candidateSignature(later)), false,
   'new reporting must invalidate a complete morning checkpoint');

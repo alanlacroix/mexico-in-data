@@ -44,8 +44,8 @@ import curationCheckpoint from './lib/curation-checkpoint.cjs';
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
 const { linkScheduledCandidate } = scheduledCandidate;
-const { applyScheduledImportanceFloor, normalizeModelImportanceRow, scoreImportance } = importanceRubric;
-const { attentionSignal, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates } = candidatePriority;
+const { applyScheduledImportanceFloor, normalizeModelImportanceRow, officialnessEvidence, overrideOfficialness, scoreImportance } = importanceRubric;
+const { attentionSignal, commentaryOnlyCandidate, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates } = candidatePriority;
 const { evidenceInputs } = reportEvidence;
 const { mergeApprovedAttempt } = analysisAttempts;
 const { candidateSignature, canReuseCuration } = curationCheckpoint;
@@ -80,7 +80,7 @@ const MAX_STORE = 60;        // hard cap on stored entries
 const MAX_NEW = 16;          // model returns at most this many new events per run
 const MAX_CANDIDATES = 24;   // small enough for one exhaustive decision per row; attention priority protects consequential older items.
 const CURATION_MAX_TOKENS = 6000; // enough for 24 compact decisions; the old 16k ceiling falsely exhausted the monthly guard.
-const CURATION_POLICY = 'edition-window-assessment-v2';
+const CURATION_POLICY = 'edition-window-assessment-v3';
 
 const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
 
@@ -345,7 +345,7 @@ For EVERY item, return:
 - i: its index in the list
 - decision: keep | routine | duplicate | outside-scope | thin-evidence
 - section: exactly one of economy | money | politics | security | us-mexico | society
-- importanceComponents: score 0, 1, or 2 on EACH of five criteria: nationalConsequence, usMexicoStakes, modelImpact, durability, and officialness. Return the five scores separately. Code, not you, owns the arithmetic.
+- importanceComponents: score 0, 1, or 2 on EACH criterion. nationalConsequence: 2 national, 1 one sector/state, 0 one company. usMexicoStakes: 2 central to tariffs/USMCA/migration/security cooperation, 0 none. modelImpact: 2 moves a tracked economic number, 1 directly explains one, 0 neither. durability: 2 a lasting state change, 0 commentary, advocacy, or a re-report. officialness: return 0 because code derives it from the attached source domain. Return all five scores separately. Code, not you, owns the arithmetic.
 - title: for keep, a clean factual headline in present tense; otherwise "". No hype, em-dash, clickbait or unexplained acronyms. Say "US trade office", "US-Mexico-Canada trade agreement", "Mexico's statistics agency", or an equally clear plain-English name instead of USTR, USMCA, INEGI, DOF, and similar shorthand.
 - why: for keep, ONE or two sentences of context that add a sourced fact; otherwise "". Write ONLY from the provided title and dek. Copy every number exactly as supplied. No invented facts or adjectives doing the work of an argument.
 - company: for keep, the one named company when the event is primarily about it; otherwise "". Never invent a company.
@@ -403,7 +403,14 @@ ${BAN}`;
   }
   const assessed = out.decisions.map((row) => {
     const x = cands[row.i];
-    return { row, x, scored: normalizeModelImportanceRow(row, { scheduledObligation: scheduledObligation(x) }) };
+    const reviewedRow = row.decision === 'keep' && commentaryOnlyCandidate(x)
+      ? { ...row, decision: 'routine', title: '', why: '', company: '' }
+      : row;
+    if (reviewedRow !== row) console.warn(`  reviewed commentary candidate ${row.i}: keep -> routine · ${String(x?.title || '').slice(0, 100)}`);
+    return { row: reviewedRow, x, scored: normalizeModelImportanceRow(reviewedRow, {
+      scheduledObligation: scheduledObligation(x),
+      officialnessEvidence: officialnessEvidence(x),
+    }) };
   });
   const counts = assessed.reduce((memo, item) => {
     memo[item.row.decision] = (memo[item.row.decision] || 0) + 1;
@@ -1137,6 +1144,20 @@ function mergeLog(existing, fresh, now) {
       if (evidenced) merged.reportEvidence = evidenced.reportEvidence;
     }
     return merged;
+  });
+  events = events.map((event) => {
+    if (!event.importanceComponents) return event;
+    const scored = overrideOfficialness({
+      importance: event.importance,
+      importanceComponents: event.importanceComponents,
+      importanceProvenance: event.importanceProvenance,
+    }, officialnessEvidence(event));
+    return {
+      ...event,
+      importance: scored.importance,
+      importanceComponents: scored.importanceComponents,
+      importanceProvenance: scored.importanceProvenance,
+    };
   });
   const cutoff = now.getTime() - KEEP_DAYS * 864e5;
   const kept = events.filter((e) => { const t = Date.parse(e.date) || 0; return t >= cutoff || (e.importance || 0) >= 5; });

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import priority from '../lib/candidate-priority.cjs';
 
-const { attentionSignal, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates } = priority;
+const { attentionSignal, commentaryOnlyCandidate, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates } = priority;
 const total = (components) => Object.values(components).reduce((sum, value) => sum + value, 0);
 
 const recurring = Array.from({ length: 60 }, (_, index) => ({
@@ -76,8 +76,20 @@ assert.ok(total(fallbackImportanceComponents({
 assert.ok(total(fallbackImportanceComponents({
   title: 'GWM launches a new car model in Mexico', dek: 'The company adds a product to its range.', tier: 2,
 })) < 5, 'a routine product launch must not become a top Brief story without model review');
+assert.equal(fallbackImportanceComponents({
+  title: 'Mexico publishes a new labor report', tier: 2, url: 'https://elceo.com/economia/report',
+}).officialness, 1, 'model and deterministic paths must give tier-2 press the same evidence-owned score');
 assert.equal(total(fallbackImportanceComponents({
   title: 'Weather in Mexico this Sunday', dek: 'Rain is expected.', tier: 1,
 })), 0, 'routine coverage must remain outside deterministic Brief ranking');
+
+assert.equal(commentaryOnlyCandidate({
+  title: 'Agustín Carstens aboga por una estrategia coordinada para la revisión del T-MEC',
+  dek: 'El exgobernador de Banxico propone que México negocie con Estados Unidos.',
+}), true, 'a former official advocating a position is commentary, not a new development');
+assert.equal(commentaryOnlyCandidate({
+  title: 'Sheinbaum presenta iniciativa para reformar la ley aduanera',
+  dek: 'La presidenta propone cambios al Congreso.',
+}), false, 'a current decision-maker formally filing a proposal is a development');
 
 console.log('candidate-priority tests: ok');

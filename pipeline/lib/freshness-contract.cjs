@@ -2,6 +2,10 @@
 
 const clean = (value) => String(value || '').trim();
 
+function editionWindowAssessment(receipt) {
+  return /^edition-window-assessment-v(?:2|3)$/.test(clean(receipt?.policy));
+}
+
 function curationReadiness(receipt, editorialDate, options = {}) {
   const date = clean(editorialDate);
   if (!receipt || typeof receipt !== 'object') {
@@ -17,7 +21,7 @@ function curationReadiness(receipt, editorialDate, options = {}) {
   // Decision coverage is not publication readiness. On Aug. 27 every model row had
   // a decision, but the only selected current-day facts failed the copy gate. Calling
   // that complete turned a processing failure into “No major developments.”
-  if (receipt.policy === 'edition-window-assessment-v2') {
+  if (editionWindowAssessment(receipt)) {
     if (Number(receipt.selectedCount) !== Number(receipt.keptCount) + Number(receipt.rejectedCount)) {
       return { ok: false, legacy: false, reason: 'selected-report accounting does not reconcile' };
     }
@@ -48,11 +52,11 @@ function curationReadiness(receipt, editorialDate, options = {}) {
   // that nothing happened. That exact false success produced the empty Aug. 24 Brief.
   if (clean(receipt.mode) === 'deterministic-fallback'
       && Number(receipt.freshCandidateCount) > 0
-      && Number(receipt.policy === 'edition-window-assessment-v2'
+      && Number(editionWindowAssessment(receipt)
         ? receipt.freshKeptCount : receipt.keptCount) === 0) {
     return { ok: false, legacy: false, reason: 'fresh reporting exists but could not be resolved without the model' };
   }
   return { ok: true, legacy: false, reason: '' };
 }
 
-module.exports = { curationReadiness };
+module.exports = { curationReadiness, editionWindowAssessment };

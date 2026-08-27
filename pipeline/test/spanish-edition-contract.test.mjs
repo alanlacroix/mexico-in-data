@@ -9,6 +9,7 @@ const require = createRequire(import.meta.url);
 const english = require(path.join(root, '_data', 'feed.js'))();
 const nativeInclusive = require(path.join(root, '_data', 'feed.js')).forLocale('es');
 const spanish = require(path.join(root, '_data', 'feedEs.js'))();
+const ui = require(path.join(root, '_data', 'uiStrings.js'));
 const {
   cached, criticalStrings, missingCritical, resolveSpanishBrief,
 } = require(path.join(root, 'pipeline', 'lib', 'es-translation.cjs'));
@@ -33,7 +34,12 @@ if (!missing.length) {
 } else {
   assert.equal(spanish.translationCarrying, true,
     'an incomplete translation must carry the last complete Spanish Brief');
-  assert.equal(spanish.brief, snapshot.brief);
+  if (english.carrying) {
+    assert.equal(spanish.brief, ui.es.updateDelayed,
+      'a delayed English publication must not be presented as a quiet Spanish edition');
+  } else {
+    assert.equal(spanish.brief, snapshot.brief);
+  }
   const visibleIds = new Set(english.stories.map((story) => story.id));
   const visibleSnapshot = snapshot.editorialDate === english.date
     ? snapshot.stories.filter((story) => visibleIds.has(story.id)) : snapshot.stories;

@@ -58,7 +58,7 @@ assert.equal(result.ok, false,
 assert.match(result.reason, /could not be resolved/);
 
 result = curationReadiness({
-  policy: 'edition-window-assessment-v2', editorialDate: '2026-08-14', complete: true,
+  policy: 'edition-window-assessment-v3', editorialDate: '2026-08-14', complete: true,
   freshCandidateCount: 5, eligibleFreshCandidateCount: 5,
   selectedCount: 1, keptCount: 0, rejectedCount: 1,
   freshSelectedCount: 1, freshKeptCount: 0,
@@ -94,6 +94,6 @@ result = curationReadiness({
   freshSelectedCount: 1, freshKeptCount: 1,
   unassessedFreshCandidateCount: 0, freshRejectedCount: 0, currentDayResolved: true,
 }, '2026-08-14');
-assert.equal(result.ok, true, 'a fully resolved current-day ledger may certify facts or a genuine quiet state');
+assert.equal(result.ok, true, 'the current evidence-fidelity policy may certify a fully resolved current-day ledger');
 
 console.log('freshness-contract tests: ok');

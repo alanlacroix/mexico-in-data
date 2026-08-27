@@ -75,6 +75,81 @@ const contextTokens = (value) => String(value || '').toLowerCase()
   .split(/\s+/)
   .filter((token) => token && !CONTEXT_STOP.has(token));
 
+const PROPOSAL_EVIDENCE = /\b(?:anteproyecto|propuesta|iniciativa|plantea|propone|draft|proposal|proposed|would|seeks?|plans? to)\b/i;
+const PROPOSAL_COPY = /\b(?:anteproyecto|proposal|propos\w*|draft|would|seeks?|plans?|aims?|calls? for|asks?|files?|submits?)\b/i;
+const COMPLETED_ACTION = /\b(?:approved?|passed?|enacted?|adopted?|implemented?|reduced?|eased?|sets?|banned?|barred?|required?|eliminated?|raised?|cuts?|launched?|created?)\b/i;
+const ENACTMENT_EVIDENCE = /\b(?:approved?|passed?|enacted?|adopted?|implemented?|enters? into force|aprueb\w*|aprob\w*|adopt\w*|implement\w*|promulg\w*|entra en vigor|publica (?:el |un )?decreto)\b/i;
+const ROLE_FAMILIES = [
+  { copy: /\bpresident\b/i, evidence: /\b(?:president|president[ea])\b/i },
+  { copy: /\bminister\b/i, evidence: /\b(?:minister|ministr[oa])\b/i },
+  { copy: /\bgovernor\b/i, evidence: /\b(?:governor|gobernador[ae]?)\b/i },
+  { copy: /\b(?:Banxico chief|central bank chief)\b/i, evidence: /\b(?:Banxico (?:chief|governor)|central bank (?:chief|governor)|gobernador[ae]? (?:de )?Banxico)\b/i },
+  { copy: /\b(?:chief executive|CEO)\b/i, evidence: /\b(?:chief executive|CEO|director[ae]? general)\b/i },
+];
+const SUPERLATIVE_FAMILIES = [
+  {
+    copy: /\b(?:highest|largest)\b/i,
+    evidence: /\b(?:highest|largest|m[aá]xim\w*|mayor|m[aá]s (?:alto|grande)\w*)\b/i,
+  },
+  {
+    copy: /\b(?:lowest|smallest)\b/i,
+    evidence: /\b(?:lowest|smallest|m[ií]nim\w*|menor|m[aá]s (?:bajo|pequeñ)\w*)\b/i,
+  },
+  {
+    copy: /\b(?:record|all-time|first-ever)\b/i,
+    evidence: /\b(?:record|r[eé]cord|all-time|first-ever|por primera vez)\b/i,
+  },
+];
+const escapeRegExp = (value) => String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+function evidenceSupportsCurrentRole(evidence, family) {
+  const re = new RegExp(family.evidence.source, `${family.evidence.flags.replace('g', '')}g`);
+  for (const match of evidence.matchAll(re)) {
+    const prefix = evidence.slice(Math.max(0, match.index - 12), match.index);
+    if (!/(?:former|ex[- ]?)\s*$/i.test(prefix)) return true;
+  }
+  return false;
+}
+
+function evidenceFidelityFlags({ title = '', context = '', inputs = [] }) {
+  const flags = [];
+  const evidenceRows = inputs.map((value) => String(value || '').trim()).filter(Boolean);
+  const evidence = evidenceRows.join(' ');
+  if (PROPOSAL_EVIDENCE.test(evidence) && !ENACTMENT_EVIDENCE.test(evidence)) {
+    for (const claim of [title, ...sentences(context)]) {
+      if (COMPLETED_ACTION.test(claim) && !PROPOSAL_COPY.test(claim)) {
+        flags.push('proposal or draft described as a completed action');
+        break;
+      }
+    }
+  }
+
+  // If the source headline leads with a named person, generated copy may use the
+  // surname or omit the biography. It may not replace that person with an unsupported
+  // current office. This catches “Agustín Carstens” becoming “Banxico chief.”
+  const named = evidenceRows
+    .map((row) => row.match(/^([A-ZÁÉÍÓÚÑ][\p{L}.'’\-]+)\s+([A-ZÁÉÍÓÚÑ][\p{L}.'’\-]+)(?:,\s*|\s+)(?=[a-záéíóúñ])/u))
+    .find((match) => match && !/^(?:El|La|Los|Las|The)$/i.test(match[1]));
+  if (named) {
+    const surname = new RegExp(`\\b${escapeRegExp(named[2])}\\b`, 'i');
+    for (const claim of [title, ...sentences(context)]) {
+      const family = ROLE_FAMILIES.find((item) => item.copy.test(claim));
+      if (family && !surname.test(claim) && !evidenceSupportsCurrentRole(evidence, family)) {
+        flags.push(`named source actor replaced by unsupported role: ${named[2]}`);
+        break;
+      }
+    }
+  }
+
+  for (const family of SUPERLATIVE_FAMILIES) {
+    const superlative = `${title} ${context}`.match(family.copy);
+    if (superlative && !family.evidence.test(evidence)) {
+      flags.push(`unsupported evidence qualifier: ${superlative[0]}`);
+    }
+  }
+  return flags;
+}
+
 // A context line earns its space only by adding a second sourced fact, comparison,
 // mechanism or caveat. This catches the common model failure where the dek simply
 // rewrites the headline with synonyms (for example, "inflation slows" becoming
@@ -127,7 +202,11 @@ export function lintEventReport({ event = {}, inputs = [] }) {
     maxWords: 70,
     maxSentences: 3,
   });
-  const flags = [...new Set([...report.flags, ...slopFlags(event)])];
+  const flags = [...new Set([
+    ...report.flags,
+    ...evidenceFidelityFlags({ title, context, inputs }),
+    ...slopFlags(event),
+  ])];
   return { ok: flags.length === 0, flags };
 }
 

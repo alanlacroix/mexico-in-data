@@ -327,6 +327,100 @@ assert.equal(lintEventReport({
   event: { title: 'Technology changes the labor market...', why: 'The report describes changes in Mexico.', url: 'https://example.com', date: '2026-08-08' },
   inputs: ['Technology changes the labor market...', 'The report describes changes in Mexico.'],
 }).ok, false, 'deterministic fallback must reject feed ellipses before they enter the event ledger');
+assert.ok(lintEventReport({
+  event: {
+    title: 'Banxico chief calls for an integrated trade review',
+    why: 'Agustín Carstens, former Banxico governor, called for coordination.',
+    url: 'https://example.com/carstens', date: '2026-08-27',
+  },
+  inputs: ['Agustín Carstens aboga por una integración inteligente en la revisión comercial'],
+}).flags.some((flag) => flag.includes('unsupported role')),
+'a named source actor must not be replaced with a current office the evidence never states');
+assert.equal(lintEventReport({
+  event: {
+    title: "Mexico's president asks the foreign minister to press the US",
+    why: 'The president asked for a diplomatic response.',
+    url: 'https://example.com/sheinbaum', date: '2026-08-27',
+  },
+  inputs: ['Claudia Sheinbaum pidió una respuesta diplomática. La presidenta instruyó al canciller.'],
+}).ok, true, 'a role stated in retained evidence may replace a named actor without a false rejection');
+assert.ok(lintEventReport({
+  event: {
+    title: 'Carstens calls for a coordinated trade review',
+    why: 'The central bank chief urged North American governments to coordinate.',
+    url: 'https://example.com/carstens-context', date: '2026-08-27',
+  },
+  inputs: ['Agustín Carstens aboga por una revisión coordinada del acuerdo comercial.'],
+}).flags.some((flag) => flag.includes('unsupported role')),
+'unsupported office substitutions must also be caught in context, not only headlines');
+assert.ok(lintEventReport({
+  event: {
+    title: 'Banxico chief calls for coordination',
+    why: 'The proposal concerns the trade review.',
+    url: 'https://example.com/former-carstens', date: '2026-08-27',
+  },
+  inputs: ['Agustín Carstens, exgobernador de Banxico, aboga por coordinación.'],
+}).flags.some((flag) => flag.includes('unsupported role')),
+'punctuation after a named actor must not let a former office become a current title');
+assert.ok(lintEventReport({
+  event: {
+    title: 'Banking regulators ease the card-payment fee cap',
+    why: 'Banxico and CNBV reduced the ceiling to 1.3 percent.',
+    url: 'https://example.com/card-fees', date: '2026-08-27',
+  },
+  inputs: ['El nuevo anteproyecto implica una reducción y el tope de crédito queda en 1.3%'],
+}).flags.some((flag) => flag.includes('proposal or draft')),
+'a draft must not be rewritten as an action already taken');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Lawmakers approve the proposed banking rule',
+    why: 'The approved rule sets a new fee ceiling.',
+    url: 'https://example.com/approved-rule', date: '2026-08-27',
+  },
+  inputs: ['Lawmakers approved the proposed banking rule and its new fee ceiling.'],
+}).ok, true, 'evidence that records enactment must not remain frozen at the proposal stage');
+assert.ok(lintEventReport({
+  event: {
+    title: 'Mexico adds over 1 million informal workers',
+    why: 'The monthly increase was a record tracking labor-market deterioration.',
+    url: 'https://example.com/labor', date: '2026-08-27',
+  },
+  inputs: ['La informalidad registró un incremento mensual de 1.084 millones de trabajadores.'],
+}).flags.some((flag) => flag.includes('unsupported evidence qualifier')),
+'record and other superlative claims require the retained source to make that comparison');
+assert.ok(lintEventReport({
+  event: {
+    title: 'Mexico posts its largest monthly increase',
+    why: 'The report calls it the highest result.',
+    url: 'https://example.com/polarity', date: '2026-08-27',
+  },
+  inputs: ['México registró el menor aumento mensual del periodo.'],
+}).flags.some((flag) => flag.includes('unsupported evidence qualifier')),
+'a lower or smaller comparison must not support a highest or largest claim');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Sheinbaum proposes a constitutional reform',
+    why: 'The draft would require officeholders to renounce another citizenship.',
+    url: 'https://example.com/reform', date: '2026-08-27',
+  },
+  inputs: ['Sheinbaum presenta iniciativa. La reforma plantea una renuncia a otra ciudadanía.'],
+}).ok, true, 'copy that preserves a proposal’s procedural stage must pass');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Sinaloa Congress appoints Graciela Domínguez interim governor',
+    why: 'The state legislature swore her in for 14 months.',
+    url: 'https://example.com/sinaloa', date: '2026-08-25',
+  },
+  inputs: ['El Congreso de Sinaloa designa a Graciela Domínguez como gobernadora interina por 14 meses.'],
+}).ok, true, 'a leading article plus institution must not be mistaken for a person whose role was replaced');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Credit access falls for the smallest companies',
+    why: 'The report covers companies with up to 100 employees.',
+    url: 'https://example.com/credit', date: '2026-08-24',
+  },
+  inputs: ['Cae el acceso al crédito entre las empresas más pequeñas, con hasta 100 empleados.'],
+}).ok, true, 'a sourced Spanish size comparison may be translated faithfully');
 assert.ok(lintReportText({
   text: 'Federal transfers are losing momentum and tightening fiscal room.',
   inputs: ['Federal transfers are losing momentum and tightening fiscal room.'],

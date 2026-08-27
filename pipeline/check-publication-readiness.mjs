@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import freshnessContract from './lib/freshness-contract.cjs';
+
+const { editionWindowAssessment } = freshnessContract;
 
 const FILE = fileURLToPath(import.meta.url);
 const ROOT = path.resolve(path.dirname(FILE), '..');
@@ -15,7 +18,7 @@ export function publicationReadiness(brief, editorialDate, options = {}) {
   if (!stories.length) {
     if (brief?.meta?.quiet === true) {
       const curation = options.curation;
-      if (curation?.policy === 'edition-window-assessment-v2'
+      if (editionWindowAssessment(curation)
           && (curation.currentDayResolved !== true
             || Number(curation.freshRejectedCount) > 0
             || Number(curation.unassessedFreshCandidateCount) > 0)) {
