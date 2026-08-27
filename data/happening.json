@@ -5,32 +5,117 @@
     "updated": "2026-08-27",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
-    "count": 57,
-    "generatedAt": "2026-08-27T20:47:15.889Z",
+    "count": 60,
+    "generatedAt": "2026-08-27T21:22:06.513Z",
     "llm": true,
     "curation": {
-      "policy": "edition-window-assessment-v2",
+      "policy": "edition-window-assessment-v3",
       "editorialDate": "2026-08-27",
       "candidateCount": 24,
-      "candidateSig": "444e91cb5eb1bbb20d73a3e83d5ba2c63c017337923d391ed4a2e0dfd66113d4",
+      "candidateSig": "7c402cd97f23b70d4f9b7e9a9e97c1aa4dbcfe6b0f8bbf899286917f022be2f1",
       "freshCandidateCount": 24,
       "assessedCount": 24,
-      "selectedCount": 8,
-      "freshSelectedCount": 8,
-      "keptCount": 8,
-      "freshKeptCount": 8,
-      "rejectedCount": 0,
-      "freshRejectedCount": 0,
-      "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 45,
-      "unassessedFreshCandidateCount": 21,
+      "selectedCount": 4,
+      "freshSelectedCount": 4,
+      "keptCount": 3,
+      "freshKeptCount": 3,
+      "rejectedCount": 1,
+      "freshRejectedCount": 1,
+      "rejectedSelected": [
+        {
+          "id": "n-m-xico-env-a-al-mundo-un-monto-hist-rico-de-473-917--2026-08-27",
+          "candidateIndex": 0,
+          "date": "2026-08-27",
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/mexico-envia-al-mundo-un-monto-historico-de-473917-mdd-en-exportaciones/",
+          "flags": [
+            "money calque (N,000 million)"
+          ]
+        }
+      ],
+      "eligibleFreshCandidateCount": 44,
+      "unassessedFreshCandidateCount": 20,
       "currentDayResolved": false,
       "mode": "model",
       "complete": true,
-      "reason": "the current-day candidate ledger was not fully resolved"
+      "reason": "1 selected event(s) quarantined by the copy gate"
     }
   },
   "events": [
+    {
+      "id": "n-mexico-trade-surge-hits-us-81-4-billion-record-2026-08-27",
+      "date": "2026-08-27",
+      "section": "economy",
+      "title": "Mexico's July exports and imports each surpass 80 billion dollars for first time",
+      "why": "Combined monthly trade flow reached 81.4 billion dollars in July 2026, driven by a 134 percent surge in electrical and electronics shipments.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-trade-surge-hits-us814-billion-record",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-27T21:16:46.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mexico Trade Surge Hits US$81.4 Billion Record",
+        "dek": "Driven by a record 134% surge in electrical and electronics shipments, Mexico’s monthly exports and imports both surpassed US$80 billion for the first time in July 2026, pushing the country into an US$848 million monthly trade deficit despite a strong year-to-date surplus."
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-trade-surge-hits-us814-billion-record",
+          "publishedAt": "2026-08-27T21:16:46.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's July exports and imports each surpass 80 billion dollars for first time",
+          "summary": "Combined monthly trade flow reached 81.4 billion dollars in July 2026, driven by a 134 percent surge in electrical and electronics shipments."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexicobusiness.news"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
     {
       "id": "n-sheinbaum-pide-a-velasco-insistir-ante-rubio-por-mue-2026-08-27",
       "date": "2026-08-27",
@@ -98,6 +183,154 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "aristeguinoticias.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-m-xico-pierde-empleos-formales-y-suma-m-s-de-1-mill--2026-08-27",
+      "date": "2026-08-27",
+      "section": "economy",
+      "title": "Mexico loses formal employment and adds over one million workers to informal sector",
+      "why": "Informal employment rose by 1.084 million workers in the monthly count, reflecting a net shift away from registered jobs.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/mexico-pierde-empleos-formales-y-suma-mas-de-1-millon-en-la-informalidad/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-27T16:12:46.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México pierde empleos formales y suma más de 1 millón en la informalidad",
+        "dek": "La población ocupada en la informalidad registró un incremento mensual de 1.084 millones de trabajadores en el mercado laboral de México. La publicación México pierde empleos formales y suma más de 1 millón en la informalidad apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/mexico-pierde-empleos-formales-y-suma-mas-de-1-millon-en-la-informalidad/",
+          "publishedAt": "2026-08-27T16:12:46.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico loses formal employment and adds over one million workers to informal sector",
+          "summary": "Informal employment rose by 1.084 million workers in the monthly count, reflecting a net shift away from registered jobs."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
+      "date": "2026-08-27",
+      "section": "money",
+      "title": "Mexico's central bank and banking regulator soften cap on card-payment fees to 1.3 percent",
+      "why": "Banxico and the National Commission of Banking and Securities announced a revised proposal reducing the surcharge ceiling, lowering the impact on credit costs versus the initial draft.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-27T15:00:34.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Banxico y CNBV suavizan tope a cuotas de bancos por pagos con tarjeta; crédito queda en 1.3%",
+        "dek": "El nuevo anteproyecto elaborado por Banxico y la CNBV implica una reducción, aunque menor a la que se sugería en un principio. La publicación Banxico y CNBV suavizan tope a cuotas de bancos por pagos con tarjeta; crédito queda en 1.3% apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
+          "publishedAt": "2026-08-27T15:00:34.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's central bank and banking regulator soften cap on card-payment fees to 1.3 percent",
+          "summary": "Banxico and the National Commission of Banking and Securities announced a revised proposal reducing the surcharge ceiling, lowering the impact on credit costs versus the initial draft."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
             }
           }
         },
