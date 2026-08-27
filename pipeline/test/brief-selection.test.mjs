@@ -216,6 +216,38 @@ assert.deepEqual(weekDates('2026-08-16'), {
   assert.equal(result.receipt.filter((row) => row.reason === 'not-selected:extension-not-earned').length, 2);
 }
 
+// Different cuts of one national merchandise-trade print may coexist in the evidence
+// ledger, but only one can consume a homepage slot. Product and destination export
+// stories remain independent developments.
+{
+  const result = selectDailyBrief([
+    candidate('ytd-national-exports', 8, {
+      date: '2026-08-27', publishedAt: '2026-08-27T18:56:37Z',
+      title: "Mexico's exports reach 473.9 billion dollars in the first seven months",
+      why: 'Manufactured products accounted for 92 percent of Mexican exports.',
+      reportEvidence: { title: 'Exportaciones mexicanas', dek: '473.9 billion dollars; primeros siete meses; productos manufacturados.' },
+    }),
+    candidate('monthly-national-trade', 8, {
+      date: '2026-08-27', publishedAt: '2026-08-27T21:16:46Z',
+      title: 'Mexico reports July exports, imports and a trade deficit',
+      why: 'Monthly trade reached 81.4 billion dollars.',
+      reportEvidence: { title: 'Mexico monthly trade', dek: 'July exports and imports produced a trade deficit of 848 million dollars.' },
+    }),
+    candidate('avocado-exports', 7, {
+      date: '2026-08-27', title: "Mexico's avocado exports rise in July",
+    }),
+    candidate('oil-exports', 7, {
+      date: '2026-08-27', title: "Mexico's crude oil exports fall in July",
+    }),
+  ]);
+  assert.equal(result.selected.filter((event) => /national-(?:exports|trade)/.test(event.id)).length, 1,
+    'one national merchandise-trade print gets one homepage slot');
+  assert.equal(receiptFor(result, 'ytd-national-exports').reason === 'not-selected:duplicate-development-family'
+    || receiptFor(result, 'monthly-national-trade').reason === 'not-selected:duplicate-development-family', true);
+  assert.deepEqual(result.selected.filter((event) => /avocado|oil/.test(event.id)).map((event) => event.id).sort(),
+    ['avocado-exports', 'oil-exports'], 'commodity export stories must remain independent');
+}
+
 // Fourth and fifth stories earn their slots. Higher importance and a declared
 // interest qualify; the sixth candidate remains outside the five-story cap.
 {

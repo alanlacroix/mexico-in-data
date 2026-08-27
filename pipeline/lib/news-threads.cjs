@@ -168,7 +168,6 @@ function sameThread(a, b) {
   if (clean(a.url) && clean(a.url) === clean(b.url)) return true;
   if (clean(a.id) && clean(a.id) === clean(b.id)) return true;
   if (!withinThreadWindow(a, b)) return false;
-
   const titleA = words(titleOf(a));
   const titleB = words(titleOf(b));
   const actionsA = actionWords(titleA);

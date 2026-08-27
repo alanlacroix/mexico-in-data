@@ -168,6 +168,61 @@ const sameInflationRelease = groupEvents([
 assert.equal(sameInflationRelease.length, 1, 'two same-day reports of the same official indicator value must use one story slot');
 assert.equal(sameInflationRelease[0].sourceCount, 2, 'the merged release must retain both source links');
 
+const sameNationalTradePrint = groupEvents([
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T18:56:37Z', source: 'Outlet A',
+    url: 'https://example.com/ytd-exports', title: 'Mexico exports 473.9 billion dollars in the first seven months',
+    why: 'Manufactured products account for most exports.',
+  },
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T21:16:46Z', source: 'Outlet B',
+    url: 'https://example.com/july-trade', title: 'Mexico reports July exports, imports and an 848 million dollar trade deficit',
+    why: 'The monthly merchandise-trade release covers July.',
+  },
+]);
+assert.equal(sameNationalTradePrint.length, 2,
+  'different cuts of a trade release remain separate evidence records; homepage selection owns diversity');
+assert.equal(groupEvents([
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T18:00:00Z', source: 'Outlet A',
+    url: 'https://example.com/avocado', title: "Mexico's avocado exports rise in July",
+  },
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T19:00:00Z', source: 'Outlet B',
+    url: 'https://example.com/crude', title: "Mexico's crude oil exports fall in July",
+  },
+]).length, 2, 'different export products must never be collapsed into one national trade release');
+assert.equal(groupEvents([
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T18:00:00Z', source: 'Outlet A',
+    url: 'https://example.com/tourism', title: "Mexico's tourism exports rise in July",
+  },
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T19:00:00Z', source: 'Outlet B',
+    url: 'https://example.com/merchandise', title: 'Mexico reports July merchandise exports and imports',
+  },
+]).length, 2, 'tourism exports must remain separate from the merchandise-trade print');
+assert.equal(groupEvents([
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T18:00:00Z', source: 'Outlet A',
+    url: 'https://example.com/us-exports', title: "Mexico's exports to the US rise in July",
+  },
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T19:00:00Z', source: 'Outlet B',
+    url: 'https://example.com/national-trade', title: 'Mexico reports July merchandise exports and imports',
+  },
+]).length, 2, 'a destination-specific export story must remain separate from the national trade print');
+assert.equal(groupEvents([
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T18:00:00Z', source: 'Outlet A',
+    url: 'https://example.com/trade-print', title: 'Mexico reports July exports and imports',
+  },
+  {
+    date: '2026-08-27', publishedAt: '2026-08-27T19:00:00Z', source: 'Outlet B',
+    url: 'https://example.com/tariff-policy', title: 'Mexico challenges US tariff on tomato exports',
+  },
+]).length, 2, 'a tariff or trade-policy action must remain separate from the national statistics release');
+
 const sameMexicaliAlert = groupEvents([
   {
     date: '2026-08-25', publishedAt: '2026-08-25T13:59:36Z', source: 'Outlet A',
@@ -327,6 +382,89 @@ assert.equal(lintEventReport({
   event: { title: 'Technology changes the labor market...', why: 'The report describes changes in Mexico.', url: 'https://example.com', date: '2026-08-08' },
   inputs: ['Technology changes the labor market...', 'The report describes changes in Mexico.'],
 }).ok, false, 'deterministic fallback must reject feed ellipses before they enter the event ledger');
+assert.ok(lintEventReport({
+  event: {
+    title: "Mexico's export figures for the first seven months",
+    why: 'The sourceTitle and sourceDek provide the reported export volume.',
+    url: 'https://example.com/prompt-leak', date: '2026-08-27',
+  },
+  inputs: ['México exportó 473,917 mdd durante los primeros siete meses.'],
+}).flags.some((flag) => flag.includes('prompt or source narration')),
+'internal evidence-field names must never reach public copy');
+assert.ok(lintEventReport({
+  event: {
+    title: "Mexico's export figures for the first seven months",
+    why: 'The evidence strings provide the reported export volume.',
+    url: 'https://example.com/repair-schema-leak', date: '2026-08-27',
+  },
+  inputs: ['México exportó 473,917 mdd durante los primeros siete meses.'],
+}).flags.some((flag) => flag.includes('prompt or source narration')),
+'the repair schema wording must never become public context');
+assert.ok(lintEventReport({
+  event: {
+    title: "Mexico's exports and imports each surpass 80 billion dollars",
+    why: 'Combined monthly trade flow reached 81.4 billion dollars.',
+    url: 'https://example.com/quantity-scope', date: '2026-08-27',
+  },
+  inputs: ['Mexico Trade Surge Hits US$81.4 Billion Record', 'Exports and imports both surpassed US$80 billion.'],
+}).flags.some((flag) => flag.includes('unsupported quantity scope')),
+'a generated combined total must be stated in retained evidence');
+assert.equal(lintEventReport({
+  event: {
+    title: "Mexico's exports and imports each surpass 40 billion dollars",
+    why: 'Combined monthly trade flow reached 81.4 billion dollars.',
+    url: 'https://example.com/possible-total', date: '2026-08-27',
+  },
+  inputs: ['Exports and imports both surpassed US$40 billion, for a combined US$81.4 billion.'],
+}).ok, true, 'compatible sourced component and aggregate quantities must remain publishable');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Both chambers approve the reform',
+    why: 'The Senate and House voted on Thursday.',
+    url: 'https://example.com/both-chambers', date: '2026-08-27',
+  },
+  inputs: ['The Senate and House approved the reform on Thursday.'],
+}).ok, true, 'a nonnumeric use of both must not trigger a quantity-scope gate');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Both chambers approve a 5 billion dollar budget',
+    why: 'The Senate and House voted on Thursday.',
+    url: 'https://example.com/both-chambers-budget', date: '2026-08-27',
+  },
+  inputs: ['The Senate and House approved a 5 billion dollar budget.'],
+}).ok, true, 'both describing actors must not be mistaken for component quantities');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Two companies form a combined 5 billion dollar venture',
+    why: 'The companies signed the joint-venture agreement.',
+    url: 'https://example.com/combined-venture', date: '2026-08-27',
+  },
+  inputs: ['Two companies formed a 5 billion dollar joint venture.'],
+}).ok, true, 'combined describing one venture must not require aggregate-source wording');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Both companies form a combined 5 billion dollar venture',
+    why: 'The companies signed the joint-venture agreement.',
+    url: 'https://example.com/both-combined-venture', date: '2026-08-27',
+  },
+  inputs: ['Company A and Company B formed a 5 billion dollar joint venture.'],
+}).ok, true, 'one shared amount must not be mistaken for separate component and total claims');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Output rises alongside investment',
+    why: 'Combined with higher investment, production increased.',
+    url: 'https://example.com/combined-with', date: '2026-08-27',
+  },
+  inputs: ['Combined with higher investment, production increased.'],
+}).ok, true, 'combined used as an ordinary connector must not trigger arithmetic checks');
+assert.equal(lintEventReport({
+  event: {
+    title: 'Phishing losses average 8,750 pesos per victim',
+    why: 'Victims lost an average of 8,750 pesos each.',
+    url: 'https://example.com/per-victim', date: '2026-08-27',
+  },
+  inputs: ['A las víctimas les roban 8,750 pesos en promedio.'],
+}).ok, true, 'a sourced average may be expressed as a per-person amount');
 assert.ok(lintEventReport({
   event: {
     title: 'Banxico chief calls for an integrated trade review',

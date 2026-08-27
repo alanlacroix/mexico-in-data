@@ -10,7 +10,7 @@ const falseQuiet = publicationReadiness(
   { meta: { editorialDate: '2026-08-17', quiet: true }, lead: null, items: [] },
   '2026-08-17',
   { curation: {
-    policy: 'edition-window-assessment-v4', currentDayResolved: false,
+    policy: 'edition-window-assessment-v5', currentDayResolved: false,
     freshRejectedCount: 1, unassessedFreshCandidateCount: 0,
   } },
 );
@@ -34,7 +34,7 @@ const factualFromBoundedReview = publicationReadiness({
   lead: { headline: 'A selected current-day fact', lane: 'today', date: '2026-08-17' },
   items: [],
 }, '2026-08-17', { curation: {
-  policy: 'edition-window-assessment-v4', currentDayResolved: false,
+    policy: 'edition-window-assessment-v5', currentDayResolved: false,
   freshKeptCount: 8, freshRejectedCount: 0, unassessedFreshCandidateCount: 21,
 } });
 assert.equal(factualFromBoundedReview.publish, true,

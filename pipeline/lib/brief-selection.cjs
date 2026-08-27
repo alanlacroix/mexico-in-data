@@ -103,6 +103,28 @@ function rawImportance(event) {
   return finiteNumber(event && event.importance);
 }
 
+// Two outlets can take different cuts of one national merchandise-trade release: one
+// leads with year-to-date exports, another with the monthly balance. Preserve both in
+// the evidence ledger, but spend only one homepage slot on that print. This intentionally
+// excludes commodity, company, tourism, tariff and destination-specific export stories.
+function defaultDiversityFamily(event) {
+  if (!event || clean(event.company)) return '';
+  const evidence = event.reportEvidence || {};
+  const text = [event.title, event.why, evidence.title, evidence.dek]
+    .map(clean).filter(Boolean).join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  if (!/\bmexic/.test(text) || !/\b(?:exports?|exportaciones?)\b/.test(text)) return '';
+  if (/\b(?:tariff|arancel|duty|usmca|t-mec|agreement|sanction|ban|restriction)\b/.test(text)) return '';
+  const period = /\b(?:monthly|month|july|julio|first seven months|primeros siete meses|year[- ]to[- ]date)\b/.test(text);
+  const money = /(?:us\$|mx\$|\$)\s*\d|\b\d+(?:[.,]\d+)?\s*(?:billion|million|trillion|mdd|mdp)\b/.test(text);
+  const balanceCut = /\b(?:trade|comercial)\s+(?:balance|deficit|surplus)\b/.test(text)
+    || (/\bmonthly\b/.test(text) && /\bimports?\b/.test(text));
+  const nationalExportCut = /\b(?:mexico'?s exports?|mexican exports?|exportaciones mexicanas)\b/.test(text)
+    && /\bmanufactur/.test(text);
+  const day = clean(event.date) || clean(event.publishedAt || event.published_at).slice(0, 10);
+  return period && money && (balanceCut || nationalExportCut) && day
+    ? `national-merchandise-trade:${day}` : '';
+}
+
 /**
  * Deterministically select the Daily Brief's factual stories.
  *
@@ -123,6 +145,8 @@ function selectDailyBrief(candidates, options = {}) {
     ? options.scheduledMatch : defaultScheduledMatch;
   const candidateGate = typeof options.candidateGate === 'function'
     ? options.candidateGate : defaultCandidateGate;
+  const diversityFamily = typeof options.diversityFamily === 'function'
+    ? options.diversityFamily : defaultDiversityFamily;
 
   const records = events.map((event, inputIndex) => {
     const importance = finiteNumber(effectiveImportance(event));
@@ -149,6 +173,7 @@ function selectDailyBrief(candidates, options = {}) {
       source: clean(event && event.source),
       section: clean(event && event.section),
       time: eventTime(event),
+      diversityFamily: clean(diversityFamily(event)),
       eligible,
       rank: null,
       selected: false,
@@ -188,11 +213,17 @@ function selectDailyBrief(candidates, options = {}) {
   }
 
   const selectedRecords = [];
+  const selectedFamilies = new Set();
   for (const record of ranked) {
+    if (record.diversityFamily && selectedFamilies.has(record.diversityFamily)) {
+      record.reason = 'not-selected:duplicate-development-family';
+      continue;
+    }
     if (selectedRecords.length < softFloor) {
       record.selected = true;
       record.reason = 'selected:core';
       selectedRecords.push(record);
+      if (record.diversityFamily) selectedFamilies.add(record.diversityFamily);
       continue;
     }
     if (selectedRecords.length >= cap) {
@@ -212,6 +243,7 @@ function selectDailyBrief(candidates, options = {}) {
         ? 'selected:extension:scheduled'
         : 'selected:extension:interest';
     selectedRecords.push(record);
+    if (record.diversityFamily) selectedFamilies.add(record.diversityFamily);
   }
 
   const receipt = records.map((record) => ({
@@ -227,6 +259,7 @@ function selectDailyBrief(candidates, options = {}) {
     analysisState: record.analysis.state,
     analysisVersion: record.analysis.version,
     analysis: { ...record.analysis },
+    diversityFamily: record.diversityFamily,
   }));
 
   return {

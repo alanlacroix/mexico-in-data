@@ -3,7 +3,7 @@
 const clean = (value) => String(value || '').trim();
 
 function editionWindowAssessment(receipt) {
-  return /^edition-window-assessment-v(?:2|3|4)$/.test(clean(receipt?.policy));
+  return /^edition-window-assessment-v(?:2|3|4|5)$/.test(clean(receipt?.policy));
 }
 
 function curationReadiness(receipt, editorialDate, options = {}) {

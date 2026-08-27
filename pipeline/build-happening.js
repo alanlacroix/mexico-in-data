@@ -80,7 +80,7 @@ const MAX_STORE = 60;        // hard cap on stored entries
 const MAX_NEW = 16;          // model returns at most this many new events per run
 const MAX_CANDIDATES = 24;   // small enough for one exhaustive decision per row; attention priority protects consequential older items.
 const CURATION_MAX_TOKENS = 6000; // enough for 24 compact decisions; the old 16k ceiling falsely exhausted the monthly guard.
-const CURATION_POLICY = 'edition-window-assessment-v4';
+const CURATION_POLICY = 'edition-window-assessment-v5';
 
 const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
 
@@ -465,12 +465,11 @@ ${BAN}`;
     } };
     const repairPayload = rejected.map(({ item, flags }, i) => ({
       i,
-      sourceTitle: item.x.title,
-      sourceDek: String(item.x.dek || '').slice(0, 260),
-      rejectionReasons: flags,
+      evidence: [item.x.title, String(item.x.dek || '').slice(0, 260)],
+      problems: flags,
     }));
     const repaired = await askJSON({
-      system: `Repair factual report copy that failed a deterministic publication gate. Return exactly one repair for every input i. Use only sourceTitle and sourceDek. Do not add, round, or infer numbers. Keep the actor, action, and outcome concrete. Write a short plain-English title and one or two complete sentences of useful context. Remove the stated rejection problem. No em dash, semicolon, hype, insider labels, vague newsroom language, or unsupported judgment. This is a copy repair only: do not change which item was selected.\n\n${REPORT}\n\n${BAN}`,
+      system: `Repair factual report copy that failed a deterministic publication gate. Return exactly one repair for every input i. Use only the two evidence strings. State the supported fact directly; never mention the source, article, prompt, evidence fields, or input labels. Do not add, round, or infer numbers. Keep the actor, action, and outcome concrete. Write a short plain-English title and one or two complete sentences of useful context. Remove the stated rejection problem. No em dash, semicolon, hype, insider labels, vague newsroom language, or unsupported judgment. This is a copy repair only: do not change which item was selected.\n\n${REPORT}\n\n${BAN}`,
       user: JSON.stringify(repairPayload),
       schema: repairSchema,
       maxTokens: Math.min(2400, 300 + repairPayload.length * 240),

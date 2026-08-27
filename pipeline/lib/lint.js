@@ -35,6 +35,11 @@ const VAGUE_NEWSROOM = /\b(losing momentum|fiscal room|budgetary room|welfare co
 // tighter than what, because of which part of the decision, and with what consequence?
 // The Brief must state the rate action, guidance and reason in ordinary language.
 const UNEXPLAINED_POLICY_LABEL = /\b(?:hawkish|dovish|hawkishness|dovishness)\b/i;
+// Public copy must never narrate the prompt or the evidence fields. This exact class
+// escaped the bounded repair on Aug. 27 as “The sourceTitle and sourceDek provide...”.
+// It is neither a fact nor useful context, and exposing internal field names makes the
+// automated page read like a broken editor rather than a finished publication.
+const PROMPT_OR_SOURCE_NARRATION = /\b(?:source\s*title|source\s*dek|sourceTitle|sourceDek|report\s*evidence|reportEvidence|rejection\s*reasons|rejectionReasons|evidence\s+strings?|input\s+labels?)\b/i;
 const VAGUE_ANALYSIS = /\b(could have implications|could impact|important to watch|will be important to watch|suggests? that|indicates? that|underscores? (?:the|a)|highlights? (?:the|a)|reflects? (?:a|the) broader|may signal|broader trend|complex picture|key takeaway)\b/i;
 // These words evaluate an announcement without helping the reader understand it. They
 // are especially dangerous in labelled analysis because the polish can disguise the
@@ -176,6 +181,33 @@ function evidenceFidelityFlags({ title = '', context = '', inputs = [] }) {
       flags.push(`unsupported evidence qualifier: ${superlative[0]}`);
     }
   }
+
+  // Quantity scope is part of a numeric claim. “Combined” cannot be inferred from a
+  // nearby amount, and “each” cannot be inferred from an aggregate. Keep this limited
+  // to money magnitudes so ordinary phrases such as “both chambers” or “combined with
+  // higher investment” are never treated as quantity claims.
+  const scopedMagnitude = (scope, { combined = false } = {}) => {
+    const sentence = [title, ...sentences(context)].find((claim) =>
+      scope.test(claim) && !(combined && /\bcombined with\b/i.test(claim)));
+    if (!sentence) return null;
+    const amount = sentence.match(/(?:US\$|MX\$|\$)?\s*(\d+(?:[.,]\d+)?)\s*(?:billion|million|trillion)\s*(?:dollars?|pesos?)?/i);
+    return amount ? { sentence, amount: canonicalNumericToken(amount[1]) } : null;
+  };
+  const componentScope = /\b(?:each|both)\b/i;
+  const aggregateScope = /\b(?:combined|aggregate|in total|totalled|totaled)\b/i;
+  const componentClaim = scopedMagnitude(componentScope);
+  const aggregateClaim = scopedMagnitude(aggregateScope, { combined: true });
+  // Enforce scope only when public copy compares component and aggregate money claims.
+  // A lone “both chambers approved a $5 billion budget” or “combined venture” is normal
+  // prose, not a component-total assertion.
+  if (componentClaim && aggregateClaim
+      && componentClaim.sentence !== aggregateClaim.sentence
+      && componentClaim.amount !== aggregateClaim.amount) {
+    const componentEvidence = /\b(?:each|both|cada|ambos|ambas|per (?:person|victim|worker|resident)|on average|average of|en promedio|promedio de)\b/i;
+    const aggregateEvidence = /\b(?:combined|aggregate|in total|total(?:led|ed)?|combinad[oa]s?|conjunto|en total|totales?|suma)\b/i;
+    if (!componentEvidence.test(evidence)) flags.push('unsupported quantity scope: each/both');
+    if (!aggregateEvidence.test(evidence)) flags.push('unsupported quantity scope: combined/total');
+  }
   return flags;
 }
 
@@ -203,6 +235,7 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   const editorial = clean.match(EDITORIALIZING); if (editorial) flags.push(`editorial shorthand: "${editorial[0]}"`);
   const vague = clean.match(VAGUE_NEWSROOM); if (vague) flags.push(`vague newsroom phrase: "${vague[0]}"`);
   const policyLabel = clean.match(UNEXPLAINED_POLICY_LABEL); if (policyLabel) flags.push(`unexplained monetary-policy label: "${policyLabel[0]}"`);
+  const promptLeak = clean.match(PROMPT_OR_SOURCE_NARRATION); if (promptLeak) flags.push(`prompt or source narration: "${promptLeak[0]}"`);
   const collision = clean.match(ENTITY_ALIAS_COLLISION); if (collision) flags.push(`duplicated institutional label: "${collision[0]}"`);
   if (/\.{3}|…/.test(clean)) flags.push('ellipsis or truncated copy');
   const words = clean.split(/\s+/).filter(Boolean).length;
