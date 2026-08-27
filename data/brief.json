@@ -4,46 +4,46 @@
     "editorialDate": "2026-08-27",
     "updated": "2026-08-27",
     "asOf": "2026-08-27",
-    "reviewedAt": "2026-08-27T21:39:26.829Z",
+    "reviewedAt": "2026-08-27T22:01:00.836Z",
     "latestItemDate": "2026-08-27",
     "quiet": false,
     "newCount": 0,
-    "generatedAt": "2026-08-27T21:40:24.226Z",
+    "generatedAt": "2026-08-27T22:01:40.011Z",
     "mode": "curated",
     "editionType": "daily",
     "summaryV": 4,
     "summaryMode": "model-synthesis",
     "count": 3,
-    "words": 104,
-    "contentSig": "6717b3d738f81c8fc02a622690a978452805cacf82ad97becc8a98170f486c37",
+    "words": 97,
+    "contentSig": "de77b3de33b8ec901aff08a197ef01f0c0e07db2269b88905bea99586add668f",
     "windowHours": 36,
     "selection": {
       "policy": "exact-day-plus-carryover-v1",
       "receipt": [
         {
-          "id": "n-mexico-trade-surge-hits-us-81-4-billion-record-2026-08-27",
-          "rank": 2,
+          "id": "n-el-inge-enviado-por-m-xico-a-ee-uu-se-declara-culpab-2026-08-27",
+          "rank": 1,
           "selected": true,
           "reason": "selected:core",
-          "effectiveImportance": 8,
-          "rawImportance": 8,
+          "effectiveImportance": 7,
+          "rawImportance": 7,
           "importanceProvenance": {
             "rubricVersion": "five-component-v1",
-            "calculatedTotal": 8,
+            "calculatedTotal": 7,
             "components": {
               "nationalConsequence": {
-                "raw": 2,
-                "score": 2,
-                "status": "accepted"
-              },
-              "usMexicoStakes": {
                 "raw": 1,
                 "score": 1,
                 "status": "accepted"
               },
-              "modelImpact": {
+              "usMexicoStakes": {
                 "raw": 2,
                 "score": 2,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 1,
+                "score": 1,
                 "status": "accepted"
               },
               "durability": {
@@ -59,65 +59,7 @@
                 "evidence": {
                   "score": 1,
                   "source": "publishable-press",
-                  "hostname": "mexicobusiness.news"
-                }
-              }
-            },
-            "reportedTotal": null,
-            "componentSource": "model"
-          },
-          "tags": [],
-          "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
-          "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
-          },
-          "lane": "today",
-          "laneRank": 2
-        },
-        {
-          "id": "n-m-xico-env-a-al-mundo-un-monto-hist-rico-de-473-917--2026-08-27",
-          "rank": 1,
-          "selected": true,
-          "reason": "selected:core",
-          "effectiveImportance": 8,
-          "rawImportance": 8,
-          "importanceProvenance": {
-            "rubricVersion": "five-component-v1",
-            "calculatedTotal": 8,
-            "components": {
-              "nationalConsequence": {
-                "raw": 2,
-                "score": 2,
-                "status": "accepted"
-              },
-              "usMexicoStakes": {
-                "raw": 1,
-                "score": 1,
-                "status": "accepted"
-              },
-              "modelImpact": {
-                "raw": 2,
-                "score": 2,
-                "status": "accepted"
-              },
-              "durability": {
-                "raw": 2,
-                "score": 2,
-                "status": "accepted"
-              },
-              "officialness": {
-                "raw": 2,
-                "score": 1,
-                "status": "evidence-override",
-                "modelScore": 2,
-                "evidence": {
-                  "score": 1,
-                  "source": "publishable-press",
-                  "hostname": "elceo.com"
+                  "hostname": "aristeguinoticias.com"
                 }
               }
             },
@@ -125,7 +67,8 @@
             "componentSource": "model"
           },
           "tags": [
-            "growth"
+            "political-stability",
+            "us-relationship"
           ],
           "scheduledMatch": false,
           "analysisState": "missing",
@@ -135,14 +78,15 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "today",
           "laneRank": 1
         },
         {
           "id": "n-sheinbaum-pide-a-velasco-insistir-ante-rubio-por-mue-2026-08-27",
-          "rank": 3,
-          "selected": true,
-          "reason": "selected:core",
+          "rank": null,
+          "selected": false,
+          "reason": "not-selected:cap-reached",
           "effectiveImportance": 7,
           "rawImportance": 7,
           "importanceProvenance": {
@@ -195,8 +139,9 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "today",
-          "laneRank": 3
+          "laneRank": 4
         },
         {
           "id": "n-m-xico-pierde-empleos-formales-y-suma-m-s-de-1-mill--2026-08-27",
@@ -253,8 +198,132 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "today",
           "laneRank": 5
+        },
+        {
+          "id": "n-sector-manufacturero-sostiene-exportaciones-de-m-xic-2026-08-27",
+          "rank": 3,
+          "selected": true,
+          "reason": "selected:core",
+          "effectiveImportance": 7,
+          "rawImportance": 7,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 7,
+            "components": {
+              "nationalConsequence": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 0,
+                "score": 1,
+                "status": "evidence-override",
+                "modelScore": 0,
+                "evidence": {
+                  "score": 1,
+                  "source": "publishable-press",
+                  "hostname": "t21.com.mx"
+                }
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "model"
+          },
+          "tags": [
+            "growth"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          },
+          "diversityFamily": "",
+          "lane": "today",
+          "laneRank": 3
+        },
+        {
+          "id": "n-banxico-muestra-optimismo-eleva-tasa-de-crecimiento--2026-08-26",
+          "rank": 2,
+          "selected": true,
+          "reason": "selected:core",
+          "effectiveImportance": 7,
+          "rawImportance": 7,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 7,
+            "components": {
+              "nationalConsequence": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 0,
+                "score": 1,
+                "status": "evidence-override",
+                "modelScore": 0,
+                "evidence": {
+                  "score": 1,
+                  "source": "publishable-press",
+                  "hostname": "elfinanciero.com.mx"
+                }
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "model"
+          },
+          "tags": [
+            "growth",
+            "political-stability"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          },
+          "diversityFamily": "",
+          "lane": "today",
+          "laneRank": 2
         },
         {
           "id": "n-deer-park-reporta-ganancias-por-13-900-mdp-mientras--2026-08-27",
@@ -311,8 +380,9 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "today",
-          "laneRank": 4
+          "laneRank": 6
         },
         {
           "id": "n-adeudos-de-pemex-ahogan-al-transporte-mar-timo-la-in-2026-08-27",
@@ -371,11 +441,12 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "today",
-          "laneRank": 6
+          "laneRank": 7
         },
         {
-          "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
+          "id": "n-far-as-ten-a-una-red-para-distribuir-combustible-de--2026-08-27",
           "rank": null,
           "selected": false,
           "reason": "not-selected:cap-reached",
@@ -386,8 +457,8 @@
             "calculatedTotal": 6,
             "components": {
               "nationalConsequence": {
-                "raw": 1,
-                "score": 1,
+                "raw": 2,
+                "score": 2,
                 "status": "accepted"
               },
               "usMexicoStakes": {
@@ -396,8 +467,8 @@
                 "status": "accepted"
               },
               "modelImpact": {
-                "raw": 2,
-                "score": 2,
+                "raw": 1,
+                "score": 1,
                 "status": "accepted"
               },
               "durability": {
@@ -406,14 +477,14 @@
                 "status": "accepted"
               },
               "officialness": {
-                "raw": 2,
+                "raw": 0,
                 "score": 1,
                 "status": "evidence-override",
-                "modelScore": 2,
+                "modelScore": 0,
                 "evidence": {
                   "score": 1,
                   "source": "publishable-press",
-                  "hostname": "elceo.com"
+                  "hostname": "aristeguinoticias.com"
                 }
               }
             },
@@ -429,8 +500,129 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "today",
-          "laneRank": 7
+          "laneRank": 9
+        },
+        {
+          "id": "n-amacarga-plantea-corredores-digitales-para-blindar-l-2026-08-27",
+          "rank": null,
+          "selected": false,
+          "reason": "not-selected:cap-reached",
+          "effectiveImportance": 6,
+          "rawImportance": 6,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 6,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 0,
+                "score": 1,
+                "status": "evidence-override",
+                "modelScore": 0,
+                "evidence": {
+                  "score": 1,
+                  "source": "publishable-press",
+                  "hostname": "t21.com.mx"
+                }
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "model"
+          },
+          "tags": [
+            "ai-tech"
+          ],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          },
+          "diversityFamily": "",
+          "lane": "today",
+          "laneRank": 8
+        },
+        {
+          "id": "n-m-xico-crt-reactiva-m-s-de-3-6-millones-de-l-neas-ce-2026-08-27",
+          "rank": null,
+          "selected": false,
+          "reason": "ineligible:copy-gate:context repeats the headline without adding a sourced fact",
+          "effectiveImportance": 5,
+          "rawImportance": 5,
+          "importanceProvenance": {
+            "rubricVersion": "five-component-v1",
+            "calculatedTotal": 5,
+            "components": {
+              "nationalConsequence": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "usMexicoStakes": {
+                "raw": 0,
+                "score": 0,
+                "status": "accepted"
+              },
+              "modelImpact": {
+                "raw": 1,
+                "score": 1,
+                "status": "accepted"
+              },
+              "durability": {
+                "raw": 2,
+                "score": 2,
+                "status": "accepted"
+              },
+              "officialness": {
+                "raw": 0,
+                "score": 1,
+                "status": "evidence-override",
+                "modelScore": 0,
+                "evidence": {
+                  "score": 1,
+                  "source": "publishable-press",
+                  "hostname": "dplnews.com"
+                }
+              }
+            },
+            "reportedTotal": null,
+            "componentSource": "model"
+          },
+          "tags": [],
+          "scheduledMatch": false,
+          "analysisState": "missing",
+          "analysisVersion": 0,
+          "analysis": {
+            "state": "missing",
+            "version": 0,
+            "complete": false
+          },
+          "diversityFamily": "",
+          "lane": "today",
+          "laneRank": null
         },
         {
           "id": "n-developers-seek-semarnat-permits-for-1-2gw-clean-ene-2026-08-27",
@@ -489,6 +681,7 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "today",
           "laneRank": null
         },
@@ -549,8 +742,9 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "today",
-          "laneRank": 8
+          "laneRank": 10
         },
         {
           "id": "n-mexican-ranchers-prepare-to-resume-livestock-sales-t-2026-08-24",
@@ -609,6 +803,7 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "key-development",
           "laneRank": 1
         },
@@ -669,79 +864,20 @@
             "version": 0,
             "complete": false
           },
+          "diversityFamily": "",
           "lane": "key-development",
           "laneRank": null
-        },
-        {
-          "id": "n-banxico-muestra-optimismo-eleva-tasa-de-crecimiento--2026-08-26",
-          "rank": null,
-          "selected": false,
-          "reason": "not-selected:cap-reached",
-          "effectiveImportance": 6,
-          "rawImportance": 6,
-          "importanceProvenance": {
-            "rubricVersion": "five-component-v1",
-            "calculatedTotal": 6,
-            "components": {
-              "nationalConsequence": {
-                "raw": 2,
-                "score": 2,
-                "status": "accepted"
-              },
-              "usMexicoStakes": {
-                "raw": 0,
-                "score": 0,
-                "status": "accepted"
-              },
-              "modelImpact": {
-                "raw": 1,
-                "score": 1,
-                "status": "accepted"
-              },
-              "durability": {
-                "raw": 2,
-                "score": 2,
-                "status": "accepted"
-              },
-              "officialness": {
-                "raw": 2,
-                "score": 1,
-                "status": "evidence-override",
-                "modelScore": 2,
-                "evidence": {
-                  "score": 1,
-                  "source": "publishable-press",
-                  "hostname": "t21.com.mx"
-                }
-              }
-            },
-            "reportedTotal": null,
-            "componentSource": "model"
-          },
-          "tags": [
-            "growth"
-          ],
-          "scheduledMatch": false,
-          "analysisState": "missing",
-          "analysisVersion": 0,
-          "analysis": {
-            "state": "missing",
-            "version": 0,
-            "complete": false
-          },
-          "lane": "key-development",
-          "laneRank": 2
         }
       ],
       "lockedIds": [
-        "n-m-xico-env-a-al-mundo-un-monto-hist-rico-de-473-917--2026-08-27",
-        "n-mexico-trade-surge-hits-us-81-4-billion-record-2026-08-27",
-        "n-sheinbaum-pide-a-velasco-insistir-ante-rubio-por-mue-2026-08-27"
+        "n-el-inge-enviado-por-m-xico-a-ee-uu-se-declara-culpab-2026-08-27",
+        "n-banxico-muestra-optimismo-eleva-tasa-de-crecimiento--2026-08-26",
+        "n-sector-manufacturero-sostiene-exportaciones-de-m-xic-2026-08-27"
       ],
       "publishedIds": [
-        "n-m-xico-env-a-al-mundo-un-monto-hist-rico-de-473-917--2026-08-27",
-        "n-mexico-trade-surge-hits-us-81-4-billion-record-2026-08-27",
-        "n-sheinbaum-pide-a-velasco-insistir-ante-rubio-por-mue-2026-08-27"
+        "n-el-inge-enviado-por-m-xico-a-ee-uu-se-declara-culpab-2026-08-27",
+        "n-banxico-muestra-optimismo-eleva-tasa-de-crecimiento--2026-08-26",
+        "n-sector-manufacturero-sostiene-exportaciones-de-m-xic-2026-08-27"
       ],
       "lanes": {
         "today": 3,
@@ -751,17 +887,17 @@
       "carryoverDate": "2026-08-26",
       "scheduledOutcomes": {
         "editorialDate": "2026-08-27",
-        "checkedAt": "2026-08-27T21:39:26.765Z",
+        "checkedAt": "2026-08-27T22:01:00.771Z",
         "count": 14,
         "blockers": 0,
         "ok": true
       }
     }
   },
-  "summary": "Mexico's July exports and imports each exceeded 80 billion dollars for the first time, reaching 81.4 billion dollars combined as electrical and electronics shipments surged 134 percent. President Sheinbaum instructed the foreign minister to press the US State Department on deaths of Mexican nationals in US immigration detention centers.",
+  "summary": "Mexico delivered a fentanyl trafficker to the United States in January under the National Security Law, and he pleaded guilty in court. Mexico's central bank raised its 2026 growth forecast to 1.5 percent, though Deputy Governor Jonathan Heath cited services inflation concerns. Manufacturing exports sustained Mexico's trade in July despite an overall trade deficit.",
   "lead": {
-    "h1": "Mexico's export figures for first seven months",
-    "context": "Mexico exported products during the first seven months of the year, with manufactured goods making up the majority of shipments. The sourceTitle and sourceDek provide the reported export volume and the share of manufactured products.",
+    "h1": "Mexico-delivered fentanyl trafficker El Inge pleads guilty in US court",
+    "context": "The Mexican government delivered a detainee to the United States in January 2026 under the National Security Law, outside standard extradition procedures. The individual pleaded guilty to fentanyl distribution.",
     "background": "",
     "view": "",
     "prediction": "",
@@ -771,33 +907,34 @@
     "drivers": "",
     "implications": "",
     "next": "",
-    "image": "https://elceo.com/wp-content/uploads/2026/08/exportaciones_componentes_electronicos_comercio.jpg",
-    "publishedAt": "2026-08-27T18:56:37.000Z",
+    "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/07/Fentanilo-Portada-Trump.jpg",
+    "publishedAt": "2026-08-27T21:22:21.000Z",
     "coverage": [
       {
-        "source": "El CEO",
-        "url": "https://elceo.com/economia/mexico-envia-al-mundo-un-monto-historico-de-473917-mdd-en-exportaciones/",
-        "publishedAt": "2026-08-27T18:56:37.000Z",
+        "source": "Aristegui Noticias",
+        "url": "https://aristeguinoticias.com/2708/mexico/el-inge-enviado-por-mexico-a-ee-uu-se-declara-culpable-por-distribucion-de-fentanilo/",
+        "publishedAt": "2026-08-27T21:22:21.000Z",
         "date": "2026-08-27",
-        "title": "Mexico's export figures for first seven months",
-        "summary": "Mexico exported products during the first seven months of the year, with manufactured goods making up the majority of shipments. The sourceTitle and sourceDek provide the reported export volume and the share of manufactured products."
+        "title": "Mexico-delivered fentanyl trafficker El Inge pleads guilty in US court",
+        "summary": "The Mexican government delivered a detainee to the United States in January 2026 under the National Security Law, outside standard extradition procedures. The individual pleaded guilty to fentanyl distribution."
       }
     ],
     "refs": [
-      "n-m-xico-env-a-al-mundo-un-monto-hist-rico-de-473-917--2026-08-27"
+      "n-el-inge-enviado-por-m-xico-a-ee-uu-se-declara-culpab-2026-08-27"
     ],
-    "href": "https://elceo.com/economia/mexico-envia-al-mundo-un-monto-historico-de-473917-mdd-en-exportaciones/",
-    "source": "El CEO",
+    "href": "https://aristeguinoticias.com/2708/mexico/el-inge-enviado-por-mexico-a-ee-uu-se-declara-culpable-por-distribucion-de-fentanilo/",
+    "source": "Aristegui Noticias",
     "date": "2026-08-27",
-    "section": "economy",
+    "section": "us-mexico",
     "lane": "today",
     "isNew": false,
     "ranking": {
       "rank": 1,
-      "importance": 8,
-      "effectiveImportance": 8,
+      "importance": 7,
+      "effectiveImportance": 7,
       "tags": [
-        "growth"
+        "political-stability",
+        "us-relationship"
       ],
       "scheduledEventId": "",
       "reason": "selected:core"
@@ -805,8 +942,8 @@
   },
   "items": [
     {
-      "headline": "Mexico's July exports and imports each surpass 80 billion dollars for first time",
-      "context": "Combined monthly trade flow reached 81.4 billion dollars in July 2026, driven by a 134 percent surge in electrical and electronics shipments.",
+      "headline": "Mexico's central bank raises 2026 growth forecast to 1.5 percent",
+      "context": "Mexico's central bank raised its economic growth projection for Mexico to 1.5 percent for the year. Deputy Governor Jonathan Heath flagged the evolution of services inflation as his main concern.",
       "background": "",
       "view": "",
       "prediction": "",
@@ -816,39 +953,50 @@
       "drivers": "",
       "implications": "",
       "next": "",
-      "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/kyle-hinkson-1nX1Gvzf3Yc-unsplash%20%281%29.jpg?h=995c6d1e&itok=MYI6kJsc",
-      "publishedAt": "2026-08-27T21:16:46.000Z",
+      "image": "https://www.elfinanciero.com.mx/resizer/v2/2XXYKBEU7BDRLNIU3JFDPSEDOQ.jpg?smart=true&auth=44fce9a09cc1bf96c1827c17dea64ac58ffedd372cd62750385c1db11af3a129&width=1200&height=630",
+      "publishedAt": "2026-08-27T09:14:16.000Z",
       "coverage": [
         {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-trade-surge-hits-us814-billion-record",
-          "publishedAt": "2026-08-27T21:16:46.000Z",
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/27/banxico-eleva-su-pronostico-de-crecimiento-economico-en-mexico-a-15-por-ciento-para-este-ano/",
+          "publishedAt": "2026-08-27T09:14:16.000Z",
           "date": "2026-08-27",
-          "title": "Mexico's July exports and imports each surpass 80 billion dollars for first time",
-          "summary": "Combined monthly trade flow reached 81.4 billion dollars in July 2026, driven by a 134 percent surge in electrical and electronics shipments."
+          "title": "Mexico's central bank raises 2026 growth forecast to 1.5 percent",
+          "summary": "Banxico raised its economic growth projection for Mexico to 1.5 percent for the year. Deputy Governor Jonathan Heath flagged the evolution of services inflation as his main concern."
+        },
+        {
+          "source": "T21",
+          "url": "https://t21.com.mx/banxico-muestra-optimismo-eleva-tasa-de-crecimiento-para-economia-mexicana-en-2026/",
+          "publishedAt": "2026-08-26T22:07:05.000Z",
+          "date": "2026-08-26",
+          "title": "Mexico's central bank raises 2026 growth forecast to 1.5 percent",
+          "summary": "Banxico revised its full-year GDP estimate upward, citing stronger economic activity. The forecast now stands at 1.5 percent for 2026."
         }
       ],
       "refs": [
-        "n-mexico-trade-surge-hits-us-81-4-billion-record-2026-08-27"
+        "n-banxico-muestra-optimismo-eleva-tasa-de-crecimiento--2026-08-26"
       ],
-      "href": "https://mexicobusiness.news/trade-and-investment/news/mexico-trade-surge-hits-us814-billion-record",
-      "source": "Mexico Business News",
+      "href": "https://elfinanciero.com.mx/economia/2026/08/27/banxico-eleva-su-pronostico-de-crecimiento-economico-en-mexico-a-15-por-ciento-para-este-ano/",
+      "source": "El Financiero — Economía",
       "date": "2026-08-27",
-      "section": "economy",
+      "section": "money",
       "lane": "today",
       "isNew": false,
       "ranking": {
         "rank": 2,
-        "importance": 8,
-        "effectiveImportance": 8,
-        "tags": [],
+        "importance": 7,
+        "effectiveImportance": 7,
+        "tags": [
+          "political-stability",
+          "growth"
+        ],
         "scheduledEventId": "",
         "reason": "selected:core"
       }
     },
     {
-      "headline": "Sheinbaum asks foreign minister to press US on Mexican deaths in detention",
-      "context": "Mexico's president instructed the foreign minister to push the US State Department on deaths of Mexican nationals in US immigration detention and custody centers, part of an ongoing diplomatic complaint.",
+      "headline": "Mexico's manufacturing exports sustain trade through July 2026",
+      "context": "Mexico's manufacturing sector drove exports in July, though the overall trade balance recorded a deficit according to the national statistics agency.",
       "background": "",
       "view": "",
       "prediction": "",
@@ -858,25 +1006,25 @@
       "drivers": "",
       "implications": "",
       "next": "",
-      "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/07/migrante-venezolano-muere-georgia-eu-ice-15072026.jpg",
-      "publishedAt": "2026-08-27T18:54:20.000Z",
+      "image": "https://t21.com.mx/wp-content/uploads/2026/08/BCCMJUL2.jpeg",
+      "publishedAt": "2026-08-27T13:00:08.000Z",
       "coverage": [
         {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/2708/mexico/sheinbaum-pide-a-velasco-insistir-ante-rubio-por-muertes-de-mexicanos-en-ee-uu/",
-          "publishedAt": "2026-08-27T18:54:20.000Z",
+          "source": "T21",
+          "url": "https://t21.com.mx/sector-manufacturero-sostiene-exportaciones-de-mexico-en-julio/",
+          "publishedAt": "2026-08-27T13:00:08.000Z",
           "date": "2026-08-27",
-          "title": "Sheinbaum asks foreign minister to press US on Mexican deaths in detention",
-          "summary": "Mexico's president instructed the foreign minister to push the US State Department on deaths of Mexican nationals in US immigration detention and custody centers, part of an ongoing diplomatic complaint."
+          "title": "Mexico's manufacturing exports sustain trade through July 2026",
+          "summary": "Mexico's manufacturing sector drove exports in July, though the overall trade balance recorded a deficit according to the national statistics agency."
         }
       ],
       "refs": [
-        "n-sheinbaum-pide-a-velasco-insistir-ante-rubio-por-mue-2026-08-27"
+        "n-sector-manufacturero-sostiene-exportaciones-de-m-xic-2026-08-27"
       ],
-      "href": "https://aristeguinoticias.com/2708/mexico/sheinbaum-pide-a-velasco-insistir-ante-rubio-por-muertes-de-mexicanos-en-ee-uu/",
-      "source": "Aristegui Noticias",
+      "href": "https://t21.com.mx/sector-manufacturero-sostiene-exportaciones-de-mexico-en-julio/",
+      "source": "T21",
       "date": "2026-08-27",
-      "section": "us-mexico",
+      "section": "economy",
       "lane": "today",
       "isNew": false,
       "ranking": {
@@ -884,7 +1032,7 @@
         "importance": 7,
         "effectiveImportance": 7,
         "tags": [
-          "us-relationship"
+          "growth"
         ],
         "scheduledEventId": "",
         "reason": "selected:core"
