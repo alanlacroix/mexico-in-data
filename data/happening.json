@@ -6,23 +6,575 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-27T13:31:54.665Z",
+    "generatedAt": "2026-08-27T20:47:15.889Z",
     "llm": true,
     "curation": {
-      "policy": "exact-day-assessment-v1",
+      "policy": "edition-window-assessment-v2",
       "editorialDate": "2026-08-27",
       "candidateCount": 24,
-      "candidateSig": "23daa62e8e98a51f5f0e143e6f2e17bb6ddbe53f3cbfef28da2b747096dd0167",
-      "freshCandidateCount": 5,
+      "candidateSig": "444e91cb5eb1bbb20d73a3e83d5ba2c63c017337923d391ed4a2e0dfd66113d4",
+      "freshCandidateCount": 24,
       "assessedCount": 24,
-      "keptCount": 3,
-      "rejectedCount": 2,
+      "selectedCount": 8,
+      "freshSelectedCount": 8,
+      "keptCount": 8,
+      "freshKeptCount": 8,
+      "rejectedCount": 0,
+      "freshRejectedCount": 0,
+      "rejectedSelected": [],
+      "eligibleFreshCandidateCount": 45,
+      "unassessedFreshCandidateCount": 21,
+      "currentDayResolved": false,
       "mode": "model",
       "complete": true,
-      "reason": "2 selected event(s) quarantined by the copy gate"
+      "reason": "the current-day candidate ledger was not fully resolved"
     }
   },
   "events": [
+    {
+      "id": "n-agust-n-carstens-aboga-por-una-integraci-n-inteligen-2026-08-27",
+      "date": "2026-08-27",
+      "section": "us-mexico",
+      "title": "Banxico chief calls for smart integration in US-Mexico-Canada trade deal review",
+      "why": "Agustín Carstens, former Banxico governor, warned that North American countries' response to the trade deal review should avoid fragmentation, weighing in on the core renegotiation framework.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/08/27/agustin-carstens-aboga-por-una-integracion-inteligente-en-revision-del-t-mec/",
+      "importance": 10,
+      "kind": "event",
+      "publishedAt": "2026-08-27T20:35:57.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Agustín Carstens aboga por una ‘integración inteligente’ en revisión del T-MEC",
+        "dek": "Carstens consideró que la respuesta de los países de Norteamérica bajo el T-MEC no debe ser la fragmentación comercial."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/27/agustin-carstens-aboga-por-una-integracion-inteligente-en-revision-del-t-mec/",
+          "publishedAt": "2026-08-27T20:35:57.000Z",
+          "date": "2026-08-27",
+          "title": "Banxico chief calls for smart integration in US-Mexico-Canada trade deal review",
+          "summary": "Agustín Carstens, former Banxico governor, warned that North American countries' response to the trade deal review should avoid fragmentation, weighing in on the core renegotiation framework."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 10,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-m-xico-pierde-empleos-formales-y-suma-m-s-de-1-mill--2026-08-27",
+      "date": "2026-08-27",
+      "section": "economy",
+      "title": "Mexico loses formal jobs and adds over 1 million informal workers",
+      "why": "Mexico's informal workforce grew by 1.084 million workers in a single month as the country shed formal employment, a record tracking labor market deterioration.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/mexico-pierde-empleos-formales-y-suma-mas-de-1-millon-en-la-informalidad/",
+      "importance": 9,
+      "kind": "event",
+      "publishedAt": "2026-08-27T16:12:46.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México pierde empleos formales y suma más de 1 millón en la informalidad",
+        "dek": "La población ocupada en la informalidad registró un incremento mensual de 1.084 millones de trabajadores en el mercado laboral de México. La publicación México pierde empleos formales y suma más de 1 millón en la informalidad apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/mexico-pierde-empleos-formales-y-suma-mas-de-1-millon-en-la-informalidad/",
+          "publishedAt": "2026-08-27T16:12:46.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico loses formal jobs and adds over 1 million informal workers",
+          "summary": "Mexico's informal workforce grew by 1.084 million workers in a single month as the country shed formal employment, a record tracking labor market deterioration."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 9,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
+      "date": "2026-08-27",
+      "section": "money",
+      "title": "Mexico banking regulators ease cap on card payment fees",
+      "why": "Banxico and CNBV reduced the fee ceiling for banks processing card transactions, with the credit rate set at 1.3 percent. The new proposal represents a smaller reduction than initially suggested.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
+      "importance": 9,
+      "kind": "event",
+      "publishedAt": "2026-08-27T15:00:34.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Banxico y CNBV suavizan tope a cuotas de bancos por pagos con tarjeta; crédito queda en 1.3%",
+        "dek": "El nuevo anteproyecto elaborado por Banxico y la CNBV implica una reducción, aunque menor a la que se sugería en un principio. La publicación Banxico y CNBV suavizan tope a cuotas de bancos por pagos con tarjeta; crédito queda en 1.3% apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
+          "publishedAt": "2026-08-27T15:00:34.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico banking regulators ease cap on card payment fees",
+          "summary": "Banxico and CNBV reduced the fee ceiling for banks processing card transactions, with the credit rate set at 1.3 percent. The new proposal represents a smaller reduction than initially suggested."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 9,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-sheinbaum-pide-a-velasco-insistir-ante-rubio-por-mue-2026-08-27",
+      "date": "2026-08-27",
+      "section": "us-mexico",
+      "title": "Sheinbaum asks foreign minister to press US on Mexican deaths in detention",
+      "why": "Mexico's president instructed the foreign minister to push the US State Department on deaths of Mexican nationals in US immigration detention and custody centers, part of an ongoing diplomatic complaint.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/2708/mexico/sheinbaum-pide-a-velasco-insistir-ante-rubio-por-muertes-de-mexicanos-en-ee-uu/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-27T18:54:20.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Sheinbaum pide a Velasco insistir ante Rubio por muertes de mexicanos en EE.UU.",
+        "dek": "México ha presentado denuncias ante autoridades de EE.UU. por muertes de connacionales en detenciones y centros de custodia migratoria."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2708/mexico/sheinbaum-pide-a-velasco-insistir-ante-rubio-por-muertes-de-mexicanos-en-ee-uu/",
+          "publishedAt": "2026-08-27T18:54:20.000Z",
+          "date": "2026-08-27",
+          "title": "Sheinbaum asks foreign minister to press US on Mexican deaths in detention",
+          "summary": "Mexico's president instructed the foreign minister to push the US State Department on deaths of Mexican nationals in US immigration detention and custody centers, part of an ongoing diplomatic complaint."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-deer-park-reporta-ganancias-por-13-900-mdp-mientras--2026-08-27",
+      "date": "2026-08-27",
+      "section": "money",
+      "title": "Deer Park posts first-half profit as Pemex absorbs fuel support costs",
+      "why": "Deer Park recorded gains during the first half of 2026 by selling gasoline and diesel at elevated prices. Pemex faced financial strain from providing subsidies to fuel wholesalers during the same period.",
+      "company": "Deer Park",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/deer-park-reporta-ganancias-por-13900-mdp-mientras-pemex-registra-perdidas/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-27T08:00:15.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Deer Park reporta ganancias por 13,900 mdp mientras Pemex registra pérdidas",
+        "dek": "Mientras que Deer Park aprovechó los altos precios de la gasolina y el diésel al cierre del primer semestre de 2026, para Pemex significaron una carga financiera al absorber los apoyos dados a los mayoristas. La publicación Deer Park reporta ganancias por 13,900 mdp mientras Pemex registra pérdidas apareció primero en"
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/deer-park-reporta-ganancias-por-13900-mdp-mientras-pemex-registra-perdidas/",
+          "publishedAt": "2026-08-27T08:00:15.000Z",
+          "date": "2026-08-27",
+          "title": "Deer Park posts first-half profit as Pemex absorbs fuel support costs",
+          "summary": "Deer Park recorded gains during the first half of 2026 by selling gasoline and diesel at elevated prices. Pemex faced financial strain from providing subsidies to fuel wholesalers during the same period."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-adeudos-de-pemex-ahogan-al-transporte-mar-timo-la-in-2026-08-27",
+      "date": "2026-08-27",
+      "section": "money",
+      "title": "Pemex payment arrears strain maritime transport operators",
+      "why": "Members of Mexico's maritime transport chamber face unpaid bills from Pemex that complicate fleet modernization investment, a direct constraint on energy sector logistics.",
+      "company": "Pemex",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/adeudos-de-pemex-ahogan-al-transporte-maritimo-la-industria-se-ve-presionada-para-renovar-su-flota/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-27T19:10:21.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Adeudos de Pemex ‘ahogan’ al transporte marítimo: la industria se ve presionada para renovar su flota",
+        "dek": "Integrantes de la Cameintram están en la lista de proveedores con pagos pendientes por parte de Pemex, lo que dificulta sus inversiones. La publicación Adeudos de Pemex ‘ahogan’ al transporte marítimo: la industria se ve presionada para renovar su flota apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/adeudos-de-pemex-ahogan-al-transporte-maritimo-la-industria-se-ve-presionada-para-renovar-su-flota/",
+          "publishedAt": "2026-08-27T19:10:21.000Z",
+          "date": "2026-08-27",
+          "title": "Pemex payment arrears strain maritime transport operators",
+          "summary": "Members of Mexico's maritime transport chamber face unpaid bills from Pemex that complicate fleet modernization investment, a direct constraint on energy sector logistics."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-sheinbaum-presenta-iniciativa-para-eliminar-doble-na-2026-08-27",
+      "date": "2026-08-27",
+      "section": "politics",
+      "title": "Sheinbaum proposes constitutional reform to bar dual citizens from presidency and governorships",
+      "why": "Mexico's president introduced a draft constitutional reform requiring anyone holding another citizenship to renounce it before serving as president or governor and blocking dual citizenship holders during their term.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/2708/mexico/sheinbaum-presenta-iniciativa-para-eliminar-doble-nacionalidad-de-presidentes-y-gobernadores/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-27T14:07:18.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Sheinbaum presenta iniciativa para eliminar doble nacionalidad de presidentes y gobernadores",
+        "dek": "La reforma plantea que quienes ya posean otra ciudadanía acrediten su renuncia y fija restricciones durante el ejercicio del cargo."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2708/mexico/sheinbaum-presenta-iniciativa-para-eliminar-doble-nacionalidad-de-presidentes-y-gobernadores/",
+          "publishedAt": "2026-08-27T14:07:18.000Z",
+          "date": "2026-08-27",
+          "title": "Sheinbaum proposes constitutional reform to bar dual citizens from presidency and governorships",
+          "summary": "Mexico's president introduced a draft constitutional reform requiring anyone holding another citizenship to renounce it before serving as president or governor and blocking dual citizenship holders during their term."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-developers-seek-semarnat-permits-for-1-2gw-clean-ene-2026-08-27",
+      "date": "2026-08-27",
+      "section": "economy",
+      "title": "Private developers submit permits for 1.2 gigawatts of renewable energy to environment ministry",
+      "why": "Private renewable energy developers filed Environmental Impact Statements with Mexico's environment ministry for over 1.2 gigawatts of solar and wind capacity, signaling new utility-scale clean energy investment.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/energy/news/developers-seek-semarnat-permits-12gw-clean-energy",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-27T16:22:08.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Developers Seek SEMARNAT Permits for 1.2GW Clean Energy",
+        "dek": "Private renewable energy developers submitted Regional Environmental Impact Statements (MIA-R) to SEMARNAT for over 1.2GW of solar and wind proposals across Mexico, signaling a new wave of utility-scale permit applications undergoing federal review. A major trend across the submissions is the direct integration of Batt"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/energy/news/developers-seek-semarnat-permits-12gw-clean-energy",
+          "publishedAt": "2026-08-27T16:22:08.000Z",
+          "date": "2026-08-27",
+          "title": "Private developers submit permits for 1.2 gigawatts of renewable energy to environment ministry",
+          "summary": "Private renewable energy developers filed Environmental Impact Statements with Mexico's environment ministry for over 1.2 gigawatts of solar and wind capacity, signaling new utility-scale clean energy investment."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
     {
       "id": "n-mexican-ranchers-prepare-to-resume-livestock-sales-t-2026-08-24",
       "date": "2026-08-26",
@@ -4116,550 +4668,6 @@
           "url": "https://www.federalregister.gov/documents/2026/03/10/2026-04641/geographic-targeting-order-imposing-recordkeeping-and-reporting-requirements-on-certain-money"
         }
       ]
-    },
-    {
-      "id": "n-m-xico-realiza-m-s-importaciones-desde-econom-as-eme-2026-08-11",
-      "date": "2026-08-11",
-      "section": "economy",
-      "title": "Mexico imports more from emerging Asian economies than from United States",
-      "why": "Mexico's accumulated imports from China, Taiwan, Vietnam, and Malaysia exceed imports from the United States, despite recent tariff pressures.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/mexico-realiza-mas-importaciones-desde-economias-emergentes-de-asia-que-de-estados-unidos/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-11T20:50:12.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "México realiza más importaciones desde economías emergentes de Asia que de Estados Unidos",
-        "dek": "A pesar de los aranceles, las importaciones acumuladas de México desde China, Taiwán, Vietnam y Malasia fueron mayores frente a las de EU. La publicación México realiza más importaciones desde economías emergentes de Asia que de Estados Unidos apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/mexico-realiza-mas-importaciones-desde-economias-emergentes-de-asia-que-de-estados-unidos/",
-          "publishedAt": "2026-08-11T20:50:12.000Z",
-          "date": "2026-08-11",
-          "title": "Mexico imports more from emerging Asian economies than from United States",
-          "summary": "Mexico's accumulated imports from China, Taiwan, Vietnam, and Malaysia exceed imports from the United States, despite recent tariff pressures."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 2,
-        "durability": 1,
-        "officialness": 0
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-omar-garc-a-harfuch-gana-confianza-en-washington-eu--2026-08-11",
-      "date": "2026-08-11",
-      "section": "us-mexico",
-      "title": "Interior Security Minister Omar García Harfuch gains confidence in Washington, bolsters bilateral ties",
-      "why": "García Harfuch has strengthened US officials' confidence in his role as Interior Security Minister and improved Mexico-US bilateral relations.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/actualidad/omar-garcia-harfuch-gana-confianza-en-washington-eu-respalda-su-papel-en-la-relacion-bilateral/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-11T17:24:39.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Omar García Harfuch gana confianza en Washington; EU respalda su papel en la relación bilateral",
-        "dek": "Omar García Harfuch ha ganado confianza de funcionarios en Estados Unidos, al tiempo en que ha ayudado a mejorar la relación bilateral. La publicación Omar García Harfuch gana confianza en Washington; EU respalda su papel en la relación bilateral apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/actualidad/omar-garcia-harfuch-gana-confianza-en-washington-eu-respalda-su-papel-en-la-relacion-bilateral/",
-          "publishedAt": "2026-08-11T17:24:39.000Z",
-          "date": "2026-08-11",
-          "title": "Interior Security Minister Omar García Harfuch gains confidence in Washington, bolsters bilateral ties",
-          "summary": "García Harfuch has strengthened US officials' confidence in his role as Interior Security Minister and improved Mexico-US bilateral relations."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-contra-r-publica-exportaciones-de-aguacate-mexicano--2026-08-11",
-      "date": "2026-08-11",
-      "section": "economy",
-      "title": "Mexican avocado exports fall 25 percent in first half of 2026 amid US suspension risk",
-      "why": "Mexican avocado exports dropped nearly 25 percent in the first six months of 2026. Beyond the temporary US suspension, persistent export decline reflects both market pressure and the security threat that triggered the ban.",
-      "company": "",
-      "source": "Grupo Consultor de Mercados Agrícolas",
-      "url": "https://gcma.com.mx/contra-republica-exportaciones-de-aguacate-mexicano-caen-25-en-primer-semestre-de-2026/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-11T15:41:21.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Contra Républica: Exportaciones de aguacate mexicano caen 25% en primer semestre de 2026",
-        "dek": "ContraRéplica | 11 de agosto de 2026. El aguacate mexicano enfrenta un escenario complicado: además de la suspensión temporal de envíos a Estados Unidos, las exportaciones registraron una caída de casi 25% durante la primera mitad de 2026, según cifras del Grupo Consultor de Mercados Agrícolas (GCMA). Entre enero y jun"
-      },
-      "coverage": [
-        {
-          "source": "Grupo Consultor de Mercados Agrícolas",
-          "url": "https://gcma.com.mx/contra-republica-exportaciones-de-aguacate-mexicano-caen-25-en-primer-semestre-de-2026/",
-          "publishedAt": "2026-08-11T15:41:21.000Z",
-          "date": "2026-08-11",
-          "title": "Mexican avocado exports fall 25 percent in first half of 2026 amid US suspension risk",
-          "summary": "Mexican avocado exports dropped nearly 25 percent in the first six months of 2026. Beyond the temporary US suspension, persistent export decline reflects both market pressure and the security threat that triggered the ban."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-perros-deben-pasar-inspecci-n-contra-gusano-barrenad-2026-08-11",
-      "date": "2026-08-11",
-      "section": "us-mexico",
-      "title": "US-Mexico border inspection protocol added for dogs crossing frontier",
-      "why": "New agreement requires dogs crossing the Mexico-US border to pass inspection for screwworm parasite, aimed at strengthening control measures in both countries.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/1108/mexico/perros-deben-pasar-inspeccion-contra-gusano-barrenador-para-cruzar-la-frontera-mexico-ee-uu/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-12T00:55:26.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Perros deben pasar inspección contra gusano barrenador para cruzar la frontera México-EE. UU.",
-        "dek": "Dicho acuerdo \"está orientado a fortalecer las medidas de control del GBG en ambos países\", señaló la dependencia."
-      },
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/1108/mexico/perros-deben-pasar-inspeccion-contra-gusano-barrenador-para-cruzar-la-frontera-mexico-ee-uu/",
-          "publishedAt": "2026-08-12T00:55:26.000Z",
-          "date": "2026-08-11",
-          "title": "US-Mexico border inspection protocol added for dogs crossing frontier",
-          "summary": "New agreement requires dogs crossing the Mexico-US border to pass inspection for screwworm parasite, aimed at strengthening control measures in both countries."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-cfe-calificados-signs-ppa-for-cip-s-la-esperanza-sol-2026-08-11",
-      "date": "2026-08-11",
-      "section": "economy",
-      "title": "CFE Calificados signs power purchase agreement for La Esperanza Solar project",
-      "why": "CFE Calificados executed a long-term power contract for Copenhagen Infrastructure Partners' US$510 million La Esperanza Solar project in Campeche, combining 420 MW of photovoltaic generation with battery storage.",
-      "company": "Copenhagen Infrastructure Partners",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/energy/news/cfe-calificados-signs-ppa-cips-la-esperanza-solar",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-12T00:18:15.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "CFE Calificados Signs PPA for CIP's La Esperanza Solar",
-        "dek": "CFE Calificados signed a long-term coverage contract for Copenhagen Infrastructure Partners’ US$510 million La Esperanza Solar project in Campeche, combining 420 MW of photovoltaic generation with a 150 MW / 750 MWh battery storage system. The agreement secures revenue predictability to advance construction on the SENE"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/energy/news/cfe-calificados-signs-ppa-cips-la-esperanza-solar",
-          "publishedAt": "2026-08-12T00:18:15.000Z",
-          "date": "2026-08-11",
-          "title": "CFE Calificados signs power purchase agreement for La Esperanza Solar project",
-          "summary": "CFE Calificados executed a long-term power contract for Copenhagen Infrastructure Partners' US$510 million La Esperanza Solar project in Campeche, combining 420 MW of photovoltaic generation with battery storage."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-china-imposes-a-tariff-of-up-to-52-on-mexican-pecans-2026-08-11",
-      "date": "2026-08-11",
-      "section": "economy",
-      "title": "China imposes up to 52 percent provisional tariff on Mexican pecans",
-      "why": "China has announced provisional anti-dumping duties on pecan imports from Mexico and the United States.",
-      "company": "",
-      "source": "MEXICONOW",
-      "url": "https://mexico-now.com/china-imposes-a-tariff-of-up-to-52-on-mexican-pecans/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-11T14:54:32.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "China imposes a tariff of up to 52% on Mexican pecans.",
-        "dek": "China has announced the imposition of provisional anti-dumping duties on pecan imports from Mexico and the United States. Tariffs have..."
-      },
-      "coverage": [
-        {
-          "source": "MEXICONOW",
-          "url": "https://mexico-now.com/china-imposes-a-tariff-of-up-to-52-on-mexican-pecans/",
-          "publishedAt": "2026-08-11T14:54:32.000Z",
-          "date": "2026-08-11",
-          "title": "China imposes up to 52 percent provisional tariff on Mexican pecans",
-          "summary": "China has announced provisional anti-dumping duties on pecan imports from Mexico and the United States."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 0,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-sat-dif-cilmente-alcanzar-la-meta-de-recaudaci-n-de--2026-08-11",
-      "date": "2026-08-11",
-      "section": "money",
-      "title": "Mexico tax authority unlikely to meet 5.838 billion peso collection target this year",
-      "why": "Analysts doubt the SAT will reach its 2026 tax collection target of 5.838 billion pesos, citing weakness in employment and declines in income tax collections.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/sat-dificilmente-alcanzara-la-meta-de-recaudacion-de-impuestos-este-ano/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-11T08:00:43.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "SAT difícilmente alcanzará la meta de recaudación de impuestos este año",
-        "dek": "Analistas dudan que el SAT cumpla con su meta de recaudación de 5.838 bdp este año ante la debilidad del empleo y la caída en cobro del ISR. La publicación SAT difícilmente alcanzará la meta de recaudación de impuestos este año apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/sat-dificilmente-alcanzara-la-meta-de-recaudacion-de-impuestos-este-ano/",
-          "publishedAt": "2026-08-11T08:00:43.000Z",
-          "date": "2026-08-11",
-          "title": "Mexico tax authority unlikely to meet 5.838 billion peso collection target this year",
-          "summary": "Analysts doubt the SAT will reach its 2026 tax collection target of 5.838 billion pesos, citing weakness in employment and declines in income tax collections."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-m-xico-m-xico-supera-el-promedio-mundial-en-uso-mult-2026-08-11",
-      "date": "2026-08-11",
-      "section": "economy",
-      "title": "Mexico's ChatGPT users lead global average in multimedia content generation at 10 percent of messages",
-      "why": "About 10 percent of messages sent from Mexico to ChatGPT during the second quarter of 2026 were devoted to generating, analyzing or retrieving multimedia content, exceeding the global average.",
-      "company": "",
-      "source": "DPL News",
-      "url": "https://dplnews.com/mexico-mexico-supera-el-promedio-mundial-en-uso-multimedia-de-chatgpt-con-cerca-de-10-de-los-mensajes/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-11T17:59:35.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "México | México supera el promedio mundial en uso multimedia de ChatGPT con cerca de 10% de los mensajes",
-        "dek": "El Economista Cerca de 10% de los mensajes enviados desde México a ChatGPT durante el segundo trimestre de 2026 estuvo dedicado a generar, analizar o recuperar contenido multimedia, frente a un promedio mundial de 7.8%, según los primeros datos país por país publicados por OpenAI sobre el uso de su plataforma. México s"
-      },
-      "coverage": [
-        {
-          "source": "DPL News",
-          "url": "https://dplnews.com/mexico-mexico-supera-el-promedio-mundial-en-uso-multimedia-de-chatgpt-con-cerca-de-10-de-los-mensajes/",
-          "publishedAt": "2026-08-11T17:59:35.000Z",
-          "date": "2026-08-11",
-          "title": "Mexico's ChatGPT users lead global average in multimedia content generation at 10 percent of messages",
-          "summary": "About 10 percent of messages sent from Mexico to ChatGPT during the second quarter of 2026 were devoted to generating, analyzing or retrieving multimedia content, exceeding the global average."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 1,
-        "officialness": 0
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
     }
   ]
 }
