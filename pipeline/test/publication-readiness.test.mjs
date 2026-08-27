@@ -29,6 +29,17 @@ assert.equal(complete.publish, true);
 assert.equal(complete.storyCount, 1);
 assert.equal(complete.todayCount, 1);
 
+const factualFromBoundedReview = publicationReadiness({
+  meta: { editorialDate: '2026-08-17', selection: { policy: 'exact-day-plus-carryover-v1' } },
+  lead: { headline: 'A selected current-day fact', lane: 'today', date: '2026-08-17' },
+  items: [],
+}, '2026-08-17', { curation: {
+  policy: 'edition-window-assessment-v2', currentDayResolved: false,
+  freshKeptCount: 8, freshRejectedCount: 0, unassessedFreshCandidateCount: 21,
+} });
+assert.equal(factualFromBoundedReview.publish, true,
+  'ledger completeness is an empty-edition requirement, not a reason to suppress accepted facts');
+
 const carryoverOnly = publicationReadiness({
   meta: { editorialDate: '2026-08-18', selection: { policy: 'exact-day-plus-carryover-v1' } },
   lead: { headline: 'Yesterday remains important', lane: 'key-development', date: '2026-08-17' },

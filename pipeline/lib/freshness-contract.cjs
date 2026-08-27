@@ -24,7 +24,11 @@ function curationReadiness(receipt, editorialDate, options = {}) {
     if (Number(receipt.freshSelectedCount) !== Number(receipt.freshKeptCount) + Number(receipt.freshRejectedCount)) {
       return { ok: false, legacy: false, reason: 'current-day selected-report accounting does not reconcile' };
     }
-    if (Number(receipt.unassessedFreshCandidateCount) > 0) {
+    // An exhaustive current-day ledger is required before claiming a quiet day. It is
+    // not required to publish factual stories that did clear the bounded review. The
+    // final Brief gate below owns the stricter empty-edition invariant.
+    if (Number(receipt.unassessedFreshCandidateCount) > 0
+        && Number(receipt.freshKeptCount) === 0) {
       return { ok: false, legacy: false, reason: `${Number(receipt.unassessedFreshCandidateCount)} current-day candidate(s) did not enter the bounded assessment` };
     }
     if (Number(receipt.freshRejectedCount) > 0) {
@@ -35,7 +39,7 @@ function curationReadiness(receipt, editorialDate, options = {}) {
         && Number(receipt.freshKeptCount) === 0) {
       return { ok: false, legacy: false, reason: 'fresh reporting exists but could not be resolved without the model' };
     }
-    if (receipt.currentDayResolved !== true) {
+    if (receipt.currentDayResolved !== true && Number(receipt.freshKeptCount) === 0) {
       return { ok: false, legacy: false, reason: clean(receipt.reason) || 'the current-day candidate ledger is unresolved' };
     }
   }

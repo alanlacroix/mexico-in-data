@@ -79,6 +79,16 @@ assert.match(result.reason, /did not enter/);
 
 result = curationReadiness({
   policy: 'edition-window-assessment-v2', editorialDate: '2026-08-14', complete: true,
+  mode: 'model', freshCandidateCount: 24, eligibleFreshCandidateCount: 45,
+  selectedCount: 8, keptCount: 8, rejectedCount: 0,
+  freshSelectedCount: 8, freshKeptCount: 8,
+  unassessedFreshCandidateCount: 21, freshRejectedCount: 0, currentDayResolved: false,
+}, '2026-08-14');
+assert.equal(result.ok, true,
+  'accepted current-day facts may publish even when lower-priority reporting remains outside the bounded batch');
+
+result = curationReadiness({
+  policy: 'edition-window-assessment-v2', editorialDate: '2026-08-14', complete: true,
   freshCandidateCount: 5, eligibleFreshCandidateCount: 5,
   selectedCount: 1, keptCount: 1, rejectedCount: 0,
   freshSelectedCount: 1, freshKeptCount: 1,

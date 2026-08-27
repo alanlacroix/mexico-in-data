@@ -69,6 +69,10 @@ for (let i = 0; i < dailyBrief.stories.length; i += 1) {
 if (dailyBrief.stories.length) {
   assert.ok(dailyBrief.summaryLead && dailyBrief.summaryLead.trim().length >= 40,
     'a populated edition must contain a substantive summary');
+} else if (dailyBrief.publicationInterrupted || dailyBrief.carryingLastBrief) {
+  assert.match(dailyBrief.summaryLead, /update is delayed/i,
+    'an interrupted edition must report the outage instead of making a quiet-day claim');
+  assert.doesNotMatch(dailyBrief.summaryLead, /No major developments/i);
 } else {
   assert.equal(dailyBrief.summaryLead, 'No major developments yet today.',
     'an empty edition must be explicit, current, and concise');
