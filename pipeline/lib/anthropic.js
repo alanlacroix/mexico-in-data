@@ -56,6 +56,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const MONTHLY_CAP_USD = 6.0;
+// Alan approved a one-time refresh for the final days of August after repeated
+// migration runs consumed the original allowance. Keep the exception explicit and
+// expiring: September and every later month remain at the normal $6 ceiling.
+const MONTHLY_CAP_EXCEPTIONS = { '2026-08': 6.10 };
 // Preserve most of the small budget for the two jobs that define the product:
 // selecting the Brief and explaining its top stories. Translation, topic synthesis
 // and other fail-soft polish stop first. This changes allocation, never Alan's cap.
@@ -98,7 +102,8 @@ function settle(costUSD) {
   try { fs.writeFileSync(LEDGER, `${JSON.stringify(ledger, null, 1)}\n`); } catch { /* read-only fs: skip */ }
 }
 function budgetLimit(priority = 'standard') {
-  return priority === 'core' ? MONTHLY_CAP_USD : MONTHLY_CAP_USD - CORE_RESERVE_USD;
+  const cap = MONTHLY_CAP_EXCEPTIONS[monthKey()] || MONTHLY_CAP_USD;
+  return priority === 'core' ? cap : Math.round((cap - CORE_RESERVE_USD) * 1e6) / 1e6;
 }
 function overBudget(priority = 'standard') {
   if (process.env.LLM_BUDGET_OVERRIDE) return false;

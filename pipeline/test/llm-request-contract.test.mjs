@@ -25,11 +25,15 @@ const { askJSON, budgetStatus, models } = await import('../lib/anthropic.js');
 
 assert.ok(budgetStatus('core').limitUSD > budgetStatus('standard').limitUSD,
   'the fixed monthly cap must reserve budget for ranking and selected-story analysis');
-assert.equal(budgetStatus('core').limitUSD, 6, 'the total monthly ceiling must be exactly $6');
-assert.equal(budgetStatus('standard').limitUSD, 3, 'half the ceiling must remain reserved for the Brief');
+assert.equal(budgetStatus('core').limitUSD, 6.1, 'the approved August-only refresh must remain narrowly bounded');
+assert.equal(budgetStatus('standard').limitUSD, 3.1, 'the August exception must not consume the Brief reserve');
 assert.equal(budgetStatus('core').pacedLimitUSD, budgetStatus('core').limitUSD,
   'the late-August increase must be usable immediately without falsifying prior spend');
 assert.equal(budgetStatus('core').period, '2026-08');
+process.env.LLM_BUDGET_DATE = '2026-09-10T12:00:00Z';
+assert.equal(budgetStatus('core').limitUSD, 6, 'the normal ceiling must return to exactly $6 in September');
+assert.equal(budgetStatus('standard').limitUSD, 3, 'the normal $3 core reserve must return in September');
+process.env.LLM_BUDGET_DATE = '2026-08-10T12:00:00Z';
 
 await askJSON({ system: 's', user: 'u', effort: 'low', model: models.HAIKU });
 assert.equal(sent.at(-1).model, 'claude-haiku-4-5');
