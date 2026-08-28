@@ -59,7 +59,7 @@ const MONTHLY_CAP_USD = 6.0;
 // Alan approved a one-time refresh for the final days of August after repeated
 // migration runs consumed the original allowance. Keep the exception explicit and
 // expiring: September and every later month remain at the normal $6 ceiling.
-const MONTHLY_CAP_EXCEPTIONS = { '2026-08': 6.10 };
+const MONTHLY_CAP_EXCEPTIONS = { '2026-08': 6.25 };
 // Preserve most of the small budget for the two jobs that define the product:
 // selecting the Brief and explaining its top stories. Translation, topic synthesis
 // and other fail-soft polish stop first. This changes allocation, never Alan's cap.

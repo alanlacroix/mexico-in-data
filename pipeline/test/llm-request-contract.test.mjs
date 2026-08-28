@@ -25,8 +25,8 @@ const { askJSON, budgetStatus, models } = await import('../lib/anthropic.js');
 
 assert.ok(budgetStatus('core').limitUSD > budgetStatus('standard').limitUSD,
   'the fixed monthly cap must reserve budget for ranking and selected-story analysis');
-assert.equal(budgetStatus('core').limitUSD, 6.1, 'the approved August-only refresh must remain narrowly bounded');
-assert.equal(budgetStatus('standard').limitUSD, 3.1, 'the August exception must not consume the Brief reserve');
+assert.equal(budgetStatus('core').limitUSD, 6.25, 'the approved August-only refresh must remain narrowly bounded');
+assert.equal(budgetStatus('standard').limitUSD, 3.25, 'the August exception must not consume the Brief reserve');
 assert.equal(budgetStatus('core').pacedLimitUSD, budgetStatus('core').limitUSD,
   'the late-August increase must be usable immediately without falsifying prior spend');
 assert.equal(budgetStatus('core').period, '2026-08');
