@@ -59,14 +59,26 @@ assert.match(happeningBuilder, /for \(const target of researchTargets\)[\s\S]*we
   'a selected non-official story without local context may get one bounded primary-record search');
 assert.match(happeningBuilder, /const hasLocalContext[\s\S]*researchTargets = fetched\.filter[\s\S]*!hasLocalContext\(item\.e\)/,
   'stories that already have relevant official or independent context must not buy a redundant search');
+assert.match(happeningBuilder, /retainedPrimary[\s\S]*source: sourceHost\(source\.url\), title: sourceHost\(source\.url\)[\s\S]*!item\.research\.length/,
+  'a version migration must re-fetch a verified primary URL without rebuying search or trusting an old generated label');
+assert.doesNotMatch(happeningBuilder, /retainedPrimary[\s\S]{0,500}title: stripDashWs\(source\.source\)/,
+  'poisoned labels from an older analysis version must never enter retained primary evidence text');
 assert.match(happeningBuilder, /searched\.find\(\(source\) => sourceKey\(source\.url\) === sourceKey\(proposed\.url\)\)/,
   'a model-returned research URL must have appeared in the provider search results');
 assert.match(happeningBuilder, /primaryResearchUrl\(source\.url\)/,
   'research must resolve to a government, regulator, international body, or corporate filing page');
 assert.match(happeningBuilder, /field === 'background'[\s\S]*contextualEvidence/,
   'Background must establish context from evidence beyond the original article');
-assert.doesNotMatch(happeningBuilder, /auditCompleted|independent evidence editor/,
-  'a redundant second model audit must not delete a complete evidence-gated explanation');
+assert.equal((happeningBuilder.match(/await auditCompletedOnce\(\)/g) || []).length, 1,
+  'completed panels must receive exactly one semantic evidence audit after drafting and repair');
+assert.match(happeningBuilder, /if \(firstReturned \|\| retryReturned\) await auditCompletedOnce\(\)/,
+  'the semantic audit must run once after the bounded drafting retry, not after both drafts');
+assert.doesNotMatch(happeningBuilder, /independentContext\s*:/,
+  'semantic audit must receive only the exact evidence cited by each field');
+assert.match(happeningBuilder, /target\.research\.push\(\{[\s\S]*source: sourceHost\(source\.url\),[\s\S]*title: sourceHost\(source\.url\)/,
+  'a newly discovered primary must use its verified host as its evidence label and title');
+assert.doesNotMatch(happeningBuilder, /title: stripDashWs\(proposed\.title\)/,
+  'model-authored research titles must never enter the closed evidence set');
 assert.match(happeningBuilder, /rejectionsThisRun = new Map\(arr\(priorOutcomes\)[\s\S]*fields: rejectedFields/,
   'field-level failures must survive into one targeted recovery instead of collapsing to field-rejected');
 assert.match(happeningBuilder, /const analyzableIds = new Set[\s\S]*!analyzableIds\.has\(id\)[\s\S]*thin-evidence/,
@@ -118,6 +130,12 @@ assert.equal(lintAnalysisText({
   inputs: ['The regulator published a draft that would reduce the fee cap.'],
   role: 'background',
 }).ok, false, 'the shared analysis gate must not turn a draft into a completed action');
+assert.equal(lintAnalysisText({
+  text: 'If project delays accumulate, whether the company pivots to more borrowing.',
+  inputs: ['The company announced projects financed with private partners.'],
+  role: 'prediction',
+}).flags.includes('watch item is grammatically incomplete'), true,
+'a conditional followed by a dangling whether clause must not reach the public watch field');
 assert.equal(slopFlags({
   title: 'Mexico updates its governmental accounting rules',
   why: 'The Manual de Contabilidad Gubernamental de México sets the reporting structure.',

@@ -295,6 +295,7 @@ export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWor
     flags.push('announcement number has no denominator or useful comparison');
   }
   if (role === 'prediction') {
+    if (/^if\b[^.]{0,180},\s*whether\b/i.test(clean)) flags.push('watch item is grammatically incomplete');
     if (strictForecast) {
       // The public label is "What we're watching." A concrete next decision and the
       // observable fork it resolves is useful even when the sources do not support a

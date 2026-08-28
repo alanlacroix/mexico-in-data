@@ -664,7 +664,16 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
       summary: source.summary || '',
       result: await fetchArticle(source.url).catch(() => ({ ok: false, text: '' })),
     })));
-    return { e, r, secondary, research: [] };
+    // A policy migration may invalidate old prose without invalidating the primary URL
+    // it discovered. Re-fetch that record instead of paying to search for it again. The
+    // visible source name comes from the verified host, never a model-supplied label.
+    const retainedPrimary = arr(e.analysisSources)
+      .filter((source) => source?.kind === 'primary' && primaryResearchUrl(source.url)).slice(0, 1);
+    const research = await Promise.all(retainedPrimary.map(async (source) => ({
+      source: sourceHost(source.url), title: sourceHost(source.url), url: source.url,
+      result: await fetchArticle(source.url).catch(() => ({ ok: false, text: '' })),
+    })));
+    return { e, r, secondary, research: research.filter((source) => String(source.result.text || '').length >= 250) };
   }));
   const hasLocalContext = (event) => arr(event.coverage).some((source) => source.url && source.url !== event.url)
     || relevantStanding(event, standingFacts, 1).length > 0
@@ -679,11 +688,11 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
   // non-official article, fetch the record ourselves, and make it part of the closed
   // evidence set. Search finds the document; it never writes the analysis.
   const researchTargets = fetched.filter((item) => needsAnalysis(item.e)
-    && !primaryRecordUrl(item.e.url) && !hasLocalContext(item.e));
+    && !primaryRecordUrl(item.e.url) && !item.research.length && !hasLocalContext(item.e));
   if (researchTargets.length) {
     const researchSchema = { type: 'object', additionalProperties: false, required: ['source'], properties: { source: {
-      type: 'object', additionalProperties: false, required: ['url', 'source', 'title'], properties: {
-        url: { type: 'string' }, source: { type: 'string' }, title: { type: 'string' },
+      type: 'object', additionalProperties: false, required: ['url'], properties: {
+        url: { type: 'string' },
       },
     } } };
     // One small request per story is simpler and more dependable than asking one model
@@ -714,8 +723,8 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
         continue;
       }
       target.research.push({
-        source: stripDashWs(proposed.source) || sourceHost(source.url),
-        title: stripDashWs(proposed.title) || stripDashWs(source.title),
+        source: sourceHost(source.url),
+        title: sourceHost(source.url),
         url: source.url,
         result,
       });
@@ -981,14 +990,89 @@ ${BAN}`;
     return true;
   };
 
-  const first = await request(items, 'low', 3500);
+  // Deterministic gates catch numbers, stage words, shape, and source IDs; they cannot
+  // prove that a fluent mechanism actually follows from the cited prose. One compact
+  // semantic copy-desk pass therefore reviews only the completed units, after drafting
+  // and its bounded repair are finished. It never writes copy. A missing or failed
+  // review removes the field and persists the exact correction for the next run.
+  const auditSchema = { type: 'object', additionalProperties: false, required: ['reviews'], properties: { reviews: {
+    type: 'array', items: { type: 'object', additionalProperties: false,
+      required: ['i', 'ok', 'failures'], properties: {
+        i: { type: 'integer' }, ok: { type: 'boolean' }, failures: { type: 'array', items: {
+          type: 'object', additionalProperties: false, required: ['field', 'reason'], properties: {
+            field: { type: 'string', enum: CORE }, reason: { type: 'string' },
+          },
+        } },
+      },
+    },
+  } } };
+  const auditCompletedOnce = async () => {
+    const candidates = items.filter((item) => completed.has(item.e.id));
+    if (!candidates.length) return true;
+    const payload = { items: candidates.map((item) => {
+      const approved = approvedThisRun.get(item.e.id) || {};
+      const refs = approvedRefsThisRun.get(item.e.id) || {};
+      const byId = new Map(item.evidence.map((entry) => [entry.id, entry]));
+      return {
+        i: item.i,
+        headline: item.e.title,
+        summary: item.e.context || item.e.why || '',
+        fields: CORE.map((field) => ({
+          field, text: approved[field], refs: refs[field],
+          evidence: arr(refs[field]).map((id) => byId.get(id)).filter(Boolean),
+        })),
+      };
+    }) };
+    const result = await askJSON({
+      system: `You are the final evidence editor for Briefly Explained. Review every field claim by claim. You do not rewrite copy. Return ok true only when all three fields pass.
+- Every field must be clear, grammatical English made of complete sentences.
+- A reported fact, status, stage, actor, date, comparison, institutional role, and number must be directly supported by that field's cited evidence. A source link by itself proves nothing.
+- Background must accurately describe the independent context. Reject a source or institution name that disagrees with its URL or document.
+- View may make a narrow inference, but every new mechanism and tradeoff must follow from cited facts. Reject invented descriptions such as largest, monopoly, off-balance, higher-margin, deliberate cuts, preserved borrowing capacity, investor appetite, market-share effects, or management intent unless the cited evidence states the necessary facts.
+- Prediction must be grammatical and name a real next decision, release, milestone, or observable fork supported by evidence. Reject invented schedules, announcements, competitor behavior, motives, and forecasts. Distinguish an announced plan from an outcome and falling sales from a company choosing to cut sales.
+- Reject repetition that adds no context. For each failure name the field and one concrete correction. Return exactly one review for every input i and JSON only.`,
+      user: JSON.stringify(payload), schema: auditSchema,
+      maxTokens: Math.min(1800, 300 + candidates.length * 350),
+      model: models.HAIKU, priority: 'core',
+    });
+    const reviews = new Map(arr(result?.reviews).map((review) => [Number(review.i), review]));
+    let allPassed = true;
+    for (const item of candidates) {
+      const review = reviews.get(item.i);
+      const failures = arr(review?.failures).filter((failure) => CORE.includes(failure?.field));
+      if (review?.ok === true && failures.length === 0) continue;
+      allPassed = false;
+      const rejectedFields = failures.length ? [...new Set(failures.map((failure) => failure.field))] : CORE;
+      const approved = approvedThisRun.get(item.e.id) || {};
+      const refs = approvedRefsThisRun.get(item.e.id) || {};
+      for (const field of rejectedFields) {
+        const reasons = failures.filter((failure) => failure.field === field)
+          .map((failure) => stripDashWs(failure.reason)).filter(Boolean);
+        rememberRejection(item.e.id, field, reasons.length ? reasons : ['semantic evidence audit did not approve this field']);
+        delete approved[field];
+        delete refs[field];
+      }
+      approvedThisRun.set(item.e.id, approved);
+      approvedRefsThisRun.set(item.e.id, refs);
+      delete item.e.analysisV;
+      delete item.e.analysisRefs;
+      delete item.e.analysisSources;
+      for (const field of CORE) delete item.e[field];
+      if (completed.delete(item.e.id)) added = Math.max(0, added - 1);
+      console.warn(`  semantic evidence audit reject ${item.e.id}: ${rejectedFields.join(', ')}`);
+    }
+    return allPassed;
+  };
+
+  const first = await request(items, 'low', Math.min(3000, 500 + items.length * 850));
   const firstReturned = applyDraft(first, items);
   const retryItems = items.filter((item) => !completed.has(item.e.id));
   let retryReturned = false;
   if (retryItems.length && budgetStatus('core').available) {
     console.warn(`  analysis retry: ${retryItems.length} selected ${retryItems.length === 1 ? 'story' : 'stories'} did not clear all three fields`);
-    retryReturned = applyDraft(await request(retryItems, 'medium', 7000), retryItems);
+    retryReturned = applyDraft(await request(retryItems, 'medium', Math.min(3000, 400 + retryItems.length * 900)), retryItems);
   }
+  if (firstReturned || retryReturned) await auditCompletedOnce();
   if (!firstReturned && !retryReturned) console.warn('  analysis: no model result — selected stories remain unpublished');
   return {
     added,
