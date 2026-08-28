@@ -6,25 +6,25 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T14:55:22.928Z",
+    "generatedAt": "2026-08-28T15:33:27.254Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "2e43028f73454a990fab911577be216c9c324f839e79c1a7d82177a466d75646",
-      "freshCandidateCount": 12,
+      "candidateSig": "b7f99cbc20b6f36c651dee33822451426d7affeef586eebd52085b51af95f9b1",
+      "freshCandidateCount": 16,
       "assessedCount": 24,
-      "selectedCount": 3,
+      "selectedCount": 1,
       "freshSelectedCount": 0,
-      "keptCount": 2,
+      "keptCount": 0,
       "freshKeptCount": 0,
       "rejectedCount": 1,
       "freshRejectedCount": 0,
       "rejectedSelected": [
         {
           "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
-          "candidateIndex": 15,
+          "candidateIndex": 18,
           "date": "2026-08-27",
           "source": "El CEO",
           "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
@@ -33,7 +33,7 @@
           ]
         }
       ],
-      "eligibleFreshCandidateCount": 12,
+      "eligibleFreshCandidateCount": 16,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
@@ -41,38 +41,29 @@
       "reason": "1 selected event(s) quarantined by the copy gate"
     },
     "analysisTarget": {
-      "policy": "every-selected-story-evidence-locked-v4",
+      "policy": "every-selected-story-evidence-locked-v5",
       "ids": [
         "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
         "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
         "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28"
       ],
       "attempt": 1,
-      "added": 1,
+      "added": 2,
       "outcomes": [
         {
           "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
-          "ready": false,
-          "reason": "field-rejected",
-          "fields": {
-            "view": [
-              "unsupported number: 37.5"
-            ],
-            "prediction": [
-              "watch item has no observable next test"
-            ]
-          }
+          "ready": true,
+          "reason": "ready",
+          "fields": {}
         },
         {
           "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
           "ready": false,
           "reason": "field-rejected",
           "fields": {
-            "background": [
-              "unsupported number: 92"
-            ],
             "view": [
-              "3 evidence references (cap 2)"
+              "4 sentences (cap 3)",
+              "announcement number has no denominator or useful comparison"
             ]
           }
         },
@@ -160,7 +151,38 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 2
+      "imgTries": 3,
+      "background": "CFE, Latin America's largest electric utility and a state monopoly, must finance generation, transmission, and distribution infrastructure while maintaining a healthy balance sheet.",
+      "view": "CFE's dependence on private capital through off-balance structures shifts investment risk to partners and preserves the utility's borrowing capacity, but raises execution risk if private appetite cools or projects encounter delays. Investors gain exposure to power infrastructure, CFE retains operational control.",
+      "prediction": "CFE will announce whether the 52 generation projects, 175 transmission routes, and four distribution programs meet completion milestones on schedule. If project delays accumulate or private partners withdraw, whether CFE pivots to larger on-balance borrowing that would compress its debt ceiling.",
+      "analysisV": 10,
+      "analysisRefs": {
+        "background": [
+          "article",
+          "standing:std-energy-constraint"
+        ],
+        "view": [
+          "article"
+        ],
+        "prediction": [
+          "article",
+          "standing:std-energy-constraint"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "Bloomberg Línea",
+          "url": "https://bloomberglinea.com/latinoamerica/mexico/cfe-dependera-del-sector-privado-para-financiar-la-mayoria-de-sus-inversiones-con-sheinbaum/"
+        },
+        {
+          "id": "standing:std-energy-constraint",
+          "kind": "standing",
+          "source": "CENACE / U.S. EIA",
+          "url": "https://www.gob.mx/cenace"
+        }
+      ]
     },
     {
       "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
@@ -236,7 +258,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 2
+      "imgTries": 3
     },
     {
       "id": "n-aristegui-en-vivo-fernando-n-es-vinculado-a-proceso--2026-08-28",
@@ -385,43 +407,34 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
-      "imgTries": 2,
-      "background": "Mexican auto tariffs of 50% on imports from Japan push assemblers to choose between raising local prices, shifting sourcing to Mexico or North America, or importing Japanese-built vehicles and accepting the duty. Suzuki, a low-volume player in Mexico, faces this choice acutely.",
-      "view": "Suzuki raised imports from Japan while Mexico sales fell 18% in the first seven months of 2026, indicating the tariff forced a trade-off: ship higher-margin or tariff-exempt models from Japan rather than produce or assemble locally. Exiting the Baleno from the Mexican portfolio suggests the company is shifting away from price-sensitive segments where the 50% duty erodes profitability.",
-      "prediction": "Suzuki will announce its 2027 Mexico product and sourcing strategy, likely by the Paquete Económico 2027 delivery on 2026-09-08 or during auto-sector quarterly earnings. The observable test is whether it commits to local assembly of high-volume models to recover tariff ground or consolidates Mexico into a import-only market, which would signal acceptance of smaller volume.",
-      "analysisV": 9,
+      "imgTries": 3,
+      "background": "Mexico imposed a 50% tariff on automotive imports in response to trade friction, raising costs for foreign manufacturers who supply the Mexican market.",
+      "view": "Suzuki raised imports from Japan while cutting Mexican sales 18% in seven months, accepting tariff costs on higher-margin models to avoid local price increases that would shrink market share further. The tradeoff sacrifices volume for margin and signals that tariff pass-through pricing destroys demand faster than higher per-unit costs.",
+      "prediction": "Suzuki will drop the Baleno model from its Mexico lineup and shift inventory toward imported Swift and Jimny models. If competitors follow with similar import increases and local cuts, the tariff will have pushed Mexican assembly output lower despite intent to protect domestic production.",
+      "analysisV": 10,
       "analysisRefs": {
         "background": [
-          "article",
-          "standing:std-fiscal-path"
+          "primary:1"
         ],
         "view": [
-          "article",
-          "standing:std-fiscal-path"
+          "article"
         ],
         "prediction": [
-          "calendar:federal-budget-package-2027-2026-09-08",
           "article"
         ]
       },
       "analysisSources": [
         {
+          "id": "primary:1",
+          "kind": "primary",
+          "source": "Diario Oficial de la Federación (DOF)",
+          "url": "https://www.trade.gov/knowledge-product/mexico-import-tariffs"
+        },
+        {
           "id": "article",
           "kind": "article",
           "source": "Expansión, Empresas",
           "url": "https://expansion.mx/empresas/2026/08/28/suzuki-importara-mas-swift-jimny-japon-esquivar-arancel-50"
-        },
-        {
-          "id": "standing:std-fiscal-path",
-          "kind": "standing",
-          "source": "SHCP (Hacienda)",
-          "url": "https://www.gob.mx/hacienda"
-        },
-        {
-          "id": "calendar:federal-budget-package-2027-2026-09-08",
-          "kind": "calendar",
-          "source": "SHCP / LFPRH Art. 42",
-          "url": "https://www.diputados.gob.mx/LeyesBiblio/pdf/LFPRH.pdf"
         }
       ]
     },
