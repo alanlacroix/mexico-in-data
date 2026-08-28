@@ -6,25 +6,25 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T13:32:40.001Z",
+    "generatedAt": "2026-08-28T14:55:22.928Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "10efc82685eb9454d7e984193d3944b41ca5098b0af11e6558e05e68aae25fc3",
-      "freshCandidateCount": 13,
+      "candidateSig": "2e43028f73454a990fab911577be216c9c324f839e79c1a7d82177a466d75646",
+      "freshCandidateCount": 12,
       "assessedCount": 24,
-      "selectedCount": 8,
-      "freshSelectedCount": 5,
-      "keptCount": 7,
-      "freshKeptCount": 5,
+      "selectedCount": 3,
+      "freshSelectedCount": 0,
+      "keptCount": 2,
+      "freshKeptCount": 0,
       "rejectedCount": 1,
       "freshRejectedCount": 0,
       "rejectedSelected": [
         {
           "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
-          "candidateIndex": 18,
+          "candidateIndex": 15,
           "date": "2026-08-27",
           "source": "El CEO",
           "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
@@ -33,7 +33,7 @@
           ]
         }
       ],
-      "eligibleFreshCandidateCount": 13,
+      "eligibleFreshCandidateCount": 12,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
@@ -41,28 +41,46 @@
       "reason": "1 selected event(s) quarantined by the copy gate"
     },
     "analysisTarget": {
-      "policy": "every-selected-story-context-audited-v3",
+      "policy": "every-selected-story-evidence-locked-v4",
       "ids": [
         "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
         "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
         "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28"
       ],
-      "added": 0,
+      "attempt": 1,
+      "added": 1,
       "outcomes": [
         {
           "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
           "ready": false,
-          "reason": "field-rejected"
+          "reason": "field-rejected",
+          "fields": {
+            "view": [
+              "unsupported number: 37.5"
+            ],
+            "prediction": [
+              "watch item has no observable next test"
+            ]
+          }
         },
         {
           "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
           "ready": false,
-          "reason": "field-rejected"
+          "reason": "field-rejected",
+          "fields": {
+            "background": [
+              "unsupported number: 92"
+            ],
+            "view": [
+              "3 evidence references (cap 2)"
+            ]
+          }
         },
         {
           "id": "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28",
-          "ready": false,
-          "reason": "field-rejected"
+          "ready": true,
+          "reason": "ready",
+          "fields": {}
         }
       ]
     }
@@ -142,7 +160,7 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 1
+      "imgTries": 2
     },
     {
       "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
@@ -218,7 +236,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 1
+      "imgTries": 2
     },
     {
       "id": "n-aristegui-en-vivo-fernando-n-es-vinculado-a-proceso--2026-08-28",
@@ -367,7 +385,45 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
-      "imgTries": 1
+      "imgTries": 2,
+      "background": "Mexican auto tariffs of 50% on imports from Japan push assemblers to choose between raising local prices, shifting sourcing to Mexico or North America, or importing Japanese-built vehicles and accepting the duty. Suzuki, a low-volume player in Mexico, faces this choice acutely.",
+      "view": "Suzuki raised imports from Japan while Mexico sales fell 18% in the first seven months of 2026, indicating the tariff forced a trade-off: ship higher-margin or tariff-exempt models from Japan rather than produce or assemble locally. Exiting the Baleno from the Mexican portfolio suggests the company is shifting away from price-sensitive segments where the 50% duty erodes profitability.",
+      "prediction": "Suzuki will announce its 2027 Mexico product and sourcing strategy, likely by the Paquete Económico 2027 delivery on 2026-09-08 or during auto-sector quarterly earnings. The observable test is whether it commits to local assembly of high-volume models to recover tariff ground or consolidates Mexico into a import-only market, which would signal acceptance of smaller volume.",
+      "analysisV": 9,
+      "analysisRefs": {
+        "background": [
+          "article",
+          "standing:std-fiscal-path"
+        ],
+        "view": [
+          "article",
+          "standing:std-fiscal-path"
+        ],
+        "prediction": [
+          "calendar:federal-budget-package-2027-2026-09-08",
+          "article"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "Expansión, Empresas",
+          "url": "https://expansion.mx/empresas/2026/08/28/suzuki-importara-mas-swift-jimny-japon-esquivar-arancel-50"
+        },
+        {
+          "id": "standing:std-fiscal-path",
+          "kind": "standing",
+          "source": "SHCP (Hacienda)",
+          "url": "https://www.gob.mx/hacienda"
+        },
+        {
+          "id": "calendar:federal-budget-package-2027-2026-09-08",
+          "kind": "calendar",
+          "source": "SHCP / LFPRH Art. 42",
+          "url": "https://www.diputados.gob.mx/LeyesBiblio/pdf/LFPRH.pdf"
+        }
+      ]
     },
     {
       "id": "n-el-paso-de-elon-musk-en-m-xico-tesla-se-frena-pero-s-2026-08-28",
@@ -978,6 +1034,88 @@
       }
     },
     {
+      "id": "n-uif-y-pemex-firman-convenio-para-combatir-el-huachic-2026-08-27",
+      "date": "2026-08-27",
+      "section": "security",
+      "title": "Mexico's Treasury, Financial Intelligence Unit and Pemex to share data on fuel theft",
+      "why": "The Treasury, UIF and state oil firm Pemex will exchange information to identify financial structures used in hydrocarbon theft. Fuel smuggling (huachicol) costs Mexico billions annually and represents both a revenue loss for public finances and a security challenge.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/huachicol-en-la-mira-hacienda-uif-y-pemex-intercambiaran-informacion-para-atender-el-robo-de-hidrocarburos/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-28T00:52:55.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Huachicol en la mira: Hacienda, UIF y Pemex intercambiarán información para atender el robo de hidrocarburos",
+        "dek": "La UIF y Pemex buscan identificar las estructuras financieras con las que se opera el robo de hidrocarburos. La publicación Huachicol en la mira: Hacienda, UIF y Pemex intercambiarán información para atender el robo de hidrocarburos apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/huachicol-en-la-mira-hacienda-uif-y-pemex-intercambiaran-informacion-para-atender-el-robo-de-hidrocarburos/",
+          "publishedAt": "2026-08-28T00:52:55.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's Treasury, Financial Intelligence Unit and Pemex to share data on fuel theft",
+          "summary": "The Treasury, UIF and state oil firm Pemex will exchange information to identify financial structures used in hydrocarbon theft. Fuel smuggling (huachicol) costs Mexico billions annually and represents both a revenue loss for public finances and a security challenge."
+        },
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2708/mexico/uif-y-pemex-firman-convenio-para-combatir-el-huachicol/",
+          "publishedAt": "2026-08-28T00:22:07.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's Financial Intelligence Unit and Pemex sign agreement to combat fuel theft",
+          "summary": "The UIF and Pemex signed a pact to exchange intelligence and data to counter hydrocarbon theft, targeting the financial structures underlying fuel smuggling."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-adeudos-de-pemex-ahogan-al-transporte-mar-timo-la-in-2026-08-27",
       "date": "2026-08-27",
       "section": "money",
@@ -1192,80 +1330,6 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "t21.com.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-uif-y-pemex-firman-convenio-para-combatir-el-huachic-2026-08-27",
-      "date": "2026-08-27",
-      "section": "security",
-      "title": "Mexico's Financial Intelligence Unit and Pemex sign agreement to combat fuel theft",
-      "why": "The UIF and Pemex signed a pact to exchange intelligence and data to counter hydrocarbon theft, targeting the financial structures underlying fuel smuggling.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/2708/mexico/uif-y-pemex-firman-convenio-para-combatir-el-huachicol/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-28T00:22:07.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "UIF y Pemex firman convenio para combatir el huachicol",
-        "dek": "Intercambiarán información y datos de inteligencia para intentar frenar el desfalco que significa el robo de combustibles."
-      },
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/2708/mexico/uif-y-pemex-firman-convenio-para-combatir-el-huachicol/",
-          "publishedAt": "2026-08-28T00:22:07.000Z",
-          "date": "2026-08-27",
-          "title": "Mexico's Financial Intelligence Unit and Pemex sign agreement to combat fuel theft",
-          "summary": "The UIF and Pemex signed a pact to exchange intelligence and data to counter hydrocarbon theft, targeting the financial structures underlying fuel smuggling."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "aristeguinoticias.com"
             }
           }
         },
@@ -1644,6 +1708,80 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "insightcrime.org"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-pemex-credit-risk-declines-238bps-shcp-2026-08-26",
+      "date": "2026-08-26",
+      "section": "money",
+      "title": "Pemex five-year credit risk falls 238 basis points, Mexico Finance Ministry reports",
+      "why": "Mexico's state oil company saw its five-year Credit Default Swap spread narrow by 238 basis points, according to the Ministry of Finance. The decline reflects reduced gross liabilities and recent credit operations, moving directly on borrowing costs and foreign investor perception of sovereign and state-enterprise risk.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/oilandgas/news/pemex-credit-risk-declines-238bps-shcp",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-26T22:38:34.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "PEMEX Credit Risk Declines 238bps: SHCP",
+        "dek": "The Ministry of Finance reported a significant decline in five-year Credit Default Swap (CDS) benchmarks for both Mexico’s sovereign debt and Pemex, driven by reduced gross liabilities and recent credit rating upgrades. This reduction lowers borrowing costs and enhances capital market access for state entities while bo"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/oilandgas/news/pemex-credit-risk-declines-238bps-shcp",
+          "publishedAt": "2026-08-26T22:38:34.000Z",
+          "date": "2026-08-26",
+          "title": "Pemex five-year credit risk falls 238 basis points, Mexico Finance Ministry reports",
+          "summary": "Mexico's state oil company saw its five-year Credit Default Swap spread narrow by 238 basis points, according to the Ministry of Finance. The decline reflects reduced gross liabilities and recent credit operations, moving directly on borrowing costs and foreign investor perception of sovereign and state-enterprise risk."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexicobusiness.news"
             }
           }
         },
@@ -4864,112 +5002,6 @@
         },
         "componentSource": "deterministic-fallback-v1"
       }
-    },
-    {
-      "id": "n-m-xico-vuelve-a-prueba-en-seguridad-a-rea-as-enfrent-2026-08-12",
-      "date": "2026-08-12",
-      "section": "security",
-      "title": "Mexico aviation authority faces FAA safety evaluation",
-      "why": "The Mexican civil aviation authority will undergo US FAA assessment this week on safety standards compliance, with potential consequences for Mexico's aviation category ranking.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/mexico-vuelve-a-prueba-en-seguridad-aerea-asi-enfrenta-la-afac-la-evaluacion-de-eu/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-12T08:00:06.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "México vuelve a prueba en seguridad aérea; así enfrenta la AFAC la evaluación de EU",
-        "dek": "La AFAC enfrentará esta semana una evaluación de la FAA sobre seguridad aérea. La publicación México vuelve a prueba en seguridad aérea; así enfrenta la AFAC la evaluación de EU apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/mexico-vuelve-a-prueba-en-seguridad-aerea-asi-enfrenta-la-afac-la-evaluacion-de-eu/",
-          "publishedAt": "2026-08-12T08:00:06.000Z",
-          "date": "2026-08-12",
-          "title": "Mexico aviation authority faces FAA safety evaluation",
-          "summary": "The Mexican civil aviation authority will undergo US FAA assessment this week on safety standards compliance, with potential consequences for Mexico's aviation category ranking."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "image": "https://elceo.com/wp-content/uploads/2026/08/AFAC_evaluacion_aviacion.jpg",
-      "imgTries": 2,
-      "background": "The FAA restored Mexico to Category 1 in September 2023. This review tests whether Mexico's aviation authority still meets international safety-oversight standards. Mexico is not currently trying to regain the rating.",
-      "view": "The risk is a future downgrade, not a current Category 2 restriction. Category 1 lets Mexican airlines add US routes and codeshares, so the useful question is whether the authority has maintained staffing, rules and oversight since the 2023 restoration.",
-      "prediction": "Watch the FAA's country-rating list and any formal notice after the review. Category 1 staying in place would confirm continued compliance. A downgrade would again limit new US routes and codeshares.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "view": [
-          "article",
-          "primary:faa"
-        ],
-        "prediction": [
-          "primary:faa"
-        ],
-        "background": [
-          "primary:faa"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/mexico-vuelve-a-prueba-en-seguridad-aerea-asi-enfrenta-la-afac-la-evaluacion-de-eu/"
-        },
-        {
-          "id": "primary:faa",
-          "kind": "primary",
-          "source": "US Federal Aviation Administration",
-          "url": "https://www.faa.gov/newsroom/federal-aviation-administration-returns-mexico-highest-aviation-safety-status"
-        }
-      ]
     }
   ]
 }
