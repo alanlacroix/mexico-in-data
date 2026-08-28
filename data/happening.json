@@ -6,25 +6,25 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T15:49:49.261Z",
+    "generatedAt": "2026-08-28T15:54:51.838Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "7b4e4705c245d017e23064ca3c44903f6723c77ee901447ba9af725f0815a846",
-      "freshCandidateCount": 18,
+      "candidateSig": "7b1c077f2befa1e081d4d1f06e3d18156729c4fb3cc7502f349cc3e65dd0bb81",
+      "freshCandidateCount": 16,
       "assessedCount": 24,
-      "selectedCount": 3,
-      "freshSelectedCount": 2,
-      "keptCount": 2,
-      "freshKeptCount": 2,
+      "selectedCount": 2,
+      "freshSelectedCount": 1,
+      "keptCount": 1,
+      "freshKeptCount": 1,
       "rejectedCount": 1,
       "freshRejectedCount": 0,
       "rejectedSelected": [
         {
           "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
-          "candidateIndex": 20,
+          "candidateIndex": 18,
           "date": "2026-08-27",
           "source": "El CEO",
           "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
@@ -33,7 +33,7 @@
           ]
         }
       ],
-      "eligibleFreshCandidateCount": 18,
+      "eligibleFreshCandidateCount": 16,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
@@ -53,37 +53,45 @@
         {
           "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
           "ready": false,
-          "reason": "budget-unavailable",
+          "reason": "field-rejected",
           "fields": {
             "view": [
-              "unsupported number: 37.5"
+              "The claim that off-balance-sheet financing 'transfers operational and cost risks to private partners and users' and that this 'lowering CFE's renewable proportion' are invented mechanisms not stated in the evidence. The article only confirms that most off-balance projects are renewable energy mixtures, not that this lowers CFE's overall renewable proportion or transfers specific risks to users."
+            ],
+            "prediction": [
+              "The prediction conflates an announced plan (the 2030 development program targets) with an outcome by stating 'CFE will execute' these projects. This overstates certainty. The evidence shows CFE's stated goals and plans, not a binding commitment or observable fork with measurable milestones that would constitute a real next decision or release."
             ]
           }
         },
         {
           "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
           "ready": false,
-          "reason": "budget-unavailable",
+          "reason": "field-rejected",
           "fields": {
+            "background": [
+              "field was empty"
+            ],
             "view": [
-              "unsupported number: 81.4"
+              "field was empty"
             ],
             "prediction": [
-              "4 sentences (cap 2)",
-              "watch item has no observable next test"
+              "field was empty"
             ]
           }
         },
         {
           "id": "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28",
           "ready": false,
-          "reason": "budget-unavailable",
+          "reason": "field-rejected",
           "fields": {
+            "background": [
+              "field was empty"
+            ],
             "view": [
-              "unsupported number: 2026"
+              "field was empty"
             ],
             "prediction": [
-              "unsupported number: 2026"
+              "field was empty"
             ]
           }
         }
@@ -165,38 +173,7 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 4,
-      "background": "CFE, Latin America's largest electric utility and a state monopoly, must finance generation, transmission, and distribution infrastructure while maintaining a healthy balance sheet.",
-      "view": "CFE's dependence on private capital through off-balance structures shifts investment risk to partners and preserves the utility's borrowing capacity, but raises execution risk if private appetite cools or projects encounter delays. Investors gain exposure to power infrastructure, CFE retains operational control.",
-      "prediction": "CFE will announce whether the 52 generation projects, 175 transmission routes, and four distribution programs meet completion milestones on schedule. If project delays accumulate or private partners withdraw, whether CFE pivots to larger on-balance borrowing that would compress its debt ceiling.",
-      "analysisV": 10,
-      "analysisRefs": {
-        "background": [
-          "article",
-          "standing:std-energy-constraint"
-        ],
-        "view": [
-          "article"
-        ],
-        "prediction": [
-          "article",
-          "standing:std-energy-constraint"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "Bloomberg Línea",
-          "url": "https://bloomberglinea.com/latinoamerica/mexico/cfe-dependera-del-sector-privado-para-financiar-la-mayoria-de-sus-inversiones-con-sheinbaum/"
-        },
-        {
-          "id": "standing:std-energy-constraint",
-          "kind": "standing",
-          "source": "CENACE / U.S. EIA",
-          "url": "https://www.gob.mx/cenace"
-        }
-      ]
+      "imgTries": 5
     },
     {
       "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
@@ -272,7 +249,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 4
+      "imgTries": 5
     },
     {
       "id": "n-aristegui-en-vivo-fernando-n-es-vinculado-a-proceso--2026-08-28",
@@ -421,7 +398,7 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
-      "imgTries": 4,
+      "imgTries": 5,
       "background": "Mexico imposed a 50% tariff on automotive imports in response to trade friction, raising costs for foreign manufacturers who supply the Mexican market.",
       "view": "Suzuki raised imports from Japan while cutting Mexican sales 18% in seven months, accepting tariff costs on higher-margin models to avoid local price increases that would shrink market share further. The tradeoff sacrifices volume for margin and signals that tariff pass-through pricing destroys demand faster than higher per-unit costs.",
       "prediction": "Suzuki will drop the Baleno model from its Mexico lineup and shift inventory toward imported Swift and Jimny models. If competitors follow with similar import increases and local cuts, the tariff will have pushed Mexican assembly output lower despite intent to protect domestic production.",
@@ -667,6 +644,80 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "aristeguinoticias.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-convocatoria-para-la-convenci-n-obrero-patronal-de-l-2026-08-28",
+      "date": "2026-08-28",
+      "section": "politics",
+      "title": "Federal labor authority convenes wage-revision convention for textile-sector collective contract",
+      "why": "The Center Federal de Conciliación y Registro Laboral has called a convention under Mexico's collective bargaining framework to negotiate wages in the garment-sector contract.",
+      "company": "",
+      "source": "Diario Oficial de la Federación",
+      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797396&fecha=28/08/2026",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-28T12:00:00.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Convocatoria para la Convención Obrero Patronal de la revisión salarial del Contrato-Ley de la Industria Textil de Géneros de Punto.",
+        "dek": "DOF · ORGANISMOS DESCONCENTRADOS O DESCENTRALIZADOS CENTRO FEDERAL DE CONCILIACION Y REGISTRO LABORAL"
+      },
+      "coverage": [
+        {
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797396&fecha=28/08/2026",
+          "publishedAt": "2026-08-28T12:00:00.000Z",
+          "date": "2026-08-28",
+          "title": "Federal labor authority convenes wage-revision convention for textile-sector collective contract",
+          "summary": "The Center Federal de Conciliación y Registro Laboral has called a convention under Mexico's collective bargaining framework to negotiate wages in the garment-sector contract."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 0,
+        "durability": 1,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 2,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 2,
+              "source": "authoritative-domain",
+              "hostname": "diariooficial.gob.mx"
             }
           }
         },
@@ -4878,112 +4929,6 @@
         },
         "componentSource": "deterministic-fallback-v1"
       }
-    },
-    {
-      "id": "n-fresa-mexicana-en-riesgo-ante-elecciones-de-estados--2026-08-13",
-      "date": "2026-08-13",
-      "section": "us-mexico",
-      "title": "Mexican strawberry exports face US antidumping investigation ahead of US elections",
-      "why": "Mexican strawberry shipments are under US investigation on antidumping grounds, with timing sensitivity tied to the US election cycle.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-13T08:00:37.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Fresa mexicana en riesgo ante elecciones de Estados Unidos, señala el CNA",
-        "dek": "La fresa mexicana está bajo observación de Estados Unidos con una investigación antidumping. La publicación Fresa mexicana en riesgo ante elecciones de Estados Unidos, señala el CNA apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/",
-          "publishedAt": "2026-08-13T08:00:37.000Z",
-          "date": "2026-08-13",
-          "title": "Mexican strawberry exports face US antidumping investigation ahead of US elections",
-          "summary": "Mexican strawberry shipments are under US investigation on antidumping grounds, with timing sensitivity tied to the US election cycle."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "image": "https://elceo.com/wp-content/uploads/2026/08/fresa_mexicana_exportaciones_eu_cna.jpg",
-      "imgTries": 2,
-      "background": "The US Commerce Department opened the case in February. Its official notice describes 18.32% as the alleged dumping margin, not a final duty.",
-      "view": "The immediate risk is uncertainty for growers, not a proven 18.32% tariff. The claim that election politics drove the case comes from Mexico's farm council. The official record shows Florida producers filed the petition, but it does not establish their motive.",
-      "prediction": "Watch Commerce case A-201-869 for its next determination. A finding that sets an actual duty would turn the allegation into a trade cost. A lower or zero margin would weaken the cost concern.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "primary:commerce"
-        ],
-        "view": [
-          "article",
-          "primary:commerce"
-        ],
-        "prediction": [
-          "primary:commerce"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/fresa-mexicana-en-riesgo-ante-elecciones-de-estados-unidos-senala-el-cna/"
-        },
-        {
-          "id": "primary:commerce",
-          "kind": "primary",
-          "source": "US Department of Commerce",
-          "url": "https://www.trade.gov/commerce-initiates-antidumping-duty-investigation-fresh-strawberries-mexico"
-        }
-      ]
     }
   ]
 }
