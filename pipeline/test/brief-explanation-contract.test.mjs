@@ -8,10 +8,36 @@ const require = createRequire(import.meta.url);
 const { briefReadiness } = require('../lib/brief-readiness.cjs');
 const { ANALYSIS_VERSION } = require('../lib/analysis-contract.cjs');
 const { evidenceInputs } = require('../lib/report-evidence.cjs');
-const { mergeApprovedAttempt } = require('../lib/analysis-attempts.cjs');
+const { analysisTargetSurvivesSelfHeal, mergeApprovedAttempt } = require('../lib/analysis-attempts.cjs');
 const interests = require('../../data/interests.json');
 const happeningBuilder = fs.readFileSync(new URL('../build-happening.js', import.meta.url), 'utf8');
 const briefBuilder = fs.readFileSync(new URL('../build-brief.js', import.meta.url), 'utf8');
+
+const attemptEvent = {
+  id: 'selected', title: 'CFE plans private financing', context: 'The utility described its plan.',
+  why: 'The utility described its plan.', source: 'Example', url: 'https://example.com/cfe', date: '2026-08-28',
+  reportEvidence: { title: 'Raw title', dek: 'Raw dek' }, coverage: [],
+  analysisSources: [{ kind: 'primary', source: 'Old wrong label', url: 'https://agency.gov/record' }],
+  analysisV: 10, view: 'Stale generated prose.',
+};
+const healedAttemptEvent = { ...attemptEvent, analysisV: undefined, view: undefined };
+const attemptTarget = { policy: 'policy-v1', ids: ['selected'], attempt: 1 };
+assert.equal(analysisTargetSurvivesSelfHeal([attemptEvent], [healedAttemptEvent], attemptTarget, 'policy-v1'), true,
+  'purging stale generated prose must not reset an unchanged selected story to attempt one');
+assert.equal(analysisTargetSurvivesSelfHeal([attemptEvent], [{ ...healedAttemptEvent, context: 'The plan changed.' }], attemptTarget, 'policy-v1'), false,
+  'a changed selected-story input must reset the bounded recovery');
+assert.equal(analysisTargetSurvivesSelfHeal([attemptEvent], [{
+  ...healedAttemptEvent,
+  analysisSources: [{ kind: 'primary', source: 'Agency', url: 'https://agency.gov/new-record' }],
+}], attemptTarget, 'policy-v1'), false, 'a changed retained primary record must reset the bounded recovery');
+assert.equal(analysisTargetSurvivesSelfHeal([attemptEvent], [], attemptTarget, 'policy-v1'), false,
+  'removing a selected row must reset the bounded recovery');
+assert.equal(analysisTargetSurvivesSelfHeal([
+  attemptEvent, { id: 'unrelated', title: 'Old row' },
+], [healedAttemptEvent], attemptTarget, 'policy-v1'), true,
+  'purging an unrelated row must not rebuy analysis for unchanged selected stories');
+assert.equal(analysisTargetSurvivesSelfHeal([attemptEvent], [healedAttemptEvent], attemptTarget, 'policy-v2'), false,
+  'a changed analysis policy must reset the bounded recovery');
 
 const story = (id, ready = false) => ({
   refs: [id],

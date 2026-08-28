@@ -49,7 +49,7 @@ const { linkScheduledCandidate } = scheduledCandidate;
 const { applyScheduledImportanceFloor, normalizeModelImportanceRow, officialnessEvidence, overrideOfficialness, scoreImportance } = importanceRubric;
 const { attentionSignal, commentaryOnlyCandidate, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates } = candidatePriority;
 const { evidenceInputs } = reportEvidence;
-const { mergeApprovedAttempt } = analysisAttempts;
+const { analysisTargetSurvivesSelfHeal, mergeApprovedAttempt } = analysisAttempts;
 const { candidateSignature, canReuseCuration } = curationCheckpoint;
 const { calendarScore, relatedEventScore, standingScore } = analysisEvidence;
 const { ANALYSIS_VERSION, ANALYSIS_POLICY } = analysisContract;
@@ -1277,7 +1277,13 @@ async function main() {
         count: healed.length,
         curation: checkpoint,
       };
-      delete meta.analysisTarget;
+      // Housekeeping often purges stale analysis prose or repairs unrelated rows. That
+      // must not turn the same selected stories back into attempt 1 and rebuy the same
+      // failed draft forever. Preserve the bounded recovery only when every input that
+      // can affect those stories' evidence is unchanged; otherwise reset it.
+      if (!analysisTargetSurvivesSelfHeal(arr(existing.events), healed, existing.meta?.analysisTarget, ANALYSIS_POLICY)) {
+        delete meta.analysisTarget;
+      }
       fs.writeFileSync(OUT, JSON.stringify({ ...existing, meta, events: healed }, null, 2));
       console.log(`  curation checkpoint still matches — reused assessment and self-healed the event log (${arr(existing.events).length} -> ${healed.length})`);
     } else {
