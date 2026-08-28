@@ -6,25 +6,25 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T15:54:51.838Z",
+    "generatedAt": "2026-08-28T16:05:57.601Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "7b1c077f2befa1e081d4d1f06e3d18156729c4fb3cc7502f349cc3e65dd0bb81",
-      "freshCandidateCount": 16,
+      "candidateSig": "ca2de27a8030ebdb74888aca660bd85a0f21d6495c4c90f3938e21310f1a01a8",
+      "freshCandidateCount": 18,
       "assessedCount": 24,
-      "selectedCount": 2,
+      "selectedCount": 3,
       "freshSelectedCount": 1,
-      "keptCount": 1,
+      "keptCount": 2,
       "freshKeptCount": 1,
       "rejectedCount": 1,
       "freshRejectedCount": 0,
       "rejectedSelected": [
         {
           "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
-          "candidateIndex": 18,
+          "candidateIndex": 20,
           "date": "2026-08-27",
           "source": "El CEO",
           "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
@@ -33,7 +33,7 @@
           ]
         }
       ],
-      "eligibleFreshCandidateCount": 16,
+      "eligibleFreshCandidateCount": 18,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
@@ -56,10 +56,13 @@
           "reason": "field-rejected",
           "fields": {
             "view": [
-              "The claim that off-balance-sheet financing 'transfers operational and cost risks to private partners and users' and that this 'lowering CFE's renewable proportion' are invented mechanisms not stated in the evidence. The article only confirms that most off-balance projects are renewable energy mixtures, not that this lowers CFE's overall renewable proportion or transfers specific risks to users."
+              "em-dash",
+              "77 words (cap 70)",
+              "4 sentences (cap 3)"
             ],
             "prediction": [
-              "The prediction conflates an announced plan (the 2030 development program targets) with an outcome by stating 'CFE will execute' these projects. This overstates certainty. The evidence shows CFE's stated goals and plans, not a binding commitment or observable fork with measurable milestones that would constitute a real next decision or release."
+              "67 words (cap 55)",
+              "3 sentences (cap 2)"
             ]
           }
         },
@@ -68,14 +71,14 @@
           "ready": false,
           "reason": "field-rejected",
           "fields": {
-            "background": [
-              "field was empty"
-            ],
             "view": [
-              "field was empty"
+              "6 sentences (cap 3)",
+              "unsupported number: 81.4",
+              "announcement number has no denominator or useful comparison"
             ],
             "prediction": [
-              "field was empty"
+              "3 sentences (cap 2)",
+              "unsupported numbers: 75, 80"
             ]
           }
         },
@@ -85,13 +88,13 @@
           "reason": "field-rejected",
           "fields": {
             "background": [
-              "field was empty"
+              "The cited article URL returns a 403 CloudFront error and provides no readable evidence. The trade.gov link is truncated navigation boilerplate with no substantive tariff rate. Neither source directly supports the claimed 50% tariff rate on imported vehicles into Mexico."
             ],
             "view": [
-              "field was empty"
+              "The evidence does not support the causal claim that Suzuki 'chose to import more finished vehicles from Japan rather than increase Mexican production.' The article text only states imports rose and sales fell 18%, it does not explain Suzuki's production strategy decision or compare it to a Mexican production alternative. The characterizations 'sacrifices volume to protect per-unit margin,' 'domestic suppliers lose orders,' and 'Mexican tariff revenue gains' are inferences not stated in the evidence."
             ],
             "prediction": [
-              "field was empty"
+              "The prediction invents a schedule ('within the next two quarters') and a decision test ('whether the company is reducing Mexico exposure') not supported by the evidence. The article mentions Baleno 'se encamina a salir' (is headed to exit) but does not commit to an announcement timeline or frame it as a test of exposure reduction strategy."
             ]
           }
         }
@@ -173,7 +176,7 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 5
+      "imgTries": 6
     },
     {
       "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
@@ -249,7 +252,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 5
+      "imgTries": 6
     },
     {
       "id": "n-aristegui-en-vivo-fernando-n-es-vinculado-a-proceso--2026-08-28",
@@ -398,36 +401,7 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
-      "imgTries": 5,
-      "background": "Mexico imposed a 50% tariff on automotive imports in response to trade friction, raising costs for foreign manufacturers who supply the Mexican market.",
-      "view": "Suzuki raised imports from Japan while cutting Mexican sales 18% in seven months, accepting tariff costs on higher-margin models to avoid local price increases that would shrink market share further. The tradeoff sacrifices volume for margin and signals that tariff pass-through pricing destroys demand faster than higher per-unit costs.",
-      "prediction": "Suzuki will drop the Baleno model from its Mexico lineup and shift inventory toward imported Swift and Jimny models. If competitors follow with similar import increases and local cuts, the tariff will have pushed Mexican assembly output lower despite intent to protect domestic production.",
-      "analysisV": 10,
-      "analysisRefs": {
-        "background": [
-          "primary:1"
-        ],
-        "view": [
-          "article"
-        ],
-        "prediction": [
-          "article"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "primary:1",
-          "kind": "primary",
-          "source": "Diario Oficial de la Federación (DOF)",
-          "url": "https://www.trade.gov/knowledge-product/mexico-import-tariffs"
-        },
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "Expansión, Empresas",
-          "url": "https://expansion.mx/empresas/2026/08/28/suzuki-importara-mas-swift-jimny-japon-esquivar-arancel-50"
-        }
-      ]
+      "imgTries": 6
     },
     {
       "id": "n-el-paso-de-elon-musk-en-m-xico-tesla-se-frena-pero-s-2026-08-28",
@@ -496,6 +470,80 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-caso-garc-a-luna-sheinbaum-destinar-dinero-recuperad-2026-08-28",
+      "date": "2026-08-28",
+      "section": "politics",
+      "title": "Mexico recovers $5.8 million from García Luna case, funds allocated to Guerrero schools",
+      "why": "President Sheinbaum announced the recovered funds from the US prosecution of former security minister García Luna will be directed to educational infrastructure in Guerrero state.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/2808/mexico/caso-garcia-luna-sheinbaum-destinara-dinero-recuperado-a-escuelas-de-guerrero/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T15:51:39.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Caso García Luna: Sheinbaum destinará dinero recuperado a escuelas de Guerrero",
+        "dek": "México recuperó 5.8 millones de dólares en EU por el caso García Luna; Sheinbaum anunció que serán destinados a infraestructura educativa."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2808/mexico/caso-garcia-luna-sheinbaum-destinara-dinero-recuperado-a-escuelas-de-guerrero/",
+          "publishedAt": "2026-08-28T15:51:39.000Z",
+          "date": "2026-08-28",
+          "title": "Mexico recovers $5.8 million from García Luna case, funds allocated to Guerrero schools",
+          "summary": "President Sheinbaum announced the recovered funds from the US prosecution of former security minister García Luna will be directed to educational infrastructure in Guerrero state."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "aristeguinoticias.com"
             }
           }
         },
@@ -718,6 +766,88 @@
               "score": 2,
               "source": "authoritative-domain",
               "hostname": "diariooficial.gob.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-agust-n-carstens-pide-integraci-n-inteligente-frente-2026-08-27",
+      "date": "2026-08-27",
+      "section": "us-mexico",
+      "title": "Banxico former governor Carstens urges smart integration against China in US-Mexico-Canada trade agreement review",
+      "why": "Agustín Carstens, former Banxico governor, set out a position on how Mexico, the United States, and Canada should handle the US-Mexico-Canada trade agreement review in light of China.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/agustin-carstens-pide-integracion-inteligente-frente-a-china-en-la-revision-del-t-mec/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-28T00:02:51.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Agustín Carstens pide integración inteligente frente a China en la revisión del T-MEC",
+        "dek": "El exgobernador de Banxico fijó su postura sobre cómo deben abordar México, Estados Unidos y Canadá la revisión del T-MEC frente a China. La publicación Agustín Carstens pide integración inteligente frente a China en la revisión del T-MEC apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/agustin-carstens-pide-integracion-inteligente-frente-a-china-en-la-revision-del-t-mec/",
+          "publishedAt": "2026-08-28T00:02:51.000Z",
+          "date": "2026-08-27",
+          "title": "Banxico former governor Carstens urges smart integration against China in US-Mexico-Canada trade agreement review",
+          "summary": "Agustín Carstens, former Banxico governor, set out a position on how Mexico, the United States, and Canada should handle the US-Mexico-Canada trade agreement review in light of China."
+        },
+        {
+          "source": "elfinanciero.com.mx",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/27/agustin-carstens-aboga-por-una-integracion-inteligente-en-revision-del-t-mec/",
+          "publishedAt": "2026-08-27T20:35:57.000Z",
+          "date": "2026-08-27",
+          "title": "Agustín Carstens aboga por una ‘integración inteligente’ en revisión del T-MEC",
+          "summary": "Carstens consideró que la respuesta de los países de Norteamérica bajo el T-MEC no debe ser la fragmentación comercial."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
             }
           }
         },
@@ -4747,183 +4877,6 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "borderreport.com"
-            }
-          }
-        },
-        "componentSource": "deterministic-fallback-v1"
-      }
-    },
-    {
-      "id": "n-mexico-asks-us-pause-steel-auto-tariffs-2026-08-14",
-      "date": "2026-08-14",
-      "section": "us-mexico",
-      "title": "Mexico asks the US to pause steel and auto tariffs during the trade-agreement review",
-      "why": "The Mexican government presented a study on how the tariffs affect its auto industry.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/14/revision-del-t-mec-mexico-pide-pausa-de-aranceles-al-acero-y-autos-aplicame-un-descuento-pide-ebrard/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-14T09:39:04.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Revisión del T-MEC: México pide pausa de aranceles al acero y autos; ‘aplícame un descuento’, pide Ebrard",
-        "dek": "El gobierno mexicano presentó un estudio sobre el impacto a la industria automotriz de los aranceles en la revisión del T-MEC."
-      },
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/14/revision-del-t-mec-mexico-pide-pausa-de-aranceles-al-acero-y-autos-aplicame-un-descuento-pide-ebrard/",
-          "publishedAt": "2026-08-14T09:39:04.000Z",
-          "date": "2026-08-14",
-          "title": "Mexico asks the US to pause steel and auto tariffs during the trade-agreement review",
-          "summary": "The Mexican government presented a study on how the tariffs affect its auto industry."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elfinanciero.com.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "editor-reviewed-fallback-v1"
-      },
-      "background": "US and Mexican officials have discussed steel, aluminum and automobiles in three review rounds. They scheduled a fourth bilateral round for September.",
-      "view": "Mexico has made tariff relief a negotiating request, not a concession it has won. The practical result depends on whether Washington accepts a pause or offers a narrower reduction.",
-      "prediction": "The September round is the next stated test. Tariff relief in the joint statement would confirm movement. Another statement limited to continued talks would weaken that view.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "primary:ustr-july23"
-        ],
-        "view": [
-          "article",
-          "primary:ustr-july23"
-        ],
-        "prediction": [
-          "primary:ustr-july23"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/14/revision-del-t-mec-mexico-pide-pausa-de-aranceles-al-acero-y-autos-aplicame-un-descuento-pide-ebrard/"
-        },
-        {
-          "id": "primary:ustr-july23",
-          "kind": "primary",
-          "source": "US Trade Representative",
-          "url": "https://ustr.gov/about/policy-offices/press-office/press-releases/2026/july/joint-statement-ambassador-jamieson-greer-and-mexican-secretary-economy-marcelo-ebrard"
-        }
-      ]
-    },
-    {
-      "id": "n-mexico-urges-us-tariff-freeze-and-relief-in-usmca-ta-2026-08-14",
-      "date": "2026-08-14",
-      "section": "economy",
-      "title": "Mexico Urges US Tariff Freeze and Relief in USMCA Talks",
-      "why": "Mexico has formally requested that the United States halt the imposition of new tariffs during ongoing USMCA review talks while pushing for preferential treatment and reduced duties on Mexican automotive and steel exports.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-urges-us-tariff-freeze-and-relief-usmca-talks",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-14T16:04:00.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Mexico Urges US Tariff Freeze and Relief in USMCA Talks",
-        "dek": "Mexico has formally requested that the United States halt the imposition of new tariffs during ongoing USMCA review talks while pushing for preferential treatment and reduced duties on Mexican automotive and steel exports."
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-urges-us-tariff-freeze-and-relief-usmca-talks",
-          "publishedAt": "2026-08-14T16:04:00.000Z",
-          "date": "2026-08-14",
-          "title": "Mexico Urges US Tariff Freeze and Relief in USMCA Talks",
-          "summary": "Mexico has formally requested that the United States halt the imposition of new tariffs during ongoing USMCA review talks while pushing for preferential treatment and reduced duties on Mexican automotive and steel exports."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 2,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexicobusiness.news"
             }
           }
         },
