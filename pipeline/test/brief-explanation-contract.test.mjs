@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url);
 const { briefReadiness } = require('../lib/brief-readiness.cjs');
 const { ANALYSIS_VERSION } = require('../lib/analysis-contract.cjs');
 const { evidenceInputs } = require('../lib/report-evidence.cjs');
-const { analysisTargetSurvivesSelfHeal, mergeApprovedAttempt } = require('../lib/analysis-attempts.cjs');
+const { analysisTargetSurvivesSelfHeal, dropUnsupportedNumberSentences, mergeApprovedAttempt, nextAnalysisAttempt } = require('../lib/analysis-attempts.cjs');
 const interests = require('../../data/interests.json');
 const happeningBuilder = fs.readFileSync(new URL('../build-happening.js', import.meta.url), 'utf8');
 const briefBuilder = fs.readFileSync(new URL('../build-brief.js', import.meta.url), 'utf8');
@@ -38,6 +38,38 @@ assert.equal(analysisTargetSurvivesSelfHeal([
   'purging an unrelated row must not rebuy analysis for unchanged selected stories');
 assert.equal(analysisTargetSurvivesSelfHeal([attemptEvent], [healedAttemptEvent], attemptTarget, 'policy-v2'), false,
   'a changed analysis policy must reset the bounded recovery');
+assert.equal(
+  analysisTargetSurvivesSelfHeal(
+    [attemptEvent], [healedAttemptEvent], { ...attemptTarget, policy: 'policy-v6', attempt: 2 }, 'policy-v7', 'policy-v6',
+  ),
+  true,
+  'self-healing must retain the terminal predecessor long enough for its one repair-only migration',
+);
+assert.equal(
+  dropUnsupportedNumberSentences(
+    'The 2027 plan would set the timetable. Signed financing would confirm the investment can proceed.',
+    ['unsupported number: 2027'],
+  ),
+  'Signed financing would confirm the investment can proceed.',
+  'unsupported numbers may be repaired only by removing their complete sentence',
+);
+assert.equal(dropUnsupportedNumberSentences('The value was 81.4. The comparison is supported.', ['em-dash', 'unsupported number: 81.4']), '',
+  'sentence repair must not activate when the failure is not exclusively numeric');
+assert.equal(
+  dropUnsupportedNumberSentences('The value was 81.4. The comparison is supported.', ['unsupported number: 81.4']),
+  'The comparison is supported.',
+  'a decimal must stay intact while its complete unsupported sentence is removed',
+);
+assert.deepEqual(
+  nextAnalysisAttempt(
+    { policy: 'policy-v6', ids: ['lead'], attempt: 2, outcomes: [{ id: 'lead', reason: 'field-rejected' }] },
+    ['lead'], 'policy-v7', 'policy-v6',
+  ),
+  { attempt: 2, reuseOutcomes: true },
+  'a repair-only policy migration must receive exactly one terminal recovery, not reset to attempt one',
+);
+assert.deepEqual(nextAnalysisAttempt({ policy: 'policy-v6', ids: ['other'], attempt: 2 }, ['lead'], 'policy-v7', 'policy-v6'),
+  { attempt: 1, reuseOutcomes: false }, 'a genuinely different selection must start a fresh bounded attempt');
 
 const story = (id, ready = false) => ({
   refs: [id],
@@ -119,6 +151,8 @@ assert.match(briefBuilder, /analysisTargetIds = omitUnreadyOptionalTail\(rankedP
   'the bounded analysis batch must exclude the same optional tail the final builder may omit');
 assert.match(happeningBuilder, /selection\?\.analysisTargetIds/,
   'targeted enrichment must use the precomputed blocking explanation target');
+assert.match(happeningBuilder, /corrected cited source[\s\S]*removed unsupported-number sentence/,
+  'the deterministic repair must prefer exact citation correction and otherwise remove a whole unsupported sentence');
 
 assert.deepEqual(
   mergeApprovedAttempt(

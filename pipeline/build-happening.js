@@ -49,10 +49,10 @@ const { linkScheduledCandidate } = scheduledCandidate;
 const { applyScheduledImportanceFloor, normalizeModelImportanceRow, officialnessEvidence, overrideOfficialness, scoreImportance } = importanceRubric;
 const { attentionSignal, commentaryOnlyCandidate, decisionCoverage, fallbackImportanceComponents, prioritizeCandidates } = candidatePriority;
 const { evidenceInputs } = reportEvidence;
-const { analysisTargetSurvivesSelfHeal, mergeApprovedAttempt } = analysisAttempts;
+const { analysisTargetSurvivesSelfHeal, dropUnsupportedNumberSentences, mergeApprovedAttempt, nextAnalysisAttempt } = analysisAttempts;
 const { candidateSignature, canReuseCuration } = curationCheckpoint;
 const { calendarScore, relatedEventScore, standingScore } = analysisEvidence;
-const { ANALYSIS_VERSION, ANALYSIS_POLICY } = analysisContract;
+const { ANALYSIS_VERSION, ANALYSIS_POLICY, ANALYSIS_REPAIR_PREDECESSOR } = analysisContract;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -891,7 +891,7 @@ ${BAN}`;
       const evidenceById = new Map(item.evidence.map((entry) => [entry.id, entry]));
       for (const field of CORE) {
         if (approvedThisRun.get(item.e.id)?.[field]) continue;
-        const text = stripDashWs(r[field]);
+        let text = stripDashWs(r[field]);
         if (!text) {
           console.warn(`  analysis reject ${item.e.id}.${field}: field was empty`);
           rememberRejection(item.e.id, field, ['field was empty']);
@@ -918,23 +918,40 @@ ${BAN}`;
         // Validate the public claim against only the evidence the draft itself cites.
         // Including generated copy or the whole research bundle here would let an
         // unsupported claim appear grounded merely because another source was nearby.
-        const gateFor = (candidateRefs) => {
+        const gateFor = (candidateText, candidateRefs) => {
           const inputs = candidateRefs.map((ref) => evidenceById.get(ref).text);
-          return lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
+          return lintAnalysisText({ text: candidateText, inputs, role: field, maxWords, maxSentences,
             requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
             strictForecast: field === 'prediction', forbidFirstPerson: true });
         };
-        let gate = gateFor(refs);
+        let gate = gateFor(text, refs);
         // If the prose is otherwise sound and its only problem is a number found in
-        // another supplied source, attach that source deterministically. This repairs
-        // provenance, not prose: no claim changes and the two-source cap still applies.
-        if (!gate.ok && refs.length < 2 && gate.flags.every((flag) => /^unsupported number/.test(flag))) {
-          const supporting = item.evidence.find((entry) => !refs.includes(entry.id)
-            && gateFor([...refs, entry.id]).ok);
-          if (supporting) {
-            refs = [...refs, supporting.id];
-            gate = gateFor(refs);
-            console.log(`  analysis evidence repair ${item.e.id}.${field}: added ${supporting.id}`);
+        // another supplied source, attach or substitute that source deterministically.
+        // If no supplied source supports the number, remove the whole sentence carrying
+        // it and re-run every normal gate. We never edit a number or sentence fragment.
+        if (!gate.ok && gate.flags.every((flag) => /^unsupported number/.test(flag))) {
+          const candidates = item.evidence.filter((entry) => !refs.includes(entry.id)).flatMap((entry) => {
+            if (refs.length < 2) return [[...refs, entry.id]];
+            return refs.map((_, index) => refs.map((ref, refIndex) => refIndex === index ? entry.id : ref));
+          });
+          const repairedRefs = candidates.find((candidateRefs) => (
+            (field !== 'background' || candidateRefs.some((ref) => contextualEvidence(evidenceById.get(ref))))
+            && gateFor(text, candidateRefs).ok
+          ));
+          if (repairedRefs) {
+            refs = repairedRefs;
+            gate = gateFor(text, refs);
+            console.log(`  analysis evidence repair ${item.e.id}.${field}: corrected cited source`);
+          } else {
+            const withoutUnsupportedSentence = dropUnsupportedNumberSentences(text, gate.flags);
+            if (withoutUnsupportedSentence) {
+              const repairedGate = gateFor(withoutUnsupportedSentence, refs);
+              if (repairedGate.ok) {
+                text = withoutUnsupportedSentence;
+                gate = repairedGate;
+                console.log(`  analysis evidence repair ${item.e.id}.${field}: removed unsupported-number sentence`);
+              }
+            }
           }
         }
         const slop = slopFlags({ title: item.e.title, context: text, url: item.e.url, date: item.e.date });
@@ -1233,13 +1250,14 @@ async function main() {
     }
     const events = arr(existing.events);
     const priorTarget = existing.meta?.analysisTarget || {};
-    const sameTarget = priorTarget.policy === ANALYSIS_POLICY
-      && JSON.stringify(arr(priorTarget.ids)) === JSON.stringify(selectedIds);
-    const attempt = sameTarget ? Math.max(1, Number(priorTarget.attempt) || 1) + 1 : 1;
+    const attemptState = nextAnalysisAttempt(
+      priorTarget, selectedIds, ANALYSIS_POLICY, ANALYSIS_REPAIR_PREDECESSOR,
+    );
+    const attempt = attemptState.attempt;
     const analysis = await addBackgrounds(events, now, {
       priorityIds: selectedIds,
       onlyPriority: true,
-      priorOutcomes: sameTarget ? priorTarget.outcomes : [],
+      priorOutcomes: attemptState.reuseOutcomes ? priorTarget.outcomes : [],
     });
     const out = {
       ...existing,
@@ -1287,7 +1305,9 @@ async function main() {
       // must not turn the same selected stories back into attempt 1 and rebuy the same
       // failed draft forever. Preserve the bounded recovery only when every input that
       // can affect those stories' evidence is unchanged; otherwise reset it.
-      if (!analysisTargetSurvivesSelfHeal(arr(existing.events), healed, existing.meta?.analysisTarget, ANALYSIS_POLICY)) {
+      if (!analysisTargetSurvivesSelfHeal(
+        arr(existing.events), healed, existing.meta?.analysisTarget, ANALYSIS_POLICY, ANALYSIS_REPAIR_PREDECESSOR,
+      )) {
         delete meta.analysisTarget;
       }
       fs.writeFileSync(OUT, JSON.stringify({ ...existing, meta, events: healed }, null, 2));
