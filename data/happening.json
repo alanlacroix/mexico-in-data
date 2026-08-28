@@ -6,25 +6,25 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T16:27:28.445Z",
+    "generatedAt": "2026-08-28T16:55:03.780Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "5dc3179f9832e76a89677e6db07feb33e7734c4c2aa7e29c9a38c7e7e145b4ff",
-      "freshCandidateCount": 19,
+      "candidateSig": "8bd9fa4c8199dad72d6110bf5530920f732c727e493829861a903abd4670fd0c",
+      "freshCandidateCount": 18,
       "assessedCount": 24,
-      "selectedCount": 6,
-      "freshSelectedCount": 5,
-      "keptCount": 5,
-      "freshKeptCount": 5,
+      "selectedCount": 3,
+      "freshSelectedCount": 2,
+      "keptCount": 2,
+      "freshKeptCount": 2,
       "rejectedCount": 1,
       "freshRejectedCount": 0,
       "rejectedSelected": [
         {
           "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
-          "candidateIndex": 20,
+          "candidateIndex": 19,
           "date": "2026-08-27",
           "source": "El CEO",
           "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
@@ -33,7 +33,7 @@
           ]
         }
       ],
-      "eligibleFreshCandidateCount": 19,
+      "eligibleFreshCandidateCount": 18,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
@@ -41,12 +41,12 @@
       "reason": "1 selected event(s) quarantined by the copy gate"
     },
     "analysisTarget": {
-      "policy": "every-selected-story-evidence-locked-v6",
+      "policy": "every-selected-story-evidence-locked-v7",
       "ids": [
         "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
         "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28"
       ],
-      "attempt": 2,
+      "attempt": 1,
       "added": 0,
       "outcomes": [
         {
@@ -54,8 +54,14 @@
           "ready": false,
           "reason": "field-rejected",
           "fields": {
+            "background": [
+              "The claim that CFE 'has historically financed expansion from government budgets and on-balance-sheet debt' is not supported by the evidence provided. The article and standing evidence do not document CFE's historical financing patterns."
+            ],
+            "view": [
+              "The claim that private funding 'may accelerate renewable projects' is an invented inference not supported by the evidence. The article states CFE's plan but contains no evidence comparing private-funded timelines to alternative financing methods."
+            ],
             "prediction": [
-              "unsupported number: 2027"
+              "The prediction asks whether 'private partners complete renewable projects on schedule' and whether 'grid connection delays decline or widen,' but the evidence only states CFE's planned investment targets, not any announced decision point, release, milestone, or observable fork that would distinguish success from failure in testable terms."
             ]
           }
         },
@@ -64,8 +70,9 @@
           "ready": false,
           "reason": "field-rejected",
           "fields": {
-            "view": [
-              "unsupported number: 81.4"
+            "prediction": [
+              "em-dash",
+              "unsupported number: 30"
             ]
           }
         }
@@ -147,7 +154,7 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 9
+      "imgTries": 10
     },
     {
       "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
@@ -223,7 +230,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 9
+      "imgTries": 10
     },
     {
       "id": "n-aristegui-en-vivo-fernando-n-es-vinculado-a-proceso--2026-08-28",
@@ -517,6 +524,170 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-axtel-se-dispara-casi-16-en-la-bmv-tras-oferta-de-to-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Axtel stock rises 16% after Milmo takeover offer",
+      "why": "Tomás Milmo Santos made an offer to acquire all shares held by public investors in Axtel, pending regulatory approval. The stock rose 16% on the Mexican stock exchange following the announcement.",
+      "company": "Axtel",
+      "source": "El CEO",
+      "url": "https://elceo.com/mercados/axtel-se-dispara-casi-16-en-la-bmv-tras-oferta-de-tomas-milmo-para-adquirir-acciones-publicas/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T16:44:49.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Axtel se dispara casi 16% en la BMV tras oferta de Tomás Milmo para adquirir acciones públicas",
+        "dek": "Tomás Milmo Santos busca adquirir la totalidad de las acciones en manos del público inversionista; solo espera aval de reguladores. La publicación Axtel se dispara casi 16% en la BMV tras oferta de Tomás Milmo para adquirir acciones públicas apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/mercados/axtel-se-dispara-casi-16-en-la-bmv-tras-oferta-de-tomas-milmo-para-adquirir-acciones-publicas/",
+          "publishedAt": "2026-08-28T16:44:49.000Z",
+          "date": "2026-08-28",
+          "title": "Axtel stock rises 16% after Milmo takeover offer",
+          "summary": "Tomás Milmo Santos made an offer to acquire all shares held by public investors in Axtel, pending regulatory approval. The stock rose 16% on the Mexican stock exchange following the announcement."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-uif-y-pemex-firman-convenio-para-combatir-el-huachic-2026-08-27",
+      "date": "2026-08-28",
+      "section": "security",
+      "title": "Pemex and Mexico's Financial Intelligence Unit sign agreement to combat hydrocarbon theft",
+      "why": "Pemex and the Financial Intelligence Unit have signed a collaboration agreement addressing fuel theft, a recurring drain on Mexico's state oil company and public finances.",
+      "company": "Pemex",
+      "source": "MEXICONOW",
+      "url": "https://mexico-now.com/pemex-uif-agreement-to-combat-hydrocarbon-theft/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T16:41:26.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Pemex-UIF Agreement to Combat Hydrocarbon Theft",
+        "dek": "Pemex and the Ministry of Finance and Public Credit (HCP), through the Financial Intelligence Unit (UIF), have signed a collaboration..."
+      },
+      "coverage": [
+        {
+          "source": "MEXICONOW",
+          "url": "https://mexico-now.com/pemex-uif-agreement-to-combat-hydrocarbon-theft/",
+          "publishedAt": "2026-08-28T16:41:26.000Z",
+          "date": "2026-08-28",
+          "title": "Pemex and Mexico's Financial Intelligence Unit sign agreement to combat hydrocarbon theft",
+          "summary": "Pemex and the Financial Intelligence Unit have signed a collaboration agreement addressing fuel theft, a recurring drain on Mexico's state oil company and public finances."
+        },
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/huachicol-en-la-mira-hacienda-uif-y-pemex-intercambiaran-informacion-para-atender-el-robo-de-hidrocarburos/",
+          "publishedAt": "2026-08-28T00:52:55.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's Treasury, Financial Intelligence Unit and Pemex to share data on fuel theft",
+          "summary": "The Treasury, UIF and state oil firm Pemex will exchange information to identify financial structures used in hydrocarbon theft. Fuel smuggling (huachicol) costs Mexico billions annually and represents both a revenue loss for public finances and a security challenge."
+        },
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2708/mexico/uif-y-pemex-firman-convenio-para-combatir-el-huachicol/",
+          "publishedAt": "2026-08-28T00:22:07.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's Financial Intelligence Unit and Pemex sign agreement to combat fuel theft",
+          "summary": "The UIF and Pemex signed a pact to exchange intelligence and data to counter hydrocarbon theft, targeting the financial structures underlying fuel smuggling."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexico-now.com"
             }
           }
         },
@@ -1729,88 +1900,6 @@
             "score": 1,
             "status": "evidence-override",
             "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-uif-y-pemex-firman-convenio-para-combatir-el-huachic-2026-08-27",
-      "date": "2026-08-27",
-      "section": "security",
-      "title": "Mexico's Treasury, Financial Intelligence Unit and Pemex to share data on fuel theft",
-      "why": "The Treasury, UIF and state oil firm Pemex will exchange information to identify financial structures used in hydrocarbon theft. Fuel smuggling (huachicol) costs Mexico billions annually and represents both a revenue loss for public finances and a security challenge.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/huachicol-en-la-mira-hacienda-uif-y-pemex-intercambiaran-informacion-para-atender-el-robo-de-hidrocarburos/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-28T00:52:55.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Huachicol en la mira: Hacienda, UIF y Pemex intercambiarán información para atender el robo de hidrocarburos",
-        "dek": "La UIF y Pemex buscan identificar las estructuras financieras con las que se opera el robo de hidrocarburos. La publicación Huachicol en la mira: Hacienda, UIF y Pemex intercambiarán información para atender el robo de hidrocarburos apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/huachicol-en-la-mira-hacienda-uif-y-pemex-intercambiaran-informacion-para-atender-el-robo-de-hidrocarburos/",
-          "publishedAt": "2026-08-28T00:52:55.000Z",
-          "date": "2026-08-27",
-          "title": "Mexico's Treasury, Financial Intelligence Unit and Pemex to share data on fuel theft",
-          "summary": "The Treasury, UIF and state oil firm Pemex will exchange information to identify financial structures used in hydrocarbon theft. Fuel smuggling (huachicol) costs Mexico billions annually and represents both a revenue loss for public finances and a security challenge."
-        },
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/2708/mexico/uif-y-pemex-firman-convenio-para-combatir-el-huachicol/",
-          "publishedAt": "2026-08-28T00:22:07.000Z",
-          "date": "2026-08-27",
-          "title": "Mexico's Financial Intelligence Unit and Pemex sign agreement to combat fuel theft",
-          "summary": "The UIF and Pemex signed a pact to exchange intelligence and data to counter hydrocarbon theft, targeting the financial structures underlying fuel smuggling."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
             "evidence": {
               "score": 1,
               "source": "publishable-press",
@@ -4652,105 +4741,6 @@
         },
         "componentSource": "deterministic-fallback-v1"
       }
-    },
-    {
-      "id": "n-sonora-first-active-screwworm-case-2026-08-19",
-      "date": "2026-08-19",
-      "section": "us-mexico",
-      "title": "Screwworm reaches Sonora days before a cattle-export crossing is due to reopen",
-      "why": "Mexico's animal-health agency listed Sonora's first active case in Álamos. The US Agriculture Department has scheduled the Douglas, Arizona, cattle crossing to reopen on August 24, subject to Mexico following the joint control plan.",
-      "company": "",
-      "source": "RTN Medios",
-      "url": "https://rtnmedios.com/slider/sonora-registra-primer-caso-activo-de-gusano-barrenador/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-19T18:00:00.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Sonora registra primer caso activo de Gusano Barrenador",
-        "dek": "Sonora registró su primer caso activo de Gusano Barrenador del Ganado. La detección ocurre cinco días antes de la reapertura de la frontera, programada para el 24 de agosto."
-      },
-      "coverage": [
-        {
-          "source": "RTN Medios",
-          "url": "https://rtnmedios.com/slider/sonora-registra-primer-caso-activo-de-gusano-barrenador/",
-          "publishedAt": "2026-08-19T18:00:00.000Z",
-          "date": "2026-08-19",
-          "title": "Screwworm reaches Sonora days before a cattle-export crossing is due to reopen",
-          "summary": "Mexico's animal-health agency listed Sonora's first active case in Álamos. The US Agriculture Department has scheduled the Douglas, Arizona, cattle crossing to reopen on August 24, subject to Mexico following the joint control plan."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 3,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "reportedTotal": null,
-        "componentSource": "manual-source-review",
-        "components": {
-          "officialness": {
-            "modelScore": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "rtnmedios.com"
-            }
-          }
-        }
-      },
-      "background": "New World screwworm larvae feed on living tissue. The US Agriculture Department has tied the border reopening to the joint control plan and inspection of every animal entering through Douglas.",
-      "view": "One confirmed case does not by itself cancel the reopening. Sonora had been one of the northern states kept free of the pest, so the case tests whether the control plan can contain an isolated detection without another trade closure.",
-      "prediction": "Watch the US Agriculture Department's import page and Mexico's animal-health updates before August 24. If the crossing reopens on schedule with the case contained, that would support the control plan. A delay or more northern cases would show the trade risk is rising.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "article",
-          "primary:usda-screwworm"
-        ],
-        "view": [
-          "article",
-          "primary:usda-reopening"
-        ],
-        "prediction": [
-          "primary:usda-reopening",
-          "primary:senasica"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "RTN Medios",
-          "url": "https://rtnmedios.com/slider/sonora-registra-primer-caso-activo-de-gusano-barrenador/"
-        },
-        {
-          "id": "primary:usda-reopening",
-          "kind": "primary",
-          "source": "US Department of Agriculture",
-          "url": "https://direct.aphis.usda.gov/news/agency-announcements/usda-announces-phased-reopening-southern-ports-livestock-trade-0"
-        },
-        {
-          "id": "primary:usda-screwworm",
-          "kind": "primary",
-          "source": "US Department of Agriculture",
-          "url": "https://direct.aphis.usda.gov/live-animal-import/cattle-bison-germplasm/mexico"
-        },
-        {
-          "id": "primary:senasica",
-          "kind": "primary",
-          "source": "SENASICA",
-          "url": "https://www.gob.mx/agricultura/acciones-y-programas/gusano-barrenador-del-ganado-gbg-429472"
-        }
-      ],
-      "image": "https://rtnmedios.com/wp-content/uploads/2026/08/WhatsApp-Image-2026-08-19-at-3.52.55-PM.webp",
-      "imgTries": 1
     }
   ]
 }
