@@ -6,28 +6,39 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T18:52:29.507Z",
+    "generatedAt": "2026-08-28T19:04:58.128Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "4c4262e74b92d2cbcba1fc23edc9668b2b294c7e050fb87bac230505198b11db",
-      "freshCandidateCount": 24,
+      "candidateSig": "dd29baf8e44899f3e4f61aa40c55b50dfd9f67eefd2b086e47a8e8100ece49be",
+      "freshCandidateCount": 21,
       "assessedCount": 24,
-      "selectedCount": 6,
-      "freshSelectedCount": 6,
-      "keptCount": 6,
-      "freshKeptCount": 6,
-      "rejectedCount": 0,
-      "freshRejectedCount": 0,
-      "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 26,
-      "unassessedFreshCandidateCount": 2,
+      "selectedCount": 4,
+      "freshSelectedCount": 4,
+      "keptCount": 3,
+      "freshKeptCount": 3,
+      "rejectedCount": 1,
+      "freshRejectedCount": 1,
+      "rejectedSelected": [
+        {
+          "id": "n-el-queso-destruir-al-t-mec-crecen-las-tensiones-entr-2026-08-28",
+          "candidateIndex": 20,
+          "date": "2026-08-28",
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/el-queso-destruira-al-t-mec-crecen-las-tensiones-entre-mexico-y-eu-por-las-protecciones-al-producto/",
+          "flags": [
+            "5 sentences (cap 3)"
+          ]
+        }
+      ],
+      "eligibleFreshCandidateCount": 21,
+      "unassessedFreshCandidateCount": 0,
       "currentDayResolved": false,
       "mode": "model",
       "complete": true,
-      "reason": "the current-day candidate ledger was not fully resolved"
+      "reason": "1 selected event(s) quarantined by the copy gate"
     },
     "analysisTarget": {
       "policy": "every-selected-story-evidence-locked-v7",
@@ -35,7 +46,7 @@
         "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
         "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28"
       ],
-      "attempt": 1,
+      "attempt": 2,
       "added": 0,
       "outcomes": [
         {
@@ -43,11 +54,14 @@
           "ready": false,
           "reason": "field-rejected",
           "fields": {
+            "background": [
+              "The phrase 'preserved borrowing capacity' is not supported by evidence. The article states CFE will keep investments 'fuera del balance' (off-balance-sheet) to maintain a 'estructura financiera saludable' (healthy financial structure), but does not establish that this preserves borrowing capacity or that capacity was previously constrained."
+            ],
             "view": [
-              "The phrase 'preserved borrowing capacity' is not supported by the cited evidence. The article states CFE uses off-balance structures 'para mantener una estructura financiera de CFE saludable' (to maintain a healthy financial structure), but does not establish that CFE had constrained borrowing capacity that is now being preserved through this strategy."
+              "The phrase 'outsourcing capital risk' is invented. The article describes off-balance-sheet financing to maintain financial health, not a transfer of capital risk to private investors. The private sector is providing financing, not absorbing project completion or demand risk."
             ],
             "prediction": [
-              "The prediction invents competitor behavior and nationalities not supported by evidence. The article does not state that CFE 'will begin awarding' these projects, it describes planned investments in the 2026-2030 program. The referenced El CEO article is dated 2026-08-28 (a future date) and only states Spain led investment in 2025, it does not forecast that Spanish and Chinese developers 'will' close financing or that CENACE connection dates will determine outcomes."
+              "The prediction conflates an announced plan with an outcome. It states projects 'will reach financial close in stages through 2030' as fact, but the evidence only shows CFE's stated intention in a development program. The prediction should distinguish the plan from whether it will actually be executed."
             ]
           }
         },
@@ -57,10 +71,7 @@
           "reason": "field-rejected",
           "fields": {
             "view": [
-              "3 evidence references (cap 2)"
-            ],
-            "prediction": [
-              "field was empty"
+              "The mechanism 'tied to US artificial intelligence investment booms' is not supported. The evidence states exports of 'equipo de cómputo' (computer equipment) increased 'ante el auge de inversiones relacionadas con IA' (amid the boom in AI-related investments), but does not establish that Mexico's exports are causally tied to or dependent on US AI investment cycles. The phrase 'passes through Mexico as value-added margin' is also invented and not stated in the evidence."
             ]
           }
         }
@@ -142,7 +153,7 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 12
+      "imgTries": 13
     },
     {
       "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
@@ -218,7 +229,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 12
+      "imgTries": 13
     },
     {
       "id": "n-uif-y-pemex-firman-convenio-para-combatir-el-huachic-2026-08-27",
@@ -747,6 +758,80 @@
           "durability": {
             "raw": 2,
             "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-qu-pasa-si-la-deuda-de-m-xico-rebasa-60-del-pib-haci-2026-08-28",
+      "date": "2026-08-28",
+      "section": "money",
+      "title": "Mexico's public debt grows under recent administrations",
+      "why": "Mexico's public debt increased during the last three federal administrations. If debt exceeds 60% of GDP, the Finance Ministry would have less flexibility and Mexico's investment grade rating could be at risk.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/que-pasa-si-la-deuda-de-mexico-rebasa-60-del-pib-hacienda-tendria-menos-margen-y-peligraria-el-grado-de-inversion/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T18:47:30.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "¿Qué pasa si la deuda de México rebasa 60% del PIB? Hacienda tendría menos margen y peligraría el grado de inversión",
+        "dek": "Los mayores incrementos del endeudamiento público neto de México se registraron en las últimas tres administraciones federales. La publicación ¿Qué pasa si la deuda de México rebasa 60% del PIB? Hacienda tendría menos margen y peligraría el grado de inversión apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/que-pasa-si-la-deuda-de-mexico-rebasa-60-del-pib-hacienda-tendria-menos-margen-y-peligraria-el-grado-de-inversion/",
+          "publishedAt": "2026-08-28T18:47:30.000Z",
+          "date": "2026-08-28",
+          "title": "Mexico's public debt grows under recent administrations",
+          "summary": "Mexico's public debt increased during the last three federal administrations. If debt exceeds 60% of GDP, the Finance Ministry would have less flexibility and Mexico's investment grade rating could be at risk."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
             "status": "accepted"
           },
           "officialness": {
@@ -1358,6 +1443,80 @@
       }
     },
     {
+      "id": "n-laser-used-to-shoot-down-cartel-drones-near-mexico-b-2026-08-28",
+      "date": "2026-08-28",
+      "section": "us-mexico",
+      "title": "US military deploys high-energy laser to shoot down cartel drones near Mexico border",
+      "why": "The U.S. military this week used a high-energy laser weapon to shoot down three drones near the southern border that officials linked to Mexican drug cartels, marking an operational escalation in cross-border enforcement.",
+      "company": "",
+      "source": "Border Report",
+      "url": "https://borderreport.com/border-report-tour/border-crime/laser-used-to-shoot-down-cartel-drones-near-mexico-border/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T14:54:47.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Laser used to shoot down cartel drones near Mexico border",
+        "dek": "The U.S. military this week used a high-energy laser to shoot down three drones near the southern border that officials said were linked to Mexican drug cartels."
+      },
+      "coverage": [
+        {
+          "source": "Border Report",
+          "url": "https://borderreport.com/border-report-tour/border-crime/laser-used-to-shoot-down-cartel-drones-near-mexico-border/",
+          "publishedAt": "2026-08-28T14:54:47.000Z",
+          "date": "2026-08-28",
+          "title": "US military deploys high-energy laser to shoot down cartel drones near Mexico border",
+          "summary": "The U.S. military this week used a high-energy laser weapon to shoot down three drones near the southern border that officials linked to Mexican drug cartels, marking an operational escalation in cross-border enforcement."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "borderreport.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-cosco-mira-m-s-all-del-mar-su-apuesta-log-stica-para-2026-08-28",
       "date": "2026-08-28",
       "section": "economy",
@@ -1720,6 +1879,80 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-el-gobierno-detalla-c-mo-recuper-cinco-millones-de-d-2026-08-28",
+      "date": "2026-08-28",
+      "section": "politics",
+      "title": "Mexico recovers seized assets from García Luna corruption case",
+      "why": "The Claudia Sheinbaum administration will direct resources seized from former Security Secretary García Luna toward a mountain region in Guerrero. The funds were recovered from the corruption network involving the official from Felipe Calderón's government.",
+      "company": "",
+      "source": "El País — México",
+      "url": "https://elpais.com/mexico/2026-08-28/el-gobierno-detalla-como-recupero-cinco-millones-de-dolares-de-la-trama-corrupta-de-garcia-luna.html",
+      "importance": 3,
+      "kind": "event",
+      "publishedAt": "2026-08-28T18:48:26.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "El Gobierno detalla cómo recuperó cinco millones de dólares de la trama corrupta de García Luna",
+        "dek": "La Administración de Claudia Sheinbaum destinará a la montaña de Guerrero los recursos incautados al exsecretario de Seguridad de Felipe Calderón"
+      },
+      "coverage": [
+        {
+          "source": "El País — México",
+          "url": "https://elpais.com/mexico/2026-08-28/el-gobierno-detalla-como-recupero-cinco-millones-de-dolares-de-la-trama-corrupta-de-garcia-luna.html",
+          "publishedAt": "2026-08-28T18:48:26.000Z",
+          "date": "2026-08-28",
+          "title": "Mexico recovers seized assets from García Luna corruption case",
+          "summary": "The Claudia Sheinbaum administration will direct resources seized from former Security Secretary García Luna toward a mountain region in Guerrero. The funds were recovered from the corruption network involving the official from Felipe Calderón's government."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 0,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 3,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elpais.com"
             }
           }
         },
@@ -4465,236 +4698,6 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-m-xico-25-millones-de-l-neas-podr-an-desaparecer-del-2026-08-24",
-      "date": "2026-08-24",
-      "section": "economy",
-      "title": "Mexico to remove 25 million inactive phone lines from registry",
-      "why": "Mexico's telecommunications regulator will purge 25 million phone numbers from its database as part of an ongoing registry cleanup, affecting inactive lines currently held in government records.",
-      "company": "",
-      "source": "DPL News",
-      "url": "https://dplnews.com/mexico-25-millones-de-lineas-podrian-desaparecer-del-registro-la-crt-explica-cuales-seran-depuradas/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-24T22:17:13.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "México | 25 millones de líneas podrían desaparecer del registro: la CRT explica cuáles serán depuradas",
-        "dek": "Expansión El registro de líneas telefónicas en México avanza, pero no todos los números celulares que actualmente aparecen en las bases de datos llegarán al final del proceso, de acuerdo a la Comisión Reguladora de Telecomunicaciones (CRT) alrededor de 25 millones de líneas serán depuradas del registro nacional. Leer m"
-      },
-      "coverage": [
-        {
-          "source": "DPL News",
-          "url": "https://dplnews.com/mexico-25-millones-de-lineas-podrian-desaparecer-del-registro-la-crt-explica-cuales-seran-depuradas/",
-          "publishedAt": "2026-08-24T22:17:13.000Z",
-          "date": "2026-08-24",
-          "title": "Mexico to remove 25 million inactive phone lines from registry",
-          "summary": "Mexico's telecommunications regulator will purge 25 million phone numbers from its database as part of an ongoing registry cleanup, affecting inactive lines currently held in government records."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "dplnews.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-inflaci-n-repunta-a-3-26-en-agosto-cebolla-se-encare-2026-08-24",
-      "date": "2026-08-24",
-      "section": "money",
-      "title": "Mexico inflation rises to 3.26 percent in first half of August as onion prices jump 67 percent",
-      "why": "The inflation rate accelerated to 3.26 percent in the first fortnight of August 2026, marking the second consecutive acceleration. Onion prices surged 67 percent and potato prices climbed nearly 50 percent.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/inflacion-repunta-a-3-26-en-agosto-cebolla-se-encarece-67-y-papa-casi-50/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-24T16:01:54.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Inflación repunta a 3.26% en agosto; cebolla se encarece 67% y papa casi 50%",
-        "dek": "La tasa de inflación en México se aceleró por segunda quincena consecutiva al escalar hasta 3.26% en la primera mitad de agosto de 2026. La publicación Inflación repunta a 3.26% en agosto; cebolla se encarece 67% y papa casi 50% apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/inflacion-repunta-a-3-26-en-agosto-cebolla-se-encarece-67-y-papa-casi-50/",
-          "publishedAt": "2026-08-24T16:01:54.000Z",
-          "date": "2026-08-24",
-          "title": "Mexico inflation rises to 3.26 percent in first half of August as onion prices jump 67 percent",
-          "summary": "The inflation rate accelerated to 3.26 percent in the first fortnight of August 2026, marking the second consecutive acceleration. Onion prices surged 67 percent and potato prices climbed nearly 50 percent."
-        },
-        {
-          "source": "elfinanciero.com.mx",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/24/inflacion-en-mexico-acelera-a-326-en-primera-quincena-de-agosto-que-productos-subieron-de-precio/",
-          "publishedAt": "2026-08-24T14:10:02.000Z",
-          "date": "2026-08-24",
-          "title": "Inflación en México acelera a 3.26% en primera quincena de agosto: ¿Qué productos subieron de precio?",
-          "summary": "La inflación en México se aceleró durante la primera quincena de agosto y alcanzó una tasa anual de 3.26 por ciento, desde el 3.14 por ciento en la quincena previa."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-bait-se-al-a-con-oxxo-para-ampliar-recargas-a-sus-26-2026-08-24",
-      "date": "2026-08-24",
-      "section": "economy",
-      "title": "Bait and OXXO partner to expand mobile payment reloads at 24,000 locations",
-      "why": "Digital payments platform Bait, serving 26.8 million users, secured distribution through OXXO's 24,000-plus convenience stores and Spin platform to allow customers to reload accounts in person.",
-      "company": "Bait",
-      "source": "Expansión — Empresas",
-      "url": "https://expansion.mx/empresas/2026/08/24/bait-alia-oxxo-recargas",
-      "importance": 3,
-      "kind": "event",
-      "publishedAt": "2026-08-24T18:05:40.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Bait se alía con OXXO para ampliar recargas a sus 26.8 millones de usuarios",
-        "dek": "Los clientes de Bait tendrán nuevos puntos para realizar recargas gracias a un acuerdo con OXXO, que suma más de 24,000 establecimientos y la plataforma Spin by OXXO."
-      },
-      "coverage": [
-        {
-          "source": "Expansión — Empresas",
-          "url": "https://expansion.mx/empresas/2026/08/24/bait-alia-oxxo-recargas",
-          "publishedAt": "2026-08-24T18:05:40.000Z",
-          "date": "2026-08-24",
-          "title": "Bait and OXXO partner to expand mobile payment reloads at 24,000 locations",
-          "summary": "Digital payments platform Bait, serving 26.8 million users, secured distribution through OXXO's 24,000-plus convenience stores and Spin platform to allow customers to reload accounts in person."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 3,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "expansion.mx"
             }
           }
         },
