@@ -6,25 +6,25 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T15:33:27.254Z",
+    "generatedAt": "2026-08-28T15:49:49.261Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "b7f99cbc20b6f36c651dee33822451426d7affeef586eebd52085b51af95f9b1",
-      "freshCandidateCount": 16,
+      "candidateSig": "7b4e4705c245d017e23064ca3c44903f6723c77ee901447ba9af725f0815a846",
+      "freshCandidateCount": 18,
       "assessedCount": 24,
-      "selectedCount": 1,
-      "freshSelectedCount": 0,
-      "keptCount": 0,
-      "freshKeptCount": 0,
+      "selectedCount": 3,
+      "freshSelectedCount": 2,
+      "keptCount": 2,
+      "freshKeptCount": 2,
       "rejectedCount": 1,
       "freshRejectedCount": 0,
       "rejectedSelected": [
         {
           "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
-          "candidateIndex": 18,
+          "candidateIndex": 20,
           "date": "2026-08-27",
           "source": "El CEO",
           "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
@@ -33,7 +33,7 @@
           ]
         }
       ],
-      "eligibleFreshCandidateCount": 16,
+      "eligibleFreshCandidateCount": 18,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
@@ -41,37 +41,51 @@
       "reason": "1 selected event(s) quarantined by the copy gate"
     },
     "analysisTarget": {
-      "policy": "every-selected-story-evidence-locked-v5",
+      "policy": "every-selected-story-evidence-locked-v6",
       "ids": [
         "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
         "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
         "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28"
       ],
       "attempt": 1,
-      "added": 2,
+      "added": 0,
       "outcomes": [
         {
           "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
-          "ready": true,
-          "reason": "ready",
-          "fields": {}
+          "ready": false,
+          "reason": "budget-unavailable",
+          "fields": {
+            "view": [
+              "unsupported number: 37.5"
+            ]
+          }
         },
         {
           "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
           "ready": false,
-          "reason": "field-rejected",
+          "reason": "budget-unavailable",
           "fields": {
             "view": [
-              "4 sentences (cap 3)",
-              "announcement number has no denominator or useful comparison"
+              "unsupported number: 81.4"
+            ],
+            "prediction": [
+              "4 sentences (cap 2)",
+              "watch item has no observable next test"
             ]
           }
         },
         {
           "id": "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28",
-          "ready": true,
-          "reason": "ready",
-          "fields": {}
+          "ready": false,
+          "reason": "budget-unavailable",
+          "fields": {
+            "view": [
+              "unsupported number: 2026"
+            ],
+            "prediction": [
+              "unsupported number: 2026"
+            ]
+          }
         }
       ]
     }
@@ -151,7 +165,7 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 3,
+      "imgTries": 4,
       "background": "CFE, Latin America's largest electric utility and a state monopoly, must finance generation, transmission, and distribution infrastructure while maintaining a healthy balance sheet.",
       "view": "CFE's dependence on private capital through off-balance structures shifts investment risk to partners and preserves the utility's borrowing capacity, but raises execution risk if private appetite cools or projects encounter delays. Investors gain exposure to power infrastructure, CFE retains operational control.",
       "prediction": "CFE will announce whether the 52 generation projects, 175 transmission routes, and four distribution programs meet completion milestones on schedule. If project delays accumulate or private partners withdraw, whether CFE pivots to larger on-balance borrowing that would compress its debt ceiling.",
@@ -258,7 +272,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 3
+      "imgTries": 4
     },
     {
       "id": "n-aristegui-en-vivo-fernando-n-es-vinculado-a-proceso--2026-08-28",
@@ -407,7 +421,7 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
-      "imgTries": 3,
+      "imgTries": 4,
       "background": "Mexico imposed a 50% tariff on automotive imports in response to trade friction, raising costs for foreign manufacturers who supply the Mexican market.",
       "view": "Suzuki raised imports from Japan while cutting Mexican sales 18% in seven months, accepting tariff costs on higher-margin models to avoid local price increases that would shrink market share further. The tradeoff sacrifices volume for margin and signals that tariff pass-through pricing destroys demand faster than higher per-unit costs.",
       "prediction": "Suzuki will drop the Baleno model from its Mexico lineup and shift inventory toward imported Swift and Jimny models. If competitors follow with similar import increases and local cuts, the tariff will have pushed Mexican assembly output lower despite intent to protect domestic production.",
@@ -505,6 +519,154 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-cfe-is-preparing-a-us-43-6-million-investment-for-a--2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Mexico's Federal Electricity Commission plans US$43.6 million investment for grid expansion by 2030",
+      "why": "The CFE announced plans to invest approximately US$43.6 million by 2030 to expand and modernize the country's electrical infrastructure.",
+      "company": "CFE",
+      "source": "MEXICONOW",
+      "url": "https://mexico-now.com/cfe-is-preparing-a-us43-6-million-investment-for-a-development-program/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T15:41:40.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "CFE is preparing a US$43.6 million investment for a development program",
+        "dek": "The Federal Electricity Commission (CFE) plans to invest approximately US$43.6 million by 2030 to expand and modernize the country’s electrical..."
+      },
+      "coverage": [
+        {
+          "source": "MEXICONOW",
+          "url": "https://mexico-now.com/cfe-is-preparing-a-us43-6-million-investment-for-a-development-program/",
+          "publishedAt": "2026-08-28T15:41:40.000Z",
+          "date": "2026-08-28",
+          "title": "Mexico's Federal Electricity Commission plans US$43.6 million investment for grid expansion by 2030",
+          "summary": "The CFE announced plans to invest approximately US$43.6 million by 2030 to expand and modernize the country's electrical infrastructure."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexico-now.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-harfuch-me-llam-as-supo-la-dea-del-operativo-contra--2026-08-28",
+      "date": "2026-08-28",
+      "section": "us-mexico",
+      "title": "Mexico's Security Minister confirms US technological support in operation against cartel leader",
+      "why": "Security Minister Omar García Harfuch confirmed that the United States provided technological support in the operation against 'El Mencho' and proposed joint investigations between both countries.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/2808/mexico/harfuch-me-llamo-asi-supo-la-dea-del-operativo-contra-el-mencho/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T15:20:12.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "‘Harfuch me llamó’: así supo la DEA del operativo contra ‘El Mencho’",
+        "dek": "Omar García Harfuch confirmó que EU brindó apoyo tecnológico en el operativo contra ‘El Mencho’ y planteó investigaciones conjuntas entre ambos países."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2808/mexico/harfuch-me-llamo-asi-supo-la-dea-del-operativo-contra-el-mencho/",
+          "publishedAt": "2026-08-28T15:20:12.000Z",
+          "date": "2026-08-28",
+          "title": "Mexico's Security Minister confirms US technological support in operation against cartel leader",
+          "summary": "Security Minister Omar García Harfuch confirmed that the United States provided technological support in the operation against 'El Mencho' and proposed joint investigations between both countries."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "aristeguinoticias.com"
             }
           }
         },
@@ -4822,199 +4984,6 @@
           "url": "https://www.trade.gov/commerce-initiates-antidumping-duty-investigation-fresh-strawberries-mexico"
         }
       ]
-    },
-    {
-      "id": "n-acuerdo-por-el-que-se-reforma-y-adiciona-el-manual-d-2026-08-13",
-      "date": "2026-08-13",
-      "section": "economy",
-      "title": "Mexico's Treasury reforms governmental accounting manual",
-      "why": "Official gazette publication of reforms to Mexico's Manual de Contabilidad Gubernamental establishes new accounting and reporting standards for federal entities.",
-      "company": "",
-      "source": "Diario Oficial de la Federación",
-      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796157&fecha=13/08/2026",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-13T12:00:00.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Acuerdo por el que se reforma y adiciona el Manual de Contabilidad Gubernamental.",
-        "dek": "DOF · PODER EJECUTIVO SECRETARIA DE HACIENDA Y CREDITO PUBLICO"
-      },
-      "coverage": [
-        {
-          "source": "Diario Oficial de la Federación",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796157&fecha=13/08/2026",
-          "publishedAt": "2026-08-13T12:00:00.000Z",
-          "date": "2026-08-13",
-          "title": "Mexico's Treasury reforms governmental accounting manual",
-          "summary": "Official gazette publication of reforms to Mexico's Manual de Contabilidad Gubernamental establishes new accounting and reporting standards for federal entities."
-        },
-        {
-          "source": "diariooficial.gob.mx",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796158&fecha=13/08/2026",
-          "publishedAt": "2026-08-13T12:00:00.000Z",
-          "date": "2026-08-13",
-          "title": "Acuerdo por el que se reforma el Marco Conceptual de Contabilidad Gubernamental.",
-          "summary": "DOF · PODER EJECUTIVO SECRETARIA DE HACIENDA Y CREDITO PUBLICO"
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 2,
-              "source": "authoritative-domain",
-              "hostname": "diariooficial.gob.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "imgTries": 3,
-      "background": "Mexico's national accounting council sets a common rulebook for federal, state and municipal public accounts. The official gazette published changes to both the manual and its conceptual framework.",
-      "view": "The reform changes how public entities record and report money, not how much they can spend. Its value depends on whether the new statements make obligations and transfers easier to compare across entities, including federal support for Pemex.",
-      "prediction": "Watch whether the next quarterly financial statements use the new classifications consistently. Common treatment would show adoption, while different treatment across entities would reveal an implementation gap.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "article"
-        ],
-        "view": [
-          "article",
-          "standing:std-fiscal-path"
-        ],
-        "prediction": [
-          "article",
-          "report:1"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "Diario Oficial de la Federación",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796157&fecha=13/08/2026"
-        },
-        {
-          "id": "standing:std-fiscal-path",
-          "kind": "standing",
-          "source": "SHCP (Hacienda)",
-          "url": "https://www.gob.mx/hacienda"
-        },
-        {
-          "id": "report:1",
-          "kind": "report",
-          "source": "diariooficial.gob.mx",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796158&fecha=13/08/2026"
-        }
-      ]
-    },
-    {
-      "id": "n-mining-leads-mexico-s-2025-m-a-2026-08-13",
-      "date": "2026-08-13",
-      "section": "economy",
-      "title": "Mining Leads Mexico’s 2025 M&A",
-      "why": "Mining drove 20.5% of Mexico's 2025 M&A with 33 deals.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/mining/news/mining-leads-mexicos-2025-ma",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-13T18:44:26.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Mining Leads Mexico’s 2025 M&A",
-        "dek": "Mining drove 20.5% of Mexico's 2025 M&A with 33 deals. The test now is whether the new owners spend on the assets they bought. In addition, US aluminum producers want Mexico's fabricated goods excluded from any USMCA tariff carveout, arguing origin rules cannot replace Section 232. Ready for more? Here is your weekly r"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/mining/news/mining-leads-mexicos-2025-ma",
-          "publishedAt": "2026-08-13T18:44:26.000Z",
-          "date": "2026-08-13",
-          "title": "Mining Leads Mexico’s 2025 M&A",
-          "summary": "Mining drove 20.5% of Mexico's 2025 M&A with 33 deals."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexicobusiness.news"
-            }
-          }
-        },
-        "componentSource": "deterministic-fallback-v1"
-      }
     }
   ]
 }
