@@ -6,28 +6,28 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T17:51:04.357Z",
+    "generatedAt": "2026-08-28T18:52:29.507Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "f343ed4debca7a0b2a810712e67ed274969a32e9fdc858458c32fcc8a6bf0ff1",
-      "freshCandidateCount": 19,
+      "candidateSig": "4c4262e74b92d2cbcba1fc23edc9668b2b294c7e050fb87bac230505198b11db",
+      "freshCandidateCount": 24,
       "assessedCount": 24,
-      "selectedCount": 3,
-      "freshSelectedCount": 2,
-      "keptCount": 3,
-      "freshKeptCount": 2,
+      "selectedCount": 6,
+      "freshSelectedCount": 6,
+      "keptCount": 6,
+      "freshKeptCount": 6,
       "rejectedCount": 0,
       "freshRejectedCount": 0,
       "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 19,
-      "unassessedFreshCandidateCount": 0,
-      "currentDayResolved": true,
+      "eligibleFreshCandidateCount": 26,
+      "unassessedFreshCandidateCount": 2,
+      "currentDayResolved": false,
       "mode": "model",
       "complete": true,
-      "reason": ""
+      "reason": "the current-day candidate ledger was not fully resolved"
     },
     "analysisTarget": {
       "policy": "every-selected-story-evidence-locked-v7",
@@ -43,8 +43,11 @@
           "ready": false,
           "reason": "field-rejected",
           "fields": {
+            "view": [
+              "The phrase 'preserved borrowing capacity' is not supported by the cited evidence. The article states CFE uses off-balance structures 'para mantener una estructura financiera de CFE saludable' (to maintain a healthy financial structure), but does not establish that CFE had constrained borrowing capacity that is now being preserved through this strategy."
+            ],
             "prediction": [
-              "3 sentences (cap 2)"
+              "The prediction invents competitor behavior and nationalities not supported by evidence. The article does not state that CFE 'will begin awarding' these projects, it describes planned investments in the 2026-2030 program. The referenced El CEO article is dated 2026-08-28 (a future date) and only states Spain led investment in 2025, it does not forecast that Spanish and Chinese developers 'will' close financing or that CENACE connection dates will determine outcomes."
             ]
           }
         },
@@ -54,6 +57,9 @@
           "reason": "field-rejected",
           "fields": {
             "view": [
+              "3 evidence references (cap 2)"
+            ],
+            "prediction": [
               "field was empty"
             ]
           }
@@ -136,7 +142,7 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 11
+      "imgTries": 12
     },
     {
       "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
@@ -212,7 +218,105 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 11
+      "imgTries": 12
+    },
+    {
+      "id": "n-uif-y-pemex-firman-convenio-para-combatir-el-huachic-2026-08-27",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "PEMEX and Financial Intelligence Unit sign fuel-fraud information-sharing agreement",
+      "why": "Mexico's state oil company and Financial Intelligence Unit formalized an agreement to disrupt illegal fuel commercialization by targeting financial and logistical networks supporting it.",
+      "company": "PEMEX",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/oilandgas/news/pemex-uif-sign-agreement-curb-hydrocarbon-market-fraud",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-28T18:33:34.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "PEMEX, UIF Sign Agreement to Curb Hydrocarbon Market Fraud",
+        "dek": "Mexico's Financial Intelligence Unit (UIF) and PEMEX signed an information-sharing agreement to disrupt illegal fuel commercialization by targeting its financial and logistical structures. The strategy addresses widespread supply-chain vulnerabilities, including permit misuse, customs misclassifications, and non-compli"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/oilandgas/news/pemex-uif-sign-agreement-curb-hydrocarbon-market-fraud",
+          "publishedAt": "2026-08-28T18:33:34.000Z",
+          "date": "2026-08-28",
+          "title": "PEMEX and Financial Intelligence Unit sign fuel-fraud information-sharing agreement",
+          "summary": "Mexico's state oil company and Financial Intelligence Unit formalized an agreement to disrupt illegal fuel commercialization by targeting financial and logistical networks supporting it."
+        },
+        {
+          "source": "MEXICONOW",
+          "url": "https://mexico-now.com/pemex-uif-agreement-to-combat-hydrocarbon-theft/",
+          "publishedAt": "2026-08-28T16:41:26.000Z",
+          "date": "2026-08-28",
+          "title": "Pemex and Mexico's Financial Intelligence Unit sign agreement to combat hydrocarbon theft",
+          "summary": "Pemex and the Financial Intelligence Unit have signed a collaboration agreement addressing fuel theft, a recurring drain on Mexico's state oil company and public finances."
+        },
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/huachicol-en-la-mira-hacienda-uif-y-pemex-intercambiaran-informacion-para-atender-el-robo-de-hidrocarburos/",
+          "publishedAt": "2026-08-28T00:52:55.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's Treasury, Financial Intelligence Unit and Pemex to share data on fuel theft",
+          "summary": "The Treasury, UIF and state oil firm Pemex will exchange information to identify financial structures used in hydrocarbon theft. Fuel smuggling (huachicol) costs Mexico billions annually and represents both a revenue loss for public finances and a security challenge."
+        },
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2708/mexico/uif-y-pemex-firman-convenio-para-combatir-el-huachicol/",
+          "publishedAt": "2026-08-28T00:22:07.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's Financial Intelligence Unit and Pemex sign agreement to combat fuel theft",
+          "summary": "The UIF and Pemex signed a pact to exchange intelligence and data to counter hydrocarbon theft, targeting the financial structures underlying fuel smuggling."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexicobusiness.news"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
     },
     {
       "id": "n-presi-n-de-eu-genera-cambios-en-las-sofomes-buscan-q-2026-08-28",
@@ -281,6 +385,80 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-tu-l-nea-telcel-at-t-o-bait-termina-en-n-mero-1-este-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Mexican phone lines ending in 1 face registration deadline",
+      "why": "Lines ending in 1 on Telcel, AT&T, or Bait must be registered by today. The registration process continues in phases through December, with different deadlines for each number.",
+      "company": "",
+      "source": "Expansión — Empresas",
+      "url": "https://expansion.mx/empresas/2026/08/28/linea-termina-1-ultimo-dia-registro-telefonico",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-28T15:55:13.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Tu línea Telcel, AT&T o Bait termina en número 1: este es el último día para el registro telefónico",
+        "dek": "El proceso seguirá de forma escalonada hasta diciembre. Conoce el calendario, los plazos para registrar tu línea y qué hacer si ya fue suspendida."
+      },
+      "coverage": [
+        {
+          "source": "Expansión — Empresas",
+          "url": "https://expansion.mx/empresas/2026/08/28/linea-termina-1-ultimo-dia-registro-telefonico",
+          "publishedAt": "2026-08-28T15:55:13.000Z",
+          "date": "2026-08-28",
+          "title": "Mexican phone lines ending in 1 face registration deadline",
+          "summary": "Lines ending in 1 on Telcel, AT&T, or Bait must be registered by today. The registration process continues in phases through December, with different deadlines for each number."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "expansion.mx"
             }
           }
         },
@@ -588,6 +766,154 @@
       }
     },
     {
+      "id": "n-alcanza-oxxo-gas-14-de-energ-a-renovable-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "OXXO Gas achieves 14 percent renewable energy in electricity supply",
+      "why": "OXXO Gas reached 14 percent of its electricity supply from clean sources, primarily solar and wind power.",
+      "company": "OXXO",
+      "source": "Energía a Debate",
+      "url": "https://energiaadebate.com/alcanza-oxxo-gas-14-de-energia-renovable/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T18:27:14.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Alcanza OXXO Gas 14 % de energía renovable",
+        "dek": "Monterrey, NL.- OXXO Gas alcanzó 14 por ciento de su suministro eléctrico a partir de fuentes limpias, principalmente solar fotovoltaica y eólica. Jaime Longoria Manllo, CEO de la empresa distribuidora de combustibles automotrices, refirió que, al presente, la compañía ha instalado más de 2 mil paneles solares y sistem"
+      },
+      "coverage": [
+        {
+          "source": "Energía a Debate",
+          "url": "https://energiaadebate.com/alcanza-oxxo-gas-14-de-energia-renovable/",
+          "publishedAt": "2026-08-28T18:27:14.000Z",
+          "date": "2026-08-28",
+          "title": "OXXO Gas achieves 14 percent renewable energy in electricity supply",
+          "summary": "OXXO Gas reached 14 percent of its electricity supply from clean sources, primarily solar and wind power."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "energiaadebate.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-audi-reaches-1-5-million-q5-units-in-mexico-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Audi reaches 1.5 million Q5 units manufactured at San José Chiapa facility",
+      "why": "Audi achieved a production milestone of 1.5 million Q5 vehicles at its San José Chiapa plant in Mexico.",
+      "company": "Audi",
+      "source": "MEXICONOW",
+      "url": "https://mexico-now.com/audi-reaches-1-5-million-q5-units-in-mexico/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T18:12:11.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Audi Reaches 1.5 Million Q5 Units in Mexico",
+        "dek": "Audi has reached a major production milestone in Mexico, manufacturing 1.5 million Q5 vehicles at its San José Chiapa facility..."
+      },
+      "coverage": [
+        {
+          "source": "MEXICONOW",
+          "url": "https://mexico-now.com/audi-reaches-1-5-million-q5-units-in-mexico/",
+          "publishedAt": "2026-08-28T18:12:11.000Z",
+          "date": "2026-08-28",
+          "title": "Audi reaches 1.5 million Q5 units manufactured at San José Chiapa facility",
+          "summary": "Audi achieved a production milestone of 1.5 million Q5 vehicles at its San José Chiapa plant in Mexico."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexico-now.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-m-xico-coloca-casi-1-800-millones-de-d-lares-en-bono-2026-08-28",
       "date": "2026-08-28",
       "section": "money",
@@ -662,6 +988,80 @@
       }
     },
     {
+      "id": "n-el-tecnol-gico-es-el-principal-reto-de-las-sofomes-e-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Financial technology and artificial intelligence named primary challenge for Mexican lending firms in 2026",
+      "why": "FIRA and Mexico's banking regulator identified digital access, artificial intelligence, and data capabilities as the main collective challenge facing sofomes (specialized financial companies) in 2026.",
+      "company": "",
+      "source": "DPL News",
+      "url": "https://dplnews.com/el-tecnologico-es-el-principal-reto-de-las-sofomes-en-2026-coinciden-fira-y-cnbv/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T16:49:51.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "El tecnológico es el principal reto de las sofomes en 2026, coinciden FIRA y CNBV",
+        "dek": "Cancún, Quintana Roo. En 2026, el creciente reto tecnológico de acceso a datos, Inteligencia Artificial y capacidades digitales es el principal desafío que requiere acción colectiva por parte de las sociedades financieras de objeto múltiple (sofomes), advirtió Alan Elizondo Flores, director general de los Fideicomisos"
+      },
+      "coverage": [
+        {
+          "source": "DPL News",
+          "url": "https://dplnews.com/el-tecnologico-es-el-principal-reto-de-las-sofomes-en-2026-coinciden-fira-y-cnbv/",
+          "publishedAt": "2026-08-28T16:49:51.000Z",
+          "date": "2026-08-28",
+          "title": "Financial technology and artificial intelligence named primary challenge for Mexican lending firms in 2026",
+          "summary": "FIRA and Mexico's banking regulator identified digital access, artificial intelligence, and data capabilities as the main collective challenge facing sofomes (specialized financial companies) in 2026."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "dplnews.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-axtel-se-dispara-casi-16-en-la-bmv-tras-oferta-de-to-2026-08-28",
       "date": "2026-08-28",
       "section": "economy",
@@ -728,96 +1128,6 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-uif-y-pemex-firman-convenio-para-combatir-el-huachic-2026-08-27",
-      "date": "2026-08-28",
-      "section": "security",
-      "title": "Pemex and Mexico's Financial Intelligence Unit sign agreement to combat hydrocarbon theft",
-      "why": "Pemex and the Financial Intelligence Unit have signed a collaboration agreement addressing fuel theft, a recurring drain on Mexico's state oil company and public finances.",
-      "company": "Pemex",
-      "source": "MEXICONOW",
-      "url": "https://mexico-now.com/pemex-uif-agreement-to-combat-hydrocarbon-theft/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-28T16:41:26.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Pemex-UIF Agreement to Combat Hydrocarbon Theft",
-        "dek": "Pemex and the Ministry of Finance and Public Credit (HCP), through the Financial Intelligence Unit (UIF), have signed a collaboration..."
-      },
-      "coverage": [
-        {
-          "source": "MEXICONOW",
-          "url": "https://mexico-now.com/pemex-uif-agreement-to-combat-hydrocarbon-theft/",
-          "publishedAt": "2026-08-28T16:41:26.000Z",
-          "date": "2026-08-28",
-          "title": "Pemex and Mexico's Financial Intelligence Unit sign agreement to combat hydrocarbon theft",
-          "summary": "Pemex and the Financial Intelligence Unit have signed a collaboration agreement addressing fuel theft, a recurring drain on Mexico's state oil company and public finances."
-        },
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/huachicol-en-la-mira-hacienda-uif-y-pemex-intercambiaran-informacion-para-atender-el-robo-de-hidrocarburos/",
-          "publishedAt": "2026-08-28T00:52:55.000Z",
-          "date": "2026-08-27",
-          "title": "Mexico's Treasury, Financial Intelligence Unit and Pemex to share data on fuel theft",
-          "summary": "The Treasury, UIF and state oil firm Pemex will exchange information to identify financial structures used in hydrocarbon theft. Fuel smuggling (huachicol) costs Mexico billions annually and represents both a revenue loss for public finances and a security challenge."
-        },
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/2708/mexico/uif-y-pemex-firman-convenio-para-combatir-el-huachicol/",
-          "publishedAt": "2026-08-28T00:22:07.000Z",
-          "date": "2026-08-27",
-          "title": "Mexico's Financial Intelligence Unit and Pemex sign agreement to combat fuel theft",
-          "summary": "The UIF and Pemex signed a pact to exchange intelligence and data to counter hydrocarbon theft, targeting the financial structures underlying fuel smuggling."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexico-now.com"
             }
           }
         },
@@ -1294,6 +1604,80 @@
           "date": "2026-08-28",
           "title": "Mexicana de Aviación reaches 26 percent of 2026 revenue target",
           "summary": "Mexicana de Aviación set a goal to increase passenger numbers by 106 percent in 2026 compared to the prior year, and current revenue reaches 26 percent of that 2026 objective."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-scjn-arrastra-15-asuntos-fiscales-pendientes-samsung-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Supreme Court holding 15 pending tax disputes involving Samsung, Dish, and Movistar",
+      "why": "Mexico's Supreme Court is managing 15 fiscal cases, while the tax authority maintains 24 open litigation matters with IMMEX companies, including three named multinationals.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/scjn-arrastra-15-asuntos-fiscales-pendientes-samsung-dish-y-movistar-entre-los-casos/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-28T08:00:29.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "SCJN arrastra 15 asuntos fiscales pendientes; Samsung, Dish y Movistar, entre los casos",
+        "dek": "El Servicio de Administración Tributaria (SAT) mantiene abiertos 24 litigios con empresas IMMEX. La publicación SCJN arrastra 15 asuntos fiscales pendientes; Samsung, Dish y Movistar, entre los casos apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/scjn-arrastra-15-asuntos-fiscales-pendientes-samsung-dish-y-movistar-entre-los-casos/",
+          "publishedAt": "2026-08-28T08:00:29.000Z",
+          "date": "2026-08-28",
+          "title": "Supreme Court holding 15 pending tax disputes involving Samsung, Dish, and Movistar",
+          "summary": "Mexico's Supreme Court is managing 15 fiscal cases, while the tax authority maintains 24 open litigation matters with IMMEX companies, including three named multinationals."
         }
       ],
       "importanceComponents": {
@@ -4317,384 +4701,6 @@
         "reportedTotal": null,
         "componentSource": "model"
       }
-    },
-    {
-      "id": "n-bbva-santander-y-otros-bancos-pagar-an-86-4-mdd-por--2026-08-23",
-      "date": "2026-08-23",
-      "section": "money",
-      "title": "Seven major banks including BBVA and Santander face 86.4 million dollar penalty for bond-market collusion",
-      "why": "BBVA, Santander and five other Mexican banks are subject to an 86.4 million dollar penalty for allegedly fixing spreads, margins and timing of government bond sales.",
-      "company": "BBVA, Santander",
-      "source": "El CEO",
-      "url": "https://elceo.com/mercados/bbva-santander-y-otros-bancos-pagarian-86-4-mdd-por-caso-de-bonos-mexicanos/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-23T13:00:23.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "BBVA, Santander y otros bancos pagarían 86.4 mdd por caso de bonos mexicanos",
-        "dek": "A principios del año pasado, EL CEO publicó como siete de los bancos más importantes del país se habrían coludido para fijar posturas, márgenes y momentos de venta. La publicación BBVA, Santander y otros bancos pagarían 86.4 mdd por caso de bonos mexicanos apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/mercados/bbva-santander-y-otros-bancos-pagarian-86-4-mdd-por-caso-de-bonos-mexicanos/",
-          "publishedAt": "2026-08-23T13:00:23.000Z",
-          "date": "2026-08-23",
-          "title": "Seven major banks including BBVA and Santander face 86.4 million dollar penalty for bond-market collusion",
-          "summary": "BBVA, Santander and five other Mexican banks are subject to an 86.4 million dollar penalty for allegedly fixing spreads, margins and timing of government bond sales."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-bancos-whatsapp-y-sms-13-5-millones-de-mexicanos-cae-2026-08-23",
-      "date": "2026-08-23",
-      "section": "society",
-      "title": "13.5 million Mexicans fall victim to phishing fraud averaging 8,750 pesos per victim",
-      "why": "Cybercriminals used bank-impersonation calls in 35.8 percent of phishing cases and WhatsApp or SMS messages in 22.2 percent, reaching 13.5 million Mexicans and stealing an average of 8,750 pesos each.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/tecnologia/bancos-whatsapp-y-sms-13-5-millones-de-mexicanos-caen-fraudes-de-phishing-y-les-roban-8750-pesos-en-promedio/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-23T16:00:20.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Bancos, WhatsApp y SMS: 13.5 millones de mexicanos caen en fraudes de phishing y les roban 8,750 pesos en promedio",
-        "dek": "Los ciberdelincuentes usan llamadas que suplantan a bancos en 35.8% de los casos y mensajes de WhatsApp o SMS en 22.2% de los fraudes. La publicación Bancos, WhatsApp y SMS: 13.5 millones de mexicanos caen en fraudes de phishing y les roban 8,750 pesos en promedio apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/tecnologia/bancos-whatsapp-y-sms-13-5-millones-de-mexicanos-caen-fraudes-de-phishing-y-les-roban-8750-pesos-en-promedio/",
-          "publishedAt": "2026-08-23T16:00:20.000Z",
-          "date": "2026-08-23",
-          "title": "13.5 million Mexicans fall victim to phishing fraud averaging 8,750 pesos per victim",
-          "summary": "Cybercriminals used bank-impersonation calls in 35.8 percent of phishing cases and WhatsApp or SMS messages in 22.2 percent, reaching 13.5 million Mexicans and stealing an average of 8,750 pesos each."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-rub-n-rocha-moya-pide-licencia-nuevamente-como-gober-2026-08-22",
-      "date": "2026-08-22",
-      "section": "politics",
-      "title": "Sinaloa Governor Rubén Rocha Moya requests leave again after brief return to post",
-      "why": "Governor Rocha Moya requested another leave of absence from the Sinaloa governorship on 22 August, having only recently resumed the role. President Sheinbaum learned of the decision through social media.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/politica/ruben-rocha-moya-pide-licencia-nuevamente-como-gobernador-de-sinaloa/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-23T01:31:11.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Rubén Rocha Moya pide licencia nuevamente como gobernador de Sinaloa",
-        "dek": "La presidenta Claudia Sheinbaum declaró que se enteró de la decisión de Rubén Rocha Moya de retomar su cargo por redes sociales. La publicación Rubén Rocha Moya pide licencia nuevamente como gobernador de Sinaloa apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/politica/ruben-rocha-moya-pide-licencia-nuevamente-como-gobernador-de-sinaloa/",
-          "publishedAt": "2026-08-23T01:31:11.000Z",
-          "date": "2026-08-22",
-          "title": "Sinaloa Governor Rubén Rocha Moya requests leave again after brief return to post",
-          "summary": "Governor Rocha Moya requested another leave of absence from the Sinaloa governorship on 22 August, having only recently resumed the role. President Sheinbaum learned of the decision through social media."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-us-treasury-sanctions-ecuador-to-us-cocaine-traffick-2026-08-21",
-      "date": "2026-08-21",
-      "section": "economy",
-      "title": "US Treasury sanctions Ecuador-to-US cocaine trafficking network",
-      "why": "The U.S. Treasury on Thursday sanctioned 15 people for their involvement in a network that allegedly shipped thousands of kilograms of cocaine per month from Ecuador through Mexico, destined for the United States.",
-      "company": "",
-      "source": "Border Report",
-      "url": "https://borderreport.com/border-report-tour/border-crime/us-treasury-sanctions-ecuador-to-us-cocaine-trafficking-network/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-21T18:06:36.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "US Treasury sanctions Ecuador-to-US cocaine trafficking network",
-        "dek": "The U.S. Treasury on Thursday sanctioned 15 people for their involvement in a network that allegedly shipped thousands of kilograms of cocaine per month from Ecuador through Mexico, destined for the United States."
-      },
-      "coverage": [
-        {
-          "source": "Border Report",
-          "url": "https://borderreport.com/border-report-tour/border-crime/us-treasury-sanctions-ecuador-to-us-cocaine-trafficking-network/",
-          "publishedAt": "2026-08-21T18:06:36.000Z",
-          "date": "2026-08-21",
-          "title": "US Treasury sanctions Ecuador-to-US cocaine trafficking network",
-          "summary": "The U.S. Treasury on Thursday sanctioned 15 people for their involvement in a network that allegedly shipped thousands of kilograms of cocaine per month from Ecuador through Mexico, destined for the United States."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "borderreport.com"
-            }
-          }
-        },
-        "componentSource": "deterministic-fallback-v1"
-      }
-    },
-    {
-      "id": "n-mexican-migrant-job-losses-in-us-raise-remittance-ri-2026-08-20",
-      "date": "2026-08-20",
-      "section": "economy",
-      "title": "Mexican Migrant Job Losses in US Raise Remittance Risks",
-      "why": "Mexican immigrant employment in the United States fell 8.9% year-over-year in 1Q26, a loss of 664,589 jobs concentrated in construction, professional services, and manufacturing, according to CEMLA.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/talent/news/mexican-migrant-job-losses-us-raise-remittance-risks",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-20T18:24:33.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Mexican Migrant Job Losses in US Raise Remittance Risks",
-        "dek": "Mexican immigrant employment in the United States fell 8.9% year-over-year in 1Q26, a loss of 664,589 jobs concentrated in construction, professional services, and manufacturing, according to CEMLA. The contraction, linked to intensified US immigration enforcement, threatens the wage base that funds remittances to Mexi"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/talent/news/mexican-migrant-job-losses-us-raise-remittance-risks",
-          "publishedAt": "2026-08-20T18:24:33.000Z",
-          "date": "2026-08-20",
-          "title": "Mexican Migrant Job Losses in US Raise Remittance Risks",
-          "summary": "Mexican immigrant employment in the United States fell 8.9% year-over-year in 1Q26, a loss of 664,589 jobs concentrated in construction, professional services, and manufacturing, according to CEMLA."
-        },
-        {
-          "source": "mexicobusiness.news",
-          "url": "https://mexicobusiness.news/talent/news/mexican-migrant-job-losses-united-states-threaten-remittances",
-          "publishedAt": "2026-08-20T18:24:33.000Z",
-          "date": "2026-08-20",
-          "title": "Mexican Migrant Job Losses in United States Threaten Remittances",
-          "summary": "Mexican immigrant employment in the United States fell 8.9% year-over-year in 1Q26, a loss of 664,589 jobs concentrated in construction, professional services, and manufacturing, according to CEMLA. The contraction, linked to intensified US immigration enforcement, threatens the wage base that funds remittances to Mexi"
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 2,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexicobusiness.news"
-            }
-          }
-        },
-        "componentSource": "deterministic-fallback-v1"
-      },
-      "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/nils-huenerfuerst-os3aXzC6Dy8-unsplash.jpg?h=c6577a3f&itok=I16whWMO",
-      "imgTries": 1
     }
   ]
 }
