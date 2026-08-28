@@ -47,33 +47,19 @@
         "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28"
       ],
       "attempt": 2,
-      "added": 0,
+      "added": 2,
       "outcomes": [
         {
           "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
-          "ready": false,
-          "reason": "field-rejected",
-          "fields": {
-            "background": [
-              "The phrase 'preserved borrowing capacity' is not supported by evidence. The article states CFE will keep investments 'fuera del balance' (off-balance-sheet) to maintain a 'estructura financiera saludable' (healthy financial structure), but does not establish that this preserves borrowing capacity or that capacity was previously constrained."
-            ],
-            "view": [
-              "The phrase 'outsourcing capital risk' is invented. The article describes off-balance-sheet financing to maintain financial health, not a transfer of capital risk to private investors. The private sector is providing financing, not absorbing project completion or demand risk."
-            ],
-            "prediction": [
-              "The prediction conflates an announced plan with an outcome. It states projects 'will reach financial close in stages through 2030' as fact, but the evidence only shows CFE's stated intention in a development program. The prediction should distinguish the plan from whether it will actually be executed."
-            ]
-          }
+          "ready": true,
+          "reason": "ready",
+          "fields": {}
         },
         {
           "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
-          "ready": false,
-          "reason": "field-rejected",
-          "fields": {
-            "view": [
-              "The mechanism 'tied to US artificial intelligence investment booms' is not supported. The evidence states exports of 'equipo de cómputo' (computer equipment) increased 'ante el auge de inversiones relacionadas con IA' (amid the boom in AI-related investments), but does not establish that Mexico's exports are causally tied to or dependent on US AI investment cycles. The phrase 'passes through Mexico as value-added margin' is also invented and not stated in the evidence."
-            ]
-          }
+          "ready": true,
+          "reason": "ready",
+          "fields": {}
         }
       ]
     }
@@ -152,6 +138,37 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
+      "background": "CFE plans US$37.5 billion for new power plants, grids and pipelines. Reliable connections to the national grid are already a constraint on new industrial projects.",
+      "view": "The financing structure matters as much as the total. Keeping projects off CFE's balance sheet may protect its financial position, but private funding alone does not establish that a plant or transmission line will be built.",
+      "prediction": "Watch which projects obtain signed financing and construction schedules. Those milestones would confirm that the plan is becoming usable electricity capacity, while repeated delays would weaken that conclusion.",
+      "analysisV": 11,
+      "analysisRefs": {
+        "background": [
+          "article",
+          "standing:std-energy-constraint"
+        ],
+        "view": [
+          "article"
+        ],
+        "prediction": [
+          "article",
+          "standing:std-energy-constraint"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "Bloomberg Línea",
+          "url": "https://bloomberglinea.com/latinoamerica/mexico/cfe-dependera-del-sector-privado-para-financiar-la-mayoria-de-sus-inversiones-con-sheinbaum/"
+        },
+        {
+          "id": "standing:std-energy-constraint",
+          "kind": "standing",
+          "source": "CENACE",
+          "url": "https://www.gob.mx/cenace"
+        }
+      ],
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
       "imgTries": 13
     },
@@ -228,6 +245,43 @@
         "reportedTotal": null,
         "componentSource": "model"
       },
+      "background": "Mexico sends about 80% of its exports to the United States, so a national export record is also a measure of Mexico's exposure to one foreign market.",
+      "view": "Compared with June, July exports rose about 12.3%. Imports also reached a record because firms bought more intermediate goods, so the headline does not show how much of the final value was created in Mexico.",
+      "prediction": "The next monthly trade release will show whether July was a one-off jump. If exports and intermediate-goods imports remain high together, the record will look more like sustained factory activity than a temporary surge.",
+      "analysisV": 11,
+      "analysisRefs": {
+        "background": [
+          "standing:std-us-dependence"
+        ],
+        "view": [
+          "article",
+          "number:banxico-exports-total"
+        ],
+        "prediction": [
+          "article",
+          "number:banxico-exports-total"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/28/exportaciones-en-mexico-rompen-record-en-julio-superan-80-mil-millones-de-dolares/"
+        },
+        {
+          "id": "standing:std-us-dependence",
+          "kind": "standing",
+          "source": "U.S. Census / INEGI",
+          "url": "https://www.census.gov/foreign-trade/balance/c2010.html"
+        },
+        {
+          "id": "number:banxico-exports-total",
+          "kind": "number",
+          "source": "Banco de México (SIE)",
+          "url": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SE36593/datos"
+        }
+      ],
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
       "imgTries": 13
     },
