@@ -6,39 +6,28 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T16:55:03.780Z",
+    "generatedAt": "2026-08-28T17:51:04.357Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "8bd9fa4c8199dad72d6110bf5530920f732c727e493829861a903abd4670fd0c",
-      "freshCandidateCount": 18,
+      "candidateSig": "f343ed4debca7a0b2a810712e67ed274969a32e9fdc858458c32fcc8a6bf0ff1",
+      "freshCandidateCount": 19,
       "assessedCount": 24,
       "selectedCount": 3,
       "freshSelectedCount": 2,
-      "keptCount": 2,
+      "keptCount": 3,
       "freshKeptCount": 2,
-      "rejectedCount": 1,
+      "rejectedCount": 0,
       "freshRejectedCount": 0,
-      "rejectedSelected": [
-        {
-          "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
-          "candidateIndex": 19,
-          "date": "2026-08-27",
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
-          "flags": [
-            "proposal or draft described as a completed action"
-          ]
-        }
-      ],
-      "eligibleFreshCandidateCount": 18,
+      "rejectedSelected": [],
+      "eligibleFreshCandidateCount": 19,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
       "complete": true,
-      "reason": "1 selected event(s) quarantined by the copy gate"
+      "reason": ""
     },
     "analysisTarget": {
       "policy": "every-selected-story-evidence-locked-v7",
@@ -54,14 +43,8 @@
           "ready": false,
           "reason": "field-rejected",
           "fields": {
-            "background": [
-              "The claim that CFE 'has historically financed expansion from government budgets and on-balance-sheet debt' is not supported by the evidence provided. The article and standing evidence do not document CFE's historical financing patterns."
-            ],
-            "view": [
-              "The claim that private funding 'may accelerate renewable projects' is an invented inference not supported by the evidence. The article states CFE's plan but contains no evidence comparing private-funded timelines to alternative financing methods."
-            ],
             "prediction": [
-              "The prediction asks whether 'private partners complete renewable projects on schedule' and whether 'grid connection delays decline or widen,' but the evidence only states CFE's planned investment targets, not any announced decision point, release, milestone, or observable fork that would distinguish success from failure in testable terms."
+              "3 sentences (cap 2)"
             ]
           }
         },
@@ -70,9 +53,8 @@
           "ready": false,
           "reason": "field-rejected",
           "fields": {
-            "prediction": [
-              "em-dash",
-              "unsupported number: 30"
+            "view": [
+              "field was empty"
             ]
           }
         }
@@ -154,7 +136,7 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 10
+      "imgTries": 11
     },
     {
       "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
@@ -230,7 +212,81 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 10
+      "imgTries": 11
+    },
+    {
+      "id": "n-presi-n-de-eu-genera-cambios-en-las-sofomes-buscan-q-2026-08-28",
+      "date": "2026-08-28",
+      "section": "money",
+      "title": "Mexican nonbank lenders seek regulatory reclassification",
+      "why": "Sofomes accelerated self-regulation and dialogue with Mexican authorities to change how they are classified.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/presion-de-eu-genera-cambios-en-las-sofomes-buscan-quitarse-el-apellido-de-entidad-no-regulada/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-28T17:06:10.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Presión de EU genera cambios en las Sofomes: buscan ‘quitarse el apellido’ de entidad no regulada",
+        "dek": "Las Sofomes aceleraron la autorregulación y el diálogo con las autoridades mexicanas para cambiar su denominación. La publicación Presión de EU genera cambios en las Sofomes: buscan ‘quitarse el apellido’ de entidad no regulada apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/presion-de-eu-genera-cambios-en-las-sofomes-buscan-quitarse-el-apellido-de-entidad-no-regulada/",
+          "publishedAt": "2026-08-28T17:06:10.000Z",
+          "date": "2026-08-28",
+          "title": "Mexican nonbank lenders seek regulatory reclassification",
+          "summary": "Sofomes accelerated self-regulation and dialogue with Mexican authorities to change how they are classified."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
     },
     {
       "id": "n-aristegui-en-vivo-fernando-n-es-vinculado-a-proceso--2026-08-28",
@@ -513,6 +569,80 @@
           "durability": {
             "raw": 2,
             "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-m-xico-coloca-casi-1-800-millones-de-d-lares-en-bono-2026-08-28",
+      "date": "2026-08-28",
+      "section": "money",
+      "title": "Mexico issues yen-denominated bonds after two-year gap",
+      "why": "Mexico's last samurai bond issuance occurred in August 2024 for 152,200 million yen.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/mexico-coloca-casi-1800-millones-de-dolares-en-bonos-samurai-luego-de-dos-anos-de-ausencia/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T16:56:57.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México coloca casi 1,800 millones de dólares en bonos samurai luego de dos años de ausencia",
+        "dek": "La última emisión de México de bonos samurai tuvo lugar en agosto de 2024, por un valor de 152,200 millones de yenes. La publicación México coloca casi 1,800 millones de dólares en bonos samurai luego de dos años de ausencia apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/mexico-coloca-casi-1800-millones-de-dolares-en-bonos-samurai-luego-de-dos-anos-de-ausencia/",
+          "publishedAt": "2026-08-28T16:56:57.000Z",
+          "date": "2026-08-28",
+          "title": "Mexico issues yen-denominated bonds after two-year gap",
+          "summary": "Mexico's last samurai bond issuance occurred in August 2024 for 152,200 million yen."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
             "status": "accepted"
           },
           "officialness": {
@@ -2348,6 +2478,80 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "aristeguinoticias.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
+      "date": "2026-08-27",
+      "section": "money",
+      "title": "Banxico and CNBV propose smaller reduction to card payment fees",
+      "why": "Banxico and the CNBV drafted a new proposal that reduces the fee cap for card payments, with credit capped at 1.3 percent, though the reduction is smaller than an earlier suggestion.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-27T15:00:34.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Banxico y CNBV suavizan tope a cuotas de bancos por pagos con tarjeta; crédito queda en 1.3%",
+        "dek": "El nuevo anteproyecto elaborado por Banxico y la CNBV implica una reducción, aunque menor a la que se sugería en un principio. La publicación Banxico y CNBV suavizan tope a cuotas de bancos por pagos con tarjeta; crédito queda en 1.3% apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
+          "publishedAt": "2026-08-27T15:00:34.000Z",
+          "date": "2026-08-27",
+          "title": "Banxico and CNBV propose smaller reduction to card payment fees",
+          "summary": "Banxico and the CNBV drafted a new proposal that reduces the fee cap for card payments, with credit capped at 1.3 percent, though the reduction is smaller than an earlier suggestion."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
             }
           }
         },
@@ -4491,256 +4695,6 @@
       },
       "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/nils-huenerfuerst-os3aXzC6Dy8-unsplash.jpg?h=c6577a3f&itok=I16whWMO",
       "imgTries": 1
-    },
-    {
-      "id": "n-morena-finabien-payments-2024-records-2026-08-20",
-      "date": "2026-08-20",
-      "section": "politics",
-      "title": "Investigation finds Morena sent MX$134.9 million through a state financial service in 2024",
-      "why": "Mexico Against Corruption says Finabien records show 252,901 payments and that the money does not appear in Morena's 2024 campaign filings. Finabien denies acting improperly, and no electoral authority has ruled that the payments were illegal.",
-      "company": "",
-      "source": "Mexicanos Contra la Corrupción",
-      "url": "https://contralacorrupcion.mx/morenagate-en-la-vispera-de-la-eleccion-de-2024-morena-disperso-135-millones-en-252-mil-apoyos/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-20T12:50:00.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "#MorenaGate: En la víspera de la elección de 2024, Morena dispersó $134.9 millones en 252,901 apoyos",
-        "dek": "Para 2024 se repartieron 134.9 millones de pesos en 252,901 pagos, cerca de 533 pesos por pago. Finabien rechazó cualquier actuación irregular. El monto no aparece en los informes de gastos de campaña."
-      },
-      "coverage": [
-        {
-          "source": "Mexicanos Contra la Corrupción",
-          "url": "https://contralacorrupcion.mx/morenagate-en-la-vispera-de-la-eleccion-de-2024-morena-disperso-135-millones-en-252-mil-apoyos/",
-          "publishedAt": "2026-08-20T12:50:00.000Z",
-          "date": "2026-08-20",
-          "title": "Investigation finds Morena sent MX$134.9 million through a state financial service in 2024",
-          "summary": "Mexico Against Corruption says Finabien records show 252,901 payments and that the money does not appear in Morena's 2024 campaign filings. Finabien denies acting improperly, and no electoral authority has ruled that the payments were illegal."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 3,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "reportedTotal": null,
-        "componentSource": "manual-source-review",
-        "components": {
-          "officialness": {
-            "modelScore": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "contralacorrupcion.mx"
-            }
-          }
-        }
-      },
-      "background": "Mexico's election agency audits how parties receive and spend money. Its online system is where parties record income and expenses. The documents cited by Mexico Against Corruption show that payments were made. They do not by themselves show why recipients were chosen.",
-      "view": "The MX$134.9 million total covered 252,901 payments, about MX$533 each. The unresolved question is accounting. The investigation says it could not find the amount in Morena's filings, which warrants an official explanation but does not establish vote-buying.",
-      "prediction": "Watch for a response from Morena or the election agency that identifies the account, purpose and reporting category. A clean reconciliation would weaken the concern. An audit finding of unreported spending would strengthen it.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "article",
-          "primary:ine-fiscalization"
-        ],
-        "view": [
-          "article",
-          "primary:ine-fiscalization"
-        ],
-        "prediction": [
-          "article",
-          "primary:ine-fiscalization"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "Mexicanos Contra la Corrupción",
-          "url": "https://contralacorrupcion.mx/morenagate-en-la-vispera-de-la-eleccion-de-2024-morena-disperso-135-millones-en-252-mil-apoyos/"
-        },
-        {
-          "id": "primary:ine-fiscalization",
-          "kind": "primary",
-          "source": "Instituto Nacional Electoral",
-          "url": "https://www.ine.mx/voto-y-elecciones/fiscalizacion/"
-        }
-      ]
-    },
-    {
-      "id": "n-mexico-farm-council-us-strawberry-duties-2026-08-20",
-      "date": "2026-08-20",
-      "section": "us-mexico",
-      "title": "Mexico's farm council challenges preliminary US strawberry duties",
-      "why": "The US Commerce Department's preliminary dumping margin averages 4.83% for winter strawberries from Mexico. A final decision is due January 8, 2027, and Mexico's farm council says the method could extend to other seasonal produce.",
-      "company": "",
-      "source": "El Economista",
-      "url": "https://www.eleconomista.com.mx/empresas/castigo-fresa-mexicana-sienta-mal-precedente-comercio-eu-cna-20260820-829226.html",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-20T06:33:49.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Castigo a fresa mexicana sienta mal precedente en el comercio con EU: CNA",
-        "dek": "La entidad estadounidense calculó un promedio de dumping de 4.83%. La determinación final está programada para el 8 de enero de 2027. El margen alegado era 18.32%."
-      },
-      "coverage": [
-        {
-          "source": "El Economista",
-          "url": "https://www.eleconomista.com.mx/empresas/castigo-fresa-mexicana-sienta-mal-precedente-comercio-eu-cna-20260820-829226.html",
-          "publishedAt": "2026-08-20T06:33:49.000Z",
-          "date": "2026-08-20",
-          "title": "Mexico's farm council challenges preliminary US strawberry duties",
-          "summary": "The US Commerce Department's preliminary dumping margin averages 4.83% for winter strawberries from Mexico. A final decision is due January 8, 2027, and Mexico's farm council says the method could extend to other seasonal produce."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "reportedTotal": null,
-        "componentSource": "manual-source-review",
-        "components": {
-          "officialness": {
-            "modelScore": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "www.eleconomista.com.mx"
-            }
-          }
-        }
-      },
-      "background": "Antidumping cases have two separate tests: the Commerce Department estimates whether imports were sold below fair value, and the US International Trade Commission decides whether the domestic industry was injured. A preliminary margin is not the final result.",
-      "view": "The immediate cost is narrower than the farm council's warning. The case applies to winter strawberries, and the 4.83% average is well below the 18.32% alleged at the start. Any broader precedent depends on the final reasoning, not only the rate.",
-      "prediction": "Watch the Commerce Department's final determination on January 8, followed by the injury decision. Lower or zero final margins would weaken the case. Similar margins and a final injury finding would put the duties on firmer ground.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "article",
-          "primary:commerce",
-          "primary:usitc"
-        ],
-        "view": [
-          "article",
-          "primary:commerce"
-        ],
-        "prediction": [
-          "article",
-          "primary:usitc"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El Economista",
-          "url": "https://www.eleconomista.com.mx/empresas/castigo-fresa-mexicana-sienta-mal-precedente-comercio-eu-cna-20260820-829226.html"
-        },
-        {
-          "id": "primary:commerce",
-          "kind": "primary",
-          "source": "US Department of Commerce",
-          "url": "https://www.trade.gov/commerce-initiates-antidumping-duty-investigation-fresh-strawberries-mexico"
-        },
-        {
-          "id": "primary:usitc",
-          "kind": "primary",
-          "source": "US International Trade Commission",
-          "url": "https://www.usitc.gov/fed_reg_notices/antidumpingcountervailing_duty/701731/fresh_winter_strawberries_mexico_031026.htm"
-        }
-      ]
-    },
-    {
-      "id": "n-pemex-petrobras-to-explore-ultra-deep-pre-salt-forma-2026-08-20",
-      "date": "2026-08-20",
-      "section": "economy",
-      "title": "PEMEX, Petrobras to Explore Ultra-Deep Pre-Salt Formations",
-      "why": "Petróleos Mexicanos (PEMEX) and Petróleo Brasileiro (Petrobras) have signed a two-year Memorandum of Understanding to evaluate ultra-deep pre-salt formations and mature basins off the coast of Campeche.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/oilandgas/news/pemex-petrobras-explore-ultra-deep-pre-salt-formations",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-20T19:09:16.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "PEMEX, Petrobras to Explore Ultra-Deep Pre-Salt Formations",
-        "dek": "Petróleos Mexicanos (PEMEX) and Petróleo Brasileiro (Petrobras) have signed a two-year Memorandum of Understanding to evaluate ultra-deep pre-salt formations and mature basins off the coast of Campeche. The strategic collaboration provides PEMEX with access to Petrobras’ specialized subsea engineering and deepwater tec"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/oilandgas/news/pemex-petrobras-explore-ultra-deep-pre-salt-formations",
-          "publishedAt": "2026-08-20T19:09:16.000Z",
-          "date": "2026-08-20",
-          "title": "PEMEX, Petrobras to Explore Ultra-Deep Pre-Salt Formations",
-          "summary": "Petróleos Mexicanos (PEMEX) and Petróleo Brasileiro (Petrobras) have signed a two-year Memorandum of Understanding to evaluate ultra-deep pre-salt formations and mature basins off the coast of Campeche."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 0,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexicobusiness.news"
-            }
-          }
-        },
-        "componentSource": "deterministic-fallback-v1"
-      }
     }
   ]
 }
