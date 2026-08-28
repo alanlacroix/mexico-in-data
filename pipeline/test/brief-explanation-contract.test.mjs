@@ -81,6 +81,8 @@ assert.doesNotMatch(happeningBuilder, /title: stripDashWs\(proposed\.title\)/,
   'model-authored research titles must never enter the closed evidence set');
 assert.match(happeningBuilder, /rejectionsThisRun = new Map\(arr\(priorOutcomes\)[\s\S]*fields: rejectedFields/,
   'field-level failures must survive into one targeted recovery instead of collapsing to field-rejected');
+assert.match(happeningBuilder, /analysis reject \$\{item\.e\.id\}\.\$\{field\}: field was empty/,
+  'an empty returned field must be visible in the workflow log as well as the recovery receipt');
 assert.match(happeningBuilder, /const analyzableIds = new Set[\s\S]*!analyzableIds\.has\(id\)[\s\S]*thin-evidence/,
   'a selected story without relevant independent context must be recorded as thin evidence, not a generic field failure');
 assert.match(happeningBuilder, /const request = \(batch, effort, maxTokens\) => askJSON\(\{[\s\S]*?model: models\.HAIKU,[\s\S]*?priority: 'core'/,

@@ -892,7 +892,11 @@ ${BAN}`;
       for (const field of CORE) {
         if (approvedThisRun.get(item.e.id)?.[field]) continue;
         const text = stripDashWs(r[field]);
-        if (!text) { rememberRejection(item.e.id, field, ['field was empty']); continue; }
+        if (!text) {
+          console.warn(`  analysis reject ${item.e.id}.${field}: field was empty`);
+          rememberRejection(item.e.id, field, ['field was empty']);
+          continue;
+        }
         const refField = `${field}Refs`;
         let refs = [...new Set(arr(r[refField]).map(stripDashWs).filter(Boolean))];
         const invalidRefs = refs.filter((ref) => !evidenceById.has(ref));
