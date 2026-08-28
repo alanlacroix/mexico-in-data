@@ -849,6 +849,8 @@ assert.match(happeningBuilder, /mergeApprovedAttempt\(approvedThisRun\.get\(item
   'a bounded retry may complete the same evidence-locked BE unit');
 assert.match(happeningBuilder, /CORE\.every\(\(field\) => approved\[field\] && arr\(approvedRefs\[field\]\)\.length\)/,
   'no BE field may become visible until all three fields and their evidence references have passed their gates');
+assert.match(happeningBuilder, /const preservedAnalysisTarget = analysisTargetSurvivesSelfHeal\([\s\S]*preservedAnalysisTarget \? \{ analysisTarget: preservedAnalysisTarget \} : \{\}/,
+  'fresh unrelated reporting must not reset the bounded explanation attempt for unchanged locked stories');
 assert.doesNotMatch(happeningBuilder, /\[brief\.lead, \.\.\.arr\(brief\.items\)\]\.slice\(0, 3\)/,
   'targeted explanation must cover the full locked selection, not only the first three stories');
 assert.match(happeningBuilder, /SCHEDULED OUTCOMES \(hard requirement\)[\s\S]*SELECT it[\s\S]*unchanged[\s\S]*not news/i,

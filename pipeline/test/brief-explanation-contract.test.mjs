@@ -36,6 +36,9 @@ assert.equal(analysisTargetSurvivesSelfHeal([
   attemptEvent, { id: 'unrelated', title: 'Old row' },
 ], [healedAttemptEvent], attemptTarget, 'policy-v1'), true,
   'purging an unrelated row must not rebuy analysis for unchanged selected stories');
+assert.equal(analysisTargetSurvivesSelfHeal(
+  [attemptEvent], [healedAttemptEvent, { id: 'new-report', title: 'A later unrelated report' }], attemptTarget, 'policy-v1',
+), true, 'new reporting must not reset analysis when the locked story inputs are unchanged');
 assert.equal(analysisTargetSurvivesSelfHeal([attemptEvent], [healedAttemptEvent], attemptTarget, 'policy-v2'), false,
   'a changed analysis policy must reset the bounded recovery');
 assert.equal(

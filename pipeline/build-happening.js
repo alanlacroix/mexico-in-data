@@ -1345,6 +1345,12 @@ async function main() {
   const events = reconcileHappeningFactCopy(merged, { tradeUS: readJson(D('trade-us.json'), null) });
   const bgResult = skipAnalysis ? { added: 0, outcomes: [] } : await addBackgrounds(events, now);
   if (bgResult.added) console.log(`  background: ${bgResult.added} written (article-grounded)`);
+  // A fresh source may require another curation pass without changing the stories
+  // already locked for explanation. Preserve their bounded attempt state in that
+  // case; otherwise every new article would turn attempt two back into attempt one.
+  const preservedAnalysisTarget = analysisTargetSurvivesSelfHeal(
+    arr(existing.events), events, existing.meta?.analysisTarget, ANALYSIS_POLICY, ANALYSIS_REPAIR_PREDECESSOR,
+  ) ? existing.meta.analysisTarget : null;
 
   const out = {
     meta: {
@@ -1354,6 +1360,7 @@ async function main() {
       source: 'The Mexico Brief', sourceUrl: 'https://mexicobrief.com/',
       count: events.length, generatedAt: now.toISOString(), llm: hasLLM(),
       curation: curation.receipt,
+      ...(preservedAnalysisTarget ? { analysisTarget: preservedAnalysisTarget } : {}),
     },
     events,
   };
