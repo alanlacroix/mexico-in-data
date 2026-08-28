@@ -2,54 +2,65 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-27",
+    "updated": "2026-08-28",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-27T22:01:01.034Z",
+    "generatedAt": "2026-08-28T13:32:40.001Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
-      "editorialDate": "2026-08-27",
+      "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "b420138857317746106cae019614a4121f960a652236905cd00396249e0d258b",
-      "freshCandidateCount": 24,
+      "candidateSig": "10efc82685eb9454d7e984193d3944b41ca5098b0af11e6558e05e68aae25fc3",
+      "freshCandidateCount": 13,
       "assessedCount": 24,
-      "selectedCount": 6,
-      "freshSelectedCount": 6,
-      "keptCount": 6,
-      "freshKeptCount": 6,
-      "rejectedCount": 0,
+      "selectedCount": 8,
+      "freshSelectedCount": 5,
+      "keptCount": 7,
+      "freshKeptCount": 5,
+      "rejectedCount": 1,
       "freshRejectedCount": 0,
-      "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 43,
-      "unassessedFreshCandidateCount": 19,
-      "currentDayResolved": false,
+      "rejectedSelected": [
+        {
+          "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
+          "candidateIndex": 18,
+          "date": "2026-08-27",
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
+          "flags": [
+            "proposal or draft described as a completed action"
+          ]
+        }
+      ],
+      "eligibleFreshCandidateCount": 13,
+      "unassessedFreshCandidateCount": 0,
+      "currentDayResolved": true,
       "mode": "model",
       "complete": true,
-      "reason": "the current-day candidate ledger was not fully resolved"
+      "reason": "1 selected event(s) quarantined by the copy gate"
     },
     "analysisTarget": {
       "policy": "every-selected-story-context-audited-v3",
       "ids": [
-        "n-el-inge-enviado-por-m-xico-a-ee-uu-se-declara-culpab-2026-08-27",
-        "n-banxico-muestra-optimismo-eleva-tasa-de-crecimiento--2026-08-26",
-        "n-sector-manufacturero-sostiene-exportaciones-de-m-xic-2026-08-27"
+        "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
+        "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
+        "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28"
       ],
       "added": 0,
       "outcomes": [
         {
-          "id": "n-el-inge-enviado-por-m-xico-a-ee-uu-se-declara-culpab-2026-08-27",
+          "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
           "ready": false,
           "reason": "field-rejected"
         },
         {
-          "id": "n-banxico-muestra-optimismo-eleva-tasa-de-crecimiento--2026-08-26",
+          "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
           "ready": false,
           "reason": "field-rejected"
         },
         {
-          "id": "n-sector-manufacturero-sostiene-exportaciones-de-m-xic-2026-08-27",
+          "id": "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28",
           "ready": false,
           "reason": "field-rejected"
         }
@@ -57,6 +68,381 @@
     }
   },
   "events": [
+    {
+      "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "CFE to rely on private sector for investment funding",
+      "why": "Mexico's state electric utility CFE will depend on the private sector to finance most of its investments during President Sheinbaum's term.",
+      "company": "",
+      "source": "Bloomberg Línea",
+      "url": "https://bloomberglinea.com/latinoamerica/mexico/cfe-dependera-del-sector-privado-para-financiar-la-mayoria-de-sus-inversiones-con-sheinbaum/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-28T11:52:59.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "CFE dependerá del sector privado para financiar la mayoría de sus inversiones con Sheinbaum",
+        "dek": "La empresa eléctrica prevé inversiones por US$37.500 millones para nuevas centrales, redes eléctricas y ductos durante el sexenio de la presidenta mexicana."
+      },
+      "coverage": [
+        {
+          "source": "Bloomberg Línea",
+          "url": "https://bloomberglinea.com/latinoamerica/mexico/cfe-dependera-del-sector-privado-para-financiar-la-mayoria-de-sus-inversiones-con-sheinbaum/",
+          "publishedAt": "2026-08-28T11:52:59.000Z",
+          "date": "2026-08-28",
+          "title": "CFE to rely on private sector for investment funding",
+          "summary": "Mexico's state electric utility CFE will depend on the private sector to finance most of its investments during President Sheinbaum's term."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "bloomberglinea.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
+      "imgTries": 1
+    },
+    {
+      "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Mexico exports reach record 80 billion dollars in July 2026",
+      "why": "Mexican exports surpassed 80 billion dollars in July, with imports also at record levels driven by demand for intermediate goods.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/08/28/exportaciones-en-mexico-rompen-record-en-julio-superan-80-mil-millones-de-dolares/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-28T09:25:35.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Exportaciones en México rompen récord en julio: Superan 80 mil millones de dólares",
+        "dek": "Importaciones también en máximos, por demanda de bienes intermedios."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/28/exportaciones-en-mexico-rompen-record-en-julio-superan-80-mil-millones-de-dolares/",
+          "publishedAt": "2026-08-28T09:25:35.000Z",
+          "date": "2026-08-28",
+          "title": "Mexico exports reach record 80 billion dollars in July 2026",
+          "summary": "Mexican exports surpassed 80 billion dollars in July, with imports also at record levels driven by demand for intermediate goods."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elfinanciero.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
+      "imgTries": 1
+    },
+    {
+      "id": "n-aristegui-en-vivo-fernando-n-es-vinculado-a-proceso--2026-08-28",
+      "date": "2026-08-28",
+      "section": "security",
+      "title": "Former Mexico admiral Fernando 'N' charged with organized crime and fuel theft",
+      "why": "Fernando 'N', an ex-admiral, was linked to process for organized crime and hydrocarbon crimes, signaling government prosecution of high-ranking officials involved in fuel theft.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/2808/mexico/aristegui-en-vivo-fernando-n-es-vinculado-a-proceso-por-huachicol-fiscal-eeuu-logra-sentencias-contra-3-narcos-enviados-por-mexico-muere-el-rey-harald-de-noruega/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-28T13:24:24.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Aristegui en Vivo: Fernando ‘N’ es vinculado a proceso por huachicol fiscal; EEUU logra sentencias contra 3 narcos enviados por México; muere el Rey Harald de Noruega",
+        "dek": "El excontralmirante Fernando “N” fue vinculado a proceso por delincuencia organizada y delitos en materia de hidrocarburos; aspirantes a candidaturas presidenciales y gubernaturas deberán renunciar a doble nacionalidad; el rey noruego falleció por una rara enfermedad sanguínea."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2808/mexico/aristegui-en-vivo-fernando-n-es-vinculado-a-proceso-por-huachicol-fiscal-eeuu-logra-sentencias-contra-3-narcos-enviados-por-mexico-muere-el-rey-harald-de-noruega/",
+          "publishedAt": "2026-08-28T13:24:24.000Z",
+          "date": "2026-08-28",
+          "title": "Former Mexico admiral Fernando 'N' charged with organized crime and fuel theft",
+          "summary": "Fernando 'N', an ex-admiral, was linked to process for organized crime and hydrocarbon crimes, signaling government prosecution of high-ranking officials involved in fuel theft."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "aristeguinoticias.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Suzuki increases imports from Japan to offset 50% tariff, adjusts Mexico pricing",
+      "why": "Suzuki raised imports from Japan while Mexico sales fell 18% in the first seven months of 2026, responding to tariff pressure and shifting its product portfolio.",
+      "company": "Suzuki",
+      "source": "Expansión — Empresas",
+      "url": "https://expansion.mx/empresas/2026/08/28/suzuki-importara-mas-swift-jimny-japon-esquivar-arancel-50",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-28T11:55:49.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Suzuki resiente el arancel de 50% y ajusta su oferta de autos para mantener precios competitivos",
+        "dek": "La automotriz japonesa elevó sus importaciones desde Japón mientras sus ventas en México cayeron 18% entre enero y julio. Baleno se encamina a salir de su portafolio."
+      },
+      "coverage": [
+        {
+          "source": "Expansión — Empresas",
+          "url": "https://expansion.mx/empresas/2026/08/28/suzuki-importara-mas-swift-jimny-japon-esquivar-arancel-50",
+          "publishedAt": "2026-08-28T11:55:49.000Z",
+          "date": "2026-08-28",
+          "title": "Suzuki increases imports from Japan to offset 50% tariff, adjusts Mexico pricing",
+          "summary": "Suzuki raised imports from Japan while Mexico sales fell 18% in the first seven months of 2026, responding to tariff pressure and shifting its product portfolio."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "expansion.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "imgTries": 1
+    },
+    {
+      "id": "n-el-paso-de-elon-musk-en-m-xico-tesla-se-frena-pero-s-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Tesla stalls in Mexico while Starlink grows",
+      "why": "Elon Musk's ventures in Mexico have moved in different directions. Tesla's Gigafactory has stopped, while Starlink has continued to advance in the country.",
+      "company": "Tesla",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/el-paso-de-elon-musk-en-mexico-tesla-se-frena-pero-starlink-avanza/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-28T08:00:39.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "El paso de Elon Musk en México: Tesla se frena, pero Starlink avanza",
+        "dek": "El paso de Elon Musk en México deja una Gigafactory detenida, pero también el avance de Tesla y Starlink en el país. La publicación El paso de Elon Musk en México: Tesla se frena, pero Starlink avanza apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/el-paso-de-elon-musk-en-mexico-tesla-se-frena-pero-starlink-avanza/",
+          "publishedAt": "2026-08-28T08:00:39.000Z",
+          "date": "2026-08-28",
+          "title": "Tesla stalls in Mexico while Starlink grows",
+          "summary": "Elon Musk's ventures in Mexico have moved in different directions. Tesla's Gigafactory has stopped, while Starlink has continued to advance in the country."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
     {
       "id": "n-el-inge-enviado-por-m-xico-a-ee-uu-se-declara-culpab-2026-08-27",
       "date": "2026-08-27",
@@ -132,6 +518,80 @@
       },
       "image": "https://editorial.aristeguinoticias.com/wp-content/uploads/2026/07/Fentanilo-Portada-Trump.jpg",
       "imgTries": 1
+    },
+    {
+      "id": "n-m-xico-env-a-al-mundo-un-monto-hist-rico-de-473-917--2026-08-27",
+      "date": "2026-08-27",
+      "section": "economy",
+      "title": "Mexico's manufactured exports in first seven months",
+      "why": "Manufactured products made up 92.03 percent of Mexico's exports during the first seven months of the year. The country exported manufactured goods during this period, with shipments representing the bulk of total outbound trade.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/mexico-envia-al-mundo-un-monto-historico-de-473917-mdd-en-exportaciones/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-27T18:56:37.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México envía al mundo un monto histórico de 473,917 mdd en exportaciones",
+        "dek": "De los casi 474,000 mdd en exportaciones mexicanas durante los primeros siete meses del año, el 92.03% correspondió a los envíos exclusivos de productos manufacturados. La publicación México envía al mundo un monto histórico de 473,917 mdd en exportaciones apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/mexico-envia-al-mundo-un-monto-historico-de-473917-mdd-en-exportaciones/",
+          "publishedAt": "2026-08-27T18:56:37.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's manufactured exports in first seven months",
+          "summary": "Manufactured products made up 92.03 percent of Mexico's exports during the first seven months of the year. The country exported manufactured goods during this period, with shipments representing the bulk of total outbound trade."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
     },
     {
       "id": "n-sheinbaum-pide-a-velasco-insistir-ante-rubio-por-mue-2026-08-27",
@@ -732,6 +1192,80 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "t21.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-uif-y-pemex-firman-convenio-para-combatir-el-huachic-2026-08-27",
+      "date": "2026-08-27",
+      "section": "security",
+      "title": "Mexico's Financial Intelligence Unit and Pemex sign agreement to combat fuel theft",
+      "why": "The UIF and Pemex signed a pact to exchange intelligence and data to counter hydrocarbon theft, targeting the financial structures underlying fuel smuggling.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/2708/mexico/uif-y-pemex-firman-convenio-para-combatir-el-huachicol/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T00:22:07.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "UIF y Pemex firman convenio para combatir el huachicol",
+        "dek": "Intercambiarán información y datos de inteligencia para intentar frenar el desfalco que significa el robo de combustibles."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/2708/mexico/uif-y-pemex-firman-convenio-para-combatir-el-huachicol/",
+          "publishedAt": "2026-08-28T00:22:07.000Z",
+          "date": "2026-08-27",
+          "title": "Mexico's Financial Intelligence Unit and Pemex sign agreement to combat fuel theft",
+          "summary": "The UIF and Pemex signed a pact to exchange intelligence and data to counter hydrocarbon theft, targeting the financial structures underlying fuel smuggling."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "aristeguinoticias.com"
             }
           }
         },
@@ -4436,594 +4970,6 @@
           "url": "https://www.faa.gov/newsroom/federal-aviation-administration-returns-mexico-highest-aviation-safety-status"
         }
       ]
-    },
-    {
-      "id": "n-pemex-duplica-env-o-de-gas-a-la-atm-sfera-en-el-segu-2026-08-12",
-      "date": "2026-08-12",
-      "section": "economy",
-      "title": "Pemex doubles atmospheric gas flaring in second quarter 2026 to 778 million cubic feet",
-      "why": "Pemex produced 4,006 million cubic feet of gas from April to June 2026 but flared 778 million cubic feet, double the previous rate, signaling operational or maintenance challenges in Mexico's primary energy company.",
-      "company": "Pemex",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/pemex-duplica-envio-de-gas-a-la-atmosfera-en-el-segundo-trimestre-del-ano/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-12T18:08:59.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Pemex duplica envío de gas a la atmósfera en el segundo trimestre del año",
-        "dek": "Pemex registró una producción de gas de 4,006 millones de pies cúbicos de abril a junio de 2026, pero quemó 778 millones de pies cúbicos. La publicación Pemex duplica envío de gas a la atmósfera en el segundo trimestre del año apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/pemex-duplica-envio-de-gas-a-la-atmosfera-en-el-segundo-trimestre-del-ano/",
-          "publishedAt": "2026-08-12T18:08:59.000Z",
-          "date": "2026-08-12",
-          "title": "Pemex doubles atmospheric gas flaring in second quarter 2026 to 778 million cubic feet",
-          "summary": "Pemex produced 4,006 million cubic feet of gas from April to June 2026 but flared 778 million cubic feet, double the previous rate, signaling operational or maintenance challenges in Mexico's primary energy company."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "image": "https://elceo.com/wp-content/uploads/2026/08/pemex_quema_gas.jpg",
-      "imgTries": 1,
-      "background": "Pemex reports quarterly operating and financial data to Mexico's securities regulator. Those filings are the official record for comparing gas production and flaring across periods.",
-      "view": "Compared with a year earlier, flaring nearly doubled. That points to a capture and transport problem: Pemex is producing the gas but cannot use all of it, while Mexico remains dependent on imported US supply.",
-      "prediction": "Watch whether the next Pemex quarterly filing shows lower flaring with steady gas output. That would confirm better capture. Another increase would show the operating constraint remains.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "standing:std-pemex-filings"
-        ],
-        "prediction": [
-          "article"
-        ],
-        "view": [
-          "article"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "standing:std-pemex-filings",
-          "kind": "standing",
-          "source": "Pemex",
-          "url": "https://www.pemex.com/ri/reguladores/Paginas/informacion_cnbv.aspx"
-        },
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/pemex-duplica-envio-de-gas-a-la-atmosfera-en-el-segundo-trimestre-del-ano/"
-        }
-      ]
-    },
-    {
-      "id": "n-at-t-y-telcel-podr-an-quedar-fuera-de-licitaci-n-de--2026-08-12",
-      "date": "2026-08-12",
-      "section": "economy",
-      "title": "AT&T and Telcel may be barred from intelligent networks spectrum auction due to spectrum concentration",
-      "why": "Mexico's communications regulator has proposed excluding carriers holding more than 20 percent of spectrum in PCS, AWS, 2.3 GHz, 2.5 GHz, 3.3 GHz, and 3.5 GHz bands from accumulating additional spectrum in the intelligent networks auction.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/att-y-telcel-podrian-quedar-fuera-de-licitacion-de-espectro-para-redes-inteligentes/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-12T08:00:47.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "AT&T y Telcel podrían quedar fuera de licitación de espectro para redes inteligentes",
-        "dek": "De acuerdo con la CRT, los concesionarios que cuenten con una participación mayor al 20% en las bandas PCS, AWS, 2.3 GHz, 2.5 GHz, 3.3 GHz y 3.5 GHz, no podrán acumular más espectro en esta licitación. La publicación AT&T y Telcel podrían quedar fuera de licitación de espectro para redes inteligentes apareció primero e"
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/att-y-telcel-podrian-quedar-fuera-de-licitacion-de-espectro-para-redes-inteligentes/",
-          "publishedAt": "2026-08-12T08:00:47.000Z",
-          "date": "2026-08-12",
-          "title": "AT&T and Telcel may be barred from intelligent networks spectrum auction due to spectrum concentration",
-          "summary": "Mexico's communications regulator has proposed excluding carriers holding more than 20 percent of spectrum in PCS, AWS, 2.3 GHz, 2.5 GHz, 3.3 GHz, and 3.5 GHz bands from accumulating additional spectrum in the intelligent networks auction."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "image": "https://elceo.com/wp-content/uploads/2026/08/Att_telcel_licitacion_espectro.jpg",
-      "imgTries": 1,
-      "background": "The regulator's public consultation ended in July, so the 20% cap is still part of draft auction rules, not a completed award. The trade agreement calls for transparent spectrum procedures that promote competition.",
-      "view": "The cap would steer spectrum away from the two national mobile networks and toward smaller industrial-network providers. That may widen participation, but the result depends on whether smaller bidders have enough capital and demand to use the frequencies.",
-      "prediction": "Watch whether the regulator keeps the cap in its final rules and whether qualified smaller bidders enter. Low participation or a legal challenge would expose the tradeoff.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "primary:crt",
-          "primary:usmca-telecom"
-        ],
-        "view": [
-          "article"
-        ],
-        "prediction": [
-          "article",
-          "primary:crt"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/att-y-telcel-podrian-quedar-fuera-de-licitacion-de-espectro-para-redes-inteligentes/"
-        },
-        {
-          "id": "primary:crt",
-          "kind": "primary",
-          "source": "Mexico's telecommunications regulator",
-          "url": "https://portal.crt.gob.mx/ConsultaPublica/Detalle/14"
-        },
-        {
-          "id": "primary:usmca-telecom",
-          "kind": "primary",
-          "source": "USMCA Chapter 18",
-          "url": "https://ustr.gov/sites/default/files/files/agreements/FTA/USMCA/Text/18-Telecommunications.pdf"
-        }
-      ]
-    },
-    {
-      "id": "n-general-motors-vende-m-s-autos-importados-en-m-xico--2026-08-12",
-      "date": "2026-08-12",
-      "section": "economy",
-      "title": "General Motors imports exceed combined sales of 29 other brands in Mexico",
-      "why": "From January through July 2026, General Motors imported vehicles accounted for more sales volume than the next 29 brands combined, with imported vehicles representing 69.7 percent of all Mexico car sales.",
-      "company": "General Motors",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/general-motors-vende-mas-autos-importados-en-mexico-que-29-marcas-juntas/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-12T19:15:13.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "General Motors vende más autos importados en México que 29 marcas juntas",
-        "dek": "Del total de autos comercializados en México entre enero y julio, 69.7% correspondieron a unidades importadas La publicación General Motors vende más autos importados en México que 29 marcas juntas apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/general-motors-vende-mas-autos-importados-en-mexico-que-29-marcas-juntas/",
-          "publishedAt": "2026-08-12T19:15:13.000Z",
-          "date": "2026-08-12",
-          "title": "General Motors imports exceed combined sales of 29 other brands in Mexico",
-          "summary": "From January through July 2026, General Motors imported vehicles accounted for more sales volume than the next 29 brands combined, with imported vehicles representing 69.7 percent of all Mexico car sales."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-pulso-diario-san-luis-cae-exportaci-n-de-cerveza-5-2026-08-12",
-      "date": "2026-08-12",
-      "section": "economy",
-      "title": "Mexico beer exports fall 5 percent in first half of 2026",
-      "why": "Four of Mexico's most-exported agricultural products recorded declines in the first semester of 2026, including a 5 percent drop in beer shipments, indicating softening demand or increased competition.",
-      "company": "",
-      "source": "Grupo Consultor de Mercados Agrícolas",
-      "url": "https://gcma.com.mx/pulso-diario-san-luis-cae-exportacion-de-cerveza-5/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-12T15:35:54.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Pulso Diario San Luis: Cae exportación de cerveza 5%",
-        "dek": "El Universal | 12 de agosto de 2026. Ciudad de México.- En el primer semestre de este año, cuatro de los agroalimentos más exportados por México registraron caídas, de acuerdo con el Grupo Consultor de Mercados Agrícolas (GCMA). Las ventas de cerveza a otros países cayeron 5% en dicho semestre con respecto al mismo per"
-      },
-      "coverage": [
-        {
-          "source": "Grupo Consultor de Mercados Agrícolas",
-          "url": "https://gcma.com.mx/pulso-diario-san-luis-cae-exportacion-de-cerveza-5/",
-          "publishedAt": "2026-08-12T15:35:54.000Z",
-          "date": "2026-08-12",
-          "title": "Mexico beer exports fall 5 percent in first half of 2026",
-          "summary": "Four of Mexico's most-exported agricultural products recorded declines in the first semester of 2026, including a 5 percent drop in beer shipments, indicating softening demand or increased competition."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "gcma.com.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-m-xico-no-tiene-pruebas-de-presuntos-v-nculos-del-ni-2026-08-12",
-      "date": "2026-08-12",
-      "section": "security",
-      "title": "Mexico's security cabinet states no evidence links Castro's grandson to Cuban organized crime network in Quintana Roo",
-      "why": "Mexico's security officials stated they have no evidence of alleged connections between Raúl Castro's grandson and a Cuban mafia network operating in Quintana Roo, responding to New York Times reporting.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/1208/mexico/mexico-no-tiene-pruebas-sobre-presuntos-vinculos-del-nieto-de-raul-castro-con-red-criminal-seguridad/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-12T14:22:02.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "México no tiene pruebas de presuntos vínculos del nieto de Raúl Castro con “Mafia Cubana en Quintana Roo”: Seguridad",
-        "dek": "La postura del Gabinete de Seguridad se dio después de que The New York Times publicara una investigación sobre la denominada “Mafia Cubana en Quintana Roo”, una red a la que atribuyó actividades de contrabando de personas y mercancías ilícitas."
-      },
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/1208/mexico/mexico-no-tiene-pruebas-sobre-presuntos-vinculos-del-nieto-de-raul-castro-con-red-criminal-seguridad/",
-          "publishedAt": "2026-08-12T14:22:02.000Z",
-          "date": "2026-08-12",
-          "title": "Mexico's security cabinet states no evidence links Castro's grandson to Cuban organized crime network in Quintana Roo",
-          "summary": "Mexico's security officials stated they have no evidence of alleged connections between Raúl Castro's grandson and a Cuban mafia network operating in Quintana Roo, responding to New York Times reporting."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "aristeguinoticias.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-busca-cfe-recursos-en-los-mercados-realizar-emisi-n--2026-08-12",
-      "date": "2026-08-12",
-      "section": "economy",
-      "title": "Mexico's Federal Electricity Commission plans debt issuance of 4.5 billion pesos",
-      "why": "The CFE will issue 4.5 billion pesos in debt and CFE Capital seeks authorization for simultaneous public offering in Mexico and private international placement of certificates.",
-      "company": "CFE",
-      "source": "Energía a Debate",
-      "url": "https://energiaadebate.com/busca-cfe-recursos-en-los-mercados-realizara-emision-de-deuda-manana-por-4-5-mil-millones-de-pesos/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-12T20:26:33.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Busca CFE recursos en los mercados; realizará emisión de deuda mañana por 4.5 mil millones de pesos",
-        "dek": "Por su parte, CFE Capital, administradora de la FIBRA-E, pide autorización para oferta pública en México simultánea a una oferta privada internacional de certificados bursátiles"
-      },
-      "coverage": [
-        {
-          "source": "Energía a Debate",
-          "url": "https://energiaadebate.com/busca-cfe-recursos-en-los-mercados-realizara-emision-de-deuda-manana-por-4-5-mil-millones-de-pesos/",
-          "publishedAt": "2026-08-12T20:26:33.000Z",
-          "date": "2026-08-12",
-          "title": "Mexico's Federal Electricity Commission plans debt issuance of 4.5 billion pesos",
-          "summary": "The CFE will issue 4.5 billion pesos in debt and CFE Capital seeks authorization for simultaneous public offering in Mexico and private international placement of certificates."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "energiaadebate.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-12",
-      "date": "2026-08-12",
-      "section": "politics",
-      "title": "Judicial administration body appoints auxiliary officials",
-      "why": "Official Federal Official Journal notice of judicial personnel appointments issued by Mexico's Judicial Administration Organ.",
-      "company": "",
-      "source": "Diario Oficial de la Federación",
-      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796075&fecha=12/08/2026",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-12T12:00:00.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Acuerdo General del Pleno del Órgano de Administración Judicial que reforma el similar por el que se designan a las personas titulares de diversos órganos auxiliares.",
-        "dek": "DOF · PODER JUDICIAL ORGANO DE ADMINISTRACION JUDICIAL"
-      },
-      "coverage": [
-        {
-          "source": "Diario Oficial de la Federación",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5796075&fecha=12/08/2026",
-          "publishedAt": "2026-08-12T12:00:00.000Z",
-          "date": "2026-08-12",
-          "title": "Judicial administration body appoints auxiliary officials",
-          "summary": "Official Federal Official Journal notice of judicial personnel appointments issued by Mexico's Judicial Administration Organ."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 0,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 2,
-              "source": "authoritative-domain",
-              "hostname": "diariooficial.gob.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
     }
   ]
 }
