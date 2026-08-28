@@ -3,9 +3,6 @@ const ACTIVE_RUN_STATUSES = new Set(['queued', 'in_progress', 'requested', 'wait
 
 const DEFAULT_GRACE_MINUTES = 20;
 const DEFAULT_RECENT_RUN_MINUTES = 180;
-const DEFAULT_RETRY_COOLDOWN_MINUTES = 45;
-const DEFAULT_FAILURE_WINDOW_MINUTES = 1440;
-const DEFAULT_MAX_FAILURES = 1;
 const MORNING_MINUTE_ET = 9 * 60;
 const QUIET_RECHECK_MINUTE_ET = 12 * 60;
 
@@ -31,6 +28,11 @@ function easternParts(now) {
   return Object.fromEntries(
     parts.filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]),
   );
+}
+
+function easternDate(value) {
+  const parts = easternParts(value);
+  return `${parts.year}-${parts.month}-${parts.day}`;
 }
 
 /**
@@ -69,6 +71,32 @@ export function publicationStopsRecovery(status, due) {
   return (SLOT_RANK[status.slot] || 0) >= (SLOT_RANK[due.slot] || Infinity);
 }
 
+function receiptTime(status) {
+  const timestamp = Date.parse(status?.generatedAt || '');
+  return Number.isFinite(timestamp) ? timestamp : null;
+}
+
+/**
+ * Production remains the public truth unless the repository contains a strictly
+ * newer deferral for the exact edition that is due. That is the one case where a
+ * same-day live publication can be known obsolete even though Pages still serves it.
+ */
+export function resolvePublicationStatus(liveStatus, repositoryStatus, due) {
+  const liveTime = receiptTime(liveStatus);
+  const repositoryTime = receiptTime(repositoryStatus);
+  const repositoryDefersDueEdition = Boolean(due)
+    && repositoryStatus?.state === 'deferred'
+    && repositoryStatus?.editorialDate === due.editorialDate
+    && (SLOT_RANK[repositoryStatus?.slot] || 0) >= (SLOT_RANK[due.slot] || Infinity)
+    && liveTime !== null
+    && repositoryTime !== null
+    && repositoryTime > liveTime;
+
+  return repositoryDefersDueEdition
+    ? { status: repositoryStatus, source: 'repository' }
+    : { status: liveStatus, source: 'live' };
+}
+
 export function recentActiveRun(runs, now = new Date(), recentRunMinutes = DEFAULT_RECENT_RUN_MINUTES) {
   const currentTime = (now instanceof Date ? now : new Date(now)).getTime();
   if (Number.isNaN(currentTime)) throw new TypeError('now must be a valid date');
@@ -87,31 +115,19 @@ export function recentActiveRun(runs, now = new Date(), recentRunMinutes = DEFAU
   }) || null;
 }
 
-function ageMinutes(run, now) {
-  const timestamp = run?.run_started_at || run?.created_at || run?.updated_at;
-  const time = Date.parse(timestamp || '');
-  return Number.isFinite(time) ? (now.getTime() - time) / 60_000 : Infinity;
-}
-
-export function recoveryThrottle(runs, now = new Date(), {
-  cooldownMinutes = DEFAULT_RETRY_COOLDOWN_MINUTES,
-  failureWindowMinutes = DEFAULT_FAILURE_WINDOW_MINUTES,
-  maxFailures = DEFAULT_MAX_FAILURES,
-} = {}) {
-  const clock = now instanceof Date ? now : new Date(now);
-  const list = Array.isArray(runs) ? runs : [];
-  const recentDispatch = list.find((run) => run?.event === 'workflow_dispatch'
-    && ageMinutes(run, clock) >= -5 && ageMinutes(run, clock) < positiveNumber(cooldownMinutes, DEFAULT_RETRY_COOLDOWN_MINUTES));
-  if (recentDispatch) return { blocked: true, reason: 'a recovery run was dispatched recently', runId: recentDispatch.id ?? null };
-
-  // One independent recovery attempt is enough for a given editorial day. The primary
-  // workflow already gets hourly chances, so three identical watchdog dispatches only
-  // repeat spend and notifications when the failure is deterministic.
-  const failures = list.filter((run) => run?.event === 'workflow_dispatch'
-    && run?.status === 'completed' && run?.conclusion === 'failure'
-    && ageMinutes(run, clock) >= 0 && ageMinutes(run, clock) < positiveNumber(failureWindowMinutes, DEFAULT_FAILURE_WINDOW_MINUTES));
-  if (failures.length >= positiveNumber(maxFailures, DEFAULT_MAX_FAILURES)) {
-    return { blocked: true, reason: 'recovery failure limit reached', failures: failures.length };
+export function recoveryThrottle(runs, editorialDate) {
+  const priorDispatch = (Array.isArray(runs) ? runs : []).find((run) => {
+    if (run?.event !== 'workflow_dispatch') return false;
+    const createdAt = new Date(run?.created_at || '');
+    if (Number.isNaN(createdAt.getTime())) return false;
+    return easternDate(createdAt) === editorialDate;
+  });
+  if (priorDispatch) {
+    return {
+      blocked: true,
+      reason: 'the independent recovery allowance was already used for this editorial date',
+      runId: priorDispatch.id ?? null,
+    };
   }
   return { blocked: false };
 }

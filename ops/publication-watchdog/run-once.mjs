@@ -1,6 +1,7 @@
 import { runWatchdog } from './src/index.mjs';
 
-// Recovery is based on what readers can reach, never on a receipt that exists only
-// in Git. This makes the GitHub fallback genuinely independent of Pages deployment.
+// Recovery compares the live receipt with the repository's newer coordination
+// receipt. This catches a deferred repair even when Pages still serves a same-day
+// edition that the newer pipeline no longer certifies.
 const result = await runWatchdog(process.env, new Date());
 console.log(JSON.stringify(result));

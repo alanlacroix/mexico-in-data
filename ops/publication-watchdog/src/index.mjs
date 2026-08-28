@@ -1,4 +1,11 @@
-import { publicationCoversEdition, publicationStopsRecovery, dueEdition, recentActiveRun, recoveryThrottle } from './decision.mjs';
+import {
+  publicationCoversEdition,
+  publicationStopsRecovery,
+  dueEdition,
+  recentActiveRun,
+  recoveryThrottle,
+  resolvePublicationStatus,
+} from './decision.mjs';
 
 const DEFAULTS = Object.freeze({
   publicationStatusUrl: 'https://mexicobrief.com/data/publication-status.json',
@@ -8,9 +15,6 @@ const DEFAULTS = Object.freeze({
   githubRef: 'main',
   graceMinutes: 20,
   recentRunMinutes: 180,
-  retryCooldownMinutes: 45,
-  failureWindowMinutes: 1440,
-  maxFailures: 1,
   heartbeatMaxAgeMinutes: 45,
 });
 
@@ -30,9 +34,6 @@ function config(env) {
     githubRef: env.GITHUB_REF || DEFAULTS.githubRef,
     graceMinutes: numericEnv(env.WATCHDOG_GRACE_MINUTES, DEFAULTS.graceMinutes),
     recentRunMinutes: numericEnv(env.RECENT_RUN_MINUTES, DEFAULTS.recentRunMinutes),
-    retryCooldownMinutes: numericEnv(env.RETRY_COOLDOWN_MINUTES, DEFAULTS.retryCooldownMinutes),
-    failureWindowMinutes: numericEnv(env.FAILURE_WINDOW_MINUTES, DEFAULTS.failureWindowMinutes),
-    maxFailures: numericEnv(env.MAX_RECOVERY_FAILURES, DEFAULTS.maxFailures),
     heartbeatMaxAgeMinutes: numericEnv(env.HEARTBEAT_MAX_AGE_MINUTES, DEFAULTS.heartbeatMaxAgeMinutes),
   };
 }
@@ -96,7 +97,70 @@ async function fetchWorkflowRuns(settings, token) {
   return payload.workflow_runs;
 }
 
-async function dispatchWorkflow(settings, token, due) {
+function nextUtcDate(dateKey) {
+  const date = new Date(`${dateKey}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) throw new Error(`invalid editorial date: ${dateKey}`);
+  date.setUTCDate(date.getUTCDate() + 1);
+  return date.toISOString().slice(0, 10);
+}
+
+function recoveryRunsUrl(settings, editorialDate, page) {
+  const url = workflowRunsUrl(settings);
+  // An Eastern editorial day spans parts of two UTC dates. Query both, then let the
+  // pure Eastern-date guard decide which dispatch consumed this day's allowance.
+  url.searchParams.set('event', 'workflow_dispatch');
+  url.searchParams.set('created', `${editorialDate}..${nextUtcDate(editorialDate)}`);
+  url.searchParams.set('per_page', '100');
+  url.searchParams.set('page', String(page));
+  return url;
+}
+
+async function fetchRecoveryRuns(settings, token, editorialDate) {
+  const runs = [];
+  for (let page = 1; page <= 10; page += 1) {
+    const response = await fetch(recoveryRunsUrl(settings, editorialDate, page), {
+      headers: githubHeaders(token),
+    });
+    if (!response.ok) throw new Error(`GitHub recovery-runs request returned HTTP ${response.status}`);
+
+    const payload = await response.json();
+    if (!Array.isArray(payload?.workflow_runs)) {
+      throw new Error('GitHub recovery-runs response did not contain workflow_runs');
+    }
+    if (Number(payload.total_count) > 1000) {
+      throw new Error('GitHub recovery-runs query exceeded its safe result limit');
+    }
+    runs.push(...payload.workflow_runs);
+    if (payload.workflow_runs.length < 100) return runs;
+  }
+  throw new Error('GitHub recovery-runs query did not reach a complete page');
+}
+
+function repositoryStatusUrl(settings) {
+  const url = new URL(
+    `https://api.github.com/repos/${encodeURIComponent(settings.githubOwner)}/${encodeURIComponent(settings.githubRepo)}/contents/data/publication-status.json`,
+  );
+  url.searchParams.set('ref', settings.githubRef);
+  return url;
+}
+
+async function fetchRepositoryPublicationStatus(settings, token) {
+  const response = await fetch(repositoryStatusUrl(settings), {
+    headers: {
+      ...githubHeaders(token),
+      Accept: 'application/vnd.github.raw+json',
+    },
+  });
+  if (!response.ok) throw new Error(`GitHub publication-status request returned HTTP ${response.status}`);
+
+  const status = await response.json();
+  if (!status || typeof status !== 'object' || Array.isArray(status)) {
+    throw new Error('GitHub publication status was not a JSON object');
+  }
+  return status;
+}
+
+async function dispatchWorkflow(settings, token, force) {
   const workflow = encodeURIComponent(settings.githubWorkflow);
   const endpoint = `https://api.github.com/repos/${encodeURIComponent(settings.githubOwner)}/${encodeURIComponent(settings.githubRepo)}/actions/workflows/${workflow}/dispatches`;
   const response = await fetch(endpoint, {
@@ -108,7 +172,7 @@ async function dispatchWorkflow(settings, token, due) {
     body: JSON.stringify({
       ref: settings.githubRef,
       inputs: {
-        force: 'true',
+        force: force ? 'true' : 'false',
       },
     }),
   });
@@ -136,13 +200,18 @@ export async function runWatchdog(env, now = new Date()) {
   }
 
   const overriddenStatus = publicationStatusOverride(env);
-  const status = overriddenStatus === undefined
+  const liveStatus = overriddenStatus === undefined
     ? await fetchPublicationStatus(settings.publicationStatusUrl)
     : overriddenStatus;
+  if (!env.GITHUB_TOKEN) throw new Error('GITHUB_TOKEN secret is not configured');
+  const repositoryStatus = await fetchRepositoryPublicationStatus(settings, env.GITHUB_TOKEN);
+  const resolved = resolvePublicationStatus(liveStatus, repositoryStatus, due);
+  const status = resolved.status;
   if (publicationCoversEdition(status, due)) {
     log('info', 'publication_current', {
       due,
       publicationId: status.publicationId || null,
+      statusSource: resolved.source,
     });
     return { action: 'none', reason: 'publication is current', due };
   }
@@ -155,7 +224,6 @@ export async function runWatchdog(env, now = new Date()) {
     return { action: 'none', reason: `publication is ${status.state}`, due };
   }
 
-  if (!env.GITHUB_TOKEN) throw new Error('GITHUB_TOKEN secret is not configured');
   const runs = await fetchWorkflowRuns(settings, env.GITHUB_TOKEN);
   const activeRun = recentActiveRun(runs, now, settings.recentRunMinutes);
   if (activeRun) {
@@ -168,25 +236,20 @@ export async function runWatchdog(env, now = new Date()) {
     };
   }
 
-  const throttle = recoveryThrottle(runs, now, {
-    cooldownMinutes: settings.retryCooldownMinutes,
-    failureWindowMinutes: settings.failureWindowMinutes,
-    maxFailures: settings.maxFailures,
-  });
+  const recoveryRuns = await fetchRecoveryRuns(settings, env.GITHUB_TOKEN, due.editorialDate);
+  const throttle = recoveryThrottle(recoveryRuns, due.editorialDate);
   if (throttle.blocked) {
-    log(throttle.failures ? 'error' : 'info', 'recovery_throttled', { due, ...throttle });
-    if (throttle.failures) {
-      throw new Error(`publication is stale and ${throttle.reason} (${throttle.failures} failed runs)`);
-    }
+    log('info', 'recovery_throttled', { due, ...throttle });
     return { action: 'none', reason: throttle.reason, due };
   }
 
-  const dispatchedRun = await dispatchWorkflow(settings, env.GITHUB_TOKEN, due);
+  const dispatchedRun = await dispatchWorkflow(settings, env.GITHUB_TOKEN, resolved.source !== 'repository');
   log('info', 'workflow_dispatched', {
     due,
     workflowRunId: dispatchedRun?.workflow_run_id || null,
-    liveEditorialDate: status?.editorialDate || null,
-    liveSlot: status?.slot || null,
+    statusSource: resolved.source,
+    resolvedEditorialDate: status?.editorialDate || null,
+    resolvedSlot: status?.slot || null,
   });
   return { action: 'dispatch', reason: 'publication was stale', due };
 }
@@ -237,6 +300,7 @@ export async function checkHealth(env, now = new Date()) {
     githubTokenConfigured: Boolean(env.GITHUB_TOKEN),
     stateBindingConfigured: Boolean(env.WATCHDOG_STATE && typeof env.WATCHDOG_STATE.get === 'function'),
     publicationStatusReachable: false,
+    repositoryStatusReachable: false,
     githubApiReachable: false,
     heartbeatFresh: false,
     lastScheduledCheckHealthy: false,
@@ -244,6 +308,8 @@ export async function checkHealth(env, now = new Date()) {
   };
   const errors = [];
   let livePublication = null;
+  let repositoryPublication = null;
+  let resolvedPublication = { status: null, source: 'live' };
   let latestWorkflowRun = null;
   let workflowRuns = [];
   let heartbeat = null;
@@ -263,16 +329,25 @@ export async function checkHealth(env, now = new Date()) {
       latestWorkflowRun = workflowRuns[0] || null;
       checks.githubApiReachable = true;
     } catch (error) {
-      errors.push(`GitHub API: ${errorMessage(error)}`);
+      errors.push(`GitHub workflow API: ${errorMessage(error)}`);
+    }
+    try {
+      repositoryPublication = await fetchRepositoryPublicationStatus(settings, env.GITHUB_TOKEN);
+      checks.repositoryStatusReachable = true;
+    } catch (error) {
+      errors.push(`GitHub publication status: ${errorMessage(error)}`);
     }
   }
 
   const due = dueEdition(now, settings.graceMinutes);
+  if (checks.publicationStatusReachable && checks.repositoryStatusReachable) {
+    resolvedPublication = resolvePublicationStatus(livePublication, repositoryPublication, due);
+  }
   const recoveryActive = due
     ? recentActiveRun(workflowRuns, now, settings.recentRunMinutes)
     : null;
   checks.editionCurrentOrRecoveryActive = !due
-    || publicationCoversEdition(livePublication, due)
+    || publicationCoversEdition(resolvedPublication.status, due)
     || Boolean(recoveryActive);
   if (!checks.editionCurrentOrRecoveryActive) {
     errors.push(`${due.editorialDate} ${due.slot} edition is not live and no recovery run is active`);
@@ -313,6 +388,14 @@ export async function checkHealth(env, now = new Date()) {
       slot: livePublication.slot || null,
       publicationId: livePublication.publicationId || null,
     } : null,
+    repositoryPublication: repositoryPublication ? {
+      state: repositoryPublication.state || 'published',
+      editorialDate: repositoryPublication.editorialDate || null,
+      contentEditorialDate: repositoryPublication.contentEditorialDate || repositoryPublication.editorialDate || null,
+      slot: repositoryPublication.slot || null,
+      publicationId: repositoryPublication.publicationId || null,
+    } : null,
+    resolvedPublicationSource: resolvedPublication.source,
     latestWorkflowRun: latestWorkflowRun ? {
       id: latestWorkflowRun.id ?? null,
       status: latestWorkflowRun.status || null,

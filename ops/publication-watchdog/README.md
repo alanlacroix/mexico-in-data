@@ -1,11 +1,14 @@
 # Publication watchdog
 
-This Worker checks the live publication receipt every 15 minutes. After the
+This Worker checks the live publication receipt and the repository's publication
+receipt every 15 minutes. After the
 day's single morning edition is due in Eastern time (plus a 20-minute grace
 period), it dispatches `.github/workflows/happening.yml` only when:
 
-1. the live receipt does not cover the due edition; and
-2. no recent run of that workflow is queued or in progress.
+1. the live receipt does not cover the due edition, or a strictly newer same-day
+   repository receipt says that edition is deferred;
+2. no recent run of that workflow is queued or in progress; and
+3. the Worker has not already dispatched a recovery for that Eastern editorial date.
 
 `GET /` and `GET /health` are read-only health responses. They fail with HTTP
 503 unless the GitHub credential works, the live receipt is reachable, and the
@@ -15,8 +18,8 @@ dispatch the workflow.
 ## Deploy
 
 Create a fine-grained GitHub token for `alanlacroix/mexico-in-data` with
-**Actions: read and write** access. Store it as a Worker secret; never add it to
-`wrangler.jsonc` or the repository.
+**Actions: read and write** and **Contents: read** access. Store it as a Worker
+secret; never add it to `wrangler.jsonc` or the repository.
 
 ```sh
 cd ops/publication-watchdog

@@ -330,9 +330,9 @@ assert.match(
 assert.doesNotMatch(publicationFallback, /\n\s*schedule:|\n\s*workflow_run:|\n\s*push:/,
   'the Cloudflare watchdog must be the only automatic recovery loop');
 assert.match(watchdogRunOnce, /runWatchdog\(process\.env, new Date\(\)\)/,
-  'the GitHub fallback must decide from the public production receipt');
+  'the GitHub fallback must use the same live-plus-repository recovery decision as the independent watchdog');
 assert.doesNotMatch(watchdogRunOnce, /PUBLICATION_STATUS_JSON|data\/publication-status\.json/,
-  'a repository receipt must never hide a stale Pages deployment from recovery');
+  'the fallback must fetch both receipts remotely rather than trusting the checked-out file');
 assert.match(
   publicationFallback,
   /permissions:[\s\S]*?actions:\s*write/,
