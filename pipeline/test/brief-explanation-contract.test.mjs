@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import { extractText } from '../lib/fetch-article.js';
-import { reportContextDistinct, slopFlags } from '../lib/lint.js';
+import { lintAnalysisText, reportContextDistinct, slopFlags } from '../lib/lint.js';
 
 const require = createRequire(import.meta.url);
 const { briefReadiness } = require('../lib/brief-readiness.cjs');
@@ -28,8 +28,8 @@ assert.equal(briefReadiness(brief([false, false, false, true, true])).targetMet,
   'analysis on lower-ranked stories must not disguise any unexplained selected story');
 assert.deepEqual(briefReadiness(brief([false, false, false, false, false])).missingTarget,
   ['lead', 'item-2', 'item-3', 'item-4', 'item-5']);
-assert.equal(briefReadiness(brief([false, false, false])).publicationBlocking, false,
-  'missing analysis must not stop a factual nonquiet edition');
+assert.equal(briefReadiness(brief([false, false, false])).publicationBlocking, true,
+  'a factual card without Briefly Explained must not be certified as the finished Brief');
 assert.equal(briefReadiness(brief([true, true, false, false, false])).targetMet, false,
   'two complete explanations cannot certify a five-story edition');
 assert.deepEqual(briefReadiness(brief([true, true, false])).missingTarget, ['item-3'],
@@ -62,14 +62,14 @@ assert.match(happeningBuilder, /primaryResearchUrl\(source\.url\)/,
   'research must resolve to a government, regulator, international body, or corporate filing page');
 assert.match(happeningBuilder, /field === 'background'[\s\S]*contextualEvidence/,
   'Background must establish context from evidence beyond the original article');
-assert.match(happeningBuilder, /auditCompleted[\s\S]*initiated[\s\S]*preliminary[\s\S]*final[\s\S]*recovered/,
-  'a separate evidence editor must check the status and procedural stage before publication');
+assert.doesNotMatch(happeningBuilder, /auditCompleted|independent evidence editor/,
+  'a redundant second model audit must not delete a complete evidence-gated explanation');
+assert.match(happeningBuilder, /rejectionsThisRun = new Map\(arr\(priorOutcomes\)[\s\S]*fields: rejectedFields/,
+  'field-level failures must survive into one targeted recovery instead of collapsing to field-rejected');
 assert.match(happeningBuilder, /const request = \(batch, effort, maxTokens\) => askJSON\(\{[\s\S]*?model: models\.HAIKU,[\s\S]*?priority: 'core'/,
   'evidence-locked drafting must use the bounded model tier so daily all-story coverage fits the monthly cap');
 assert.match(briefBuilder, /const picked = rankedPicked/,
-  'a failed explanation pass must preserve every selected factual story');
-assert.doesNotMatch(briefBuilder, /selected reporting exists, but no story has a complete Briefly Explained unit/,
-  'analysis scarcity must never block factual publication');
+  'analysis must not silently rerank the locked factual selection');
 
 assert.deepEqual(
   mergeApprovedAttempt(
@@ -103,6 +103,16 @@ assert.equal(reportContextDistinct({
   headline: "Mexico's annual inflation falls to 3.12 percent in July, its lowest rate since 2020",
   context: "The headline rate is close to Banxico's target, but underlying inflation remained more persistent.",
 }), true, 'a sourced caveat should earn the context line');
+assert.equal(lintAnalysisText({
+  text: 'The official record shows the decision is still preliminary.',
+  inputs: ['The official record says the decision remains preliminary.'],
+  role: 'background',
+}).ok, true, 'ordinary official-record language must not be mistaken for a record superlative');
+assert.equal(lintAnalysisText({
+  text: 'The regulator approved the fee cap.',
+  inputs: ['The regulator published a draft that would reduce the fee cap.'],
+  role: 'background',
+}).ok, false, 'the shared analysis gate must not turn a draft into a completed action');
 assert.equal(slopFlags({
   title: 'Mexico updates its governmental accounting rules',
   why: 'The Manual de Contabilidad Gubernamental de México sets the reporting structure.',

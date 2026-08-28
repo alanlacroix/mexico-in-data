@@ -2,10 +2,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import { priorTerminalAnalysisAttempt } from '../publish-edition.mjs';
 import publicationTransition from '../lib/publication-transition.cjs';
 
+const require = createRequire(import.meta.url);
 const { nonPublishedTransition } = publicationTransition;
+const { PIPELINE_VERSION } = require('../lib/edition-contract.cjs');
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const workflowDir = path.join(root, '.github', 'workflows');
@@ -107,12 +110,12 @@ assert.match(receiptWriter, /state !== 'published'[\s\S]*contentEditorialDate[\s
 assert.match(receiptWriter, /nonPublishedTransition\(prior, next\)/,
   'a failed forced republish must not downgrade a complete current edition');
 {
-  const next = { state: 'deferred', editorialDate: '2026-08-27', reason: 'fresh copy unresolved' };
-  const factual = { state: 'published', editorialDate: '2026-08-27', quiet: false, publicationId: 'facts' };
+  const next = { state: 'deferred', pipelineVersion: PIPELINE_VERSION, editorialDate: '2026-08-27', reason: 'fresh copy unresolved' };
+  const factual = { state: 'published', pipelineVersion: PIPELINE_VERSION, editorialDate: '2026-08-27', quiet: false, publicationId: 'facts' };
   const quiet = { state: 'published', editorialDate: '2026-08-27', quiet: true, publicationId: 'empty' };
   factual.selectedStories = 2;
   assert.deepEqual(nonPublishedTransition(factual, next), { status: factual, retained: true },
-    'a later optional failure must not take down a complete factual edition');
+    'a later same-contract failure must not take down a complete factual edition');
   assert.deepEqual(nonPublishedTransition(quiet, next), { status: next, retained: false },
     'a noon contradiction must replace the provisional quiet receipt with an honest deferral');
   const legacyQuiet = {
@@ -121,6 +124,9 @@ assert.match(receiptWriter, /nonPublishedTransition\(prior, next\)/,
   };
   assert.deepEqual(nonPublishedTransition(legacyQuiet, next), { status: next, retained: false },
     'a legacy zero-story receipt without a quiet flag must remain provisional during migration');
+  const obsoleteFactual = { ...factual, pipelineVersion: PIPELINE_VERSION - 1 };
+  assert.deepEqual(nonPublishedTransition(obsoleteFactual, next), { status: next, retained: false },
+    'a factual edition from an obsolete contract must not hide a failed migration');
 }
 assert.match(
   receiptWriter,
@@ -198,25 +204,33 @@ assert.match(
   'only a fully assessed deferral may persist its reusable news staging; a blocked run must commit no partial editorial data',
 );
 assert.match(editionPublisher, /const priorAttempt = priorTerminalAnalysisAttempt[\s\S]*if \(priorAttempt\)[\s\S]*else node\('Explain ranked stories'/,
-  'an unchanged explanation failure must skip repeat spend without blocking the factual edition');
-assert.doesNotMatch(editionPublisher, /requireSelectedExplanations|Briefly Explained is not ready/,
-  'optional analysis must not be a publication gate');
-assert.doesNotMatch(receiptWriter, /throw new Error\(`Briefly Explained incomplete/,
-  'the publication receipt must report explanation coverage without requiring it');
+  'an unchanged twice-rejected explanation must stop repeat spend');
+assert.match(editionPublisher, /requireSelectedExplanations\(\)/,
+  'the atomic publisher must require the explanatory layer before certification');
 const lockedBrief = { meta: { selection: { lockedIds: ['lead'] } } };
 assert.match(
   priorTerminalAnalysisAttempt(lockedBrief, { meta: { analysisTarget: {
-    ids: ['lead'], outcomes: [{ id: 'lead', ready: false, reason: 'budget-unavailable' }],
+    policy: 'every-selected-story-evidence-locked-v4', ids: ['lead'], attempt: 2,
+    outcomes: [{ id: 'lead', ready: false, reason: 'budget-unavailable' }],
   } } }),
   /complete panel \(budget-unavailable\)/,
   'the exact locked story must not repeat a known terminal model attempt',
 );
 assert.equal(
   priorTerminalAnalysisAttempt(lockedBrief, { meta: { analysisTarget: {
-    ids: ['different'], outcomes: [{ id: 'different', ready: false, reason: 'field-rejected' }],
+    policy: 'every-selected-story-evidence-locked-v4', ids: ['different'], attempt: 2,
+    outcomes: [{ id: 'different', ready: false, reason: 'field-rejected' }],
   } } }),
   '',
   'new reporting and a new story selection must receive a fresh explanation attempt',
+);
+assert.equal(
+  priorTerminalAnalysisAttempt(lockedBrief, { meta: { analysisTarget: {
+    policy: 'every-selected-story-evidence-locked-v4', ids: ['lead'], attempt: 1,
+    outcomes: [{ id: 'lead', ready: false, reason: 'field-rejected', fields: { view: ['needs a mechanism'] } }],
+  } } }),
+  '',
+  'one same-day recovery must receive the retained field corrections before becoming terminal',
 );
 assert.match(
   happening,

@@ -11,9 +11,9 @@
 // own headline + dek, and every entry keeps its source link and date.
 //
 // The factual event log is fail-soft: with no ANTHROPIC_API_KEY it falls back to a
-// deterministic pick (top-tier, most-recent, spread across sections). Every selected
-// story gets one bounded Briefly Explained attempt, but that optional layer never blocks
-// the facts. One event keeps one stable id, moves to the newest curated report, and
+// deterministic pick (top-tier, most-recent, spread across sections). Every published
+// story must carry one complete Briefly Explained unit; a failed unit defers certification
+// without deleting the underlying fact from the reading feed. One event keeps one stable id, moves to the newest curated report, and
 // retains other outlets and adjacent-day reports as coverage.
 //
 //   node build-happening.js                    # update data/happening.json in place
@@ -81,6 +81,7 @@ const MAX_NEW = 16;          // model returns at most this many new events per r
 const MAX_CANDIDATES = 24;   // small enough for one exhaustive decision per row; attention priority protects consequential older items.
 const CURATION_MAX_TOKENS = 6000; // enough for 24 compact decisions; the old 16k ceiling falsely exhausted the monthly guard.
 const CURATION_POLICY = 'edition-window-assessment-v5';
+const ANALYSIS_POLICY = 'every-selected-story-evidence-locked-v4';
 
 const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
 
@@ -607,7 +608,7 @@ function relevantStanding(event, facts, limit = 5) {
     .slice(0, limit).map((item) => item.fact);
 }
 
-async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = false } = {}) {
+async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = false, priorOutcomes = [] } = {}) {
   const priority = new Set(priorityIds);
   const cutoff = now.getTime() - BG_DAYS * 864e5;
   const totalWords = (e) => ['background', 'view', 'prediction']
@@ -849,7 +850,13 @@ ${BAN}`;
   // is still one reviewed unit. Nothing from an earlier edition is carried forward.
   const approvedThisRun = new Map();
   const approvedRefsThisRun = new Map();
-  const rejectionsThisRun = new Map();
+  // A same-day recovery sees the exact field failures from the prior bounded attempt.
+  // Previously the receipt retained only "field-rejected", so the next run had no way
+  // to repair the failure and simply bought the same draft again.
+  const rejectionsThisRun = new Map(arr(priorOutcomes).map((item) => [
+    stripDashWs(item?.id),
+    item?.fields && typeof item.fields === 'object' ? item.fields : {},
+  ]).filter(([id]) => id));
   const rememberRejection = (eventId, field, reasons) => {
     const prior = rejectionsThisRun.get(eventId) || {};
     prior[field] = arr(reasons).filter(Boolean);
@@ -916,11 +923,9 @@ ${BAN}`;
         // unsupported claim appear grounded merely because another source was nearby.
         const gateFor = (candidateRefs) => {
           const inputs = candidateRefs.map((ref) => evidenceById.get(ref).text);
-          return field === 'background'
-            ? lintReportText({ text, inputs, maxWords, maxSentences })
-            : lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
-              requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
-              strictForecast: field === 'prediction', forbidFirstPerson: true });
+          return lintAnalysisText({ text, inputs, role: field, maxWords, maxSentences,
+            requireScale: field === 'view' && analysisNeedsScale([item.e.title, item.e.context || item.e.why]),
+            strictForecast: field === 'prediction', forbidFirstPerson: true });
         };
         let gate = gateFor(refs);
         // If the prose is otherwise sound and its only problem is a number found in
@@ -992,84 +997,13 @@ ${BAN}`;
     return true;
   };
 
-  // Numeric-token lint cannot catch a reversed status or stage. On 2026-08-13 a
-  // draft cited an article that said Mexico had recovered FAA Category 1, then wrote
-  // that Mexico was still trying to regain it. A separate copy-desk pass now compares
-  // each field with its cited text and every primary record before the unit can ship.
-  const auditSchema = { type: 'object', additionalProperties: false, required: ['reviews'], properties: { reviews: {
-    type: 'array', items: { type: 'object', additionalProperties: false,
-      required: ['i', 'ok', 'failures'], properties: {
-        i: { type: 'integer' }, ok: { type: 'boolean' }, failures: { type: 'array', items: {
-          type: 'object', additionalProperties: false, required: ['field', 'reason'], properties: {
-            field: { type: 'string', enum: CORE }, reason: { type: 'string' },
-          },
-        } },
-      },
-    },
-  } } };
-  const auditCompleted = async (batch, label) => {
-    const candidates = batch.filter((item) => completed.has(item.e.id));
-    if (!candidates.length) return true;
-    const payload = { items: candidates.map((item) => {
-      const approved = approvedThisRun.get(item.e.id) || {};
-      const refs = approvedRefsThisRun.get(item.e.id) || {};
-      const byId = new Map(item.evidence.map((entry) => [entry.id, entry]));
-      return {
-        i: item.i,
-        headline: item.e.title,
-        summary: item.e.context || item.e.why || '',
-        fields: CORE.map((field) => ({
-          field, text: approved[field], refs: refs[field],
-          evidence: arr(refs[field]).map((id) => byId.get(id)).filter(Boolean),
-        })),
-        contextEvidence: item.evidence.filter(contextualEvidence),
-      };
-    }) };
-    const result = await askJSON({
-      system: `You are the independent evidence editor for Briefly Explained. Review every field claim by claim. Return ok true only when: (1) every factual status, stage, date, actor and number is directly supported by that field's cited evidence; (2) no supplied primary or contextual record contradicts it; (3) a labeled view is a narrow inference whose mechanism follows from the evidence; and (4) What we're watching names a real next step and an observable test without treating correlation as proof of motive. Pay special attention to words such as alleged, initiated, preliminary, final, proposed, approved, recovered, retained and lost. A source link alone proves nothing. Reject paraphrase that adds no context. For each failure name the field and give one concrete correction. Return exactly one review for every input index and JSON only.`,
-      user: JSON.stringify(payload),
-      schema: auditSchema,
-      maxTokens: 2400,
-      model: models.HAIKU,
-      priority: 'core',
-    });
-    const reviews = new Map(arr(result?.reviews).map((review) => [Number(review.i), review]));
-    let allPassed = true;
-    for (const item of candidates) {
-      const review = reviews.get(item.i);
-      if (review?.ok) continue;
-      allPassed = false;
-      const failures = arr(review?.failures).filter((failure) => CORE.includes(failure?.field));
-      const rejectedFields = failures.length ? [...new Set(failures.map((failure) => failure.field))] : CORE;
-      const approved = approvedThisRun.get(item.e.id) || {};
-      const refs = approvedRefsThisRun.get(item.e.id) || {};
-      for (const field of rejectedFields) {
-        const reasons = failures.filter((failure) => failure.field === field).map((failure) => stripDashWs(failure.reason));
-        rememberRejection(item.e.id, field, reasons.length ? reasons : [`${label} evidence audit did not approve this field`]);
-        delete approved[field];
-        delete refs[field];
-      }
-      approvedThisRun.set(item.e.id, approved);
-      approvedRefsThisRun.set(item.e.id, refs);
-      delete item.e.analysisV;
-      delete item.e.analysisRefs;
-      delete item.e.analysisSources;
-      for (const field of CORE) delete item.e[field];
-      if (completed.delete(item.e.id)) added = Math.max(0, added - 1);
-      console.warn(`  analysis evidence audit reject ${item.e.id}: ${rejectedFields.join(', ')}`);
-    }
-    return allPassed;
-  };
-
   const first = await request(items, 'low', 3500);
   const firstReturned = applyDraft(first, items);
-  if (firstReturned) await auditCompleted(items, 'first-pass');
   const retryItems = items.filter((item) => !completed.has(item.e.id));
   let retryReturned = false;
   if (retryItems.length && budgetStatus('core').available) {
     console.warn(`  analysis retry: ${retryItems.length} selected ${retryItems.length === 1 ? 'story' : 'stories'} did not clear all three fields`);
     retryReturned = applyDraft(await request(retryItems, 'medium', 7000), retryItems);
-    if (retryReturned) await auditCompleted(retryItems, 'final');
   }
   if (!firstReturned && !retryReturned) console.warn('  analysis: no model result — selected stories remain unpublished');
   return {
@@ -1077,11 +1011,13 @@ ${BAN}`;
     outcomes: priorityIds.map((id) => {
       const event = events.find((candidate) => candidate.id === id);
       const fetch = fetched.find((item) => item.e.id === id);
-      if (analysisReady(event)) return outcome(event, 'ready');
-      if (fetch && !fetch.r.ok && !evidenceFor(fetch).length) return outcome(event, 'fetch-failed');
-      if (!budgetStatus('core').available) return outcome(event, 'budget-unavailable');
-      if (!firstReturned && !retryReturned) return outcome(event, 'model-unavailable');
-      return outcome(event, 'field-rejected');
+      const rejectedFields = rejectionsThisRun.get(id) || {};
+      const withDetails = (reason) => ({ ...outcome(event, reason), fields: rejectedFields });
+      if (analysisReady(event)) return withDetails('ready');
+      if (fetch && !fetch.r.ok && !evidenceFor(fetch).length) return withDetails('fetch-failed');
+      if (!budgetStatus('core').available) return withDetails('budget-unavailable');
+      if (!firstReturned && !retryReturned) return withDetails('model-unavailable');
+      return withDetails('field-rejected');
     }),
   };
 }
@@ -1217,7 +1153,15 @@ async function main() {
       throw new Error('targeted analysis requires the exact selection-only lock for this edition');
     }
     const events = arr(existing.events);
-    const analysis = await addBackgrounds(events, now, { priorityIds: selectedIds, onlyPriority: true });
+    const priorTarget = existing.meta?.analysisTarget || {};
+    const sameTarget = priorTarget.policy === ANALYSIS_POLICY
+      && JSON.stringify(arr(priorTarget.ids)) === JSON.stringify(selectedIds);
+    const attempt = sameTarget ? Math.max(1, Number(priorTarget.attempt) || 1) + 1 : 1;
+    const analysis = await addBackgrounds(events, now, {
+      priorityIds: selectedIds,
+      onlyPriority: true,
+      priorOutcomes: sameTarget ? priorTarget.outcomes : [],
+    });
     const out = {
       ...existing,
       meta: {
@@ -1226,7 +1170,7 @@ async function main() {
         generatedAt: now.toISOString(),
         count: events.length,
         llm: hasLLM(),
-        analysisTarget: { policy: 'every-selected-story-context-audited-v3', ids: selectedIds, ...analysis },
+        analysisTarget: { policy: ANALYSIS_POLICY, ids: selectedIds, attempt, ...analysis },
       },
       events,
     };

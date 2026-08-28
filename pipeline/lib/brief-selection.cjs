@@ -1,8 +1,8 @@
 'use strict';
 
-// Daily Brief selection is deliberately separate from story analysis.
-// A factual, publishable event competes on editorial importance even when its
-// Briefly Explained unit is missing, incomplete, or still awaiting approval.
+// Daily Brief selection is deliberately separate from story analysis. Importance
+// locks the candidate set first; the publication boundary then requires the complete
+// Briefly Explained unit for every locked story without reranking around a failure.
 
 const DEFAULT_MIN_IMPORTANCE = 5;
 const DEFAULT_SOFT_FLOOR = 3;
@@ -10,8 +10,9 @@ const DEFAULT_CAP = 5;
 const DEFAULT_CARRYOVER_MIN_IMPORTANCE = 6;
 const DEFAULT_CARRYOVER_CAP = 2;
 const WEEKEND_RECAP_MIN_IMPORTANCE = 6;
-// v9 adds separately retained context beyond the original article plus an independent claim audit.
-// Older prose is never mistaken for the current product when an event returns.
+// v9 requires separately retained context beyond the original article, exact field
+// references, and the shared deterministic evidence-fidelity gate. Older prose is
+// never mistaken for the current product when an event returns.
 const ANALYSIS_VERSION = 9;
 const ANALYSIS_FIELDS = ['background', 'view', 'prediction'];
 

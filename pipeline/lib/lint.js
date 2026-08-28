@@ -107,7 +107,9 @@ const SUPERLATIVE_FAMILIES = [
     evidence: /\b(?:lowest|smallest|m[ií]nim\w*|menor|m[aá]s (?:bajo|pequeñ)\w*)\b/i,
   },
   {
-    copy: /\b(?:record|all-time|first-ever)\b/i,
+    // "record" is also an ordinary noun in "official record" and "court record."
+    // Treat it as a superlative only when the phrase claims a new/high/low result.
+    copy: /\b(?:all-time|first-ever|new record|record(?:-high|-low)?\s+(?:\d|US\$|MX\$|\$|high|low|level|amount|number|total|exports?|imports?|sales?|profit|loss)|sets? (?:a )?record|breaks? (?:the |a )?record)\b/i,
     evidence: /\b(?:record|r[eé]cord|all-time|first-ever|por primera vez)\b/i,
   },
 ];
@@ -279,8 +281,13 @@ export const analysisNeedsScale = (inputs = []) => ANNOUNCEMENT_NUMBER.test(inpu
 
 export function lintAnalysisText({ text = '', inputs = [], role = 'view', maxWords = 45, maxSentences = 2, requireScale = false, strictForecast = true, forbidFirstPerson = false, checkNumbers = true }) {
   const report = lintReportText({ text, inputs, maxWords, maxSentences, checkNumbers });
-  const flags = [...report.flags];
   const clean = String(text || '').trim();
+  // Analysis is allowed to draw a narrow inference, but it is not allowed to change
+  // the underlying actor, procedural stage, or direction of a sourced comparison.
+  // Run the same evidence-fidelity rules used by factual report copy so a second model
+  // is not required merely to catch "proposal" becoming "approved" or a former
+  // official becoming the current office-holder.
+  const flags = [...report.flags, ...evidenceFidelityFlags({ context: clean, inputs })];
   const vague = clean.match(VAGUE_ANALYSIS); if (vague) flags.push(`vague analysis: "${vague[0]}"`);
   const empty = clean.match(EMPTY_EVALUATION); if (empty) flags.push(`empty evaluation: "${empty[0]}"`);
   if (forbidFirstPerson && FIRST_PERSON.test(clean)) flags.push('first person is not part of the publication voice');

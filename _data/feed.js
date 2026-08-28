@@ -204,8 +204,8 @@ function buildFeed(locale = 'en') {
   // ---- This week -----------------------------------------------------------
   // This week is a curated reading list, not an analysis surface (Alan,
   // 2026-08-02). The old "no explanation, no card" gate protected an analysis
-  // surface that no longer exists here; Briefly explained lives only under
-  // Key developments now. Ranking, dedup and the slop gate still decide entry;
+  // surface that no longer exists here; Briefly Explained belongs to every selected
+  // Brief card, while This week remains the unexpanded reading shelf. Ranking, dedup and the slop gate still decide entry;
   // four per topic keeps it a scan, not a feed.
   const weekItems = [];
   for (const group of week.groups) {

@@ -2,8 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import freshnessContract from './lib/freshness-contract.cjs';
+import briefReadinessContract from './lib/brief-readiness.cjs';
 
 const { editionWindowAssessment } = freshnessContract;
+const { briefReadiness } = briefReadinessContract;
 
 const FILE = fileURLToPath(import.meta.url);
 const ROOT = path.resolve(path.dirname(FILE), '..');
@@ -27,6 +29,15 @@ export function publicationReadiness(brief, editorialDate, options = {}) {
       return { publish: true, storyCount: 0, todayCount, reason: 'current dated quiet edition' };
     }
     return { publish: false, storyCount: 0, todayCount, reason: 'zero stories without an explicit quiet state' };
+  }
+  const explanations = briefReadiness(brief);
+  if (!explanations.targetMet) {
+    return {
+      publish: false,
+      storyCount: stories.length,
+      todayCount,
+      reason: `Briefly Explained incomplete for ${explanations.missingTarget.join(', ')}`,
+    };
   }
   const reason = policy === 'exact-day-plus-carryover-v1' && todayCount === 0
     ? `${stories.length} one-day key developments; no same-day story cleared the gate`

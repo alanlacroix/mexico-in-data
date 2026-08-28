@@ -46,9 +46,10 @@ function briefReadiness(brief) {
     readyIds,
     missingTarget,
     targetMet,
-    // Coverage is a quality metric, not a publication dependency. The only blocking
-    // state represented here is an unmarked empty edition; content readiness owns it.
-    publicationBlocking: stories.length === 0 && brief?.meta?.quiet !== true,
+    // Briefly Explained is the product contract, not optional decoration. A factual
+    // card without its complete evidence-linked unit may remain in the reading feed,
+    // but it cannot be certified as part of the Brief.
+    publicationBlocking: !targetMet,
   };
 }
 

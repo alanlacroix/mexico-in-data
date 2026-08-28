@@ -1,6 +1,16 @@
 import assert from 'node:assert/strict';
 import { publicationReadiness } from '../check-publication-readiness.mjs';
 
+const explained = (story) => ({
+  ...story,
+  analysisV: 9,
+  background: 'A sourced structural fact.',
+  view: 'The mechanism changes the practical outcome.',
+  prediction: 'The next release will confirm or weaken that view.',
+  analysisRefs: { background: ['primary'], view: ['primary'], prediction: ['primary'] },
+  analysisSources: [{ id: 'primary', kind: 'primary', source: 'Official record', url: 'https://agency.gov/record' }],
+});
+
 const empty = publicationReadiness({ meta: { editorialDate: '2026-08-17', quiet: true }, lead: null, items: [] }, '2026-08-17');
 assert.equal(empty.publish, true);
 assert.equal(empty.storyCount, 0);
@@ -22,7 +32,7 @@ assert.equal(ambiguousEmpty.publish, false, 'only an explicit quiet edition may 
 
 const complete = publicationReadiness({
   meta: { editorialDate: '2026-08-17', selection: { policy: 'exact-day-plus-carryover-v1' } },
-  lead: { headline: 'A sourced development', lane: 'today', date: '2026-08-17' },
+  lead: explained({ headline: 'A sourced development', lane: 'today', date: '2026-08-17' }),
   items: [],
 }, '2026-08-17');
 assert.equal(complete.publish, true);
@@ -31,7 +41,7 @@ assert.equal(complete.todayCount, 1);
 
 const factualFromBoundedReview = publicationReadiness({
   meta: { editorialDate: '2026-08-17', selection: { policy: 'exact-day-plus-carryover-v1' } },
-  lead: { headline: 'A selected current-day fact', lane: 'today', date: '2026-08-17' },
+  lead: explained({ headline: 'A selected current-day fact', lane: 'today', date: '2026-08-17' }),
   items: [],
 }, '2026-08-17', { curation: {
     policy: 'edition-window-assessment-v5', currentDayResolved: false,
@@ -42,7 +52,7 @@ assert.equal(factualFromBoundedReview.publish, true,
 
 const carryoverOnly = publicationReadiness({
   meta: { editorialDate: '2026-08-18', selection: { policy: 'exact-day-plus-carryover-v1' } },
-  lead: { headline: 'Yesterday remains important', lane: 'key-development', date: '2026-08-17' },
+  lead: explained({ headline: 'Yesterday remains important', lane: 'key-development', date: '2026-08-17' }),
   items: [],
 }, '2026-08-18');
 assert.equal(carryoverOnly.publish, true);
@@ -52,10 +62,18 @@ assert.match(carryoverOnly.reason, /one-day key developments/);
 
 const weekendRecap = publicationReadiness({
   meta: { editorialDate: '2026-08-16', selection: { policy: 'weekend-recap-v1' } },
-  lead: { headline: 'The week in context', lane: 'week-recap', date: '2026-08-14' },
+  lead: explained({ headline: 'The week in context', lane: 'week-recap', date: '2026-08-14' }),
   items: [],
 }, '2026-08-16');
 assert.equal(weekendRecap.publish, true, 'a clearly labelled weekend recap need not invent a Sunday story');
+
+const unexplained = publicationReadiness({
+  meta: { editorialDate: '2026-08-17', selection: { policy: 'exact-day-plus-carryover-v1' } },
+  lead: { refs: ['missing-be'], headline: 'A fact without its explanation', lane: 'today', date: '2026-08-17' },
+  items: [],
+}, '2026-08-17');
+assert.equal(unexplained.publish, false, '0-of-1 explanation coverage must never certify a factual edition');
+assert.match(unexplained.reason, /Briefly Explained incomplete/);
 
 assert.throws(
   () => publicationReadiness({ meta: { editorialDate: '2026-08-16' }, lead: null, items: [] }, '2026-08-17'),

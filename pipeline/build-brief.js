@@ -200,9 +200,10 @@ async function main() {
       && JSON.stringify(lockedIds) !== JSON.stringify(rankedIds)) {
     throw new Error(`selected story set changed after analysis enrichment: ${lockedIds.join(',')} -> ${rankedIds.join(',')}`);
   }
-  // Explanation is an optional layer on the selected facts. Ranking is locked before
-  // enrichment, and an incomplete unit is omitted atomically by optionalAnalysis below.
-  // It must never remove a factual story or turn real reporting into a stale/quiet day.
+  // Ranking is locked before enrichment, so analysis can never manufacture importance
+  // or replace a harder story with an easier one. optionalAnalysis keeps this builder
+  // safe during the selection-only stage; the atomic publisher refuses to certify the
+  // final factual edition unless every locked story has the complete approved unit.
   const picked = rankedPicked;
   const pickedIds = picked.map((event) => event.id).filter(Boolean);
   const selectedCounts = selection.policy === 'weekend-recap-v1'

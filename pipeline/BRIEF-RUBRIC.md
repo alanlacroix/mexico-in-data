@@ -24,7 +24,7 @@ An authoritative scheduled decision or release is a new outcome even when the nu
 - **Floor: 3 (soft).** If fewer than 3 clear the threshold, ship what clears it. Never pad to a count.
 - **A fourth or fifth item must earn the extra space.** It needs importance ≥ 6 or a direct match to the stated interest list. A routine importance-5 item does not fill an empty slot.
 - Two reports about the same meeting or decision use one slot and retain both source links.
-- Analysis never changes ranking. A factual, sourced event competes and publishes even when its explanation is missing. After the exact story order is locked, every selected story gets one bounded enrichment attempt in that order. Only a complete, approved, evidence-linked Briefly Explained unit is shown; failure omits that panel without blocking, demoting, or replacing the factual story.
+- Analysis never changes ranking. After the exact story order is locked, every selected story gets one bounded enrichment pass and one field-specific repair. Only a complete, approved, evidence-linked Briefly Explained unit is shown. An incomplete unit defers certification of the Brief while the underlying report remains available in the reading feed; it never produces a silently unexplained card.
 - Every build writes a receipt for every candidate with its effective importance, final rank, selection or exclusion reason, tags, scheduled status, and analysis state.
 
 ## Calendar completeness

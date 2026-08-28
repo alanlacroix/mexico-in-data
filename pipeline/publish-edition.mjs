@@ -11,6 +11,9 @@ import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const { curationReadiness } = require('./lib/freshness-contract.cjs');
+const { briefReadiness } = require('./lib/brief-readiness.cjs');
+
+const ANALYSIS_POLICY = 'every-selected-story-evidence-locked-v4';
 
 const FILE = fileURLToPath(import.meta.url);
 const PIPELINE = path.dirname(FILE);
@@ -101,11 +104,23 @@ export function priorTerminalAnalysisAttempt(brief, happening) {
     ? brief.meta.selection.lockedIds : [];
   const target = happening.meta?.analysisTarget;
   if (!selectedIds.length || !Array.isArray(target?.ids)) return '';
+  if (target.policy !== ANALYSIS_POLICY) return '';
   if (JSON.stringify(selectedIds) !== JSON.stringify(target.ids)) return '';
+  if ((Number(target.attempt) || 1) < 2) return '';
   const terminal = (target.outcomes || []).filter((outcome) => outcome?.ready !== true
     && ['budget-unavailable', 'field-rejected'].includes(outcome?.reason));
   if (!terminal.length) return '';
   return `prior attempt cannot produce a complete panel (${[...new Set(terminal.map((outcome) => outcome.reason))].join(', ')})`;
+}
+
+function requireSelectedExplanations() {
+  const result = briefReadiness(read('brief.json'));
+  if (result.targetMet) return;
+  const target = read('happening.json').meta?.analysisTarget;
+  const failures = (target?.outcomes || [])
+    .filter((item) => item?.ready !== true)
+    .map((item) => `${item.id}: ${item.reason}`);
+  throw new DeferredEdition(`Briefly Explained incomplete for ${result.missingTarget.join(', ')}${failures.length ? ` (${failures.join('; ')})` : ''}`);
 }
 
 function validateInputs() {
@@ -137,6 +152,7 @@ function buildEdition() {
     if (priorAttempt) console.log(`\n== Explain ranked stories ==\n  skipped: ${priorAttempt}`);
     else node('Explain ranked stories', 'build-happening.js', ['--analysis-for-brief'], { cwd: PIPELINE });
     node('Build final English edition', 'build-brief.js', [], { cwd: PIPELINE });
+    requireSelectedExplanations();
 
     node('Validate editorial data', 'assert-data.js');
     node('Translate selected edition', 'translate-es.mjs', ['--critical'], { cwd: PIPELINE });

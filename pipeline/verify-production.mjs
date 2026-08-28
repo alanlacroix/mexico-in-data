@@ -59,6 +59,15 @@ export async function checkProduction() {
   if (claims.length === 0 && brief.meta?.quiet !== true) {
     throw new Error('live Brief has no stories and is not marked quiet');
   }
+  if (claims.length && status.explanations?.targetMet !== true) {
+    throw new Error(`live Briefly Explained coverage is ${status.explanations?.readyTargetCount || 0}/${claims.length}`);
+  }
+  if (claims.some((claim) => Number(claim.analysisV) < 9
+    || !['background', 'view', 'prediction'].every((field) => String(claim[field] || '').trim())
+    || !['background', 'view', 'prediction'].every((field) => Array.isArray(claim.analysisRefs?.[field]) && claim.analysisRefs[field].length)
+    || !claim.analysisSources?.some((source) => source?.kind !== 'article' && /^https:\/\//i.test(String(source?.url || ''))))) {
+    throw new Error('live Brief contains a story without a complete evidence-linked Briefly Explained unit');
+  }
   assertDatedEdition(brief, EXPECTED_DATE);
   if (claims.some((claim) => claim.lane === 'today' && claim.date !== EXPECTED_DATE)) {
     throw new Error("live Today's stories include a claim from another date");
@@ -94,6 +103,10 @@ export async function checkProduction() {
   });
   if (!homepage.includes(longDate)) {
     throw new Error(`live homepage does not render the ${EXPECTED_DATE} edition`);
+  }
+  const beControls = (homepage.match(/class="be-btn"/g) || []).length;
+  if (beControls !== claims.length) {
+    throw new Error(`live homepage renders ${beControls}/${claims.length} Briefly Explained controls`);
   }
   return status;
 }
