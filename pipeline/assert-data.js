@@ -21,6 +21,7 @@ import briefReadinessPolicy from './lib/brief-readiness.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
 import freshnessContract from './lib/freshness-contract.cjs';
 import briefSummary from './lib/brief-summary.cjs';
+import analysisContract from './lib/analysis-contract.cjs';
 
 const { editorialDay } = newsDay;
 const { eventTimestamp } = newsWindow;
@@ -29,6 +30,7 @@ const { briefReadiness } = briefReadinessPolicy;
 const { evidenceInputs } = reportEvidence;
 const { curationReadiness } = freshnessContract;
 const { isHeadlineOnly } = briefSummary;
+const { ANALYSIS_VERSION } = analysisContract;
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'data');
@@ -283,8 +285,8 @@ try {
     }
     const claimHasAnalysis = ['background', 'view', 'prediction'].some((field) => String(claim[field] || '').trim());
     const claimHasCompleteAnalysis = ['background', 'view', 'prediction'].every((field) => String(claim[field] || '').trim());
-    if (claimHasAnalysis && (!claimHasCompleteAnalysis || Number(claim.analysisV) < 9)) fails.push(`brief: claim ${index + 1} exposes incomplete or unapproved BE analysis`);
-    if (claimHasCompleteAnalysis && Number(claim.analysisV) >= 9) {
+    if (claimHasAnalysis && (!claimHasCompleteAnalysis || Number(claim.analysisV) < ANALYSIS_VERSION)) fails.push(`brief: claim ${index + 1} exposes incomplete or unapproved BE analysis`);
+    if (claimHasCompleteAnalysis && Number(claim.analysisV) >= ANALYSIS_VERSION) {
       const refs = claim.analysisRefs || {};
       for (const field of ['background', 'view', 'prediction']) {
         if (!Array.isArray(refs[field]) || !refs[field].some((ref) => String(ref || '').trim())) {

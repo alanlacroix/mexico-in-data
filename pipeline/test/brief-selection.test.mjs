@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import selection from '../lib/brief-selection.cjs';
 
-const { analysisState, optionalAnalysis, selectDailyBrief, selectEditionBrief, weekDates } = selection;
+const { ANALYSIS_VERSION, analysisState, omitUnreadyOptionalTail, optionalAnalysis, selectDailyBrief, selectEditionBrief, weekDates } = selection;
 
 const candidate = (id, importance, extra = {}) => ({
   id,
@@ -14,7 +14,7 @@ const candidate = (id, importance, extra = {}) => ({
   ...extra,
 });
 const approvedAnalysis = (extra = {}) => ({
-  analysisV: 9,
+  analysisV: ANALYSIS_VERSION,
   background: 'Complete background.',
   view: 'Complete view because the mechanism is clear.',
   prediction: 'The outcome is likely if the next release confirms it.',
@@ -287,7 +287,7 @@ assert.deepEqual(weekDates('2026-08-16'), {
   missingSource.source = '';
   const result = selectDailyBrief([
     candidate('ready', 6, approvedAnalysis()),
-    candidate('partial', 6, { analysisV: 9, background: 'B' }),
+    candidate('partial', 6, { analysisV: ANALYSIS_VERSION, background: 'B' }),
     candidate('below-floor', 4),
     missingSource,
   ]);
@@ -304,7 +304,7 @@ assert.deepEqual(weekDates('2026-08-16'), {
 // Optional analysis is atomic: never expose a half-filled disclosure panel.
 {
   const partial = candidate('partial-analysis', 6, {
-    analysisV: 9,
+    analysisV: ANALYSIS_VERSION,
     background: 'Background is present.',
     view: 'View is present.',
     analysisRefs: { background: ['article'], view: ['article'] },
@@ -316,21 +316,39 @@ assert.deepEqual(weekDates('2026-08-16'), {
   const unapproved = {
     ...partial,
     prediction: 'Watch item is present.',
-    analysisV: 7,
+    analysisV: ANALYSIS_VERSION - 1,
     analysisRefs: { ...partial.analysisRefs, prediction: ['article'] },
   };
   assert.equal(optionalAnalysis(unapproved), null);
   assert.equal(analysisState(unapproved).state, 'unapproved');
 
-  const complete = { ...unapproved, analysisV: 9 };
+  const complete = { ...unapproved, analysisV: ANALYSIS_VERSION };
   assert.deepEqual(optionalAnalysis(complete), {
     background: 'Background is present.',
     view: 'View is present.',
     prediction: 'Watch item is present.',
-    analysisV: 9,
+    analysisV: ANALYSIS_VERSION,
     analysisRefs: { background: ['article'], view: ['article'], prediction: ['article'] },
     analysisSources: [{ kind: 'primary', source: 'Example agency', url: 'https://agency.gov/evidence' }],
   });
+}
+
+// A low-importance unexplained tail can be omitted without replacing or reranking it.
+{
+  const lead = candidate('lead', 8, approvedAnalysis());
+  const second = candidate('second', 7, approvedAnalysis());
+  const optionalTail = candidate('optional-tail', 6);
+  assert.deepEqual(omitUnreadyOptionalTail([lead, second, optionalTail]).map((event) => event.id), ['lead', 'second']);
+  assert.deepEqual(omitUnreadyOptionalTail([lead, second, candidate('important-tail', 7)]).map((event) => event.id),
+    ['lead', 'second', 'important-tail'], 'importance-7 developments remain publication-blocking');
+  assert.deepEqual(omitUnreadyOptionalTail([lead, second, candidate('scheduled-tail', 6, { scheduledEventId: 'decision' })]).map((event) => event.id),
+    ['lead', 'second', 'scheduled-tail'], 'scheduled developments remain publication-blocking');
+  assert.deepEqual(omitUnreadyOptionalTail([lead, second, candidate('ready-tail', 6, approvedAnalysis())]).map((event) => event.id),
+    ['lead', 'second', 'ready-tail'], 'an explained optional tail remains visible');
+  assert.deepEqual(omitUnreadyOptionalTail([lead, optionalTail]).map((event) => event.id), ['lead'],
+    'a ready lead can publish alone when its optional tail cannot be explained');
+  assert.deepEqual(omitUnreadyOptionalTail([candidate('unready-lead', 6)]).map((event) => event.id), ['unready-lead'],
+    'an unready lead remains publication-blocking');
 }
 
 // Selection is referentially transparent: it neither annotates nor reorders the

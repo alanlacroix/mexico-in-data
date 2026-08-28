@@ -1,9 +1,12 @@
 import assert from 'node:assert/strict';
 import { publicationReadiness } from '../check-publication-readiness.mjs';
+import analysisContract from '../lib/analysis-contract.cjs';
+
+const { ANALYSIS_VERSION } = analysisContract;
 
 const explained = (story) => ({
   ...story,
-  analysisV: 9,
+  analysisV: ANALYSIS_VERSION,
   background: 'A sourced structural fact.',
   view: 'The mechanism changes the practical outcome.',
   prediction: 'The next release will confirm or weaken that view.',

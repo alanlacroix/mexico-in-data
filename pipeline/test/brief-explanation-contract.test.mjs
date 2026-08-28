@@ -6,6 +6,7 @@ import { lintAnalysisText, reportContextDistinct, slopFlags } from '../lib/lint.
 
 const require = createRequire(import.meta.url);
 const { briefReadiness } = require('../lib/brief-readiness.cjs');
+const { ANALYSIS_VERSION } = require('../lib/analysis-contract.cjs');
 const { evidenceInputs } = require('../lib/report-evidence.cjs');
 const { mergeApprovedAttempt } = require('../lib/analysis-attempts.cjs');
 const interests = require('../../data/interests.json');
@@ -15,7 +16,7 @@ const briefBuilder = fs.readFileSync(new URL('../build-brief.js', import.meta.ur
 const story = (id, ready = false) => ({
   refs: [id],
   headline: id,
-  analysisV: ready ? 9 : 0,
+  analysisV: ready ? ANALYSIS_VERSION : 0,
   background: ready ? 'A structural fact.' : '',
   view: ready ? 'A view because the mechanism is clear.' : '',
   prediction: ready ? 'The result is likely if the next release confirms it.' : '',
@@ -55,7 +56,9 @@ const quietReadiness = briefReadiness({ meta: { quiet: true }, lead: null, items
 assert.equal(quietReadiness.targetMet, true, 'an explicit current-day quiet state needs no explanation panels');
 assert.equal(quietReadiness.publicationBlocking, false);
 assert.match(happeningBuilder, /for \(const target of researchTargets\)[\s\S]*web_search_20250305[\s\S]*max_uses: 1/,
-  'selected non-official stories must get one bounded primary-record search each');
+  'a selected non-official story without local context may get one bounded primary-record search');
+assert.match(happeningBuilder, /const hasLocalContext[\s\S]*researchTargets = fetched\.filter[\s\S]*!hasLocalContext\(item\.e\)/,
+  'stories that already have relevant official or independent context must not buy a redundant search');
 assert.match(happeningBuilder, /searched\.find\(\(source\) => sourceKey\(source\.url\) === sourceKey\(proposed\.url\)\)/,
   'a model-returned research URL must have appeared in the provider search results');
 assert.match(happeningBuilder, /primaryResearchUrl\(source\.url\)/,
@@ -66,10 +69,12 @@ assert.doesNotMatch(happeningBuilder, /auditCompleted|independent evidence edito
   'a redundant second model audit must not delete a complete evidence-gated explanation');
 assert.match(happeningBuilder, /rejectionsThisRun = new Map\(arr\(priorOutcomes\)[\s\S]*fields: rejectedFields/,
   'field-level failures must survive into one targeted recovery instead of collapsing to field-rejected');
+assert.match(happeningBuilder, /const analyzableIds = new Set[\s\S]*!analyzableIds\.has\(id\)[\s\S]*thin-evidence/,
+  'a selected story without relevant independent context must be recorded as thin evidence, not a generic field failure');
 assert.match(happeningBuilder, /const request = \(batch, effort, maxTokens\) => askJSON\(\{[\s\S]*?model: models\.HAIKU,[\s\S]*?priority: 'core'/,
   'evidence-locked drafting must use the bounded model tier so daily all-story coverage fits the monthly cap');
-assert.match(briefBuilder, /const picked = rankedPicked/,
-  'analysis must not silently rerank the locked factual selection');
+assert.match(briefBuilder, /const rankedPicked = selection\.picked[\s\S]*omitUnreadyOptionalTail\(rankedPicked\)/,
+  'analysis may only remove an unready optional tail from the locked ranking, never select a replacement');
 
 assert.deepEqual(
   mergeApprovedAttempt(

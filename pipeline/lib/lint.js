@@ -109,7 +109,7 @@ const SUPERLATIVE_FAMILIES = [
   {
     // "record" is also an ordinary noun in "official record" and "court record."
     // Treat it as a superlative only when the phrase claims a new/high/low result.
-    copy: /\b(?:all-time|first-ever|new record|record(?:-high|-low)?\s+(?:\d|US\$|MX\$|\$|high|low|level|amount|number|total|exports?|imports?|sales?|profit|loss)|sets? (?:a )?record|breaks? (?:the |a )?record)\b/i,
+    copy: /\b(?:all-time|first-ever|new record|record(?:-high|-low)?\s+(?:\d|US\$|MX\$|\$|high|low|level|amount|number|total|increase|growth|exports?|imports?|sales?|profit|loss|tracking)|sets? (?:a )?record|breaks? (?:the |a )?record)\b/i,
     evidence: /\b(?:record|r[eé]cord|all-time|first-ever|por primera vez)\b/i,
   },
 ];

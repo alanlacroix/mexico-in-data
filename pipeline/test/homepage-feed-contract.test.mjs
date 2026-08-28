@@ -11,6 +11,7 @@ const require = createRequire(import.meta.url);
 const { editorialDay } = require(path.join(root, 'pipeline/lib/news-day.cjs'));
 const { groupEvents, sameThread } = require(path.join(root, 'pipeline/lib/news-threads.cjs'));
 const { recentEvents } = require(path.join(root, 'pipeline/lib/news-window.cjs'));
+const { ANALYSIS_VERSION } = require(path.join(root, 'pipeline/lib/analysis-contract.cjs'));
 const dailyBriefFactory = require(path.join(root, '_data/dailyBrief.js'));
 const latestStoriesFactory = require(path.join(root, '_data/latestStories.js'));
 const dailyBrief = dailyBriefFactory();
@@ -59,7 +60,7 @@ assert.ok(dailyBrief.stories.every((story) => {
   const refs = ['background', 'view', 'prediction'].every((field) => story.analysisRefs?.[field]?.length);
   const linked = story.analysisSources?.some((source) => source?.kind !== 'article'
     && /^https:\/\//i.test(String(source?.url || '')));
-  return story.analysisV >= 9 && fields.length === 3 && refs && linked;
+  return story.analysisV >= ANALYSIS_VERSION && fields.length === 3 && refs && linked;
 }), 'every selected story must expose one complete approved Briefly Explained unit');
 for (let i = 0; i < dailyBrief.stories.length; i += 1) {
   for (let j = i + 1; j < dailyBrief.stories.length; j += 1) {
@@ -822,8 +823,10 @@ assert.match(feedData, /week: brief\.weekendEdition \? \[\] : weekItems/,
   'the separate This week shelf must disappear when the selected Brief already is the weekly recap');
 assert.match(feedData, /lane: story\.lane/,
   'language snapshots and renderers must retain each story’s dated selection lane');
-assert.match(briefBuilder, /const picked = rankedPicked/,
-  'analysis readiness must never remove or reorder the locked factual selection');
+assert.match(briefBuilder, /const rankedPicked = selection\.picked[\s\S]*omitUnreadyOptionalTail\(rankedPicked\)/,
+  'analysis readiness may remove only an unready optional tail, without reordering or replacement');
+assert.match(briefBuilder, /omittedIds: rankedIds\.filter\(\(id\) => !pickedIds\.includes\(id\)\)/,
+  'the publication audit must name every locked tail story omitted for incomplete explanation');
 assert.match(briefBuilder, /selectEditionBrief\(candidates/, 'the two story lanes must share the auditable importance-first selector');
 assert.doesNotMatch(briefBuilder, /BIG_MONEY|bigCapital/, 'a dollar-amount regex must not override the audited importance rubric');
 assert.doesNotMatch(briefBuilder, /priorApproved|carriedForward/,

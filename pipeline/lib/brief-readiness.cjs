@@ -2,6 +2,7 @@
 
 const arr = (value) => (Array.isArray(value) ? value : []);
 const text = (value) => String(value || '').trim();
+const { ANALYSIS_VERSION, ANALYSIS_FIELDS } = require('./analysis-contract.cjs');
 
 function storyId(story, index) {
   return arr(story && story.refs)[0]
@@ -11,9 +12,9 @@ function storyId(story, index) {
 
 function hasApprovedAnalysis(story) {
   const refs = story && story.analysisRefs;
-  return Number(story && story.analysisV) >= 9
-    && ['background', 'view', 'prediction'].every((field) => text(story && story[field]))
-    && ['background', 'view', 'prediction'].every((field) => arr(refs && refs[field]).some(text))
+  return Number(story && story.analysisV) >= ANALYSIS_VERSION
+    && ANALYSIS_FIELDS.every((field) => text(story && story[field]))
+    && ANALYSIS_FIELDS.every((field) => arr(refs && refs[field]).some(text))
     && arr(story && story.analysisSources).some((source) => source && source.kind !== 'article'
       && /^https:\/\//i.test(text(source.url)));
 }

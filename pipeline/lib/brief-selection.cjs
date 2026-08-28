@@ -10,11 +10,10 @@ const DEFAULT_CAP = 5;
 const DEFAULT_CARRYOVER_MIN_IMPORTANCE = 6;
 const DEFAULT_CARRYOVER_CAP = 2;
 const WEEKEND_RECAP_MIN_IMPORTANCE = 6;
-// v9 requires separately retained context beyond the original article, exact field
+// The shared version requires separately retained context beyond the original article, exact field
 // references, and the shared deterministic evidence-fidelity gate. Older prose is
 // never mistaken for the current product when an event returns.
-const ANALYSIS_VERSION = 9;
-const ANALYSIS_FIELDS = ['background', 'view', 'prediction'];
+const { ANALYSIS_VERSION, ANALYSIS_FIELDS } = require('./analysis-contract.cjs');
 
 const clean = (value) => String(value == null ? '' : value).trim();
 const finiteNumber = (value, fallback = 0) => {
@@ -55,6 +54,21 @@ function optionalAnalysis(event) {
     analysisRefs: event.analysisRefs && typeof event.analysisRefs === 'object' ? { ...event.analysisRefs } : {},
     analysisSources: Array.isArray(event.analysisSources) ? event.analysisSources.map((source) => ({ ...source })) : [],
   };
+}
+
+// Briefly Explained is mandatory for every visible card, but a low-importance optional
+// tail must not hold a stronger, fully explained story hostage. Only remove an
+// unready contiguous tail after ranking: never replace it, never remove the lead, and
+// never remove a scheduled or importance-7+ development.
+function omitUnreadyOptionalTail(events) {
+  const selected = Array.isArray(events) ? events.slice() : [];
+  while (selected.length > 1) {
+    const tail = selected[selected.length - 1];
+    const optional = !tail?.scheduledEventId && finiteNumber(tail?.importance) <= 6;
+    if (!optional || analysisState(tail).complete) break;
+    selected.pop();
+  }
+  return selected;
 }
 
 function defaultCandidateGate(event) {
@@ -446,6 +460,7 @@ function selectEditionBrief(candidates, options = {}) {
 module.exports = {
   ANALYSIS_VERSION,
   analysisState,
+  omitUnreadyOptionalTail,
   optionalAnalysis,
   selectDailyBrief,
   selectEditionBrief,

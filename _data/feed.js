@@ -13,6 +13,7 @@ const dailyBrief = require('./dailyBrief.js');
 const boards = require('./boards.js');
 const weeklyTop = require('./weeklyTop.js');
 const calendar = require('./calendar.js');
+const { ANALYSIS_VERSION } = require('../pipeline/lib/analysis-contract.cjs');
 
 const DATA = path.join(__dirname, '..', 'data');
 // Written by pipeline/write-context.mjs: the economy notes and the calendar's title,
@@ -181,7 +182,7 @@ function buildFeed(locale = 'en') {
     view: story.view || '',
     watch: story.prediction || '',
     why: story.view || story.bg || '',
-    be: Boolean(story.bg && story.view && story.prediction && story.analysisV >= 9
+    be: Boolean(story.bg && story.view && story.prediction && story.analysisV >= ANALYSIS_VERSION
       && story.analysisSources?.some((source) => source?.kind !== 'article'
         && /^https:\/\//i.test(String(source?.url || '')))),
     analysisSources: story.analysisSources || [],

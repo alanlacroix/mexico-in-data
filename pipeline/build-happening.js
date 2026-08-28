@@ -40,6 +40,8 @@ import candidatePriority from './lib/candidate-priority.cjs';
 import reportEvidence from './lib/report-evidence.cjs';
 import analysisAttempts from './lib/analysis-attempts.cjs';
 import curationCheckpoint from './lib/curation-checkpoint.cjs';
+import analysisEvidence from './lib/analysis-evidence.cjs';
+import analysisContract from './lib/analysis-contract.cjs';
 
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
@@ -49,6 +51,8 @@ const { attentionSignal, commentaryOnlyCandidate, decisionCoverage, fallbackImpo
 const { evidenceInputs } = reportEvidence;
 const { mergeApprovedAttempt } = analysisAttempts;
 const { candidateSignature, canReuseCuration } = curationCheckpoint;
+const { calendarScore, relatedEventScore, standingScore } = analysisEvidence;
+const { ANALYSIS_VERSION, ANALYSIS_POLICY } = analysisContract;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -81,7 +85,6 @@ const MAX_NEW = 16;          // model returns at most this many new events per r
 const MAX_CANDIDATES = 24;   // small enough for one exhaustive decision per row; attention priority protects consequential older items.
 const CURATION_MAX_TOKENS = 6000; // enough for 24 compact decisions; the old 16k ceiling falsely exhausted the monthly guard.
 const CURATION_POLICY = 'edition-window-assessment-v5';
-const ANALYSIS_POLICY = 'every-selected-story-evidence-locked-v4';
 
 const SECTIONS = ['economy', 'money', 'politics', 'security', 'us-mexico', 'society'];
 
@@ -540,9 +543,8 @@ ${BAN}`;
 //   view        — a narrow, evidence-backed judgment, explicitly labeled as ours
 //   prediction  — what we expect or the measurable condition that would change the view
 // All three are grounded in retained evidence. Thin evidence blocks publication; it
-// never produces filler and it never changes the factual ranking. v9 also requires a
+// never produces filler and it never changes the factual ranking. v10 also requires a
 // primary record and a separate claim-by-claim evidence audit. ----
-const ANALYSIS_VERSION = 9;
 const BG_MAX = 3;             // Match the homepage cap: never research stories readers will not see.
 const BG_FETCH_MAX = 9;       // Failed article fetches must not consume the scarce analysis slots.
 const BG_DAYS = 14;           // recent events earn the analysis fetch
@@ -572,40 +574,20 @@ const primaryResearchUrl = (value) => {
   } catch { return false; }
 };
 
-const SECTION_TOPICS = {
-  economy: ['economy', 'trade', 'energy', 'fiscal'],
-  money: ['money', 'payments', 'economy'],
-  politics: ['politics', 'fiscal'],
-  security: ['security', 'politics', 'society'],
-  society: ['society', 'economy'],
-  'us-mexico': ['us-mexico', 'trade', 'migration'],
-};
-const evidenceTokens = (value) => new Set(normTitle(value).split(' ').filter((word) => word.length > 3));
-const tokenOverlap = (left, right) => {
-  const a = evidenceTokens(left), b = evidenceTokens(right);
-  let score = 0;
-  for (const word of a) if (b.has(word)) score++;
-  return score;
-};
-function topicalKeys(event) {
-  const text = `${event.title || ''} ${event.why || ''}`;
-  const keys = new Set(SECTION_TOPICS[event.section] || ['economy']);
-  if (/tariff|trade|export|import|usmca|t-?mec|customs/i.test(text)) keys.add('trade');
-  if (/inflation|rate|banxico|peso|bank|credit|market|stock/i.test(text)) keys.add('money');
-  if (/power|electric|energy|pemex|cfe|gas|water|grid/i.test(text)) keys.add('energy');
-  if (/migration|border|remittance/i.test(text)) keys.add('migration');
-  if (/crime|security|cartel|homicide|extortion/i.test(text)) keys.add('security');
-  return keys;
-}
 function relevantStanding(event, facts, limit = 5) {
-  const keys = topicalKeys(event);
-  const text = `${event.title || ''} ${event.why || ''}`;
   return facts.map((fact) => ({
     fact,
-    score: arr(fact.topics).filter((topic) => keys.has(topic)).length * 10 + tokenOverlap(text, fact.fact),
+    score: standingScore(event, fact),
   })).filter((item) => item.score > 0)
     .sort((a, b) => b.score - a.score || String(a.fact.id).localeCompare(String(b.fact.id)))
     .slice(0, limit).map((item) => item.fact);
+}
+
+function relevantCalendar(event, calendar, limit = 2) {
+  return calendar.map((item) => ({ item, score: calendarScore(event, item) }))
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score || String(a.item.date).localeCompare(String(b.item.date)))
+    .slice(0, limit).map((entry) => entry.item);
 }
 
 async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = false, priorOutcomes = [] } = {}) {
@@ -655,21 +637,21 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
   // its official source so the writer can connect a story to a dated baseline and the
   // reader can follow that connection.
   const siteNumbers = [
-    ['banxico-usdmxn-fix', 'Peso, MXN per US dollar', /peso|currency|exchange|dollar|export|import|remittance/i],
-    ['banxico-cetes-28d', 'Cetes 28-day rate, percent', /cetes|rate|yield|credit|borrow|bond|financ/i],
-    ['banxico-bmv-ipc', 'IPC stock index', /stock|market|listed|equity|bmv|ipc/i],
-    ['fred-ust10', 'US 10-year Treasury yield, percent', /US rate|treasury|yield|bond|rate gap/i],
-    ['banxico-exports-total', 'Monthly goods exports, US dollars', /trade|tariff|export|manufactur|border|usmca|t-?mec/i],
-    ['banxico-inflacion', 'Headline inflation, percent year over year', /inflation|price|banxico|rate|wage/i],
-    ['banxico-tasa-objetivo', 'Banxico policy rate, percent', /banxico|policy rate|interest|inflation|credit|peso/i],
-    ['banxico-remesas', 'Monthly remittances, US dollars', /remittance|migrant|household|border|peso/i],
-  ].flatMap(([id, label, match]) => {
+    ['banxico-usdmxn-fix', 'Peso, MXN per US dollar'],
+    ['banxico-cetes-28d', 'Cetes 28-day rate, percent'],
+    ['banxico-bmv-ipc', 'IPC stock index'],
+    ['fred-ust10', 'US 10-year Treasury yield, percent'],
+    ['banxico-exports-total', 'Monthly goods exports, US dollars'],
+    ['banxico-inflacion', 'Headline inflation, percent year over year'],
+    ['banxico-tasa-objetivo', 'Banxico policy rate, percent'],
+    ['banxico-remesas', 'Monthly remittances, US dollars'],
+  ].flatMap(([id, label]) => {
     const doc = readJson(D(`series/${id}.json`), {});
     const rows = arr(doc.data).filter((r) => Number.isFinite(Number(r?.value)));
     const last = rows[rows.length - 1];
     return last ? [{
       id: `number:${id}`, kind: 'number', source: doc.meta?.source || label,
-      url: doc.meta?.sourceUrl || '', match,
+      url: doc.meta?.sourceUrl || '',
       text: `${label}: ${last.value} (as of ${String(last.date).slice(0, 10)})`,
     }] : [];
   });
@@ -684,12 +666,20 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
     })));
     return { e, r, secondary, research: [] };
   }));
+  const hasLocalContext = (event) => arr(event.coverage).some((source) => source.url && source.url !== event.url)
+    || relevantStanding(event, standingFacts, 1).length > 0
+    || siteNumbers.some((number) => standingScore(event, number) > 0)
+    || relevantCalendar(event, calendar, 1).length > 0
+    || events.some((candidate) => candidate.id !== event.id && (candidate.importance || 0) >= 5
+      && Date.parse(candidate.date) >= now.getTime() - BG_DAYS * 864e5
+      && relatedEventScore(event, candidate) > 0);
   // A news report can contain the relevant facts and still describe the current stage
   // incorrectly. That happened with both the FAA Category 1 review and the strawberry
   // dumping case on 2026-08-13. Discover one primary public record for each selected
   // non-official article, fetch the record ourselves, and make it part of the closed
   // evidence set. Search finds the document; it never writes the analysis.
-  const researchTargets = fetched.filter((item) => needsAnalysis(item.e) && !primaryRecordUrl(item.e.url));
+  const researchTargets = fetched.filter((item) => needsAnalysis(item.e)
+    && !primaryRecordUrl(item.e.url) && !hasLocalContext(item.e));
   if (researchTargets.length) {
     const researchSchema = { type: 'object', additionalProperties: false, required: ['source'], properties: { source: {
       type: 'object', additionalProperties: false, required: ['url', 'source', 'title'], properties: {
@@ -775,23 +765,16 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
     for (const fact of relevantStanding(x.e, standingFacts)) push({
       id: `standing:${fact.id}`, kind: 'standing', source: fact.source, url: fact.url, text: fact.fact,
     });
-    const eventText = `${x.e.title || ''} ${x.e.why || ''}`;
-    for (const number of siteNumbers.filter((item) => item.match.test(eventText)).slice(0, 3)) push(number);
-    const eventKeys = topicalKeys(x.e);
-    const relevantCalendar = calendar.map((item) => ({
-      item,
-      score: tokenOverlap(eventText, `${item.label || ''} ${item.mechanism || ''}`)
-        + (eventKeys.has(item.kind) ? 5 : 0),
-    })).filter((item) => item.score > 0).sort((a, b) => b.score - a.score || String(a.item.date).localeCompare(String(b.item.date))).slice(0, 2);
-    for (const { item } of relevantCalendar) push({
+    for (const number of siteNumbers.filter((item) => standingScore(x.e, item) > 0).slice(0, 3)) push(number);
+    for (const item of relevantCalendar(x.e, calendar)) push({
       id: `calendar:${item.id || `${item.date}:${slug(item.label || item.title)}`}`,
       kind: 'calendar', source: item.source, url: item.sourceUrl,
       text: `${item.date}: ${item.label || item.title}. ${item.mechanism || ''}`,
     });
     const relatedEvents = events.filter((event) => event.id !== x.e.id && (event.importance || 0) >= 5
       && Date.parse(event.date) >= now.getTime() - BG_DAYS * 864e5)
-      .map((event) => ({ event, score: (event.section === x.e.section ? 3 : 0) + tokenOverlap(eventText, `${event.title || ''} ${event.why || ''}`) }))
-      .filter((item) => item.score >= 4)
+      .map((event) => ({ event, score: relatedEventScore(x.e, event) }))
+      .filter((item) => item.score > 0)
       .sort((a, b) => b.score - a.score || (Date.parse(b.event.date) || 0) - (Date.parse(a.event.date) || 0)).slice(0, 3);
     for (const { event } of relatedEvents) push({
       id: `event:${event.id}`, kind: 'prior-event', source: event.source, url: event.url,
@@ -805,6 +788,7 @@ async function addBackgrounds(events, now, { priorityIds = [], onlyPriority = fa
   const items = fetched.filter((x) => needsAnalysis(x.e)).slice(0, BG_MAX).map((x, i) => ({
     i, e: x.e, evidence: evidenceFor(x),
   })).filter((item) => item.evidence.some(contextualEvidence));
+  const analyzableIds = new Set(items.map((item) => item.e.id));
   const imgGot = fetched.filter((x) => x.r.image).length;
   console.log(`  fetch: ${want.length} wanted · ${items.length} to analyze · ${imgGot} images grabbed`);
   if (!items.length) return {
@@ -965,7 +949,7 @@ ${BAN}`;
       approvedThisRun.set(item.e.id, approved);
       const approvedRefs = { ...(approvedRefsThisRun.get(item.e.id) || {}), ...proposedRefs };
       approvedRefsThisRun.set(item.e.id, approvedRefs);
-      // v9: all three fields, their exact references, and at least one primary record
+      // Current contract: all three fields, their exact references, and at least one primary record
       // must pass before anything becomes visible. The fields may come from the first
       // attempt or its one bounded retry, but never from old prose.
       if (CORE.every((field) => approved[field] && arr(approvedRefs[field]).length)) {
@@ -1015,6 +999,7 @@ ${BAN}`;
       const withDetails = (reason) => ({ ...outcome(event, reason), fields: rejectedFields });
       if (analysisReady(event)) return withDetails('ready');
       if (fetch && !fetch.r.ok && !evidenceFor(fetch).length) return withDetails('fetch-failed');
+      if (!analyzableIds.has(id)) return withDetails('thin-evidence');
       if (!budgetStatus('core').available) return withDetails('budget-unavailable');
       if (!firstReturned && !retryReturned) return withDetails('model-unavailable');
       return withDetails('field-rejected');

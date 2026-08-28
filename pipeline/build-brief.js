@@ -29,7 +29,7 @@ const WEEKEND_WINDOW_HOURS = 168;
 const STORY_CAP = 3;
 const SUMMARY_VERSION = 4;
 const { plainExplanation, plainHeadline } = plainLanguage;
-const { optionalAnalysis, selectEditionBrief } = briefSelection;
+const { omitUnreadyOptionalTail, optionalAnalysis, selectEditionBrief } = briefSelection;
 const { contextDigest } = briefSummary;
 const { evidenceInputs } = reportEvidence;
 const { curationReadiness } = freshnessContract;
@@ -182,6 +182,7 @@ async function writeSummary(picked) {
 async function main() {
   const now = new Date();
   const selectionOnly = process.argv.includes('--selection-only');
+  const omitOptionalTail = process.argv.includes('--omit-unready-tail');
   const editorialDate = editorialDay(now);
   console.log(`\nbuild-brief · ${hasLLM() ? 'llm available (drafts only, gated)' : 'no llm — human context'}`);
   const P = pool(now);
@@ -204,7 +205,12 @@ async function main() {
   // or replace a harder story with an easier one. optionalAnalysis keeps this builder
   // safe during the selection-only stage; the atomic publisher refuses to certify the
   // final factual edition unless every locked story has the complete approved unit.
-  const picked = rankedPicked;
+  const picked = !selectionOnly && omitOptionalTail
+    ? omitUnreadyOptionalTail(rankedPicked)
+    : rankedPicked;
+  if (picked.length !== rankedPicked.length) {
+    console.warn(`  omitted ${rankedPicked.length - picked.length} unready optional tail ${rankedPicked.length - picked.length === 1 ? 'story' : 'stories'}; no lower-ranked replacement was used`);
+  }
   const pickedIds = picked.map((event) => event.id).filter(Boolean);
   const selectedCounts = selection.policy === 'weekend-recap-v1'
     ? {
@@ -335,6 +341,7 @@ async function main() {
       receipt: selection.receipt,
       lockedIds: selectionOnly ? rankedIds : (lockedIds.length ? lockedIds : rankedIds),
       publishedIds: pickedIds,
+      omittedIds: rankedIds.filter((id) => !pickedIds.includes(id)),
       lanes: selectedCounts,
       carryoverDate: selection.carryoverDate,
       weekStartDate: selection.weekStartDate,

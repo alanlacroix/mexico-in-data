@@ -12,8 +12,7 @@ import { fileURLToPath } from 'node:url';
 const require = createRequire(import.meta.url);
 const { curationReadiness } = require('./lib/freshness-contract.cjs');
 const { briefReadiness } = require('./lib/brief-readiness.cjs');
-
-const ANALYSIS_POLICY = 'every-selected-story-evidence-locked-v4';
+const { ANALYSIS_POLICY } = require('./lib/analysis-contract.cjs');
 
 const FILE = fileURLToPath(import.meta.url);
 const PIPELINE = path.dirname(FILE);
@@ -97,8 +96,8 @@ function requireScheduledOutcomes() {
 
 // A field-rejected or budget-blocked explanation already received its one bounded
 // attempt against this exact locked selection. When the source ledger is unchanged,
-// another run would buy the same work again. The factual edition still publishes;
-// incomplete analysis is simply omitted from that story.
+// another run would buy the same work again. A low-importance optional tail may be
+// omitted by the final builder; a lead, scheduled item, or importance-7+ fact blocks.
 export function priorTerminalAnalysisAttempt(brief, happening) {
   const selectedIds = Array.isArray(brief.meta?.selection?.lockedIds)
     ? brief.meta.selection.lockedIds : [];
@@ -151,7 +150,7 @@ function buildEdition() {
     const priorAttempt = priorTerminalAnalysisAttempt(read('brief.json'), read('happening.json'));
     if (priorAttempt) console.log(`\n== Explain ranked stories ==\n  skipped: ${priorAttempt}`);
     else node('Explain ranked stories', 'build-happening.js', ['--analysis-for-brief'], { cwd: PIPELINE });
-    node('Build final English edition', 'build-brief.js', [], { cwd: PIPELINE });
+    node('Build final English edition', 'build-brief.js', ['--omit-unready-tail'], { cwd: PIPELINE });
     requireSelectedExplanations();
 
     node('Validate editorial data', 'assert-data.js');

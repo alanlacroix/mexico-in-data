@@ -1,3 +1,6 @@
+import analysisContract from './lib/analysis-contract.cjs';
+
+const { ANALYSIS_VERSION } = analysisContract;
 const BASE_URL = (process.env.PRODUCTION_URL || 'https://mexicobrief.com').replace(/\/$/, '');
 const EXPECTED_ID = process.env.PUBLICATION_ID;
 const EXPECTED_DATE = process.env.PUBLICATION_DATE;
@@ -62,7 +65,7 @@ export async function checkProduction() {
   if (claims.length && status.explanations?.targetMet !== true) {
     throw new Error(`live Briefly Explained coverage is ${status.explanations?.readyTargetCount || 0}/${claims.length}`);
   }
-  if (claims.some((claim) => Number(claim.analysisV) < 9
+  if (claims.some((claim) => Number(claim.analysisV) < ANALYSIS_VERSION
     || !['background', 'view', 'prediction'].every((field) => String(claim[field] || '').trim())
     || !['background', 'view', 'prediction'].every((field) => Array.isArray(claim.analysisRefs?.[field]) && claim.analysisRefs[field].length)
     || !claim.analysisSources?.some((source) => source?.kind !== 'article' && /^https:\/\//i.test(String(source?.url || ''))))) {

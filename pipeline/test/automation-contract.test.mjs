@@ -9,6 +9,7 @@ import publicationTransition from '../lib/publication-transition.cjs';
 const require = createRequire(import.meta.url);
 const { nonPublishedTransition } = publicationTransition;
 const { PIPELINE_VERSION } = require('../lib/edition-contract.cjs');
+const { ANALYSIS_POLICY } = require('../lib/analysis-contract.cjs');
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const workflowDir = path.join(root, '.github', 'workflows');
@@ -147,7 +148,7 @@ assert.doesNotMatch(editionPublisher, /build-news\.js/,
   'the flaky optional GDELT supplement belongs in the background refresh, not the publication path');
 assert.match(
   editionPublisher,
-  /'build-happening\.js', \['--skip-analysis', '--resume-current-edition'\][\s\S]*'build-brief\.js', \['--selection-only'\][\s\S]*'build-happening\.js', \['--analysis-for-brief'\][\s\S]*'build-brief\.js', \[\]/,
+  /'build-happening\.js', \['--skip-analysis', '--resume-current-edition'\][\s\S]*'build-brief\.js', \['--selection-only'\][\s\S]*'build-happening\.js', \['--analysis-for-brief'\][\s\S]*'build-brief\.js', \['--omit-unready-tail'\]/,
   'the workflow must lock the ranked stories before spending the explanation budget on those exact stories',
 );
 assert.match(
@@ -210,7 +211,7 @@ assert.match(editionPublisher, /requireSelectedExplanations\(\)/,
 const lockedBrief = { meta: { selection: { lockedIds: ['lead'] } } };
 assert.match(
   priorTerminalAnalysisAttempt(lockedBrief, { meta: { analysisTarget: {
-    policy: 'every-selected-story-evidence-locked-v4', ids: ['lead'], attempt: 2,
+    policy: ANALYSIS_POLICY, ids: ['lead'], attempt: 2,
     outcomes: [{ id: 'lead', ready: false, reason: 'budget-unavailable' }],
   } } }),
   /complete panel \(budget-unavailable\)/,
@@ -218,7 +219,7 @@ assert.match(
 );
 assert.equal(
   priorTerminalAnalysisAttempt(lockedBrief, { meta: { analysisTarget: {
-    policy: 'every-selected-story-evidence-locked-v4', ids: ['different'], attempt: 2,
+    policy: ANALYSIS_POLICY, ids: ['different'], attempt: 2,
     outcomes: [{ id: 'different', ready: false, reason: 'field-rejected' }],
   } } }),
   '',
@@ -226,7 +227,7 @@ assert.equal(
 );
 assert.equal(
   priorTerminalAnalysisAttempt(lockedBrief, { meta: { analysisTarget: {
-    policy: 'every-selected-story-evidence-locked-v4', ids: ['lead'], attempt: 1,
+    policy: ANALYSIS_POLICY, ids: ['lead'], attempt: 1,
     outcomes: [{ id: 'lead', ready: false, reason: 'field-rejected', fields: { view: ['needs a mechanism'] } }],
   } } }),
   '',
