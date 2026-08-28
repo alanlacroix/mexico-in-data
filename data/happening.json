@@ -6,19 +6,19 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-28T16:05:57.601Z",
+    "generatedAt": "2026-08-28T16:14:33.956Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-28",
       "candidateCount": 24,
-      "candidateSig": "ca2de27a8030ebdb74888aca660bd85a0f21d6495c4c90f3938e21310f1a01a8",
-      "freshCandidateCount": 18,
+      "candidateSig": "5dc3179f9832e76a89677e6db07feb33e7734c4c2aa7e29c9a38c7e7e145b4ff",
+      "freshCandidateCount": 19,
       "assessedCount": 24,
-      "selectedCount": 3,
-      "freshSelectedCount": 1,
-      "keptCount": 2,
-      "freshKeptCount": 1,
+      "selectedCount": 6,
+      "freshSelectedCount": 5,
+      "keptCount": 5,
+      "freshKeptCount": 5,
       "rejectedCount": 1,
       "freshRejectedCount": 0,
       "rejectedSelected": [
@@ -33,7 +33,7 @@
           ]
         }
       ],
-      "eligibleFreshCandidateCount": 18,
+      "eligibleFreshCandidateCount": 19,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
@@ -45,7 +45,7 @@
       "ids": [
         "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
         "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
-        "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28"
+        "n-huawei-y-trina-solar-estas-son-las-multinacionales-c-2026-08-28"
       ],
       "attempt": 1,
       "added": 0,
@@ -53,48 +53,37 @@
         {
           "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
           "ready": false,
-          "reason": "field-rejected",
+          "reason": "budget-unavailable",
           "fields": {
             "view": [
-              "em-dash",
-              "77 words (cap 70)",
-              "4 sentences (cap 3)"
-            ],
-            "prediction": [
-              "67 words (cap 55)",
-              "3 sentences (cap 2)"
+              "unsupported number: 37.5"
             ]
           }
         },
         {
           "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
           "ready": false,
-          "reason": "field-rejected",
+          "reason": "budget-unavailable",
           "fields": {
             "view": [
-              "6 sentences (cap 3)",
-              "unsupported number: 81.4",
-              "announcement number has no denominator or useful comparison"
+              "unsupported numbers: 81.4, 2025"
             ],
             "prediction": [
               "3 sentences (cap 2)",
-              "unsupported numbers: 75, 80"
+              "unsupported number: 30"
             ]
           }
         },
         {
-          "id": "n-suzuki-resiente-el-arancel-de-50-y-ajusta-su-oferta--2026-08-28",
+          "id": "n-huawei-y-trina-solar-estas-son-las-multinacionales-c-2026-08-28",
           "ready": false,
-          "reason": "field-rejected",
+          "reason": "budget-unavailable",
           "fields": {
-            "background": [
-              "The cited article URL returns a 403 CloudFront error and provides no readable evidence. The trade.gov link is truncated navigation boilerplate with no substantive tariff rate. Neither source directly supports the claimed 50% tariff rate on imported vehicles into Mexico."
-            ],
             "view": [
-              "The evidence does not support the causal claim that Suzuki 'chose to import more finished vehicles from Japan rather than increase Mexican production.' The article text only states imports rose and sales fell 18%, it does not explain Suzuki's production strategy decision or compare it to a Mexican production alternative. The characterizations 'sacrifices volume to protect per-unit margin,' 'domestic suppliers lose orders,' and 'Mexican tariff revenue gains' are inferences not stated in the evidence."
+              "proposal or draft described as a completed action"
             ],
             "prediction": [
-              "The prediction invents a schedule ('within the next two quarters') and a decision test ('whether the company is reducing Mexico exposure') not supported by the evidence. The article mentions Baleno 'se encamina a salir' (is headed to exit) but does not commit to an announcement timeline or frame it as a test of exposure reduction strategy."
+              "unsupported numbers: 12, 2027"
             ]
           }
         }
@@ -176,7 +165,7 @@
         "componentSource": "model"
       },
       "image": "https://www.bloomberglinea.com/resizer/v2/D35RUNGQV2BN54R5KHCN36YFTI.jpg?auth=355d36f57205ed79cf840700b0006c609e2bdb7d33b38a5102542b7f4ab7d55c&width=1200&height=630&quality=80&smart=true",
-      "imgTries": 6
+      "imgTries": 7
     },
     {
       "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
@@ -252,7 +241,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/LZO4PAD52BHPXIOAXN4N575LYI.jpeg?smart=true&auth=f5851f6b3456abba3029b6fb813b50275bd8d988bfc1af535dfc58379746e500&width=1200&height=630",
-      "imgTries": 6
+      "imgTries": 7
     },
     {
       "id": "n-aristegui-en-vivo-fernando-n-es-vinculado-a-proceso--2026-08-28",
@@ -402,6 +391,82 @@
         "componentSource": "model"
       },
       "imgTries": 6
+    },
+    {
+      "id": "n-huawei-y-trina-solar-estas-son-las-multinacionales-c-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Huawei and Trina Solar express interest in Mexico's electric sector",
+      "why": "Spain led foreign investment in Mexico's electric generation, transmission, distribution, and commercialization during 2025, with technology multinational firms signaling expansion into the sector.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/huawei-y-trina-solar-estas-son-las-multinacionales-con-interes-en-el-sector-electrico-de-mexico/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-28T08:00:51.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Huawei y Trina Solar: estas son las multinacionales con interés en el sector eléctrico de México",
+        "dek": "Durante 2025, el país que mayor inversión realizó en México por concepto de generación, transmisión, distribución y comercialización de energía eléctrica fue España. La publicación Huawei y Trina Solar: estas son las multinacionales con interés en el sector eléctrico de México apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/huawei-y-trina-solar-estas-son-las-multinacionales-con-interes-en-el-sector-electrico-de-mexico/",
+          "publishedAt": "2026-08-28T08:00:51.000Z",
+          "date": "2026-08-28",
+          "title": "Huawei and Trina Solar express interest in Mexico's electric sector",
+          "summary": "Spain led foreign investment in Mexico's electric generation, transmission, distribution, and commercialization during 2025, with technology multinational firms signaling expansion into the sector."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://elceo.com/wp-content/uploads/2026/08/sector_electrico_mexico_inversion_huawei_trina_solar.jpg",
+      "imgTries": 1
     },
     {
       "id": "n-el-paso-de-elon-musk-en-m-xico-tesla-se-frena-pero-s-2026-08-28",
@@ -700,6 +765,80 @@
       }
     },
     {
+      "id": "n-cosco-mira-m-s-all-del-mar-su-apuesta-log-stica-para-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Cosco charts logistics expansion across Mexico's Pacific ports",
+      "why": "Over a decade, Asian trade volume through Mexico has grown, with Pacific ports absorbing larger container flows and supply chains being reorganized as regional manufacturing shifts position.",
+      "company": "Cosco",
+      "source": "T21",
+      "url": "https://t21.com.mx/cosco-mira-mas-alla-del-mar-su-apuesta-logistica-para-la-proxima-decada/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-28T13:00:58.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Cosco mira más allá del mar: su apuesta logística para la próxima década",
+        "dek": "En una década, el mapa marítimo de México cambió de escala. El intercambio con Asia ganó peso, los puertos del Pacífico absorbieron mayores volúmenes de contenedores y las cadenas de suministro comenzaron a demandar algo más que espacio a bordo de un buque. En ese escenario, Cosco Shipping Lines México multiplicó entre"
+      },
+      "coverage": [
+        {
+          "source": "T21",
+          "url": "https://t21.com.mx/cosco-mira-mas-alla-del-mar-su-apuesta-logistica-para-la-proxima-decada/",
+          "publishedAt": "2026-08-28T13:00:58.000Z",
+          "date": "2026-08-28",
+          "title": "Cosco charts logistics expansion across Mexico's Pacific ports",
+          "summary": "Over a decade, Asian trade volume through Mexico has grown, with Pacific ports absorbing larger container flows and supply chains being reorganized as regional manufacturing shifts position."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "t21.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-convocatoria-para-la-convenci-n-obrero-patronal-de-l-2026-08-28",
       "date": "2026-08-28",
       "section": "politics",
@@ -766,6 +905,236 @@
               "score": 2,
               "source": "authoritative-domain",
               "hostname": "diariooficial.gob.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-del-cr-dito-pyme-al-lending-para-gig-workers-aprendi-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "R2 Fintech expands lending to gig workers across Mexico and Latin America",
+      "why": "R2 has shifted from small-business credit to gig-worker lending under an agreement with Uber, operating in Mexico, Colombia, and Peru while facing challenges in credit evaluation, funding, and fraud control.",
+      "company": "R2 Fintech",
+      "source": "iupana",
+      "url": "https://iupana.com/2026/08/28/lending-para-gig-workers-aprendizajes-y-desafios-de-r2-fintech/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-28T09:00:40.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Del crédito pyme al lending para gig workers: aprendizajes y desafíos de R2",
+        "dek": "El modelo ya opera con Uber en México, Colombia y Perú, pero su despliegue revela los retos de construir modelos de evaluación de crédito, fondeo y control de fraude.... Leer más..."
+      },
+      "coverage": [
+        {
+          "source": "iupana",
+          "url": "https://iupana.com/2026/08/28/lending-para-gig-workers-aprendizajes-y-desafios-de-r2-fintech/",
+          "publishedAt": "2026-08-28T09:00:40.000Z",
+          "date": "2026-08-28",
+          "title": "R2 Fintech expands lending to gig workers across Mexico and Latin America",
+          "summary": "R2 has shifted from small-business credit to gig-worker lending under an agreement with Uber, operating in Mexico, Colombia, and Peru while facing challenges in credit evaluation, funding, and fraud control."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "iupana.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-mexicana-de-aviaci-n-reprueba-en-metas-de-la-4t-ingr-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Mexicana de Aviación reaches 26 percent of 2026 revenue target",
+      "why": "Mexicana de Aviación set a goal to increase passenger numbers by 106 percent in 2026 compared to the prior year, and current revenue reaches 26 percent of that 2026 objective.",
+      "company": "Mexicana de Aviación",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/mexicana-de-aviacion-reprueba-en-metas-de-la-4t-ingresos-alcanzan-apenas-26-del-objetivo-de-2026/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-08-28T08:00:47.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Mexicana de Aviación ‘reprueba’ en metas de la 4T: ingresos alcanzan apenas 26% del objetivo de 2026",
+        "dek": "Mexicana estableció como objetivo para 2026 incrementar 106% el número de viajeros transportados respecto al año anterior. La publicación Mexicana de Aviación ‘reprueba’ en metas de la 4T: ingresos alcanzan apenas 26% del objetivo de 2026 apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/mexicana-de-aviacion-reprueba-en-metas-de-la-4t-ingresos-alcanzan-apenas-26-del-objetivo-de-2026/",
+          "publishedAt": "2026-08-28T08:00:47.000Z",
+          "date": "2026-08-28",
+          "title": "Mexicana de Aviación reaches 26 percent of 2026 revenue target",
+          "summary": "Mexicana de Aviación set a goal to increase passenger numbers by 106 percent in 2026 compared to the prior year, and current revenue reaches 26 percent of that 2026 objective."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-telcel-reporta-ca-da-en-ventas-de-celulares-por-regi-2026-08-28",
+      "date": "2026-08-28",
+      "section": "economy",
+      "title": "Telcel sales decline as telephone registration rule takes effect",
+      "why": "Telcel reported a decline in mobile phone sales in the second quarter after four consecutive quarters of growth, attributed to the mandatory telephone registration requirement and chip shortages.",
+      "company": "Telcel",
+      "source": "DPL News",
+      "url": "https://dplnews.com/telcel-reporta-caida-en-ventas-de-celulares-por-registro-telefonico-y-escasez-de-chips/",
+      "importance": 3,
+      "kind": "event",
+      "publishedAt": "2026-08-28T15:37:40.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Telcel reporta caída en ventas de celulares por registro telefónico y escasez de chips",
+        "dek": "Expansión Las ventas de teléfonos fueron complicadas para Telcel en el segundo trimestre de este año, luego de haber hilado cuatro trimestres de crecimiento. La subsidiaria de América Móvil sufrió una caída en sus ingresos por equipo de 1.7%, al reportar 14,598 millones de pesos, respecto a los 14,853 millones del mism"
+      },
+      "coverage": [
+        {
+          "source": "DPL News",
+          "url": "https://dplnews.com/telcel-reporta-caida-en-ventas-de-celulares-por-registro-telefonico-y-escasez-de-chips/",
+          "publishedAt": "2026-08-28T15:37:40.000Z",
+          "date": "2026-08-28",
+          "title": "Telcel sales decline as telephone registration rule takes effect",
+          "summary": "Telcel reported a decline in mobile phone sales in the second quarter after four consecutive quarters of growth, attributed to the mandatory telephone registration requirement and chip shortages."
+        },
+        {
+          "source": "expansion.mx",
+          "url": "https://expansion.mx/empresas/2026/08/27/telcel-registro-telefonico-frena-ventas-escasez-chips",
+          "publishedAt": "2026-08-27T23:49:57.000Z",
+          "date": "2026-08-27",
+          "title": "Telcel reporta caída en ventas de celulares por registro telefónico y escasez de chips",
+          "summary": "Telcel vio caer sus ingresos 1.7% en equipos debido al registro telefónico que modifica los hábitos de la renovación y un escenario de mayor presión en los precios de los celulares por los semiconductores."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 3,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "dplnews.com"
             }
           }
         },
@@ -4400,488 +4769,6 @@
       ],
       "image": "https://rtnmedios.com/wp-content/uploads/2026/08/WhatsApp-Image-2026-08-19-at-3.52.55-PM.webp",
       "imgTries": 1
-    },
-    {
-      "id": "n-mexico-us-drones-antidrone-security-2026-08-17",
-      "date": "2026-08-17",
-      "section": "us-mexico",
-      "title": "Mexico will buy US drones and anti-drone systems for security operations",
-      "why": "The United States announced that Mexico will be able to buy the equipment at competitive prices.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/1708/mexico/aristegui-en-vivo-mexico-comprara-drones-y-antidrones-a-ee-uu-ministro-israeli-llama-al-asesinato-de-palestinos-17-08-2026/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-17T12:37:29.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Aristegui en Vivo: México comprará drones y antidrones a EE.UU.; ministro israelí llama al asesinato de palestinos (17/08/2026)",
-        "dek": "Este lunes: Estados Unidos anunció que México le comprará drones y sistemas antidrones ‘a precios competitivos’."
-      },
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/1708/mexico/aristegui-en-vivo-mexico-comprara-drones-y-antidrones-a-ee-uu-ministro-israeli-llama-al-asesinato-de-palestinos-17-08-2026/",
-          "publishedAt": "2026-08-17T12:37:29.000Z",
-          "date": "2026-08-17",
-          "title": "Mexico will buy US drones and anti-drone systems for security operations",
-          "summary": "The United States announced that Mexico will be able to buy the equipment at competitive prices."
-        },
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/2026-08-17/mexico-y-estados-unidos-encarrilan-su-relacion-en-seguridad-pese-a-la-fractura-por-la-visa-de-andy-lopez-beltran.html",
-          "publishedAt": "2026-08-17T04:00:00.000Z",
-          "date": "2026-08-16",
-          "title": "Mexico and the United States advance security cooperation",
-          "summary": "US Ambassador Ronald Johnson announced access to drones, while Omar García Harfuch plans to attend a DEA conference in Argentina."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "aristeguinoticias.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "manual-source-review"
-      },
-      "background": "Drones can extend surveillance over difficult terrain. Anti-drone systems serve a different purpose: they detect, track or disrupt unauthorized aircraft. The announcement covers both capabilities but does not identify models, quantities or delivery dates.",
-      "view": "This is a procurement opening, not yet proof of a new operational capability. Its value will depend on what Mexico buys, how quickly it arrives and which agencies can use it under clear rules.",
-      "prediction": "Watch for a contract or official delivery notice that names the equipment and quantity. That would show the announcement has moved from access to an actual purchase.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "article",
-          "primary:crs-counter-uas"
-        ],
-        "view": [
-          "article",
-          "corroboration:elpais"
-        ],
-        "prediction": [
-          "article"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/1708/mexico/aristegui-en-vivo-mexico-comprara-drones-y-antidrones-a-ee-uu-ministro-israeli-llama-al-asesinato-de-palestinos-17-08-2026/"
-        },
-        {
-          "id": "corroboration:elpais",
-          "kind": "context",
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/2026-08-17/mexico-y-estados-unidos-encarrilan-su-relacion-en-seguridad-pese-a-la-fractura-por-la-visa-de-andy-lopez-beltran.html"
-        },
-        {
-          "id": "primary:crs-counter-uas",
-          "kind": "primary",
-          "source": "US Congressional Research Service",
-          "url": "https://www.congress.gov/crs-product/IF11480"
-        }
-      ],
-      "imgTries": 1
-    },
-    {
-      "id": "n-manufacturing-employment-june-rebound-2026-08-17",
-      "date": "2026-08-17",
-      "section": "business",
-      "title": "Manufacturing employment edges up 0.1% in June after four monthly declines",
-      "why": "The increase ended a four-month slide, but factory employment remained below a year earlier for a 40th consecutive month. Computer-equipment manufacturing was the exception.",
-      "company": "",
-      "source": "El Economista",
-      "url": "https://eleconomista.com.mx/empresas/empleo-manufacturero-leve-repunte-junio-cuatro-meses-20260817-828627.html",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-17T13:48:47.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Empleo manufacturero tiene leve repunte en junio, después de cuatro meses",
-        "dek": "Creció 0.1% y rompió una racha de cuatro meses de contracciones, aunque de forma interanual se mantiene en rojo e hiló 40 meses en contracción; empleo en la industria de cómputo es la excepción a la tendencia."
-      },
-      "coverage": [
-        {
-          "source": "El Economista",
-          "url": "https://eleconomista.com.mx/empresas/empleo-manufacturero-leve-repunte-junio-cuatro-meses-20260817-828627.html",
-          "publishedAt": "2026-08-17T13:48:47.000Z",
-          "date": "2026-08-17",
-          "title": "Manufacturing employment edges up 0.1% in June after four monthly declines",
-          "summary": "The increase ended a four-month slide, but factory employment remained below a year earlier for a 40th consecutive month. Computer-equipment manufacturing was the exception."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "eleconomista.com.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "manual-source-review"
-      },
-      "background": "INEGI's manufacturing survey tracks payroll employment across the factory sector. A 0.1% monthly rise shows that June was better than May, but it does not erase 40 straight months of year-over-year declines.",
-      "view": "The split matters more than the small monthly gain. Factory hiring is still weak across the sector, while computer equipment is growing with demand for data-center hardware. That is a narrow pocket of strength, not a broad manufacturing recovery.",
-      "prediction": "Watch the July survey for another monthly increase and fewer year-over-year losses across industries. If computer equipment remains the main exception, the recovery is still narrow.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "article",
-          "primary:inegi-emim"
-        ],
-        "view": [
-          "article",
-          "context:computer-exports"
-        ],
-        "prediction": [
-          "primary:inegi-emim"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El Economista",
-          "url": "https://eleconomista.com.mx/empresas/empleo-manufacturero-leve-repunte-junio-cuatro-meses-20260817-828627.html"
-        },
-        {
-          "id": "primary:inegi-emim",
-          "kind": "primary",
-          "source": "INEGI manufacturing survey",
-          "url": "https://www.inegi.org.mx/programas/emim/2018/"
-        },
-        {
-          "id": "context:computer-exports",
-          "kind": "context",
-          "source": "El Economista",
-          "url": "https://eleconomista.com.mx/tecnologia/industria-tic-mexico-crece-4-6-precios-exportaciones-computo-avanzan-20260817-828632.html"
-        }
-      ]
-    },
-    {
-      "id": "n-afac-faa-results-within-60-days-2026-08-16",
-      "date": "2026-08-16",
-      "section": "business",
-      "title": "Mexico's aviation regulator says FAA review results are due within 60 days",
-      "why": "AFAC said it answered all questions in the review and that the FAA thanked it for providing the requested information. The US regulator has not announced a result.",
-      "company": "",
-      "source": "El Economista",
-      "url": "https://eleconomista.com.mx/empresas/afac-informo-resultados-evaluacion-aerea-estaran-60-dias-20260816-828545.html",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-17T04:05:42.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "La AFAC informó que los resultados de la evaluación aérea estarán en 60 días",
-        "dek": "La AFAC detalló en un comunicado emitido el sábado que ‘las preguntas requeridas fueron contestadas en su totalidad y la FAA agradeció a la Agencia por entregar la información solicitada’."
-      },
-      "coverage": [
-        {
-          "source": "El Economista",
-          "url": "https://eleconomista.com.mx/empresas/afac-informo-resultados-evaluacion-aerea-estaran-60-dias-20260816-828545.html",
-          "publishedAt": "2026-08-17T04:05:42.000Z",
-          "date": "2026-08-16",
-          "title": "Mexico's aviation regulator says FAA review results are due within 60 days",
-          "summary": "AFAC said it answered all questions in the review and that the FAA thanked it for providing the requested information. The US regulator has not announced a result."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "eleconomista.com.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "manual-source-review"
-      },
-      "background": "The FAA restored Mexico to Category 1 in September 2023. That status lets Mexican airlines add US routes and codeshares. The latest review tests whether Mexico's regulator still meets international safety-oversight standards.",
-      "view": "The on-site review is finished, but the safety finding is not. Mexico remains Category 1 while it waits. The business risk begins only if the FAA finds that oversight has slipped and changes the rating.",
-      "prediction": "Watch the FAA's country-rating list or a formal notice by mid-October. Category 1 staying in place would confirm continued compliance. A downgrade would again limit new US routes and codeshares.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "primary:faa"
-        ],
-        "view": [
-          "article",
-          "primary:faa"
-        ],
-        "prediction": [
-          "article",
-          "primary:faa"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El Economista",
-          "url": "https://eleconomista.com.mx/empresas/afac-informo-resultados-evaluacion-aerea-estaran-60-dias-20260816-828545.html"
-        },
-        {
-          "id": "primary:faa",
-          "kind": "primary",
-          "source": "US Federal Aviation Administration",
-          "url": "https://www.faa.gov/newsroom/federal-aviation-administration-returns-mexico-highest-aviation-safety-status"
-        }
-      ]
-    },
-    {
-      "id": "n-mexican-national-allegedly-smuggled-children-across--2026-08-15",
-      "date": "2026-08-15",
-      "section": "us-mexico",
-      "title": "Mexican national allegedly smuggled children across border",
-      "why": "The U.S. Attorney's Office for the Western District of Texas announced charges against several individuals, including a Mexican national accused of juvenile smuggling and a Cuban migrant with a significant criminal history, as part of 292 new immigration-related criminal cases.",
-      "company": "",
-      "source": "Border Report",
-      "url": "https://borderreport.com/regions/texas/mexican-national-allegedly-smuggled-children-across-border/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-16T02:23:00.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Mexican national allegedly smuggled children across border",
-        "dek": "The U.S. Attorney's Office for the Western District of Texas announced charges against several individuals, including a Mexican national accused of juvenile smuggling and a Cuban migrant with a significant criminal history, as part of 292 new immigration-related criminal cases."
-      },
-      "coverage": [
-        {
-          "source": "Border Report",
-          "url": "https://borderreport.com/regions/texas/mexican-national-allegedly-smuggled-children-across-border/",
-          "publishedAt": "2026-08-16T02:23:00.000Z",
-          "date": "2026-08-15",
-          "title": "Mexican national allegedly smuggled children across border",
-          "summary": "The U.S. Attorney's Office for the Western District of Texas announced charges against several individuals, including a Mexican national accused of juvenile smuggling and a Cuban migrant with a significant criminal history, as part of 292 new immigration-related criminal cases."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "borderreport.com"
-            }
-          }
-        },
-        "componentSource": "deterministic-fallback-v1"
-      }
-    },
-    {
-      "id": "n-fda-green-lights-more-screwworm-medications-should-y-2026-08-15",
-      "date": "2026-08-15",
-      "section": "us-mexico",
-      "title": "FDA green lights more screwworm medications: Should you give them to your pets?",
-      "why": "The Food and Drug Administration has granted emergency use authorizations for more medications that can prevent and treat infestations of the flesh-eating New World screwworm spreading along the U.S.-Mexico border.",
-      "company": "",
-      "source": "Border Report",
-      "url": "https://borderreport.com/news/health/fda-green-lights-more-screwworm-medications-should-you-give-them-to-your-pets/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-16T02:21:24.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "FDA green lights more screwworm medications: Should you give them to your pets?",
-        "dek": "The Food and Drug Administration has granted emergency use authorizations for more medications that can prevent and treat infestations of the flesh-eating New World screwworm spreading along the U.S.-Mexico border."
-      },
-      "coverage": [
-        {
-          "source": "Border Report",
-          "url": "https://borderreport.com/news/health/fda-green-lights-more-screwworm-medications-should-you-give-them-to-your-pets/",
-          "publishedAt": "2026-08-16T02:21:24.000Z",
-          "date": "2026-08-15",
-          "title": "FDA green lights more screwworm medications: Should you give them to your pets?",
-          "summary": "The Food and Drug Administration has granted emergency use authorizations for more medications that can prevent and treat infestations of the flesh-eating New World screwworm spreading along the U.S.-Mexico border."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "borderreport.com"
-            }
-          }
-        },
-        "componentSource": "deterministic-fallback-v1"
-      }
     }
   ]
 }
