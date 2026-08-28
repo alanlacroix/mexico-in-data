@@ -99,8 +99,9 @@ function requireScheduledOutcomes() {
 // another run would buy the same work again. A low-importance optional tail may be
 // omitted by the final builder; a lead, scheduled item, or importance-7+ fact blocks.
 export function priorTerminalAnalysisAttempt(brief, happening) {
-  const selectedIds = Array.isArray(brief.meta?.selection?.lockedIds)
-    ? brief.meta.selection.lockedIds : [];
+  const selectedIds = Array.isArray(brief.meta?.selection?.analysisTargetIds)
+    ? brief.meta.selection.analysisTargetIds
+    : Array.isArray(brief.meta?.selection?.lockedIds) ? brief.meta.selection.lockedIds : [];
   const target = happening.meta?.analysisTarget;
   if (!selectedIds.length || !Array.isArray(target?.ids)) return '';
   if (target.policy !== ANALYSIS_POLICY) return '';

@@ -208,7 +208,7 @@ assert.match(editionPublisher, /const priorAttempt = priorTerminalAnalysisAttemp
   'an unchanged twice-rejected explanation must stop repeat spend');
 assert.match(editionPublisher, /requireSelectedExplanations\(\)/,
   'the atomic publisher must require the explanatory layer before certification');
-const lockedBrief = { meta: { selection: { lockedIds: ['lead'] } } };
+const lockedBrief = { meta: { selection: { lockedIds: ['lead', 'optional-tail'], analysisTargetIds: ['lead'] } } };
 assert.match(
   priorTerminalAnalysisAttempt(lockedBrief, { meta: { analysisTarget: {
     policy: ANALYSIS_POLICY, ids: ['lead'], attempt: 2,

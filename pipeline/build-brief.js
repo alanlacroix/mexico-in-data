@@ -197,6 +197,12 @@ async function main() {
   const selection = select(P.events, editorialDate);
   const rankedPicked = selection.picked;
   const rankedIds = rankedPicked.map((event) => event.id).filter(Boolean);
+  // Use the same optional-tail rule before enrichment and before publication. A weak,
+  // unscheduled tail that the final page may omit must not consume the bounded model
+  // batch ahead of stronger stories. The full ranked IDs remain locked below, so no
+  // lower-ranked replacement can enter the edition.
+  const analysisTargetIds = omitUnreadyOptionalTail(rankedPicked)
+    .map((event) => event.id).filter(Boolean);
   if (!selectionOnly && prev?.meta?.editorialDate === editorialDate && lockedIds.length
       && JSON.stringify(lockedIds) !== JSON.stringify(rankedIds)) {
     throw new Error(`selected story set changed after analysis enrichment: ${lockedIds.join(',')} -> ${rankedIds.join(',')}`);
@@ -245,6 +251,7 @@ async function main() {
           policy: selection.policy,
           receipt: selection.receipt,
           lockedIds: selectionOnly ? rankedIds : (lockedIds.length ? lockedIds : rankedIds),
+          analysisTargetIds,
           publishedIds: [],
           empty: true,
           lanes: selectedCounts,
@@ -340,6 +347,7 @@ async function main() {
       policy: selection.policy,
       receipt: selection.receipt,
       lockedIds: selectionOnly ? rankedIds : (lockedIds.length ? lockedIds : rankedIds),
+      analysisTargetIds,
       publishedIds: pickedIds,
       omittedIds: rankedIds.filter((id) => !pickedIds.includes(id)),
       lanes: selectedCounts,

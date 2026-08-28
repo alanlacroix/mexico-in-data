@@ -115,6 +115,10 @@ assert.match(happeningBuilder, /const request = \(batch, effort, maxTokens\) => 
   'evidence-locked drafting must use the bounded model tier so daily all-story coverage fits the monthly cap');
 assert.match(briefBuilder, /const rankedPicked = selection\.picked[\s\S]*omitUnreadyOptionalTail\(rankedPicked\)/,
   'analysis may only remove an unready optional tail from the locked ranking, never select a replacement');
+assert.match(briefBuilder, /analysisTargetIds = omitUnreadyOptionalTail\(rankedPicked\)/,
+  'the bounded analysis batch must exclude the same optional tail the final builder may omit');
+assert.match(happeningBuilder, /selection\?\.analysisTargetIds/,
+  'targeted enrichment must use the precomputed blocking explanation target');
 
 assert.deepEqual(
   mergeApprovedAttempt(

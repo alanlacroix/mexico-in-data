@@ -1214,16 +1214,22 @@ async function main() {
       console.log('  targeted analysis: quiet edition, no selected stories');
       return;
     }
-    const selectedIds = [brief.lead, ...arr(brief.items)]
+    const rankedIds = [brief.lead, ...arr(brief.items)]
       .map((story) => arr(story?.refs)[0])
       .filter(Boolean);
-    if (!selectedIds.length) {
+    if (!rankedIds.length) {
       console.log('  targeted analysis: quiet edition, no selected stories');
       return;
     }
     const lockedIds = arr(brief?.meta?.selection?.lockedIds);
-    if (!lockedIds.length || JSON.stringify(lockedIds) !== JSON.stringify(selectedIds)) {
+    if (!lockedIds.length || JSON.stringify(lockedIds) !== JSON.stringify(rankedIds)) {
       throw new Error('targeted analysis requires the exact selection-only lock for this edition');
+    }
+    const selectedIds = arr(brief?.meta?.selection?.analysisTargetIds);
+    const isLockedPrefix = selectedIds.length > 0
+      && selectedIds.every((id, index) => id === lockedIds[index]);
+    if (!isLockedPrefix) {
+      throw new Error('targeted analysis requires a non-empty locked explanation target');
     }
     const events = arr(existing.events);
     const priorTarget = existing.meta?.analysisTarget || {};
