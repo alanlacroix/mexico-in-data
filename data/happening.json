@@ -6,24 +6,24 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-31T14:09:29.857Z",
+    "generatedAt": "2026-08-31T20:13:41.824Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-08-31",
       "candidateCount": 24,
-      "candidateSig": "9b57a4b56ddf388762792b6162d4193168690cb4142254c7efaa4e65a3bcff45",
-      "freshCandidateCount": 16,
+      "candidateSig": "d088d164a1c07e36e8d3153a8c436eba017f74bbe4253f01e487b218364514e1",
+      "freshCandidateCount": 24,
       "assessedCount": 24,
-      "selectedCount": 0,
-      "freshSelectedCount": 0,
-      "keptCount": 0,
-      "freshKeptCount": 0,
+      "selectedCount": 1,
+      "freshSelectedCount": 1,
+      "keptCount": 1,
+      "freshKeptCount": 1,
       "rejectedCount": 0,
       "freshRejectedCount": 0,
       "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 16,
-      "unassessedFreshCandidateCount": 0,
+      "eligibleFreshCandidateCount": 37,
+      "unassessedFreshCandidateCount": 13,
       "currentDayResolved": false,
       "mode": "deterministic-fallback",
       "complete": true,
@@ -32,28 +32,95 @@
     "analysisTarget": {
       "policy": "every-selected-story-evidence-locked-v7",
       "ids": [
-        "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
-        "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28"
+        "n-vw-cuts-shift-at-puebla-plant-amid-regional-headwind-2026-08-31"
       ],
-      "attempt": 2,
-      "added": 2,
+      "attempt": 1,
+      "added": 0,
       "outcomes": [
         {
-          "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
-          "ready": true,
-          "reason": "ready",
-          "fields": {}
-        },
-        {
-          "id": "n-exportaciones-en-m-xico-rompen-r-cord-en-julio-super-2026-08-28",
-          "ready": true,
-          "reason": "ready",
-          "fields": {}
+          "id": "n-vw-cuts-shift-at-puebla-plant-amid-regional-headwind-2026-08-31",
+          "ready": false,
+          "reason": "thin-evidence"
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "n-vw-cuts-shift-at-puebla-plant-amid-regional-headwind-2026-08-31",
+      "date": "2026-08-31",
+      "section": "economy",
+      "title": "VW Cuts Shift at Puebla Plant Amid Regional Headwinds",
+      "why": "Volkswagen de México has announced an adjustment to its manufacturing capacity at its Puebla assembly facility, the company's largest plant in Mexico, citing a \"challenging context\" across the global and North American automotive industries.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/automotive/news/vw-cuts-shift-puebla-plant-amid-regional-headwinds",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-31T18:10:45.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "VW Cuts Shift at Puebla Plant Amid Regional Headwinds",
+        "dek": "Volkswagen de México has announced an adjustment to its manufacturing capacity at its Puebla assembly facility, the company's largest plant in Mexico, citing a \"challenging context\" across the global and North American automotive industries. To align its assembly volume with current demand in key markets, the German au"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/automotive/news/vw-cuts-shift-puebla-plant-amid-regional-headwinds",
+          "publishedAt": "2026-08-31T18:10:45.000Z",
+          "date": "2026-08-31",
+          "title": "VW Cuts Shift at Puebla Plant Amid Regional Headwinds",
+          "summary": "Volkswagen de México has announced an adjustment to its manufacturing capacity at its Puebla assembly facility, the company's largest plant in Mexico, citing a \"challenging context\" across the global and North American automotive industries."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 0,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 1,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 1,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexicobusiness.news"
+            }
+          }
+        },
+        "componentSource": "deterministic-fallback-v1"
+      },
+      "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/jorgen-hendriksen-44M0wr2Vy3E-unsplash%20%281%29.jpg?h=7a3a0daf&itok=Iqm3NUtR",
+      "imgTries": 1
+    },
     {
       "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
       "date": "2026-08-28",
@@ -4625,80 +4692,6 @@
           "date": "2026-08-24",
           "title": "Bank lending to small firms rises but access falls for smallest companies",
           "summary": "Mexico's central bank data from the second quarter of 2026 shows that 22.7 percent of firms with up to 100 employees cited commercial bank financing as a source, indicating tightening access at the smallest end of the small-business sector."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-apoyos-de-hacienda-a-pemex-cuestan-1-162-pesos-por-c-2026-08-24",
-      "date": "2026-08-24",
-      "section": "money",
-      "title": "Mexican government transfers to state oil company cost 1,162 pesos per taxpayer",
-      "why": "Government subsidies to Pemex amount to roughly one third of the state oil company's recorded revenue, calculating to 1,162 pesos per individual taxpayer.",
-      "company": "Pemex",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/apoyos-de-hacienda-a-pemex-cuestan-1162-pesos-por-cada-contribuyente-del-sat/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-24T08:00:31.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Apoyos de Hacienda a Pemex cuestan 1,162 pesos por cada contribuyente del SAT",
-        "dek": "Aunque las transferencias gubernamentales a Pemex han disminuido respecto al año pasado, todavía representan prácticamente una tercera parte de los ingresos registrados por la empresa. La publicación Apoyos de Hacienda a Pemex cuestan 1,162 pesos por cada contribuyente del SAT apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/apoyos-de-hacienda-a-pemex-cuestan-1162-pesos-por-cada-contribuyente-del-sat/",
-          "publishedAt": "2026-08-24T08:00:31.000Z",
-          "date": "2026-08-24",
-          "title": "Mexican government transfers to state oil company cost 1,162 pesos per taxpayer",
-          "summary": "Government subsidies to Pemex amount to roughly one third of the state oil company's recorded revenue, calculating to 1,162 pesos per individual taxpayer."
         }
       ],
       "importanceComponents": {
