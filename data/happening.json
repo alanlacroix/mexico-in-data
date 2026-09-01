@@ -6,23 +6,23 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-09-01T13:32:28.853Z",
+    "generatedAt": "2026-09-01T15:00:47.953Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-09-01",
       "candidateCount": 24,
-      "candidateSig": "cf61153323afe9be5e63c6c87bdbc2fb6b3052c6e5ad572634eedbfa6ac8fb32",
-      "freshCandidateCount": 11,
+      "candidateSig": "eaf11389d5249e55bf9c16052e374315159776775718fd158823835a38e0c691",
+      "freshCandidateCount": 14,
       "assessedCount": 24,
-      "selectedCount": 12,
-      "freshSelectedCount": 4,
-      "keptCount": 12,
-      "freshKeptCount": 4,
+      "selectedCount": 8,
+      "freshSelectedCount": 2,
+      "keptCount": 8,
+      "freshKeptCount": 2,
       "rejectedCount": 0,
       "freshRejectedCount": 0,
       "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 11,
+      "eligibleFreshCandidateCount": 14,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
@@ -36,16 +36,22 @@
         "n-m-xico-va-por-mayor-escrutinio-a-inversi-n-extranjer-2026-09-01",
         "n-pemex-exxon-valero-y-bp-tambi-n-pierden-con-los-prec-2026-09-01"
       ],
-      "attempt": 1,
-      "added": 1,
+      "attempt": 2,
+      "added": 0,
       "outcomes": [
         {
           "id": "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01",
           "ready": false,
           "reason": "field-rejected",
           "fields": {
+            "background": [
+              "The standing evidence from UN Comtrade describes Mexico's trade balance with China but does not support the claim that tariff policy affects North American supply chains or rules of origin, those mechanisms are asserted but not cited."
+            ],
             "view": [
-              "The mechanism 'substitution toward higher-cost suppliers or inventory drawdowns' is inferred but not stated in the cited evidence. The article and standing evidence confirm the 32.5% import drop and tariff impact on automotive and footwear sectors, but neither source explains whether the drop results from substitution, inventory drawdown, demand loss, or another cause. This mechanism is invented."
+              "The view acknowledges uncertainty about causation (substitution, inventory, demand loss) but does not reject the summary's claim that the drop 'reflects tariff impact.' The view should either confirm tariff causation is stated in the source or flag that the source does not distinguish between mechanisms."
+            ],
+            "prediction": [
+              "The prediction describes a conditional fork (resume or lock in alternatives) and mentions 'import levels in following months' but does not name a specific date, announced decision, or observable milestone, it is a general monitoring statement unsupported by evidence of a scheduled report or policy review."
             ]
           }
         },
@@ -139,7 +145,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/YJNNADMNYBFJDDG46AOAV4UMH4.jpeg?smart=true&auth=50cd1e6fb8f539a36a17be8fdc1ac4bcca5c95d70443e38e2ae061229f18ebf5&width=1200&height=630",
-      "imgTries": 1
+      "imgTries": 2
     },
     {
       "id": "n-m-xico-va-por-mayor-escrutinio-a-inversi-n-extranjer-2026-09-01",
@@ -323,7 +329,81 @@
         "componentSource": "model"
       },
       "image": "https://elceo.com/wp-content/uploads/2026/08/pemex_exxon_valero_bp_precio_gasolina_diesel-1.jpg",
-      "imgTries": 1
+      "imgTries": 2
+    },
+    {
+      "id": "n-el-cerco-al-silicio-vulnerabilidad-y-blindaje-del-ha-2026-09-01",
+      "date": "2026-09-01",
+      "section": "economy",
+      "title": "US tariff review on AI semiconductors and data-center hardware affects Mexico's technology positioning",
+      "why": "The US government is evaluating new tariff structures on semiconductors and hardware for AI data centers, establishing a potential control point for Mexico's role in AI infrastructure and supply chains.",
+      "company": "",
+      "source": "T21",
+      "url": "https://t21.com.mx/el-cerco-al-silicio-vulnerabilidad-y-blindaje-del-hardware-de-ia-en-mexico/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-09-01T13:15:07.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "El cerco al silicio: vulnerabilidad y blindaje del hardware de IA en México",
+        "dek": "La evaluación que realiza el gobierno estadounidense para imponer una nueva estructura arancelaria sobre semiconductores y hardware destinado a centros de datos de inteligencia artificial marca un punto de inflexión en la geopolítica tecnológica global. Esta iniciativa regulatoria persigue un doble propósito estrictame"
+      },
+      "coverage": [
+        {
+          "source": "T21",
+          "url": "https://t21.com.mx/el-cerco-al-silicio-vulnerabilidad-y-blindaje-del-hardware-de-ia-en-mexico/",
+          "publishedAt": "2026-09-01T13:15:07.000Z",
+          "date": "2026-09-01",
+          "title": "US tariff review on AI semiconductors and data-center hardware affects Mexico's technology positioning",
+          "summary": "The US government is evaluating new tariff structures on semiconductors and hardware for AI data centers, establishing a potential control point for Mexico's role in AI infrastructure and supply chains."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "t21.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
     },
     {
       "id": "n-resoluci-n-que-modifica-las-disposiciones-de-car-cte-2026-09-01",
@@ -392,6 +472,80 @@
               "score": 2,
               "source": "authoritative-domain",
               "hostname": "diariooficial.gob.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-aifa-entre-rutas-terrestres-de-alto-riesgo-anerpv-2026-09-01",
+      "date": "2026-09-01",
+      "section": "security",
+      "title": "Mexico City airport cargo routes flagged by business transport association for security risk",
+      "why": "The freight association ANERPV identified high-risk terrestrial routes for goods leaving Felipe Ángeles airport, signaling operational vulnerability in critical infrastructure.",
+      "company": "",
+      "source": "T21",
+      "url": "https://t21.com.mx/aifa-entre-rutas-terrestres-de-alto-riesgo-anerpv/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-09-01T13:10:48.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "AIFA, entre rutas terrestres de alto riesgo: ANERPV",
+        "dek": "La conectividad terrestre del Aeropuerto Internacional Felipe Ángeles (AIFA) enfrenta un desafío adicional en materia de seguridad, ya que las mercancías que salen de la terminal aérea deben circular por corredores carreteros identificados entre los de mayor incidencia de robo de carga en el Estado de México. La autopi"
+      },
+      "coverage": [
+        {
+          "source": "T21",
+          "url": "https://t21.com.mx/aifa-entre-rutas-terrestres-de-alto-riesgo-anerpv/",
+          "publishedAt": "2026-09-01T13:10:48.000Z",
+          "date": "2026-09-01",
+          "title": "Mexico City airport cargo routes flagged by business transport association for security risk",
+          "summary": "The freight association ANERPV identified high-risk terrestrial routes for goods leaving Felipe Ángeles airport, signaling operational vulnerability in critical infrastructure."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "t21.com.mx"
             }
           }
         },
@@ -770,6 +924,154 @@
       }
     },
     {
+      "id": "n-m-xico-frena-la-exploraci-n-minera-mientras-el-mundo-2026-08-31",
+      "date": "2026-08-31",
+      "section": "economy",
+      "title": "Mexico halts private rare-earth mineral exploration while US and China secure strategic reserves",
+      "why": "Mexico maintains suspended private exploration for critical minerals and rare earths, limiting activity to three government-controlled zones, as the US and China compete to secure supply chains.",
+      "company": "",
+      "source": "Expansión — Empresas",
+      "url": "https://expansion.mx/empresas/2026/08/31/mexico-polemica-estrategia-minera-tierras-raras",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-31T23:56:24.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México frena la exploración minera mientras el mundo acelera la carrera por los minerales críticos",
+        "dek": "Mientras China y Estados Unidos aseguran reservas estratégicas, México mantiene detenida la exploración privada y concentra sus esfuerzos en tres zonas que no incluyen tierras raras."
+      },
+      "coverage": [
+        {
+          "source": "Expansión — Empresas",
+          "url": "https://expansion.mx/empresas/2026/08/31/mexico-polemica-estrategia-minera-tierras-raras",
+          "publishedAt": "2026-08-31T23:56:24.000Z",
+          "date": "2026-08-31",
+          "title": "Mexico halts private rare-earth mineral exploration while US and China secure strategic reserves",
+          "summary": "Mexico maintains suspended private exploration for critical minerals and rare earths, limiting activity to three government-controlled zones, as the US and China compete to secure supply chains."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "expansion.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-chinese-imports-drop-currency-gains-cloud-results-2026-08-31",
+      "date": "2026-08-31",
+      "section": "us-mexico",
+      "title": "Chinese imports to Mexico fell 28.4% year-over-year from January to May 2026",
+      "why": "China's Economy Ministry reported a 28.4 percent year-over-year decline in imports to Mexico from January through May 2026, attributed to Mexico's tariff package covering 1,463 product lines.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/trade-and-investment/news/chinese-imports-drop-currency-gains-cloud-results",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-31T18:14:44.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Chinese Imports Drop; Currency Gains Cloud Results",
+        "dek": "China's Economy Ministry reported a 28.4% year-over-year decline in imports from China between January and May 2026, attributing the drop to Mexico's tariff package covering 1,463 product lines across 17 sectors, with duties reaching 50% on goods from countries lacking a free trade agreement with Mexico. The measure, p"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/trade-and-investment/news/chinese-imports-drop-currency-gains-cloud-results",
+          "publishedAt": "2026-08-31T18:14:44.000Z",
+          "date": "2026-08-31",
+          "title": "Chinese imports to Mexico fell 28.4% year-over-year from January to May 2026",
+          "summary": "China's Economy Ministry reported a 28.4 percent year-over-year decline in imports to Mexico from January through May 2026, attributed to Mexico's tariff package covering 1,463 product lines."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexicobusiness.news"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-acuerdo-por-el-que-se-reforman-adicionan-y-derogan-d-2026-08-31",
       "date": "2026-08-31",
       "section": "economy",
@@ -836,6 +1138,80 @@
               "score": 2,
               "source": "authoritative-domain",
               "hostname": "diariooficial.gob.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-pensiones-becas-deuda-y-pemex-le-cuestan-m-s-de-2-bi-2026-08-31",
+      "date": "2026-08-31",
+      "section": "money",
+      "title": "Pensions, scholarships, debt service, and Pemex support constrain Mexico's 2027 budget",
+      "why": "Spending on pensions, scholarships, debt-service costs, and subsidies to Pemex exceed 2 trillion pesos, limiting the budget margin for the 2027 economic package.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/pensiones-becas-deuda-y-pemex-le-cuestan-mas-de-2-billones-a-hacienda-y-limitan-el-gasto-en-paquete-economico-2027/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-31T08:00:09.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Pensiones, becas, deuda y Pemex le cuestan más de 2 billones a Hacienda y limitan el gasto en Paquete Económico 2027",
+        "dek": "La carga en pensiones, becas, costo financiero de la deuda y apoyos a Pemex limitan el margen de Hacienda para programar el gasto en 2027. La publicación Pensiones, becas, deuda y Pemex le cuestan más de 2 billones a Hacienda y limitan el gasto en Paquete Económico 2027 apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/pensiones-becas-deuda-y-pemex-le-cuestan-mas-de-2-billones-a-hacienda-y-limitan-el-gasto-en-paquete-economico-2027/",
+          "publishedAt": "2026-08-31T08:00:09.000Z",
+          "date": "2026-08-31",
+          "title": "Pensions, scholarships, debt service, and Pemex support constrain Mexico's 2027 budget",
+          "summary": "Spending on pensions, scholarships, debt-service costs, and subsidies to Pemex exceed 2 trillion pesos, limiting the budget margin for the 2027 economic package."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
             }
           }
         },
@@ -1065,6 +1441,228 @@
       },
       "image": "https://mexicobusiness.news/sites/default/files/styles/crop_16_9/public/2026-08/jorgen-hendriksen-44M0wr2Vy3E-unsplash%20%281%29.jpg?h=7a3a0daf&itok=Iqm3NUtR",
       "imgTries": 1
+    },
+    {
+      "id": "n-infraestructura-servicios-e-inseguridad-frenan-reloc-2026-08-31",
+      "date": "2026-08-31",
+      "section": "economy",
+      "title": "Infrastructure gaps, service deficiencies, and insecurity slow supply-chain relocation to Mexico",
+      "why": "Real-estate industry specialists identified deficiencies in infrastructure, basic services, and security as barriers to nearshoring, even as Mexico retains competitive advantages for foreign investment.",
+      "company": "",
+      "source": "T21",
+      "url": "https://t21.com.mx/infraestructura-servicios-e-inseguridad-frenan-relocalizacion-de-cadenas-de-suministro/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-31T13:13:46.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Infraestructura, servicios e inseguridad frenan relocalización de cadenas de suministro",
+        "dek": "Aunque México mantiene ventajas competitivas para atraer inversiones, especialistas del sector inmobiliario industrial advirtieron que las deficiencias en infraestructura, servicios básicos y seguridad están limitando la capacidad del país para aprovechar plenamente la relocalización de cadenas de suministro. En el pan"
+      },
+      "coverage": [
+        {
+          "source": "T21",
+          "url": "https://t21.com.mx/infraestructura-servicios-e-inseguridad-frenan-relocalizacion-de-cadenas-de-suministro/",
+          "publishedAt": "2026-08-31T13:13:46.000Z",
+          "date": "2026-08-31",
+          "title": "Infrastructure gaps, service deficiencies, and insecurity slow supply-chain relocation to Mexico",
+          "summary": "Real-estate industry specialists identified deficiencies in infrastructure, basic services, and security as barriers to nearshoring, even as Mexico retains competitive advantages for foreign investment."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "t21.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-ebrard-descarta-que-eu-condicione-temas-de-comercio--2026-08-31",
+      "date": "2026-08-31",
+      "section": "us-mexico",
+      "title": "Mexico's foreign minister says US will not condition trade talks on security cooperation",
+      "why": "Foreign Minister Ebrard stated that Mexico and the US maintain separate discussions on commerce and security, while negotiating to preserve a 3.4 percent tariff rate on Mexican exports.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/08/31/ebrard-descarta-que-eu-condicione-temas-de-comercio-a-seguridad/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-08-31T07:30:00.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Ebrard descarta que EU condicione temas de comercio a seguridad",
+        "dek": "Ebrard afirmó que México mantiene separados los temas comerciales y de seguridad con EU, mientras negocia conservar el arancel de 3.4% para sus exportaciones."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/31/ebrard-descarta-que-eu-condicione-temas-de-comercio-a-seguridad/",
+          "publishedAt": "2026-08-31T07:30:00.000Z",
+          "date": "2026-08-31",
+          "title": "Mexico's foreign minister says US will not condition trade talks on security cooperation",
+          "summary": "Foreign Minister Ebrard stated that Mexico and the US maintain separate discussions on commerce and security, while negotiating to preserve a 3.4 percent tariff rate on Mexican exports."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elfinanciero.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-cfe-restablece-al-100-luz-en-cuatro-estados-tras-van-2026-08-31",
+      "date": "2026-08-31",
+      "section": "security",
+      "title": "CFE Restores Full Power in Four States After Vandalism",
+      "why": "Comisión Federal de Electricidad restored power to four states after vandals damaged two 400 kV transmission lines. The utility energized both lines and planned to investigate who caused the damage.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/3108/mexico/cfe-restablece-al-100-luz-en-cuatro-estados-tras-vandalismo/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-09-01T02:51:36.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "CFE restablece al 100% luz en cuatro estados tras vandalismo",
+        "dek": "Dos líneas de alta tensión de 400 kV fueron reparadas y energizadas; CFE realizará peritajes para identificar a los responsables."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/3108/mexico/cfe-restablece-al-100-luz-en-cuatro-estados-tras-vandalismo/",
+          "publishedAt": "2026-09-01T02:51:36.000Z",
+          "date": "2026-08-31",
+          "title": "CFE Restores Full Power in Four States After Vandalism",
+          "summary": "Comisión Federal de Electricidad restored power to four states after vandals damaged two 400 kV transmission lines. The utility energized both lines and planned to investigate who caused the damage."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "aristeguinoticias.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
     },
     {
       "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
@@ -4076,606 +4674,6 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "mexicobusiness.news"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-sheinbaum-presenta-iniciativa-para-eliminar-doble-na-2026-08-27",
-      "date": "2026-08-27",
-      "section": "politics",
-      "title": "Sheinbaum proposes constitutional reform to bar dual citizens from presidency and governorships",
-      "why": "Mexico's president introduced a draft constitutional reform requiring anyone holding another citizenship to renounce it before serving as president or governor and blocking dual citizenship holders during their term.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/2708/mexico/sheinbaum-presenta-iniciativa-para-eliminar-doble-nacionalidad-de-presidentes-y-gobernadores/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-27T14:07:18.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Sheinbaum presenta iniciativa para eliminar doble nacionalidad de presidentes y gobernadores",
-        "dek": "La reforma plantea que quienes ya posean otra ciudadanía acrediten su renuncia y fija restricciones durante el ejercicio del cargo."
-      },
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/2708/mexico/sheinbaum-presenta-iniciativa-para-eliminar-doble-nacionalidad-de-presidentes-y-gobernadores/",
-          "publishedAt": "2026-08-27T14:07:18.000Z",
-          "date": "2026-08-27",
-          "title": "Sheinbaum proposes constitutional reform to bar dual citizens from presidency and governorships",
-          "summary": "Mexico's president introduced a draft constitutional reform requiring anyone holding another citizenship to renounce it before serving as president or governor and blocking dual citizenship holders during their term."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "aristeguinoticias.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-banxico-y-cnbv-suavizan-tope-a-cuotas-de-bancos-por--2026-08-27",
-      "date": "2026-08-27",
-      "section": "money",
-      "title": "Banxico and CNBV propose smaller reduction to card payment fees",
-      "why": "Banxico and the CNBV drafted a new proposal that reduces the fee cap for card payments, with credit capped at 1.3 percent, though the reduction is smaller than an earlier suggestion.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-27T15:00:34.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Banxico y CNBV suavizan tope a cuotas de bancos por pagos con tarjeta; crédito queda en 1.3%",
-        "dek": "El nuevo anteproyecto elaborado por Banxico y la CNBV implica una reducción, aunque menor a la que se sugería en un principio. La publicación Banxico y CNBV suavizan tope a cuotas de bancos por pagos con tarjeta; crédito queda en 1.3% apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/banxico-y-cnbv-suavizan-recorte-a-cuotas-de-bancos-por-pagos-con-tarjeta-tope-de-credito-queda-en-1-3/",
-          "publishedAt": "2026-08-27T15:00:34.000Z",
-          "date": "2026-08-27",
-          "title": "Banxico and CNBV propose smaller reduction to card payment fees",
-          "summary": "Banxico and the CNBV drafted a new proposal that reduces the fee cap for card payments, with credit capped at 1.3 percent, though the reduction is smaller than an earlier suggestion."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-mexican-ranchers-prepare-to-resume-livestock-sales-t-2026-08-24",
-      "date": "2026-08-26",
-      "section": "us-mexico",
-      "title": "United States to resume imports of Mexican cattle",
-      "why": "The U.S. Secretary of Agriculture approved the reopening of cattle imports from Mexico on a phased basis, ending restrictions that had blocked the trade.",
-      "company": "",
-      "source": "MEXICONOW",
-      "url": "https://mexico-now.com/the-u-s-will-resume-imports-of-mexican-cattle/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-26T15:10:16.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "The United States will resume imports of Mexican cattle.",
-        "dek": "The U.S. Secretary of Agriculture has decided to resume imports of Mexican cattle, paving the way for the gradual reopening..."
-      },
-      "coverage": [
-        {
-          "source": "MEXICONOW",
-          "url": "https://mexico-now.com/the-u-s-will-resume-imports-of-mexican-cattle/",
-          "publishedAt": "2026-08-26T15:10:16.000Z",
-          "date": "2026-08-26",
-          "title": "United States to resume imports of Mexican cattle",
-          "summary": "The U.S. Secretary of Agriculture approved the reopening of cattle imports from Mexico on a phased basis, ending restrictions that had blocked the trade."
-        },
-        {
-          "source": "Border Report",
-          "url": "https://borderreport.com/news/trade/mexican-ranchers-prepare-to-resume-livestock-sales-to-us-under-tight-controls-over-screwworm-risk/",
-          "publishedAt": "2026-08-24T20:43:33.000Z",
-          "date": "2026-08-24",
-          "title": "US resumes livestock imports from Mexico under screwworm controls beginning Monday at Douglas crossing",
-          "summary": "The US is set to resume Mexican livestock imports starting Monday at the Douglas, Arizona border crossing following completion of controls over screwworm risk. The resumption marks a reopening of a bilateral trade channel after a restriction."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexico-now.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-cheap-drones-are-a-costly-problem-for-governments-in-2026-08-26",
-      "date": "2026-08-26",
-      "section": "security",
-      "title": "Mexico and United States sign declaration on counter-drone cooperation",
-      "why": "Mexico and the United States signed a non-binding declaration of intent deepening security cooperation around counter-drone efforts, addressing the use of low-cost drones by criminal organizations across Latin America.",
-      "company": "",
-      "source": "InSight Crime — Mexico",
-      "url": "https://insightcrime.org/news/cheap-drones-are-a-costly-problem-for-governments-in-latin-america/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-26T18:53:24.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Cheap Drones Are A Costly Problem For Governments in Latin America",
-        "dek": "Cheap Drones Are A Costly Problem For Governments in Latin America Mexico and the United States recently signed a non-binding “declaration of intent” deepening security cooperation around counter-drone technology, as governments across Latin America race to adapt to how criminal organizations are transforming the inexp"
-      },
-      "coverage": [
-        {
-          "source": "InSight Crime — Mexico",
-          "url": "https://insightcrime.org/news/cheap-drones-are-a-costly-problem-for-governments-in-latin-america/",
-          "publishedAt": "2026-08-26T18:53:24.000Z",
-          "date": "2026-08-26",
-          "title": "Mexico and United States sign declaration on counter-drone cooperation",
-          "summary": "Mexico and the United States signed a non-binding declaration of intent deepening security cooperation around counter-drone efforts, addressing the use of low-cost drones by criminal organizations across Latin America."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "insightcrime.org"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-pemex-credit-risk-declines-238bps-shcp-2026-08-26",
-      "date": "2026-08-26",
-      "section": "money",
-      "title": "Pemex five-year credit risk falls 238 basis points, Mexico Finance Ministry reports",
-      "why": "Mexico's state oil company saw its five-year Credit Default Swap spread narrow by 238 basis points, according to the Ministry of Finance. The decline reflects reduced gross liabilities and recent credit operations, moving directly on borrowing costs and foreign investor perception of sovereign and state-enterprise risk.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/oilandgas/news/pemex-credit-risk-declines-238bps-shcp",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-26T22:38:34.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "PEMEX Credit Risk Declines 238bps: SHCP",
-        "dek": "The Ministry of Finance reported a significant decline in five-year Credit Default Swap (CDS) benchmarks for both Mexico’s sovereign debt and Pemex, driven by reduced gross liabilities and recent credit rating upgrades. This reduction lowers borrowing costs and enhances capital market access for state entities while bo"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/oilandgas/news/pemex-credit-risk-declines-238bps-shcp",
-          "publishedAt": "2026-08-26T22:38:34.000Z",
-          "date": "2026-08-26",
-          "title": "Pemex five-year credit risk falls 238 basis points, Mexico Finance Ministry reports",
-          "summary": "Mexico's state oil company saw its five-year Credit Default Swap spread narrow by 238 basis points, according to the Ministry of Finance. The decline reflects reduced gross liabilities and recent credit operations, moving directly on borrowing costs and foreign investor perception of sovereign and state-enterprise risk."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexicobusiness.news"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-honda-condiciona-nueva-planta-automotriz-en-am-rica--2026-08-25",
-      "date": "2026-08-25",
-      "section": "economy",
-      "title": "Honda ties new North American auto plant to extension of US-Mexico-Canada trade agreement",
-      "why": "Honda has made a new assembly plant slated to begin operations in 2030 contingent on an extension of the USMCA, signaling major manufacturers' direct link between trade agreement continuity and investment decisions in North America.",
-      "company": "Honda",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/honda-condiciona-nueva-planta-automotriz-en-america-del-norte-a-extension-del-t-mec/",
-      "importance": 9,
-      "kind": "event",
-      "publishedAt": "2026-08-25T23:24:58.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Honda condiciona nueva planta automotriz en América del Norte a extensión del T-MEC",
-        "dek": "Honda tenía planeando abrir una nueva fábrica para aumentar su capacidad de ensamblaje, la cual iba a iniciar operaciones en el 2030. La publicación Honda condiciona nueva planta automotriz en América del Norte a extensión del T-MEC apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/honda-condiciona-nueva-planta-automotriz-en-america-del-norte-a-extension-del-t-mec/",
-          "publishedAt": "2026-08-25T23:24:58.000Z",
-          "date": "2026-08-25",
-          "title": "Honda ties new North American auto plant to extension of US-Mexico-Canada trade agreement",
-          "summary": "Honda has made a new assembly plant slated to begin operations in 2030 contingent on an extension of the USMCA, signaling major manufacturers' direct link between trade agreement continuity and investment decisions in North America."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 9,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-canada-announces-retaliatory-tariffs-of-up-to-50-aga-2026-08-25",
-      "date": "2026-08-25",
-      "section": "us-mexico",
-      "title": "Canada announces retaliatory tariffs of 15 to 50 percent against US goods",
-      "why": "Canada announced retaliatory tariffs ranging from 15 to 50 percent on US goods in response to Washington's trade escalation, contrasting with Mexico's continued negotiation strategy in the trade dispute.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/trade-and-investment/news/canada-announces-retaliatory-tariffs-50-against-us",
-      "importance": 9,
-      "kind": "event",
-      "publishedAt": "2026-08-25T16:31:00.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Canada Announces Retaliatory Tariffs of Up to 50% Against the US",
-        "dek": "Canada's decision to impose retaliatory tariffs of 15% to 50% on US goods marks a sharp escalation in its trade dispute with Washington, contrasting directly with Mexico's continued negotiation ahead of a fourth USMCA review round in September. This matters for Mexico because trade data already shows Washington treatin"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/trade-and-investment/news/canada-announces-retaliatory-tariffs-50-against-us",
-          "publishedAt": "2026-08-25T16:31:00.000Z",
-          "date": "2026-08-25",
-          "title": "Canada announces retaliatory tariffs of 15 to 50 percent against US goods",
-          "summary": "Canada announced retaliatory tariffs ranging from 15 to 50 percent on US goods in response to Washington's trade escalation, contrasting with Mexico's continued negotiation strategy in the trade dispute."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 9,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexicobusiness.news"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-gobierno-de-m-xico-se-endeuda-en-el-extranjero-como--2026-08-25",
-      "date": "2026-08-25",
-      "section": "money",
-      "title": "Mexico's international debt issuances reach record 20.531 billion dollars",
-      "why": "Mexican government international debt issuances hit an all-time high of 20.531 billion dollars. Over the past five years, external debt growth in capital markets has expanded at an average rate of 52.57 percent annually.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/gobierno-de-mexico-se-endeuda-en-el-extranjero-como-nunca-emisiones-internacionales-tocan-record-de-20531-mdd/",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-25T22:42:36.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Gobierno de México se endeuda en el extranjero como nunca: emisiones internacionales tocan récord de 20,531 mdd",
-        "dek": "En el último lustro, la tasa de crecimiento promedio de la deuda externa de México en los mercados de capitales se expandió a 52.57% anual. La publicación Gobierno de México se endeuda en el extranjero como nunca: emisiones internacionales tocan récord de 20,531 mdd apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/gobierno-de-mexico-se-endeuda-en-el-extranjero-como-nunca-emisiones-internacionales-tocan-record-de-20531-mdd/",
-          "publishedAt": "2026-08-25T22:42:36.000Z",
-          "date": "2026-08-25",
-          "title": "Mexico's international debt issuances reach record 20.531 billion dollars",
-          "summary": "Mexican government international debt issuances hit an all-time high of 20.531 billion dollars. Over the past five years, external debt growth in capital markets has expanded at an average rate of 52.57 percent annually."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 1,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
             }
           }
         },
