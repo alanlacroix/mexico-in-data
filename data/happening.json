@@ -6,28 +6,28 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-09-01T15:00:47.953Z",
+    "generatedAt": "2026-09-01T18:39:53.058Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-09-01",
       "candidateCount": 24,
-      "candidateSig": "eaf11389d5249e55bf9c16052e374315159776775718fd158823835a38e0c691",
-      "freshCandidateCount": 14,
+      "candidateSig": "d252310c4208d46bb87a2073aee4f5aac9333da0f19b2a839991e37bc1c93027",
+      "freshCandidateCount": 24,
       "assessedCount": 24,
-      "selectedCount": 8,
-      "freshSelectedCount": 2,
-      "keptCount": 8,
-      "freshKeptCount": 2,
+      "selectedCount": 7,
+      "freshSelectedCount": 7,
+      "keptCount": 7,
+      "freshKeptCount": 7,
       "rejectedCount": 0,
       "freshRejectedCount": 0,
       "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 14,
-      "unassessedFreshCandidateCount": 0,
-      "currentDayResolved": true,
+      "eligibleFreshCandidateCount": 34,
+      "unassessedFreshCandidateCount": 10,
+      "currentDayResolved": false,
       "mode": "model",
       "complete": true,
-      "reason": ""
+      "reason": "the current-day candidate ledger was not fully resolved"
     },
     "analysisTarget": {
       "policy": "every-selected-story-evidence-locked-v7",
@@ -332,6 +332,336 @@
       "imgTries": 2
     },
     {
+      "id": "n-fdi-capital-grows-cautious-mexico-awaits-clarity-on--2026-09-01",
+      "date": "2026-09-01",
+      "section": "economy",
+      "title": "Mexico's FDI Shifts to Reinvested Earnings",
+      "why": "Foreign direct investment in Mexico reached record nominal levels in early 2026, but nearly all inflows came from reinvested earnings rather than new capital. Fresh investment declined 13% year-over-year as manufacturers awaited clarity on the USMCA's shift to annual reviews.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/trade-and-investment/news/fdi-capital-grows-cautious-mexico-awaits-clarity-usmca",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-09-01T18:21:11.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "FDI Capital Grows Cautious; Mexico Awaits Clarity on USMCA",
+        "dek": "FDI in Mexico reached record nominal levels in early 2026, but nearly all inflows came from reinvested earnings rather than new capital, with fresh investment declining 13% year-over-year amid uncertainty over the USMCA's shift to annual reviews. Manufacturers in automotive, apparel, and industrial parts are actively e"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/trade-and-investment/news/fdi-capital-grows-cautious-mexico-awaits-clarity-usmca",
+          "publishedAt": "2026-09-01T18:21:11.000Z",
+          "date": "2026-09-01",
+          "title": "Mexico's FDI Shifts to Reinvested Earnings",
+          "summary": "Foreign direct investment in Mexico reached record nominal levels in early 2026, but nearly all inflows came from reinvested earnings rather than new capital. Fresh investment declined 13% year-over-year as manufacturers awaited clarity on the USMCA's shift to annual reviews."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexicobusiness.news"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-remesas-enviadas-a-m-xico-se-sacuden-el-polvo-crecen-2026-09-01",
+      "date": "2026-09-01",
+      "section": "economy",
+      "title": "Remittances to Mexico grow 3% in July, extending six-month upward streak",
+      "why": "Remittances to Mexico recorded a new advance in July 2026, extending gains across six months. The inflows represent a key external source of household income and foreign exchange.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/09/01/remesas-enviadas-a-mexico-se-sacuden-el-polvo-crecen-3-en-julio-y-ligan-seis-meses-al-alza/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-09-01T17:23:13.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Remesas enviadas a México ‘se sacuden el polvo’: Crecen 3% en julio y ligan seis meses al alza",
+        "dek": "Las remesas enviadas a México registraron un nuevo avance durante julio."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/09/01/remesas-enviadas-a-mexico-se-sacuden-el-polvo-crecen-3-en-julio-y-ligan-seis-meses-al-alza/",
+          "publishedAt": "2026-09-01T17:23:13.000Z",
+          "date": "2026-09-01",
+          "title": "Remittances to Mexico grow 3% in July, extending six-month upward streak",
+          "summary": "Remittances to Mexico recorded a new advance in July 2026, extending gains across six months. The inflows represent a key external source of household income and foreign exchange."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elfinanciero.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-en-vivo-segundo-informe-de-gobierno-de-claudia-shein-2026-09-01",
+      "date": "2026-09-01",
+      "section": "politics",
+      "title": "Claudia Sheinbaum's Second Government Report",
+      "why": "Claudia Sheinbaum delivered her Second Government Report on September 1 from Palacio Nacional, presenting announcements and results from her administration.",
+      "company": "",
+      "source": "Aristegui Noticias",
+      "url": "https://aristeguinoticias.com/0109/mexico/en-vivo-segundo-informe-de-gobierno-de-claudia-sheinbaum/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-09-01T17:08:44.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "EN VIVO | Segundo Informe de Gobierno de Claudia Sheinbaum",
+        "dek": "Claudia Sheinbaum presenta este 1 de septiembre su Segundo Informe de Gobierno desde Palacio Nacional. Sigue EN VIVO los anuncios y resultados de su administración."
+      },
+      "coverage": [
+        {
+          "source": "Aristegui Noticias",
+          "url": "https://aristeguinoticias.com/0109/mexico/en-vivo-segundo-informe-de-gobierno-de-claudia-sheinbaum/",
+          "publishedAt": "2026-09-01T17:08:44.000Z",
+          "date": "2026-09-01",
+          "title": "Claudia Sheinbaum's Second Government Report",
+          "summary": "Claudia Sheinbaum delivered her Second Government Report on September 1 from Palacio Nacional, presenting announcements and results from her administration."
+        }
+      ],
+      "scheduledEventId": "presidential-informe-2026-09-01",
+      "scheduledImportanceFloor": 7,
+      "requiredForBrief": true,
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted",
+            "scheduledFloor": {
+              "previous": 2,
+              "score": 2
+            }
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "aristeguinoticias.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model",
+        "scheduledOutcome": {
+          "applied": true,
+          "id": "presidential-informe-2026-09-01",
+          "kind": "release",
+          "scheduledFor": "2026-09-01",
+          "outcomeStatus": null,
+          "isNewOutcome": true,
+          "changed": false,
+          "evidence": {
+            "source": "Aristegui Noticias",
+            "url": "https://aristeguinoticias.com/0109/mexico/en-vivo-segundo-informe-de-gobierno-de-claudia-sheinbaum/",
+            "publishedAt": "2026-09-01T17:08:44.000Z"
+          },
+          "componentFloors": {
+            "durability": {
+              "previous": 2,
+              "score": 2,
+              "source": "scheduled-outcome-evidence"
+            }
+          },
+          "importanceFloor": {
+            "requested": 7,
+            "before": 6,
+            "after": 7,
+            "applied": true
+          }
+        }
+      },
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 0,
+        "durability": 2,
+        "officialness": 1
+      }
+    },
+    {
+      "id": "n-mexico-s-exports-to-canada-surge-20-2-amid-us-trade--2026-09-01",
+      "date": "2026-09-01",
+      "section": "economy",
+      "title": "Mexico's exports to Canada surge 20.2% in first half of 2026",
+      "why": "Mexican merchandise exports to Canada reached US$12.258 billion in the first half of 2026, a 20.2% increase, driven by automotive demand as US-Canada tariffs escalate. The shift reflects trade diversion under USMCA tensions.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/automotive/news/mexicos-exports-canada-surge-202-amid-us-trade-feud",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-09-01T16:56:47.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mexico’s Exports to Canada Surge 20.2% Amid US Trade Feud",
+        "dek": "Mexican merchandise exports to Canada surged 20.2% to US$12.258 billion in the first half of 2026, driven by strong automotive growth as escalating US-Canada tariffs prompt Canadian buyers to seek competitive alternative suppliers."
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/automotive/news/mexicos-exports-canada-surge-202-amid-us-trade-feud",
+          "publishedAt": "2026-09-01T16:56:47.000Z",
+          "date": "2026-09-01",
+          "title": "Mexico's exports to Canada surge 20.2% in first half of 2026",
+          "summary": "Mexican merchandise exports to Canada reached US$12.258 billion in the first half of 2026, a 20.2% increase, driven by automotive demand as US-Canada tariffs escalate. The shift reflects trade diversion under USMCA tensions."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexicobusiness.news"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-el-cerco-al-silicio-vulnerabilidad-y-blindaje-del-ha-2026-09-01",
       "date": "2026-09-01",
       "section": "economy",
@@ -472,6 +802,228 @@
               "score": 2,
               "source": "authoritative-domain",
               "hostname": "diariooficial.gob.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-mining-sector-pushes-for-a-critical-minerals-chapter-2026-09-01",
+      "date": "2026-09-01",
+      "section": "economy",
+      "title": "Mexico's mining industry proposes critical minerals chapter for USMCA",
+      "why": "Mexican mining associations AIMMGM and CAMIMEX formally proposed adding a critical minerals chapter to USMCA, seeking a single regulatory window and exploration incentives. The move aligns with US strategic interest in securing supply chains.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/mining/news/mining-sector-pushes-critical-minerals-chapter-usmca",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-09-01T18:18:36.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Mining Sector Pushes for a Critical Minerals Chapter in USMCA",
+        "dek": "Mexico's mining industry, through AIMMGM and CAMIMEX, has formally proposed a critical minerals plan for inclusion in the USMCA framework, seeking a one-stop regulatory window, exploration incentives, and faster permitting to unlock over US$43 billion in potential investment. The push matters as Washington's critical m"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/mining/news/mining-sector-pushes-critical-minerals-chapter-usmca",
+          "publishedAt": "2026-09-01T18:18:36.000Z",
+          "date": "2026-09-01",
+          "title": "Mexico's mining industry proposes critical minerals chapter for USMCA",
+          "summary": "Mexican mining associations AIMMGM and CAMIMEX formally proposed adding a critical minerals chapter to USMCA, seeking a single regulatory window and exploration incentives. The move aligns with US strategic interest in securing supply chains."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 2,
+        "modelImpact": 0,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexicobusiness.news"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-banxico-prepara-relanzamiento-de-pagos-digitales-y-n-2026-09-01",
+      "date": "2026-09-01",
+      "section": "money",
+      "title": "Mexico's central bank relaunches digital payments and introduces new account type",
+      "why": "Banxico is relaunching digital payments infrastructure and introducing the N2 Bis account to expand financial inclusion and traceability of transactions. The initiative broadens the banking system's reach.",
+      "company": "",
+      "source": "DPL News",
+      "url": "https://dplnews.com/banxico-prepara-relanzamiento-pagos-digitales-n2-bis/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-09-01T16:49:34.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Banxico prepara relanzamiento de pagos digitales y nueva cuenta N2 Bis en México",
+        "dek": "Banxico prepara un relanzamiento de los pagos digitales, mientras la cuenta N2 Bis busca ampliar la inclusión financiera y la trazabilidad de las operaciones en México."
+      },
+      "coverage": [
+        {
+          "source": "DPL News",
+          "url": "https://dplnews.com/banxico-prepara-relanzamiento-pagos-digitales-n2-bis/",
+          "publishedAt": "2026-09-01T16:49:34.000Z",
+          "date": "2026-09-01",
+          "title": "Mexico's central bank relaunches digital payments and introduces new account type",
+          "summary": "Banxico is relaunching digital payments infrastructure and introducing the N2 Bis account to expand financial inclusion and traceability of transactions. The initiative broadens the banking system's reach."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "dplnews.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-cnbv-abre-la-puerta-a-que-bancos-env-en-c-digos-de-s-2026-09-01",
+      "date": "2026-09-01",
+      "section": "money",
+      "title": "Mexico's banking regulator expands authentication channels for deposit accounts",
+      "why": "The CNBV broadened approved methods for banks to deliver security codes, now permitting SMS delivery alongside other channels. The move simplifies account access and supports financial inclusion.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/cnbv-abre-la-puerta-a-que-bancos-envien-codigos-de-seguridad-por-sms-y-simplifica-consultas-de-saldo/",
+      "importance": 4,
+      "kind": "event",
+      "publishedAt": "2026-09-01T16:37:45.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "CNBV abre la puerta a que bancos envíen códigos de seguridad por SMS y simplifica consultas de saldo",
+        "dek": "La CNBV amplió los medios de contacto para que los usuarios puedan recibir el código de autenticación de su institución crediticia. La publicación CNBV abre la puerta a que bancos envíen códigos de seguridad por SMS y simplifica consultas de saldo apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/cnbv-abre-la-puerta-a-que-bancos-envien-codigos-de-seguridad-por-sms-y-simplifica-consultas-de-saldo/",
+          "publishedAt": "2026-09-01T16:37:45.000Z",
+          "date": "2026-09-01",
+          "title": "Mexico's banking regulator expands authentication channels for deposit accounts",
+          "summary": "The CNBV broadened approved methods for banks to deliver security codes, now permitting SMS delivery alongside other channels. The move simplifies account access and supports financial inclusion."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 4,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
             }
           }
         },
@@ -4152,534 +4704,6 @@
       },
       "image": "https://t21.com.mx/wp-content/uploads/2026/08/BCCMJUL2.jpeg",
       "imgTries": 1
-    },
-    {
-      "id": "n-banxico-muestra-optimismo-eleva-tasa-de-crecimiento--2026-08-26",
-      "date": "2026-08-27",
-      "section": "money",
-      "title": "Mexico's central bank raises 2026 growth forecast to 1.5 percent",
-      "why": "Banxico raised its economic growth projection for Mexico to 1.5 percent for the year. Deputy Governor Jonathan Heath flagged the evolution of services inflation as his main concern.",
-      "company": "",
-      "source": "El Financiero — Economía",
-      "url": "https://elfinanciero.com.mx/economia/2026/08/27/banxico-eleva-su-pronostico-de-crecimiento-economico-en-mexico-a-15-por-ciento-para-este-ano/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-27T09:14:16.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Banxico eleva su pronóstico de crecimiento económico en México a 1.5 por ciento para este año",
-        "dek": "Señala Jonathan Heath que su mayor preocupación es la evolución de la inflación en servicios en México."
-      },
-      "coverage": [
-        {
-          "source": "El Financiero — Economía",
-          "url": "https://elfinanciero.com.mx/economia/2026/08/27/banxico-eleva-su-pronostico-de-crecimiento-economico-en-mexico-a-15-por-ciento-para-este-ano/",
-          "publishedAt": "2026-08-27T09:14:16.000Z",
-          "date": "2026-08-27",
-          "title": "Mexico's central bank raises 2026 growth forecast to 1.5 percent",
-          "summary": "Banxico raised its economic growth projection for Mexico to 1.5 percent for the year. Deputy Governor Jonathan Heath flagged the evolution of services inflation as his main concern."
-        },
-        {
-          "source": "T21",
-          "url": "https://t21.com.mx/banxico-muestra-optimismo-eleva-tasa-de-crecimiento-para-economia-mexicana-en-2026/",
-          "publishedAt": "2026-08-26T22:07:05.000Z",
-          "date": "2026-08-26",
-          "title": "Mexico's central bank raises 2026 growth forecast to 1.5 percent",
-          "summary": "Banxico revised its full-year GDP estimate upward, citing stronger economic activity. The forecast now stands at 1.5 percent for 2026."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elfinanciero.com.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "image": "https://www.elfinanciero.com.mx/resizer/v2/2XXYKBEU7BDRLNIU3JFDPSEDOQ.jpg?smart=true&auth=44fce9a09cc1bf96c1827c17dea64ac58ffedd372cd62750385c1db11af3a129&width=1200&height=630",
-      "imgTries": 1
-    },
-    {
-      "id": "n-deer-park-reporta-ganancias-por-13-900-mdp-mientras--2026-08-27",
-      "date": "2026-08-27",
-      "section": "money",
-      "title": "Deer Park posts first-half profit as Pemex absorbs fuel support costs",
-      "why": "Deer Park recorded gains during the first half of 2026 by selling gasoline and diesel at elevated prices. Pemex faced financial strain from providing subsidies to fuel wholesalers during the same period.",
-      "company": "Deer Park",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/deer-park-reporta-ganancias-por-13900-mdp-mientras-pemex-registra-perdidas/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-27T08:00:15.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Deer Park reporta ganancias por 13,900 mdp mientras Pemex registra pérdidas",
-        "dek": "Mientras que Deer Park aprovechó los altos precios de la gasolina y el diésel al cierre del primer semestre de 2026, para Pemex significaron una carga financiera al absorber los apoyos dados a los mayoristas. La publicación Deer Park reporta ganancias por 13,900 mdp mientras Pemex registra pérdidas apareció primero en"
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/deer-park-reporta-ganancias-por-13900-mdp-mientras-pemex-registra-perdidas/",
-          "publishedAt": "2026-08-27T08:00:15.000Z",
-          "date": "2026-08-27",
-          "title": "Deer Park posts first-half profit as Pemex absorbs fuel support costs",
-          "summary": "Deer Park recorded gains during the first half of 2026 by selling gasoline and diesel at elevated prices. Pemex faced financial strain from providing subsidies to fuel wholesalers during the same period."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-adeudos-de-pemex-ahogan-al-transporte-mar-timo-la-in-2026-08-27",
-      "date": "2026-08-27",
-      "section": "money",
-      "title": "Pemex payment arrears strain maritime transport operators",
-      "why": "Members of Mexico's maritime transport chamber face unpaid bills from Pemex that complicate fleet modernization investment, a direct constraint on energy sector logistics.",
-      "company": "Pemex",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/adeudos-de-pemex-ahogan-al-transporte-maritimo-la-industria-se-ve-presionada-para-renovar-su-flota/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-27T19:10:21.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Adeudos de Pemex ‘ahogan’ al transporte marítimo: la industria se ve presionada para renovar su flota",
-        "dek": "Integrantes de la Cameintram están en la lista de proveedores con pagos pendientes por parte de Pemex, lo que dificulta sus inversiones. La publicación Adeudos de Pemex ‘ahogan’ al transporte marítimo: la industria se ve presionada para renovar su flota apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/adeudos-de-pemex-ahogan-al-transporte-maritimo-la-industria-se-ve-presionada-para-renovar-su-flota/",
-          "publishedAt": "2026-08-27T19:10:21.000Z",
-          "date": "2026-08-27",
-          "title": "Pemex payment arrears strain maritime transport operators",
-          "summary": "Members of Mexico's maritime transport chamber face unpaid bills from Pemex that complicate fleet modernization investment, a direct constraint on energy sector logistics."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-far-as-ten-a-una-red-para-distribuir-combustible-de--2026-08-27",
-      "date": "2026-08-27",
-      "section": "security",
-      "title": "President Sheinbaum says jailed official Farías ran smuggled fuel distribution network",
-      "why": "President Sheinbaum said the investigation into Farías involves former Navy commanders, business figures, and individuals in the United States, some with extradition requests.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/2708/mexico/farias-tenia-una-red-para-distribuir-combustible-de-contrabando-sheinbaum/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-27T15:58:39.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Farías ‘tenía una red para distribuir combustible de contrabando’: Sheinbaum",
-        "dek": "La presidenta dijo que la investigación involucra a exmandos de Marina, empresarios y personas en Estados Unidos, algunas con solicitud de extradición."
-      },
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/2708/mexico/farias-tenia-una-red-para-distribuir-combustible-de-contrabando-sheinbaum/",
-          "publishedAt": "2026-08-27T15:58:39.000Z",
-          "date": "2026-08-27",
-          "title": "President Sheinbaum says jailed official Farías ran smuggled fuel distribution network",
-          "summary": "President Sheinbaum said the investigation into Farías involves former Navy commanders, business figures, and individuals in the United States, some with extradition requests."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "aristeguinoticias.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-amacarga-plantea-corredores-digitales-para-blindar-l-2026-08-27",
-      "date": "2026-08-27",
-      "section": "economy",
-      "title": "Mexican freight forwarders call for digital corridors in North America",
-      "why": "Amacarga proposed that Mexico, the United States, and Canada develop interoperable digital corridors to protect the integrity of logistics operations across the region.",
-      "company": "",
-      "source": "T21",
-      "url": "https://t21.com.mx/amacarga-plantea-corredores-digitales-para-blindar-la-logistica-de-norteamerica/",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-27T13:05:55.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Amacarga plantea corredores digitales para blindar la logística de Norteamérica",
-        "dek": "La Asociación Mexicana de Agentes de Carga (Amacarga) consideró que México, Estados Unidos y Canadá deben avanzar hacia corredores digitales interoperables para proteger la integridad de toda la operación logística. El organismo señaló que México no debe esperar a conocer las próximas exigencias derivadas de la revisió"
-      },
-      "coverage": [
-        {
-          "source": "T21",
-          "url": "https://t21.com.mx/amacarga-plantea-corredores-digitales-para-blindar-la-logistica-de-norteamerica/",
-          "publishedAt": "2026-08-27T13:05:55.000Z",
-          "date": "2026-08-27",
-          "title": "Mexican freight forwarders call for digital corridors in North America",
-          "summary": "Amacarga proposed that Mexico, the United States, and Canada develop interoperable digital corridors to protect the integrity of logistics operations across the region."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "t21.com.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-m-xico-crt-reactiva-m-s-de-3-6-millones-de-l-neas-ce-2026-08-27",
-      "date": "2026-08-27",
-      "section": "economy",
-      "title": "Mexico reactivates 3.6 million suspended prepaid phone lines",
-      "why": "Mexico's communications regulator reactivated 3.6 million prepaid lines between August 16 and 25 that had been suspended for failure to register under the national identification requirement.",
-      "company": "",
-      "source": "DPL News",
-      "url": "https://dplnews.com/mexico-crt-reactiva-mas-de-3-6-millones-de-lineas-celulares-suspendidas-con-terminacion-cero/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-27T18:22:39.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "México | CRT reactiva más de 3.6 millones de líneas celulares suspendidas con terminación cero",
-        "dek": "La Jornada Tres millones 627 mil 213 líneas de telefonía celular con terminación cero fueron reactivadas del 16 al 25 de agosto pasado, luego de que fueron suspendidas por no registrarse antes de la fecha límite, que fue el día 15 de este mes, informó hoy la Comisión Reguladora de Telecomunicaciones (CRT). El registro"
-      },
-      "coverage": [
-        {
-          "source": "DPL News",
-          "url": "https://dplnews.com/mexico-crt-reactiva-mas-de-3-6-millones-de-lineas-celulares-suspendidas-con-terminacion-cero/",
-          "publishedAt": "2026-08-27T18:22:39.000Z",
-          "date": "2026-08-27",
-          "title": "Mexico reactivates 3.6 million suspended prepaid phone lines",
-          "summary": "Mexico's communications regulator reactivated 3.6 million prepaid lines between August 16 and 25 that had been suspended for failure to register under the national identification requirement."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "dplnews.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-developers-seek-semarnat-permits-for-1-2gw-clean-ene-2026-08-27",
-      "date": "2026-08-27",
-      "section": "economy",
-      "title": "Private developers submit permits for 1.2 gigawatts of renewable energy to environment ministry",
-      "why": "Private renewable energy developers filed Environmental Impact Statements with Mexico's environment ministry for over 1.2 gigawatts of solar and wind capacity, signaling new utility-scale clean energy investment.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/energy/news/developers-seek-semarnat-permits-12gw-clean-energy",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-27T16:22:08.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Developers Seek SEMARNAT Permits for 1.2GW Clean Energy",
-        "dek": "Private renewable energy developers submitted Regional Environmental Impact Statements (MIA-R) to SEMARNAT for over 1.2GW of solar and wind proposals across Mexico, signaling a new wave of utility-scale permit applications undergoing federal review. A major trend across the submissions is the direct integration of Batt"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/energy/news/developers-seek-semarnat-permits-12gw-clean-energy",
-          "publishedAt": "2026-08-27T16:22:08.000Z",
-          "date": "2026-08-27",
-          "title": "Private developers submit permits for 1.2 gigawatts of renewable energy to environment ministry",
-          "summary": "Private renewable energy developers filed Environmental Impact Statements with Mexico's environment ministry for over 1.2 gigawatts of solar and wind capacity, signaling new utility-scale clean energy investment."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexicobusiness.news"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
     }
   ]
 }
