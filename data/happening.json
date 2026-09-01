@@ -2,50 +2,995 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-08-31",
+    "updated": "2026-09-01",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-08-31T23:56:46.554Z",
+    "generatedAt": "2026-09-01T13:32:28.853Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
-      "editorialDate": "2026-08-31",
+      "editorialDate": "2026-09-01",
       "candidateCount": 24,
-      "candidateSig": "c317a6d68cda5111c00c2cae60f230c935d761a721c2635a0815692fab809656",
-      "freshCandidateCount": 24,
+      "candidateSig": "cf61153323afe9be5e63c6c87bdbc2fb6b3052c6e5ad572634eedbfa6ac8fb32",
+      "freshCandidateCount": 11,
       "assessedCount": 24,
-      "selectedCount": 0,
-      "freshSelectedCount": 0,
-      "keptCount": 0,
-      "freshKeptCount": 0,
+      "selectedCount": 12,
+      "freshSelectedCount": 4,
+      "keptCount": 12,
+      "freshKeptCount": 4,
       "rejectedCount": 0,
       "freshRejectedCount": 0,
       "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 48,
-      "unassessedFreshCandidateCount": 24,
-      "currentDayResolved": false,
-      "mode": "deterministic-fallback",
+      "eligibleFreshCandidateCount": 11,
+      "unassessedFreshCandidateCount": 0,
+      "currentDayResolved": true,
+      "mode": "model",
       "complete": true,
-      "reason": "model request unavailable; conservative deterministic assessment used"
+      "reason": ""
     },
     "analysisTarget": {
       "policy": "every-selected-story-evidence-locked-v7",
       "ids": [
-        "n-vw-cuts-shift-at-puebla-plant-amid-regional-headwind-2026-08-31"
+        "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01",
+        "n-m-xico-va-por-mayor-escrutinio-a-inversi-n-extranjer-2026-09-01",
+        "n-pemex-exxon-valero-y-bp-tambi-n-pierden-con-los-prec-2026-09-01"
       ],
       "attempt": 1,
-      "added": 0,
+      "added": 1,
       "outcomes": [
         {
-          "id": "n-vw-cuts-shift-at-puebla-plant-amid-regional-headwind-2026-08-31",
+          "id": "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01",
           "ready": false,
-          "reason": "thin-evidence"
+          "reason": "field-rejected",
+          "fields": {
+            "view": [
+              "The mechanism 'substitution toward higher-cost suppliers or inventory drawdowns' is inferred but not stated in the cited evidence. The article and standing evidence confirm the 32.5% import drop and tariff impact on automotive and footwear sectors, but neither source explains whether the drop results from substitution, inventory drawdown, demand loss, or another cause. This mechanism is invented."
+            ]
+          }
+        },
+        {
+          "id": "n-m-xico-va-por-mayor-escrutinio-a-inversi-n-extranjer-2026-09-01",
+          "ready": true,
+          "reason": "ready",
+          "fields": {}
+        },
+        {
+          "id": "n-pemex-exxon-valero-y-bp-tambi-n-pierden-con-los-prec-2026-09-01",
+          "ready": false,
+          "reason": "thin-evidence",
+          "fields": {}
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01",
+      "date": "2026-09-01",
+      "section": "economy",
+      "title": "Mexico cuts imports from Taiwan, China and Brazil 32.5 percent",
+      "why": "Imports fell sharply in response to tariff impositions affecting automotive and footwear sectors across three major trading partners, reflecting the tariff regime's direct trade impact.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/09/01/mexico-reduce-compras-a-taiwan-china-y-brasil-importaciones-caen-325-por-ciento/",
+      "importance": 9,
+      "kind": "event",
+      "publishedAt": "2026-09-01T09:12:51.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México reduce compras a Taiwán, China y Brasil: Importaciones caen 32.5 por ciento",
+        "dek": "La imposición de tarifas impactó sectores como automotriz y calzado en Taiwán, China y Brasil."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/09/01/mexico-reduce-compras-a-taiwan-china-y-brasil-importaciones-caen-325-por-ciento/",
+          "publishedAt": "2026-09-01T09:12:51.000Z",
+          "date": "2026-09-01",
+          "title": "Mexico cuts imports from Taiwan, China and Brazil 32.5 percent",
+          "summary": "Imports fell sharply in response to tariff impositions affecting automotive and footwear sectors across three major trading partners, reflecting the tariff regime's direct trade impact."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 9,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elfinanciero.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://www.elfinanciero.com.mx/resizer/v2/YJNNADMNYBFJDDG46AOAV4UMH4.jpeg?smart=true&auth=50cd1e6fb8f539a36a17be8fdc1ac4bcca5c95d70443e38e2ae061229f18ebf5&width=1200&height=630",
+      "imgTries": 1
+    },
+    {
+      "id": "n-m-xico-va-por-mayor-escrutinio-a-inversi-n-extranjer-2026-09-01",
+      "date": "2026-09-01",
+      "section": "us-mexico",
+      "title": "Mexico seeks heightened foreign investment scrutiny on national security grounds ahead of USMCA talks",
+      "why": "President Claudia Sheinbaum sent a Foreign Investment Law reform to the Senate before the fourth bilateral negotiation round of the US-Mexico-Canada trade agreement, aligning review procedures with US standards.",
+      "company": "",
+      "source": "Bloomberg Línea",
+      "url": "https://bloomberglinea.com/latinoamerica/mexico/mexico-va-por-mayor-escrutinio-a-inversion-extranjera-por-seguridad-nacional-en-linea-con-eeuu/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-09-01T12:15:45.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México va por mayor escrutinio a inversión extranjera por seguridad nacional en línea con EE.UU.",
+        "dek": "La presidenta Claudia Sheinbaum envió al Senado una reforma a la Ley de Inversión Extranjera previo a la cuarta ronda de negociación bilateral del T-MEC."
+      },
+      "coverage": [
+        {
+          "source": "Bloomberg Línea",
+          "url": "https://bloomberglinea.com/latinoamerica/mexico/mexico-va-por-mayor-escrutinio-a-inversion-extranjera-por-seguridad-nacional-en-linea-con-eeuu/",
+          "publishedAt": "2026-09-01T12:15:45.000Z",
+          "date": "2026-09-01",
+          "title": "Mexico seeks heightened foreign investment scrutiny on national security grounds ahead of USMCA talks",
+          "summary": "President Claudia Sheinbaum sent a Foreign Investment Law reform to the Senate before the fourth bilateral negotiation round of the US-Mexico-Canada trade agreement, aligning review procedures with US standards."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "bloomberglinea.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://www.bloomberglinea.com/resizer/v2/MDBL7ZSZNFBHZCPEEBMXJ6RWCQ.jpeg?auth=7e154eed56885deb4cb43d250c95fa8a18610d62c9e3f89ce1cdbd717ba07597&width=1200&height=630&quality=80&smart=true",
+      "imgTries": 1,
+      "background": "USMCA entered annual review in July 2026 after the US declined a 16-year extension. The three countries now review the agreement yearly and the treaty can run through 2036 unless a country withdraws, exposing new projects to uncertain future rules.",
+      "view": "Mexico is moving to align foreign investment screening with US and OECD standards before USMCA negotiations resume in Washington. The reform targets security-sensitive acquisitions and narrows regulatory distance with the US, reducing one source of friction in talks where automotive rules of origin and labor compliance are already contested.",
+      "prediction": "The Senate will vote on the reform proposal. If Mexico implements screening narrowly, foreign investment will flow as before, if applied broadly to block US or Chinese capacity moves, it would signal readiness to use security as a trade lever in USMCA renegotiation.",
+      "analysisV": 11,
+      "analysisRefs": {
+        "background": [
+          "standing:std-usmca-review",
+          "article"
+        ],
+        "view": [
+          "article",
+          "standing:std-usmca-review"
+        ],
+        "prediction": [
+          "article",
+          "standing:std-usmca-review"
+        ]
+      },
+      "analysisSources": [
+        {
+          "id": "standing:std-usmca-review",
+          "kind": "standing",
+          "source": "USTR",
+          "url": "https://ustr.gov/"
+        },
+        {
+          "id": "article",
+          "kind": "article",
+          "source": "Bloomberg Línea",
+          "url": "https://bloomberglinea.com/latinoamerica/mexico/mexico-va-por-mayor-escrutinio-a-inversion-extranjera-por-seguridad-nacional-en-linea-con-eeuu/"
+        }
+      ]
+    },
+    {
+      "id": "n-pemex-exxon-valero-y-bp-tambi-n-pierden-con-los-prec-2026-09-01",
+      "date": "2026-09-01",
+      "section": "money",
+      "title": "Price Caps Narrow Profit Margins for Fuel Importers",
+      "why": "Pemex, Exxon, Valero, and BP are among 13 companies with permits from Mexico's energy ministry to import fuel. Price caps on gasoline and diesel reduce their profit margins.",
+      "company": "Pemex",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/pemex-exxon-valero-y-bp-tambien-pierden-con-los-precios-tope-a-la-gasolina-y-el-diesel/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-09-01T08:00:50.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Pemex, Exxon, Valero y BP también pierden con los precios tope a la gasolina y el diésel",
+        "dek": "13 empresas cuentan con permisos de Sener para importar combustibles en México. Para ellas, el tope a la gasolina y el diésel representa un riesgo a sus márgenes de ganancia. La publicación Pemex, Exxon, Valero y BP también pierden con los precios tope a la gasolina y el diésel apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/pemex-exxon-valero-y-bp-tambien-pierden-con-los-precios-tope-a-la-gasolina-y-el-diesel/",
+          "publishedAt": "2026-09-01T08:00:50.000Z",
+          "date": "2026-09-01",
+          "title": "Price Caps Narrow Profit Margins for Fuel Importers",
+          "summary": "Pemex, Exxon, Valero, and BP are among 13 companies with permits from Mexico's energy ministry to import fuel. Price caps on gasoline and diesel reduce their profit margins."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://elceo.com/wp-content/uploads/2026/08/pemex_exxon_valero_bp_precio_gasolina_diesel-1.jpg",
+      "imgTries": 1
+    },
+    {
+      "id": "n-resoluci-n-que-modifica-las-disposiciones-de-car-cte-2026-09-01",
+      "date": "2026-09-01",
+      "section": "money",
+      "title": "Finance Ministry modifies general provisions for credit institutions",
+      "why": "Federal Official Gazette published a resolution modifying operational dispositions for banks, affecting credit system rules.",
+      "company": "",
+      "source": "Diario Oficial de la Federación",
+      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797560&fecha=01/09/2026",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-09-01T12:00:00.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Resolución que modifica las Disposiciones de carácter general aplicables a las instituciones de crédito.",
+        "dek": "DOF · PODER EJECUTIVO SECRETARIA DE HACIENDA Y CREDITO PUBLICO"
+      },
+      "coverage": [
+        {
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797560&fecha=01/09/2026",
+          "publishedAt": "2026-09-01T12:00:00.000Z",
+          "date": "2026-09-01",
+          "title": "Finance Ministry modifies general provisions for credit institutions",
+          "summary": "Federal Official Gazette published a resolution modifying operational dispositions for banks, affecting credit system rules."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 2,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 2,
+              "source": "authoritative-domain",
+              "hostname": "diariooficial.gob.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-chinese-imports-drops-currency-gains-may-be-erasing--2026-08-31",
+      "date": "2026-08-31",
+      "section": "economy",
+      "title": "Imports from China drop 28.4 percent January to May",
+      "why": "China's Economy Ministry reported a 28.4% year-over-year decline in imports to Mexico between January and May 2026, attributed to Mexico's tariff package covering 1,463 product lines.",
+      "company": "",
+      "source": "Mexico Business News",
+      "url": "https://mexicobusiness.news/trade-and-investment/news/chinese-imports-drops-currency-gains-may-be-erasing-gains",
+      "importance": 9,
+      "kind": "event",
+      "publishedAt": "2026-08-31T18:14:44.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Chinese Imports Drops, Currency Gains May Be Erasing the Gains",
+        "dek": "China's Economy Ministry reported a 28.4% year-over-year decline in imports from China between January and May 2026, attributing the drop to Mexico's tariff package covering 1,463 product lines across 17 sectors, with duties reaching 50% on goods from countries lacking a free trade agreement with Mexico. The measure, p"
+      },
+      "coverage": [
+        {
+          "source": "Mexico Business News",
+          "url": "https://mexicobusiness.news/trade-and-investment/news/chinese-imports-drops-currency-gains-may-be-erasing-gains",
+          "publishedAt": "2026-08-31T18:14:44.000Z",
+          "date": "2026-08-31",
+          "title": "Imports from China drop 28.4 percent January to May",
+          "summary": "China's Economy Ministry reported a 28.4% year-over-year decline in imports to Mexico between January and May 2026, attributed to Mexico's tariff package covering 1,463 product lines."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 9,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexicobusiness.news"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-uaw-amenaza-con-frenar-el-t-mec-si-no-cambian-las-re-2026-08-31",
+      "date": "2026-08-31",
+      "section": "us-mexico",
+      "title": "UAW Proposes T-MEC Sanctions for Job Displacement",
+      "why": "The UAW submitted a proposal to the U.S. Trade Representative that would impose sanctions on companies moving jobs to other countries, targeting rules within the Mexico trade agreement.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/uaw-amenaza-con-frenar-el-t-mec-si-no-cambian-las-reglas-de-produccion-en-mexico/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-31T22:28:08.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "UAW amenaza con frenar el T-MEC si no cambian las reglas de producción en México",
+        "dek": "El UAW presentó ante la USTR una propuesta que contempla sanciones o castigos para las empresas que trasladen empleos hacia otros países. La publicación UAW amenaza con frenar el T-MEC si no cambian las reglas de producción en México apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/uaw-amenaza-con-frenar-el-t-mec-si-no-cambian-las-reglas-de-produccion-en-mexico/",
+          "publishedAt": "2026-08-31T22:28:08.000Z",
+          "date": "2026-08-31",
+          "title": "UAW Proposes T-MEC Sanctions for Job Displacement",
+          "summary": "The UAW submitted a proposal to the U.S. Trade Representative that would impose sanctions on companies moving jobs to other countries, targeting rules within the Mexico trade agreement."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-dame-m-s-gasolina-sheinbaum-mantendr-el-precio-de-lo-2026-08-31",
+      "date": "2026-08-31",
+      "section": "money",
+      "title": "Sheinbaum and fuel retailers agree to maintain price ceiling for six months",
+      "why": "On August 31, President Sheinbaum and gasoline retailers signed an accord fixing maximum prices for gasoline and diesel through the six-month commitment period.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/08/31/dame-mas-gasolina-sheinbaum-mantendra-el-precio-de-los-combustibles-por-seis-meses/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-09-01T05:59:00.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "‘Dame más gasolina’: Sheinbaum mantendrá el precio de los combustibles por seis meses",
+        "dek": "Este 31 de agosto, la presidenta Claudia Sheinbaum y empresarios gasolineros firmaron un acuerdo para mantener un precio máximo para la gasolina y el diésel."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/31/dame-mas-gasolina-sheinbaum-mantendra-el-precio-de-los-combustibles-por-seis-meses/",
+          "publishedAt": "2026-09-01T05:59:00.000Z",
+          "date": "2026-08-31",
+          "title": "Sheinbaum and fuel retailers agree to maintain price ceiling for six months",
+          "summary": "On August 31, President Sheinbaum and gasoline retailers signed an accord fixing maximum prices for gasoline and diesel through the six-month commitment period."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elfinanciero.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-sat-reporta-freno-en-la-recaudaci-n-de-impuestos-se--2026-08-31",
+      "date": "2026-08-31",
+      "section": "money",
+      "title": "Tax revenue growth stalls at 0 percent January to July",
+      "why": "Tax Authority reported that government income from taxes, which represent 70 of every 100 pesos in available resources, grew 0.0% in the first seven months of 2026.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/sat-reporta-freno-en-la-recaudacion-de-impuestos-se-estancan-0-de-enero-a-julio/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-31T22:37:08.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "SAT reporta freno en la recaudación de impuestos: se estancan 0% de enero a julio",
+        "dek": "Los ingresos tributarios del gobierno, que representan 70 de cada 100 pesos de los recursos disponibles, crecieron 0.0% de enero a julio. La publicación SAT reporta freno en la recaudación de impuestos: se estancan 0% de enero a julio apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/sat-reporta-freno-en-la-recaudacion-de-impuestos-se-estancan-0-de-enero-a-julio/",
+          "publishedAt": "2026-08-31T22:37:08.000Z",
+          "date": "2026-08-31",
+          "title": "Tax revenue growth stalls at 0 percent January to July",
+          "summary": "Tax Authority reported that government income from taxes, which represent 70 of every 100 pesos in available resources, grew 0.0% in the first seven months of 2026."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-di-sel-caro-presiona-a-pemex-al-gobierno-e-importado-2026-08-31",
+      "date": "2026-08-31",
+      "section": "economy",
+      "title": "Falling Diesel Output Lifts Import Pressure",
+      "why": "Pemex's diesel production declined through the first half of the year while fuel imports rose, except in June, pushing up prices for the company and the government.",
+      "company": "Pemex",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/diesel-caro-presiona-a-pemex-al-gobierno-e-importadores-mexico-tiene-uno-de-los-precios-mas-altos/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-31T08:00:09.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Diésel caro presiona a Pemex, al gobierno e importadores; México tiene uno de los precios más altos",
+        "dek": "La producción de diésel en Pemex ha ido a la baja a lo largo del primer semestre del año; mientras que la importación del combustible se comportó al alza, exceptuando a junio. La publicación Diésel caro presiona a Pemex, al gobierno e importadores; México tiene uno de los precios más altos apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/diesel-caro-presiona-a-pemex-al-gobierno-e-importadores-mexico-tiene-uno-de-los-precios-mas-altos/",
+          "publishedAt": "2026-08-31T08:00:09.000Z",
+          "date": "2026-08-31",
+          "title": "Falling Diesel Output Lifts Import Pressure",
+          "summary": "Pemex's diesel production declined through the first half of the year while fuel imports rose, except in June, pushing up prices for the company and the government."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-acuerdo-por-el-que-se-reforman-adicionan-y-derogan-d-2026-08-31",
+      "date": "2026-08-31",
+      "section": "economy",
+      "title": "Government modifies rules for national content verification in goods procurement",
+      "why": "The Federal Official Gazette published on August 31 reforms to procedures for determining, verifying and accrediting the national content of goods offered in government procurement.",
+      "company": "",
+      "source": "Diario Oficial de la Federación",
+      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797479&fecha=31/08/2026",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-08-31T12:00:00.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Acuerdo por el que se reforman, adicionan y derogan diversas disposiciones de las Reglas para la determinación, acreditación y verificación del contenido nacional de los bienes que se ofertan y…",
+        "dek": "DOF · PODER EJECUTIVO SECRETARIA ANTICORRUPCION Y BUEN GOBIERNO"
+      },
+      "coverage": [
+        {
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797479&fecha=31/08/2026",
+          "publishedAt": "2026-08-31T12:00:00.000Z",
+          "date": "2026-08-31",
+          "title": "Government modifies rules for national content verification in goods procurement",
+          "summary": "The Federal Official Gazette published on August 31 reforms to procedures for determining, verifying and accrediting the national content of goods offered in government procurement."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 2,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 2,
+              "source": "authoritative-domain",
+              "hostname": "diariooficial.gob.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-m-xico-habilita-solicitudes-para-permisos-de-biocomb-2026-08-31",
+      "date": "2026-08-31",
+      "section": "economy",
+      "title": "Mexico opens applications for biofuel permits",
+      "why": "The Energy Ministry issued an agreement on August 31 establishing application formats for eight categories of biofuel permits, enabling new authorizations in the sector.",
+      "company": "",
+      "source": "Bloomberg Línea",
+      "url": "https://bloomberglinea.com/latinoamerica/mexico/mexico-habilita-solicitudes-para-permisos-de-biocombustibles/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-09-01T03:04:21.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "México habilita solicitudes para permisos de biocombustibles",
+        "dek": "La Secretaría de Energía emitió este lunes un acuerdo con los formatos de solicitud para ocho tipos de permisos."
+      },
+      "coverage": [
+        {
+          "source": "Bloomberg Línea",
+          "url": "https://bloomberglinea.com/latinoamerica/mexico/mexico-habilita-solicitudes-para-permisos-de-biocombustibles/",
+          "publishedAt": "2026-09-01T03:04:21.000Z",
+          "date": "2026-08-31",
+          "title": "Mexico opens applications for biofuel permits",
+          "summary": "The Energy Ministry issued an agreement on August 31 establishing application formats for eight categories of biofuel permits, enabling new authorizations in the sector."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "bloomberglinea.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-sener-publica-formatos-para-permisos-y-bit-coras-de--2026-08-31",
+      "date": "2026-08-31",
+      "section": "economy",
+      "title": "Energy Ministry publishes biofuel permit formats and logs",
+      "why": "The Energy Ministry released on August 31 the formats and records required for various biofuel production and handling procedures.",
+      "company": "",
+      "source": "T21",
+      "url": "https://t21.com.mx/sener-publica-formatos-para-permisos-y-bitacoras-de-biocombustibles-en-mexico/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-09-01T00:05:06.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Sener publica formatos para permisos y bitácoras de biocombustibles en México",
+        "dek": "La Secretaría de Energía (Sener) dio a conocer este 31 de agosto los formatos y bitácoras que deberán utilizarse para diversos trámites relacionados con la producción y manejo de biocombustibles, con lo que avanza la instrumentación del nuevo marco regulatorio para esta actividad. El acuerdo, publicado en el Diario Ofi"
+      },
+      "coverage": [
+        {
+          "source": "T21",
+          "url": "https://t21.com.mx/sener-publica-formatos-para-permisos-y-bitacoras-de-biocombustibles-en-mexico/",
+          "publishedAt": "2026-09-01T00:05:06.000Z",
+          "date": "2026-08-31",
+          "title": "Energy Ministry publishes biofuel permit formats and logs",
+          "summary": "The Energy Ministry released on August 31 the formats and records required for various biofuel production and handling procedures."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "t21.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
     {
       "id": "n-vw-cuts-shift-at-puebla-plant-amid-regional-headwind-2026-08-31",
       "date": "2026-08-31",
@@ -3720,1009 +4665,6 @@
           "durability": {
             "raw": 2,
             "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-mexico-attracts-record-us-34-97-billion-in-fdi-in-1h-2026-08-25",
-      "date": "2026-08-25",
-      "section": "economy",
-      "title": "Mexico records 34.968 billion dollars in foreign direct investment in first half of 2026",
-      "why": "Mexico attracted a record 34.968 billion dollars in FDI during the first half of 2026, driven primarily by reinvested profits from established companies rather than new greenfield investment.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-attracts-record-us3497-billion-fdi-1h26",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-25T16:38:04.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Mexico Attracts Record US$34.97 Billion in FDI in 1H26",
-        "dek": "Mexico posted a record US$34.968 billion in FDI in the 1H26, driven overwhelmingly by reinvested profits from companies already established in the country rather than new entrants, with the United States, manufacturing and Mexico City dominating the flows. The result matters because it signals continued multinational c"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-attracts-record-us3497-billion-fdi-1h26",
-          "publishedAt": "2026-08-25T16:38:04.000Z",
-          "date": "2026-08-25",
-          "title": "Mexico records 34.968 billion dollars in foreign direct investment in first half of 2026",
-          "summary": "Mexico attracted a record 34.968 billion dollars in FDI during the first half of 2026, driven primarily by reinvested profits from established companies rather than new greenfield investment."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexicobusiness.news"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-el-congreso-de-sinaloa-designa-a-graciela-dom-nguez--2026-08-25",
-      "date": "2026-08-25",
-      "section": "politics",
-      "title": "Sinaloa Congress appoints Graciela Domínguez interim governor to replace Rocha Moya",
-      "why": "The Sinaloa state legislature swore in federal deputy Graciela Domínguez as interim governor for 14 months following Rubén Rocha Moya's departure.",
-      "company": "",
-      "source": "El País — México",
-      "url": "https://elpais.com/mexico/2026-08-25/el-congreso-de-sinaloa-designa-a-graciela-dominguez-como-gobernadora-interina-en-sustitucion-de-rocha-moya.html",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-25T15:53:59.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "El Congreso de Sinaloa designa a Graciela Domínguez como gobernadora interina en sustitución de Rocha Moya",
-        "dek": "El Legislativo jura en el cargo por 14 meses a la diputada federal y exfuncionaria del cuestionado mandatario de Morena"
-      },
-      "coverage": [
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/2026-08-25/el-congreso-de-sinaloa-designa-a-graciela-dominguez-como-gobernadora-interina-en-sustitucion-de-rocha-moya.html",
-          "publishedAt": "2026-08-25T15:53:59.000Z",
-          "date": "2026-08-25",
-          "title": "Sinaloa Congress appoints Graciela Domínguez interim governor to replace Rocha Moya",
-          "summary": "The Sinaloa state legislature swore in federal deputy Graciela Domínguez as interim governor for 14 months following Rubén Rocha Moya's departure."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elpais.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "imgTries": 2,
-      "image": "https://imagenes.elpais.com/resizer/v2/5V35BXLXRJPYVMPSS6JGLGSUQ4.jpg?auth=534b2cb1b2f59377b8fe9349b0a8b6715d7616102a38c98c31ce072f554e1b37&width=1200"
-    },
-    {
-      "id": "n-estados-unidos-emite-una-alerta-de-seguridad-y-suspe-2026-08-25",
-      "date": "2026-08-25",
-      "section": "us-mexico",
-      "title": "US embassy in Mexicali suspends operations and issues security alert",
-      "why": "The US suspended consular activities in Mexicali on 25 August over unspecified threats and instructed US citizens to avoid Mexican government buildings. The alert reflects rising security tensions at a major border crossing and signals diplomatic concern over conditions in the state.",
-      "company": "",
-      "source": "El País — México",
-      "url": "https://elpais.com/mexico/2026-08-25/estados-unidos-emite-una-alerta-de-seguridad-y-suspende-sus-actividades-en-mexicali-por-amenazas.html",
-      "importance": 6,
-      "kind": "event",
-      "publishedAt": "2026-08-25T13:59:36.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Estados Unidos emite una alerta de seguridad y suspende sus actividades en Mexicali por “amenazas”",
-        "dek": "El consulado en Tijuana pide a los estadounidenses que eviten los edificios de Gobierno. Las autoridades mexicanas incautaron la semana pasada en la ciudad fronteriza cuatro millones de dosis de fentanilo con información de la DEA"
-      },
-      "coverage": [
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/2026-08-25/estados-unidos-emite-una-alerta-de-seguridad-y-suspende-sus-actividades-en-mexicali-por-amenazas.html",
-          "publishedAt": "2026-08-25T13:59:36.000Z",
-          "date": "2026-08-25",
-          "title": "US embassy in Mexicali suspends operations and issues security alert",
-          "summary": "The US suspended consular activities in Mexicali on 25 August over unspecified threats and instructed US citizens to avoid Mexican government buildings. The alert reflects rising security tensions at a major border crossing and signals diplomatic concern over conditions in the state."
-        },
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/2508/mexico/ee-uu-suspende-actividades-y-viajes-de-su-personal-en-mexicali-por-amenaza/",
-          "publishedAt": "2026-08-25T08:59:40.000Z",
-          "date": "2026-08-25",
-          "title": "US suspends consular activities in Mexicali over threat",
-          "summary": "The US Consulate in Tijuana instructed personnel to suspend activity and travel in Mexicali, directing staff and citizens to avoid government buildings and monitor surroundings in response to an unspecified threat."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 6,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elpais.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "image": "https://imagenes.elpais.com/resizer/v2/OJYK56J5P5FGTLQUQWYPOK4WZA.jpg?auth=df1d42b6c3a26ecdf905ab7a8ed2ee09eaf54dd5ebd9bb7626681b4522bb7185&width=1200",
-      "imgTries": 1,
-      "background": "The US Consulate in Tijuana oversees consular services across Baja California, including Mexicali, a major border crossing where Mexican authorities seized 4 million fentanilo doses the week before with DEA coordination.",
-      "view": "A suspension signals the consulate assessed a direct threat serious enough to interrupt visa processing and official movement in a major trade crossing. The practical consequence is delays for US citizens seeking entry documents and disruption to routine diplomatic engagement at a border city of economic importance, though the alert does not disclose the threat's nature or duration.",
-      "prediction": "The consulate will either resume operations within days if the threat is contained or clarified, or issue a travel advisory upgrade if conditions worsen. Observable evidence would be a formal status update from the US State Department naming the threat type or confirming the all-clear.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "view": [
-          "article",
-          "primary:1"
-        ],
-        "prediction": [
-          "primary:1",
-          "article"
-        ],
-        "background": [
-          "article",
-          "primary:1"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El País, México",
-          "url": "https://elpais.com/mexico/2026-08-25/estados-unidos-emite-una-alerta-de-seguridad-y-suspende-sus-actividades-en-mexicali-por-amenazas.html"
-        },
-        {
-          "id": "primary:1",
-          "kind": "primary",
-          "source": "U.S. Embassy & Consulates in Mexico",
-          "url": "https://mx.usembassy.gov/security-alert-august-25-threat-in-mexicali/"
-        }
-      ]
-    },
-    {
-      "id": "n-sheinbaum-busca-prohibir-doble-nacionalidad-a-presid-2026-08-25",
-      "date": "2026-08-25",
-      "section": "politics",
-      "title": "President Sheinbaum proposes constitutional ban on dual nationality for presidents and governors",
-      "why": "President Sheinbaum announced plans to send a constitutional reform that would prohibit dual nationality for presidents and governors, citing the case of former governor Francisco García Cabeza de Vaca.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/2508/mexico/sheinbaum-busca-prohibir-doble-nacionalidad-a-presidentes-y-gobernadores/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-25T21:22:15.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Sheinbaum busca prohibir doble nacionalidad a presidentes y gobernadores",
-        "dek": "Sheinbaum adelantó que analiza enviar una reforma constitucional tras cuestionar el caso de Francisco García Cabeza de Vaca."
-      },
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/2508/mexico/sheinbaum-busca-prohibir-doble-nacionalidad-a-presidentes-y-gobernadores/",
-          "publishedAt": "2026-08-25T21:22:15.000Z",
-          "date": "2026-08-25",
-          "title": "President Sheinbaum proposes constitutional ban on dual nationality for presidents and governors",
-          "summary": "President Sheinbaum announced plans to send a constitutional reform that would prohibit dual nationality for presidents and governors, citing the case of former governor Francisco García Cabeza de Vaca."
-        },
-        {
-          "source": "bloomberglinea.com",
-          "url": "https://bloomberglinea.com/latinoamerica/mexico/mexico-analiza-prohibir-que-presidentes-y-gobernadores-tengan-doble-nacionalidad/",
-          "publishedAt": "2026-08-25T16:16:29.000Z",
-          "date": "2026-08-25",
-          "title": "México analiza prohibir que presidentes y gobernadores tengan doble nacionalidad",
-          "summary": "Sheinbaum dijo que algunas personas no eligen tener doble nacionalidad, como los casos por nacimiento, pero es una decisión de adultos mantenerla."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "aristeguinoticias.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-acuerdo-general-del-pleno-del-rgano-de-administraci--2026-08-25",
-      "date": "2026-08-25",
-      "section": "politics",
-      "title": "Mexico's Judiciary reforms transparency and public information rules",
-      "why": "The Judicial Administration Board has amended its transparency and public-information agreement, a formal action published in the Official Federal Gazette.",
-      "company": "",
-      "source": "Diario Oficial de la Federación",
-      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797042&fecha=25/08/2026",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-25T12:00:00.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Acuerdo General del Pleno del Órgano de Administración Judicial que reforma el similar que establece las disposiciones en materia de transparencia, acceso a la información pública y protección de…",
-        "dek": "DOF · PODER JUDICIAL ORGANO DE ADMINISTRACION JUDICIAL"
-      },
-      "coverage": [
-        {
-          "source": "Diario Oficial de la Federación",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797042&fecha=25/08/2026",
-          "publishedAt": "2026-08-25T12:00:00.000Z",
-          "date": "2026-08-25",
-          "title": "Mexico's Judiciary reforms transparency and public information rules",
-          "summary": "The Judicial Administration Board has amended its transparency and public-information agreement, a formal action published in the Official Federal Gazette."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 2,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 2,
-              "source": "authoritative-domain",
-              "hostname": "diariooficial.gob.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      },
-      "imgTries": 5,
-      "background": "Mexico's judicial system underwent fundamental restructuring in 2024, replacing appointment with election for much of the federal judiciary, the new Supreme Court took office in September 2025, and practical tests now center on case resolution speed, enforcement, and independence when government or powerful interests are involved.",
-      "view": "The amendment formalizes transparency and data-protection procedures for the reformed judiciary. Publication in the Official Federal Gazette makes the new rules binding on federal courts. The substance of the changes is not disclosed in available sources, so the practical effect on case disclosure, financial filings, or judicial independence cannot be determined from this announcement alone.",
-      "prediction": "Courts will apply the revised rules to information requests and personnel records immediately. Whether the amendment strengthens or weakens public access depends on specific provisions not yet detailed in public reporting, that detail will emerge when transparency organizations or media test the new procedures against specific cases or records requests.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "view": [
-          "article"
-        ],
-        "prediction": [
-          "article"
-        ],
-        "background": [
-          "standing:std-judicial-reform",
-          "standing:std-political-system"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "standing:std-judicial-reform",
-          "kind": "standing",
-          "source": "OAS / Suprema Corte",
-          "url": "https://www.scjn.gob.mx/"
-        },
-        {
-          "id": "standing:std-political-system",
-          "kind": "standing",
-          "source": "INE / Constitución",
-          "url": "https://www.ine.mx/"
-        },
-        {
-          "id": "article",
-          "kind": "primary",
-          "source": "Diario Oficial de la Federación",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797042&fecha=25/08/2026"
-        }
-      ]
-    },
-    {
-      "id": "n-sheinbaum-conf-a-en-alcanzar-acuerdo-comercial-con-e-2026-08-24",
-      "date": "2026-08-24",
-      "section": "us-mexico",
-      "title": "Mexico aims for US trade agreement after Canada rupture",
-      "why": "Marcelo Ebrard, Mexico's chief trade negotiator and Economy Secretary, traveled to the United States for one week to pursue a bilateral agreement, signaling an attempt to secure a deal as the three-country pact faces strain.",
-      "company": "",
-      "source": "Bloomberg Línea",
-      "url": "https://bloomberglinea.com/latinoamerica/mexico/sheinbaum-confia-en-alcanzar-acuerdo-comercial-con-eeuu-tras-ruptura-de-canada/",
-      "importance": 9,
-      "kind": "event",
-      "publishedAt": "2026-08-24T21:43:17.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Sheinbaum confía en alcanzar acuerdo comercial con EE.UU. tras ruptura de Canadá",
-        "dek": "Marcelo Ebrard, principal negociador comercial y el Secretario de Economía de México, viajó a Estados Unidos donde se quedará durante una semana con el objetivo de alcanzar un acuerdo."
-      },
-      "coverage": [
-        {
-          "source": "Bloomberg Línea",
-          "url": "https://bloomberglinea.com/latinoamerica/mexico/sheinbaum-confia-en-alcanzar-acuerdo-comercial-con-eeuu-tras-ruptura-de-canada/",
-          "publishedAt": "2026-08-24T21:43:17.000Z",
-          "date": "2026-08-24",
-          "title": "Mexico aims for US trade agreement after Canada rupture",
-          "summary": "Marcelo Ebrard, Mexico's chief trade negotiator and Economy Secretary, traveled to the United States for one week to pursue a bilateral agreement, signaling an attempt to secure a deal as the three-country pact faces strain."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 9,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "bloomberglinea.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-us-mexico-tariff-negotiations-higher-education-2026--2026-08-24",
-      "date": "2026-08-24",
-      "section": "us-mexico",
-      "title": "President Sheinbaum expresses optimism on US-Mexico tariff negotiations to avert steel, aluminum, and auto duties",
-      "why": "President Claudia Sheinbaum stated optimism regarding trade negotiations with the United States to prevent unilateral tariffs of 50 percent on steel and aluminum. The negotiations are central to Mexico's trade standing under USMCA.",
-      "company": "",
-      "source": "Mexico Business News",
-      "url": "https://mexicobusiness.news/policyandeconomy/news/us-mexico-tariff-negotiations-higher-education-2026-platform",
-      "importance": 9,
-      "kind": "event",
-      "publishedAt": "2026-08-24T16:33:11.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "US-Mexico Tariff Negotiations / Higher Education 2026 Platform",
-        "dek": "US-Mexico Tariff Negotiations. President Claudia Sheinbaum expressed optimism regarding trade negotiations with the United States, aiming to avert unilateral tariffs of 50% on steel and aluminum and 25% on vehicles. Minister of Economy Marcelo Ebrard traveled to the United States to hold meetings intended to protect cr"
-      },
-      "coverage": [
-        {
-          "source": "Mexico Business News",
-          "url": "https://mexicobusiness.news/policyandeconomy/news/us-mexico-tariff-negotiations-higher-education-2026-platform",
-          "publishedAt": "2026-08-24T16:33:11.000Z",
-          "date": "2026-08-24",
-          "title": "President Sheinbaum expresses optimism on US-Mexico tariff negotiations to avert steel, aluminum, and auto duties",
-          "summary": "President Claudia Sheinbaum stated optimism regarding trade negotiations with the United States to prevent unilateral tariffs of 50 percent on steel and aluminum. The negotiations are central to Mexico's trade standing under USMCA."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 2,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 9,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "mexicobusiness.news"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-m-xico-mira-con-incertidumbre-la-tensi-n-comercial-e-2026-08-24",
-      "date": "2026-08-24",
-      "section": "us-mexico",
-      "title": "Mexico navigates tariff uncertainty as US-Canada trade tensions grow under USMCA review",
-      "why": "Mexico faces rising uncertainty over its trade conditions as tensions between the US and Canada intensify, with the future of the US-Mexico-Canada trade agreement in question. The country is negotiating its own tariff terms amid the broader commercial dispute.",
-      "company": "",
-      "source": "El País — México",
-      "url": "https://elpais.com/mexico/economia/2026-08-25/mexico-mira-con-incertidumbre-la-tension-comercial-entre-estados-unidos-y-canada.html",
-      "importance": 8,
-      "kind": "event",
-      "publishedAt": "2026-08-25T04:00:00.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "México mira con incertidumbre la tensión comercial entre Estados Unidos y Canadá",
-        "dek": "El país latinoamericano negocia sus condiciones arancelarias mientras navega el incierto futuro del TMEC"
-      },
-      "coverage": [
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/economia/2026-08-25/mexico-mira-con-incertidumbre-la-tension-comercial-entre-estados-unidos-y-canada.html",
-          "publishedAt": "2026-08-25T04:00:00.000Z",
-          "date": "2026-08-24",
-          "title": "Mexico navigates tariff uncertainty as US-Canada trade tensions grow under USMCA review",
-          "summary": "Mexico faces rising uncertainty over its trade conditions as tensions between the US and Canada intensify, with the future of the US-Mexico-Canada trade agreement in question. The country is negotiating its own tariff terms amid the broader commercial dispute."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 8,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 1,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 1,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elpais.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-arizona-livestock-port-1st-to-reopen-to-mexican-catt-2026-08-24",
-      "date": "2026-08-24",
-      "section": "us-mexico",
-      "title": "Douglas Arizona livestock port reopens to Mexican cattle as screwworm cases decline",
-      "why": "The first U.S. border crossing to resume imports of live cattle from Mexico opened on Monday at Douglas, Arizona, following a reduction in New World screwworm cases that had previously blocked the trade.",
-      "company": "",
-      "source": "Border Report",
-      "url": "https://borderreport.com/news/environment/arizona-livestock-port-1st-to-reopen-to-mexican-cattle-as-screwworm-cases-decline/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-24T23:38:14.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Arizona livestock port 1st to reopen to Mexican cattle as screwworm cases decline",
-        "dek": "The U.S. livestock port in Douglas, Arizona, became the first along the Southwest border to reopen to Mexican cattle on Monday, but the threat of New World screwworm still remains elsewhere and that means restrictions are still in place."
-      },
-      "coverage": [
-        {
-          "source": "Border Report",
-          "url": "https://borderreport.com/news/environment/arizona-livestock-port-1st-to-reopen-to-mexican-cattle-as-screwworm-cases-decline/",
-          "publishedAt": "2026-08-24T23:38:14.000Z",
-          "date": "2026-08-24",
-          "title": "Douglas Arizona livestock port reopens to Mexican cattle as screwworm cases decline",
-          "summary": "The first U.S. border crossing to resume imports of live cattle from Mexico opened on Monday at Douglas, Arizona, following a reduction in New World screwworm cases that had previously blocked the trade."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "borderreport.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-ied-en-m-xico-pierde-fuerza-nuevas-inversiones-caen--2026-08-24",
-      "date": "2026-08-24",
-      "section": "economy",
-      "title": "Mexico's new foreign investment falls 13.4 percent while reinvestment gains ground in first half 2026",
-      "why": "New foreign direct investment into Mexico totaled 2.726 billion dollars in the first half of 2026, down 13.43 percent from the same period in 2025, as reinvested earnings play an increasing role in total inflows.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/economia/nueva-ied-captada-por-mexico-se-contrae-13-43-en-el-primer-semestre-de-2026/",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-24T22:27:12.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "IED en México pierde fuerza: nuevas inversiones caen 13.4% y las reinversiones ganan terreno",
-        "dek": "México atrajo 2,726 mdd en nuevas inversiones respecto al total de la IED en el primer semestre del año, cifra 13.43% menor que en 2025. La publicación IED en México pierde fuerza: nuevas inversiones caen 13.4% y las reinversiones ganan terreno apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/economia/nueva-ied-captada-por-mexico-se-contrae-13-43-en-el-primer-semestre-de-2026/",
-          "publishedAt": "2026-08-24T22:27:12.000Z",
-          "date": "2026-08-24",
-          "title": "Mexico's new foreign investment falls 13.4 percent while reinvestment gains ground in first half 2026",
-          "summary": "New foreign direct investment into Mexico totaled 2.726 billion dollars in the first half of 2026, down 13.43 percent from the same period in 2025, as reinvested earnings play an increasing role in total inflows."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "components": {
-          "nationalConsequence": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 2,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-sheinbaum-sinaloa-interim-governor-october-2027-2026-08-24",
-      "date": "2026-08-24",
-      "section": "politics",
-      "title": "Sheinbaum says Sinaloa's interim governor should serve through October 2027",
-      "why": "Sinaloa's Congress is due to name a replacement Monday after granting Rubén Rocha Moya a second indefinite leave. Rocha had returned to office for about a day and a half while facing a US criminal case.",
-      "company": "",
-      "source": "El País",
-      "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html",
-      "importance": 7,
-      "kind": "event",
-      "publishedAt": "2026-08-24T15:26:00.000Z",
-      "sourceTier": 1,
-      "reportEvidence": {
-        "title": "Sheinbaum, sobre el regreso de Rocha Moya: 'No me parecía pertinente, por decir lo menos'",
-        "dek": "La presidenta afirmó que la persona designada como gobernadora interina debe permanecer en el cargo hasta el 31 de octubre de 2027. El Congreso de Sinaloa debe elegir a la sustituta o sustituto tras la segunda licencia indefinida de Rocha."
-      },
-      "coverage": [
-        {
-          "source": "El País",
-          "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html",
-          "publishedAt": "2026-08-24T15:26:00.000Z",
-          "date": "2026-08-24",
-          "title": "Sheinbaum says Sinaloa's interim governor should serve through October 2027",
-          "summary": "Sinaloa's Congress is due to name a replacement Monday after granting Rubén Rocha Moya a second indefinite leave. Rocha had returned to office for about a day and a half while facing a US criminal case."
-        },
-        {
-          "source": "Associated Press",
-          "url": "https://apnews.com/article/8daea70ca6c4148b65ab3acf2d81c6ee",
-          "publishedAt": "2026-08-23T18:00:00.000Z",
-          "date": "2026-08-23",
-          "title": "Mexican governor indicted by US seeks leave again after contentious return to office",
-          "summary": "Rocha sought a second indefinite leave about a day and a half after returning to office."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 2,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 2,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 7,
-        "reportedTotal": null,
-        "componentSource": "manual-source-review",
-        "components": {
-          "officialness": {
-            "modelScore": 2,
-            "score": 1,
-            "status": "evidence-override",
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elpais.com"
-            }
-          }
-        }
-      },
-      "background": "Sinaloa's constitution requires Congress to appoint an interim governor when an absence lasts more than 30 days. The appointment requires an absolute majority.",
-      "view": "The second leave turns a brief return into a longer succession decision. If Congress appoints someone through October 2027, that person, not Rocha, will run the state while the US case proceeds.",
-      "prediction": "Congress's appointment will show whether the handover lasts through October 2027. A shorter term would leave the succession open.",
-      "analysisV": 9,
-      "analysisRefs": {
-        "background": [
-          "primary:sinaloa-constitution"
-        ],
-        "view": [
-          "article",
-          "report:ap"
-        ],
-        "prediction": [
-          "article",
-          "primary:sinaloa-constitution"
-        ]
-      },
-      "analysisSources": [
-        {
-          "id": "article",
-          "kind": "article",
-          "source": "El País",
-          "url": "https://elpais.com/mexico/2026-08-24/sheinbaum-sobre-el-regreso-de-rocha-moya-no-me-parecia-pertinente-por-decir-lo-menos.html"
-        },
-        {
-          "id": "report:ap",
-          "kind": "report",
-          "source": "Associated Press",
-          "url": "https://apnews.com/article/8daea70ca6c4148b65ab3acf2d81c6ee"
-        },
-        {
-          "id": "primary:sinaloa-constitution",
-          "kind": "primary",
-          "source": "Congress of Sinaloa",
-          "url": "https://iip.congresosinaloa.gob.mx/docs/ref_le/007/089.pdf"
-        }
-      ],
-      "image": "https://imagenes.elpais.com/resizer/v2/SEJWTPYCSNDKVH3VOQNGOQGKKE.png?auth=b640870211b3a4af7ef9c423e5198d4a40e0b827510ab604d5a10c6ed173fac6",
-      "imgTries": 1
-    },
-    {
-      "id": "n-banca-presta-m-s-a-mipymes-pero-cae-el-acceso-al-cr--2026-08-24",
-      "date": "2026-08-24",
-      "section": "money",
-      "title": "Bank lending to small firms rises but access falls for smallest companies",
-      "why": "Mexico's central bank data from the second quarter of 2026 shows that 22.7 percent of firms with up to 100 employees cited commercial bank financing as a source, indicating tightening access at the smallest end of the small-business sector.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/banca-presta-mas-a-mipymes-pero-cae-el-acceso-al-credito-entre-las-empresas-mas-pequenas/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-24T23:16:57.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Banca presta más a mipymes, pero cae el acceso al crédito entre las empresas más pequeñas",
-        "dek": "Datos de Banxico arrojan que, en el segundo trimestre de 2026, el porcentaje de empresas de hasta 100 empleados que señaló como fuente de financiamiento la banca comercial fue de 22.7%. La publicación Banca presta más a mipymes, pero cae el acceso al crédito entre las empresas más pequeñas apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/banca-presta-mas-a-mipymes-pero-cae-el-acceso-al-credito-entre-las-empresas-mas-pequenas/",
-          "publishedAt": "2026-08-24T23:16:57.000Z",
-          "date": "2026-08-24",
-          "title": "Bank lending to small firms rises but access falls for smallest companies",
-          "summary": "Mexico's central bank data from the second quarter of 2026 shows that 22.7 percent of firms with up to 100 employees cited commercial bank financing as a source, indicating tightening access at the smallest end of the small-business sector."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
             "status": "accepted"
           },
           "officialness": {
