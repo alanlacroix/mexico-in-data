@@ -11,7 +11,9 @@ import { fileURLToPath } from 'node:url';
 import { collectNews } from './collect-news.js';
 import { fetchArticle } from './lib/fetch-article.js';
 import { eventCandidateEligible, mexicoRelevant } from './lib/news-trust.js';
-import { lintAnalysisText, lintReportText, reportContextDistinct } from './lib/lint.js';
+import {
+  lintAnalysisText, lintReportText, reportContextDistinct, unsupportedNumericTokens,
+} from './lib/lint.js';
 import newsDay from './lib/news-day.cjs';
 import newsThreads from './lib/news-threads.cjs';
 import scheduledCandidate from './lib/scheduled-candidate.cjs';
@@ -260,6 +262,53 @@ function validRefs(row, refs) {
   const ids = new Set(row.evidence.map((item) => item.id));
   return arr(refs).length >= 1 && arr(refs).length <= 3 && arr(refs).every((ref) => ids.has(ref));
 }
+
+function sentenceParts(text, locale) {
+  return [...new Intl.Segmenter(locale, { granularity: 'sentence' }).segment(clean(text))]
+    .map((part) => part.segment.trim()).filter(Boolean);
+}
+
+// Unsupported numbers are removed, never guessed or rounded. In the three analysis
+// fields only, omit a whole contaminated sentence before rejecting the entire story.
+// When the translations have the same sentence shape, drop the matching sentence in
+// both languages; all deterministic and independent bilingual gates still rerun.
+function repairUnsupportedAnalysisNumbers(row, draft) {
+  const repaired = structuredClone(draft);
+  for (const field of ['background', 'view', 'watch']) {
+    const refs = repaired[`${field}Refs`];
+    let inputs = citedInputs(row, refs);
+    let missing = unsupportedNumericTokens(`${repaired[field]} ${repaired?.es?.[field]}`, inputs);
+    // If another already-retrieved, topically matched record contains the number,
+    // cite that record before deleting prose. This repairs the citation, not the fact.
+    for (const evidence of row.evidence) {
+      if (!missing.length || refs.length >= 3 || refs.includes(evidence.id)) continue;
+      const next = unsupportedNumericTokens(missing.join(' '), [evidence.text]);
+      if (next.length >= missing.length) continue;
+      refs.push(evidence.id);
+      inputs = citedInputs(row, refs);
+      missing = unsupportedNumericTokens(`${repaired[field]} ${repaired?.es?.[field]}`, inputs);
+    }
+    const english = sentenceParts(repaired[field], 'en');
+    const spanish = sentenceParts(repaired?.es?.[field], 'es');
+    const badEnglish = new Set(english.flatMap((sentence, index) => (
+      unsupportedNumericTokens(sentence, inputs).length ? [index] : []
+    )));
+    const badSpanish = new Set(spanish.flatMap((sentence, index) => (
+      unsupportedNumericTokens(sentence, inputs).length ? [index] : []
+    )));
+    if (!badEnglish.size && !badSpanish.size) continue;
+    if (english.length === spanish.length) {
+      const rejected = new Set([...badEnglish, ...badSpanish]);
+      repaired[field] = english.filter((_, index) => !rejected.has(index)).join(' ').trim();
+      repaired.es[field] = spanish.filter((_, index) => !rejected.has(index)).join(' ').trim();
+    } else {
+      repaired[field] = english.filter((_, index) => !badEnglish.has(index)).join(' ').trim();
+      repaired.es[field] = spanish.filter((_, index) => !badSpanish.has(index)).join(' ').trim();
+    }
+  }
+  return repaired;
+}
+
 function deterministicDraftCheck(row, draft) {
   const flags = [];
   const checks = [
@@ -493,18 +542,41 @@ async function main() {
       }))),
       schema: draftSchema(), maxTokens: 6500,
     });
-    const draftByIndex = new Map(arr(draftResponse.stories).map((draft) => [Number(draft.i), draft]));
+    const draftRejects = [];
+    const expectedDrafts = new Set(researchable.map((row) => row.index));
+    const draftByIndex = new Map();
+    for (const draft of arr(draftResponse.stories)) {
+      const index = Number(draft?.i);
+      if (!expectedDrafts.has(index)) {
+        draftRejects.push(`unexpected draft index ${Number.isFinite(index) ? index : '?'}`);
+        continue;
+      }
+      if (draftByIndex.has(index)) {
+        draftRejects.push(`duplicate draft index ${index}`);
+        continue;
+      }
+      draftByIndex.set(index, draft);
+    }
     const deterministicPass = researchable.flatMap((row) => {
-      const draft = draftByIndex.get(row.index);
-      if (!draft) return [];
+      const rawDraft = draftByIndex.get(row.index);
+      if (!rawDraft) {
+        const reason = `${storyId(row.item)}: model omitted the required story unit`;
+        draftRejects.push(reason);
+        console.warn(`  reject draft ${reason}`);
+        return [];
+      }
+      const draft = repairUnsupportedAnalysisNumbers(row, rawDraft);
       const flags = deterministicDraftCheck(row, draft);
       if (flags.length) {
+        draftRejects.push(`${storyId(row.item)}: ${flags.join('; ')}`);
         console.warn(`  reject draft ${storyId(row.item)}: ${flags.join('; ')}`);
         return [];
       }
       return [{ row, draft }];
     });
-    if (!deterministicPass.length) throw new Error('all story drafts failed the deterministic evidence gate');
+    if (!deterministicPass.length) {
+      throw new Error(`all story drafts failed the deterministic evidence gate: ${draftRejects.join(' | ').slice(0, 330)}`);
+    }
 
     const auditResponse = await call({
       system: `You are the final independent evidence and bilingual editor. Review each English field only against the exact evidence cited for that field. Independently compare its Spanish translation with both the English field and the same cited evidence. Reject unsupported actors, numbers, comparisons, causal claims, procedural stages, predictions, non sequiturs, mistranslations, reversed actions, changed subjects, or changed degrees of certainty in either language. Do not reject a clearly labeled narrow inference merely for being an inference. Do not rewrite either language. Return one verdict for every input index.`,

@@ -39,6 +39,10 @@ const CONCEPT_RULES = [
   ['auto-tariff', /\b(?:auto|automotive|automotriz|cars?|vehicles?|suzuki)\b[\s\S]{0,80}\b(?:tariff|arancel|duty)\b|\b(?:tariff|arancel|duty)\b[\s\S]{0,80}\b(?:auto|automotive|automotriz|cars?|vehicles?|suzuki)\b/i],
   ['china-inputs', /\bchina\b[\s\S]{0,80}\b(?:imports?|inputs?|components?)\b/i],
   ['foreign-direct-investment', /\b(?:foreign direct investment|fdi|inversion extranjera directa)\b/i],
+  // A company's physical investment announcement can use the official fixed-
+  // investment series as context. A financial fund or portfolio cannot: both an
+  // investment verb and a physical operating purpose are required.
+  ['physical-investment', /\b(?:invest(?:s|ed|ing|ment)|inversion(?:es)?)\b[\s\S]{0,120}\b(?:plant|factory|facilit|capacity|cement|circular economy|economia circular)\w*\b|\b(?:plant|factory|facilit|capacity|cement|circular economy|economia circular)\w*\b[\s\S]{0,120}\b(?:invest(?:s|ed|ing|ment)|inversion(?:es)?)\b/i],
   ['economic-growth', /\b(?:gdp|economic (?:growth|activity)|growth forecast|producto interno bruto|igae)\b/i],
   ['fixed-investment', /\b(?:fixed investment|gross fixed capital|inversion fija)\b/i],
   ['private-credit', /\b(?:bank credit|private credit|business lending|credito bancario)\b/i],
@@ -55,6 +59,7 @@ const CONCEPT_RULES = [
   ['pemex-operations', /\bpemex\b[\s\S]{0,100}\b(?:production|processing|refin|flaring|operating)\b/i],
   ['telecom-spectrum', /\b(?:spectrum|telecommunications regulator|telecom auction)\b/i],
   ['constitutional-power', /\b(?:constitutional reform|amend the constitution|two thirds congress)\b/i],
+  ['presidential-informe', /\b(?:informe de gobierno|state of the nation|presidential report)\b/i],
   ['judiciary', /\b(?:judicial reform|judiciary|supreme court|court election)\b/i],
   ['security', /\b(?:homicides?|extortion|cargo theft|violent crime|cartel|security strategy)\b/i],
   ['labor-informality', /\b(?:informal employment|informality|informal workers?)\b/i],
@@ -76,7 +81,7 @@ const ID_CONCEPTS = {
   'std-china-inputs': ['china-inputs'],
   'std-fdi-composition': ['foreign-direct-investment'],
   'std-weak-growth': ['economic-growth'],
-  'std-investment-rate': ['fixed-investment'],
+  'std-investment-rate': ['fixed-investment', 'physical-investment'],
   'std-bank-credit': ['private-credit'],
   'std-stock-market': ['stock-market'],
   'std-inflation-target': ['inflation', 'policy-rate'],
@@ -87,7 +92,7 @@ const ID_CONCEPTS = {
   'std-pemex-filings': ['pemex-operations'],
   'std-spectrum-auctions': ['telecom-spectrum'],
   'std-energy-constraint': ['electricity-grid'],
-  'std-political-system': ['constitutional-power'],
+  'std-political-system': ['constitutional-power', 'presidential-informe'],
   'std-judicial-reform': ['judiciary'],
   'std-security-measures': ['security'],
   'std-informal-economy': ['labor-informality'],

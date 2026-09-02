@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { lintReportText } from '../lib/lint.js';
+import { lintReportText, unsupportedNumericTokens } from '../lib/lint.js';
 import scheduledCandidate from '../lib/scheduled-candidate.cjs';
 
 const builder = fs.readFileSync(new URL('../build-edition.mjs', import.meta.url), 'utf8');
@@ -18,6 +18,15 @@ assert.match(builder, /mistranslations, reversed actions, changed subjects/,
 assert.equal(lintReportText({ text: 'The sourceTitle says the rule changed.', inputs: ['The rule changed.'] }).ok, false);
 assert.equal(lintReportText({ text: 'The evidence strings show the amount.', inputs: ['The amount was 5.'] }).ok, false);
 assert.equal(lintReportText({ text: 'Exports reached 81.4 billion dollars.', inputs: ['Exports reached 80 billion dollars.'] }).ok, false);
+assert.deepEqual(unsupportedNumericTokens('The reform followed the 2024 election.', ['The reform was presented.']), ['2024']);
+assert.match(builder, /repairUnsupportedAnalysisNumbers/,
+  'one unsupported number in analysis should remove its sentence before discarding the story');
+assert.doesNotMatch(builder, /maxItems|minItems:\s*expectedCount/,
+  'unsupported Anthropic array-count keywords must not reach the live schema');
+assert.match(builder, /unexpected draft index/);
+assert.match(builder, /duplicate draft index/);
+assert.match(builder, /model omitted the required story unit/,
+  'missing model rows must be visible in the persisted failure reason');
 
 const schedule = [{
   id: 'banxico-policy-test', date: '2026-09-24', outcomeRequired: true, requiredForBrief: true,

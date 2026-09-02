@@ -71,6 +71,11 @@ const canonicalNumericToken = (raw) => {
 const numericTokens = (s) => (String(s || '').match(/\d+(?:[.,]\d+)*/g) || [])
   .map(canonicalNumericToken);
 
+export function unsupportedNumericTokens(text = '', inputs = []) {
+  const allowed = new Set(numericTokens((Array.isArray(inputs) ? inputs : [inputs]).join(' ')));
+  return [...new Set(numericTokens(text).filter((token) => !allowed.has(token)))];
+}
+
 const CONTEXT_STOP = new Set(['a', 'an', 'and', 'at', 'by', 'for', 'from', 'in', 'is', 'its', 'of', 'on', 'since', 'the', 'to']);
 const contextTokens = (value) => String(value || '').toLowerCase()
   .replace(/annual price growth/g, 'inflation')
@@ -246,8 +251,7 @@ export function lintReportText({ text = '', inputs = [], maxWords = 45, maxSente
   if (count > maxSentences) flags.push(`${count} sentences (cap ${maxSentences})`);
 
   if (checkNumbers) {
-    const allowed = new Set(numericTokens(inputs.join(' ')));
-    const unsupported = [...new Set(numericTokens(clean).filter((n) => !allowed.has(n)))];
+    const unsupported = unsupportedNumericTokens(clean, inputs);
     if (unsupported.length) flags.push(`unsupported number${unsupported.length === 1 ? '' : 's'}: ${unsupported.join(', ')}`);
   }
   return { ok: flags.length === 0, flags };

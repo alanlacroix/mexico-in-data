@@ -40,6 +40,19 @@ assert.equal(standingScore({ title: 'Mexico raises tariffs on electric vehicles'
 assert.equal(standingScore({ title: 'Electric vehicle sales rise in Mexico' },
   standing.find((fact) => fact.id === 'std-energy-constraint')), 0,
 'electric vehicle sales must not inherit utility-grid context');
+const investment = standing.find((fact) => fact.id === 'std-investment-rate');
+assert.ok(standingScore({
+  title: 'Holcim invests US$500 million in Mexico to advance circular economy projects',
+}, investment) > 0, 'a physical business investment should receive the fixed-investment baseline');
+assert.equal(standingScore({
+  title: 'An investment fund raises capital for its bond portfolio',
+}, investment), 0, 'a financial portfolio must not be treated as physical fixed investment');
+assert.equal(standingScore({
+  title: 'An energy investment fund raises capital for a bond portfolio',
+}, investment), 0, 'an energy fund is not evidence of new physical capacity');
+assert.equal(standingScore({
+  title: 'Investment in manufacturing stocks rises',
+}, investment), 0, 'manufacturing equities are not physical fixed investment');
 assert.deepEqual(calendar.filter((item) => calendarScore(cfe, item) > 0), [],
   'the exact CFE story must not inherit a political or federal-budget date');
 
@@ -98,5 +111,9 @@ assert.ok(calendarScore({
   why: 'The consumer-price reading will shape the next policy-rate decision.',
 }, calendar.find((item) => item.id === 'inegi-cpi-2026-09-09')) > 0,
 'an inflation story must keep the next CPI release');
+assert.ok(standingScore({
+  section: 'politics', title: "Sheinbaum delivers Mexico's second Informe de Gobierno",
+}, standing.find((fact) => fact.id === 'std-political-system')) > 0,
+'a completed presidential informe should receive the presidential-system baseline');
 
 console.log('analysis-evidence tests: ok');
