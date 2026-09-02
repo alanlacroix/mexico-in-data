@@ -268,6 +268,36 @@ function sentenceParts(text, locale) {
     .map((part) => part.segment.trim()).filter(Boolean);
 }
 
+const wordCount = (text) => clean(text).split(/\s+/).filter(Boolean).length;
+
+// A style ceiling must not take down an evidence-safe edition. Remove only complete
+// trailing analysis sentences, preserving aligned EN/ES meaning when possible. Never
+// shorten headline/dek, never edit a sentence fragment, and never force a one-sentence
+// field under the cap; the ordinary gates and independent audit still run afterward.
+function repairOverlongAnalysis(draft) {
+  const repaired = structuredClone(draft);
+  for (const [field, englishCap, spanishCap] of [
+    ['background', 55, 65], ['view', 55, 65], ['watch', 55, 65],
+  ]) {
+    const english = sentenceParts(repaired[field], 'en');
+    const spanish = sentenceParts(repaired?.es?.[field], 'es');
+    while (wordCount(english.join(' ')) > englishCap || wordCount(spanish.join(' ')) > spanishCap) {
+      if (english.length === spanish.length && english.length > 1) {
+        english.pop();
+        spanish.pop();
+        continue;
+      }
+      let changed = false;
+      if (wordCount(english.join(' ')) > englishCap && english.length > 1) { english.pop(); changed = true; }
+      if (wordCount(spanish.join(' ')) > spanishCap && spanish.length > 1) { spanish.pop(); changed = true; }
+      if (!changed) break;
+    }
+    repaired[field] = english.join(' ').trim();
+    repaired.es[field] = spanish.join(' ').trim();
+  }
+  return repaired;
+}
+
 // Unsupported numbers are removed, never guessed or rounded. In the three analysis
 // fields only, omit a whole contaminated sentence before rejecting the entire story.
 // When the translations have the same sentence shape, drop the matching sentence in
@@ -571,7 +601,7 @@ async function main() {
         console.warn(`  reject draft ${reason}`);
         return [];
       }
-      const draft = repairUnsupportedAnalysisNumbers(row, rawDraft);
+      const draft = repairOverlongAnalysis(repairUnsupportedAnalysisNumbers(row, rawDraft));
       const flags = deterministicDraftCheck(row, draft);
       if (flags.length) {
         draftRejects.push(`${storyId(row.item)}: ${flags.join('; ')}`);

@@ -21,6 +21,12 @@ assert.equal(lintReportText({ text: 'Exports reached 81.4 billion dollars.', inp
 assert.deepEqual(unsupportedNumericTokens('The reform followed the 2024 election.', ['The reform was presented.']), ['2024']);
 assert.match(builder, /repairUnsupportedAnalysisNumbers/,
   'one unsupported number in analysis should remove its sentence before discarding the story');
+assert.match(builder, /repairOverlongAnalysis\(repairUnsupportedAnalysisNumbers\(row, rawDraft\)\)/,
+  'a style-only analysis overrun must lose whole trailing sentences before it can block publication');
+assert.match(builder, /english\.pop\(\);\s*spanish\.pop\(\)/,
+  'length repair must preserve aligned English and Spanish sentences when possible');
+assert.doesNotMatch(builder, /slice\(0,\s*(?:55|65)\)/,
+  'length repair must never cut a sentence fragment');
 assert.doesNotMatch(builder, /maxItems|minItems:\s*expectedCount/,
   'unsupported Anthropic array-count keywords must not reach the live schema');
 assert.match(builder, /unexpected draft index/);
