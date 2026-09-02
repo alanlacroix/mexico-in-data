@@ -27,6 +27,10 @@ assert.match(builder, /unexpected draft index/);
 assert.match(builder, /duplicate draft index/);
 assert.match(builder, /model omitted the required story unit/,
   'missing model rows must be visible in the persisted failure reason');
+assert.match(builder, /evidenceRows\.filter\(\(row\) => row\.evidence\.length >= 2\)\.slice\(0, MAX_VISIBLE\)/,
+  'the fixed top-five ranking must choose only cards that can support Briefly Explained');
+assert.match(builder, /No replacement happens after drafting/,
+  'writing convenience must never rerank the selected developments');
 
 const schedule = [{
   id: 'banxico-policy-test', date: '2026-09-24', outcomeRequired: true, requiredForBrief: true,

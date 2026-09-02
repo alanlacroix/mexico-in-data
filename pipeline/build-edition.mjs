@@ -515,27 +515,33 @@ async function main() {
     ranked.sort((a, b) => Number(Boolean(b.item._scheduled)) - Number(Boolean(a.item._scheduled))
       || b.importance - a.importance
       || String(b.item.published_at).localeCompare(String(a.item.published_at)));
-    // The model may return five ranked ids so the receipt is auditable, but only the
-    // top three form the locked edition pool. A rejected card is omitted; a lower
-    // story is never promoted merely because it was easier for the model to explain.
-    const locked = ranked.filter((row) => row.item._scheduled || row.importance >= 6)
-      .slice(0, MAX_RANKED).slice(0, MAX_VISIBLE);
-    if (!locked.length) throw new Error('ranking selected no developments');
-    if (!weekendDay(editorialDate) && !locked.some((row) => row.item._editorialDate === editorialDate)) {
+    // Rank once, then apply the product's independent-evidence requirement to that
+    // fixed order. Looking through the bounded top five is not a post-writing rerank:
+    // it prevents a card that could never support Briefly Explained from consuming
+    // one of the three edition positions. No replacement happens after drafting.
+    const rankedPool = ranked.filter((row) => row.item._scheduled || row.importance >= 6)
+      .slice(0, MAX_RANKED);
+    if (!rankedPool.length) throw new Error('ranking selected no developments');
+    if (!weekendDay(editorialDate) && !rankedPool.some((row) => row.item._editorialDate === editorialDate)) {
       throw new Error('ranking selected no exact-day development');
     }
 
     const standing = arr(read(path.join(DATA, 'standing.json'), { facts: [] }).facts);
     const calendar = arr(schedule.events).filter((event) => event?.date >= previousDay(editorialDate));
-    const evidenceRows = await Promise.all(locked.map(async (row) => ({
+    const evidenceRows = await Promise.all(rankedPool.map(async (row) => ({
       ...row, evidence: await evidenceFor(row.item, standing, calendar),
     })));
-    const researchable = evidenceRows.filter((row) => row.evidence.length >= 2);
-    if (!researchable.length) throw new Error('no selected development has independent context');
+    const withoutContext = evidenceRows.filter((row) => row.evidence.length < 2);
+    for (const row of withoutContext) console.warn(`  skip ranked story without independent context: ${storyId(row.item)}`);
+    const locked = evidenceRows.filter((row) => row.evidence.length >= 2).slice(0, MAX_VISIBLE);
+    if (!locked.length) throw new Error('no ranked development has independent context');
+    if (!weekendDay(editorialDate) && !locked.some((row) => row.item._editorialDate === editorialDate)) {
+      throw new Error(`no ranked exact-day development has independent context: ${withoutContext.map((row) => storyId(row.item)).join(', ').slice(0, 300)}`);
+    }
 
     const draftResponse = await call({
       system: `${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\n${ANALYSIS_SHAPE}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: context a newcomer needs and must cite at least one source other than article. Our view: a narrow inference supported by its citations, without first person. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
-      user: JSON.stringify(researchable.map((row) => ({
+      user: JSON.stringify(locked.map((row) => ({
         i: row.index,
         story: { date: row.item._editorialDate, source: row.item.sourceName || row.item.source, url: row.item.url },
         evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
@@ -543,7 +549,7 @@ async function main() {
       schema: draftSchema(), maxTokens: 6500,
     });
     const draftRejects = [];
-    const expectedDrafts = new Set(researchable.map((row) => row.index));
+    const expectedDrafts = new Set(locked.map((row) => row.index));
     const draftByIndex = new Map();
     for (const draft of arr(draftResponse.stories)) {
       const index = Number(draft?.i);
@@ -557,7 +563,7 @@ async function main() {
       }
       draftByIndex.set(index, draft);
     }
-    const deterministicPass = researchable.flatMap((row) => {
+    const deterministicPass = locked.flatMap((row) => {
       const rawDraft = draftByIndex.get(row.index);
       if (!rawDraft) {
         const reason = `${storyId(row.item)}: model omitted the required story unit`;
