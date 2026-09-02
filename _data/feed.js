@@ -13,7 +13,6 @@ const dailyBrief = require('./dailyBrief.js');
 const boards = require('./boards.js');
 const weeklyTop = require('./weeklyTop.js');
 const calendar = require('./calendar.js');
-const { ANALYSIS_VERSION } = require('../pipeline/lib/analysis-contract.cjs');
 
 const DATA = path.join(__dirname, '..', 'data');
 // Written by pipeline/write-context.mjs: the economy notes and the calendar's title,
@@ -67,21 +66,6 @@ const monthDay = (iso) => {
   return Number.isNaN(d.getTime()) ? iso
     : d.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
 };
-// Did the wire actually translate this item, or does the "original" differ only in
-// punctuation and spacing? Curly quotes, dashes and stray whitespace are normalised away
-// before comparing, so only a real change of words counts as a translation.
-const translated = (item) => {
-  if (!item.originalTitle) return false;
-  const plain = (s) => String(s)
-    .replace(/[‘’‛]/g, "'")
-    .replace(/[“”]/g, '"')
-    .replace(/[‐-―]/g, '-')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase();
-  return plain(item.originalTitle) !== plain(item.title);
-};
-
 const monthName = (iso) => {
   const d = new Date(`${String(iso).slice(0, 10)}T12:00:00Z`);
   return Number.isNaN(d.getTime()) ? iso
@@ -128,9 +112,9 @@ const chipFor = (title) => {
 };
 
 function buildFeed(locale = 'en') {
-  const brief = dailyBrief();
+  const brief = dailyBrief(new Date(), {}, locale);
   const board = boards();
-  const week = weeklyTop();
+  const week = weeklyTop(locale);
 
   // ---- Numbers -------------------------------------------------------------
   const numbers = board.today.map((card) => {
@@ -182,9 +166,8 @@ function buildFeed(locale = 'en') {
     view: story.view || '',
     watch: story.prediction || '',
     why: story.view || story.bg || '',
-    be: Boolean(story.bg && story.view && story.prediction && story.analysisV >= ANALYSIS_VERSION
-      && story.analysisSources?.some((source) => source?.kind !== 'article'
-        && /^https:\/\//i.test(String(source?.url || '')))),
+    be: Boolean(story.bg && story.view && story.prediction
+      && story.analysisSources?.some((source) => /^https:\/\//i.test(String(source?.url || '')))),
     analysisSources: story.analysisSources || [],
   });
   const todayStories = brief.todayStories.map(storyCard);
@@ -194,12 +177,14 @@ function buildFeed(locale = 'en') {
   const stories = brief.weekendEdition
     ? [...weekendStories, ...weekRecapStories]
     : [...todayStories, ...keyDevelopments];
+  // This label is intentionally date-neutral. If today's build fails, Cloudflare
+  // keeps yesterday's already-built HTML; that HTML must still describe itself
+  // honestly without client-side date rewriting.
   const storySections = (brief.weekendEdition ? [
     { id: 'new-this-weekend', kind: 'weekend', latest: weekendStories[0]?.date || '', stories: weekendStories },
     { id: 'week-recap', kind: 'week-recap', latest: weekRecapStories[0]?.date || '', stories: weekRecapStories },
   ] : [
-    { id: 'today-stories', kind: 'today', latest: todayStories[0]?.date || '', stories: todayStories },
-    { id: 'key-developments', kind: 'key', latest: keyDevelopments[0]?.date || '', stories: keyDevelopments },
+    { id: 'latest-edition', kind: 'latest', latest: monthDay(brief.editorialDate), stories },
   ]).filter((section) => section.stories.length);
 
   // ---- This week -----------------------------------------------------------
@@ -212,26 +197,16 @@ function buildFeed(locale = 'en') {
   for (const group of week.groups) {
     const visible = group.items
       .filter((item) => !item.shownToday)
-      .filter((item) => locale !== 'en' || item.sourceLang !== 'es' || translated(item))
       .slice(0, 4);
     for (const item of visible) {
-      const translatedFromSpanish = translated(item);
-      const nativeSpanish = item.sourceLang === 'es' && !translatedFromSpanish;
-      // The language toggle is a contract. If an ES wire item has not reached the
-      // translation cache, omit it from EN; feedEs asks for the native-inclusive
-      // lane and restores the original title there.
       weekItems.push({
         id: `${group.key}-${weekItems.length}`,
         date: item.dayLabel || monthDay(item.date),
         cat: group.label,
         catKey: group.key,
         source: item.sourceName,
-        // Keep translation provenance in the data so the Spanish edition can restore the
-        // native headline. The English template intentionally shows only the English title.
-        // The comparison ignores punctuation-only differences so Spanish mode does not
-        // mistake an English headline for a translated one (2026-08-03).
-        lang: translatedFromSpanish || nativeSpanish ? 'ES' : '',
-        orig: translatedFromSpanish ? item.originalTitle : (nativeSpanish ? item.title : ''),
+        lang: '',
+        orig: '',
         url: item.url,
         title: item.title,
         dek: item.dek || '',

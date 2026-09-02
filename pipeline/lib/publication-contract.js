@@ -9,9 +9,7 @@ const SERIES = (id) => `data/series/${id}.json`;
 // valid last-good value with zero or a made-up fallback.
 export const PAGE_DATA_CONTRACTS = {
   'Brief': [
-    'data/health.json', 'data/brief.json', 'data/event-status.json',
-    'data/events.json', 'data/happening.json',
-    'data/news/translations.json', 'data/es/brief.json',
+    'data/health.json', 'data/edition.json', 'data/events.json',
     ...[
       'banxico-usdmxn-fix', 'cre-gasolina-regular', 'banxico-cetes-28d',
       'fred-ust10', 'banxico-bmv-ipc', 'banxico-inflacion',

@@ -1,138 +1,109 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { editorialDay } = require('../pipeline/lib/news-day.cjs');
-const { groupEvents, mergeCoverage, sameThread } = require('../pipeline/lib/news-threads.cjs');
+const { validateEdition } = require('../pipeline/lib/public-edition.cjs');
 const { plainExplanation, plainHeadline, plainSourceName } = require('../pipeline/lib/plain-language.cjs');
 
-const read = (rel) => {
-  try { return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', rel), 'utf8')); }
-  catch { return null; }
-};
-
+const FILE = path.join(__dirname, '..', 'data', 'edition.json');
 const SECTIONS = {
-  economy:     { beat: 'Economy',         room: 'Economy & money',     key: 'economy' },
-  money:       { beat: 'Markets & money', room: 'Economy & money',     key: 'economy' },
-  politics:    { beat: 'Politics',        room: 'Politics',            key: 'politics' },
-  security:    { beat: 'Security',        room: 'Security & society',  key: 'society' },
-  society:     { beat: 'Society',         room: 'Security & society',  key: 'society' },
-  'us-mexico': { beat: 'US & Mexico',     room: 'US & Mexico',         key: 'usmexico' },
+  economy: { beat: 'Economy', room: 'Economy & money', key: 'economy' },
+  money: { beat: 'Markets & money', room: 'Economy & money', key: 'economy' },
+  politics: { beat: 'Politics', room: 'Politics', key: 'politics' },
+  security: { beat: 'Security', room: 'Security & society', key: 'society' },
+  society: { beat: 'Society', room: 'Security & society', key: 'society' },
+  'us-mexico': { beat: 'US & Mexico', room: 'US & Mexico', key: 'usmexico' },
+  energy: { beat: 'Energy & infrastructure', room: 'Energy & infrastructure', key: 'energy' },
+  payments: { beat: 'Payments & fintech', room: 'Payments & fintech', key: 'payments' },
+  deals: { beat: 'Deals & investment', room: 'Deals & investment', key: 'deals' },
 };
-
-const clean = (value) => String(value || '').trim();
-const shortDate = (value) => {
+const shortDate = (value, locale = 'en') => {
   const date = new Date(`${value}T12:00:00Z`);
-  return Number.isFinite(date.getTime()) ? date.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' }) : value;
-};
-const sentence = (value) => {
-  const text = clean(value).replace(/\.\s*$/, '');
-  return text ? `${text}.` : '';
+  return Number.isFinite(date.getTime()) ? date.toLocaleDateString(locale === 'es' ? 'es-MX' : 'en-US', {
+    timeZone: 'UTC', month: 'short', day: 'numeric',
+  }) : value;
 };
 
-function toStory(group) {
-  const event = group.event;
-  const section = SECTIONS[event && event.section] || SECTIONS.economy;
-  const sources = mergeCoverage(event, event.coverage || [], group.coverage || [])
-    .map((source) => ({ ...source, source: plainSourceName(source.source) }));
-  const latestSourceTime = sources.map((source) => clean(source.publishedAt)).find(Boolean);
+function loadEdition(sources) {
+  if (sources?.edition) return sources.edition;
+  try { return JSON.parse(fs.readFileSync(FILE, 'utf8')); } catch { return null; }
+}
+
+function toStory(story, locale) {
+  const copy = story[locale] || story.en || {};
+  const section = SECTIONS[story.section] || SECTIONS.economy;
+  const analysisSources = (story.evidence || []).filter((item) => item.kind !== 'article');
+  const sources = (story.evidence || []).map((item) => ({
+    source: plainSourceName(item.source), url: item.url, publishedAt: story.publishedAt, date: story.date,
+  }));
   return {
-    id: clean(event.id) || clean(event.h1 || event.headline || event.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+    id: story.id,
     beat: section.beat,
-    date: clean(event.date),
-    lane: clean(event.lane),
-    title: plainHeadline(event.h1 || event.headline || event.title).replace(/\.\s*$/, ''),
-    summary: plainExplanation(event.summary || event.dek || event.context || event.why),
-    bg: plainExplanation(event.background),
-    view: plainExplanation(event.view),
-    prediction: plainExplanation(event.prediction),
-    analysisV: Number(event.analysisV) || 0,
-    analysisRefs: event.analysisRefs && typeof event.analysisRefs === 'object' ? event.analysisRefs : {},
-    analysisSources: Array.isArray(event.analysisSources) ? event.analysisSources : [],
-    implications: plainExplanation(event.implications),
-    next: plainExplanation(event.next),
-    image: /^https:\/\//i.test(clean(event.image)) ? clean(event.image) : '',
-    source: plainSourceName(event.source),
-    url: clean(event.href || event.url),
-    reportTime: latestSourceTime || clean(event.publishedAt),
+    date: story.date,
+    lane: story.lane,
+    title: plainHeadline(copy.headline).replace(/\.\s*$/, ''),
+    summary: plainExplanation(copy.dek),
+    bg: plainExplanation(copy.background),
+    view: plainExplanation(copy.view),
+    prediction: plainExplanation(copy.watch),
+    analysisV: 1,
+    analysisRefs: story.evidenceRefs || {},
+    analysisSources,
+    source: plainSourceName(story.source),
+    url: story.url,
+    reportTime: story.publishedAt,
     sources,
-    sourceCount: sources.length || 1,
+    sourceCount: sources.length,
     topic: section.room,
     topicKey: section.key,
   };
 }
 
-module.exports = function (now = new Date(), sources = {}) {
-  const brief = sources.brief || read('brief.json') || {};
-  const happening = sources.happening || read('happening.json') || {};
-  const publicationStatus = sources.publicationStatus || read('publication-status.json') || {};
-  const meta = brief.meta || {};
-  const clock = now instanceof Date || typeof now === 'string' || typeof now === 'number' ? now : new Date();
-  const editorialDate = editorialDay(clock);
-  const claims = [brief.lead, ...(Array.isArray(brief.items) ? brief.items : [])].filter(Boolean);
-  const briefEditorialDate = clean(meta.editorialDate);
-  const publicationInterrupted = publicationStatus.editorialDate === editorialDate
-    && ['deferred', 'blocked'].includes(publicationStatus.state);
-  const generatedForToday = briefEditorialDate === editorialDate && !publicationInterrupted;
-  // Never disguise a deployment outage as an editorial judgment. A stale build keeps
-  // the last certified dateline, hides its cards, and says the update is delayed. Only
-  // a current edition with meta.quiet may claim there were no major developments.
-  const carryingLastBrief = !generatedForToday;
-  const visibleClaims = generatedForToday ? claims : [];
-  const visibleEditionDate = generatedForToday ? editorialDate : (briefEditorialDate || editorialDate);
-  const briefGroups = groupEvents(visibleClaims).map((group) => {
-    const related = (happening.events || []).filter((event) => sameThread(group.event, event));
-    return { ...group, coverage: mergeCoverage(group.coverage, related, related.flatMap((event) => event.coverage || [])) };
-  });
-  const selectedStories = briefGroups.map(toStory).filter((story) => story.title).slice(0, 3);
-  const weekendEdition = meta.selection?.policy === 'weekend-recap-v1';
-  // The date is authoritative. A prior-day development may extend a real current
-  // edition, but prior reporting can never create an edition on its own.
-  const prior = new Date(`${editorialDate}T12:00:00Z`);
-  prior.setUTCDate(prior.getUTCDate() - 1);
-  const priorDate = prior.toISOString().slice(0, 10);
-  const todayStories = weekendEdition
-    ? [] : selectedStories.filter((story) => story.date === editorialDate);
-  const keyDevelopments = weekendEdition
-    ? []
-    : selectedStories.filter((story) => story.date === priorDate);
-  const weekendStories = weekendEdition
-    ? selectedStories.filter((story) => story.lane === 'weekend') : [];
-  const weekRecapStories = weekendEdition
-    ? selectedStories.filter((story) => story.lane === 'week-recap') : [];
-  const stories = weekendEdition
-    ? [...weekendStories, ...weekRecapStories]
-    : [...todayStories, ...keyDevelopments];
-  const droppedMisdatedStories = stories.length !== selectedStories.length;
-  const latestItemDate = stories.map((story) => story.date).filter(Boolean).sort().at(-1) || '';
-  const fallback = stories.slice(0, 3).map((story) => sentence(story.title)).join(' ');
-  const quietCopy = 'No major developments yet today.';
+function mondayOfEdition(day) {
+  const date = new Date(`${day}T12:00:00Z`);
+  const weekday = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() - weekday + 1);
+  return date.toISOString().slice(0, 10);
+}
 
+module.exports = function (now = new Date(), sources = {}, locale = 'en') {
+  if (!(now instanceof Date) && typeof now !== 'string' && typeof now !== 'number') {
+    sources = now || {};
+    now = new Date();
+  }
+  const edition = loadEdition(sources);
+  const validation = validateEdition(edition);
+  if (!validation.ok) throw new Error(`data/edition.json is invalid: ${validation.errors.join('; ')}`);
+  const currentEditorialDate = editorialDay(now);
+  const carryingLastBrief = edition.editorialDate !== currentEditorialDate;
+  const weekendEdition = edition.editionType === 'weekend-recap';
+  const stories = edition.stories.map((story) => toStory(story, locale));
+  const todayStories = weekendEdition ? [] : stories.filter((story) => story.lane === 'today');
+  const keyDevelopments = weekendEdition ? [] : stories.filter((story) => story.lane === 'key-development');
+  const weekendStories = weekendEdition ? stories.filter((story) => story.lane === 'weekend') : [];
+  const weekRecapStories = weekendEdition ? stories.filter((story) => story.lane === 'week-recap') : [];
   const briefSources = [];
   for (const story of stories) {
-    for (const source of story.sources) {
-      if (!source.source || !source.url || briefSources.some((item) => item.source === source.source)) continue;
-      briefSources.push(source);
-      if (briefSources.length === 5) break;
-    }
-    if (briefSources.length === 5) break;
+    const source = story.sources.find((item) => item.url === story.url) || story.sources[0];
+    if (!source || briefSources.some((item) => item.url === source.url)) continue;
+    briefSources.push(source);
   }
-
+  const latestItemDate = stories.map((story) => story.date).sort().at(-1) || '';
+  const delayed = locale === 'es'
+    ? 'La actualización de hoy está retrasada. Esta es la última edición completa.'
+    : "Today's update is delayed. This is the last complete edition.";
   return {
-    editorialDate: visibleEditionDate,
-    currentEditorialDate: editorialDate,
-    briefEditorialDate,
+    editorialDate: edition.editorialDate,
+    currentEditorialDate,
+    briefEditorialDate: edition.editorialDate,
+    artifactHash: edition.artifactHash,
     carryingLastBrief,
-    publicationInterrupted,
+    publicationInterrupted: carryingLastBrief,
     weekendEdition,
-    editionType: weekendEdition ? 'weekend-recap' : 'daily',
-    briefTitle: weekendEdition ? 'Weekend recap' : 'The brief',
-    newsThrough: clean(meta.reviewedAt || meta.generatedAt || happening.meta?.generatedAt),
-    quiet: generatedForToday && (!stories.length || !!meta.quiet),
-    summaryLead: publicationInterrupted
-      ? "Today's update is delayed while reported developments are being checked."
-      : carryingLastBrief
-      ? "Today's update is delayed. The date above is the last complete edition."
-      : plainExplanation(!droppedMisdatedStories && clean(brief.summary)
-        ? clean(brief.summary) : (fallback || quietCopy)),
+    editionType: edition.editionType,
+    briefTitle: weekendEdition ? (locale === 'es' ? 'Resumen del fin de semana' : 'Weekend recap') : (locale === 'es' ? 'El resumen' : 'The brief'),
+    newsThrough: edition.generatedAt,
+    quiet: false,
+    summaryLead: carryingLastBrief ? delayed : edition.summary[locale],
     stories,
     todayStories,
     keyDevelopments,
@@ -140,7 +111,7 @@ module.exports = function (now = new Date(), sources = {}) {
     weekRecapStories,
     briefSources,
     latestItemDate,
-    windowHours: Number(meta.windowHours) || 36,
-    windowLabel: weekendEdition ? `Since ${shortDate(meta.selection?.weekStartDate)}` : `Past ${Number(meta.windowHours) || 36} hours`,
+    windowHours: 36,
+    windowLabel: weekendEdition ? `${locale === 'es' ? 'Desde' : 'Since'} ${shortDate(mondayOfEdition(edition.editorialDate), locale)}` : '',
   };
 };

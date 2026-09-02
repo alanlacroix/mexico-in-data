@@ -2,14 +2,7 @@
   "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
   "name": "mexico-brief-publication-watchdog",
   "main": "src/index.mjs",
-  "compatibility_date": "2026-07-31",
-  "compatibility_flags": ["nodejs_compat"],
-  "secrets": {
-    "required": ["GITHUB_TOKEN"]
-  },
-  "triggers": {
-    "crons": ["*/15 * * * *"]
-  },
+  "compatibility_date": "2026-09-02",
   "kv_namespaces": [
     {
       "binding": "WATCHDOG_STATE",
@@ -17,14 +10,14 @@
     }
   ],
   "vars": {
-    "PUBLICATION_STATUS_URL": "https://mexicobrief.com/data/publication-status.json",
     "GITHUB_OWNER": "alanlacroix",
     "GITHUB_REPO": "mexico-in-data",
     "GITHUB_WORKFLOW": "happening.yml",
     "GITHUB_REF": "main",
-    "WATCHDOG_GRACE_MINUTES": "20",
-    "RECENT_RUN_MINUTES": "180",
     "HEARTBEAT_MAX_AGE_MINUTES": "45"
+  },
+  "triggers": {
+    "crons": ["*/15 * * * *"]
   },
   "observability": {
     "enabled": true

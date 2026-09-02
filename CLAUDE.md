@@ -18,8 +18,9 @@ deployment live.
 
 - The Brief is the reason the site exists. Ranking, factual accuracy, plain language,
   freshness, and useful Briefly Explained context come before new features.
-- Keep five key developments at most. Analysis is optional; a missing analysis panel
-  may not block or reorder factual news.
+- Rank up to five candidates, lock the top three, and publish one to three key developments. Every
+  published development has a complete Briefly Explained panel. The topic-filtered
+  weekly shelf stays terse and comes from the same bilingual edition artifact.
 - Keep the homepage topic filters. They help a reader scan the week, but they are
   filters, not gateways to separate quarterly pages.
 - English and Spanish are separate complete editions. Never mix languages inside one.
@@ -30,10 +31,17 @@ deployment live.
 
 ## Reliability law
 
-- `happening.yml` is the only workflow that publishes the daily edition.
-- Its order is fixed: collect RSS → curate facts without analysis → reconcile scheduled
-  outcomes → lock the exact five → explain those five → build the final brief → translate
-  → validate → receipt → release → push → verify production.
+- `happening.yml` is the only workflow that publishes the daily edition, through one
+  command: `pipeline/build-edition.mjs`.
+- `data/edition.json` is the only public content authority. It contains the complete
+  English and Spanish edition and weekly shelf. A failed build leaves it byte-for-byte
+  unchanged and exits nonzero.
+- Publication gets one morning attempt and one noon attempt. Each attempt has three
+  bounded model calls and no internal retry loop. A same-input noon check is a zero-call
+  no-op only after that morning successfully published the artifact still on disk.
+  Monthly and per-day budgets are hard limits.
+- The Cloudflare Worker is only a clock. It may dispatch each date/slot once; it never
+  evaluates, repairs, or republishes content.
 - The six-hour refresh may update only inputs rendered on the homepage. Optional or
   historical datasets do not belong on the critical path.
 - Machine-generated `data/` changes win conflicts. Rebase before editing and never
@@ -48,7 +56,6 @@ The build copies only:
 - the English and Spanish homepage;
 - `404.html`, `feed.xml`, `robots.txt`, and `sitemap.xml`;
 - the stylesheet and two social images;
-- `publication-status.json`, `brief.json`, and `event-status.json` for production
-  verification.
+- `edition.json` for exact production verification.
 
 Raw data, source snapshots, prompts, docs, and model keys never enter `_site/`.

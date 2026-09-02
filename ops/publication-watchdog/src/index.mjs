@@ -1,445 +1,174 @@
-import {
-  publicationCoversEdition,
-  publicationStopsRecovery,
-  dueEdition,
-  recentActiveRun,
-  recoveryThrottle,
-  resolvePublicationStatus,
-} from './decision.mjs';
-
 const DEFAULTS = Object.freeze({
-  publicationStatusUrl: 'https://mexicobrief.com/data/publication-status.json',
   githubOwner: 'alanlacroix',
   githubRepo: 'mexico-in-data',
   githubWorkflow: 'happening.yml',
   githubRef: 'main',
-  graceMinutes: 20,
-  recentRunMinutes: 180,
   heartbeatMaxAgeMinutes: 45,
 });
-
 const HEARTBEAT_KEY = 'last-scheduled-check';
+const CLAIM_TTL_SECONDS = 7 * 24 * 60 * 60;
 
-function numericEnv(value, fallback) {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;
-}
-
-function config(env) {
+function settings(env) {
   return {
-    publicationStatusUrl: env.PUBLICATION_STATUS_URL || DEFAULTS.publicationStatusUrl,
     githubOwner: env.GITHUB_OWNER || DEFAULTS.githubOwner,
     githubRepo: env.GITHUB_REPO || DEFAULTS.githubRepo,
     githubWorkflow: env.GITHUB_WORKFLOW || DEFAULTS.githubWorkflow,
     githubRef: env.GITHUB_REF || DEFAULTS.githubRef,
-    graceMinutes: numericEnv(env.WATCHDOG_GRACE_MINUTES, DEFAULTS.graceMinutes),
-    recentRunMinutes: numericEnv(env.RECENT_RUN_MINUTES, DEFAULTS.recentRunMinutes),
-    heartbeatMaxAgeMinutes: numericEnv(env.HEARTBEAT_MAX_AGE_MINUTES, DEFAULTS.heartbeatMaxAgeMinutes),
+    heartbeatMaxAgeMinutes: Number(env.HEARTBEAT_MAX_AGE_MINUTES) || DEFAULTS.heartbeatMaxAgeMinutes,
   };
+}
+
+export function easternClock(now = new Date()) {
+  const date = now instanceof Date ? now : new Date(now);
+  if (!Number.isFinite(date.getTime())) throw new TypeError('now must be valid');
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/New_York',
+    year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(date).filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]));
+  return {
+    editorialDate: `${parts.year}-${parts.month}-${parts.day}`,
+    minuteOfDay: Number(parts.hour) * 60 + Number(parts.minute),
+  };
+}
+
+export function dueSlot(now = new Date()) {
+  const clock = easternClock(now);
+  if (clock.minuteOfDay < 9 * 60) return null;
+  return { editorialDate: clock.editorialDate, slot: clock.minuteOfDay < 12 * 60 ? 'morning' : 'noon' };
+}
+
+function requireBindings(env) {
+  if (!env.GITHUB_TOKEN) throw new Error('GITHUB_TOKEN secret is not configured');
+  if (!env.WATCHDOG_STATE || typeof env.WATCHDOG_STATE.get !== 'function'
+      || typeof env.WATCHDOG_STATE.put !== 'function' || typeof env.WATCHDOG_STATE.delete !== 'function') {
+    throw new Error('WATCHDOG_STATE KV binding is not configured');
+  }
+}
+
+function claimKey(due) {
+  return `edition-dispatch:${due.editorialDate}:${due.slot}`;
 }
 
 function githubHeaders(token) {
   return {
     Accept: 'application/vnd.github+json',
     Authorization: `Bearer ${token}`,
-    'User-Agent': 'mexico-brief-publication-watchdog',
+    'Content-Type': 'application/json',
+    'User-Agent': 'mexico-brief-edition-clock',
     'X-GitHub-Api-Version': '2022-11-28',
   };
 }
 
-async function fetchPublicationStatus(url) {
-  const target = new URL(url);
-  target.searchParams.set('watchdog', String(Date.now()));
-  const response = await fetch(target, {
-    headers: { Accept: 'application/json', 'Cache-Control': 'no-cache' },
-  });
-
-  // A missing receipt means no edition has been proven live yet.
-  if (response.status === 404) return null;
-  if (!response.ok) throw new Error(`publication status returned HTTP ${response.status}`);
-
-  const status = await response.json();
-  if (!status || typeof status !== 'object' || Array.isArray(status)) {
-    throw new Error('publication status was not a JSON object');
-  }
-  return status;
-}
-
-function publicationStatusOverride(env) {
-  if (!env.PUBLICATION_STATUS_JSON) return undefined;
-  const status = JSON.parse(env.PUBLICATION_STATUS_JSON);
-  if (!status || typeof status !== 'object' || Array.isArray(status)) {
-    throw new Error('PUBLICATION_STATUS_JSON was not a JSON object');
-  }
-  return status;
-}
-
-function workflowRunsUrl(settings) {
-  const workflow = encodeURIComponent(settings.githubWorkflow);
-  const url = new URL(
-    `https://api.github.com/repos/${encodeURIComponent(settings.githubOwner)}/${encodeURIComponent(settings.githubRepo)}/actions/workflows/${workflow}/runs`,
-  );
-  url.searchParams.set('branch', settings.githubRef);
-  url.searchParams.set('per_page', '20');
-  return url;
-}
-
-async function fetchWorkflowRuns(settings, token) {
-  const response = await fetch(workflowRunsUrl(settings), {
-    headers: githubHeaders(token),
-  });
-  if (!response.ok) throw new Error(`GitHub workflow-runs request returned HTTP ${response.status}`);
-
-  const payload = await response.json();
-  if (!Array.isArray(payload?.workflow_runs)) {
-    throw new Error('GitHub workflow-runs response did not contain workflow_runs');
-  }
-  return payload.workflow_runs;
-}
-
-function nextUtcDate(dateKey) {
-  const date = new Date(`${dateKey}T00:00:00Z`);
-  if (Number.isNaN(date.getTime())) throw new Error(`invalid editorial date: ${dateKey}`);
-  date.setUTCDate(date.getUTCDate() + 1);
-  return date.toISOString().slice(0, 10);
-}
-
-function recoveryRunsUrl(settings, editorialDate, page) {
-  const url = workflowRunsUrl(settings);
-  // An Eastern editorial day spans parts of two UTC dates. Query both, then let the
-  // pure Eastern-date guard decide which dispatch consumed this day's allowance.
-  url.searchParams.set('event', 'workflow_dispatch');
-  url.searchParams.set('created', `${editorialDate}..${nextUtcDate(editorialDate)}`);
-  url.searchParams.set('per_page', '100');
-  url.searchParams.set('page', String(page));
-  return url;
-}
-
-async function fetchRecoveryRuns(settings, token, editorialDate) {
-  const runs = [];
-  for (let page = 1; page <= 10; page += 1) {
-    const response = await fetch(recoveryRunsUrl(settings, editorialDate, page), {
-      headers: githubHeaders(token),
-    });
-    if (!response.ok) throw new Error(`GitHub recovery-runs request returned HTTP ${response.status}`);
-
-    const payload = await response.json();
-    if (!Array.isArray(payload?.workflow_runs)) {
-      throw new Error('GitHub recovery-runs response did not contain workflow_runs');
-    }
-    if (Number(payload.total_count) > 1000) {
-      throw new Error('GitHub recovery-runs query exceeded its safe result limit');
-    }
-    runs.push(...payload.workflow_runs);
-    if (payload.workflow_runs.length < 100) return runs;
-  }
-  throw new Error('GitHub recovery-runs query did not reach a complete page');
-}
-
-function repositoryStatusUrl(settings) {
-  const url = new URL(
-    `https://api.github.com/repos/${encodeURIComponent(settings.githubOwner)}/${encodeURIComponent(settings.githubRepo)}/contents/data/publication-status.json`,
-  );
-  url.searchParams.set('ref', settings.githubRef);
-  return url;
-}
-
-async function fetchRepositoryPublicationStatus(settings, token) {
-  const response = await fetch(repositoryStatusUrl(settings), {
-    headers: {
-      ...githubHeaders(token),
-      Accept: 'application/vnd.github.raw+json',
-    },
-  });
-  if (!response.ok) throw new Error(`GitHub publication-status request returned HTTP ${response.status}`);
-
-  const status = await response.json();
-  if (!status || typeof status !== 'object' || Array.isArray(status)) {
-    throw new Error('GitHub publication status was not a JSON object');
-  }
-  return status;
-}
-
-async function dispatchWorkflow(settings, token, force) {
-  const workflow = encodeURIComponent(settings.githubWorkflow);
-  const endpoint = `https://api.github.com/repos/${encodeURIComponent(settings.githubOwner)}/${encodeURIComponent(settings.githubRepo)}/actions/workflows/${workflow}/dispatches`;
-  const response = await fetch(endpoint, {
+async function dispatch(settingsValue, token, due) {
+  const workflow = encodeURIComponent(settingsValue.githubWorkflow);
+  const url = `https://api.github.com/repos/${encodeURIComponent(settingsValue.githubOwner)}/${encodeURIComponent(settingsValue.githubRepo)}/actions/workflows/${workflow}/dispatches`;
+  const response = await fetch(url, {
     method: 'POST',
-    headers: {
-      ...githubHeaders(token),
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      ref: settings.githubRef,
-      inputs: {
-        force: force ? 'true' : 'false',
-      },
-    }),
+    headers: githubHeaders(token),
+    body: JSON.stringify({ ref: settingsValue.githubRef, inputs: { slot: due.slot } }),
   });
-
-  if (response.status !== 200 && response.status !== 204) {
-    const detail = (await response.text()).slice(0, 300);
-    throw new Error(`GitHub workflow dispatch returned HTTP ${response.status}: ${detail}`);
+  if (response.status !== 204) {
+    const error = new Error(`GitHub workflow dispatch returned HTTP ${response.status}`);
+    error.code = 'github-dispatch-http';
+    throw error;
   }
-
-  return response.status === 200 ? response.json() : null;
 }
 
-function log(level, event, details = {}) {
-  const payload = JSON.stringify({ service: 'publication-watchdog', event, ...details });
-  if (level === 'error') console.error(payload);
-  else console.log(payload);
-}
+export async function runClock(env, now = new Date()) {
+  requireBindings(env);
+  const due = dueSlot(now);
+  if (!due) return { action: 'none', reason: 'before the morning slot', due: null };
+  const key = claimKey(due);
+  if (await env.WATCHDOG_STATE.get(key)) return { action: 'none', reason: 'slot already dispatched', due };
 
-export async function runWatchdog(env, now = new Date()) {
-  const settings = config(env);
-  const due = dueEdition(now, settings.graceMinutes);
-  if (!due) {
-    log('info', 'not_due', { checkedAt: now.toISOString() });
-    return { action: 'none', reason: 'no edition is due', due: null };
+  // KV is not a lock. It prevents ordinary repeats; build-edition's committed slot
+  // ledger is the second, authoritative idempotency boundary if duplicate Worker
+  // invocations race or GitHub's backup schedule fires too.
+  await env.WATCHDOG_STATE.put(key, JSON.stringify({ claimedAt: now.toISOString() }), { expirationTtl: CLAIM_TTL_SECONDS });
+  try {
+    await dispatch(settings(env), env.GITHUB_TOKEN, due);
+    console.log(JSON.stringify({ service: 'edition-clock', event: 'dispatched', ...due }));
+    return { action: 'dispatch', reason: 'slot claimed', due };
+  } catch (error) {
+    await env.WATCHDOG_STATE.delete(key);
+    throw error;
   }
-
-  const overriddenStatus = publicationStatusOverride(env);
-  const liveStatus = overriddenStatus === undefined
-    ? await fetchPublicationStatus(settings.publicationStatusUrl)
-    : overriddenStatus;
-  if (!env.GITHUB_TOKEN) throw new Error('GITHUB_TOKEN secret is not configured');
-  const repositoryStatus = await fetchRepositoryPublicationStatus(settings, env.GITHUB_TOKEN);
-  const resolved = resolvePublicationStatus(liveStatus, repositoryStatus, due);
-  const status = resolved.status;
-  if (publicationCoversEdition(status, due)) {
-    log('info', 'publication_current', {
-      due,
-      publicationId: status.publicationId || null,
-      statusSource: resolved.source,
-    });
-    return { action: 'none', reason: 'publication is current', due };
-  }
-  if (publicationStopsRecovery(status, due)) {
-    log(status.state === 'blocked' ? 'error' : 'info', `publication_${status.state}`, {
-      due,
-      publicationId: status.publicationId || null,
-      reason: status.reason || null,
-    });
-    return { action: 'none', reason: `publication is ${status.state}`, due };
-  }
-
-  const runs = await fetchWorkflowRuns(settings, env.GITHUB_TOKEN);
-  const activeRun = recentActiveRun(runs, now, settings.recentRunMinutes);
-  if (activeRun) {
-    log('info', 'workflow_active', { due, activeRunId: activeRun.id ?? null, status: activeRun.status });
-    return {
-      action: 'none',
-      reason: 'workflow is already queued or in progress',
-      due,
-      activeRunId: activeRun.id ?? null,
-    };
-  }
-
-  const recoveryRuns = await fetchRecoveryRuns(settings, env.GITHUB_TOKEN, due.editorialDate);
-  const throttle = recoveryThrottle(recoveryRuns, due.editorialDate);
-  if (throttle.blocked) {
-    log('info', 'recovery_throttled', { due, ...throttle });
-    return { action: 'none', reason: throttle.reason, due };
-  }
-
-  const dispatchedRun = await dispatchWorkflow(settings, env.GITHUB_TOKEN, resolved.source !== 'repository');
-  log('info', 'workflow_dispatched', {
-    due,
-    workflowRunId: dispatchedRun?.workflow_run_id || null,
-    statusSource: resolved.source,
-    resolvedEditorialDate: status?.editorialDate || null,
-    resolvedSlot: status?.slot || null,
-  });
-  return { action: 'dispatch', reason: 'publication was stale', due };
 }
 
 async function writeHeartbeat(env, heartbeat) {
-  if (!env.WATCHDOG_STATE || typeof env.WATCHDOG_STATE.put !== 'function') {
-    throw new Error('WATCHDOG_STATE KV binding is not configured');
-  }
-  await env.WATCHDOG_STATE.put(HEARTBEAT_KEY, JSON.stringify(heartbeat), {
-    expirationTtl: 7 * 24 * 60 * 60,
-  });
+  await env.WATCHDOG_STATE.put(HEARTBEAT_KEY, JSON.stringify(heartbeat), { expirationTtl: CLAIM_TTL_SECONDS });
 }
 
 async function readHeartbeat(env) {
   if (!env.WATCHDOG_STATE || typeof env.WATCHDOG_STATE.get !== 'function') return null;
-  const raw = await env.WATCHDOG_STATE.get(HEARTBEAT_KEY);
-  if (!raw) return null;
-  const heartbeat = JSON.parse(raw);
-  if (!heartbeat || typeof heartbeat !== 'object' || Array.isArray(heartbeat)) {
-    throw new Error('watchdog heartbeat was not a JSON object');
-  }
-  return heartbeat;
+  const value = await env.WATCHDOG_STATE.get(HEARTBEAT_KEY);
+  if (!value) return null;
+  return JSON.parse(value);
 }
 
 export async function runScheduledCheck(env, now = new Date()) {
   const checkedAt = now.toISOString();
   try {
-    const result = await runWatchdog(env, now);
+    const result = await runClock(env, now);
     await writeHeartbeat(env, { ok: true, checkedAt, result });
     return result;
   } catch (error) {
-    try {
-      await writeHeartbeat(env, { ok: false, checkedAt, error: error.message });
-    } catch (heartbeatError) {
-      log('error', 'heartbeat_write_failed', { checkedAt, message: heartbeatError.message });
-    }
+    // Health is public. Persist a stable class, never a GitHub response body or
+    // exception string that could contain operational details.
+    try { await writeHeartbeat(env, { ok: false, checkedAt, errorCode: error.code || 'scheduled-check-failed' }); } catch { /* binding error is reported below */ }
     throw error;
   }
 }
 
-function errorMessage(error) {
-  return error instanceof Error ? error.message : String(error);
-}
-
 export async function checkHealth(env, now = new Date()) {
-  const settings = config(env);
   const checks = {
     githubTokenConfigured: Boolean(env.GITHUB_TOKEN),
     stateBindingConfigured: Boolean(env.WATCHDOG_STATE && typeof env.WATCHDOG_STATE.get === 'function'),
-    publicationStatusReachable: false,
-    repositoryStatusReachable: false,
-    githubApiReachable: false,
     heartbeatFresh: false,
     lastScheduledCheckHealthy: false,
-    editionCurrentOrRecoveryActive: false,
   };
   const errors = [];
-  let livePublication = null;
-  let repositoryPublication = null;
-  let resolvedPublication = { status: null, source: 'live' };
-  let latestWorkflowRun = null;
-  let workflowRuns = [];
+  if (!checks.githubTokenConfigured) errors.push('GITHUB_TOKEN secret is not configured');
+  if (!checks.stateBindingConfigured) errors.push('WATCHDOG_STATE KV binding is not configured');
   let heartbeat = null;
-
-  try {
-    livePublication = await fetchPublicationStatus(settings.publicationStatusUrl);
-    checks.publicationStatusReachable = true;
-  } catch (error) {
-    errors.push(`publication status: ${errorMessage(error)}`);
-  }
-
-  if (!checks.githubTokenConfigured) {
-    errors.push('GITHUB_TOKEN secret is not configured');
-  } else {
-    try {
-      workflowRuns = await fetchWorkflowRuns(settings, env.GITHUB_TOKEN);
-      latestWorkflowRun = workflowRuns[0] || null;
-      checks.githubApiReachable = true;
-    } catch (error) {
-      errors.push(`GitHub workflow API: ${errorMessage(error)}`);
-    }
-    try {
-      repositoryPublication = await fetchRepositoryPublicationStatus(settings, env.GITHUB_TOKEN);
-      checks.repositoryStatusReachable = true;
-    } catch (error) {
-      errors.push(`GitHub publication status: ${errorMessage(error)}`);
-    }
-  }
-
-  const due = dueEdition(now, settings.graceMinutes);
-  if (checks.publicationStatusReachable && checks.repositoryStatusReachable) {
-    resolvedPublication = resolvePublicationStatus(livePublication, repositoryPublication, due);
-  }
-  const recoveryActive = due
-    ? recentActiveRun(workflowRuns, now, settings.recentRunMinutes)
-    : null;
-  checks.editionCurrentOrRecoveryActive = !due
-    || publicationCoversEdition(resolvedPublication.status, due)
-    || Boolean(recoveryActive);
-  if (!checks.editionCurrentOrRecoveryActive) {
-    errors.push(`${due.editorialDate} ${due.slot} edition is not live and no recovery run is active`);
-  }
-
-  if (!checks.stateBindingConfigured) {
-    errors.push('WATCHDOG_STATE KV binding is not configured');
-  } else {
+  if (checks.stateBindingConfigured) {
     try {
       heartbeat = await readHeartbeat(env);
-      const heartbeatTime = Date.parse(heartbeat?.checkedAt || '');
-      const ageMinutes = Number.isFinite(heartbeatTime)
-        ? (now.getTime() - heartbeatTime) / 60_000
-        : Infinity;
-      checks.heartbeatFresh = ageMinutes >= -5 && ageMinutes <= settings.heartbeatMaxAgeMinutes;
+      const age = (now.getTime() - Date.parse(heartbeat?.checkedAt || '')) / 60000;
+      checks.heartbeatFresh = Number.isFinite(age) && age >= -5 && age <= settings(env).heartbeatMaxAgeMinutes;
       checks.lastScheduledCheckHealthy = heartbeat?.ok === true;
       if (!heartbeat) errors.push('scheduled heartbeat has not been recorded');
       else if (!checks.heartbeatFresh) errors.push('scheduled heartbeat is stale');
-      else if (!checks.lastScheduledCheckHealthy) errors.push(`last scheduled check failed: ${heartbeat.error || 'unknown error'}`);
-    } catch (error) {
-      errors.push(`watchdog heartbeat: ${errorMessage(error)}`);
+      else if (!checks.lastScheduledCheckHealthy) errors.push(`last scheduled check failed: ${heartbeat.errorCode || 'unknown-error'}`);
+    } catch {
+      errors.push('heartbeat state is unreadable');
     }
   }
-
-  const ok = Object.values(checks).every(Boolean);
   return {
-    ok,
-    service: 'publication-watchdog',
+    ok: Object.values(checks).every(Boolean),
+    service: 'edition-clock',
     dispatchFromHttp: false,
     checkedAt: now.toISOString(),
     checks,
     errors,
     heartbeat,
-    livePublication: livePublication ? {
-      state: livePublication.state || 'published',
-      editorialDate: livePublication.editorialDate || null,
-      contentEditorialDate: livePublication.contentEditorialDate || livePublication.editorialDate || null,
-      slot: livePublication.slot || null,
-      publicationId: livePublication.publicationId || null,
-    } : null,
-    repositoryPublication: repositoryPublication ? {
-      state: repositoryPublication.state || 'published',
-      editorialDate: repositoryPublication.editorialDate || null,
-      contentEditorialDate: repositoryPublication.contentEditorialDate || repositoryPublication.editorialDate || null,
-      slot: repositoryPublication.slot || null,
-      publicationId: repositoryPublication.publicationId || null,
-    } : null,
-    resolvedPublicationSource: resolvedPublication.source,
-    latestWorkflowRun: latestWorkflowRun ? {
-      id: latestWorkflowRun.id ?? null,
-      status: latestWorkflowRun.status || null,
-      conclusion: latestWorkflowRun.conclusion || null,
-      createdAt: latestWorkflowRun.created_at || null,
-    } : null,
   };
 }
 
-async function healthResponse(request, env) {
-  if (request.method !== 'GET' && request.method !== 'HEAD') {
-    return new Response('Method not allowed', {
-      status: 405,
-      headers: { Allow: 'GET, HEAD' },
-    });
-  }
-
-  const path = new URL(request.url).pathname;
-  if (path !== '/' && path !== '/health') return new Response('Not found', { status: 404 });
-
+async function respond(request, env) {
+  const url = new URL(request.url);
+  if (request.method !== 'GET' && request.method !== 'HEAD') return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
+  if (url.pathname !== '/' && url.pathname !== '/health') return new Response('Not found', { status: 404 });
   const health = await checkHealth(env);
-  const body = request.method === 'HEAD'
-    ? null
-    : JSON.stringify(health);
-  return new Response(body, {
+  return new Response(request.method === 'HEAD' ? null : JSON.stringify(health), {
     status: health.ok ? 200 : 503,
-    headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
+    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
   });
 }
 
 export default {
-  // This route is intentionally read-only. Only the scheduled handler below
-  // can invoke runWatchdog and dispatch a GitHub workflow.
-  fetch(request, env) {
-    return healthResponse(request, env);
-  },
-
-  scheduled(controller, env, ctx) {
-    const now = new Date(controller.scheduledTime);
-    ctx.waitUntil(
-      runScheduledCheck(env, now).catch((error) => {
-        log('error', 'watchdog_failed', { checkedAt: now.toISOString(), message: error.message });
-        throw error;
-      }),
-    );
+  fetch: respond,
+  scheduled(_controller, env, context) {
+    context.waitUntil(runScheduledCheck(env));
   },
 };

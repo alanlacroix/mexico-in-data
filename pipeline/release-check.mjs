@@ -45,6 +45,10 @@ for (const file of actualHtml) if (!expectedHtml.has(file)) failures.push(`uncla
 for (const file of manifest.requiredFiles || []) {
   if (!fs.existsSync(path.join(OUTPUT, file))) failures.push(`required release file is missing: ${file}`);
 }
+const allowedFiles = new Set(manifest.allowedFiles || []);
+const actualFiles = walk(OUTPUT).map(relative);
+for (const file of actualFiles) if (!allowedFiles.has(file)) failures.push(`unclassified file entered the artifact: ${file}`);
+for (const file of allowedFiles) if (!actualFiles.includes(file)) failures.push(`allowed release file is missing: ${file}`);
 
 // Every executable inline script is parsed from the built HTML. Template-level
 // checks can miss declarations that only collide after includes are assembled.
@@ -87,8 +91,8 @@ const redirectRules = redirectsText.split(/\r?\n/).map((line) => line.trim()).fi
   return { from, to, status };
 });
 const globalHeaders = headerRules.get('/*') || [];
-for (const required of ['X-Content-Type-Options: nosniff', 'X-Frame-Options: DENY', 'Strict-Transport-Security: max-age=31536000']) {
-  if (!globalHeaders.includes(required)) failures.push(`_headers is missing global security header: ${required}`);
+for (const required of ['X-Content-Type-Options: nosniff', 'X-Frame-Options: DENY', 'Strict-Transport-Security: max-age=31536000', "Content-Security-Policy: default-src 'self'"]) {
+  if (!globalHeaders.some((header) => header.startsWith(required))) failures.push(`_headers is missing global security header: ${required}`);
 }
 for (const [from, to] of redirectRoutes) {
   const rule = redirectRules.find((item) => item.from === from);
@@ -184,7 +188,7 @@ for (const item of [...manifest.publicRoutes, ...manifest.compatibilityRoutes]) 
 // 5. No developer-machine URL, filesystem path, or recognizable credential may
 // be embedded in any text file that ships. If a known secret is present in the
 // environment, check its literal value too.
-const textExtensions = new Set(['.html', '.js', '.css', '.json', '.geojson', '.topojson', '.xml', '.txt', '']);
+const textExtensions = new Set(['.html', '.js', '.css', '.json', '.geojson', '.topojson', '.xml', '.txt', '.md', '.svg', '']);
 const publicTextFiles = walk(OUTPUT).filter((file) => textExtensions.has(path.extname(file)));
 const forbiddenText = [
   { label: 'localhost URL', re: /(?:https?:\/\/)?localhost(?::\d+)?/i },

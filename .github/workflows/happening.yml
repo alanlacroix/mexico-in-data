@@ -1,37 +1,19 @@
-name: happening
-# The only workflow that publishes the homepage brief. It gets several chances to
-# run in each editorial window, but the committed publication receipt makes each
-# window idempotent. Every workflow that writes to main shares the concurrency
-# group below, so a data refresh cannot race this commit again.
+name: edition
 
+# One command owns publication. 14:23 and 17:23 UTC fall inside the builder's
+# accepted morning/noon Eastern windows in both standard and daylight time. The
+# Cloudflare clock is primary; these two runs are the independent scheduler backup.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'pipeline/**'
   schedule:
-    # Run hourly and let the gate decide. This is deliberate, and it replaced four
-    # precise cron minutes on 2026-08-04 after Alan hit a third late morning in a row.
-    #
-    # GitHub's scheduler is best-effort and, for this repo, is not merely late: over
-    # 2026-08-01..04 the every-6-hours refresh (cron ':17') actually fired at :51, :34,
-    # :54, :12, :03 and :51, hours from its slot, and the morning edition cron was
-    # dropped outright on the 3rd and the 4th. Asking that scheduler to hit 13:07 UTC
-    # was the bug. No number of extra precise crons fixes an unreliable clock.
-    #
-    # pipeline/editorial-gate.mjs is already state-based rather than clock-based: it
-    # refuses before 9am Eastern and refuses again once the day's receipt exists. So an
-    # hourly attempt is free (the gate exits in seconds) and the edition now publishes on
-    # the first runner GitHub grants after 9am Eastern instead of waiting for a specific
-    # minute that may never come.
-    - cron: '23 * * * *'
+    - cron: '23 14,17 * * *'
   workflow_dispatch:
     inputs:
-      force:
-        description: Republish even if the repository receipt is current
+      slot:
+        description: Edition slot
         required: true
-        default: false
-        type: boolean
+        default: morning
+        type: choice
+        options: [morning, noon]
 
 permissions:
   contents: write
@@ -41,92 +23,96 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  happening:
+  edition:
     runs-on: ubuntu-latest
+    # Absolute feed/article/model deadlines plus two bounded deploy verifications fit
+    # under this ceiling. The old 15-minute cap could kill a correct recovery run.
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           ref: main
           fetch-depth: 0
+          persist-credentials: false
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: '24'
           cache: npm
 
-      - name: Decide whether this edition is still due
-        id: timing
-        env:
-          FORCE_PUBLICATION: ${{ github.event.inputs.force || 'false' }}
-        run: node pipeline/editorial-gate.mjs
-
       - name: Install exact dependencies
-        if: steps.timing.outputs.run == 'true'
         run: npm ci
 
-      - name: Produce and validate one atomic edition
-        if: steps.timing.outputs.run == 'true'
+      - name: Build one atomic bilingual edition
         id: edition
+        continue-on-error: true
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
-        run: node pipeline/publish-edition.mjs
+          PUBLICATION_SLOT: ${{ github.event_name == 'workflow_dispatch' && inputs.slot || '' }}
+        run: node pipeline/build-edition.mjs
 
-      - name: Commit the one publication result
-        if: steps.timing.outputs.run == 'true'
+      - name: Build and validate the exact site before publication
+        id: release
+        if: steps.edition.outcome == 'success' && steps.edition.outputs.state == 'published'
+        continue-on-error: true
+        run: npm run release
+
+      - name: Persist the result without publishing partial work
+        id: persist
+        if: always()
         env:
-          PUBLICATION_STATE: ${{ steps.edition.outputs.state }}
-          STAGING_SAFE: ${{ steps.edition.outputs.staging_safe }}
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
+          EDITION_STATE: ${{ steps.edition.outputs.state }}
+          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date }}
+          EDITION_OUTCOME: ${{ steps.edition.outcome }}
+          RELEASE_OUTCOME: ${{ steps.release.outcome }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name  "mexico-data-bot"
+          git config user.name "mexico-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          if [ "$PUBLICATION_STATE" = "published" ]; then
-            git add data/news/ data/happening.json data/event-status.json data/brief.json data/publication-status.json data/llm-spend.json data/es/
-          elif [ "$PUBLICATION_STATE" = "deferred" ] && [ "$STAGING_SAFE" = "true" ]; then
-            git add data/news/ data/happening.json data/event-status.json data/publication-status.json data/llm-spend.json
+          gh auth setup-git
+          if [ "$EDITION_OUTCOME" = "success" ] && [ "$EDITION_STATE" = "published" ] && [ "$RELEASE_OUTCOME" = "success" ]; then
+            git add data/edition.json data/edition-attempts.json data/llm-spend.json data/news/
+            message="edition: ${EDITORIAL_DATE} published"
+            echo "published=true" >> "$GITHUB_OUTPUT"
           else
-            git add data/publication-status.json data/llm-spend.json
+            git add data/edition-attempts.json data/llm-spend.json
+            message="[CF-Pages-Skip] edition: ${EDITORIAL_DATE:-unknown} ${EDITION_STATE:-failed}"
+            echo "published=false" >> "$GITHUB_OUTPUT"
           fi
           if git diff --cached --quiet; then
-            echo "no publication-state change"
+            echo "no edition-state change"
             exit 0
           fi
-          git commit -m "publication: ${PUBLICATION_DATE} ${PUBLICATION_STATE}"
+          git commit -m "$message"
           for attempt in 1 2 3 4 5; do
             if git push origin HEAD:main; then
               exit 0
             fi
             git pull --rebase --autostash origin main || exit 1
-            sleep 5
           done
           exit 1
 
-      # A blocked receipt is committed first. The hourly gate and independent watchdog
-      # then stop repeating the same code or infrastructure failure. This is the one alert.
-      - name: Report a code or infrastructure block once
-        if: steps.timing.outputs.run == 'true' && steps.edition.outputs.state == 'blocked'
+      - name: Fail loudly when generation or the release gate failed
+        if: steps.edition.outcome == 'failure' || steps.edition.outputs.state == 'failed' || steps.release.outcome == 'failure'
         run: exit 1
 
-      - name: Require the exact published edition to be live
-        if: steps.timing.outputs.run == 'true' && steps.edition.outputs.state == 'published'
-        id: live
+      - name: Verify the exact artifact reached production
+        id: production
+        if: steps.persist.outputs.published == 'true'
         continue-on-error: true
         env:
-          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date }}
+          ARTIFACT_HASH: ${{ steps.edition.outputs.artifact_hash }}
         run: node pipeline/verify-production.mjs
 
-      - name: Retrigger one stale deployment
-        if: steps.timing.outputs.run == 'true' && steps.edition.outputs.state == 'published' && steps.live.outcome == 'failure'
+      - name: Retry deployment once without rerunning editorial generation
+        if: steps.persist.outputs.published == 'true' && steps.production.outcome == 'failure'
         env:
-          PUBLICATION_SLOT: ${{ steps.timing.outputs.slot }}
-          PUBLICATION_DATE: ${{ steps.timing.outputs.editorial_date }}
-          PUBLICATION_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date }}
+          ARTIFACT_HASH: ${{ steps.edition.outputs.artifact_hash }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git commit --allow-empty -m "publication: retry ${PUBLICATION_DATE} deployment"
+          gh auth setup-git
+          git commit --allow-empty -m "deploy: retry edition ${EDITORIAL_DATE} ${ARTIFACT_HASH}"
           git push origin HEAD:main
           node pipeline/verify-production.mjs

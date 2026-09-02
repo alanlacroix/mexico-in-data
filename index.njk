@@ -181,37 +181,15 @@ bodyClass: feed-page
 
 <div class="feed">
   <div class="dateline"><h1 id="edition-date" data-iso="{{ f.date }}" data-locale="{{ locale }}">{{ f.date | longDate(locale) }}</h1></div>
-  <section class="feed-sec" id="sec-brief" data-sec="The brief">
+  {% if f.carrying %}<section class="feed-sec" id="sec-brief" data-sec="Latest edition">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.weekendBrief if f.weekend else L.brief }}</h2><div class="sec-meta" id="brief-asof" data-date="{{ f.updated }}" data-prefix="{{ L.latestBrief if f.carrying else L.updated }}">{{ L.latestBrief if f.carrying else L.updated }}</div></div>
+    <div class="sec-head"><h2>{{ L.latestBrief }}</h2><div class="sec-meta" id="brief-asof" data-date="{{ f.updated }}" data-prefix="{{ L.latestBrief }}">{{ L.latestBrief }}</div></div>
     <p class="brief-p">{{ f.brief }}</p>
-    <div class="brief-row">
-      {%- if f.briefSources.length %}<div class="brief-src"><span>{{ L.sources }}</span>{% for item in f.briefSources %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.source }} ↗</a>{% endfor %}</div>{% endif %}
-    </div>
-  </section>
-
-  {% if f.numbers.length %}<section class="feed-sec" id="sec-numbers" data-sec="Market check">
-    <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.moved }}</h2><div class="sec-meta">{{ L.marketMeta }}</div></div>
-    <div class="tiles">
-      {%- for n in f.numbers %}
-      <div class="tile-cell">
-        <button class="tile" type="button" aria-expanded="false" aria-controls="why-{{ n.id }}" data-toggle="why-{{ n.id }}">
-          <span class="tile-top"><span class="tile-label">{{ n.label }}</span><span class="tile-date">{{ n.asOf }}</span></span>
-          <span class="tile-val"><b>{{ n.value }}</b>{% if n.unit %}<span class="tile-unit">{{ n.unit }}</span>{% endif %}</span>
-          <span class="tile-change"><span class="tile-delta">{{ n.delta }}</span><span class="verdict m-{{ n.mood }}">{{ n.tag }}</span></span>
-          {%- if n.points %}<svg class="spark" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true"><polyline points="{{ n.points }}" fill="none" stroke="{{ n.tone }}" stroke-width="1.5" vector-effect="non-scaling-stroke" style="animation-delay:{{ 0.15 + loop.index0 * 0.10 }}s"/></svg>{% endif %}
-          {%- if n.why %}<span class="tile-more" data-more>{{ L.why }}</span>{% endif %}
-        </button>
-        {%- if n.why %}<div class="tile-why" id="why-{{ n.id }}" hidden>{{ n.why }}</div>{% endif %}
-      </div>
-      {%- endfor %}
-    </div>
   </section>{% endif %}
 
-  {% for storySection in f.storySections %}<section class="feed-sec" id="sec-{{ storySection.id }}" data-edition-stories data-sec="{% if storySection.kind == 'today' %}{{ L.todayStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}">
+  {% for storySection in f.storySections %}<section class="feed-sec" id="sec-{{ storySection.id }}" data-edition-stories data-sec="{% if storySection.kind == 'latest' %}{{ L.latestEditionStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}">
     <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{% if storySection.kind == 'today' %}{{ L.todayStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}</h2><div class="sec-meta">{{ L.storyCount(storySection.stories.length, storySection.latest) }}</div></div>
+    <div class="sec-head"><h2>{% if storySection.kind == 'latest' %}{{ L.latestEditionStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}</h2><div class="sec-meta">{{ L.storyCount(storySection.stories.length, storySection.latest) }}</div></div>
     <div class="cards">
       {%- for story in storySection.stories %}
       <article class="card">
@@ -237,6 +215,25 @@ bodyClass: feed-page
       {%- endfor %}
     </div>
   </section>{% endfor %}
+
+  {% if f.numbers.length %}<section class="feed-sec" id="sec-numbers" data-sec="Market check">
+    <div class="sec-rule"></div>
+    <div class="sec-head"><h2>{{ L.moved }}</h2><div class="sec-meta">{{ L.marketMeta }}</div></div>
+    <div class="tiles">
+      {%- for n in f.numbers %}
+      <div class="tile-cell">
+        <button class="tile" type="button" aria-expanded="false" aria-controls="why-{{ n.id }}" data-toggle="why-{{ n.id }}">
+          <span class="tile-top"><span class="tile-label">{{ n.label }}</span><span class="tile-date">{{ n.asOf }}</span></span>
+          <span class="tile-val"><b>{{ n.value }}</b>{% if n.unit %}<span class="tile-unit">{{ n.unit }}</span>{% endif %}</span>
+          <span class="tile-change"><span class="tile-delta">{{ n.delta }}</span><span class="verdict m-{{ n.mood }}">{{ n.tag }}</span></span>
+          {%- if n.points %}<svg class="spark" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true"><polyline points="{{ n.points }}" fill="none" stroke="{{ n.tone }}" stroke-width="1.5" vector-effect="non-scaling-stroke" style="animation-delay:{{ 0.15 + loop.index0 * 0.10 }}s"/></svg>{% endif %}
+          {%- if n.why %}<span class="tile-more" data-more>{{ L.why }}</span>{% endif %}
+        </button>
+        {%- if n.why %}<div class="tile-why" id="why-{{ n.id }}" hidden>{{ n.why }}</div>{% endif %}
+      </div>
+      {%- endfor %}
+    </div>
+  </section>{% endif %}
 
   {% if f.week.length %}<section class="feed-sec" id="sec-week" data-sec="This week">
     <div class="sec-rule"></div>
@@ -339,25 +336,6 @@ if (asof) {
   const when = new Date(asof.dataset.date);
   asof.textContent = Number.isNaN(when.getTime()) ? asof.dataset.prefix
     : `${asof.dataset.prefix} ${when.toLocaleTimeString('en-US', { timeZone: 'America/Mexico_City', hour: 'numeric', minute: '2-digit' })}`;
-}
-
-// Last-resort freshness guard. The normal workflow publishes a current dated edition,
-// including an explicit quiet state. If both deployment controls fail, a previously
-// built static page must still never present old cards as today's news.
-const editionDate = $('#edition-date');
-if (editionDate) {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/Mexico_City', year: 'numeric', month: '2-digit', day: '2-digit',
-  }).formatToParts(new Date());
-  const part = (type) => parts.find((item) => item.type === type)?.value || '';
-  const mexicoToday = `${part('year')}-${part('month')}-${part('day')}`;
-  if (editionDate.dataset.iso !== mexicoToday) {
-    $('.brief-p').textContent = I18N.updateDelayed;
-    const sources = $('.brief-row');
-    if (sources) sources.hidden = true;
-    if (asof) asof.hidden = true;
-    $$('[data-edition-stories]').forEach((section) => { section.hidden = true; });
-  }
 }
 
 // This week: chips derived from the categories actually present, with live counts.

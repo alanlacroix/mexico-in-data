@@ -7,14 +7,13 @@ module.exports = function (ec) {
   // External headlines and source labels are data, never markup. Autoescape is the
   // final browser boundary; the few intentional HTML fragments use an explicit | safe.
   ec.setNunjucksEnvironmentOptions({ autoescape: true });
-  ec.addPassthroughCopy('design');
+  // Only the public stylesheet ships. The design directory also contains internal
+  // working notes and must never be copied wholesale into the production artifact.
+  ec.addPassthroughCopy({ 'design/mckinsey-mx.css': 'design/mckinsey-mx.css' });
   ec.addPassthroughCopy('assets/og.png');
   ec.addPassthroughCopy('assets/og.svg');
-  // The watchdog reads this receipt to verify the exact edition that reached
-  // production. All other data is compiled into the homepage and stays private.
-  for (const file of ['publication-status.json', 'brief.json', 'event-status.json']) {
-    ec.addPassthroughCopy(`data/${file}`);
-  }
+  // The public edition is the single production receipt and content authority.
+  ec.addPassthroughCopy('data/edition.json');
   ec.addPassthroughCopy('_headers');   // Cloudflare Pages cache policy
   ec.addPassthroughCopy('_redirects'); // retired URLs must follow the same rules in the built site
 

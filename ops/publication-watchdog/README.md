@@ -1,25 +1,19 @@
-# Publication watchdog
+# Edition clock
 
-This Worker checks the live publication receipt and the repository's publication
-receipt every 15 minutes. After the
-day's single morning edition is due in Eastern time (plus a 20-minute grace
-period), it dispatches `.github/workflows/happening.yml` only when:
+This Worker is only a clock. Every 15 minutes it computes the current Eastern
+publication slot and dispatches `.github/workflows/happening.yml` once for the
+morning slot and once for the noon slot. A KV claim suppresses ordinary repeats;
+the publication command's committed slot ledger is the authoritative duplicate
+guard if Cloudflare and GitHub race.
 
-1. the live receipt does not cover the due edition, or a strictly newer same-day
-   repository receipt says that edition is deferred;
-2. no recent run of that workflow is queued or in progress; and
-3. the Worker has not already dispatched a recovery for that Eastern editorial date.
-
-`GET /` and `GET /health` are read-only health responses. They fail with HTTP
-503 unless the GitHub credential works, the live receipt is reachable, and the
-persisted scheduled heartbeat is recent and healthy. HTTP requests cannot
-dispatch the workflow.
+It does not inspect the website, rewrite editorial state, retry failed content,
+or publish anything. `GET /` and `GET /health` are read-only.
 
 ## Deploy
 
-Create a fine-grained GitHub token for `alanlacroix/mexico-in-data` with
-**Actions: read and write** and **Contents: read** access. Store it as a Worker
-secret; never add it to `wrangler.jsonc` or the repository.
+Store a fine-grained GitHub token with **Actions: read and write** for
+`alanlacroix/mexico-in-data` as a Worker secret. No repository-content permission
+is required.
 
 ```sh
 cd ops/publication-watchdog
@@ -27,22 +21,9 @@ npx wrangler secret put GITHUB_TOKEN
 npx wrangler deploy
 ```
 
-Deployment is not complete until all three checks pass (the health check may
-need 15 minutes for its first scheduled heartbeat):
-
-```sh
-npx wrangler versions list
-npx wrangler secret list
-curl --fail https://WORKER.workers.dev/health
-```
-
-The KV binding in `wrangler.jsonc` is the production heartbeat store. Do not
-replace or remove it without migrating `last-scheduled-check`; a Worker that
-cannot prove its cron is running is unhealthy by design.
-
-Cloudflare Cron Triggers run in UTC. The Worker converts each invocation to
-`America/New_York`, so the publication window continues to work across EST and
-EDT. Cron changes can take several minutes to propagate after deployment.
+The existing `WATCHDOG_STATE` KV namespace contains only slot claims and a health
+heartbeat. Cron times are interpreted by the Worker in `America/New_York`, so DST
+does not change the 9am/noon contract.
 
 ## Test
 

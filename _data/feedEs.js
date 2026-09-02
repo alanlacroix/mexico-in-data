@@ -6,26 +6,17 @@
 //   2. Native: most of the wire IS Spanish. Where the ledger kept the original
 //      Spanish headline, the /es/ page shows it verbatim — provenance, not
 //      translation.
-//   3. Cached model translation, for free editorial text only (the brief, the
-//      Briefly-explained fields, deks, calendar lines), keyed by a hash of the
-//      English so each sentence is translated exactly once, ever, under the es-MX
-//      contract in pipeline/translate-es.mjs.
-// The current Brief is all-or-nothing by language. If any required translation is
-// missing, this module carries the last complete Spanish Brief. Optional sections
-// omit missing free text instead of leaking English into the Spanish edition.
+//   3. The current edition's Spanish is published atomically beside its English.
+//      Cached translation remains only for optional calendar/economy/week copy.
 const fs = require('node:fs');
 const path = require('node:path');
 const feed = require('./feed.js');
 const ui = require('./uiStrings.js');
-const { hash, cached, resolveSpanishBrief } = require('../pipeline/lib/es-translation.cjs');
+const { hash, cached } = require('../pipeline/lib/es-translation.cjs');
 
 const CACHE = path.join(__dirname, '..', 'data', 'es', 'strings.json');
-const BRIEF_SNAPSHOT = path.join(__dirname, '..', 'data', 'es', 'brief.json');
 const cache = (() => {
   try { return JSON.parse(fs.readFileSync(CACHE, 'utf8')); } catch { return {}; }
-})();
-const snapshot = (() => {
-  try { return JSON.parse(fs.readFileSync(BRIEF_SNAPSHOT, 'utf8')); } catch { return null; }
 })();
 
 // Free text appears only when a reviewed cache entry exists.
@@ -42,40 +33,35 @@ const esRel = (rel) => {
 
 module.exports = function () {
   const f = feed.forLocale('es');
-  const briefFeed = resolveSpanishBrief(f, cache, snapshot);
-  const currentVisibleIds = new Set(f.stories.map((story) => story.id));
-  const translatedStories = briefFeed.stories
-    .filter((story) => briefFeed.editorialDate !== f.date || currentVisibleIds.has(story.id))
-    .map((s) => ({ ...s, date: esDate(s.date), cat: cat(s.cat) }));
-  const carrying = Boolean(f.carrying || briefFeed.translationCarrying);
-  const visibleWeekend = Boolean(briefFeed.weekend);
+  const translatedStories = f.stories.map((s) => ({ ...s, date: esDate(s.date), cat: cat(s.cat) }));
+  const carrying = Boolean(f.carrying);
+  const visibleWeekend = Boolean(f.weekend);
   const weekendStories = visibleWeekend
     ? translatedStories.filter((story) => story.lane === 'weekend') : [];
   const weekRecapStories = visibleWeekend
     ? translatedStories.filter((story) => story.lane === 'week-recap') : [];
-  const todayStories = carrying || visibleWeekend
-    ? [] : translatedStories.filter((story) => story.lane === 'today');
+  const todayStories = visibleWeekend ? [] : translatedStories.filter((story) => story.lane === 'today');
   const keyDevelopments = visibleWeekend
-    ? [] : translatedStories.filter((story) => !todayStories.includes(story));
+    ? [] : translatedStories.filter((story) => story.lane === 'key-development');
   const translatedWeek = f.week.map((w) => ({
     ...w,
     date: esDate(w.date),
     cat: cat(w.cat),
-    title: w.lang === 'ES' && w.orig ? w.orig : t(w.title),
-    dek: w.lang === 'ES' ? '' : t(w.dek),
+    title: w.title,
+    dek: w.dek,
     orig: '',
     lang: '',
-  })).filter((w) => w.title);
+  }));
   return {
     ...f,
-    date: briefFeed.editorialDate,
-    updated: briefFeed.updated,
+    date: f.date,
+    updated: f.updated,
     carrying,
     weekend: visibleWeekend,
-    translationCarrying: briefFeed.translationCarrying,
-    brief: f.carrying ? ui.es.updateDelayed : briefFeed.brief,
-    briefSources: briefFeed.briefSources || [],
-    latestStoryDate: esDate(briefFeed.latestStoryDate),
+    translationCarrying: false,
+    brief: f.brief,
+    briefSources: f.briefSources || [],
+    latestStoryDate: esDate(f.latestStoryDate),
     numbers: f.numbers.map((n) => ({
       ...n,
       label: mapped(ui.maps.tileLabels)(n.label),
@@ -92,8 +78,7 @@ module.exports = function () {
       { id: 'new-this-weekend', kind: 'weekend', latest: weekendStories[0]?.date || '', stories: weekendStories },
       { id: 'week-recap', kind: 'week-recap', latest: weekRecapStories[0]?.date || '', stories: weekRecapStories },
     ] : [
-      { id: 'today-stories', kind: 'today', latest: todayStories[0]?.date || '', stories: todayStories },
-      { id: 'key-developments', kind: 'key', latest: keyDevelopments[0]?.date || '', stories: keyDevelopments },
+      { id: 'latest-edition', kind: 'latest', latest: esDate(f.date), stories: translatedStories },
     ]).filter((section) => section.stories.length),
     week: translatedWeek,
     weekLabel: esDate(f.weekLabel),

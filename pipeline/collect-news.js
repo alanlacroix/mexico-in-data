@@ -10,6 +10,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { cleanNewsText, domainTrusted, mexicoRelevant, newsCollectionHealth, publicHeadlineEligible } from './lib/news-trust.js';
+import { articleUrlAllowed, fetchBoundedText, mapLimit, sourceHosts } from './lib/url-safety.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -18,20 +19,15 @@ const REG = JSON.parse(fs.readFileSync(path.join(__dirname, 'news-sources.json')
 const SOURCE_BY_NAME = new Map(REG.sources.map((source) => [source.name, source]));
 const UA = 'Mozilla/5.0 (compatible; mexico-brief news collector; +https://mexicobrief.com)';
 
-// ---- tiny fetch (node fetch, curl fallback) ----
-async function fetchText(url, charset) {
-  const decode = (buf) => (charset ? new TextDecoder(charset === 'latin1' ? 'iso-8859-1' : charset) : new TextDecoder()).decode(buf);
-  try {
-    const r = await fetch(url, {
-      headers: { 'User-Agent': UA, 'Accept': 'application/rss+xml,application/atom+xml,application/xml,text/xml,*/*' },
-      redirect: 'follow', signal: AbortSignal.timeout(20000),
-    });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return decode(await r.arrayBuffer());
-  } catch (e) {
-    const { execFileSync } = await import('node:child_process');
-    return decode(execFileSync('curl', ['-sL', '--compressed', '--max-time', '25', '-A', UA, url], { maxBuffer: 32 * 1024 * 1024 }));
-  }
+// One bounded network path. There is no serial curl retry: a slow publisher may be
+// marked unhealthy, but it cannot consume the edition's entire 15-minute window.
+async function fetchText(source) {
+  const result = await fetchBoundedText(source.url, {
+    allowedHosts: sourceHosts(source), charset: source.charset,
+    headers: { 'User-Agent': UA, 'Accept': 'application/rss+xml,application/atom+xml,application/xml,text/xml,*/*' },
+    timeoutMs: 12000, maxBytes: 4 * 1024 * 1024,
+  });
+  return result.text;
 }
 
 // ---- minimal RSS/Atom parsing (zero-dep) ----
@@ -148,9 +144,8 @@ function isoWeek(dt) {
 const weekFile = (w) => path.join(NEWSDIR, w + '.json');
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
 
-async function main() {
+export async function collectNews({ now = new Date() } = {}) {
   fs.mkdirSync(NEWSDIR, { recursive: true });
-  const now = new Date();
   const thisWeek = isoWeek(now);
   const prevWeek = isoWeek(new Date(now.getTime() - 7 * 864e5));
 
@@ -161,46 +156,53 @@ async function main() {
   const health = {};
   let added = 0;
 
-  for (const s of REG.sources) {
-    let n = 0, ok = false;
+  const collected = await mapLimit(REG.sources, 10, async (s) => {
     try {
-      const xml = await fetchText(s.url, s.charset);
+      const xml = await fetchText(s);
       let items = s.format === 'jsonapi' ? parseJsonApi(xml, s.baseUrl || s.url)
         : s.format === 'dof' ? parseDof(xml)
         : parseFeed(xml);
       if (s.id === 'pemex-nacionales') items = items.map(fixPemex);
-      ok = items.length > 0;
-      for (const it of items) {
-        const url = canonical(it.link);
-        if (!url) continue;
-        const id = idOf(url);
-        if (seen.has(id)) continue;
-        if (s.mx && !mexicoRelevant(`${it.title} ${it.dek}`)) continue;   // Mexico filter on pan-LatAm feeds
-        seen.add(id);
-        ledger.push({
-          id, url, title: it.title, dek: it.dek,
-          source: domainOf(url) || s.id, sourceName: s.name, tier: s.tier, beat: beatFor(s, url), lang: s.lang,
-          published_at: toISO(it.date) || now.toISOString(),
-          first_seen: now.toISOString(),
-        });
-        n++; added++;
-        if (n >= (s.tier === 'aggregator' ? 15 : 40)) break;   // no single feed floods the ledger
-      }
-    } catch (e) {
-      ok = false;
+      return { source: s, ok: items.length > 0, items };
+    } catch {
+      return { source: s, ok: false, items: [] };
+    }
+  });
+
+  for (const result of collected) {
+    const s = result.source;
+    let n = 0;
+    for (const it of result.items) {
+      const url = canonical(it.link);
+      const publishedAt = toISO(it.date);
+      // first_seen records collection. It is never substituted for a source date:
+      // undated reporting cannot satisfy the exact-day publication contract.
+      if (!url || !publishedAt || !articleUrlAllowed(s, url)) continue;
+      const id = idOf(url);
+      if (seen.has(id)) continue;
+      if (s.mx && !mexicoRelevant(`${it.title} ${it.dek}`)) continue;
+      seen.add(id);
+      ledger.push({
+        id, url, title: it.title, dek: it.dek,
+        source: domainOf(url) || s.id, sourceName: s.name, tier: s.tier, beat: beatFor(s, url), lang: s.lang,
+        published_at: publishedAt,
+        first_seen: now.toISOString(),
+      });
+      n++; added++;
+      if (n >= (s.tier === 'aggregator' ? 15 : 40)) break;
     }
     const prior = readJson(path.join(NEWSDIR, 'health.json'), {})[s.id] || {};
     health[s.id] = {
       name: s.name, last_run: now.toISOString(),
-      last_success: ok ? now.toISOString() : (prior.last_success || null),
-      new_items: n, consecutive_failures: ok ? 0 : (prior.consecutive_failures || 0) + 1,
+      last_success: result.ok ? now.toISOString() : (prior.last_success || null),
+      new_items: n, consecutive_failures: result.ok ? 0 : (prior.consecutive_failures || 0) + 1,
     };
-    console.log(`  ${ok ? '✓' : '✗'} ${s.id.padEnd(20)} +${n}`);
+    console.log(`  ${result.ok ? '✓' : '✗'} ${s.id.padEnd(20)} +${n}`);
   }
 
   ledger.sort((a, b) => String(b.published_at).localeCompare(String(a.published_at)));
   // rolling 72h wire the site reads — shape mirrors the old news.json
-  const cutoff = Date.now() - 72 * 3600 * 1000;
+  const cutoff = now.getTime() - 72 * 3600 * 1000;
   const tagOf = REG.meta.beatToTag;
   const recent = [...ledger, ...prevLedger]
     .filter((x) => Date.parse(x.published_at) >= cutoff)
@@ -238,4 +240,6 @@ async function main() {
   console.log(`\nnews: +${added} new · ledger ${thisWeek} now ${ledger.length} · wire ${wire.articles.length} · ${alive}/${REG.sources.length} sources alive`);
 }
 
-main().catch((e) => { console.error('collect-news failed:', e.message); process.exit(1); });
+if (import.meta.url === `file://${process.argv[1]}`) {
+  collectNews().catch((e) => { console.error('collect-news failed:', e.message); process.exit(1); });
+}

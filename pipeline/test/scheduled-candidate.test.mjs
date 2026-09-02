@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { linkScheduledCandidate } = require('../lib/scheduled-candidate.cjs');
+const { dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate } = require('../lib/scheduled-candidate.cjs');
 const schedule = [{
   id: 'banxico-policy-2026-08-06',
   date: '2026-08-06',
@@ -70,5 +70,34 @@ assert.equal(linkScheduledCandidate({
   sourceName: 'El Economista',
   published_at: '2026-08-07T13:15:39Z',
 }, releases, '2026-08-07'), null, 'implicit actor matching must remain scoped to Mexico');
+
+const seeded = seedScheduledCandidate({ ...schedule[0], source: 'Banco de México', sourceUrl: 'https://www.banxico.org.mx/decisiones' },
+  '06/08/26 | El objetivo para la tasa de interés de Banco de México se mantiene sin cambio en 6.50 por ciento Texto completo');
+assert.equal(seeded?._scheduled?.id, schedule[0].id,
+  'a due outcome absent from RSS must be seeded from its dated official page');
+assert.equal(seedScheduledCandidate({ ...schedule[0], source: 'Banco de México', sourceUrl: 'https://www.banxico.org.mx/decisiones' },
+  '25/06/26 | El objetivo para la tasa de interés de Banco de México se mantiene sin cambio en 6.50 por ciento'), null,
+  'an old outcome on the same official page must not satisfy today');
+assert.deepEqual(dueScheduledRows({ events: schedule }, '2026-08-06'), schedule);
+assert.deepEqual(missingScheduledRows(schedule, []), schedule,
+  'a failed or stale official fetch must leave the required outcome unresolved');
+assert.deepEqual(missingScheduledRows(schedule, [seeded]), [],
+  'a dated official seed satisfies the required outcome');
+
+const informe = {
+  id: 'presidential-informe-2026-09-01', date: '2026-09-01', outcomeRequired: true,
+  requiredForBrief: true, importanceFloor: 7, label: 'Segundo Informe de Gobierno',
+  source: 'Presidencia de la República', sourceUrl: 'https://www.gob.mx/presidencia/archivo/articulos',
+  outcome: { actor: 'presidency', topic: 'state-of-nation' },
+};
+assert.equal(seedScheduledCandidate(informe,
+  'martes, 01 de septiembre de 2026 Versión estenográfica. Segundo Informe de Gobierno de la presidenta Claudia Sheinbaum Pardo')?._scheduled?.id,
+informe.id, 'an official dated state-of-the-nation page must seed the due outcome');
+assert.equal(seedScheduledCandidate(informe,
+  'martes, 01 de septiembre de 2026 ¿A qué hora es el Segundo Informe de Gobierno de la presidenta Claudia Sheinbaum Pardo?'),
+null, 'an event-day preview or where-to-watch item must not satisfy the required outcome');
+assert.equal(seedScheduledCandidate(informe,
+  'miércoles, 02 de septiembre de 2026 conferencia. martes, 01 de septiembre de 2026 Fecha de publicación Versión estenográfica. Segundo Informe de Gobierno de la presidenta Claudia Sheinbaum Pardo Continuar leyendo. En otra nota, analistas esperan un cambio futuro.')?._scheduled?.id,
+informe.id, 'un unrelated forecast elsewhere on an archive page must not hide the dated official outcome');
 
 console.log('scheduled-candidate tests: ok');

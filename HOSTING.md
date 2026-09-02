@@ -28,10 +28,11 @@ npm run release
 After a push, verify:
 
 1. `/` and `/es/` return the current edition.
-2. `/data/publication-status.json` identifies that exact edition.
+2. `/data/edition.json` has the exact artifact hash emitted by the publisher.
 3. A retired route such as `/economy.html` redirects to `/`.
 4. `/feed.xml`, `/robots.txt`, and `/sitemap.xml` return 200.
 
-Scheduled background refreshes use `[CF-Pages-Skip]`; only the daily publication
-commit should trigger a full deploy. The independent watchdog verifies the live receipt
-and retries one stale deployment.
+Failed edition attempts commit only their private attempt/spend ledger with
+`[CF-Pages-Skip]`, so Cloudflare keeps serving the last complete edition. The
+Cloudflare Worker is a thin clock that dispatches the morning and noon slots once;
+it does not inspect or mutate editorial state.

@@ -1,11 +1,10 @@
 // anthropic.js — the pipeline's one and only LLM touchpoint. Zero-dependency raw
-// fetch to the Messages API, so the pipeline stays dependency-free. Used by
-// build-email.js to score news and summarize the week's lead items. Everything
-// else in the pipeline is deterministic code with no model in the loop.
+// fetch to the Messages API, so the pipeline stays dependency-free. The atomic
+// edition builder uses it for its three bounded calls; optional tools may also use it.
 //
-// Fail-soft by design: with no ANTHROPIC_API_KEY set, askJSON() returns null and
-// the caller falls back to a deterministic heuristic. The email still builds; the
-// model only sharpens it.
+// With no ANTHROPIC_API_KEY, askJSON() returns null. Optional callers may skip their
+// work; the edition builder treats that as a hard failure and keeps the last-good
+// public artifact unchanged.
 //
 // Model tier, per Fable 2026-08-02, amending the earlier one-model ruling. That
 // ruling's premise ("one Saturday batch, cents either way") expired: the pipeline
@@ -46,9 +45,9 @@ const EFFORT_MODELS = new Set([SONNET]);
 // so the ceiling is code: every call settles into a committed ledger
 // (data/llm-spend.json, pushed by the same CI steps that commit data/), and once
 // the balance reaches the cap—or cannot safely fit the next call—askJSON returns null.
-// Optional callers keep last-good content. The factual Brief remains publishable when
-// the model is unavailable; only complete model-produced layers are shown, and model
-// unavailability can never be relabelled as an editorially quiet day.
+// Optional callers keep last-good content. The edition is one complete bilingual
+// unit, so model unavailability blocks replacement and can never be relabelled as an
+// editorially quiet day.
 // The guard opens again on the 1st. Manual override for debugging:
 // LLM_BUDGET_OVERRIDE=1.
 import fs from 'node:fs';

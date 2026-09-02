@@ -1,139 +1,36 @@
-import analysisContract from './lib/analysis-contract.cjs';
+// Verify the exact immutable edition, not a second operational receipt.
+import publicEdition from './lib/public-edition.cjs';
 
-const { ANALYSIS_VERSION } = analysisContract;
-const BASE_URL = (process.env.PRODUCTION_URL || 'https://mexicobrief.com').replace(/\/$/, '');
-const EXPECTED_ID = process.env.PUBLICATION_ID;
-const EXPECTED_DATE = process.env.PUBLICATION_DATE;
-const EXPECTED_SLOT = process.env.PUBLICATION_SLOT;
-const TIMEOUT_MS = Number(process.env.LIVE_VERIFY_TIMEOUT_MS || 8 * 60 * 1000);
-const INTERVAL_MS = Number(process.env.LIVE_VERIFY_INTERVAL_MS || 15000);
-const SLOT_RANK = { morning: 1, afternoon: 2 };
+const { validateEdition } = publicEdition;
+const expectedDate = String(process.env.EDITORIAL_DATE || '').trim();
+const expectedHash = String(process.env.ARTIFACT_HASH || '').trim();
+const base = String(process.env.PRODUCTION_ORIGIN || 'https://mexicobrief.com').replace(/\/$/, '');
 
-function assertDatedEdition(brief, expectedDate) {
-  const claims = [brief?.lead, ...(Array.isArray(brief?.items) ? brief.items : [])].filter(Boolean);
-  if (brief?.meta?.quiet === true && claims.length === 0) return;
-  if (brief?.meta?.selection?.policy === 'exact-day-plus-carryover-v1') {
-    const prior = new Date(`${expectedDate}T12:00:00Z`);
-    prior.setUTCDate(prior.getUTCDate() - 1);
-    const priorDate = prior.toISOString().slice(0, 10);
-    if (claims.some((claim) => (claim?.lane === 'today' && claim?.date !== expectedDate)
-      || (claim?.lane === 'key-development' && claim?.date !== priorDate)
-      || !['today', 'key-development'].includes(claim?.lane))) {
-      throw new Error('live weekday Brief has a story in the wrong dated lane');
-    }
-  }
-}
+if (!/^\d{4}-\d{2}-\d{2}$/.test(expectedDate)) throw new Error('EDITORIAL_DATE is required');
+if (!/^[a-f0-9]{64}$/.test(expectedHash)) throw new Error('ARTIFACT_HASH is required');
 
-function assertExpectedInputs() {
-  if (!EXPECTED_ID || !EXPECTED_DATE || !SLOT_RANK[EXPECTED_SLOT]) {
-    throw new Error('PUBLICATION_ID, PUBLICATION_DATE and PUBLICATION_SLOT are required');
-  }
-}
-
-async function get(path, type = 'json') {
-  const joiner = path.includes('?') ? '&' : '?';
-  const response = await fetch(`${BASE_URL}${path}${joiner}publication=${encodeURIComponent(EXPECTED_ID)}&t=${Date.now()}`, {
-    headers: { 'cache-control': 'no-cache', pragma: 'no-cache' },
+async function fetchEdition() {
+  const response = await fetch(`${base}/data/edition.json?hash=${expectedHash}`, {
+    headers: { accept: 'application/json', 'cache-control': 'no-cache' },
+    signal: AbortSignal.timeout(15000),
   });
-  if (!response.ok) throw new Error(`${path} returned HTTP ${response.status}`);
-  return type === 'text' ? response.text() : response.json();
+  if (!response.ok) throw new Error(`production returned HTTP ${response.status}`);
+  return response.json();
 }
 
-export async function checkProduction() {
-  assertExpectedInputs();
-  const status = await get('/data/publication-status.json');
-  if (status.state === 'deferred') throw new Error('production still serves a deferred publication receipt');
-  if (status.publicationId !== EXPECTED_ID) throw new Error(`production still serves ${status.publicationId || 'no publication receipt'}`);
-  if (status.editorialDate !== EXPECTED_DATE) throw new Error(`production editorial date is ${status.editorialDate || 'missing'}`);
-  if ((SLOT_RANK[status.slot] || 0) < SLOT_RANK[EXPECTED_SLOT]) throw new Error(`production slot is ${status.slot || 'missing'}`);
-
-  const brief = await get('/data/brief.json');
-  if (brief.meta?.editorialDate !== EXPECTED_DATE) throw new Error(`live brief date is ${brief.meta?.editorialDate || 'missing'}`);
-  if (!Array.isArray(brief.items) || brief.items.length > 2) throw new Error('live brief has an invalid story set');
-  const selectionPolicy = brief.meta?.selection?.policy;
-  if (!['exact-day-plus-carryover-v1', 'weekend-recap-v1'].includes(selectionPolicy)
-      || !Array.isArray(brief.meta?.selection?.receipt)) {
-    throw new Error('live brief is missing its selection audit');
+let last = 'not checked';
+for (let attempt = 1; attempt <= 12; attempt += 1) {
+  try {
+    const edition = await fetchEdition();
+    const validation = validateEdition(edition);
+    if (!validation.ok) throw new Error(`live edition invalid: ${validation.errors.join('; ')}`);
+    if (edition.editorialDate !== expectedDate) throw new Error(`live date ${edition.editorialDate}, expected ${expectedDate}`);
+    if (edition.artifactHash !== expectedHash) throw new Error(`live hash ${edition.artifactHash}, expected ${expectedHash}`);
+    console.log(`production verified: ${edition.editorialDate} · ${edition.stories.length} stories · ${edition.artifactHash}`);
+    process.exit(0);
+  } catch (error) {
+    last = error.message;
+    if (attempt < 12) await new Promise((resolve) => setTimeout(resolve, 5000));
   }
-  if (brief.meta.selection.receipt.some((row) => /analysis/i.test(String(row.reason || '')))) {
-    throw new Error('live brief selection still depends on optional analysis');
-  }
-  const claims = [brief.lead, ...(brief.items || [])].filter(Boolean);
-  if (claims.length === 0 && brief.meta?.quiet !== true) {
-    throw new Error('live Brief has no stories and is not marked quiet');
-  }
-  if (claims.length && status.explanations?.targetMet !== true) {
-    throw new Error(`live Briefly Explained coverage is ${status.explanations?.readyTargetCount || 0}/${claims.length}`);
-  }
-  if (claims.some((claim) => Number(claim.analysisV) < ANALYSIS_VERSION
-    || !['background', 'view', 'prediction'].every((field) => String(claim[field] || '').trim())
-    || !['background', 'view', 'prediction'].every((field) => Array.isArray(claim.analysisRefs?.[field]) && claim.analysisRefs[field].length)
-    || !claim.analysisSources?.some((source) => source?.kind !== 'article' && /^https:\/\//i.test(String(source?.url || ''))))) {
-    throw new Error('live Brief contains a story without a complete evidence-linked Briefly Explained unit');
-  }
-  assertDatedEdition(brief, EXPECTED_DATE);
-  if (claims.some((claim) => claim.lane === 'today' && claim.date !== EXPECTED_DATE)) {
-    throw new Error("live Today's stories include a claim from another date");
-  }
-  if (selectionPolicy === 'weekend-recap-v1') {
-    const weekStart = brief.meta.selection.weekStartDate;
-    const weekendStart = brief.meta.selection.weekendStartDate;
-    if (claims.some((claim) => claim.lane === 'weekend'
-      ? claim.date < weekendStart || claim.date > EXPECTED_DATE
-      : claim.lane !== 'week-recap' || claim.date < weekStart || claim.date >= weekendStart)) {
-      throw new Error('live weekend recap has a claim in the wrong dated lane');
-    }
-  }
-  const curation = status.curation;
-  if (curation?.editorialDate !== EXPECTED_DATE || curation.complete !== true) {
-    throw new Error('live edition has no complete fresh-story curation receipt');
-  }
-  const eventStatus = await get('/data/event-status.json');
-  if (eventStatus.meta?.editorialDate !== EXPECTED_DATE) throw new Error('live scheduled-outcome audit has the wrong date');
-  if (Number(eventStatus.meta?.blockers) > 0) throw new Error('live edition has an unresolved scheduled-outcome blocker');
-
-  // These assertions have to track the page. They were still looking for the "Mexico
-  // today" headline and a data-editorial-date attribute, both of which the 2026-08-02
-  // rebuild removed, so every publication since has been marked failed after it had
-  // already published correctly. Assert what the feed actually renders: the wordmark, the
-  // brief itself, and the edition's own date in the dateline.
-  const homepage = await get('/', 'text');
-  if (!/THE MEXICO BRIEF/i.test(homepage) || !/id="sec-brief"/.test(homepage)) {
-    throw new Error('live homepage contract failed');
-  }
-  const longDate = new Date(`${EXPECTED_DATE}T12:00:00Z`).toLocaleDateString('en-US', {
-    timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
-  });
-  if (!homepage.includes(longDate)) {
-    throw new Error(`live homepage does not render the ${EXPECTED_DATE} edition`);
-  }
-  const beControls = (homepage.match(/class="be-btn"/g) || []).length;
-  if (beControls !== claims.length) {
-    throw new Error(`live homepage renders ${beControls}/${claims.length} Briefly Explained controls`);
-  }
-  return status;
 }
-
-async function main() {
-  const deadline = Date.now() + TIMEOUT_MS;
-  let lastMessage = '';
-  while (Date.now() <= deadline) {
-    try {
-      const status = await checkProduction();
-      console.log(`production verified: ${status.editorialDate} ${status.slot} ${status.publicationId}`);
-      return;
-    } catch (error) {
-      if (error.message !== lastMessage) {
-        console.log(`waiting for production: ${error.message}`);
-        lastMessage = error.message;
-      }
-      if (process.argv.includes('--once')) throw error;
-      await new Promise((resolve) => setTimeout(resolve, INTERVAL_MS));
-    }
-  }
-  throw new Error(`Production did not publish ${EXPECTED_ID} within ${Math.round(TIMEOUT_MS / 60000)} minutes: ${lastMessage}`);
-}
-
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch((error) => { console.error(error.message); process.exit(1); });
-}
+throw new Error(`production did not serve the committed edition: ${last}`);

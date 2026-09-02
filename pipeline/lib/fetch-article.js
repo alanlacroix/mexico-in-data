@@ -11,23 +11,17 @@
 // public link-preview markup a page publishes for sharing; a normal UA gets the real page.
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
 const HEADERS = { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'es-MX,es;q=0.9,en;q=0.8' };
+import { fetchBoundedText } from './url-safety.js';
 
-export async function fetchArticle(url) {
-  let html = '';
+export async function fetchArticle(url, { allowedHosts } = {}) {
   try {
-    const r = await fetch(url, { headers: HEADERS, redirect: 'follow', signal: AbortSignal.timeout(20000) });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    html = await r.text();
-  } catch {
-    try {
-      const { execFileSync } = await import('node:child_process');
-      html = execFileSync('curl', ['-sL', '--compressed', '--max-time', '22', '-A', UA, '-H', 'Accept-Language: es-MX,es;q=0.9,en;q=0.8', url], { encoding: 'utf8', maxBuffer: 24 * 1024 * 1024 });
-    } catch { return { ok: false, text: '', image: '', fetched: false }; }
-  }
-  const text = extractText(html);
-  // `fetched` = we actually obtained the page (vs a network failure). Lets callers tell a
-  // legitimately image-less page from a transient failure that should be retried.
-  return { ok: text.length >= 400, text, image: extractOgImage(html), fetched: true };
+    const initial = new URL(url);
+    const hosts = allowedHosts?.length ? allowedHosts : [initial.hostname];
+    const result = await fetchBoundedText(url, { allowedHosts: hosts, headers: HEADERS, timeoutMs: 15000, maxBytes: 6 * 1024 * 1024 });
+    const html = result.text;
+    const text = extractText(html);
+    return { ok: text.length >= 400, text, image: extractOgImage(html), fetched: true, finalUrl: result.url };
+  } catch { return { ok: false, text: '', image: '', fetched: false, finalUrl: '' }; }
 }
 
 // The article's own link-preview image (og:image / twitter:image) — the thumbnail the

@@ -16,8 +16,8 @@
 //
 // So the editorial dates live here, in the open, next to a test that fails when a template
 // changes and its date does not (pipeline/test/page-dates.test.mjs, which checks against
-// real git history wherever that history exists). The daily edition still comes from the
-// publication receipt, because that one is genuinely automatic and always correct.
+// real git history wherever that history exists). The daily edition comes from the
+// single immutable public edition artifact.
 //
 // WHEN YOU MEANINGFULLY REVISE A PAGE, UPDATE ITS DATE HERE. Formatting, a typo or a CSS
 // tweak is not a revision; new or rewritten content is.
@@ -29,17 +29,14 @@ const ROOT = path.join(__dirname, '..');
 const PAGES = {};
 
 module.exports = function () {
-  const receipt = (() => {
+  const edition = (() => {
     try {
-      return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'publication-status.json'), 'utf8'));
+      return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'edition.json'), 'utf8'));
     } catch {
       return {};
     }
   })();
-  const editionAt = receipt.state && receipt.state !== 'published'
-    ? (receipt.contentGeneratedAt || receipt.briefGeneratedAt || receipt.generatedAt)
-    : receipt.generatedAt;
-  const publishedAt = editionAt || new Date().toISOString();
+  const publishedAt = edition.generatedAt || new Date().toISOString();
 
   const out = {
     '/': { modified: publishedAt, published: publishedAt, daily: true },
