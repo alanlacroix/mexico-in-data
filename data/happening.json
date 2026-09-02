@@ -6,35 +6,46 @@
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-09-02T13:32:20.071Z",
+    "generatedAt": "2026-09-02T14:35:33.335Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
       "editorialDate": "2026-09-02",
       "candidateCount": 24,
-      "candidateSig": "eaea9f8b82eab338aaf4e1d3e2b3f6eb8ac679d216039be16ccc71523800dd28",
-      "freshCandidateCount": 8,
+      "candidateSig": "51b9884640c1fd0fb046141465fa3acbbe23955989d0acd6cb6fd993a143f9c3",
+      "freshCandidateCount": 9,
       "assessedCount": 24,
       "selectedCount": 6,
-      "freshSelectedCount": 2,
-      "keptCount": 6,
-      "freshKeptCount": 2,
-      "rejectedCount": 0,
+      "freshSelectedCount": 3,
+      "keptCount": 5,
+      "freshKeptCount": 3,
+      "rejectedCount": 1,
       "freshRejectedCount": 0,
-      "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 8,
+      "rejectedSelected": [
+        {
+          "id": "n-fgr-sat-sedena-y-marina-evaluar-n-por-amenazas-de-se-2026-08-30",
+          "candidateIndex": 22,
+          "date": "2026-08-30",
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/fgr-sat-sedena-y-marina-evaluaran-por-amenazas-de-seguridad-nacional-las-inversiones-que-reciba-mexico/",
+          "flags": [
+            "proposal or draft described as a completed action"
+          ]
+        }
+      ],
+      "eligibleFreshCandidateCount": 9,
       "unassessedFreshCandidateCount": 0,
       "currentDayResolved": true,
       "mode": "model",
       "complete": true,
-      "reason": ""
+      "reason": "1 selected event(s) quarantined by the copy gate"
     },
     "analysisTarget": {
       "policy": "every-selected-story-evidence-locked-v7",
       "ids": [
         "n-remesas-pierden-valor-por-14-meses-consecutivos-por--2026-09-02",
-        "n-por-qu-m-xico-bloque-casi-16-mil-cuentas-bancarias-e-2026-09-02",
-        "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01"
+        "n-modificaciones-y-adiciones-a-las-disposiciones-de-ca-2026-09-02",
+        "n-por-qu-m-xico-bloque-casi-16-mil-cuentas-bancarias-e-2026-09-02"
       ],
       "attempt": 1,
       "added": 0,
@@ -44,24 +55,28 @@
           "ready": false,
           "reason": "field-rejected",
           "fields": {
+            "prediction": [
+              "unsupported numbers: 3, 14"
+            ]
+          }
+        },
+        {
+          "id": "n-modificaciones-y-adiciones-a-las-disposiciones-de-ca-2026-09-02",
+          "ready": false,
+          "reason": "field-rejected",
+          "fields": {
             "background": [
-              "3 sentences (cap 2)"
+              "field was empty"
             ]
           }
         },
         {
           "id": "n-por-qu-m-xico-bloque-casi-16-mil-cuentas-bancarias-e-2026-09-02",
           "ready": false,
-          "reason": "thin-evidence",
-          "fields": {}
-        },
-        {
-          "id": "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01",
-          "ready": false,
           "reason": "field-rejected",
           "fields": {
-            "prediction": [
-              "The prediction describes general mechanisms (cost absorption, price pass-through, supplier redirection) rather than naming a real next decision, release, milestone, or observable fork. It must specify a concrete event such as a regulatory action, announced exemption review, tariff rate change, or published trade data release with a timeframe."
+            "view": [
+              "field was empty"
             ]
           }
         }
@@ -143,6 +158,81 @@
         "componentSource": "model"
       },
       "image": "https://elceo.com/wp-content/uploads/2026/09/remesas_poder_adquisitivo_inflacion.jpg",
+      "imgTries": 2
+    },
+    {
+      "id": "n-modificaciones-y-adiciones-a-las-disposiciones-de-ca-2026-09-02",
+      "date": "2026-09-02",
+      "section": "money",
+      "title": "Mexico's Treasury issues amendments to investment fund performance indicator rules",
+      "why": "Secretaría de Hacienda y Crédito Público published modifications to procedures for calculating net performance indicators for investment societies in the Official Journal on 2 September.",
+      "company": "",
+      "source": "Diario Oficial de la Federación",
+      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797700&fecha=02/09/2026",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-09-02T12:00:00.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Modificaciones y adiciones a las Disposiciones de carácter general que establecen el procedimiento para la construcción de los indicadores de rendimiento neto de las sociedades de inversión…",
+        "dek": "DOF · PODER EJECUTIVO SECRETARIA DE HACIENDA Y CREDITO PUBLICO"
+      },
+      "coverage": [
+        {
+          "source": "Diario Oficial de la Federación",
+          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797700&fecha=02/09/2026",
+          "publishedAt": "2026-09-02T12:00:00.000Z",
+          "date": "2026-09-02",
+          "title": "Mexico's Treasury issues amendments to investment fund performance indicator rules",
+          "summary": "Secretaría de Hacienda y Crédito Público published modifications to procedures for calculating net performance indicators for investment societies in the Official Journal on 2 September."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 2
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 2,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 2,
+              "source": "authoritative-domain",
+              "hostname": "diariooficial.gob.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
       "imgTries": 1
     },
     {
@@ -219,7 +309,155 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/E4LV6SYQ25D5DLI65OVPSKM47Y.jpg?smart=true&auth=8497c879f4798be91ae16fb88906879848e4722a4140c01f8608050c8fc481ba&width=1200&height=630",
-      "imgTries": 1
+      "imgTries": 2
+    },
+    {
+      "id": "n-claudia-sheinbaum-promete-paquete-econ-mico-2027-res-2026-09-02",
+      "date": "2026-09-02",
+      "section": "economy",
+      "title": "Economic Package 2027 to Balance Investment and Social Spending",
+      "why": "Claudia Sheinbaum committed to maintaining investment and social spending while pursuing a smaller deficit in the 2027 Economic Package announced during her Second Government Report.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/09/02/claudia-sheinbaum-promete-paquete-economico-2027-responsable-y-menor-deficit/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-09-02T08:07:11.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Claudia Sheinbaum promete Paquete Económico 2027 ‘responsable’ y menor déficit",
+        "dek": "En su Segundo Informe de Gobierno, Sheinbaum señaló que no se frenará la inversión ni el gasto social."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/09/02/claudia-sheinbaum-promete-paquete-economico-2027-responsable-y-menor-deficit/",
+          "publishedAt": "2026-09-02T08:07:11.000Z",
+          "date": "2026-09-02",
+          "title": "Economic Package 2027 to Balance Investment and Social Spending",
+          "summary": "Claudia Sheinbaum committed to maintaining investment and social spending while pursuing a smaller deficit in the 2027 Economic Package announced during her Second Government Report."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 2,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elfinanciero.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-holcim-invests-over-us-500-million-in-mexico-to-adva-2026-09-02",
+      "date": "2026-09-02",
+      "section": "economy",
+      "title": "Holcim invests over US$500 million in Mexico for circular economy infrastructure",
+      "why": "Holcim Mexico has invested more than US$500 million over the past five years focused on circular economy strategy, representing sustained capital deployment in industrial cement and construction materials.",
+      "company": "Holcim",
+      "source": "MEXICONOW",
+      "url": "https://mexico-now.com/holcim-invests-over-us500-million-in-mexico-to-advance-circular-economy/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-09-02T14:21:54.000Z",
+      "sourceTier": "specialist",
+      "reportEvidence": {
+        "title": "Holcim Invests Over US$500 Million in Mexico to Advance Circular Economy",
+        "dek": "Holcim Mexico has invested more than US$500 million over the past five years as part of a strategy focused on..."
+      },
+      "coverage": [
+        {
+          "source": "MEXICONOW",
+          "url": "https://mexico-now.com/holcim-invests-over-us500-million-in-mexico-to-advance-circular-economy/",
+          "publishedAt": "2026-09-02T14:21:54.000Z",
+          "date": "2026-09-02",
+          "title": "Holcim invests over US$500 million in Mexico for circular economy infrastructure",
+          "summary": "Holcim Mexico has invested more than US$500 million over the past five years focused on circular economy strategy, representing sustained capital deployment in industrial cement and construction materials."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "mexico-now.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
     },
     {
       "id": "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01",
@@ -3041,6 +3279,80 @@
       }
     },
     {
+      "id": "n-importaciones-de-calzado-y-motocicletas-de-china-y-o-2026-08-30",
+      "date": "2026-08-30",
+      "section": "economy",
+      "title": "Mexico's import tariffs cut footwear, motorcycle, and auto-parts shipments by 40 percent or more",
+      "why": "Footwear imports fell 59 percent, motorcycle imports 48 percent, and auto-parts imports 47 percent year-on-year in the first half of 2026 under Mexico's tariff policy, per Economy Ministry data.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/importaciones-de-calzado-y-motocicletas-de-china-y-otros-paises-caen-mas-de-40-por-aranceles-de-mexico/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-08-30T17:45:53.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Importaciones de calzado y motocicletas de China y otros países caen más de 40% por aranceles de México",
+        "dek": "Las importaciones de calzado de México se desplomaron 59%; las de motocicletas, 48% y las de autopartes, 47% anual, en la primera mitad del año, según datos de la Secretaría de Economía. La publicación Importaciones de calzado y motocicletas de China y otros países caen más de 40% por aranceles de México apareció prime"
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/importaciones-de-calzado-y-motocicletas-de-china-y-otros-paises-caen-mas-de-40-por-aranceles-de-mexico/",
+          "publishedAt": "2026-08-30T17:45:53.000Z",
+          "date": "2026-08-30",
+          "title": "Mexico's import tariffs cut footwear, motorcycle, and auto-parts shipments by 40 percent or more",
+          "summary": "Footwear imports fell 59 percent, motorcycle imports 48 percent, and auto-parts imports 47 percent year-on-year in the first half of 2026 under Mexico's tariff policy, per Economy Ministry data."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-cfe-depender-del-sector-privado-para-financiar-la-ma-2026-08-28",
       "date": "2026-08-28",
       "section": "economy",
@@ -4390,302 +4702,6 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "mexico-now.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-harfuch-me-llam-as-supo-la-dea-del-operativo-contra--2026-08-28",
-      "date": "2026-08-28",
-      "section": "us-mexico",
-      "title": "Mexico's Security Minister confirms US technological support in operation against cartel leader",
-      "why": "Security Minister Omar García Harfuch confirmed that the United States provided technological support in the operation against 'El Mencho' and proposed joint investigations between both countries.",
-      "company": "",
-      "source": "Aristegui Noticias",
-      "url": "https://aristeguinoticias.com/2808/mexico/harfuch-me-llamo-asi-supo-la-dea-del-operativo-contra-el-mencho/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-28T15:20:12.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "‘Harfuch me llamó’: así supo la DEA del operativo contra ‘El Mencho’",
-        "dek": "Omar García Harfuch confirmó que EU brindó apoyo tecnológico en el operativo contra ‘El Mencho’ y planteó investigaciones conjuntas entre ambos países."
-      },
-      "coverage": [
-        {
-          "source": "Aristegui Noticias",
-          "url": "https://aristeguinoticias.com/2808/mexico/harfuch-me-llamo-asi-supo-la-dea-del-operativo-contra-el-mencho/",
-          "publishedAt": "2026-08-28T15:20:12.000Z",
-          "date": "2026-08-28",
-          "title": "Mexico's Security Minister confirms US technological support in operation against cartel leader",
-          "summary": "Security Minister Omar García Harfuch confirmed that the United States provided technological support in the operation against 'El Mencho' and proposed joint investigations between both countries."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "aristeguinoticias.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-laser-used-to-shoot-down-cartel-drones-near-mexico-b-2026-08-28",
-      "date": "2026-08-28",
-      "section": "us-mexico",
-      "title": "US military deploys high-energy laser to shoot down cartel drones near Mexico border",
-      "why": "The U.S. military this week used a high-energy laser weapon to shoot down three drones near the southern border that officials linked to Mexican drug cartels, marking an operational escalation in cross-border enforcement.",
-      "company": "",
-      "source": "Border Report",
-      "url": "https://borderreport.com/border-report-tour/border-crime/laser-used-to-shoot-down-cartel-drones-near-mexico-border/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-28T14:54:47.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Laser used to shoot down cartel drones near Mexico border",
-        "dek": "The U.S. military this week used a high-energy laser to shoot down three drones near the southern border that officials said were linked to Mexican drug cartels."
-      },
-      "coverage": [
-        {
-          "source": "Border Report",
-          "url": "https://borderreport.com/border-report-tour/border-crime/laser-used-to-shoot-down-cartel-drones-near-mexico-border/",
-          "publishedAt": "2026-08-28T14:54:47.000Z",
-          "date": "2026-08-28",
-          "title": "US military deploys high-energy laser to shoot down cartel drones near Mexico border",
-          "summary": "The U.S. military this week used a high-energy laser weapon to shoot down three drones near the southern border that officials linked to Mexican drug cartels, marking an operational escalation in cross-border enforcement."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 2,
-        "modelImpact": 0,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 2,
-            "score": 2,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "borderreport.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-cosco-mira-m-s-all-del-mar-su-apuesta-log-stica-para-2026-08-28",
-      "date": "2026-08-28",
-      "section": "economy",
-      "title": "Cosco charts logistics expansion across Mexico's Pacific ports",
-      "why": "Over a decade, Asian trade volume through Mexico has grown, with Pacific ports absorbing larger container flows and supply chains being reorganized as regional manufacturing shifts position.",
-      "company": "Cosco",
-      "source": "T21",
-      "url": "https://t21.com.mx/cosco-mira-mas-alla-del-mar-su-apuesta-logistica-para-la-proxima-decada/",
-      "importance": 5,
-      "kind": "event",
-      "publishedAt": "2026-08-28T13:00:58.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Cosco mira más allá del mar: su apuesta logística para la próxima década",
-        "dek": "En una década, el mapa marítimo de México cambió de escala. El intercambio con Asia ganó peso, los puertos del Pacífico absorbieron mayores volúmenes de contenedores y las cadenas de suministro comenzaron a demandar algo más que espacio a bordo de un buque. En ese escenario, Cosco Shipping Lines México multiplicó entre"
-      },
-      "coverage": [
-        {
-          "source": "T21",
-          "url": "https://t21.com.mx/cosco-mira-mas-alla-del-mar-su-apuesta-logistica-para-la-proxima-decada/",
-          "publishedAt": "2026-08-28T13:00:58.000Z",
-          "date": "2026-08-28",
-          "title": "Cosco charts logistics expansion across Mexico's Pacific ports",
-          "summary": "Over a decade, Asian trade volume through Mexico has grown, with Pacific ports absorbing larger container flows and supply chains being reorganized as regional manufacturing shifts position."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 1,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 5,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "t21.com.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-convocatoria-para-la-convenci-n-obrero-patronal-de-l-2026-08-28",
-      "date": "2026-08-28",
-      "section": "politics",
-      "title": "Federal labor authority convenes wage-revision convention for textile-sector collective contract",
-      "why": "The Center Federal de Conciliación y Registro Laboral has called a convention under Mexico's collective bargaining framework to negotiate wages in the garment-sector contract.",
-      "company": "",
-      "source": "Diario Oficial de la Federación",
-      "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797396&fecha=28/08/2026",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-28T12:00:00.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Convocatoria para la Convención Obrero Patronal de la revisión salarial del Contrato-Ley de la Industria Textil de Géneros de Punto.",
-        "dek": "DOF · ORGANISMOS DESCONCENTRADOS O DESCENTRALIZADOS CENTRO FEDERAL DE CONCILIACION Y REGISTRO LABORAL"
-      },
-      "coverage": [
-        {
-          "source": "Diario Oficial de la Federación",
-          "url": "https://diariooficial.gob.mx/nota_detalle.php?codigo=5797396&fecha=28/08/2026",
-          "publishedAt": "2026-08-28T12:00:00.000Z",
-          "date": "2026-08-28",
-          "title": "Federal labor authority convenes wage-revision convention for textile-sector collective contract",
-          "summary": "The Center Federal de Conciliación y Registro Laboral has called a convention under Mexico's collective bargaining framework to negotiate wages in the garment-sector contract."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 0,
-        "durability": 1,
-        "officialness": 2
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 2,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 2,
-              "source": "authoritative-domain",
-              "hostname": "diariooficial.gob.mx"
             }
           }
         },
