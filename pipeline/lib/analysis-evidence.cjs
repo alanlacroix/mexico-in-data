@@ -37,6 +37,7 @@ const CONCEPT_RULES = [
   ['goods-exports', /\b(?:goods|merchandise|mexican) exports?\b|\bexportaciones mexicanas\b/i],
   ['trade-agreement', /\b(?:usmca|t-?mec|trade agreement|rules? of origin)\b/i],
   ['auto-tariff', /\b(?:auto|automotive|automotriz|cars?|vehicles?|suzuki)\b[\s\S]{0,80}\b(?:tariff|arancel|duty)\b|\b(?:tariff|arancel|duty)\b[\s\S]{0,80}\b(?:auto|automotive|automotriz|cars?|vehicles?|suzuki)\b/i],
+  ['anti-dumping', /\b(?:anti[ -]?dumping|antidumping)\b[\s\S]{0,140}\b(?:imports?|exports?|steel|trade|tariffs?|dut(?:y|ies)|price discrimination|importaciones?|exportaciones?|acero|comercio|arancel(?:es)?|discriminaci[oó]n de precios|cuotas? compensatorias?)\b|\b(?:imports?|exports?|steel|trade|tariffs?|dut(?:y|ies)|price discrimination|importaciones?|exportaciones?|acero|comercio|arancel(?:es)?|discriminaci[oó]n de precios|cuotas? compensatorias?)\b[\s\S]{0,140}\b(?:anti[ -]?dumping|antidumping)\b|\binvestigaci[oó]n por discriminaci[oó]n de precios\b|\bcuotas? compensatorias?\b/i],
   ['china-inputs', /\bchina\b[\s\S]{0,80}\b(?:imports?|inputs?|components?)\b/i],
   ['foreign-direct-investment', /\b(?:foreign direct investment|fdi|inversion extranjera directa)\b/i],
   // A company's physical investment announcement can use the official fixed-
@@ -78,6 +79,7 @@ const ID_CONCEPTS = {
   'std-us-dependence': ['goods-exports'],
   'std-usmca-review': ['trade-agreement'],
   'std-trade-volume': ['goods-exports'],
+  'std-antidumping-process': ['anti-dumping'],
   'std-china-inputs': ['china-inputs'],
   'std-fdi-composition': ['foreign-direct-investment'],
   'std-weak-growth': ['economic-growth'],

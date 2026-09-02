@@ -64,6 +64,19 @@ const exports = {
 assert.ok(standingScore(exports, standing.find((fact) => fact.id === 'std-us-dependence')) > 0,
   'a specific exports overlap must keep genuinely useful trade context');
 
+const antidumping = standing.find((fact) => fact.id === 'std-antidumping-process');
+assert.ok(standingScore({
+  section: 'us-mexico',
+  title: 'Mexico opens anti-dumping investigation into Japanese steel',
+  why: 'The Economy Ministry began a trade-remedy investigation after a domestic producer alleged price discrimination.',
+}, antidumping) > 0, 'an anti-dumping investigation should receive the official process baseline');
+assert.equal(standingScore({
+  title: 'City opens dumping investigation after toxic industrial waste was found',
+}, antidumping), 0, 'ordinary waste dumping must not inherit trade-remedy context');
+assert.equal(standingScore({
+  title: 'City launches anti-dumping campaign against industrial waste',
+}, antidumping), 0, 'an environmental anti-dumping campaign must not inherit trade-remedy context');
+
 assert.deepEqual(standing.filter((fact) => standingScore(suzuki, fact) > 0), [],
   'the exact Suzuki story has no standing fact merely because it sits in the economy section');
 assert.deepEqual(calendar.filter((item) => calendarScore(suzuki, item) > 0), [],
