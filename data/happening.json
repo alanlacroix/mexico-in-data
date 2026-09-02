@@ -2,75 +2,225 @@
   "meta": {
     "title": "What's happening",
     "note": "Curated cross-domain event log: the developments moving Mexico, each rewritten in plain English, dated, and linked to the original publisher or record source. Auto-generated from the news wire on every refresh. Raw or non-English items are quarantined and never published.",
-    "updated": "2026-09-01",
+    "updated": "2026-09-02",
     "source": "The Mexico Brief",
     "sourceUrl": "https://mexicobrief.com/",
     "count": 60,
-    "generatedAt": "2026-09-02T00:21:28.769Z",
+    "generatedAt": "2026-09-02T13:32:20.071Z",
     "llm": true,
     "curation": {
       "policy": "edition-window-assessment-v5",
-      "editorialDate": "2026-09-01",
+      "editorialDate": "2026-09-02",
       "candidateCount": 24,
-      "candidateSig": "6d7c5a20f3658df5883c90e9db028569d92fc61a6c6d8549d59c78ff0c116e8f",
-      "freshCandidateCount": 23,
+      "candidateSig": "eaea9f8b82eab338aaf4e1d3e2b3f6eb8ac679d216039be16ccc71523800dd28",
+      "freshCandidateCount": 8,
       "assessedCount": 24,
-      "selectedCount": 2,
-      "freshSelectedCount": 1,
-      "keptCount": 2,
-      "freshKeptCount": 1,
+      "selectedCount": 6,
+      "freshSelectedCount": 2,
+      "keptCount": 6,
+      "freshKeptCount": 2,
       "rejectedCount": 0,
       "freshRejectedCount": 0,
       "rejectedSelected": [],
-      "eligibleFreshCandidateCount": 57,
-      "unassessedFreshCandidateCount": 34,
-      "currentDayResolved": false,
+      "eligibleFreshCandidateCount": 8,
+      "unassessedFreshCandidateCount": 0,
+      "currentDayResolved": true,
       "mode": "model",
       "complete": true,
-      "reason": "the current-day candidate ledger was not fully resolved"
+      "reason": ""
     },
     "analysisTarget": {
       "policy": "every-selected-story-evidence-locked-v7",
       "ids": [
-        "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01",
-        "n-m-xico-va-por-mayor-escrutinio-a-inversi-n-extranjer-2026-09-01",
-        "n-pemex-exxon-valero-y-bp-tambi-n-pierden-con-los-prec-2026-09-01"
+        "n-remesas-pierden-valor-por-14-meses-consecutivos-por--2026-09-02",
+        "n-por-qu-m-xico-bloque-casi-16-mil-cuentas-bancarias-e-2026-09-02",
+        "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01"
       ],
-      "attempt": 2,
+      "attempt": 1,
       "added": 0,
       "outcomes": [
+        {
+          "id": "n-remesas-pierden-valor-por-14-meses-consecutivos-por--2026-09-02",
+          "ready": false,
+          "reason": "field-rejected",
+          "fields": {
+            "background": [
+              "3 sentences (cap 2)"
+            ]
+          }
+        },
+        {
+          "id": "n-por-qu-m-xico-bloque-casi-16-mil-cuentas-bancarias-e-2026-09-02",
+          "ready": false,
+          "reason": "thin-evidence",
+          "fields": {}
+        },
         {
           "id": "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01",
           "ready": false,
           "reason": "field-rejected",
           "fields": {
-            "background": [
-              "The standing evidence from UN Comtrade describes Mexico's trade balance with China but does not support the claim that tariff policy affects North American supply chains or rules of origin, those mechanisms are asserted but not cited."
-            ],
-            "view": [
-              "The view acknowledges uncertainty about causation (substitution, inventory, demand loss) but does not reject the summary's claim that the drop 'reflects tariff impact.' The view should either confirm tariff causation is stated in the source or flag that the source does not distinguish between mechanisms."
-            ],
             "prediction": [
-              "The prediction describes a conditional fork (resume or lock in alternatives) and mentions 'import levels in following months' but does not name a specific date, announced decision, or observable milestone, it is a general monitoring statement unsupported by evidence of a scheduled report or policy review."
+              "The prediction describes general mechanisms (cost absorption, price pass-through, supplier redirection) rather than naming a real next decision, release, milestone, or observable fork. It must specify a concrete event such as a regulatory action, announced exemption review, tariff rate change, or published trade data release with a timeframe."
             ]
           }
-        },
-        {
-          "id": "n-m-xico-va-por-mayor-escrutinio-a-inversi-n-extranjer-2026-09-01",
-          "ready": true,
-          "reason": "ready",
-          "fields": {}
-        },
-        {
-          "id": "n-pemex-exxon-valero-y-bp-tambi-n-pierden-con-los-prec-2026-09-01",
-          "ready": false,
-          "reason": "thin-evidence",
-          "fields": {}
         }
       ]
     }
   },
   "events": [
+    {
+      "id": "n-remesas-pierden-valor-por-14-meses-consecutivos-por--2026-09-02",
+      "date": "2026-09-02",
+      "section": "money",
+      "title": "Remittances lose purchasing power for 14 consecutive months as peso strengthens and inflation persists",
+      "why": "Remittance flows have declined in real terms each month for fourteen consecutive periods due to peso appreciation and inflation, reducing the value of transfers to Mexico despite gross inflows.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/remesas-pierden-valor-por-14-meses-consecutivos-por-apreciacion-del-peso-e-inflacion/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-09-02T08:00:15.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Remesas pierden valor por 14 meses consecutivos por apreciación del peso e inflación",
+        "dek": "Por decimocuarto mes consecutivo, los flujos de remesas hacia México perdieron poder adquisitivo por la apreciación del peso y la inflación. La publicación Remesas pierden valor por 14 meses consecutivos por apreciación del peso e inflación apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/remesas-pierden-valor-por-14-meses-consecutivos-por-apreciacion-del-peso-e-inflacion/",
+          "publishedAt": "2026-09-02T08:00:15.000Z",
+          "date": "2026-09-02",
+          "title": "Remittances lose purchasing power for 14 consecutive months as peso strengthens and inflation persists",
+          "summary": "Remittance flows have declined in real terms each month for fourteen consecutive periods due to peso appreciation and inflation, reducing the value of transfers to Mexico despite gross inflows."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 2,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://elceo.com/wp-content/uploads/2026/09/remesas_poder_adquisitivo_inflacion.jpg",
+      "imgTries": 1
+    },
+    {
+      "id": "n-por-qu-m-xico-bloque-casi-16-mil-cuentas-bancarias-e-2026-09-02",
+      "date": "2026-09-02",
+      "section": "money",
+      "title": "Mexico Under International Financial Review",
+      "why": "Mexico is undergoing evaluation by the Grupo de Acción Financiera Internacional, an intergovernmental organization that is scheduled to publish its assessment report by the end of the year.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/09/02/por-que-mexico-bloqueo-casi-16-mil-cuentas-bancarias-estas-son-las-razones/",
+      "importance": 7,
+      "kind": "event",
+      "publishedAt": "2026-09-02T10:39:57.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "¿Por qué México bloqueó casi 16 mil cuentas bancarias? Estas son las razones",
+        "dek": "Actualmente México se encuentra en proceso de evaluación por parte del Grupo de Acción Financiera Internacional (GAFI), organismo intergubernamental que publicará su informe a finales de este año."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/09/02/por-que-mexico-bloqueo-casi-16-mil-cuentas-bancarias-estas-son-las-razones/",
+          "publishedAt": "2026-09-02T10:39:57.000Z",
+          "date": "2026-09-02",
+          "title": "Mexico Under International Financial Review",
+          "summary": "Mexico is undergoing evaluation by the Grupo de Acción Financiera Internacional, an intergovernmental organization that is scheduled to publish its assessment report by the end of the year."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 7,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elfinanciero.com.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      },
+      "image": "https://www.elfinanciero.com.mx/resizer/v2/E4LV6SYQ25D5DLI65OVPSKM47Y.jpg?smart=true&auth=8497c879f4798be91ae16fb88906879848e4722a4140c01f8608050c8fc481ba&width=1200&height=630",
+      "imgTries": 1
+    },
     {
       "id": "n-m-xico-reduce-compras-a-taiw-n-china-y-brasil-import-2026-09-01",
       "date": "2026-09-01",
@@ -145,7 +295,7 @@
         "componentSource": "model"
       },
       "image": "https://www.elfinanciero.com.mx/resizer/v2/YJNNADMNYBFJDDG46AOAV4UMH4.jpeg?smart=true&auth=50cd1e6fb8f539a36a17be8fdc1ac4bcca5c95d70443e38e2ae061229f18ebf5&width=1200&height=630",
-      "imgTries": 2
+      "imgTries": 3
     },
     {
       "id": "n-m-xico-va-por-mayor-escrutinio-a-inversi-n-extranjer-2026-09-01",
@@ -884,6 +1034,80 @@
       }
     },
     {
+      "id": "n-volkswagen-m-xico-cu-ntos-autos-se-producen-en-puebl-2026-09-01",
+      "date": "2026-09-01",
+      "section": "economy",
+      "title": "Volkswagen Mexico cuts production shifts in Puebla amid global restructuring and tariff pressures",
+      "why": "Volkswagen is reducing shifts in its Puebla plant as part of a 2030 restructuring plan driven by global sales declines and tariff headwinds, affecting output and employment in Mexico's automotive sector.",
+      "company": "Volkswagen",
+      "source": "El CEO",
+      "url": "https://elceo.com/negocios/volkswagen-mexico-cuantos-autos-se-producen-en-puebla-y-que-pasara-con-el-recorte-de-turnos/",
+      "importance": 6,
+      "kind": "event",
+      "publishedAt": "2026-09-01T23:14:39.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Volkswagen México: ¿cuántos autos se producen en Puebla y qué pasará con el recorte de turnos?",
+        "dek": "Los ajustes ocurren en medio del plan de reestructuración a 2030 que el grupo automotriz impulsa ante los aranceles y la caída en sus ventas a nivel mundial La publicación Volkswagen México: ¿cuántos autos se producen en Puebla y qué pasará con el recorte de turnos? apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/negocios/volkswagen-mexico-cuantos-autos-se-producen-en-puebla-y-que-pasara-con-el-recorte-de-turnos/",
+          "publishedAt": "2026-09-01T23:14:39.000Z",
+          "date": "2026-09-01",
+          "title": "Volkswagen Mexico cuts production shifts in Puebla amid global restructuring and tariff pressures",
+          "summary": "Volkswagen is reducing shifts in its Puebla plant as part of a 2030 restructuring plan driven by global sales declines and tariff headwinds, affecting output and employment in Mexico's automotive sector."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 1,
+        "usMexicoStakes": 1,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 6,
+        "components": {
+          "nationalConsequence": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
       "id": "n-sheinbaum-s-second-report-record-fdi-energy-sovereig-2026-09-01",
       "date": "2026-09-01",
       "section": "economy",
@@ -1098,6 +1322,80 @@
               "score": 2,
               "source": "authoritative-domain",
               "hostname": "diariooficial.gob.mx"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-sector-privado-ve-un-mal-momento-para-invertir-en-m--2026-09-01",
+      "date": "2026-09-01",
+      "section": "money",
+      "title": "Private sector sees poor investment climate, Bank of Mexico August survey shows",
+      "why": "Banxico's latest business sentiment survey reports that private-sector representatives view the current moment as unfavorable for new investment in Mexico.",
+      "company": "",
+      "source": "El CEO",
+      "url": "https://elceo.com/economia/sector-privado-ve-un-mal-momento-para-invertir-en-mexico-revela-encuesta-de-banxico/",
+      "importance": 5,
+      "kind": "event",
+      "publishedAt": "2026-09-01T21:11:56.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Sector privado ve un mal momento para invertir en México, revela encuesta de Banxico",
+        "dek": "Banxico lanzó los resultados de agosto de su encuesta, en la que representantes del sector privado reportaron sus previsiones. La publicación Sector privado ve un mal momento para invertir en México, revela encuesta de Banxico apareció primero en EL CEO ."
+      },
+      "coverage": [
+        {
+          "source": "El CEO",
+          "url": "https://elceo.com/economia/sector-privado-ve-un-mal-momento-para-invertir-en-mexico-revela-encuesta-de-banxico/",
+          "publishedAt": "2026-09-01T21:11:56.000Z",
+          "date": "2026-09-01",
+          "title": "Private sector sees poor investment climate, Bank of Mexico August survey shows",
+          "summary": "Banxico's latest business sentiment survey reports that private-sector representatives view the current moment as unfavorable for new investment in Mexico."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 0,
+        "modelImpact": 1,
+        "durability": 1,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 5,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 0,
+            "score": 0,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elceo.com"
             }
           }
         },
@@ -2661,6 +2959,80 @@
               "score": 1,
               "source": "publishable-press",
               "hostname": "aristeguinoticias.com"
+            }
+          }
+        },
+        "reportedTotal": null,
+        "componentSource": "model"
+      }
+    },
+    {
+      "id": "n-aranceles-a-china-reducen-importaciones-a-m-xico-en--2026-08-30",
+      "date": "2026-08-30",
+      "section": "us-mexico",
+      "title": "Mexico's tariffs on Chinese goods reduce imports by 28 percent, Foreign Minister Ebrard reports",
+      "why": "Foreign Minister Marcelo Ebrard announced that Mexico's modification of tariffs on 1,463 product categories from countries without trade agreements with Mexico has reduced imports from those sources by 28 percent.",
+      "company": "",
+      "source": "El Financiero — Economía",
+      "url": "https://elfinanciero.com.mx/economia/2026/08/30/aranceles-a-china-reducen-importaciones-a-mexico-en-28-ebrard-defiende-la-medida/",
+      "importance": 8,
+      "kind": "event",
+      "publishedAt": "2026-08-31T02:29:02.000Z",
+      "sourceTier": 2,
+      "reportEvidence": {
+        "title": "Aranceles a China reducen importaciones a México en 28%; Ebrard defiende la medida",
+        "dek": "Marcelo Ebrard presentó los primeros resultados de la modificación de aranceles a 1,463 fracciones de productos procedentes de países con los que México no tiene tratados comerciales."
+      },
+      "coverage": [
+        {
+          "source": "El Financiero — Economía",
+          "url": "https://elfinanciero.com.mx/economia/2026/08/30/aranceles-a-china-reducen-importaciones-a-mexico-en-28-ebrard-defiende-la-medida/",
+          "publishedAt": "2026-08-31T02:29:02.000Z",
+          "date": "2026-08-30",
+          "title": "Mexico's tariffs on Chinese goods reduce imports by 28 percent, Foreign Minister Ebrard reports",
+          "summary": "Foreign Minister Marcelo Ebrard announced that Mexico's modification of tariffs on 1,463 product categories from countries without trade agreements with Mexico has reduced imports from those sources by 28 percent."
+        }
+      ],
+      "importanceComponents": {
+        "nationalConsequence": 2,
+        "usMexicoStakes": 2,
+        "modelImpact": 1,
+        "durability": 2,
+        "officialness": 1
+      },
+      "importanceProvenance": {
+        "rubricVersion": "five-component-v1",
+        "calculatedTotal": 8,
+        "components": {
+          "nationalConsequence": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "usMexicoStakes": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "modelImpact": {
+            "raw": 1,
+            "score": 1,
+            "status": "accepted"
+          },
+          "durability": {
+            "raw": 2,
+            "score": 2,
+            "status": "accepted"
+          },
+          "officialness": {
+            "raw": 0,
+            "score": 1,
+            "status": "evidence-override",
+            "modelScore": 0,
+            "evidence": {
+              "score": 1,
+              "source": "publishable-press",
+              "hostname": "elfinanciero.com.mx"
             }
           }
         },
@@ -4314,384 +4686,6 @@
               "score": 2,
               "source": "authoritative-domain",
               "hostname": "diariooficial.gob.mx"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-del-cr-dito-pyme-al-lending-para-gig-workers-aprendi-2026-08-28",
-      "date": "2026-08-28",
-      "section": "economy",
-      "title": "R2 Fintech expands lending to gig workers across Mexico and Latin America",
-      "why": "R2 has shifted from small-business credit to gig-worker lending under an agreement with Uber, operating in Mexico, Colombia, and Peru while facing challenges in credit evaluation, funding, and fraud control.",
-      "company": "R2 Fintech",
-      "source": "iupana",
-      "url": "https://iupana.com/2026/08/28/lending-para-gig-workers-aprendizajes-y-desafios-de-r2-fintech/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-28T09:00:40.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Del crédito pyme al lending para gig workers: aprendizajes y desafíos de R2",
-        "dek": "El modelo ya opera con Uber en México, Colombia y Perú, pero su despliegue revela los retos de construir modelos de evaluación de crédito, fondeo y control de fraude.... Leer más..."
-      },
-      "coverage": [
-        {
-          "source": "iupana",
-          "url": "https://iupana.com/2026/08/28/lending-para-gig-workers-aprendizajes-y-desafios-de-r2-fintech/",
-          "publishedAt": "2026-08-28T09:00:40.000Z",
-          "date": "2026-08-28",
-          "title": "R2 Fintech expands lending to gig workers across Mexico and Latin America",
-          "summary": "R2 has shifted from small-business credit to gig-worker lending under an agreement with Uber, operating in Mexico, Colombia, and Peru while facing challenges in credit evaluation, funding, and fraud control."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "iupana.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-mexicana-de-aviaci-n-reprueba-en-metas-de-la-4t-ingr-2026-08-28",
-      "date": "2026-08-28",
-      "section": "economy",
-      "title": "Mexicana de Aviación reaches 26 percent of 2026 revenue target",
-      "why": "Mexicana de Aviación set a goal to increase passenger numbers by 106 percent in 2026 compared to the prior year, and current revenue reaches 26 percent of that 2026 objective.",
-      "company": "Mexicana de Aviación",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/mexicana-de-aviacion-reprueba-en-metas-de-la-4t-ingresos-alcanzan-apenas-26-del-objetivo-de-2026/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-28T08:00:47.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "Mexicana de Aviación ‘reprueba’ en metas de la 4T: ingresos alcanzan apenas 26% del objetivo de 2026",
-        "dek": "Mexicana estableció como objetivo para 2026 incrementar 106% el número de viajeros transportados respecto al año anterior. La publicación Mexicana de Aviación ‘reprueba’ en metas de la 4T: ingresos alcanzan apenas 26% del objetivo de 2026 apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/mexicana-de-aviacion-reprueba-en-metas-de-la-4t-ingresos-alcanzan-apenas-26-del-objetivo-de-2026/",
-          "publishedAt": "2026-08-28T08:00:47.000Z",
-          "date": "2026-08-28",
-          "title": "Mexicana de Aviación reaches 26 percent of 2026 revenue target",
-          "summary": "Mexicana de Aviación set a goal to increase passenger numbers by 106 percent in 2026 compared to the prior year, and current revenue reaches 26 percent of that 2026 objective."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-scjn-arrastra-15-asuntos-fiscales-pendientes-samsung-2026-08-28",
-      "date": "2026-08-28",
-      "section": "economy",
-      "title": "Supreme Court holding 15 pending tax disputes involving Samsung, Dish, and Movistar",
-      "why": "Mexico's Supreme Court is managing 15 fiscal cases, while the tax authority maintains 24 open litigation matters with IMMEX companies, including three named multinationals.",
-      "company": "",
-      "source": "El CEO",
-      "url": "https://elceo.com/negocios/scjn-arrastra-15-asuntos-fiscales-pendientes-samsung-dish-y-movistar-entre-los-casos/",
-      "importance": 4,
-      "kind": "event",
-      "publishedAt": "2026-08-28T08:00:29.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "SCJN arrastra 15 asuntos fiscales pendientes; Samsung, Dish y Movistar, entre los casos",
-        "dek": "El Servicio de Administración Tributaria (SAT) mantiene abiertos 24 litigios con empresas IMMEX. La publicación SCJN arrastra 15 asuntos fiscales pendientes; Samsung, Dish y Movistar, entre los casos apareció primero en EL CEO ."
-      },
-      "coverage": [
-        {
-          "source": "El CEO",
-          "url": "https://elceo.com/negocios/scjn-arrastra-15-asuntos-fiscales-pendientes-samsung-dish-y-movistar-entre-los-casos/",
-          "publishedAt": "2026-08-28T08:00:29.000Z",
-          "date": "2026-08-28",
-          "title": "Supreme Court holding 15 pending tax disputes involving Samsung, Dish, and Movistar",
-          "summary": "Mexico's Supreme Court is managing 15 fiscal cases, while the tax authority maintains 24 open litigation matters with IMMEX companies, including three named multinationals."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 4,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elceo.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-el-gobierno-detalla-c-mo-recuper-cinco-millones-de-d-2026-08-28",
-      "date": "2026-08-28",
-      "section": "politics",
-      "title": "Mexico recovers seized assets from García Luna corruption case",
-      "why": "The Claudia Sheinbaum administration will direct resources seized from former Security Secretary García Luna toward a mountain region in Guerrero. The funds were recovered from the corruption network involving the official from Felipe Calderón's government.",
-      "company": "",
-      "source": "El País — México",
-      "url": "https://elpais.com/mexico/2026-08-28/el-gobierno-detalla-como-recupero-cinco-millones-de-dolares-de-la-trama-corrupta-de-garcia-luna.html",
-      "importance": 3,
-      "kind": "event",
-      "publishedAt": "2026-08-28T18:48:26.000Z",
-      "sourceTier": 2,
-      "reportEvidence": {
-        "title": "El Gobierno detalla cómo recuperó cinco millones de dólares de la trama corrupta de García Luna",
-        "dek": "La Administración de Claudia Sheinbaum destinará a la montaña de Guerrero los recursos incautados al exsecretario de Seguridad de Felipe Calderón"
-      },
-      "coverage": [
-        {
-          "source": "El País — México",
-          "url": "https://elpais.com/mexico/2026-08-28/el-gobierno-detalla-como-recupero-cinco-millones-de-dolares-de-la-trama-corrupta-de-garcia-luna.html",
-          "publishedAt": "2026-08-28T18:48:26.000Z",
-          "date": "2026-08-28",
-          "title": "Mexico recovers seized assets from García Luna corruption case",
-          "summary": "The Claudia Sheinbaum administration will direct resources seized from former Security Secretary García Luna toward a mountain region in Guerrero. The funds were recovered from the corruption network involving the official from Felipe Calderón's government."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 1,
-        "usMexicoStakes": 0,
-        "modelImpact": 0,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 3,
-        "components": {
-          "nationalConsequence": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "elpais.com"
-            }
-          }
-        },
-        "reportedTotal": null,
-        "componentSource": "model"
-      }
-    },
-    {
-      "id": "n-telcel-reporta-ca-da-en-ventas-de-celulares-por-regi-2026-08-28",
-      "date": "2026-08-28",
-      "section": "economy",
-      "title": "Telcel sales decline as telephone registration rule takes effect",
-      "why": "Telcel reported a decline in mobile phone sales in the second quarter after four consecutive quarters of growth, attributed to the mandatory telephone registration requirement and chip shortages.",
-      "company": "Telcel",
-      "source": "DPL News",
-      "url": "https://dplnews.com/telcel-reporta-caida-en-ventas-de-celulares-por-registro-telefonico-y-escasez-de-chips/",
-      "importance": 3,
-      "kind": "event",
-      "publishedAt": "2026-08-28T15:37:40.000Z",
-      "sourceTier": "specialist",
-      "reportEvidence": {
-        "title": "Telcel reporta caída en ventas de celulares por registro telefónico y escasez de chips",
-        "dek": "Expansión Las ventas de teléfonos fueron complicadas para Telcel en el segundo trimestre de este año, luego de haber hilado cuatro trimestres de crecimiento. La subsidiaria de América Móvil sufrió una caída en sus ingresos por equipo de 1.7%, al reportar 14,598 millones de pesos, respecto a los 14,853 millones del mism"
-      },
-      "coverage": [
-        {
-          "source": "DPL News",
-          "url": "https://dplnews.com/telcel-reporta-caida-en-ventas-de-celulares-por-registro-telefonico-y-escasez-de-chips/",
-          "publishedAt": "2026-08-28T15:37:40.000Z",
-          "date": "2026-08-28",
-          "title": "Telcel sales decline as telephone registration rule takes effect",
-          "summary": "Telcel reported a decline in mobile phone sales in the second quarter after four consecutive quarters of growth, attributed to the mandatory telephone registration requirement and chip shortages."
-        },
-        {
-          "source": "expansion.mx",
-          "url": "https://expansion.mx/empresas/2026/08/27/telcel-registro-telefonico-frena-ventas-escasez-chips",
-          "publishedAt": "2026-08-27T23:49:57.000Z",
-          "date": "2026-08-27",
-          "title": "Telcel reporta caída en ventas de celulares por registro telefónico y escasez de chips",
-          "summary": "Telcel vio caer sus ingresos 1.7% en equipos debido al registro telefónico que modifica los hábitos de la renovación y un escenario de mayor presión en los precios de los celulares por los semiconductores."
-        }
-      ],
-      "importanceComponents": {
-        "nationalConsequence": 0,
-        "usMexicoStakes": 0,
-        "modelImpact": 1,
-        "durability": 1,
-        "officialness": 1
-      },
-      "importanceProvenance": {
-        "rubricVersion": "five-component-v1",
-        "calculatedTotal": 3,
-        "components": {
-          "nationalConsequence": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "usMexicoStakes": {
-            "raw": 0,
-            "score": 0,
-            "status": "accepted"
-          },
-          "modelImpact": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "durability": {
-            "raw": 1,
-            "score": 1,
-            "status": "accepted"
-          },
-          "officialness": {
-            "raw": 0,
-            "score": 1,
-            "status": "evidence-override",
-            "modelScore": 0,
-            "evidence": {
-              "score": 1,
-              "source": "publishable-press",
-              "hostname": "dplnews.com"
             }
           }
         },
