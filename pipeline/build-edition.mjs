@@ -218,8 +218,10 @@ async function evidenceFor(item, standing, calendar) {
     allowedHosts: registered ? sourceHosts(registered) : [new URL(item.url).hostname],
   }).catch(() => ({ ok: false, text: '' }));
   const evidence = [evidenceRecord({
-    id: 'article', kind: 'article', source: item.sourceName || item.source, url: item.url,
-    text: [item.title, item.dek, article.text].filter(Boolean).join('\n'),
+    id: 'article', kind: article.articleBody ? 'article-body' : 'article', source: item.sourceName || item.source, url: item.url,
+    // Whole-page fallbacks may contain navigation, consent text, or unrelated cards.
+    // Only an explicitly located story body may add fetched prose to the evidence packet.
+    text: [item.title, item.dek, article.articleBody ? article.text : ''].filter(Boolean).join('\n'),
   })];
   const seen = new Set([item.url]);
   const push = (record) => {
@@ -261,6 +263,11 @@ function citedInputs(row, refs) {
 function validRefs(row, refs) {
   const ids = new Set(row.evidence.map((item) => item.id));
   return arr(refs).length >= 1 && arr(refs).length <= 3 && arr(refs).every((ref) => ids.has(ref));
+}
+
+function evidenceReady(row) {
+  return row.evidence.length >= 2
+    || row.evidence.some((item) => item.id === 'article' && item.kind === 'article-body' && item.url === row.item.url);
 }
 
 function sentenceParts(text, locale) {
@@ -375,7 +382,10 @@ function deterministicDraftCheck(row, draft) {
   if (clean(draft.headline) && clean(draft.dek) && !reportContextDistinct({ headline: draft.headline, context: draft.dek })) {
     flags.push('dek: repeats the headline without adding context');
   }
-  if (!arr(draft.backgroundRefs).some((ref) => ref !== 'article')) flags.push('background: needs an independent source');
+  const hasIndependentEvidence = row.evidence.some((item) => item.id !== 'article');
+  if (hasIndependentEvidence && !arr(draft.backgroundRefs).some((ref) => ref !== 'article')) {
+    flags.push('background: needs an independent source when one is available');
+  }
   return [...new Set(flags)];
 }
 
@@ -561,16 +571,18 @@ async function main() {
     const evidenceRows = await Promise.all(rankedPool.map(async (row) => ({
       ...row, evidence: await evidenceFor(row.item, standing, calendar),
     })));
-    const withoutContext = evidenceRows.filter((row) => row.evidence.length < 2);
-    for (const row of withoutContext) console.warn(`  skip ranked story without independent context: ${storyId(row.item)}`);
-    const locked = evidenceRows.filter((row) => row.evidence.length >= 2).slice(0, MAX_VISIBLE);
-    if (!locked.length) throw new Error('no ranked development has independent context');
+    const withoutContext = evidenceRows.filter((row) => !evidenceReady(row));
+    for (const row of withoutContext) {
+      console.warn(`  skip ranked story without usable evidence: ${storyId(row.item)} | ${plainSourceName(row.item.sourceName || row.item.source)} | ${clean(row.item.title).slice(0, 120)}`);
+    }
+    const locked = evidenceRows.filter(evidenceReady).slice(0, MAX_VISIBLE);
+    if (!locked.length) throw new Error('no ranked development has enough evidence for Briefly Explained');
     if (!weekendDay(editorialDate) && !locked.some((row) => row.item._editorialDate === editorialDate)) {
-      throw new Error(`no ranked exact-day development has independent context: ${withoutContext.map((row) => storyId(row.item)).join(', ').slice(0, 300)}`);
+      throw new Error(`no ranked exact-day development has enough evidence for Briefly Explained: ${withoutContext.map((row) => storyId(row.item)).join(', ').slice(0, 300)}`);
     }
 
     const draftResponse = await call({
-      system: `${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\n${ANALYSIS_SHAPE}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: context a newcomer needs and must cite at least one source other than article. Our view: a narrow inference supported by its citations, without first person. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
+      system: `${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\n${ANALYSIS_SHAPE}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: context a newcomer needs. If evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Our view: a narrow inference supported by its citations, without first person. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
       user: JSON.stringify(locked.map((row) => ({
         i: row.index,
         story: { date: row.item._editorialDate, source: row.item.sourceName || row.item.source, url: row.item.url },

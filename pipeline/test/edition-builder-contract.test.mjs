@@ -5,7 +5,7 @@ import scheduledCandidate from '../lib/scheduled-candidate.cjs';
 
 const builder = fs.readFileSync(new URL('../build-edition.mjs', import.meta.url), 'utf8');
 assert.doesNotMatch(builder, /optionalAnalysis|analysisTarget|curation checkpoint|deferred/i);
-assert.match(builder, /background: needs an independent source/);
+assert.match(builder, /background: needs an independent source when one is available/);
 assert.match(builder, /no exact-day story survived/);
 assert.match(builder, /a required scheduled outcome failed/);
 assert.match(builder, /required scheduled outcome unavailable/,
@@ -33,8 +33,10 @@ assert.match(builder, /unexpected draft index/);
 assert.match(builder, /duplicate draft index/);
 assert.match(builder, /model omitted the required story unit/,
   'missing model rows must be visible in the persisted failure reason');
-assert.match(builder, /evidenceRows\.filter\(\(row\) => row\.evidence\.length >= 2\)\.slice\(0, MAX_VISIBLE\)/,
+assert.match(builder, /evidenceRows\.filter\(evidenceReady\)\.slice\(0, MAX_VISIBLE\)/,
   'the fixed top-five ranking must choose only cards that can support Briefly Explained');
+assert.match(builder, /item\.kind === 'article-body' && item\.url === row\.item\.url/,
+  'a one-source fallback must require a verified body from the exact selected article');
 assert.match(builder, /No replacement happens after drafting/,
   'writing convenience must never rerank the selected developments');
 

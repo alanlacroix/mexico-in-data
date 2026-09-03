@@ -119,6 +119,12 @@ assert.ok(calendarScore({
   why: 'The finance ministry will present proposed revenue and spending for 2027.',
 }, calendar.find((item) => item.id === 'federal-budget-package-2027-2026-09-08')) > 0,
 'a real federal-budget story must keep the statutory September 8 calendar item');
+assert.ok(standingScore({
+  section: 'security',
+  title: 'UIF endurece ofensiva contra cárteles y va por sus finanzas',
+  dek: 'Destaca coordinación con agencias del gobierno de EU y policiacas en México.',
+}, standing.find((fact) => fact.id === 'std-security-measures')) > 0,
+'the current UIF story must use its dek and accented cartel wording to find the security baseline');
 assert.ok(calendarScore({
   section: 'money', title: 'Mexico inflation slows in August',
   why: 'The consumer-price reading will shape the next policy-rate decision.',

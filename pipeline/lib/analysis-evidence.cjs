@@ -29,7 +29,7 @@ function tokenOverlap(left, right) {
 }
 
 const recordText = (record) => (record && typeof record === 'object')
-  ? `${record.title || record.label || ''} ${record.why || record.mechanism || record.fact || ''} ${record.kind || ''}`
+  ? `${record.title || record.label || ''} ${record.dek || ''} ${record.why || record.mechanism || record.fact || ''} ${record.kind || ''}`
   : String(record || '');
 
 const CONCEPT_RULES = [
@@ -62,7 +62,7 @@ const CONCEPT_RULES = [
   ['constitutional-power', /\b(?:constitutional reform|amend the constitution|two thirds congress)\b/i],
   ['presidential-informe', /\b(?:informe de gobierno|state of the nation|presidential report)\b/i],
   ['judiciary', /\b(?:judicial reform|judiciary|supreme court|court election)\b/i],
-  ['security', /\b(?:homicides?|extortion|cargo theft|violent crime|cartel|security strategy)\b/i],
+  ['security', /\b(?:homicides?|extortion|cargo theft|violent crime|c[aá]rteles?|security strategy)\b/i],
   ['labor-informality', /\b(?:informal employment|informality|informal workers?)\b/i],
   ['labor-market', /\b(?:employment|unemployment|labor market|enoe)\b/i],
   ['wages', /\b(?:minimum wage|real wages?)\b/i],

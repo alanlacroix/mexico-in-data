@@ -51,7 +51,9 @@ const invalidCandidates = [
   { label: 'partial English', value: (() => { const value = edition(); value.stories[0].en.view = ''; return value; })() },
   { label: 'partial Spanish', value: (() => { const value = edition(); value.stories[0].es.watch = ''; return value; })() },
   { label: 'unknown evidence ref', value: (() => { const value = edition(); value.stories[0].evidenceRefs.view = ['missing']; return value; })() },
-  { label: 'article only', value: (() => { const value = edition(); value.stories[0].evidence = value.stories[0].evidence.slice(0, 1); value.stories[0].evidenceRefs.background = ['article']; return value; })() },
+  { label: 'independent evidence ignored by background', value: (() => { const value = edition(); value.stories[0].evidenceRefs.background = ['article']; return value; })() },
+  { label: 'title and dek only', value: (() => { const value = edition(); value.stories[0].evidence = value.stories[0].evidence.slice(0, 1); value.stories[0].evidenceRefs.background = ['article']; return value; })() },
+  { label: 'body marker on wrong URL', value: (() => { const value = edition(); value.stories[0].evidence = [{ id: 'article', kind: 'article-body', source: 'Official source', url: 'https://example.com/wrong' }]; value.stories[0].evidenceRefs = Object.fromEntries(Object.keys(value.stories[0].evidenceRefs).map((field) => [field, ['article']])); return value; })() },
   { label: 'missing weekly copy', value: (() => { const value = edition(); value.weekStories[0].es.dek = ''; return value; })() },
   { label: 'weekly copy disagreement', value: (() => { const value = edition(); value.weekStories[0].en.headline = 'A different headline'; return value; })() },
   { label: 'credential URL', value: (() => { const value = edition(); value.stories[0].url = 'https://user:pass@example.com/story'; value.stories[0].evidence[0].url = value.stories[0].url; value.weekStories[0].url = value.stories[0].url; return value; })() },
@@ -67,6 +69,17 @@ const twoStory = edition([
   story({ id: 'story-2', date: '2026-09-01', lane: 'key-development', url: 'https://example.com/story-2', publishedAt: '2026-09-01T18:00:00Z' }),
 ]);
 assert.equal(publicEdition.validateEdition(twoStory).ok, true, 'a dated prior-day key development may accompany today');
+
+const articleBodyOnly = edition();
+articleBodyOnly.stories[0].evidence = [{
+  id: 'article', kind: 'article-body', source: 'Official source', url: articleBodyOnly.stories[0].url,
+}];
+articleBodyOnly.stories[0].evidenceRefs = Object.fromEntries(
+  Object.keys(articleBodyOnly.stories[0].evidenceRefs).map((field) => [field, ['article']]),
+);
+articleBodyOnly.artifactHash = publicEdition.editionHash(articleBodyOnly);
+assert.equal(publicEdition.validateEdition(articleBodyOnly).ok, true,
+  'a verified body from the exact article may support a one-source story');
 
 const weekend = publicEdition.withArtifactHash({
   ...edition([story({ date: '2026-09-05', lane: 'weekend' })]),

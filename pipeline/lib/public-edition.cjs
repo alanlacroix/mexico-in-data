@@ -113,9 +113,12 @@ function validateEdition(edition) {
       if (!clean(item?.source)) errors.push(`${label}.evidence[${evidenceIndex}].source is missing`);
       if (!validHttps(item?.url)) errors.push(`${label}.evidence[${evidenceIndex}].url must be HTTPS`);
     }
-    if (evidence.length < 2) errors.push(`${label} needs the article and at least one independent evidence source`);
-    if (!evidence.some((item) => item?.id === 'article' && item?.url === story.url)) {
+    const exactArticle = evidence.find((item) => item?.id === 'article' && item?.url === story.url);
+    if (!exactArticle) {
       errors.push(`${label} needs its exact article in evidence`);
+    }
+    if (evidence.length < 2 && exactArticle?.kind !== 'article-body') {
+      errors.push(`${label} needs independent evidence or a verified article body`);
     }
 
     for (const locale of ['en', 'es']) {
@@ -136,6 +139,12 @@ function validateEdition(edition) {
       }
     }
     const refs = story?.evidenceRefs && typeof story.evidenceRefs === 'object' ? story.evidenceRefs : {};
+    const hasIndependentEvidence = evidence.some((item) => item?.id !== 'article');
+    if (hasIndependentEvidence && !Array.isArray(refs.background)) {
+      errors.push(`${label}.evidenceRefs.background must cite independent evidence when available`);
+    } else if (hasIndependentEvidence && !refs.background.some((ref) => ref !== 'article')) {
+      errors.push(`${label}.evidenceRefs.background must cite independent evidence when available`);
+    }
     for (const field of TEXT_FIELDS) {
       const fieldRefs = Array.isArray(refs[field]) ? refs[field] : [];
       if (!fieldRefs.length || fieldRefs.length > 3) errors.push(`${label}.evidenceRefs.${field} must contain 1 to 3 ids`);

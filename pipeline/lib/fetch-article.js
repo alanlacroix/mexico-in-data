@@ -19,9 +19,17 @@ export async function fetchArticle(url, { allowedHosts } = {}) {
     const hosts = allowedHosts?.length ? allowedHosts : [initial.hostname];
     const result = await fetchBoundedText(url, { allowedHosts: hosts, headers: HEADERS, timeoutMs: 15000, maxBytes: 6 * 1024 * 1024 });
     const html = result.text;
-    const text = extractText(html);
-    return { ok: text.length >= 400, text, image: extractOgImage(html), fetched: true, finalUrl: result.url };
-  } catch { return { ok: false, text: '', image: '', fetched: false, finalUrl: '' }; }
+    const extracted = extractArticleText(html);
+    const ok = extracted.text.length >= 400;
+    return {
+      ok,
+      text: extracted.text,
+      articleBody: ok && extracted.bodyFound,
+      image: extractOgImage(html),
+      fetched: true,
+      finalUrl: result.url,
+    };
+  } catch { return { ok: false, text: '', articleBody: false, image: '', fetched: false, finalUrl: '' }; }
 }
 
 // The article's own link-preview image (og:image / twitter:image) — the thumbnail the
@@ -36,8 +44,33 @@ export function extractOgImage(html) {
   return /^https:\/\//i.test(url) ? url.slice(0, 500) : '';
 }
 
-export function extractText(html) {
-  if (!html) return '';
+function balancedElementContent(html, opening) {
+  if (!opening || !opening[1] || !Number.isInteger(opening.index)) return '';
+  const tag = opening[1].toLowerCase();
+  const token = new RegExp(`<\\/?${tag}\\b[^>]*>`, 'gi');
+  token.lastIndex = opening.index;
+  let depth = 0;
+  for (let match = token.exec(html); match; match = token.exec(html)) {
+    const closing = /^<\//.test(match[0]);
+    const selfClosing = /\/\s*>$/.test(match[0]);
+    if (closing) depth--;
+    else if (!selfClosing) depth++;
+    if (depth === 0) {
+      const start = opening.index + opening[0].length;
+      return html.slice(start, match.index);
+    }
+  }
+  return '';
+}
+
+function substantialParagraphCount(html) {
+  return [...html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)]
+    .map((match) => match[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim())
+    .filter((paragraph) => paragraph.length >= 80).length;
+}
+
+export function extractArticleText(html) {
+  if (!html) return { text: '', bodyFound: false };
   let s = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ');
   // Prefer the publisher's actual story-body container. Some WordPress themes do not
   // wrap the story in <article>; they reserve <article> for the related-story cards
@@ -45,18 +78,38 @@ export function extractText(html) {
   // and prevented Briefly Explained from running. The tags marker is a useful, narrow
   // end boundary for those themes, while the ordinary single-article fallback still
   // handles cleaner publisher markup.
-  const body = s.match(/<div[^>]+class=["'][^"']*\bcontent-inner\b[^"']*["'][^>]*>([\s\S]*?)(?=<div[^>]+class=["'][^"']*\b(?:jeg_post_tags|post-tags|article-tags)\b)/i)
-    || s.match(/<div[^>]+(?:itemprop=["']articleBody["']|class=["'][^"']*\b(?:entry-content|article-content|post-content)\b[^"']*["'])[^>]*>([\s\S]*?)(?=<div[^>]+class=["'][^"']*\b(?:related|author|share-bottom|post-tags|article-tags)\b)/i);
-  if (body) s = body[1];
-  else {
-    const articles = [...s.matchAll(/<article\b[\s\S]*?<\/article>/gi)].map((match) => match[0]);
-    // Multiple <article> elements are commonly a list of cards, not the story body.
-    // Keep the full document in that case instead of confidently extracting a teaser.
-    if (articles.length === 1) s = articles[0];
+  const body = s.match(/<(div|section|article)\b(?=[^>]*(?:itemprop=["']articleBody["']|property=["']schema:text["']|class=["'][^"']*\b(?:content-inner|entry-content|article-content|article-body|story-body|content-body|post-content|article-body-wrapper)\b[^"']*["']))[^>]*>/i);
+  let bodyFound = false;
+  if (body) {
+    const content = balancedElementContent(s, body);
+    if (content) {
+      s = content;
+      bodyFound = true;
+    }
   }
-  return s.replace(/<[^>]+>/g, ' ')
+  else {
+    const articles = [...s.matchAll(/<(article)\b[^>]*>/gi)];
+    // Multiple <article> elements are commonly a list of cards, not the story body.
+    // A singleton is still trusted only when it has the shape of a story rather than
+    // a recommendation card: no card-like marker and at least two substantial paragraphs.
+    if (articles.length === 1) {
+      const content = balancedElementContent(s, articles[0]);
+      const cardLike = /\b(?:card|related|recommended|recommendation|promo|teaser|sponsored)\b/i
+        .test(`${articles[0][0]} ${content.slice(0, 300)}`);
+      if (content && !cardLike && substantialParagraphCount(content) >= 2) {
+        s = content;
+        bodyFound = true;
+      }
+    }
+  }
+  const text = s.replace(/<[^>]+>/g, ' ')
     .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
     .replace(/&#0?39;|&apos;|&#8217;/g, "'").replace(/&nbsp;|&#160;/g, ' ')
     .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n))
     .replace(/\s+/g, ' ').trim();
+  return { text, bodyFound };
+}
+
+export function extractText(html) {
+  return extractArticleText(html).text;
 }
