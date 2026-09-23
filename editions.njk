@@ -1,0 +1,26 @@
+---
+layout: base.njk
+pagination:
+  data: locales
+  size: 1
+  alias: locale
+locales: ["en", "es"]
+permalink: "{% if locale == 'es' %}/es{% endif %}/editions/"
+eleventyComputed:
+  title: "{% if locale == 'es' %}Ediciones{% else %}Editions{% endif %} · The Mexico Brief"
+  description: "{% if locale == 'es' %}Ediciones anteriores de The Mexico Brief, con sus fechas y fuentes originales.{% else %}Previous editions of The Mexico Brief, with their original dates and sources.{% endif %}"
+  alternateUrl: "{% if locale == 'es' %}/editions/{% else %}/es/editions/{% endif %}"
+bodyClass: feed-page
+---
+<div style="max-width:780px;margin:0 auto;padding:40px 24px 64px">
+  <a href="{% if locale == 'es' %}/es/{% else %}/{% endif %}">{% if locale == 'es' %}Última edición{% else %}Latest edition{% endif %}</a>
+  <h1 style="font-family:Georgia,serif;font-size:clamp(32px,5vw,48px)">{% if locale == 'es' %}Ediciones anteriores{% else %}Previous editions{% endif %}</h1>
+  <p>{% if locale == 'es' %}Las fechas y fuentes se conservan para seguir cómo cambian los acontecimientos.{% else %}Original dates and sources, so you can follow how developments change.{% endif %}</p>
+  {% for item in archiveEditions %}{% if item.locale == locale %}
+  <article style="border-top:1px solid #ccd2cb;margin-top:28px;padding-top:24px">
+    <time datetime="{{ item.edition.editorialDate }}">{{ item.edition.editorialDate | longDate(locale) }}</time>
+    <h2 style="font-family:Georgia,serif;font-size:26px;line-height:1.3"><a href="{{ item.url }}">{{ item.title }}</a></h2>
+    <p>{{ item.minutes }} {% if locale == 'es' %}min de lectura{% else %}min read{% endif %}</p>
+  </article>
+  {% endif %}{% endfor %}
+</div>

@@ -1,0 +1,21 @@
+{# Interface: expects `story`, `locale`, and `loop` in the current context. #}
+<article class="development{% if loop.first %} development-lead{% endif %}">
+  <header class="development-head">
+    <div class="development-number">0{{ loop.index }}</div>
+    <div>
+      <div class="story-meta"><span>{{ story.cat }}</span><span>{{ story.date }}</span></div>
+      <h3>{{ story.title }}</h3>
+    </div>
+  </header>
+  <div class="story-grid">
+    <section class="story-block story-change"><h4>{% if locale == 'es' %}Qué cambió{% else %}What changed{% endif %}</h4><p>{{ story.dek }}</p></section>
+    <section class="story-block story-impact"><h4>{% if locale == 'es' %}Por qué importa{% else %}Why it matters{% endif %}</h4><p>{{ story.view }}</p></section>
+    <section class="story-block"><h4>{% if locale == 'es' %}El contexto{% else %}The context{% endif %}</h4><p>{{ story.bg }}</p></section>
+    {% if story.watch %}<section class="story-block"><h4>{% if locale == 'es' %}Qué seguimos{% else %}What to watch{% endif %}</h4><p>{{ story.watch }}</p></section>{% endif %}
+  </div>
+  <div class="story-sources">
+    <span>{% if locale == 'es' %}Fuentes{% else %}Sources{% endif %}</span>
+    <a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} <span aria-hidden="true">↗</span></a>
+    {% for source in story.analysisSources %}{% if source.url != story.url %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source }} <span aria-hidden="true">↗</span></a>{% endif %}{% endfor %}
+  </div>
+</article>

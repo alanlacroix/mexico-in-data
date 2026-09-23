@@ -14,6 +14,8 @@ assert.match(builder, /english: draft\[field\], spanish: draft\.es\[field\]/,
   'the final independent audit must review Spanish rather than generate and approve it');
 assert.match(builder, /mistranslations, reversed actions, changed subjects/,
   'the independent audit must reject bilingual meaning changes');
+assert.match(builder, /EDITION_REQUIRE_REVIEW === '1' && weekendDay\(editorialDate\)/,
+  'the human-reviewed pilot skips weekend generation before creating an attempt');
 
 assert.equal(lintReportText({ text: 'The sourceTitle says the rule changed.', inputs: ['The rule changed.'] }).ok, false);
 assert.equal(lintReportText({ text: 'The evidence strings show the amount.', inputs: ['The amount was 5.'] }).ok, false);
@@ -39,6 +41,10 @@ assert.match(builder, /item\.kind === 'article-body' && item\.url === row\.item\
   'a one-source fallback must require a verified body from the exact selected article');
 assert.match(builder, /No replacement happens after drafting/,
   'writing convenience must never rerank the selected developments');
+assert.match(builder, /function draftFailureReceipt/,
+  'failed drafts must retain structured rejected-copy diagnostics without source bodies');
+assert.match(builder, /diagnostics: failureDiagnostics\.slice\(0, 5\)/,
+  'failed drafts must retain actionable rejection diagnostics, not only a truncated summary');
 
 const schedule = [{
   id: 'banxico-policy-test', date: '2026-09-24', outcomeRequired: true, requiredForBrief: true,

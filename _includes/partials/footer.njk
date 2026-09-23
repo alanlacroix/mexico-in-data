@@ -3,7 +3,7 @@
   <div class="foot-row">
     <div class="foot-brand">
       <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
-      <p class="fblurb">{{ Lf.tagline }}</p>
+      <p class="fblurb">{% if locale == 'es' %}Un informe ejecutivo entre semana. Hasta tres acontecimientos, conectados con el contexto y sus fuentes.{% else %}One weekday executive briefing. Up to three developments, connected to context and sources.{% endif %}</p>
     </div>
   </div>
 </footer>

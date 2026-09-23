@@ -12,4 +12,9 @@ eleventyExcludeFromCollections: true
 {%- for item in releaseManifest.publicRoutes %}
   <url><loc>{{ releaseManifest.siteUrl }}{{ item.canonical }}</loc><lastmod>{{ (pageDates[item.canonical].modified if pageDates[item.canonical] else buildTime) }}</lastmod></url>
 {%- endfor %}
+{%- for item in archiveEditions %}
+  <url><loc>{{ releaseManifest.siteUrl }}{{ item.url }}</loc><lastmod>{{ item.edition.generatedAt }}</lastmod></url>
+{%- endfor %}
+  <url><loc>{{ releaseManifest.siteUrl }}/editions/</loc><lastmod>{{ pageDates['/editions/'].modified }}</lastmod></url>
+  <url><loc>{{ releaseManifest.siteUrl }}/es/editions/</loc><lastmod>{{ pageDates['/es/editions/'].modified }}</lastmod></url>
 </urlset>

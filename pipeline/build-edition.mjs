@@ -26,6 +26,8 @@ import { REPORT, TRUST, SEAM, EARNED_LINE, BAN, ANALYSIS_SHAPE } from './lib/voi
 import { validateNarrativeText } from './lib/publication-contract.js';
 import { articleUrlAllowed, sourceHosts } from './lib/url-safety.js';
 import bilingualFidelity from './lib/bilingual-fidelity.cjs';
+import editionHistory from './lib/edition-history.cjs';
+import reviewGate from './lib/review-gate.cjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -212,7 +214,7 @@ function evidenceRecord({ id, kind, source, url, text }) {
   return { id: clean(id), kind: clean(kind), source: plainSourceName(source), url: clean(url), text: clean(text).slice(0, 2200) };
 }
 
-async function evidenceFor(item, standing, calendar) {
+async function evidenceFor(item, standing, calendar, memory = []) {
   const registered = SOURCE_BY_NAME.get(item.sourceName);
   const article = await fetchArticle(item.url, {
     allowedHosts: registered ? sourceHosts(registered) : [new URL(item.url).hostname],
@@ -231,6 +233,20 @@ async function evidenceFor(item, standing, calendar) {
     seen.add(record.url);
     evidence.push(shaped);
   };
+
+  // Memory proposes sources to reopen; old synthesized prose is never passed as
+  // evidence. Fetch at most two original articles, and only use extracted bodies.
+  for (const previous of editionHistory.relatedMemory(item, memory)) {
+    const url = previous.sourceUrls.find(value => !seen.has(value));
+    if (!url) continue;
+    const page = await fetchArticle(url, { allowedHosts: [new URL(url).hostname] })
+      .catch(() => ({ ok: false }));
+    if (page.ok && page.articleBody) push({
+      id: `history:${previous.id}`, kind: 'prior-article-body',
+      source: new URL(url).hostname, url,
+      text: `Previously covered on ${previous.editionDate}. Original reporting rechecked: ${page.text}`,
+    });
+  }
 
   for (const source of arr(item._coverage)) {
     if (evidence.length >= 4) break;
@@ -306,7 +322,9 @@ function repairOverlongAnalysis(draft) {
 }
 
 // Unsupported numbers are removed, never guessed or rounded. In the three analysis
-// fields only, omit a whole contaminated sentence before rejecting the entire story.
+// fields only, cite an already-fetched record that supports the number before omitting
+// a whole contaminated sentence. Headlines and deks must retain their original strict
+// source support because a matching number alone cannot establish their full claim.
 // When the translations have the same sentence shape, drop the matching sentence in
 // both languages; all deterministic and independent bilingual gates still rerun.
 function repairUnsupportedAnalysisNumbers(row, draft) {
@@ -344,6 +362,29 @@ function repairUnsupportedAnalysisNumbers(row, draft) {
     }
   }
   return repaired;
+}
+
+// Failure receipts retain model output only, never evidence text or fetched article
+// bodies. Keeping the failed EN/ES field and its evidence IDs makes a bilingual gate
+// reviewable without confusing a rejected draft with public, approved copy.
+function draftFailureReceipt(row, draft, flags, stage = 'deterministic') {
+  const fields = {};
+  for (const field of ['headline', 'dek', 'background', 'view', 'watch']) {
+    const reasons = flags.filter((flag) => String(flag).startsWith(`${field}:`));
+    if (!reasons.length && stage === 'deterministic') continue;
+    fields[field] = {
+      en: clean(draft?.[field]).slice(0, 600),
+      es: clean(draft?.es?.[field]).slice(0, 600),
+      refs: arr(draft?.[`${field}Refs`]).map(clean).filter(Boolean).slice(0, 3),
+      reasons: reasons.map((reason) => String(reason).slice(field.length + 1).trim()).slice(0, 12),
+    };
+  }
+  return {
+    stage, storyId: storyId(row.item),
+    reasons: flags.filter((flag) => !Object.keys(fields).some((field) => String(flag).startsWith(`${field}:`)))
+      .map((reason) => String(reason).slice(0, 500)).slice(0, 12),
+    fields,
+  };
 }
 
 function deterministicDraftCheck(row, draft) {
@@ -458,7 +499,6 @@ async function main() {
   const now = new Date(process.env.EDITION_NOW_ISO || Date.now());
   if (!Number.isFinite(now.getTime())) throw new Error('EDITION_NOW_ISO is invalid');
   const editorialDate = clean(process.env.PUBLICATION_DATE) || editorialDay(now);
-  const priorEdition = read(EDITION_FILE, null);
   const slot = slotFor(now);
   if (!slot) {
     console.log('edition: outside the 9am/noon Eastern publication windows, zero model calls');
@@ -466,6 +506,13 @@ async function main() {
     return;
   }
   if (!['morning', 'noon'].includes(slot)) throw new Error(`invalid publication slot: ${slot}`);
+  if (process.env.EDITION_REQUIRE_REVIEW === '1' && weekendDay(editorialDate)) {
+    console.log(`edition: ${editorialDate}/${slot} is a pilot weekend no-op, zero model calls`);
+    emitOutcome({ state: 'noop', editorial_date: editorialDate, slot, artifact_hash: '' });
+    return;
+  }
+  const priorEdition = read(EDITION_FILE, null);
+  const memory = editionHistory.issueMemory(editionHistory.loadHistory({ current: priorEdition }), { before: editorialDate });
   process.env.LLM_BUDGET_DATE = `${editorialDate}T12:00:00Z`;
 
   let attempts = readAttempts(read(ATTEMPTS_FILE, {}));
@@ -511,6 +558,9 @@ async function main() {
   write(ATTEMPTS_FILE, attempts);
   let callCount = 0;
   let modelUsage = { calls: 0, costUSD: 0 };
+  // Preserve the complete deterministic rejection evidence in the attempt ledger.
+  // The short reason remains suitable for the commit subject and workflow summary.
+  let failureDiagnostics = [];
   try {
     if (!universe.length) throw new Error('no eligible candidates');
     const { askJSON, hasLLM, models, usage } = await import('./lib/anthropic.js');
@@ -530,10 +580,11 @@ async function main() {
     };
 
     const rankedResponse = await call({
-      system: `${TRUST}\n\n${REPORT}\n\nYou are selecting the Mexico Brief, a morning news product for a business reader. Rank actual changes in government policy, regulation, courts, security, trade, macro data, or company investment. Exclude opinion, advice, profiles, previews, routine market moves, announcements without a concrete Mexico consequence, and duplicate angles. A scheduled official outcome outranks ordinary reporting and must be selected. Return no prose, only the indices and 1-10 importance scores of at most five distinct developments.`,
+      system: `${TRUST}\n\n${REPORT}\n\nYou are selecting the Mexico Brief, a morning news product for a business reader. Rank actual changes in government policy, regulation, courts, security, trade, macro data, or company investment. Exclude opinion, advice, profiles, previews, routine market moves, announcements without a concrete Mexico consequence, and duplicate angles. Prior coverage is a retrieval index, not verified evidence. Downrank recycled announcements unless the new reporting establishes a material change. Prioritize consequences for operating costs, financing, regulation, investment, and business operations in Mexico. A scheduled official outcome outranks ordinary reporting and must be selected. Return no prose, only the indices and 1-10 importance scores of at most five distinct developments.`,
       user: JSON.stringify(universe.map((item, i) => ({
         i, date: item._editorialDate, title: item.title, dek: item.dek,
         source: item.sourceName || item.source, section: item._section,
+        priorCoverage: editionHistory.relatedMemory(item, memory).map(({ editionDate, headline, reportedChange }) => ({ editionDate, headline, reportedChange })),
         scheduled: item._scheduled ? { label: item._scheduled.label, importanceFloor: item._scheduled.importanceFloor } : null,
       }))),
       schema: rankSchema(), maxTokens: 850,
@@ -569,7 +620,7 @@ async function main() {
     const standing = arr(read(path.join(DATA, 'standing.json'), { facts: [] }).facts);
     const calendar = arr(schedule.events).filter((event) => event?.date >= previousDay(editorialDate));
     const evidenceRows = await Promise.all(rankedPool.map(async (row) => ({
-      ...row, evidence: await evidenceFor(row.item, standing, calendar),
+      ...row, evidence: await evidenceFor(row.item, standing, calendar, memory),
     })));
     const withoutContext = evidenceRows.filter((row) => !evidenceReady(row));
     for (const row of withoutContext) {
@@ -582,7 +633,7 @@ async function main() {
     }
 
     const draftResponse = await call({
-      system: `${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\n${ANALYSIS_SHAPE}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: context a newcomer needs. If evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Our view: a narrow inference supported by its citations, without first person. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
+      system: `${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\n${ANALYSIS_SHAPE}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Before returning, verify every headline is at most 20 English words and 24 Spanish words, every dek is at most two sentences, every analysis field is at most three sentences, no field uses a semicolon, and every number appears in its cited evidence. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: explain a supported connection to earlier developments when prior-article-body evidence is present, otherwise supply only the context needed to understand this change. Never imply earlier MexicoBrief coverage unless a prior source was actually retrieved. If evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Our view: a narrow business implication supported by its citations, naming the affected kind of business where the evidence permits, without first person. Do not convert activity into demand, investment pledges into completed investment, or proposals into rules in force. Multiple articles may repeat one source; never imply independent confirmation from source count. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
       user: JSON.stringify(locked.map((row) => ({
         i: row.index,
         story: { date: row.item._editorialDate, source: row.item.sourceName || row.item.source, url: row.item.url },
@@ -591,6 +642,7 @@ async function main() {
       schema: draftSchema(), maxTokens: 6500,
     });
     const draftRejects = [];
+    const rejectionDiagnostics = [];
     const expectedDrafts = new Set(locked.map((row) => row.index));
     const draftByIndex = new Map();
     for (const draft of arr(draftResponse.stories)) {
@@ -610,6 +662,7 @@ async function main() {
       if (!rawDraft) {
         const reason = `${storyId(row.item)}: model omitted the required story unit`;
         draftRejects.push(reason);
+        rejectionDiagnostics.push({ stage: 'deterministic', storyId: storyId(row.item), reasons: ['model omitted the required story unit'], fields: {} });
         console.warn(`  reject draft ${reason}`);
         return [];
       }
@@ -617,12 +670,14 @@ async function main() {
       const flags = deterministicDraftCheck(row, draft);
       if (flags.length) {
         draftRejects.push(`${storyId(row.item)}: ${flags.join('; ')}`);
+        rejectionDiagnostics.push(draftFailureReceipt(row, draft, flags));
         console.warn(`  reject draft ${storyId(row.item)}: ${flags.join('; ')}`);
         return [];
       }
       return [{ row, draft }];
     });
     if (!deterministicPass.length) {
+      failureDiagnostics = rejectionDiagnostics;
       throw new Error(`all story drafts failed the deterministic evidence gate: ${draftRejects.join(' | ').slice(0, 330)}`);
     }
 
@@ -642,7 +697,10 @@ async function main() {
     for (const entry of deterministicPass) {
       const review = reviews.get(entry.row.index);
       if (!review?.ok) {
-        console.warn(`  reject audit ${storyId(entry.row.item)}: ${arr(review?.problems).join('; ') || 'missing review'}`);
+        const reasons = arr(review?.problems).map(clean).filter(Boolean);
+        failureDiagnostics.push(draftFailureReceipt(entry.row, entry.draft,
+          reasons.length ? reasons : ['missing review'], 'independent-audit'));
+        console.warn(`  reject audit ${storyId(entry.row.item)}: ${reasons.join('; ') || 'missing review'}`);
         continue;
       }
       passing.push(makeStory(entry.row, entry.draft, editorialDate, weekendDay(editorialDate)));
@@ -656,26 +714,30 @@ async function main() {
       throw new Error('no exact-day story survived the edition gate');
     }
 
-    const edition = atomicWriteEdition(EDITION_FILE, {
+    const target = reviewGate.publicationTarget({
+      dataDirectory: DATA, editorialDate, slot, requireReview: process.env.EDITION_REQUIRE_REVIEW === '1',
+    });
+    const edition = atomicWriteEdition(target.file, {
       schemaVersion: 1,
       editorialDate,
       generatedAt: now.toISOString(),
       slot,
       editionType: weekendDay(editorialDate) ? 'weekend-recap' : 'daily',
       candidateSignature: signature,
+      ...(target.publicationStatus ? { publicationStatus: target.publicationStatus } : {}),
       summary: { en: passing.map((story) => story.en.dek).join(' '), es: passing.map((story) => story.es.dek).join(' ') },
       stories: passing,
       weekStories: buildWeekStories(priorEdition, passing, editorialDate),
     });
     modelUsage = usage();
     attempts = finishAttempt(attempts, editorialDate, slot, {
-      state: 'published', completedAt: new Date().toISOString(), calls: modelUsage.calls,
+      state: target.state, completedAt: new Date().toISOString(), calls: modelUsage.calls,
       costUSD: Math.round((Number(modelUsage.costUSD) || 0) * 1e6) / 1e6,
       artifactHash: edition.artifactHash, reason: '',
     });
     write(ATTEMPTS_FILE, attempts);
-    console.log(`edition: published ${editorialDate}/${slot} · ${passing.length} stories · ${edition.artifactHash}`);
-    emitOutcome({ state: 'published', editorial_date: editorialDate, slot, artifact_hash: edition.artifactHash });
+    console.log(`edition: ${target.state} ${editorialDate}/${slot} · ${passing.length} stories · ${edition.artifactHash}`);
+    emitOutcome({ state: target.state, editorial_date: editorialDate, slot, artifact_hash: edition.artifactHash });
   } catch (error) {
     try {
       const anthropic = await import('./lib/anthropic.js');
@@ -685,6 +747,7 @@ async function main() {
       state: 'failed', completedAt: new Date().toISOString(), calls: modelUsage.calls || callCount,
       costUSD: Math.round((Number(modelUsage.costUSD) || 0) * 1e6) / 1e6,
       reason: clean(error?.message).slice(0, 500),
+      diagnostics: failureDiagnostics.slice(0, 5),
     });
     write(ATTEMPTS_FILE, attempts);
     emitOutcome({ state: 'failed', editorial_date: editorialDate, slot, artifact_hash: '' });

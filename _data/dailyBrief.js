@@ -30,6 +30,10 @@ function loadEdition(sources) {
 
 function toStory(story, locale) {
   const copy = story[locale] || story.en || {};
+  // These expand English acronyms into English prose. Applying them to reviewed
+  // Spanish copy silently produces mixed-language sentences (INEGI -> Mexico's...).
+  const headline = locale === 'es' ? value => String(value || '').trim() : plainHeadline;
+  const explanation = locale === 'es' ? value => String(value || '').trim() : plainExplanation;
   const section = SECTIONS[story.section] || SECTIONS.economy;
   const analysisSources = (story.evidence || []).filter((item) => item.kind !== 'article');
   const sources = (story.evidence || []).map((item) => ({
@@ -40,11 +44,11 @@ function toStory(story, locale) {
     beat: section.beat,
     date: story.date,
     lane: story.lane,
-    title: plainHeadline(copy.headline).replace(/\.\s*$/, ''),
-    summary: plainExplanation(copy.dek),
-    bg: plainExplanation(copy.background),
-    view: plainExplanation(copy.view),
-    prediction: plainExplanation(copy.watch),
+    title: headline(copy.headline).replace(/\.\s*$/, ''),
+    summary: explanation(copy.dek),
+    bg: explanation(copy.background),
+    view: explanation(copy.view),
+    prediction: explanation(copy.watch),
     analysisV: 1,
     analysisRefs: story.evidenceRefs || {},
     analysisSources,
