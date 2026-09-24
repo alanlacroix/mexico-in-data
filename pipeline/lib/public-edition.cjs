@@ -139,6 +139,18 @@ function validateEdition(edition) {
       }
     }
     const refs = story?.evidenceRefs && typeof story.evidenceRefs === 'object' ? story.evidenceRefs : {};
+    if (story.editorial !== undefined) {
+      const presentation = story.editorial;
+      if (!Array.isArray(presentation?.timeline) || presentation.timeline.length !== 3) errors.push(`${label}.editorial.timeline needs three sourced steps`);
+      for (const [stepIndex, step] of (Array.isArray(presentation?.timeline) ? presentation.timeline : []).entries()) {
+        for (const locale of ['en', 'es']) for (const field of ['label', 'text']) {
+          for (const error of narrativeErrors(step?.[locale]?.[field])) errors.push(`${label}.timeline[${stepIndex}].${locale}.${field} ${error}`);
+        }
+        if (!Array.isArray(step?.refs) || !step.refs.length || step.refs.some(ref => !evidenceIds.has(ref))) errors.push(`${label}.timeline[${stepIndex}] needs valid evidence refs`);
+      }
+      for (const locale of ['en', 'es']) for (const error of narrativeErrors(presentation?.margin?.[locale])) errors.push(`${label}.margin.${locale} ${error}`);
+      if (!Array.isArray(presentation?.margin?.refs) || !presentation.margin.refs.length || presentation.margin.refs.some(ref => !evidenceIds.has(ref))) errors.push(`${label}.margin needs valid evidence refs`);
+    }
     const hasIndependentEvidence = evidence.some((item) => item?.id !== 'article');
     if (hasIndependentEvidence && !Array.isArray(refs.background)) {
       errors.push(`${label}.evidenceRefs.background must cite independent evidence when available`);

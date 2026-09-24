@@ -150,6 +150,7 @@ function buildFeed(locale = 'en') {
   // ---- The one selected story set, presented in honest dated lanes --------
   const storyCard = (story) => ({
     id: story.id,
+    editorial: story.editorial,
     lane: story.lane,
     chip: chipFor(story.title),
     date: monthDay(story.date),

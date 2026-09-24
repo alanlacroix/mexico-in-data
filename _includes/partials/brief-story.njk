@@ -1,17 +1,25 @@
 {# Interface: expects `story`, `locale`, and `loop` in the current context. #}
-<article class="development{% if loop.first %} development-lead{% endif %}">
+<article class="development{% if story.editorial %} development-annotated{% endif %}{% if loop.first %} development-lead{% endif %}">
   <header class="development-head">
     <div>
       <div class="story-meta"><span>{{ story.cat }}</span><span>{{ story.date }}</span></div>
       <h2>{{ story.title }}</h2>
     </div>
   </header>
+  {% if story.editorial %}
+  <section class="story-thread" aria-label="{% if locale == 'es' %}La secuencia{% else %}The sequence{% endif %}">
+    {% for step in story.editorial.timeline %}<div class="thread-step"><h3>{{ step.label }}</h3><p>{{ step.text }}</p>{% for source in step.sources %}<a href="{{ source.url }}" class="thread-source">{{ source.source }}</a>{% endfor %}</div>{% endfor %}
+  </section>
+  <div class="annotated-body">
+
+  {% endif %}
   <div class="story-grid">
     <div class="story-block story-change"><p>{{ story.dek }}</p></div>
     <section class="story-block story-impact"><h3>{% if locale == 'es' %}Implicaciones para las empresas{% else %}Business implications{% endif %}</h3><p>{{ story.view }}</p></section>
     {% if story.bg %}<div class="story-block story-context"><p>{{ story.bg }}</p></div>{% endif %}
     {% if story.watch %}<section class="story-block"><h3>{% if locale == 'es' %}Qué sigue{% else %}Next{% endif %}</h3><p>{{ story.watch }}</p></section>{% endif %}
   </div>
+  {% if story.editorial %}  <aside class="editor-margin"><h3>{% if locale == 'es' %}Al margen{% else %}In the margin{% endif %}</h3><p>{{ story.editorial.margin }}</p>{% for source in story.editorial.marginSources %}<a href="{{ source.url }}">{{ source.source }}</a>{% endfor %}</aside></div>{% endif %}
   <div class="story-sources">
     <span>{% if locale == 'es' %}Fuentes{% else %}Sources{% endif %}</span>
     <a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.source }} <span aria-hidden="true">↗</span></a>

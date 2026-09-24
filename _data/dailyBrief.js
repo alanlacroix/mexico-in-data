@@ -41,6 +41,7 @@ function toStory(story, locale) {
   }));
   return {
     id: story.id,
+    editorial: story.editorial ? { timeline: story.editorial.timeline.map(step => ({ ...step[locale], sources: step.refs.map(id => story.evidence.find(item => item.id === id)) })), margin: story.editorial.margin[locale], marginSources: story.editorial.margin.refs.map(id => story.evidence.find(item => item.id === id)) } : null,
     beat: section.beat,
     date: story.date,
     lane: story.lane,
