@@ -9,6 +9,8 @@ module.exports = function () {
     alternateUrl: editionPath(edition.editorialDate, locale === 'en' ? 'es' : 'en'),
     title: edition.stories[0][locale].headline,
     stories: edition.stories.map(story => ({
+      id: story.id,
+      sources: story.evidence,
       editorial: story.editorial ? { timeline: story.editorial.timeline.map(step => ({ ...step[locale], sources: step.refs.map(id => story.evidence.find(item => item.id === id)) })), margin: story.editorial.margin[locale], marginSources: story.editorial.margin.refs.map(id => story.evidence.find(item => item.id === id)) } : null,
       cat: locale === 'es' ? 'Archivo' : 'Archive', date: story.date,
       title: story[locale].headline, dek: story[locale].dek,

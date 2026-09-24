@@ -37,7 +37,7 @@ function toStory(story, locale) {
   const section = SECTIONS[story.section] || SECTIONS.economy;
   const analysisSources = (story.evidence || []).filter((item) => item.kind !== 'article');
   const sources = (story.evidence || []).map((item) => ({
-    source: plainSourceName(item.source), url: item.url, publishedAt: story.publishedAt, date: story.date,
+    id: item.id, kind: item.kind, source: locale === 'es' ? item.source : plainSourceName(item.source), url: item.url, publishedAt: story.publishedAt, date: story.date,
   }));
   return {
     id: story.id,
@@ -53,7 +53,7 @@ function toStory(story, locale) {
     analysisV: 1,
     analysisRefs: story.evidenceRefs || {},
     analysisSources,
-    source: plainSourceName(story.source),
+    source: locale === 'es' ? story.source : plainSourceName(story.source),
     url: story.url,
     reportTime: story.publishedAt,
     sources,

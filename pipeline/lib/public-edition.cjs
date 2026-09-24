@@ -146,9 +146,15 @@ function validateEdition(edition) {
         for (const locale of ['en', 'es']) for (const field of ['label', 'text']) {
           for (const error of narrativeErrors(step?.[locale]?.[field])) errors.push(`${label}.timeline[${stepIndex}].${locale}.${field} ${error}`);
         }
+        if (step?.en && step?.es) for (const field of ['label', 'text']) {
+          for (const error of bilingualFidelityFlags({ english: step.en[field], spanish: step.es[field] })) errors.push(`${label}.timeline[${stepIndex}].${field} ${error}`);
+        }
         if (!Array.isArray(step?.refs) || !step.refs.length || step.refs.some(ref => !evidenceIds.has(ref))) errors.push(`${label}.timeline[${stepIndex}] needs valid evidence refs`);
       }
       for (const locale of ['en', 'es']) for (const error of narrativeErrors(presentation?.margin?.[locale])) errors.push(`${label}.margin.${locale} ${error}`);
+      if (presentation?.margin?.en && presentation?.margin?.es) {
+        for (const error of bilingualFidelityFlags({ english: presentation.margin.en, spanish: presentation.margin.es })) errors.push(`${label}.margin ${error}`);
+      }
       if (!Array.isArray(presentation?.margin?.refs) || !presentation.margin.refs.length || presentation.margin.refs.some(ref => !evidenceIds.has(ref))) errors.push(`${label}.margin needs valid evidence refs`);
     }
     const hasIndependentEvidence = evidence.some((item) => item?.id !== 'article');

@@ -151,6 +151,7 @@ function buildFeed(locale = 'en') {
   const storyCard = (story) => ({
     id: story.id,
     editorial: story.editorial,
+    sources: story.sources,
     lane: story.lane,
     chip: chipFor(story.title),
     date: monthDay(story.date),
