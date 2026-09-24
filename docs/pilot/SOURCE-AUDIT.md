@@ -58,3 +58,12 @@ For the pilot, alert on two consecutive core-feed failures and review source-spe
 A second local run used the production `fetchArticle` helper and registry host restrictions, independently of the audit's HTTP check. All ten feeds parsed; six sampled pages returned a recognized article body: El Economista, El Financiero, Bloomberg Línea, Mexico Business News, T21 and El País México. Expansión, Mexico News Daily and FT returned no extracted body; Aristegui returned text but no recognized article body. El País succeeded through the normal public article-fetch path despite the first audit user agent receiving 403. These are sample-level observations, not blanket outlet access guarantees. Bloomberg's sample concerned Colombia, demonstrating why Mexico relevance filtering remains necessary.
 
 The PR now runs this audit in GitHub Actions and retains a JSON artifact. A green audit job means the diagnostic ran; inspect individual feed and extraction outcomes before concluding a source works. Production deployment remains separate from runner verification.
+
+
+## GitHub runner verification
+
+[Run 36065476595](https://github.com/alanlacroix/mexico-in-data/actions/runs/36065476595) completed successfully. Its diagnostic JSON is saved as `source-audit-runner-2026-09-24.json`. All ten feeds parsed; nine had September 24 items, while FT's newest item was September 21. This is not ten fresh daily feeds.
+
+The production article extractor recognized bodies in six samples: El Economista, El Financiero, Bloomberg Línea, Mexico Business News, T21 and El País México. Expansión and Aristegui's sampled pages returned HTTP 200 but did not yield a recognized article body. Mexico News Daily and FT samples returned 403. Keep those four as discovery/support sources until individual article evidence qualifies; FT is optional rather than a daily dependency. No per-outlet accessibility guarantee follows from a single sample.
+
+The final implementation commit `0bd8b29f` also passed [release-check run 36065619707](https://github.com/alanlacroix/mexico-in-data/actions/runs/36065619707). Neither run deployed the Worker or approved a public edition.

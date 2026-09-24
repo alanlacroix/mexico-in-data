@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 2,
+  "environment": "github-actions",
+  "productionRunnerVerified": true,
+  "productionRunnerMeaning": "Audit executed on GitHub Actions; this does not verify a deployed runtime.",
+  "results": [
+    {
+      "id": "el-economista",
+      "name": "El Economista",
+      "registryUrl": "https://www.eleconomista.com.mx/rss/ultimas-noticias",
+      "registryTier": "1",
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:03.749Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.eleconomista.com.mx/rss/ultimas-noticias",
+        "contentType": "application/xml",
+        "bytes": 698494,
+        "itemCount": 100,
+        "newestPublishedAt": "2026-09-24T22:00:00.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": true,
+          "url": "https://www.eleconomista.com.mx/politica/autoridades-detienen-mexicali-nino-presunto-jefe-plaza-cartel-pacifico-20260924-835186.html",
+          "status": 200,
+          "finalUrl": "https://www.eleconomista.com.mx/politica/autoridades-detienen-mexicali-nino-presunto-jefe-plaza-cartel-pacifico-20260924-835186.html",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 227367
+        },
+        "extraction": {
+          "checked": true,
+          "ok": true,
+          "articleBody": true,
+          "textLength": 3360,
+          "fetched": true,
+          "finalUrl": "https://www.eleconomista.com.mx/politica/autoridades-detienen-mexicali-nino-presunto-jefe-plaza-cartel-pacifico-20260924-835186.html"
+        }
+      }
+    },
+    {
+      "id": "elfin-economia",
+      "name": "El Financiero — Economía",
+      "registryUrl": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/economia/?outputType=xml",
+      "registryTier": 2,
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:04.044Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/category/economia/?outputType=xml",
+        "contentType": "application/xml; charset=utf-8",
+        "bytes": 101351,
+        "itemCount": 14,
+        "newestPublishedAt": "2026-09-24T21:56:39.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": true,
+          "url": "https://www.elfinanciero.com.mx/economia/2026/09/24/pagar-desde-el-celular-sin-sacar-la-tarjeta-bancos-alistan-cambios-con-codi-antes-del-buen-fin/",
+          "status": 200,
+          "finalUrl": "https://www.elfinanciero.com.mx/economia/2026/09/24/pagar-desde-el-celular-sin-sacar-la-tarjeta-bancos-alistan-cambios-con-codi-antes-del-buen-fin/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 514334
+        },
+        "extraction": {
+          "checked": true,
+          "ok": true,
+          "articleBody": true,
+          "textLength": 3785,
+          "fetched": true,
+          "finalUrl": "https://www.elfinanciero.com.mx/economia/2026/09/24/pagar-desde-el-celular-sin-sacar-la-tarjeta-bancos-alistan-cambios-con-codi-antes-del-buen-fin/"
+        }
+      }
+    },
+    {
+      "id": "expansion-empresas",
+      "name": "Expansión — Empresas",
+      "registryUrl": "https://expansion.mx/rss/empresas",
+      "registryTier": 2,
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:04.511Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://expansion.mx/rss/empresas",
+        "contentType": "text/xml;charset=UTF-8",
+        "bytes": 337074,
+        "itemCount": 44,
+        "newestPublishedAt": "2026-09-24T20:55:38.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": true,
+          "url": "https://expansion.mx/empresas/2026/09/24/geely-falla-en-emgrand-asi-pueden-repararse-gratis",
+          "status": 200,
+          "finalUrl": "https://expansion.mx/empresas/2026/09/24/geely-falla-en-emgrand-asi-pueden-repararse-gratis",
+          "contentType": "text/html;charset=UTF-8",
+          "bytes": 162526
+        },
+        "extraction": {
+          "checked": true,
+          "ok": false,
+          "articleBody": false,
+          "textLength": 0,
+          "fetched": false,
+          "finalUrl": ""
+        }
+      }
+    },
+    {
+      "id": "bloomberglinea",
+      "name": "Bloomberg Línea",
+      "registryUrl": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml",
+      "registryTier": 2,
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:05.364Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.bloomberglinea.com/arc/outboundfeeds/rss/?outputType=xml",
+        "contentType": "application/xml; charset=utf-8",
+        "bytes": 892689,
+        "itemCount": 100,
+        "newestPublishedAt": "2026-09-24T21:46:50.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": true,
+          "url": "https://www.bloomberglinea.com/latinoamerica/colombia/colombia-rompe-relaciones-diplomaticas-con-iran-en-nombre-de-la-seguridad-y-la-soberania-nacional/",
+          "status": 200,
+          "finalUrl": "https://www.bloomberglinea.com/latinoamerica/colombia/colombia-rompe-relaciones-diplomaticas-con-iran-en-nombre-de-la-seguridad-y-la-soberania-nacional/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 564584
+        },
+        "extraction": {
+          "checked": true,
+          "ok": true,
+          "articleBody": true,
+          "textLength": 2583,
+          "fetched": true,
+          "finalUrl": "https://www.bloomberglinea.com/latinoamerica/colombia/colombia-rompe-relaciones-diplomaticas-con-iran-en-nombre-de-la-seguridad-y-la-soberania-nacional/"
+        }
+      }
+    },
+    {
+      "id": "mexico-business-news",
+      "name": "Mexico Business News",
+      "registryUrl": "https://mexicobusiness.news/jsonapi/node/article?page%5Blimit%5D=100&sort=-created",
+      "registryTier": "specialist",
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:05.830Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://mexicobusiness.news/jsonapi/node/article?page%5Blimit%5D=100&sort=-created",
+        "contentType": "application/vnd.api+json",
+        "bytes": 1352693,
+        "itemCount": 50,
+        "newestPublishedAt": "2026-09-24T21:40:18.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": true,
+          "url": "https://mexicobusiness.news/cloudanddata/news/ai-governance-infrastructure-face-critical-moment",
+          "status": 200,
+          "finalUrl": "https://mexicobusiness.news/cloudanddata/news/ai-governance-infrastructure-face-critical-moment",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 104358
+        },
+        "extraction": {
+          "checked": true,
+          "ok": true,
+          "articleBody": true,
+          "textLength": 2467,
+          "fetched": true,
+          "finalUrl": "https://mexicobusiness.news/cloudanddata/news/ai-governance-infrastructure-face-critical-moment"
+        }
+      }
+    },
+    {
+      "id": "t21",
+      "name": "T21",
+      "registryUrl": "https://t21.com.mx/feed/",
+      "registryTier": "specialist",
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:06.104Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://t21.com.mx/feed/",
+        "contentType": "application/rss+xml; charset=UTF-8",
+        "bytes": 78554,
+        "itemCount": 10,
+        "newestPublishedAt": "2026-09-24T21:40:54.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": true,
+          "url": "https://t21.com.mx/meor-impulsa-expansion-industrial-en-tijuana-con-arrendamiento-historico/",
+          "status": 200,
+          "finalUrl": "https://t21.com.mx/meor-impulsa-expansion-industrial-en-tijuana-con-arrendamiento-historico/",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 385497
+        },
+        "extraction": {
+          "checked": true,
+          "ok": true,
+          "articleBody": true,
+          "textLength": 3205,
+          "fetched": true,
+          "finalUrl": "https://t21.com.mx/meor-impulsa-expansion-industrial-en-tijuana-con-arrendamiento-historico/"
+        }
+      }
+    },
+    {
+      "id": "elpais-mexico",
+      "name": "El País — México",
+      "registryUrl": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/mexico/portada",
+      "registryTier": 2,
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:07.256Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/mexico/portada",
+        "contentType": "application/xml",
+        "bytes": 449886,
+        "itemCount": 119,
+        "newestPublishedAt": "2026-09-24T22:01:20.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": true,
+          "url": "https://elpais.com/mexico/2026-09-24/el-huracan-polo-en-vivo.html",
+          "status": 200,
+          "finalUrl": "https://elpais.com/mexico/2026-09-24/el-huracan-polo-en-vivo.html",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 425055
+        },
+        "extraction": {
+          "checked": true,
+          "ok": true,
+          "articleBody": true,
+          "textLength": 25282,
+          "fetched": true,
+          "finalUrl": "https://elpais.com/mexico/2026-09-24/el-huracan-polo-en-vivo.html"
+        }
+      }
+    },
+    {
+      "id": "aristegui-mexico",
+      "name": "Aristegui Noticias",
+      "registryUrl": "https://editorial.aristeguinoticias.com/category/mexico/feed/",
+      "registryTier": 2,
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:08.445Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://editorial.aristeguinoticias.com/category/mexico/feed/",
+        "contentType": "application/rss+xml; charset=UTF-8",
+        "bytes": 15727,
+        "itemCount": 15,
+        "newestPublishedAt": "2026-09-24T21:30:37.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": true,
+          "url": "https://aristeguinoticias.com/2409/mexico/juez-ordena-a-fgr-recibir-denuncias-de-madres-de-desaparecidos/",
+          "status": 200,
+          "finalUrl": "https://aristeguinoticias.com/2409/mexico/juez-ordena-a-fgr-recibir-denuncias-de-madres-de-desaparecidos/",
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 77607
+        },
+        "extraction": {
+          "checked": true,
+          "ok": true,
+          "articleBody": false,
+          "textLength": 3959,
+          "fetched": true,
+          "finalUrl": "https://aristeguinoticias.com/2409/mexico/juez-ordena-a-fgr-recibir-denuncias-de-madres-de-desaparecidos/"
+        }
+      }
+    },
+    {
+      "id": "mexico-news-daily",
+      "name": "Mexico News Daily",
+      "registryUrl": "https://mexiconewsdaily.com/feed/",
+      "registryTier": "2",
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:08.623Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://mexiconewsdaily.com/feed/",
+        "contentType": "application/rss+xml; charset=UTF-8",
+        "bytes": 135337,
+        "itemCount": 10,
+        "newestPublishedAt": "2026-09-24T22:00:41.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": false,
+          "url": "https://mexiconewsdaily.com/north-central-pacific-coast/puerto-vallarta-floating-billboard-tourism-environmental-office/",
+          "status": 403,
+          "finalUrl": "https://mexiconewsdaily.com/north-central-pacific-coast/puerto-vallarta-floating-billboard-tourism-environmental-office/",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 18121
+        },
+        "extraction": {
+          "checked": true,
+          "ok": false,
+          "articleBody": false,
+          "textLength": 0,
+          "fetched": false,
+          "finalUrl": ""
+        }
+      }
+    },
+    {
+      "id": "ft-mexico",
+      "name": "Financial Times — Mexico",
+      "registryUrl": "https://www.ft.com/mexico?format=rss",
+      "registryTier": "1",
+      "environment": "github-actions",
+      "checkedAt": "2026-09-24T22:06:08.812Z",
+      "feed": {
+        "ok": true,
+        "status": 200,
+        "finalUrl": "https://www.ft.com/mexico?format=rss",
+        "contentType": "text/xml; charset=utf-8",
+        "bytes": 12060,
+        "itemCount": 25,
+        "newestPublishedAt": "2026-09-21T04:00:11.000Z"
+      },
+      "sampleArticle": {
+        "http": {
+          "checked": true,
+          "ok": false,
+          "url": "https://www.ft.com/content/f2dca0b0-6387-4022-8dba-dc8015823dfe?syn-25a6b1a6=1",
+          "status": 403,
+          "finalUrl": "https://www.ft.com/content/f2dca0b0-6387-4022-8dba-dc8015823dfe?syn-25a6b1a6=1",
+          "contentType": "text/html; charset=UTF-8",
+          "bytes": 270622
+        },
+        "extraction": {
+          "checked": true,
+          "ok": false,
+          "articleBody": false,
+          "textLength": 0,
+          "fetched": false,
+          "finalUrl": ""
+        }
+      }
+    }
+  ]
+}
