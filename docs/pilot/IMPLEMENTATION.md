@@ -40,3 +40,13 @@ Manual visual checks cover desktop and 390px mobile in both languages, source li
 5. Measure added understanding, voluntary return visits, reading time, editorial effort, and cost. The proposed success thresholds are in the parent project plan; no reader metrics have yet been collected.
 
 Candidate approval is required by the agreed pilot plan. Reader invitations, messages, and surveys have not been sent.
+
+## Source operations implementation, September 24
+
+- Source IDs now distinguish discovery channels from publisher names; numeric and legacy string tiers share the same eligibility rules.
+- Collection runs separately every six hours, including 06:05 Mexico City, without model calls. Health observations survive failed collection and review holds. Feed parsing, newest published timestamp and new ledger items are separate fields; source-specific cadence alerts are still future calibration work.
+- Cloudflare clock changes prepare a weekday 06:35 Mexico City dispatch with a single 06:50 GitHub backup. Noon remains manual recovery. Worker configuration must be deployed separately; these changes are not live merely because the PR exists.
+- Candidate review summaries contain both languages, evidence links and exact hash. The manually dispatched `approve-edition` workflow records reviewer/hash/time, rejects stale or changed candidates, validates the complete site, commits the approved artifact and archive, and checks the live JSON plus both language pages. Generation never runs during approval.
+- Publication is held pending editorial approval. The September 22 sample is now stale and cannot be promoted as today's edition. A fresh candidate must be prepared for launch.
+- GitHub workflow summaries/artifacts provide review material and failed job state. Recipient subscriptions and any external notifications have not been configured; no proactive stale-edition alert service is claimed.
+- Full release gate passes, with seven pre-existing warnings for retained non-primary data series. No production deployment or successful live cycle is claimed.

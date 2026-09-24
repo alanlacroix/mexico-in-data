@@ -106,6 +106,7 @@ module.exports = function (now = new Date(), sources = {}, locale = 'en') {
     editionType: edition.editionType,
     briefTitle: weekendEdition ? (locale === 'es' ? 'Resumen del fin de semana' : 'Weekend recap') : (locale === 'es' ? 'El resumen' : 'The brief'),
     newsThrough: edition.generatedAt,
+    publishedAt: edition.approval?.approvedAt || edition.generatedAt,
     quiet: false,
     summaryLead: carryingLastBrief ? delayed : edition.summary[locale],
     stories,

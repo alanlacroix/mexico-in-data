@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { collectNews } from './collect-news.js';
 import { fetchArticle } from './lib/fetch-article.js';
-import { eventCandidateEligible, mexicoRelevant } from './lib/news-trust.js';
+import { editorialSourceTier, eventCandidateEligible, mexicoRelevant, registeredSourceFor } from './lib/news-trust.js';
 import {
   lintAnalysisText, lintReportText, reportContextDistinct, unsupportedNumericTokens,
 } from './lib/lint.js';
@@ -41,7 +41,6 @@ const MAX_WEEK_STORIES = 21;
 const MONTHLY_LIMIT = 6;
 const ANALYSIS_POLICY = 'atomic-bilingual-edition-v1';
 const NEWS_SOURCES = read(path.join(__dirname, 'news-sources.json'), { sources: [] }).sources || [];
-const SOURCE_BY_NAME = new Map(NEWS_SOURCES.map((source) => [source.name, source]));
 
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
@@ -84,9 +83,9 @@ const sectionOf = (item) => {
   return 'economy';
 };
 const sourceAllowed = (item) => {
-  const registered = SOURCE_BY_NAME.get(item.sourceName);
+  const registered = registeredSourceFor(item, NEWS_SOURCES);
   return Boolean(registered)
-    && (item.tier === 1 || item.tier === 2 || item.tier === 'specialist')
+    && editorialSourceTier(item.tier)
     && item.source !== 'news.google.com'
     && !/^google news\b|^via gdelt$/i.test(clean(item.sourceName))
     && articleUrlAllowed(registered, item.url)
@@ -101,15 +100,14 @@ const isoWeek = (dt) => {
   const week = Math.ceil((((date - yearStart) / 864e5) + 1) / 7);
   return `${date.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
 };
-const eastParts = (date) => Object.fromEntries(new Intl.DateTimeFormat('en-US', {
-  timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23',
+const mexicoParts = (date) => Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/Mexico_City', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23',
 }).formatToParts(date).map((part) => [part.type, part.value]));
 const slotFor = (date) => {
   const explicit = clean(process.env.PUBLICATION_SLOT);
   if (explicit) return explicit;
-  const hour = Number(eastParts(date).hour);
-  if (hour === 9 || hour === 10) return 'morning';
-  if (hour === 12 || hour === 13) return 'noon';
+  const hour = Number(mexicoParts(date).hour);
+  if (hour === 6) return 'morning';
   return '';
 };
 function emitOutcome(values) {
@@ -215,7 +213,7 @@ function evidenceRecord({ id, kind, source, url, text }) {
 }
 
 async function evidenceFor(item, standing, calendar, memory = []) {
-  const registered = SOURCE_BY_NAME.get(item.sourceName);
+  const registered = registeredSourceFor(item, NEWS_SOURCES);
   const article = await fetchArticle(item.url, {
     allowedHosts: registered ? sourceHosts(registered) : [new URL(item.url).hostname],
   }).catch(() => ({ ok: false, text: '' }));
@@ -525,8 +523,9 @@ async function main() {
   let schedule;
   let universe;
   let signature;
+  let collectionReceipt = null;
   try {
-    if (process.env.EDITION_SKIP_COLLECTION !== '1') await collectNews({ now });
+    if (process.env.EDITION_SKIP_COLLECTION !== '1') collectionReceipt = await collectNews({ now });
     schedule = read(path.join(DATA, 'events.json'), { events: [] });
     universe = await candidateUniverse(now, schedule, editorialDate);
     signature = candidateSignature(universe);
@@ -537,6 +536,7 @@ async function main() {
     attempts = finishAttempt(attempts, editorialDate, slot, {
       state: 'failed', completedAt: new Date().toISOString(), calls: 0, costUSD: 0,
       reason: `collection failed: ${clean(error?.message).slice(0, 460)}`,
+      collection: collectionReceipt || error?.collection || null,
     });
     write(ATTEMPTS_FILE, attempts);
     emitOutcome({ state: 'failed', editorial_date: editorialDate, slot, artifact_hash: '' });
@@ -547,6 +547,7 @@ async function main() {
     attempts = beginAttempt(attempts, { editorialDate, slot, candidateSignature: signature, startedAt: now.toISOString() });
     attempts = finishAttempt(attempts, editorialDate, slot, {
       state: 'noop-same-signature', completedAt: now.toISOString(), reason: 'no new eligible reporting since morning',
+      collection: collectionReceipt,
     });
     write(ATTEMPTS_FILE, attempts);
     console.log(`edition: ${editorialDate}/${slot} has the morning signature, zero model calls`);
@@ -555,6 +556,7 @@ async function main() {
   }
 
   attempts = beginAttempt(attempts, { editorialDate, slot, candidateSignature: signature, startedAt: now.toISOString() });
+  if (collectionReceipt) attempts = finishAttempt(attempts, editorialDate, slot, { collection: collectionReceipt });
   write(ATTEMPTS_FILE, attempts);
   let callCount = 0;
   let modelUsage = { calls: 0, costUSD: 0 };

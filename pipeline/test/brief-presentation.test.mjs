@@ -31,3 +31,5 @@ assert.equal(isDelayed('2026-09-18', '2026-09-21T13:00:00Z'), true, 'Monday dead
 assert.equal(isDelayed('2026-09-21', '2026-09-21T18:00:00Z'), false);
 assert.equal(isDelayed('2026-09-07', '2026-09-22T18:00:00Z'), true, 'frozen page still reveals staleness');
 console.log('brief presentation: ok');
+
+assert.match(fs.readFileSync(new URL("../../_site/index.html", import.meta.url), "utf8"), /data-artifact-hash="[a-f0-9]{64}"/, "homepage exposes its exact publication hash for deployment verification");

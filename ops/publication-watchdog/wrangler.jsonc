@@ -17,7 +17,10 @@
     "HEARTBEAT_MAX_AGE_MINUTES": "45"
   },
   "triggers": {
-    "crons": ["*/15 * * * *"]
+    "crons": [
+      "*/15 * * * *",
+      "35 12 * * mon-fri"
+    ]
   },
   "observability": {
     "enabled": true

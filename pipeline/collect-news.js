@@ -9,14 +9,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { cleanNewsText, domainTrusted, mexicoRelevant, newsCollectionHealth, publicHeadlineEligible } from './lib/news-trust.js';
+import { cleanNewsText, domainTrusted, mexicoRelevant, newsCollectionHealth, normalizeSourceTier, publicHeadlineEligible, registeredSourceFor } from './lib/news-trust.js';
 import { articleUrlAllowed, fetchBoundedText, mapLimit, sourceHosts } from './lib/url-safety.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const NEWSDIR = path.join(ROOT, 'data', 'news');
 const REG = JSON.parse(fs.readFileSync(path.join(__dirname, 'news-sources.json'), 'utf8'));
-const SOURCE_BY_NAME = new Map(REG.sources.map((source) => [source.name, source]));
 const UA = 'Mozilla/5.0 (compatible; mexico-brief news collector; +https://mexicobrief.com)';
 
 // One bounded network path. There is no serial curl retry: a slow publisher may be
@@ -143,6 +142,11 @@ function isoWeek(dt) {
 }
 const weekFile = (w) => path.join(NEWSDIR, w + '.json');
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
+function writeJsonAtomically(file, value) {
+  const temporary = `${file}.${process.pid}.tmp`;
+  fs.writeFileSync(temporary, JSON.stringify(value, null, 2));
+  fs.renameSync(temporary, file);
+}
 
 export async function collectNews({ now = new Date() } = {}) {
   fs.mkdirSync(NEWSDIR, { recursive: true });
@@ -184,16 +188,19 @@ export async function collectNews({ now = new Date() } = {}) {
       seen.add(id);
       ledger.push({
         id, url, title: it.title, dek: it.dek,
-        source: domainOf(url) || s.id, sourceName: s.name, tier: s.tier, beat: beatFor(s, url), lang: s.lang,
+        source: domainOf(url) || s.id, sourceId: s.id, sourceName: s.name, tier: normalizeSourceTier(s.tier), beat: beatFor(s, url), lang: s.lang,
         published_at: publishedAt,
         first_seen: now.toISOString(),
       });
       n++; added++;
-      if (n >= (s.tier === 'aggregator' ? 15 : 40)) break;
+      if (n >= (normalizeSourceTier(s.tier) === 'aggregator' ? 15 : 40)) break;
     }
     const prior = readJson(path.join(NEWSDIR, 'health.json'), {})[s.id] || {};
     health[s.id] = {
       name: s.name, last_run: now.toISOString(),
+      fetch_ok: result.ok,
+      newest_published_at: result.items.map(item => toISO(item.date)).filter(Boolean).sort().at(-1) || null,
+      parsed_items: result.items.length,
       last_success: result.ok ? now.toISOString() : (prior.last_success || null),
       new_items: n, consecutive_failures: result.ok ? 0 : (prior.consecutive_failures || 0) + 1,
     };
@@ -212,7 +219,7 @@ export async function collectNews({ now = new Date() } = {}) {
     if (wireSeen.has(x.id)) continue;
     if (x.source === 'news.google.com') continue;        // aggregator stays in the ledger, not the public wire
     const publisherName = x.sourceName;
-    const registered = SOURCE_BY_NAME.get(publisherName);
+    const registered = registeredSourceFor(x, REG.sources);
     if (!registered && !domainTrusted(x.source)) continue;
     if (!publicHeadlineEligible(x.title)) continue;
     if ((perDom[x.source] || 0) >= 6) continue;          // no single outlet floods the wire
@@ -229,15 +236,25 @@ export async function collectNews({ now = new Date() } = {}) {
 
   const alive = Object.values(health).filter((h) => h.consecutive_failures === 0).length;
   const collection = newsCollectionHealth({ aliveSources: alive, totalSources: REG.sources.length, wireCount: publicArticles.length });
+  const receipt = {
+    collectedAt: now.toISOString(), aliveSources: alive, totalSources: REG.sources.length,
+    wireCount: publicArticles.length, minimumAlive: collection.minimumAlive, ok: collection.ok,
+    failedSourceIds: Object.entries(health).filter(([, value]) => value.consecutive_failures > 0).map(([id]) => id),
+  };
+  // Keep the latest source-health observation even when the freshness circuit
+  // breaker blocks an edition. The last known-good ledger and wire remain intact.
+  writeJsonAtomically(path.join(NEWSDIR, 'health.json'), health);
   if (!collection.ok) {
-    throw new Error(`catastrophic news collection failure: ${alive}/${REG.sources.length} sources alive; wire ${publicArticles.length}; minimum ${collection.minimumAlive} live sources and a non-empty wire`);
+    const error = new Error(`catastrophic news collection failure: ${alive}/${REG.sources.length} sources alive; wire ${publicArticles.length}; minimum ${collection.minimumAlive} live sources and a non-empty wire`);
+    error.collection = receipt;
+    throw error;
   }
 
   fs.writeFileSync(weekFile(thisWeek), JSON.stringify(ledger));
   fs.writeFileSync(path.join(NEWSDIR, 'wire.json'), JSON.stringify(wire));
-  fs.writeFileSync(path.join(NEWSDIR, 'health.json'), JSON.stringify(health, null, 2));
 
   console.log(`\nnews: +${added} new · ledger ${thisWeek} now ${ledger.length} · wire ${wire.articles.length} · ${alive}/${REG.sources.length} sources alive`);
+  return receipt;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

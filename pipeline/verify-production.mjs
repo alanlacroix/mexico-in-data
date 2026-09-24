@@ -26,6 +26,12 @@ for (let attempt = 1; attempt <= 12; attempt += 1) {
     if (!validation.ok) throw new Error(`live edition invalid: ${validation.errors.join('; ')}`);
     if (edition.editorialDate !== expectedDate) throw new Error(`live date ${edition.editorialDate}, expected ${expectedDate}`);
     if (edition.artifactHash !== expectedHash) throw new Error(`live hash ${edition.artifactHash}, expected ${expectedHash}`);
+    for (const route of ['/', '/es/']) {
+      const response = await fetch(`${base}${route}?hash=${expectedHash}`, { signal: AbortSignal.timeout(15000), headers: { 'cache-control': 'no-cache' } });
+      if (!response.ok) throw new Error(`${route} returned HTTP ${response.status}`);
+      const html = await response.text();
+      if (!html.includes(`data-artifact-hash="${expectedHash}"`)) throw new Error(`${route} does not render the approved artifact`);
+    }
     console.log(`production verified: ${edition.editorialDate} · ${edition.stories.length} stories · ${edition.artifactHash}`);
     process.exit(0);
   } catch (error) {

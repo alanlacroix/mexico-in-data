@@ -19,7 +19,7 @@ bodyClass: brief-page
 {% set editionUrl = '/es/editions/' + f.date + '/' if locale == 'es' else '/editions/' + f.date + '/' %}
 {% set archiveUrl = '/es/editions/' if locale == 'es' else '/editions/' %}
 
-<article class="edition" aria-labelledby="edition-title">
+<article class="edition" aria-labelledby="edition-title" data-artifact-hash="{{ f.artifactHash }}">
   <header class="edition-header">
     <div class="edition-kicker">The Mexico Brief</div>
     <h1 id="edition-title">{% if locale == 'es' %}Lo que importa para operar en México{% else %}What matters for business in Mexico{% endif %}</h1>
