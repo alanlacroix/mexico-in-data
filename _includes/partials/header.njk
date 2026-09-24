@@ -5,10 +5,10 @@
   <div class="mast-row">
     <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
     {%- set Lh = uiStrings[locale] if locale else uiStrings.en %}
-    <span class="mast-tag">{% if locale == 'es' %}La información empresarial que importa en México. Conectada y explicada.{% else %}The business news that matters in Mexico. Connected and explained.{% endif %}</span>
+    <span class="mast-tag">{% if locale == 'es' %}Un informe sobre negocios en México.{% else %}A briefing on business in Mexico.{% endif %}</span>
     {#- Do not advertise an older Spanish snapshot as the translation of a newer Brief. -#}
-    {%- if alternateUrl %}<a class="lang-link" href="{{ alternateUrl }}" lang="{{ 'en' if locale == 'es' else 'es' }}" hreflang="{{ 'en' if locale == 'es' else 'es' }}">{{ 'EN' if locale == 'es' else 'ES' }}</a>
-    {%- elif page.url == '/' and not feedEs.translationCarrying %}<a class="lang-link" href="/es/" lang="es" hreflang="es">ES</a>
-    {%- elif page.url == '/es/' %}<a class="lang-link" href="/" lang="en" hreflang="en">EN</a>{% endif %}
+    {%- if alternateUrl %}<a class="lang-link" href="{{ alternateUrl }}" lang="{{ 'en' if locale == 'es' else 'es' }}" hreflang="{{ 'en' if locale == 'es' else 'es' }}">{{ 'English' if locale == 'es' else 'Español' }}</a>
+    {%- elif page.url == '/' and not feedEs.translationCarrying %}<a class="lang-link" href="/es/" lang="es" hreflang="es">Español</a>
+    {%- elif page.url == '/es/' %}<a class="lang-link" href="/" lang="en" hreflang="en">English</a>{% endif %}
   </div>
 </header>

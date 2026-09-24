@@ -14,7 +14,7 @@ bodyClass: feed-page
 articleType: NewsArticle
 ---
 {% set es = archived.locale == 'es' %}
-<div class="edition-record" style="max-width:1120px;margin:0 auto;padding:40px 24px 64px">
+<div class="edition-record" >
   <nav aria-label="{% if es %}Ediciones{% else %}Editions{% endif %}" style="display:flex;flex-wrap:wrap;gap:24px;margin-bottom:32px">
     <a href="{% if es %}/es/{% else %}/{% endif %}">{% if es %}Última edición{% else %}Latest edition{% endif %}</a>
     <a href="{% if es %}/es{% endif %}/editions/">{% if es %}Todas las ediciones{% else %}All editions{% endif %}</a>
@@ -23,7 +23,6 @@ articleType: NewsArticle
   <h1 style="font-family:Georgia,serif;font-size:clamp(28px,5vw,44px);line-height:1.15">{{ archived.edition.editorialDate | longDate(archived.locale) }}</h1>
   <p>{% if es %}Esta edición conserva el contexto de su fecha de publicación.{% else %}This edition reflects the information available when it was published.{% endif %}</p>
   <section class="developments" aria-label="{% if es %}Acontecimientos{% else %}Developments{% endif %}">
-  <div class="section-heading"><h2>{% if es %}En esta edición{% else %}In this edition{% endif %}</h2></div>
   {% set locale = archived.locale %}
   {% for story in archived.stories %}{% include "partials/brief-story.njk" %}{% endfor %}
   </section>

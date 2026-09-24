@@ -32,7 +32,7 @@ function toStory(story, locale) {
   const copy = story[locale] || story.en || {};
   // These expand English acronyms into English prose. Applying them to reviewed
   // Spanish copy silently produces mixed-language sentences (INEGI -> Mexico's...).
-  const headline = locale === 'es' ? value => String(value || '').trim() : plainHeadline;
+  const headline = value => String(value || '').trim();
   const explanation = locale === 'es' ? value => String(value || '').trim() : plainExplanation;
   const section = SECTIONS[story.section] || SECTIONS.economy;
   const analysisSources = (story.evidence || []).filter((item) => item.kind !== 'article');

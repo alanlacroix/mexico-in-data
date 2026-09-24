@@ -1,9 +1,6 @@
-{%- set Lf = uiStrings[locale] if locale else uiStrings.en %}
 <footer class="foot">
   <div class="foot-row">
-    <div class="foot-brand">
-      <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
-      <p class="fblurb">{% if locale == 'es' %}Un informe ejecutivo entre semana. Hasta tres acontecimientos, conectados con el contexto y sus fuentes.{% else %}One weekday executive briefing. Up to three developments, connected to context and sources.{% endif %}</p>
-    </div>
+    <a href="{{ '/es/editions/' if locale == 'es' else '/editions/' }}">{% if locale == 'es' %}Ediciones anteriores{% else %}Previous editions{% endif %}</a>
+    <p>{% if locale == 'es' %}Selección y síntesis de información publicada por terceros, con asistencia de IA y revisión editorial. Las fuentes se enlazan en cada nota.{% else %}Selected and summarized from third-party reporting, with AI assistance and editorial review. Sources accompany each story.{% endif %}</p>
   </div>
 </footer>

@@ -21,32 +21,21 @@ bodyClass: brief-page
 
 <article class="edition" aria-labelledby="edition-title" data-artifact-hash="{{ f.artifactHash }}">
   <header class="edition-header">
-    <div class="edition-kicker">The Mexico Brief</div>
-    <h1 id="edition-title">{% if locale == 'es' %}Lo que importa para operar en México{% else %}What matters for business in Mexico{% endif %}</h1>
-    <p class="edition-dek">{% if locale == 'es' %}Los cambios, sus implicaciones y el contexto que necesita.{% else %}The changes, implications and context you need.{% endif %}</p>
+    <h1 id="edition-title" class="visually-hidden">{% if locale == 'es' %}Informe de negocios en México{% else %}Mexico business briefing{% endif %}</h1>
     <div class="edition-meta" aria-label="{% if locale == 'es' %}Datos de la edición{% else %}Edition details{% endif %}">
       <a class="edition-date" href="{{ editionUrl }}">{{ f.date | longDate(locale) }}</a><span aria-hidden="true">/</span>
       {% for archived in archiveEditions %}{% if archived.locale == locale and archived.edition.editorialDate == f.date %}<span>{{ archived.minutes }} {% if locale == 'es' %}min de lectura{% else %}min read{% endif %}</span><span aria-hidden="true">/</span>{% endif %}{% endfor %}
       <time datetime="{{ f.updated }}" data-published-at="{{ f.updated }}">{% if locale == 'es' %}Publicada {{ f.updated }}{% else %}Published {{ f.updated }}{% endif %}</time>
     </div>
     <div class="freshness-alert" id="freshness-alert" role="status"{% if not f.carrying %} hidden{% endif %}>
-      <strong>{% if locale == 'es' %}La edición de hoy está retrasada.{% else %}Today’s edition is delayed.{% endif %}</strong>
-      {% if locale == 'es' %}Esta es la última edición completa.{% else %}This is the latest complete edition.{% endif %}
+      {% if locale == 'es' %}Aún no hay una edición más reciente.{% else %}A newer edition is not yet available.{% endif %}
     </div>
   </header>
 
-  <section class="developments" aria-labelledby="developments-title" data-edition-stories>
-    <div class="section-heading">
-      <h2 id="developments-title">{% if locale == 'es' %}Acontecimientos clave{% else %}Key developments{% endif %}</h2>
-      <span>{{ f.stories.length }} {% if locale == 'es' %}{% if f.stories.length == 1 %}tema{% else %}temas{% endif %}{% else %}{% if f.stories.length == 1 %}development{% else %}developments{% endif %}{% endif %}</span>
-    </div>
+  <section class="developments" aria-label="{% if locale == 'es' %}Noticias{% else %}Stories{% endif %}" data-edition-stories>
     {% for story in f.stories %}{% include "partials/brief-story.njk" %}{% endfor %}
   </section>
 
-  <footer class="edition-end">
-    <a href="{{ archiveUrl }}">{% if locale == 'es' %}Ver ediciones anteriores{% else %}Previous editions{% endif %} <span aria-hidden="true">→</span></a>
-    <p>{% if locale == 'es' %}The Mexico Brief sintetiza información publicada por terceros con asistencia de IA y revisión editorial. No realiza reporteo original.{% else %}The Mexico Brief synthesizes third-party reporting with AI assistance and editorial review. It does not conduct original reporting.{% endif %}</p>
-  </footer>
 </article>
 
 <script>
