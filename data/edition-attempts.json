@@ -576,6 +576,109 @@
       "costUSD": 0,
       "artifactHash": "",
       "reason": "collection failed: required scheduled outcome unavailable: banxico-policy-2026-09-24"
+    },
+    {
+      "editorialDate": "2026-09-25",
+      "slot": "morning",
+      "candidateSignature": "d4c9254066c21c6fae21c8ac6c4951f18dc9243e2299d236292bd9214ef80ec1",
+      "state": "failed",
+      "startedAt": "2026-09-25T13:01:29.091Z",
+      "completedAt": "2026-09-25T13:02:27.617Z",
+      "calls": 2,
+      "costUSD": 0.021747,
+      "artifactHash": "",
+      "reason": "all story drafts failed the deterministic evidence gate: banxico-policy-2026-09-24: background: needs an independent source when one is available | n-eade8d322d5a: headline: unsupported number: 58; headline: Spanish unsupported number: 58 | n-c446ee0d33a1: headline: unsupported number: 0.5; headline: Spanish unsupported number: 0.5; dek: 3 sentences (cap 2); background: 4 sentences (c",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "banxico-policy-2026-09-24",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "Banxico's mandate is to control inflation in Mexico. The headline inflation rate rebounded to 3.42% in early September, pressured by tomato, onion, and alcoholic beverage prices. Governor Victoria Rodríguez Ceja stated in June that services inflation was resisting sharper deceleration than expected.",
+              "es": "El mandato de Banxico es controlar la inflación en México. La inflación general repuntó a 3.42% en la primera quincena de septiembre, presionada por precios de jitomate, cebolla y bebidas alcohólicas. La gobernadora Victoria Rodríguez Ceja señaló en junio que la inflación de servicios se resistía a una desaceleración más marcada de la esperada.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-eade8d322d5a",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Pemex produces only 58% of Mexico's diesel demand, would need 72% output increase for self-sufficiency",
+              "es": "Pemex produce solo 58% de la demanda de diésel de México, requeriría aumento de 72% en producción para autosuficiencia",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 58",
+                "Spanish unsupported number: 58"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-c446ee0d33a1",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Higher diesel prices could widen Mexico's fiscal deficit by up to 0.5 percentage points, Moody's warns",
+              "es": "Diésel más caro podría ampliar el déficit fiscal de México en hasta 0.5 puntos porcentuales, advierte Moody's",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 0.5",
+                "Spanish unsupported number: 0.5"
+              ]
+            },
+            "dek": {
+              "en": "Mexico covers more than one third of its diesel consumption through purchases from the United States. If U.S. exports are restricted and prices rise, Pemex would be forced to buy at higher prices from other markets, increasing public spending.",
+              "es": "México cubre más de un tercio de su consumo de diésel mediante compras a Estados Unidos. Si las exportaciones estadounidenses se restringen y los precios suben, Pemex se vería obligado a comprar a precios más altos en otros mercados, aumentando el gasto público.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "3 sentences (cap 2)"
+              ]
+            },
+            "background": {
+              "en": "U.S. President Donald Trump has signaled support for a potential 90-day ban on diesel exports, intended to lower record-high fuel prices for American farmers ahead of midterm elections. Mexico's fiscal position is already under pressure from elevated crude and fuel prices. Moody's currently projects Mexico's 2026 deficit at 4% to 4.5% of GDP.",
+              "es": "El presidente estadounidense Donald Trump ha señalado apoyo a una posible prohibición de 90 días a las exportaciones de diésel, con el objetivo de reducir los precios de combustible en máximos históricos para los agricultores estadounidenses antes de las elecciones intermedias. La posición fiscal de México ya enfrenta presión por precios elevados del petróleo crudo y los combustibles.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "4 sentences (cap 3)",
+                "proposal or draft described as a completed action",
+                "numbers changed in Spanish"
+              ]
+            }
+          }
+        }
+      ],
+      "collection": {
+        "collectedAt": "2026-09-25T13:01:29.091Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "contxto",
+          "insightcrime-mx",
+          "retailers-mx",
+          "nexos"
+        ]
+      }
     }
   ]
 }
