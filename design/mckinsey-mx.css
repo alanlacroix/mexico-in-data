@@ -31,3 +31,14 @@
 .weekly-edition-meta{font-size:14px;gap:5px 9px}
 .weekly-edition-meta .edition-date{font-weight:600}
 @media(max-width:720px){.edition-header{padding-top:16px}.weekly-edition-meta{font-size:14px;line-height:1.5}.weekly-edition-meta time{font-size:inherit}.weekly-opening{padding-top:14px}.weekly-kicker{letter-spacing:.055em}}
+
+/* Each weekly development reads as one bounded editorial unit. */
+.weekly-ranked{display:grid;gap:22px;margin-top:26px}
+.weekly-item{padding:28px 30px 26px;border:1px solid #d0d2c9;border-radius:2px;background:#fffefa;box-shadow:0 1px 0 rgba(36,38,32,.04)}
+.weekly-reading{margin-top:20px;padding-top:17px;border-top:1px solid var(--line)}
+.weekly-reading>h3{margin-bottom:7px;color:var(--accent);font:700 12px/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase}
+.weekly-thread{margin-top:22px;padding:17px 18px 15px;border:1px solid #d7d9d0;background:#f5f5ef}
+.weekly-thread>div{padding-top:0}
+.weekly-thread>div:before{display:none}
+.weekly-item .story-sources{margin-top:22px;padding-top:15px;border-top:1px solid var(--line)}
+@media(max-width:720px){.weekly-ranked{gap:18px;margin-top:20px}.weekly-item{padding:23px 19px 21px}.weekly-thread{grid-template-columns:1fr 1fr;gap:12px;padding:15px 14px 13px;border:1px solid #d7d9d0}.weekly-thread>div{border-left:0;padding:0}.weekly-reading{margin-top:18px;padding-top:15px}}
