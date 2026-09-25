@@ -1,6 +1,6 @@
 {% set w = weeklyBrief %}
 <section class="weekly-opening" aria-labelledby="weekly-title">
-  <p class="weekly-kicker">{% if locale == 'es' %}La semana hasta ahora{% else %}The week so far{% endif %} · {{ w.start }} — {{ w.through }}</p>
+  <p class="weekly-kicker">{% if locale == 'es' %}La semana hasta ahora{% else %}The week so far{% endif %}</p>
   <h1 id="weekly-title">{% if locale == 'es' %}Esta semana en México{% else %}This week in Mexico{% endif %}</h1>
   <p class="weekly-overview">{{ w[locale].overview }}</p>
   <p class="weekly-method">{{ w[locale].method }}</p>

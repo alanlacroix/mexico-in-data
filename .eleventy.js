@@ -35,6 +35,28 @@ module.exports = function (ec) {
     return locale === 'es' ? text.charAt(0).toUpperCase() + text.slice(1) : text;
   });
 
+  ec.addFilter('weekRange', (start, through, locale) => {
+    const first = new Date(`${String(start).slice(0, 10)}T12:00:00Z`);
+    const last = new Date(`${String(through).slice(0, 10)}T12:00:00Z`);
+    if (Number.isNaN(first.getTime()) || Number.isNaN(last.getTime())) return `${start}–${through}`;
+    const sameYear = first.getUTCFullYear() === last.getUTCFullYear();
+    const sameMonth = sameYear && first.getUTCMonth() === last.getUTCMonth();
+    if (locale === 'es') {
+      const monthYear = last.toLocaleDateString('es-MX', { timeZone: 'UTC', month: 'long', year: 'numeric' });
+      if (sameMonth) return `${first.getUTCDate()}–${last.getUTCDate()} de ${monthYear}`;
+      const firstLabel = first.toLocaleDateString('es-MX', { timeZone: 'UTC', day: 'numeric', month: 'long' });
+      const lastLabel = last.toLocaleDateString('es-MX', { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' });
+      return `${firstLabel}–${lastLabel}`;
+    }
+    if (sameMonth) {
+      const month = last.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long' });
+      return `${month} ${first.getUTCDate()}–${last.getUTCDate()}, ${last.getUTCFullYear()}`;
+    }
+    const firstLabel = first.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
+    const lastLabel = last.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' });
+    return `${firstLabel}–${lastLabel}`;
+  });
+
   // Category dots, from the design handoff. Equal lightness and chroma, hue varies, so
   // no dot reads as louder than another. An unknown category falls back to grey rather
   // than inventing a colour.

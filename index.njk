@@ -22,10 +22,11 @@ bodyClass: brief-page
 <article class="edition" aria-labelledby="edition-title" data-artifact-hash="{{ f.artifactHash }}">
   <header class="edition-header">
     <h1 id="edition-title" class="visually-hidden">{% if locale == 'es' %}Informe de negocios en México{% else %}Mexico business briefing{% endif %}</h1>
-    <div class="edition-meta" aria-label="{% if locale == 'es' %}Datos de la edición{% else %}Edition details{% endif %}">
-      <a class="edition-date" href="{{ editionUrl }}">{{ f.date | longDate(locale) }}</a><span aria-hidden="true">/</span>
+    <div class="edition-meta{% if f.weeklyBrief %} weekly-edition-meta{% endif %}" aria-label="{% if locale == 'es' %}Datos de la edición{% else %}Edition details{% endif %}">
+      {% if f.weeklyBrief %}<a class="edition-date" href="{{ editionUrl }}"><time datetime="{{ f.weeklyBrief.through }}">{{ f.weeklyBrief.start | weekRange(f.weeklyBrief.through, locale) }}</time></a><span aria-hidden="true">·</span>
+      {% else %}<a class="edition-date" href="{{ editionUrl }}">{{ f.date | longDate(locale) }}</a><span aria-hidden="true">/</span>{% endif %}
       {% for archived in archiveEditions %}{% if archived.locale == locale and archived.edition.editorialDate == f.date %}<span>{{ archived.minutes }} {% if locale == 'es' %}min de lectura{% else %}min read{% endif %}</span><span aria-hidden="true">/</span>{% endif %}{% endfor %}
-      <time datetime="{{ f.updated }}" data-published-at="{{ f.updated }}">{% if locale == 'es' %}Publicada {{ f.updated }}{% else %}Published {{ f.updated }}{% endif %}</time>
+      <time{% if f.weeklyBrief %} class="weekly-published visually-hidden"{% endif %} datetime="{{ f.updated }}" data-published-at="{{ f.updated }}">{% if locale == 'es' %}Publicada {{ f.updated }}{% else %}Published {{ f.updated }}{% endif %}</time>
     </div>
     <div class="freshness-alert" id="freshness-alert" role="status"{% if not f.carrying %} hidden{% endif %}>
       {% if locale == 'es' %}Aún no hay una edición más reciente.{% else %}A newer edition is not yet available.{% endif %}
