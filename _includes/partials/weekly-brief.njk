@@ -1,7 +1,7 @@
 {% set w = weeklyBrief %}
 <section class="weekly-opening" aria-labelledby="weekly-title">
   <p class="weekly-kicker">{% if locale == 'es' %}La semana hasta ahora{% else %}The week so far{% endif %} · {{ w.start }} — {{ w.through }}</p>
-  <h1 id="weekly-title">{% if locale == 'es' %}México, en perspectiva.{% else %}Mexico, in perspective.{% endif %}</h1>
+  <h1 id="weekly-title">{% if locale == 'es' %}Esta semana en México{% else %}This week in Mexico{% endif %}</h1>
   <p class="weekly-overview">{{ w[locale].overview }}</p>
   <p class="weekly-method">{{ w[locale].method }}</p>
 </section>
@@ -9,7 +9,6 @@
 {% for item in w.items %}
   <li class="weekly-item" id="development-{{ item.id }}">
     <header class="weekly-story-head"><span class="weekly-rank" aria-hidden="true">0{{ loop.index }}</span><h2>{{ item[locale].headline }}</h2></header>
-    <p class="weekly-reason">{{ item[locale].reason }}</p>
     <p class="weekly-change">{{ item[locale].change }}</p>
     <div class="weekly-thread" aria-label="{% if locale == 'es' %}Qué cambió{% else %}What changed{% endif %}"><div><span>{% if locale == 'es' %}Antes{% else %}Before{% endif %}</span><p>{{ item[locale].before }}</p></div><div><span>{% if locale == 'es' %}Ahora{% else %}Now{% endif %}</span><p>{{ item[locale].now }}</p></div></div>
     <div class="weekly-reading"><p>{{ item[locale].context }}</p><aside class="editor-margin"><h3>{% if locale == 'es' %}Al margen{% else %}In the margin{% endif %}</h3><p>{{ item[locale].margin }}</p></aside></div>
@@ -18,4 +17,4 @@
 {% endfor %}
 </ol>
 {% if w.dates.length %}<section class="weekly-ahead"><h2>{% if locale == 'es' %}Fechas confirmadas{% else %}Confirmed dates ahead{% endif %}</h2>{% for event in w.dates %}<div class="weekly-event"><time datetime="{{ event.date }}">{{ event.date | longDate(locale) }}</time><p>{{ event[locale] }} <a href="{{ event.url }}" target="_blank" rel="noopener">{{ event.source }} ↗</a></p></div>{% endfor %}</section>{% endif %}
-<p class="weekly-end">{% if locale == 'es' %}Hasta aquí esta edición. Información disponible al {{ w.through }}.{% else %}You’re caught up on this selection. Coverage through {{ w.through }}.{% endif %}</p>
+<p class="weekly-end">{% if locale == 'es' %}Información al {{ w.through }}.{% else %}Coverage through {{ w.through }}.{% endif %}</p>
