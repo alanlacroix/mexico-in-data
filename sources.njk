@@ -1,0 +1,35 @@
+---
+layout: base.njk
+pagination:
+  data: locales
+  size: 1
+  alias: locale
+locales: ["en", "es"]
+permalink: "{% if locale == 'es' %}/es/sources/{% else %}/sources/{% endif %}"
+eleventyComputed:
+  title: "{% if locale == 'es' %}Fuentes y método · The Mexico Brief{% else %}Sources & method · The Mexico Brief{% endif %}"
+  description: "{% if locale == 'es' %}Las fuentes citadas y el método editorial de The Mexico Brief.{% else %}The cited sources and editorial method behind The Mexico Brief.{% endif %}"
+  alternateUrl: "{% if locale == 'es' %}/sources/{% else %}/es/sources/{% endif %}"
+bodyClass: info-page-shell
+---
+<article class="info-page">
+  <h1>{% if locale == 'es' %}Fuentes y método{% else %}Sources & method{% endif %}</h1>
+  {% if locale == 'es' %}
+  <p>Cada nota enlaza las piezas periodísticas, comunicados y documentos oficiales que sustentan su texto. La lista siguiente se genera a partir de las fuentes citadas en las ediciones publicadas; no es una lista de medios que se consulten siempre.</p>
+  <h2>Fuentes citadas en ediciones</h2>
+  {% else %}
+  <p>Each story links to the reporting, statements and official documents that support its text. The list below is generated from sources cited in published editions; it is not a list of outlets monitored every time.</p>
+  <h2>Sources cited in editions</h2>
+  {% endif %}
+  <ul class="source-list">{% for source in publishedSources %}<li><a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.name }}</a></li>{% endfor %}</ul>
+  <h2>{% if locale == 'es' %}Registro de consulta más amplio{% else %}Broader research registry{% endif %}</h2>
+  {% if locale == 'es' %}
+  <p>Mantenemos un registro más amplio de medios en español e inglés, fuentes oficiales y conjuntos de datos sobre comercio, economía, energía, finanzas, política y sociedad. Su inclusión significa que una fuente puede considerarse cuando es pertinente; no implica que se supervise de forma continua ni que aparezca en una edición.</p>
+  <h2>Comprobación editorial</h2>
+  <p>Buscamos la fuente primaria cuando existe, contrastamos la síntesis con los enlaces citados y distinguimos los hechos reportados de nuestra explicación. La selección, la redacción y la traducción pueden usar asistencia de IA; una persona revisa la edición antes de publicarla.</p>
+  {% else %}
+  <p>We maintain a broader registry of Spanish- and English-language outlets, official sources and datasets covering trade, the economy, energy, finance, politics and society. Inclusion means a source may be considered when relevant; it does not mean that it is continuously monitored or appears in an edition.</p>
+  <h2>Editorial checks</h2>
+  <p>We seek the primary source when one exists, check the synthesis against cited links and distinguish reported facts from our explanation. Selection, writing and translation may use AI assistance; a person reviews the edition before publication.</p>
+  {% endif %}
+</article>

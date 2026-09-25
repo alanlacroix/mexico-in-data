@@ -3,14 +3,18 @@
   "outputDir": "_site",
   "publicRoutes": [
     { "route": "/", "file": "index.html", "canonical": "/" },
-    { "route": "/es/", "file": "es/index.html", "canonical": "/es/" }
+    { "route": "/es/", "file": "es/index.html", "canonical": "/es/" },
+    { "route": "/about/", "file": "about/index.html", "canonical": "/about/" },
+    { "route": "/es/about/", "file": "es/about/index.html", "canonical": "/es/about/" },
+    { "route": "/sources/", "file": "sources/index.html", "canonical": "/sources/" },
+    { "route": "/es/sources/", "file": "es/sources/index.html", "canonical": "/es/sources/" }
   ],
   "compatibilityRoutes": [
     { "route": "/404.html", "file": "404.html", "canonical": "/404" }
   ],
   "redirectRoutes": [
-    { "route": "/about", "target": "/" },
-    { "route": "/about.html", "target": "/" },
+    { "route": "/about", "target": "/about/" },
+    { "route": "/about.html", "target": "/about/" },
     { "route": "/atlas", "target": "/" },
     { "route": "/atlas.html", "target": "/" },
     { "route": "/chart", "target": "/" },
@@ -54,8 +58,8 @@
     { "route": "/security.html", "target": "/" },
     { "route": "/society", "target": "/" },
     { "route": "/society.html", "target": "/" },
-    { "route": "/sources", "target": "/" },
-    { "route": "/sources.html", "target": "/" },
+    { "route": "/sources", "target": "/sources/" },
+    { "route": "/sources.html", "target": "/sources/" },
     { "route": "/the-read", "target": "/" },
     { "route": "/the-read.html", "target": "/" },
     { "route": "/topics-start-mockup", "target": "/" },
@@ -85,13 +89,17 @@
     "_redirects",
     "assets/og.png",
     "assets/og.svg",
+    "about/index.html",
     "data/edition.json",
     "design/mckinsey-mx.css",
+    "es/about/index.html",
     "es/index.html",
+    "es/sources/index.html",
     "feed.xml",
     "index.html",
     "robots.txt",
-    "sitemap.xml"
+    "sitemap.xml",
+    "sources/index.html"
   ],
   "functionRoutes": [],
   "sourceExclusions": [
