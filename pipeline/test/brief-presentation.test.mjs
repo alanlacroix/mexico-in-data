@@ -14,11 +14,12 @@ const html = fs.readFileSync(new URL('../../_site/index.html', import.meta.url),
 const script = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].map(match => match[1])
   .find(value => value.includes('var published ='));
 assert.ok(script, 'built page must include a reader-clock freshness check');
-function isDelayed(editionDate, now) {
+function isDelayed(editionDate, now, weekly = false) {
   const alertBox = { hidden: false };
   const published = { getAttribute: () => `${editionDate}T13:00:00Z`, textContent: '' };
-  class Clock extends Date { constructor(...args) { super(...(args.length ? args : [now])); } }
-  vm.runInNewContext(script.replace(/alertBox.hidden = "[\d-]+" >=/, `alertBox.hidden = "${editionDate}" >=`), {
+  class Clock extends Date { constructor(...args) { super(...(args.length ? args : [now])); } static now() { return new Date(now).getTime(); } }
+  const selectedScript = weekly ? script.replace(/var through = new Date\("[\d-]+"/, `var through = new Date("${editionDate}"`) : script.replace(/var through =[\s\S]*?return;/, '');
+  vm.runInNewContext(selectedScript.replace(/alertBox.hidden = "[\d-]+" >=/, `alertBox.hidden = "${editionDate}" >=`), {
     Date: Clock, Intl, document: {
       querySelector: () => published, getElementById: () => alertBox,
     },
@@ -33,3 +34,8 @@ assert.equal(isDelayed('2026-09-07', '2026-09-22T18:00:00Z'), true, 'frozen page
 console.log('brief presentation: ok');
 
 assert.match(fs.readFileSync(new URL("../../_site/index.html", import.meta.url), "utf8"), /data-artifact-hash="[a-f0-9]{64}"/, "homepage exposes its exact publication hash for deployment verification");
+
+if (script.includes('var through =')) {
+ assert.equal(isDelayed('2026-09-24', '2026-09-28T18:00:00Z', true), false, 'weekly selection remains current within seven days');
+ assert.equal(isDelayed('2026-09-24', '2026-10-02T06:00:00Z', true), true, 'frozen weekly selection reveals staleness');
+}
