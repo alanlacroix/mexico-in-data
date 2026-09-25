@@ -42,6 +42,10 @@ module.exports = function () {
   const out = {
     '/': { modified: publishedAt, published: publishedAt, daily: true },
     '/es/': { modified: publishedAt, published: publishedAt, daily: true },
+    '/about/': { modified: '2026-09-24', published: '2026-09-24' },
+    '/es/about/': { modified: '2026-09-24', published: '2026-09-24' },
+    '/sources/': { modified: '2026-09-24', published: '2026-09-24' },
+    '/es/sources/': { modified: '2026-09-24', published: '2026-09-24' },
   };
   for (const historical of loadHistory({ current: edition })) {
     for (const locale of ['en', 'es']) {

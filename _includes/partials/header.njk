@@ -5,7 +5,7 @@
   <div class="mast-row">
     <a class="brand" href="{{ '/es/' if locale == 'es' else '/' }}">THE MEXICO <span class="u">BRIEF</span></a>
     {%- set Lh = uiStrings[locale] if locale else uiStrings.en %}
-    <span class="mast-tag">{% if locale == 'es' %}Un informe sobre negocios en México.{% else %}A briefing on business in Mexico.{% endif %}</span>
+    <span class="mast-tag">{% if locale == 'es' %}Una selección semanal de noticias empresariales de México, basada en información publicada en inglés y español.{% else %}A weekly selection of Mexico’s business news, drawn from reporting in English and Spanish.{% endif %}</span>
     {#- Do not advertise an older Spanish snapshot as the translation of a newer Brief. -#}
     {%- if alternateUrl %}<a class="lang-link" href="{{ alternateUrl }}" lang="{{ 'en' if locale == 'es' else 'es' }}" hreflang="{{ 'en' if locale == 'es' else 'es' }}">{{ 'English' if locale == 'es' else 'Español' }}</a>
     {%- elif page.url == '/' and not feedEs.translationCarrying %}<a class="lang-link" href="/es/" lang="es" hreflang="es">Español</a>

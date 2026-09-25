@@ -1,0 +1,34 @@
+---
+layout: base.njk
+pagination:
+  data: locales
+  size: 1
+  alias: locale
+locales: ["en", "es"]
+permalink: "{% if locale == 'es' %}/es/about/{% else %}/about/{% endif %}"
+eleventyComputed:
+  title: "{% if locale == 'es' %}Acerca de · The Mexico Brief{% else %}About · The Mexico Brief{% endif %}"
+  description: "{% if locale == 'es' %}Para quién es The Mexico Brief y cómo se prepara cada edición.{% else %}Who The Mexico Brief is for and how each edition is prepared.{% endif %}"
+  alternateUrl: "{% if locale == 'es' %}/about/{% else %}/es/about/{% endif %}"
+bodyClass: info-page-shell
+---
+<article class="info-page">
+  <h1>{% if locale == 'es' %}Acerca de The Mexico Brief{% else %}About The Mexico Brief{% endif %}</h1>
+  {% if locale == 'es' %}
+  <p>The Mexico Brief está dirigido a lectores que siguen los negocios en México y necesitan una selección breve, contextualizada y vinculada a la información original.</p>
+  <h2>Qué seleccionamos</h2>
+  <p>Cada edición reúne hasta tres acontecimientos con consecuencias para empresas, mercados o política económica. La selección favorece hechos nuevos y verificables, y explica qué cambió frente al punto de referencia anterior.</p>
+  <h2>Cómo se prepara</h2>
+  <p>Un proceso diario recopila notas y prepara borradores candidatos. Herramientas de IA ayudan con la recopilación, la síntesis y la traducción. Una revisión editorial humana decide qué se publica, comprueba las afirmaciones frente a las fuentes y edita ambos idiomas.</p>
+  <h2>Frecuencia</h2>
+  <p>El formato es semanal. La recopilación y los borradores continúan a diario, pero una edición se publica sólo cuando ha terminado la revisión editorial; no prometemos una entrega automática cada semana.</p>
+  {% else %}
+  <p>The Mexico Brief is for readers who follow business in Mexico and need a short, contextual selection with links to the original reporting.</p>
+  <h2>What we select</h2>
+  <p>Each edition brings together up to three developments with consequences for companies, markets or economic policy. Selection favors new, verifiable events and explains what changed from the prior reference point.</p>
+  <h2>How it is prepared</h2>
+  <p>A daily process collects reporting and prepares candidate drafts. AI tools assist with collection, synthesis and translation. Human editorial review determines what is published, checks claims against the sources and edits both languages.</p>
+  <h2>Cadence</h2>
+  <p>The format is weekly. Collection and draft preparation continue daily, but an edition is published only after editorial review is complete; there is no promise of automatic weekly delivery.</p>
+  {% endif %}
+</article>
