@@ -10,8 +10,8 @@
   <li class="weekly-item" id="development-{{ item.id }}">
     <header class="weekly-story-head"><span class="weekly-rank" aria-hidden="true">0{{ loop.index }}</span><h2>{{ item[locale].headline }}</h2></header>
     <p class="weekly-change">{{ item[locale].change }}</p>
-    <div class="weekly-thread" aria-label="{% if locale == 'es' %}Qué cambió{% else %}What changed{% endif %}"><div><span>{% if locale == 'es' %}Antes{% else %}Before{% endif %}</span><p>{{ item[locale].before }}</p></div><div><span>{% if locale == 'es' %}Ahora{% else %}Now{% endif %}</span><p>{{ item[locale].now }}</p></div></div>
     <div class="weekly-reading"><p>{{ item[locale].context }}</p>{% if item.showMargin and item[locale].margin %}<aside class="editor-margin"><h3>{% if locale == 'es' %}Al margen{% else %}In the margin{% endif %}</h3><p>{{ item[locale].margin }}</p></aside>{% endif %}</div>
+    <div class="weekly-thread" aria-label="{% if locale == 'es' %}Qué cambió{% else %}What changed{% endif %}"><div><span>{% if locale == 'es' %}Antes{% else %}Before{% endif %}</span><p>{{ item[locale].before }}</p></div><div><span>{% if locale == 'es' %}Ahora{% else %}Now{% endif %}</span><p>{{ item[locale].now }}</p></div></div>
     <div class="story-sources"><span>{% if locale == 'es' %}Leer las fuentes{% else %}Read the sources{% endif %}</span>{% for source in item.sources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source }}{% if source.kind == 'official-history' %} · {% if locale == 'es' %}historial{% else %}history{% endif %}{% elif source.kind == 'official-statement' %} · {% if locale == 'es' %}comunicado{% else %}statement{% endif %}{% elif source.kind == 'official-bulletin' %} · {% if locale == 'es' %}boletín{% else %}bulletin{% endif %}{% endif %} ↗</a>{% endfor %}</div>
   </li>
 {% endfor %}
