@@ -679,6 +679,142 @@
           "nexos"
         ]
       }
+    },
+    {
+      "editorialDate": "2026-09-25",
+      "slot": "noon",
+      "candidateSignature": "d7b5f9217263e62285f2fa479c8dc4b8faff4512e82578f3f778e1227277e8e3",
+      "state": "failed",
+      "startedAt": "2026-09-25T16:01:24.108Z",
+      "completedAt": "2026-09-25T16:02:15.248Z",
+      "calls": 2,
+      "costUSD": 0.022985,
+      "artifactHash": "",
+      "reason": "all story drafts failed the deterministic evidence gate: banxico-policy-2026-09-24: headline: 2 sentences (cap 1); background: needs an independent source when one is available | n-0b9457144458: headline: unsupported number: 4; headline: numbers changed in Spanish; dek: unsupported number: 25; dek: Spanish unsupported number: 25; watch: semicolon; watch: watch item has no observable n",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "banxico-policy-2026-09-24",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Banxico holds rate at 6.5%, signals independence from U.S. Fed",
+              "es": "Banxico mantiene tasa en 6.5%, señala independencia de la Reserva Federal",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "2 sentences (cap 1)"
+              ]
+            },
+            "background": {
+              "en": "Banxico's mandate is to control inflation in Mexico. Annual inflation ticked up to 3.42% in early September, pressured by tomato, onion, and alcohol prices. Governor Victoria Rodríguez Ceja said in the April-June quarterly report that services inflation continues to decelerate but more slowly than previously expected.",
+              "es": "El mandato de Banxico es controlar la inflación en México. La inflación anual subió a 3.42% en septiembre temprano, presionada por precios de jitomate, cebolla y bebidas alcohólicas. La gobernadora Victoria Rodríguez Ceja dijo en el reporte trimestral abril-junio que la inflación de servicios continúa desacelerándose pero más lentamente de lo esperado anteriormente.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-0b9457144458",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexico's Treasury raises bond auctions for longer-dated maturities in Q4 2026",
+              "es": "México eleva subastas de bonos con plazos más largos en cuarto trimestre de 2026",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 4",
+                "numbers changed in Spanish"
+              ]
+            },
+            "dek": {
+              "en": "The Secretaría de Hacienda announced on September 25 it will increase auction amounts for 5-year and 20-year bonds and 20-year and 30-year inflation-indexed bonds (Udibonos) in the fourth quarter. It will also boost auction frequency for 20-year bonds and 10-year and 20-year Udibonos.",
+              "es": "La Secretaría de Hacienda anunció el 25 de septiembre que elevará los montos a subastar de Bonos a 5 y 20 años y Udibonos a 20 y 30 años en el cuarto trimestre. También aumentará la frecuencia de subastas de Bonos a 20 años y Udibonos a 10 y 20 años.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 25",
+                "Spanish unsupported number: 25"
+              ]
+            },
+            "watch": {
+              "en": "Success would be indicated by stable or lower yields relative to prior auctions; weakness would show in higher yields or undersubscription at the new volumes.",
+              "es": "El éxito se indicaría por rendimientos estables o menores respecto a subastas previas; debilidad se mostraría en rendimientos más altos o suscripción insuficiente en los nuevos volúmenes.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "semicolon",
+                "watch item has no observable next test",
+                "Spanish semicolon"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-eade8d322d5a",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Pemex diesel output covers only 58% of Mexico demand; 72% increase needed to cover all",
+              "es": "Producción de diésel de Pemex cubre solo 58% de la demanda de México; necesita aumento de 72%",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "semicolon",
+                "unsupported number: 58",
+                "Spanish semicolon",
+                "Spanish unsupported number: 58"
+              ]
+            },
+            "background": {
+              "en": "Pemex's diesel production has remained flat at similar levels since May 2025. The company's highest recent output occurred in November and December 2025, when production reached around 310,000 barrels per day.",
+              "es": "La producción de diésel de Pemex se ha mantenido plana en niveles similares desde mayo de 2025. La producción más alta reciente de la empresa ocurrió en noviembre y diciembre de 2025, cuando alcanzó alrededor de 310,000 barriles diarios.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or uncertainty became final in Spanish"
+              ]
+            },
+            "view": {
+              "en": "Pemex cannot meet Mexico's current diesel demand through domestic production alone and relies on net imports of roughly 50,000 barrels per day to make up the shortfall.",
+              "es": "Pemex no puede satisfacer la demanda actual de diésel de México solo con producción doméstica y depende de importaciones netas de aproximadamente 50,000 barriles diarios para cubrir el déficit.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        }
+      ],
+      "collection": {
+        "collectedAt": "2026-09-25T16:01:24.108Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "retailers-mx",
+          "m4ec-mx",
+          "nexos"
+        ]
+      }
     }
   ]
 }
