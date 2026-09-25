@@ -101,6 +101,7 @@ module.exports = function (now = new Date(), sources = {}, locale = 'en') {
     currentEditorialDate,
     briefEditorialDate: edition.editorialDate,
     artifactHash: edition.artifactHash,
+    weeklyBrief: edition.weeklyBrief || null,
     carryingLastBrief,
     publicationInterrupted: carryingLastBrief,
     weekendEdition,

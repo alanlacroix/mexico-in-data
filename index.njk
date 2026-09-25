@@ -11,7 +11,7 @@ eleventyComputed:
   description: "{% if locale == 'es' %}Hasta tres acontecimientos empresariales importantes en México, explicados en cinco minutos y vinculados a sus fuentes.{% else %}Up to three material Mexico business developments, explained in five minutes and linked to their sources.{% endif %}"
   ogTitle: "{% if locale == 'es' %}The Mexico Brief · en español{% else %}The Mexico Brief{% endif %}"
   ogDescription: "{% if locale == 'es' %}La información empresarial que importa en México. Conectada y explicada.{% else %}The business news that matters in Mexico. Connected and explained.{% endif %}"
-  articleHeadline: "{% if locale == 'es' %}Informe ejecutivo diario sobre México{% else %}Daily executive briefing on Mexico{% endif %}"
+  articleHeadline: "{% if locale == 'es' %}Informe ejecutivo sobre México{% else %}Executive briefing on Mexico{% endif %}"
 articleType: NewsArticle
 bodyClass: brief-page
 ---
@@ -32,9 +32,14 @@ bodyClass: brief-page
     </div>
   </header>
 
+  {% if f.weeklyBrief %}
+  {% set weeklyBrief = f.weeklyBrief %}
+  {% include "partials/weekly-brief.njk" %}
+  {% else %}
   <section class="developments" aria-label="{% if locale == 'es' %}Noticias{% else %}Stories{% endif %}" data-edition-stories>
     {% for story in f.stories %}{% include "partials/brief-story.njk" %}{% endfor %}
   </section>
+  {% endif %}
 
 </article>
 
@@ -49,6 +54,11 @@ bodyClass: brief-page
       {% if locale == 'es' %}'es-MX'{% else %}'en-US'{% endif %}, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Mexico_City' }
     ).format(publishedAt) + ' CT';
   }
+  {% if f.weeklyBrief %}
+  var through = new Date({{ f.weeklyBrief.through | dump | safe }} + 'T23:59:59-06:00');
+  alertBox.hidden = Date.now() - through.getTime() < 7 * 86400000;
+  return;
+  {% endif %}
   var parts = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'America/Mexico_City', year: 'numeric', month: '2-digit', day: '2-digit',
     weekday: 'short', hour: '2-digit', hourCycle: 'h23'

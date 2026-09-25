@@ -24,6 +24,11 @@ articleType: NewsArticle
   <p>{% if es %}Esta edición conserva el contexto de su fecha de publicación.{% else %}This edition reflects the information available when it was published.{% endif %}</p>
   <section class="developments" aria-label="{% if es %}Acontecimientos{% else %}Developments{% endif %}">
   {% set locale = archived.locale %}
+  {% if archived.edition.weeklyBrief %}
+  {% set weeklyBrief = archived.edition.weeklyBrief %}
+  {% include "partials/weekly-brief.njk" %}
+  {% else %}
   {% for story in archived.stories %}{% include "partials/brief-story.njk" %}{% endfor %}
+  {% endif %}
   </section>
 </div>

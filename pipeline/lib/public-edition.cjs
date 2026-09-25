@@ -67,6 +67,7 @@ function validateEdition(edition) {
     for (const locale of ['en', 'es']) for (const error of narrativeErrors(edition.summary[locale])) errors.push(`summary.${locale} ${error}`);
   }
 
+  if (edition.weeklyBrief) errors.push(...require('./weekly-brief.cjs').validateWeekly(edition.weeklyBrief, edition.editorialDate));
   const stories = Array.isArray(edition.stories) ? edition.stories : [];
   const weekStories = Array.isArray(edition.weekStories) ? edition.weekStories : [];
   if (stories.length < 1 || stories.length > 3) errors.push('stories must contain 1 to 3 items');

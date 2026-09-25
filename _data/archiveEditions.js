@@ -17,7 +17,7 @@ module.exports = function () {
       view: story[locale].view, bg: story[locale].background, watch: story[locale].watch,
       url: story.url, source: story.source, analysisSources: story.evidence,
     })),
-    minutes: Math.max(1, Math.ceil(edition.stories.reduce((total, story) =>
+    minutes: edition.weeklyBrief ? require('../pipeline/lib/weekly-brief.cjs').readingMinutes(edition.weeklyBrief, locale) : Math.max(1, Math.ceil(edition.stories.reduce((total, story) =>
       total + [...Object.values(story[locale]), ...(story.editorial?.timeline || []).flatMap(step => Object.values(step[locale])), story.editorial?.margin?.[locale] || ''].join(' ').split(/\s+/).length, 0) / 200)),
   })));
 };
