@@ -48,13 +48,55 @@ export function publicHeadlineEligible(value) {
   return mexicoRelevant(title) && !PUBLIC_HEADLINE_NOISE.test(title);
 }
 
+// Source metadata predates stable IDs in the ledger. Normalize it at both the
+// write and read boundaries so old entries remain usable without allowing an
+// unknown value to become editorially eligible.
+export function normalizeSourceTier(value) {
+  const tier = String(value ?? '').trim().toLowerCase();
+  if (tier === '1') return 1;
+  if (tier === '2') return 2;
+  if (tier === 'specialist' || tier === 'aggregator') return tier;
+  return '';
+}
+
+export function editorialSourceTier(value) {
+  return [1, 2, 'specialist'].includes(normalizeSourceTier(value));
+}
+
+function sameOrSubdomain(host, allowed) {
+  const candidate = String(host || '').toLowerCase().replace(/^www\./, '');
+  const base = String(allowed || '').toLowerCase().replace(/^www\./, '');
+  return Boolean(candidate && base && (candidate === base || candidate.endsWith(`.${base}`)));
+}
+
+function registeredSourceHosts(source) {
+  if (Array.isArray(source?.articleDomains) && source.articleDomains.length) return source.articleDomains;
+  try { return [new URL(source.baseUrl || source.url).hostname]; } catch { return []; }
+}
+
+// New records carry sourceId. For legacy records, a display name is enough only
+// where it is unique; duplicate publisher names must also match one configured
+// article host. This prevents Google News' El Economista search feed from being
+// mistaken for El Economista's direct RSS feed.
+export function registeredSourceFor(article, sources = []) {
+  const registry = Array.isArray(sources) ? sources : [];
+  const sourceId = String(article?.sourceId || '').trim();
+  if (sourceId) return registry.find((source) => source.id === sourceId) || null;
+  const named = registry.filter((source) => source.name === article?.sourceName);
+  if (named.length <= 1) return named[0] || null;
+  let host = '';
+  try { host = new URL(String(article?.url || '')).hostname; } catch { return null; }
+  const matched = named.filter((source) => registeredSourceHosts(source).some((allowed) => sameOrSubdomain(host, allowed)));
+  return matched.length === 1 ? matched[0] : null;
+}
+
 // Some trusted sources are useful reading but are not event wires. Keep their
 // essays in the topic feed while preventing a keyless fallback from mistaking an
 // argument for a new government or business action. Explicit source metadata and
 // an outlet's own /opinion/ path are the only exclusions; ordinary analysis about
 // a real dated development can still be assessed by the curator.
 export function eventCandidateEligible(article, sources = []) {
-  const source = (Array.isArray(sources) ? sources : []).find((item) => item.name === article?.sourceName);
+  const source = registeredSourceFor(article, sources);
   if (source?.eventEligible === false) return false;
   try { return !/\/opinion(?:\/|$)/i.test(new URL(String(article?.url || '')).pathname); }
   catch { return false; }

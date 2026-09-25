@@ -7,407 +7,69 @@ pagination:
 locales: ["en", "es"]
 permalink: "{% if locale == 'es' %}/es/{% else %}/{% endif %}"
 eleventyComputed:
-  title: "{% if locale == 'es' %}Noticias de México en datos oficiales · The Mexico Brief{% else %}Mexico economic, political and security news · The Mexico Brief{% endif %}"
-  description: "{% if locale == 'es' %}La economía, la política y la seguridad de México en un solo lugar: los acontecimientos clave, con cifras oficiales fechadas y el enlace a la fuente original.{% else %}Mexico’s economic, political, security and business news in one place: the key developments, with dated official figures and a link to every original source.{% endif %}"
-  # <title> leads with what people search; og:title leads with the brand, because a
-  # shared link card is seen by someone deciding whether to trust the source.
+  title: "{% if locale == 'es' %}The Mexico Brief · Información empresarial conectada y explicada{% else %}The Mexico Brief · Mexico business news, connected and explained{% endif %}"
+  description: "{% if locale == 'es' %}Hasta tres acontecimientos empresariales importantes en México, explicados en cinco minutos y vinculados a sus fuentes.{% else %}Up to three material Mexico business developments, explained in five minutes and linked to their sources.{% endif %}"
   ogTitle: "{% if locale == 'es' %}The Mexico Brief · en español{% else %}The Mexico Brief{% endif %}"
-  ogDescription: "{% if locale == 'es' %}La economía, la política y la seguridad de México, en un solo lugar.{% else %}Mexico’s economic, political, security and business news, all in one place.{% endif %}"
-  articleHeadline: "{% if locale == 'es' %}Acontecimientos clave en México{% else %}Key developments in Mexico{% endif %}"
+  ogDescription: "{% if locale == 'es' %}La información empresarial que importa en México. Conectada y explicada.{% else %}The business news that matters in Mexico. Connected and explained.{% endif %}"
+  articleHeadline: "{% if locale == 'es' %}Informe ejecutivo sobre México{% else %}Executive briefing on Mexico{% endif %}"
 articleType: NewsArticle
-bodyClass: feed-page
+bodyClass: brief-page
 ---
-{#- One template, two pages (Alan, 2026-08-03: the site also ships in Spanish —
-    reaffirmed over the no-toggle ruling, so built without slop instead of not at
-    all). `f` is the locale's feed: feedEs routes every string through hand-written
-    vocabulary, native wire headlines, or the reviewed translation cache, falling
-    back to English rather than showing machine mush. `L` is the hand-written UI
-    dictionary. The markup below never branches on language. -#}
 {% set f = feedEs if locale == 'es' else feed %}
-{% set L = uiStrings[locale] %}
-{#- The feed, built to the design handoff of 2026-08-02.
+{% set editionUrl = '/es/editions/' + f.date + '/' if locale == 'es' else '/editions/' + f.date + '/' %}
+{% set archiveUrl = '/es/editions/' if locale == 'es' else '/editions/' %}
 
-    Two rules from that handoff that are easy to break by accident:
-    1. There are no media queries. One layout reflows, driven by auto-fit + minmax().
-       Any minmax floor above ~300px is wrapped in min(Xpx, 100%), or the page scrolls
-       sideways on a phone with the text clipped off the right edge.
-    2. Every count, label and chip is derived from the data. Nothing here is hardcoded to
-       today's two stories or five numbers, and a block with no items does not render at
-       all rather than printing a heading over nothing. -#}
-<style>
-  .feed [hidden]{display:none!important}
-  .feed{max-width:var(--page);margin:0 auto;padding:0 20px}
-  .feed-sec{padding-bottom:54px}
-  .sec-rule{border-top:2px solid #0B6E4F}
-  .sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;padding:18px 0 24px}
-  /* A section head is a signpost, not the loudest voice on the page. It used to be 800/32,
-     heavier than both the dateline above it and the headlines below it, so the page shouted
-     its own furniture. The headline inside each card is now the loudest thing in its block. */
-  .sec-head h2{font-family:var(--sans);font-weight:500;font-size:24px;line-height:1.15;letter-spacing:-.014em;color:#111214;margin:0}
-  .sec-meta{font-family:var(--mono);font-weight:400;font-size:11px;line-height:1;letter-spacing:.1em;text-transform:uppercase;color:#86888E}
-  .sec-meta a{color:#0B6E4F;font-weight:500;font-size:12px}
+<article class="edition" aria-labelledby="edition-title" data-artifact-hash="{{ f.artifactHash }}">
+  <header class="edition-header">
+    <h1 id="edition-title" class="visually-hidden">{% if locale == 'es' %}Informe de negocios en México{% else %}Mexico business briefing{% endif %}</h1>
+    <div class="edition-meta" aria-label="{% if locale == 'es' %}Datos de la edición{% else %}Edition details{% endif %}">
+      <a class="edition-date" href="{{ editionUrl }}">{{ f.date | longDate(locale) }}</a><span aria-hidden="true">/</span>
+      {% for archived in archiveEditions %}{% if archived.locale == locale and archived.edition.editorialDate == f.date %}<span>{{ archived.minutes }} {% if locale == 'es' %}min de lectura{% else %}min read{% endif %}</span><span aria-hidden="true">/</span>{% endif %}{% endfor %}
+      <time datetime="{{ f.updated }}" data-published-at="{{ f.updated }}">{% if locale == 'es' %}Publicada {{ f.updated }}{% else %}Published {{ f.updated }}{% endif %}</time>
+    </div>
+    <div class="freshness-alert" id="freshness-alert" role="status"{% if not f.carrying %} hidden{% endif %}>
+      {% if locale == 'es' %}Aún no hay una edición más reciente.{% else %}A newer edition is not yet available.{% endif %}
+    </div>
+  </header>
 
-  .dateline{padding:34px 0 22px}
-  /* The date is a dateline, the way a newspaper sets it: it tells you which edition you are
-     reading, it does not compete with the reporting. It was 30px/600, louder than any story. */
-  .dateline h1{font-family:var(--sans);font-weight:500;font-size:20px;line-height:1.2;letter-spacing:-.005em;text-transform:none;color:#3C3D40;margin:0}
+  {% if f.weeklyBrief %}
+  {% set weeklyBrief = f.weeklyBrief %}
+  {% include "partials/weekly-brief.njk" %}
+  {% else %}
+  <section class="developments" aria-label="{% if locale == 'es' %}Noticias{% else %}Stories{% endif %}" data-edition-stories>
+    {% for story in f.stories %}{% include "partials/brief-story.njk" %}{% endfor %}
+  </section>
+  {% endif %}
 
-  .brief-p{font-family:var(--serif);font-weight:400;font-size:19px;line-height:1.62;color:#1A1B1D;max-width:62ch;text-wrap:pretty}
-  .brief-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:20px}
-  .brief-src{font-family:var(--mono);font-size:12px;color:#86888E;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
-  .brief-src a{color:#0B6E4F}
+</article>
 
-  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(166px,1fr));gap:1px;background:#E2E2E2;border:1px solid #E2E2E2}
-  .tile-cell{background:#fff;display:flex;flex-direction:column}
-  .tile{background:#fff;padding:14px 14px 12px;display:flex;flex-direction:column;gap:9px;text-align:left;border:0;cursor:pointer;font:inherit;width:100%}
-  .tile:hover{background:#F7F7F7}
-  .tile-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-  .tile-label{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5C5E63}
-  .tile-date{font-family:var(--mono);font-size:11px;color:#B0B2B8;white-space:nowrap}
-  .tile-val{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
-  .tile-val b{font-family:var(--sans);font-weight:600;font-size:27px;letter-spacing:-.025em;color:#111214}
-  .tile-unit{font-family:var(--mono);font-size:10px;color:#86888E}
-  .tile-change{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-  .tile-delta{font-family:var(--mono);font-weight:500;font-size:12px;color:#1A1B1D;white-space:nowrap}
-  .verdict{font-family:var(--mono);font-weight:600;font-size:9.5px;letter-spacing:.09em;white-space:nowrap}
-  .m-good{color:#0B6E4F}
-  .m-bad{color:#B4483A}
-  .m-flat{color:#6B6D73}
-  .tile-more{text-align:right;font-family:var(--mono);font-weight:500;font-size:9.5px;letter-spacing:.09em;color:#86888E}
-  .tile-why{border-top:1px solid #EBEBEB;margin:0 14px 12px;padding-top:10px;font-family:var(--serif);font-size:15px;line-height:1.45;color:#3C3D40;animation:panel .28s ease}
-
-  .cards{display:grid;grid-template-columns:1fr;border-bottom:1px solid #E2E2E2}
-  .cards-wk{grid-template-columns:1fr}
-  .card{border-top:1px solid #E2E2E2;padding:28px 0 30px;display:flex;flex-wrap:wrap;gap:16px 44px}
-  .card-rail{flex:1 1 300px;max-width:430px;min-width:0}
-  .card-body{flex:3 1 380px;min-width:0;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
-  .card-wk{padding:22px 0 24px}
-  .card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.06em}
-  .card-meta .d{color:#5C5E63}
-  .card-meta .c{color:#1A1B1D;display:inline-flex;align-items:center;gap:6px}
-  .card-meta a.c:hover{color:#0B6E4F;text-decoration:underline;text-underline-offset:3px}
-  .dot{width:7px;height:7px;border-radius:999px;flex:none}
-  .card-meta .s{color:#86888E}
-  .card h3{font-family:var(--sans);font-weight:600;font-size:24px;line-height:1.18;letter-spacing:-.018em;color:#111214;margin:10px 0 0;text-wrap:pretty}
-  .card-wk h3{font-size:20px;line-height:1.25;letter-spacing:-.013em}
-  .card h3 a{color:inherit}
-  .card h3 a:hover{color:#0B6E4F;text-decoration:none}
-  .dek{font-family:var(--sans);font-size:16px;line-height:1.5;color:#5C5E63;max-width:60ch;margin:0;text-wrap:pretty}
-  .card-wk .dek{font-size:15px}
-
-  .be-btn{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;background:transparent;border:1px solid #D4D4D6;padding:6px 11px 6px 6px;cursor:pointer;font:inherit}
-  .be-btn:hover{border-color:#0B6E4F}
-  .be-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:20px;background:#0B6E4F;color:#fff;font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.04em}
-  .card-wk .be-badge{width:21px;height:19px}
-  .be-label{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#1A1B1D}
-  .be-panel{border-left:2px solid #0B6E4F;padding:2px 0 2px 16px;display:grid;gap:0;animation:panel .28s ease}
-  .card-wk .be-panel{padding-left:14px}
-  .be-part+.be-part{border-top:1px solid #E2E2E2;margin-top:14px;padding-top:14px}
-  .be-part>.lb-why,.be-part>.lb-watch,.be-part>.lb-src{display:block;margin-bottom:5px}
-  .lb-why{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#0B6E4F}
-  .lb-watch{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#86888E}
-  .lb-src{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#86888E}
-  .bd-why{font-family:var(--serif);font-size:17px;line-height:1.55;color:#1A1B1D;max-width:58ch;text-wrap:pretty}
-  .card-wk .bd-why{max-width:56ch}
-  .bd-watch{font-family:var(--serif);font-size:16px;line-height:1.55;color:#1A1B1D;max-width:58ch;text-wrap:pretty}
-  .bd-src{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
-  .bd-src .lb-src{flex:0 0 100%;margin-bottom:0}
-  .bd-src a{color:#0B6E4F;font-family:var(--mono);font-size:12px}
-
-  .week-tools{display:flex;align-items:center;justify-content:space-between;gap:10px 20px;flex-wrap:wrap;padding-bottom:18px}
-  .chips{display:flex;flex-wrap:wrap;gap:7px}
-  .chip{border:1px solid #E2E2E2;padding:7px 12px;background:#fff;color:#1A1B1D;font-family:var(--mono);font-weight:500;font-size:12px;cursor:pointer}
-  .chip span{opacity:.55;margin-left:5px}
-  .chip:hover{border-color:#0B6E4F}
-  .chip.on{background:#111214;color:#fff;border-color:#111214}
-  .more{display:block;width:100%;margin-top:18px;background:#F5F5F5;border:1px solid #E2E2E2;padding:13px;font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#1A1B1D;cursor:pointer}
-  .more:hover{background:#EBEBEB;color:#0B6E4F}
-
-  .cal{display:grid;gap:28px}
-  .cal-g{display:block}
-  .cal-rail{display:flex;align-items:baseline;gap:12px;border-top:2px solid #111214;padding:9px 0 14px}
-  .cal-g.soon .cal-rail{border-top-color:#0B6E4F}
-  .cal-when{font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#111214}
-  .cal-rel{font-family:var(--mono);font-size:11px;color:#96989E}
-  .cal-g.soon .cal-rel{color:#0B6E4F}
-  .cal-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:22px 44px}
-  .cal-body>div{max-width:46ch}
-  .cal-t{font-family:var(--sans);font-weight:600;font-size:17px;line-height:1.25;color:#111214;text-wrap:pretty}
-  .cal-w{font-family:var(--sans);font-size:14px;line-height:1.45;color:#5C5E63;margin-top:4px;text-wrap:pretty}
-  .cal-why{font-family:var(--serif);font-size:15px;line-height:1.5;color:#1A1B1D;margin-top:6px;text-wrap:pretty}
-  .cal-s{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:6px;display:block}
-  .cal-s a{color:inherit}
-
-  .econ{border-top:1px solid #E2E2E2}
-  .econ-row{border-bottom:1px solid #E2E2E2;padding:18px 0;display:grid;gap:13px}
-  .econ-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px}
-  .econ-name{font-family:var(--mono);font-weight:600;font-size:14px;letter-spacing:.02em;color:#111214}
-  .econ-period{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:4px}
-  .econ-val{display:flex;align-items:baseline;gap:5px}
-  .econ-val b{font-family:var(--sans);font-weight:600;font-size:30px;letter-spacing:-.025em;color:#111214}
-  .econ-unit{font-family:var(--mono);font-size:10px;color:#86888E}
-  .bars{display:grid;gap:5px}
-  .bar{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:10px;align-items:center}
-  .bar-l{font-family:var(--mono);font-weight:500;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#111214}
-  .bar-l.ref{font-weight:400;color:#86888E}
-  .track{height:10px;background:#F0F0F0;display:block}
-  /* Green = today's reading (the site's accent, not a verdict); gray = the reference. */
-  .fill{height:100%;background:#0B6E4F;display:block}
-  .fill.ref{background:#D4D4D6}
-  .bar-v{font-family:var(--mono);font-weight:500;font-size:11px;color:#111214;white-space:nowrap}
-  .bar-v.ref{font-weight:400;color:#5C5E63}
-  .econ-note{font-family:var(--serif);font-size:16px;line-height:1.5;color:#1A1B1D;max-width:62ch;text-wrap:pretty}
-  .econ-src{font-family:var(--mono);font-size:11px;color:#96989E;margin-top:12px}
-
-  .mail{background:#F4F4F2;border-top:2px solid #111214;padding:26px 24px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;align-items:center}
-  .mail-k{font-family:var(--mono);font-weight:500;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#0B6E4F}
-  .mail-c{font-family:var(--serif);font-size:20px;line-height:1.45;color:#1A1B1D;max-width:36ch;margin-top:10px}
-  .mail-c a{color:#0B6E4F}
-  .mail-f{display:flex;flex-wrap:wrap;gap:10px}
-  .mail-f input{flex:1 1 190px;background:#fff;border:1px solid #D4D4D6;color:#111214;padding:13px 14px;font-family:var(--sans);font-size:15px}
-  .mail-f button{background:#111214;color:#fff;border:0;padding:13px 22px;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.12em;cursor:pointer}
-  .mail-f button:hover{background:#0B6E4F}
-  .mail-fine{font-family:var(--mono);font-size:11px;line-height:1.5;color:#86888E;margin-top:9px}
-
-  @keyframes panel{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-  @keyframes draw{to{stroke-dashoffset:0}}
-  .spark{width:100%;height:24px;display:block}
-  .spark polyline{stroke-dasharray:240;stroke-dashoffset:240;animation:draw 1.2s ease forwards}
-  @media(prefers-reduced-motion:reduce){
-    .spark polyline{animation:none;stroke-dashoffset:0}
-    .tile-why,.be-panel{animation:none}
+<script>
+(function () {
+  var published = document.querySelector('[data-published-at]');
+  var alertBox = document.getElementById('freshness-alert');
+  if (!published || !alertBox) return;
+  var publishedAt = new Date(published.getAttribute('data-published-at'));
+  if (!Number.isNaN(publishedAt.getTime())) {
+    published.textContent = {% if locale == 'es' %}'Publicada '{% else %}'Published '{% endif %} + new Intl.DateTimeFormat(
+      {% if locale == 'es' %}'es-MX'{% else %}'en-US'{% endif %}, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Mexico_City' }
+    ).format(publishedAt) + ' CT';
   }
-</style>
-
-<div class="feed">
-  <div class="dateline"><h1 id="edition-date" data-iso="{{ f.date }}" data-locale="{{ locale }}">{{ f.date | longDate(locale) }}</h1></div>
-  {% if f.carrying %}<section class="feed-sec" id="sec-brief" data-sec="Latest edition">
-    <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.latestBrief }}</h2><div class="sec-meta" id="brief-asof" data-date="{{ f.updated }}" data-prefix="{{ L.latestBrief }}">{{ L.latestBrief }}</div></div>
-    <p class="brief-p">{{ f.brief }}</p>
-  </section>{% endif %}
-
-  {% for storySection in f.storySections %}<section class="feed-sec" id="sec-{{ storySection.id }}" data-edition-stories data-sec="{% if storySection.kind == 'latest' %}{{ L.latestEditionStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}">
-    <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{% if storySection.kind == 'latest' %}{{ L.latestEditionStories }}{% elif storySection.kind == 'weekend' %}{{ L.newThisWeekend }}{% elif storySection.kind == 'week-recap' %}{{ L.weekRecap }}{% else %}{{ L.keyDevelopments }}{% endif %}</h2><div class="sec-meta">{{ L.storyCount(storySection.stories.length, storySection.latest) }}</div></div>
-    <div class="cards">
-      {%- for story in storySection.stories %}
-      <article class="card">
-        <div class="card-rail">
-          <div class="card-meta"><span class="d">{{ story.date }}</span><span class="c"><i class="dot" style="background:{{ story.catKey | catColor }}"></i>{{ story.cat }}</span><span class="s">{{ story.source }}</span></div>
-          <h3><a href="{{ story.url }}" target="_blank" rel="noopener">{{ story.title }}</a></h3>
-        </div>
-        <div class="card-body">
-        {%- if story.dek %}<p class="dek">{{ story.dek }}</p>{% endif %}
-        {%- if story.be %}
-        <button class="be-btn" type="button" aria-expanded="false" aria-controls="be-{{ story.id }}" data-toggle="be-{{ story.id }}"><span class="be-badge">BE</span><span class="be-label">{{ L.be }}</span></button>
-        <div class="be-panel" id="be-{{ story.id }}" hidden>
-          {%- if story.bg %}<div class="be-part"><span class="lb-watch">{{ L.background }}</span><p class="bd-watch">{{ story.bg }}</p></div>{% endif %}
-          {%- if story.view %}<div class="be-part"><span class="lb-why">{{ L.ourView }}</span><p class="bd-why">{{ story.view }}</p></div>{% endif %}
-          {%- if story.watch %}<div class="be-part"><span class="lb-watch">{{ L.watching }}</span><p class="bd-watch">{{ story.watch }}</p></div>{% endif %}
-          <div class="be-part bd-src"><span class="lb-src">{{ L.evidence }}</span>
-            {%- for source in story.analysisSources %}<a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.source }} ↗</a>{%- endfor %}
-          </div>
-        </div>
-        {%- endif %}
-        </div>
-      </article>
-      {%- endfor %}
-    </div>
-  </section>{% endfor %}
-
-  {% if f.numbers.length %}<section class="feed-sec" id="sec-numbers" data-sec="Market check">
-    <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.moved }}</h2><div class="sec-meta">{{ L.marketMeta }}</div></div>
-    <div class="tiles">
-      {%- for n in f.numbers %}
-      <div class="tile-cell">
-        <button class="tile" type="button" aria-expanded="false" aria-controls="why-{{ n.id }}" data-toggle="why-{{ n.id }}">
-          <span class="tile-top"><span class="tile-label">{{ n.label }}</span><span class="tile-date">{{ n.asOf }}</span></span>
-          <span class="tile-val"><b>{{ n.value }}</b>{% if n.unit %}<span class="tile-unit">{{ n.unit }}</span>{% endif %}</span>
-          <span class="tile-change"><span class="tile-delta">{{ n.delta }}</span><span class="verdict m-{{ n.mood }}">{{ n.tag }}</span></span>
-          {%- if n.points %}<svg class="spark" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true"><polyline points="{{ n.points }}" fill="none" stroke="{{ n.tone }}" stroke-width="1.5" vector-effect="non-scaling-stroke" style="animation-delay:{{ 0.15 + loop.index0 * 0.10 }}s"/></svg>{% endif %}
-          {%- if n.why %}<span class="tile-more" data-more>{{ L.why }}</span>{% endif %}
-        </button>
-        {%- if n.why %}<div class="tile-why" id="why-{{ n.id }}" hidden>{{ n.why }}</div>{% endif %}
-      </div>
-      {%- endfor %}
-    </div>
-  </section>{% endif %}
-
-  {% if f.week.length %}<section class="feed-sec" id="sec-week" data-sec="This week">
-    <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.week }}</h2><div class="sec-meta">{{ f.weekLabel }} · {{ L.weekSub }}</div></div>
-    <div class="week-tools">
-      <div class="chips" id="wk-chips"></div>
-    </div>
-    <div class="cards cards-wk" id="wk-list">
-      {%- for item in f.week %}
-      <article class="card card-wk" data-cat="{{ item.cat }}" data-cat-key="{{ item.catKey }}">
-        <div class="card-rail">
-          <div class="card-meta"><span class="d">{{ item.date }}</span><span class="c"><i class="dot" style="background:{{ item.catKey | catColor }}"></i>{{ item.cat }}</span><span class="s">{{ item.source }}</span></div>
-          <h3><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a></h3>
-        </div>
-        {#- Reading list only. Briefly explained lives under the selected story sections and
-            nowhere else (Alan, 2026-08-02): analysis concentrated in one place,
-            done properly, instead of spread thin across forty wire cards. -#}
-        <div class="card-body">
-        {%- if item.dek %}<p class="dek">{{ item.dek }}</p>{% endif %}
-        </div>
-      </article>
-      {%- endfor %}
-    </div>
-    <button class="more" id="wk-more" type="button" hidden></button>
-  </section>{% endif %}
-
-  {% if f.upcoming.length %}<section class="feed-sec" id="sec-coming" data-sec="Coming up">
-    <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.coming }}</h2><div class="sec-meta">{{ L.comingSub }}</div></div>
-    <div class="cal">
-      {%- for group in f.upcoming %}
-      <div class="cal-g{% if group.soon %} soon{% endif %}">
-        <div class="cal-rail"><div class="cal-when">{{ group.when }}</div><div class="cal-rel">{{ group.rel }}</div></div>
-        <div class="cal-body">
-          {%- for event in group.items %}
-          <div><div class="cal-t">{{ event.title }}</div>{% if event.what %}<div class="cal-w">{{ event.what }}</div>{% endif %}{% if event.why %}<div class="cal-why">{{ event.why }}</div>{% endif %}{% if event.url %}<span class="cal-s"><a href="{{ event.url }}" target="_blank" rel="noopener">{{ event.source }} ↗</a></span>{% else %}<span class="cal-s">{{ event.source }}</span>{% endif %}</div>
-          {%- endfor %}
-        </div>
-      </div>
-      {%- endfor %}
-    </div>
-  </section>{% endif %}
-
-  {% if f.econ.length %}<section class="feed-sec" id="sec-econ" data-sec="The economy">
-    <div class="sec-rule"></div>
-    <div class="sec-head"><h2>{{ L.econ }}</h2></div>
-    <div class="econ">
-      {%- for row in f.econ %}
-      <div class="econ-row">
-        <div class="econ-head">
-          <div><div class="econ-name">{{ row.name }}</div><div class="econ-period">{{ row.period }}</div></div>
-          <div class="econ-val"><b>{{ row.value }}</b>{% if row.unit %}<span class="econ-unit">{{ row.unit }}</span>{% endif %}</div>
-        </div>
-        <div class="bars">
-          <div class="bar"><span class="bar-l">Now</span><span class="track"><span class="fill" style="width:{{ row.nowPct }}%"></span></span><span class="bar-v">{{ row.nowText }}</span></div>
-          <div class="bar"><span class="bar-l ref">{{ row.refLabel }}</span><span class="track"><span class="fill ref" style="width:{{ row.refPct }}%"></span></span><span class="bar-v ref">{{ row.refText }}</span></div>
-        </div>
-        {%- if row.note %}<p class="econ-note">{{ row.note }}</p>{% endif %}
-      </div>
-      {%- endfor %}
-    </div>
-    <p class="econ-src">Banco de México · INEGI</p>
-  </section>{% endif %}
-
-</div>
-
-<script type="module">
-const I18N = {
-  be: {{ L.be | dump | safe }}, beHide: {{ L.beHide | dump | safe }},
-  why: {{ L.why | dump | safe }}, hide: {{ L.hide | dump | safe }},
-  all: {{ L.all | dump | safe }}, showMoreTpl: {{ L.showMoreTpl | dump | safe }},
-  showLess: {{ L.showLess | dump | safe }}, contextLinkTpl: {{ L.contextLinkTpl | dump | safe }},
-  quietToday: {{ L.quietToday | dump | safe }},
-  updateDelayed: {{ L.updateDelayed | dump | safe }},
-};
-const $ = (sel, root = document) => root.querySelector(sel);
-const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
-const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// Every panel on the page is the same contract: a button with aria-expanded and the
-// hidden element it controls.
-$$('[data-toggle]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const panel = document.getElementById(button.dataset.toggle);
-    if (!panel) return;
-    const open = button.getAttribute('aria-expanded') === 'true';
-    button.setAttribute('aria-expanded', String(!open));
-    panel.hidden = open;
-    const label = $('.be-label', button);
-    if (label) label.textContent = open ? I18N.be : I18N.beHide;
-    const more = $('[data-more]', button);
-    if (more) more.textContent = open ? I18N.why : I18N.hide;
-  });
-});
-
-// The freshness stamp is the one value the build cannot format: it is a clock time and
-// belongs in the reader's Mexico City day. Everything else is formatted at build time.
-const asof = $('#brief-asof');
-if (asof) {
-  const when = new Date(asof.dataset.date);
-  asof.textContent = Number.isNaN(when.getTime()) ? asof.dataset.prefix
-    : `${asof.dataset.prefix} ${when.toLocaleTimeString('en-US', { timeZone: 'America/Mexico_City', hour: 'numeric', minute: '2-digit' })}`;
-}
-
-// This week: chips derived from the categories actually present, with live counts.
-const list = $('#wk-list'), chipRow = $('#wk-chips'), moreBtn = $('#wk-more');
-if (list && chipRow && moreBtn) {
-  const cards = $$('.card', list);
-  const VISIBLE = 6;               // "All" opens with a readable handful, not the whole week
-
-  const counts = new Map();
-  cards.forEach((card) => {
-    const current = counts.get(card.dataset.catKey) || { label: card.dataset.cat, count: 0 };
-    counts.set(card.dataset.catKey, { ...current, count: current.count + 1 });
-  });
-  const requested = new URLSearchParams(location.search).get('topic');
-  let filter = counts.has(requested) ? requested : 'all', expanded = false;
-  chipRow.innerHTML = ['all', ...counts.keys()].map((key) => {
-    const item = counts.get(key);
-    const n = key === 'all' ? cards.length : item.count;
-    const label = key === 'all' ? I18N.all : item.label;
-    return `<button class="chip${key === filter ? ' on' : ''}" type="button" data-key="${key}">${label}<span>${n}</span></button>`;
-  }).join('');
-
-  const render = () => {
-    const matching = cards.filter((card) => filter === 'all' || card.dataset.catKey === filter);
-    cards.forEach((card) => { card.hidden = true; });
-    const cap = filter === 'all' ? VISIBLE : matching.length;
-    const shown = expanded ? matching : matching.slice(0, cap);
-    shown.forEach((card) => { card.hidden = false; });
-    const rest = matching.length - shown.length;
-    // A toggle, not a one-way door (Alan, 2026-08-03): expanded shows "Show less".
-    moreBtn.hidden = rest <= 0 && !expanded;
-    moreBtn.textContent = expanded ? I18N.showLess : I18N.showMoreTpl.replace('{n}', rest);
-    $$('.chip', chipRow).forEach((chip) => chip.classList.toggle('on', chip.dataset.key === filter));
-  };
-  chipRow.addEventListener('click', (event) => {
-    const chip = event.target.closest('.chip');
-    if (!chip) return;
-    filter = chip.dataset.key;
-    expanded = false;                       // a new filter starts from the top
-    const url = new URL(location.href);
-    if (filter === 'all') url.searchParams.delete('topic');
-    else url.searchParams.set('topic', filter);
-    url.hash = 'sec-week';
-    history.replaceState(null, '', url);
-    render();
-  });
-  moreBtn.addEventListener('click', () => {
-    expanded = !expanded;
-    render();
-    if (!expanded) document.getElementById('sec-week').scrollIntoView({ block: 'start' });
-  });
-  render();
-}
-
-// Section reveal. The hidden state is set from JS, never CSS, and a safety timer reveals
-// everything if the observer never fires, so a failed observer cannot leave a blank page.
-const sections = $$('[data-sec]');
-if (!still && 'IntersectionObserver' in window) {
-  const reveal = (section) => { section.style.opacity = '1'; section.style.transform = 'none'; };
-  sections.forEach((section) => {
-    section.style.opacity = '0';
-    section.style.transform = 'translateY(16px)';
-    section.style.transition = 'opacity .55s cubic-bezier(.2,.7,.3,1), transform .55s cubic-bezier(.2,.7,.3,1)';
-  });
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      reveal(entry.target);
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.05 });
-  sections.forEach((section) => observer.observe(section));
-  setTimeout(() => sections.forEach(reveal), 1400);
-}
+  {% if f.weeklyBrief %}
+  var through = new Date({{ f.weeklyBrief.through | dump | safe }} + 'T23:59:59-06:00');
+  alertBox.hidden = Date.now() - through.getTime() < 7 * 86400000;
+  return;
+  {% endif %}
+  var parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Mexico_City', year: 'numeric', month: '2-digit', day: '2-digit',
+    weekday: 'short', hour: '2-digit', hourCycle: 'h23'
+  }).formatToParts(new Date()).reduce(function (out, part) { out[part.type] = part.value; return out; }, {});
+  var current = new Date(Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day)));
+  var weekday = current.getUTCDay();
+  var daysBack = 0;
+  if (weekday === 0) daysBack = 2;
+  else if (weekday === 6) daysBack = 1;
+  else if (Number(parts.hour) < 7) daysBack = weekday === 1 ? 3 : 1;
+  current.setUTCDate(current.getUTCDate() - daysBack);
+  alertBox.hidden = {{ f.date | dump | safe }} >= current.toISOString().slice(0, 10);
+})();
 </script>

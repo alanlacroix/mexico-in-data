@@ -6,11 +6,17 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkInlineScriptsInHtml } from './lib/inline-script-check.mjs';
+import editionHistory from './lib/edition-history.cjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, '_data/releaseManifest.json'), 'utf8'));
+const currentEdition = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/edition.json'), 'utf8'));
+const historyRoutes = editionHistory.archiveRoutes(editionHistory.loadHistory({ current: currentEdition }));
+manifest.publicRoutes.push(...historyRoutes);
+manifest.allowedFiles.push(...historyRoutes.map(item => item.file));
 const OUTPUT = path.join(ROOT, manifest.outputDir);
 const failures = [];
+if (currentEdition.publicationStatus === 'candidate') failures.push('unapproved editorial candidate cannot be released');
 const notes = [];
 
 const allRoutes = [

@@ -43,3 +43,23 @@ jobs:
           path: _site/
           if-no-files-found: error
           retention-days: 14
+
+  source-audit:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: '24'
+      - name: Check core sources from the production runner environment
+        run: node pipeline/audit-sources.mjs > source-audit.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: source-audit-${{ github.sha }}
+          path: source-audit.json
+          if-no-files-found: error
+          retention-days: 14

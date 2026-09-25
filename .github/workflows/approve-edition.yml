@@ -1,0 +1,64 @@
+name: approve-edition
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: Reviewed candidate date (Mexico City YYYY-MM-DD)
+        required: true
+        type: string
+      slot:
+        description: Reviewed candidate slot
+        required: true
+        type: choice
+        options: [morning, noon]
+      reviewed_hash:
+        description: Exact SHA-256 hash of the bilingual candidate you approve
+        required: true
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: mexico-brief-production-write
+  cancel-in-progress: false
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Promote exactly the approved candidate
+        id: approve
+        env:
+          EDITORIAL_DATE: ${{ inputs.date }}
+          PUBLICATION_SLOT: ${{ inputs.slot }}
+          REVIEWED_HASH: ${{ inputs.reviewed_hash }}
+          REVIEWER: ${{ github.actor }}
+        run: node pipeline/approve-edition.mjs
+      - name: Validate the complete approved site
+        run: npm run release
+      - name: Publish the validated artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EDITORIAL_DATE: ${{ inputs.date }}
+        run: |
+          git config user.name mexico-data-bot
+          git config user.email actions@users.noreply.github.com
+          gh auth setup-git
+          git add data/edition.json data/editions/
+          if ! git diff --cached --quiet; then
+            git commit -m "edition: ${EDITORIAL_DATE} editorially approved"
+            git push origin HEAD:main
+          fi
+      - name: Verify the approved artifact reached production
+        env:
+          EDITORIAL_DATE: ${{ inputs.date }}
+          ARTIFACT_HASH: ${{ steps.approve.outputs.artifact_hash }}
+        run: node pipeline/verify-production.mjs

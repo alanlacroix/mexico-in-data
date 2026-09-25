@@ -1,11 +1,24 @@
 import assert from 'node:assert/strict';
-import worker, { checkHealth, dueSlot, runClock, runScheduledCheck } from '../../ops/publication-watchdog/src/index.mjs';
+import fs from 'node:fs';
+import worker, { checkHealth, dueSlot, mexicoCityClock, runClock, runScheduledCheck } from '../../ops/publication-watchdog/src/index.mjs';
 
-assert.equal(dueSlot(new Date('2026-07-31T12:59:00Z')), null, '8:59am EDT is before the morning slot');
-assert.deepEqual(dueSlot(new Date('2026-07-31T13:00:00Z')), { editorialDate: '2026-07-31', slot: 'morning' });
-assert.deepEqual(dueSlot(new Date('2026-07-31T16:00:00Z')), { editorialDate: '2026-07-31', slot: 'noon' });
-assert.equal(dueSlot(new Date('2026-01-15T13:59:00Z')), null, '8:59am EST is before the morning slot');
-assert.deepEqual(dueSlot(new Date('2026-01-15T14:00:00Z')), { editorialDate: '2026-01-15', slot: 'morning' });
+const config = JSON.parse(fs.readFileSync(new URL('../../ops/publication-watchdog/wrangler.jsonc', import.meta.url), 'utf8'));
+assert.deepEqual(config.triggers.crons, ['*/15 * * * *', '35 12 * * mon-fri'],
+  'the clock must have one exact 6:35am Mexico City weekday trigger plus heartbeat checks');
+
+assert.deepEqual(mexicoCityClock(new Date('2026-07-31T12:35:00Z')), {
+  editorialDate: '2026-07-31', minuteOfDay: 395, weekday: 'Fri',
+});
+assert.equal(dueSlot(new Date('2026-07-31T12:34:00Z')), null, '6:34am Mexico City is before the build target');
+assert.deepEqual(dueSlot(new Date('2026-07-31T12:35:00Z')), { editorialDate: '2026-07-31', slot: 'morning' });
+assert.deepEqual(dueSlot(new Date('2026-07-31T12:45:00Z')), { editorialDate: '2026-07-31', slot: 'morning' },
+  'the heartbeat trigger provides one bounded retry opportunity');
+assert.equal(dueSlot(new Date('2026-07-31T12:50:00Z')), null, 'the dispatch window closes at 6:50am Mexico City');
+assert.equal(dueSlot(new Date('2026-07-31T18:00:00Z')), null, 'noon is manual recovery only');
+assert.deepEqual(dueSlot(new Date('2026-01-15T12:35:00Z')), { editorialDate: '2026-01-15', slot: 'morning' },
+  'Mexico City stays aligned at UTC-6 in January');
+assert.equal(dueSlot(new Date('2026-08-01T12:35:00Z')), null, 'Saturday has no candidate run');
+assert.equal(dueSlot(new Date('2026-08-02T12:35:00Z')), null, 'Sunday has no candidate run');
 
 const values = new Map();
 const state = {
@@ -23,30 +36,29 @@ globalThis.fetch = async (_url, init) => {
 };
 
 try {
-  const morning = new Date('2026-07-31T13:00:00Z');
+  const morning = new Date('2026-07-31T12:35:00Z');
   assert.equal((await runClock(env, morning)).action, 'dispatch');
   assert.deepEqual(dispatches[0].inputs, { slot: 'morning' });
-  assert.equal((await runClock(env, new Date('2026-07-31T13:15:00Z'))).action, 'none');
+  assert.equal((await runClock(env, new Date('2026-07-31T12:45:00Z'))).action, 'none');
   assert.equal(dispatches.length, 1, 'the same slot dispatches once');
 
-  assert.equal((await runClock(env, new Date('2026-07-31T16:00:00Z'))).action, 'dispatch');
-  assert.deepEqual(dispatches[1].inputs, { slot: 'noon' });
-  assert.equal(dispatches.length, 2);
+  assert.equal((await runClock(env, new Date('2026-07-31T18:00:00Z'))).action, 'none');
+  assert.equal(dispatches.length, 1, 'noon never dispatches from the clock');
 
   failDispatch = true;
-  await assert.rejects(runClock(env, new Date('2026-08-01T13:00:00Z')), /HTTP 503/);
-  await assert.rejects(runScheduledCheck(env, new Date('2026-08-02T13:00:00Z')), /HTTP 503/);
-  const failedHealth = await checkHealth(env, new Date('2026-08-02T13:01:00Z'));
+  await assert.rejects(runClock(env, new Date('2026-08-03T12:35:00Z')), /HTTP 503/);
+  await assert.rejects(runScheduledCheck(env, new Date('2026-08-04T12:35:00Z')), /HTTP 503/);
+  const failedHealth = await checkHealth(env, new Date('2026-08-04T12:36:00Z'));
   assert.equal(failedHealth.heartbeat.errorCode, 'github-dispatch-http');
   assert.doesNotMatch(JSON.stringify(failedHealth), /GitHub workflow dispatch returned|\bno\b/,
     'public health must not expose upstream response text');
   failDispatch = false;
-  assert.equal((await runClock(env, new Date('2026-08-01T13:15:00Z'))).action, 'dispatch', 'a failed dispatch releases its claim');
+  assert.equal((await runClock(env, new Date('2026-08-03T12:45:00Z'))).action, 'dispatch', 'a failed dispatch releases its claim');
 
-  await runScheduledCheck(env, new Date('2026-08-01T16:00:00Z'));
-  const health = await checkHealth(env, new Date('2026-08-01T16:15:00Z'));
+  await runScheduledCheck(env, new Date('2026-08-03T13:00:00Z'));
+  const health = await checkHealth(env, new Date('2026-08-03T13:15:00Z'));
   assert.equal(health.ok, true);
-  const stale = await checkHealth(env, new Date('2026-08-01T17:00:00Z'));
+  const stale = await checkHealth(env, new Date('2026-08-03T14:00:00Z'));
   assert.equal(stale.ok, false);
 
   const before = dispatches.length;

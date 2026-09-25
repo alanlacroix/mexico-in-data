@@ -30,25 +30,30 @@ function loadEdition(sources) {
 
 function toStory(story, locale) {
   const copy = story[locale] || story.en || {};
+  // These expand English acronyms into English prose. Applying them to reviewed
+  // Spanish copy silently produces mixed-language sentences (INEGI -> Mexico's...).
+  const headline = value => String(value || '').trim();
+  const explanation = locale === 'es' ? value => String(value || '').trim() : plainExplanation;
   const section = SECTIONS[story.section] || SECTIONS.economy;
   const analysisSources = (story.evidence || []).filter((item) => item.kind !== 'article');
   const sources = (story.evidence || []).map((item) => ({
-    source: plainSourceName(item.source), url: item.url, publishedAt: story.publishedAt, date: story.date,
+    id: item.id, kind: item.kind, source: locale === 'es' ? item.source : plainSourceName(item.source), url: item.url, publishedAt: story.publishedAt, date: story.date,
   }));
   return {
     id: story.id,
+    editorial: story.editorial ? { timeline: story.editorial.timeline.map(step => ({ ...step[locale], sources: step.refs.map(id => story.evidence.find(item => item.id === id)) })), margin: story.editorial.margin[locale], marginSources: story.editorial.margin.refs.map(id => story.evidence.find(item => item.id === id)) } : null,
     beat: section.beat,
     date: story.date,
     lane: story.lane,
-    title: plainHeadline(copy.headline).replace(/\.\s*$/, ''),
-    summary: plainExplanation(copy.dek),
-    bg: plainExplanation(copy.background),
-    view: plainExplanation(copy.view),
-    prediction: plainExplanation(copy.watch),
+    title: headline(copy.headline).replace(/\.\s*$/, ''),
+    summary: explanation(copy.dek),
+    bg: explanation(copy.background),
+    view: explanation(copy.view),
+    prediction: explanation(copy.watch),
     analysisV: 1,
     analysisRefs: story.evidenceRefs || {},
     analysisSources,
-    source: plainSourceName(story.source),
+    source: locale === 'es' ? story.source : plainSourceName(story.source),
     url: story.url,
     reportTime: story.publishedAt,
     sources,
@@ -96,12 +101,14 @@ module.exports = function (now = new Date(), sources = {}, locale = 'en') {
     currentEditorialDate,
     briefEditorialDate: edition.editorialDate,
     artifactHash: edition.artifactHash,
+    weeklyBrief: edition.weeklyBrief || null,
     carryingLastBrief,
     publicationInterrupted: carryingLastBrief,
     weekendEdition,
     editionType: edition.editionType,
     briefTitle: weekendEdition ? (locale === 'es' ? 'Resumen del fin de semana' : 'Weekend recap') : (locale === 'es' ? 'El resumen' : 'The brief'),
     newsThrough: edition.generatedAt,
+    publishedAt: edition.approval?.approvedAt || edition.generatedAt,
     quiet: false,
     summaryLead: carryingLastBrief ? delayed : edition.summary[locale],
     stories,

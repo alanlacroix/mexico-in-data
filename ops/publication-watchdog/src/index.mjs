@@ -18,23 +18,29 @@ function settings(env) {
   };
 }
 
-export function easternClock(now = new Date()) {
+const MORNING_DISPATCH_MINUTE = 6 * 60 + 35;
+const MORNING_RETRY_CUTOFF_MINUTE = 6 * 60 + 50;
+
+export function mexicoCityClock(now = new Date()) {
   const date = now instanceof Date ? now : new Date(now);
   if (!Number.isFinite(date.getTime())) throw new TypeError('now must be valid');
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'America/New_York',
-    year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+    timeZone: 'America/Mexico_City',
+    year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short',
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
   }).formatToParts(date).filter((part) => part.type !== 'literal').map((part) => [part.type, part.value]));
   return {
     editorialDate: `${parts.year}-${parts.month}-${parts.day}`,
     minuteOfDay: Number(parts.hour) * 60 + Number(parts.minute),
+    weekday: parts.weekday,
   };
 }
 
 export function dueSlot(now = new Date()) {
-  const clock = easternClock(now);
-  if (clock.minuteOfDay < 9 * 60) return null;
-  return { editorialDate: clock.editorialDate, slot: clock.minuteOfDay < 12 * 60 ? 'morning' : 'noon' };
+  const clock = mexicoCityClock(now);
+  if (!['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(clock.weekday)) return null;
+  if (clock.minuteOfDay < MORNING_DISPATCH_MINUTE || clock.minuteOfDay >= MORNING_RETRY_CUTOFF_MINUTE) return null;
+  return { editorialDate: clock.editorialDate, slot: 'morning' };
 }
 
 function requireBindings(env) {
@@ -77,7 +83,7 @@ async function dispatch(settingsValue, token, due) {
 export async function runClock(env, now = new Date()) {
   requireBindings(env);
   const due = dueSlot(now);
-  if (!due) return { action: 'none', reason: 'before the morning slot', due: null };
+  if (!due) return { action: 'none', reason: 'outside the weekday morning dispatch window', due: null };
   const key = claimKey(due);
   if (await env.WATCHDOG_STATE.get(key)) return { action: 'none', reason: 'slot already dispatched', due };
 

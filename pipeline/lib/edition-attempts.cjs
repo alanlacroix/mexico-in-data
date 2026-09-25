@@ -72,6 +72,8 @@ function beginAttempt(attempts, { editorialDate, slot, candidateSignature: signa
     costUSD: 0,
     artifactHash: '',
     reason: '',
+    diagnostics: [],
+    collection: null,
   });
   out.attempts = out.attempts
     .filter((row) => row.editorialDate >= new Date(Date.parse(`${editorialDate}T12:00:00Z`) - 45 * 864e5).toISOString().slice(0, 10))

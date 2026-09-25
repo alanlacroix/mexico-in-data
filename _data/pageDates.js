@@ -23,6 +23,7 @@
 // tweak is not a revision; new or rewritten content is.
 const fs = require('node:fs');
 const path = require('node:path');
+const { loadHistory, editionPath } = require('../pipeline/lib/edition-history.cjs');
 
 const ROOT = path.join(__dirname, '..');
 
@@ -42,6 +43,14 @@ module.exports = function () {
     '/': { modified: publishedAt, published: publishedAt, daily: true },
     '/es/': { modified: publishedAt, published: publishedAt, daily: true },
   };
+  for (const historical of loadHistory({ current: edition })) {
+    for (const locale of ['en', 'es']) {
+      out[editionPath(historical.editorialDate, locale)] = {
+        modified: historical.generatedAt, published: historical.generatedAt,
+      };
+    }
+  }
+  for (const route of ['/editions/', '/es/editions/']) out[route] = { modified: publishedAt, published: publishedAt };
   return out;
 };
 

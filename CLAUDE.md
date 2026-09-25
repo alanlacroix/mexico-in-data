@@ -1,9 +1,10 @@
 # The Mexico Brief: working rules
 
-The homepage is the product. The public site has two reader routes: `/` and `/es/`.
-It also has a 404, Atom feed, sitemap, robots file, and the machine receipts used to
-verify publication. Do not add another page or product without Alan explicitly
-reversing this decision.
+The homepage is the product: one weekday executive briefing in English and Spanish.
+The approved September 22 plan adds dated editions and simple archives under
+`/editions/` and `/es/editions/`, keeping the original sources and publication dates.
+The site also has a 404, Atom feed, sitemap, robots file, and edition receipt.
+Do not add dashboards, personalization, newsletters, or another product without approval.
 
 Eleventy builds the static site. Cloudflare Pages deploys `main` with:
 
@@ -19,10 +20,12 @@ deployment live.
 - The Brief is the reason the site exists. Ranking, factual accuracy, plain language,
   freshness, and useful Briefly Explained context come before new features.
 - Rank up to five candidates, lock the top three, and publish one to three key developments. Every
-  published development has a complete Briefly Explained panel. The topic-filtered
-  weekly shelf stays terse and comes from the same bilingual edition artifact.
-- Keep the homepage topic filters. They help a reader scan the week, but they are
-  filters, not gateways to separate quarterly pages.
+  published development has visible reporting, business implications, context, and a
+  sourced next milestone. The primary reading path has no dashboard, calendar or weekly shelf.
+- AI compares new reporting with prior coverage. Archived prose is a retrieval index,
+  never independent evidence; reopen original source articles before citing a connection.
+- During the pilot, a human approves each candidate before publication. The workflow
+  writes review candidates separately and leaves the public edition unchanged.
 - English and Spanish are separate complete editions. Never mix languages inside one.
 - Every figure carries its observation period and an original source. Never turn a
   fetch timestamp into an “as of” date.
@@ -53,7 +56,7 @@ deployment live.
 
 The build copies only:
 
-- the English and Spanish homepage;
+- the English and Spanish homepage, archive lists and dated editions;
 - `404.html`, `feed.xml`, `robots.txt`, and `sitemap.xml`;
 - the stylesheet and two social images;
 - `edition.json` for exact production verification.

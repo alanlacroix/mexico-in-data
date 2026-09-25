@@ -67,6 +67,7 @@ function validateEdition(edition) {
     for (const locale of ['en', 'es']) for (const error of narrativeErrors(edition.summary[locale])) errors.push(`summary.${locale} ${error}`);
   }
 
+  if (edition.weeklyBrief) errors.push(...require('./weekly-brief.cjs').validateWeekly(edition.weeklyBrief, edition.editorialDate));
   const stories = Array.isArray(edition.stories) ? edition.stories : [];
   const weekStories = Array.isArray(edition.weekStories) ? edition.weekStories : [];
   if (stories.length < 1 || stories.length > 3) errors.push('stories must contain 1 to 3 items');
@@ -139,6 +140,24 @@ function validateEdition(edition) {
       }
     }
     const refs = story?.evidenceRefs && typeof story.evidenceRefs === 'object' ? story.evidenceRefs : {};
+    if (story.editorial !== undefined) {
+      const presentation = story.editorial;
+      if (!Array.isArray(presentation?.timeline) || presentation.timeline.length !== 3) errors.push(`${label}.editorial.timeline needs three sourced steps`);
+      for (const [stepIndex, step] of (Array.isArray(presentation?.timeline) ? presentation.timeline : []).entries()) {
+        for (const locale of ['en', 'es']) for (const field of ['label', 'text']) {
+          for (const error of narrativeErrors(step?.[locale]?.[field])) errors.push(`${label}.timeline[${stepIndex}].${locale}.${field} ${error}`);
+        }
+        if (step?.en && step?.es) for (const field of ['label', 'text']) {
+          for (const error of bilingualFidelityFlags({ english: step.en[field], spanish: step.es[field] })) errors.push(`${label}.timeline[${stepIndex}].${field} ${error}`);
+        }
+        if (!Array.isArray(step?.refs) || !step.refs.length || step.refs.some(ref => !evidenceIds.has(ref))) errors.push(`${label}.timeline[${stepIndex}] needs valid evidence refs`);
+      }
+      for (const locale of ['en', 'es']) for (const error of narrativeErrors(presentation?.margin?.[locale])) errors.push(`${label}.margin.${locale} ${error}`);
+      if (presentation?.margin?.en && presentation?.margin?.es) {
+        for (const error of bilingualFidelityFlags({ english: presentation.margin.en, spanish: presentation.margin.es })) errors.push(`${label}.margin ${error}`);
+      }
+      if (!Array.isArray(presentation?.margin?.refs) || !presentation.margin.refs.length || presentation.margin.refs.some(ref => !evidenceIds.has(ref))) errors.push(`${label}.margin needs valid evidence refs`);
+    }
     const hasIndependentEvidence = evidence.some((item) => item?.id !== 'article');
     if (hasIndependentEvidence && !Array.isArray(refs.background)) {
       errors.push(`${label}.evidenceRefs.background must cite independent evidence when available`);

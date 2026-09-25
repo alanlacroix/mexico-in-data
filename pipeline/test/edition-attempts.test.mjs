@@ -10,11 +10,24 @@ assert.equal(attempts.dailyLimit('2026-05-02'), 0.193548);
 let ledger = attempts.beginAttempt({}, {
   editorialDate: '2026-09-02', slot: 'morning', candidateSignature: 'a'.repeat(64), startedAt: '2026-09-02T13:00:00Z',
 });
+assert.deepEqual(ledger.attempts[0].diagnostics, [], 'a new attempt reserves a structured failure-diagnostics field');
+assert.equal(ledger.attempts[0].collection, null, 'a new attempt reserves a compact collection-health receipt');
 assert.throws(() => attempts.beginAttempt(ledger, {
   editorialDate: '2026-09-02', slot: 'morning', candidateSignature: 'a'.repeat(64), startedAt: '2026-09-02T13:01:00Z',
 }), /already attempted/);
 ledger = attempts.finishAttempt(ledger, '2026-09-02', 'morning', { state: 'failed', costUSD: 0.05, calls: 2 });
 assert.equal(attempts.dateSpend(ledger, '2026-09-02'), 0.05);
+ledger = attempts.finishAttempt(ledger, '2026-09-02', 'morning', { collection: {
+  aliveSources: 40, totalSources: 72, wireCount: 20, failedSourceIds: ['one-source'], ok: true,
+} });
+assert.deepEqual(ledger.attempts[0].collection.failedSourceIds, ['one-source']);
+ledger = attempts.finishAttempt(ledger, '2026-09-02', 'morning', { diagnostics: [{
+  stage: 'deterministic', storyId: 'n-example', reasons: [], fields: {
+    headline: { en: 'A 22-peso fine.', es: 'Una multa de 22 pesos.', refs: ['article'], reasons: ['unsupported number: 22'] },
+  },
+}] });
+assert.equal(ledger.attempts[0].diagnostics[0].fields.headline.reasons[0], 'unsupported number: 22',
+  'a failed attempt retains structured rejected-copy diagnostics without source bodies');
 assert.equal(attempts.sameSignatureNoonNoop(ledger, '2026-09-02', 'a'.repeat(64), 'b'.repeat(64)), false,
   'a failed morning must get its bounded noon recovery even when sources are unchanged');
 assert.equal(attempts.sameSignatureNoonNoop(ledger, '2026-09-02', 'b'.repeat(64)), false);

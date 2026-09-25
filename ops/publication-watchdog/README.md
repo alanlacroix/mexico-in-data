@@ -1,10 +1,14 @@
 # Edition clock
 
-This Worker is only a clock. Every 15 minutes it computes the current Eastern
-publication slot and dispatches `.github/workflows/happening.yml` once for the
-morning slot and once for the noon slot. A KV claim suppresses ordinary repeats;
-the publication command's committed slot ledger is the authoritative duplicate
-guard if Cloudflare and GitHub race.
+This Worker is only a clock. It dispatches `.github/workflows/happening.yml` once
+on weekdays at 6:35 a.m. in `America/Mexico_City`, targeting a reviewed edition
+by 7:00 a.m. The 15-minute trigger maintains the health heartbeat and provides
+one bounded dispatch retry at 6:45 if the 6:35 GitHub request fails. A KV claim
+suppresses ordinary repeats; the publication command's committed slot ledger is
+the authoritative duplicate guard if Cloudflare and GitHub race.
+
+There is no scheduled noon dispatch. Noon remains available only through the
+workflow's manual recovery input and must not be added to the Worker schedule.
 
 It does not inspect the website, rewrite editorial state, retry failed content,
 or publish anything. `GET /` and `GET /health` are read-only.
@@ -22,8 +26,10 @@ npx wrangler deploy
 ```
 
 The existing `WATCHDOG_STATE` KV namespace contains only slot claims and a health
-heartbeat. Cron times are interpreted by the Worker in `America/New_York`, so DST
-does not change the 9am/noon contract.
+heartbeat. Cloudflare Cron Triggers use UTC, so the exact weekday trigger is
+`35 12 * * mon-fri`; the Worker verifies the corresponding local time in
+`America/Mexico_City` before dispatching. Mexico City's current UTC-6 clock makes
+12:35 UTC equal to 6:35 a.m. local time.
 
 ## Test
 

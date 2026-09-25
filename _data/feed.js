@@ -150,6 +150,8 @@ function buildFeed(locale = 'en') {
   // ---- The one selected story set, presented in honest dated lanes --------
   const storyCard = (story) => ({
     id: story.id,
+    editorial: story.editorial,
+    sources: story.sources,
     lane: story.lane,
     chip: chipFor(story.title),
     date: monthDay(story.date),
@@ -304,7 +306,9 @@ function buildFeed(locale = 'en') {
 
   return {
     date: brief.editorialDate,
-    updated: brief.newsThrough,
+    updated: brief.publishedAt || brief.newsThrough,
+    artifactHash: brief.artifactHash,
+    weeklyBrief: brief.weeklyBrief,
     carrying: brief.carryingLastBrief,
     weekend: brief.weekendEdition,
     briefTitle: brief.briefTitle,

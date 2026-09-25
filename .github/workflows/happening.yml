@@ -1,11 +1,10 @@
 name: edition
 
-# One command owns publication. 14:23 and 17:23 UTC fall inside the builder's
-# accepted morning/noon Eastern windows in both standard and daylight time. The
-# Cloudflare clock is primary; these two runs are the independent scheduler backup.
+# The Cloudflare clock dispatches at 06:35 Mexico City. This single weekday
+# backup is 06:50 Mexico City; the persisted slot attempt prevents duplicate calls.
 on:
   schedule:
-    - cron: '23 14,17 * * *'
+    - cron: '50 12 * * 1-5'
   workflow_dispatch:
     inputs:
       slot:
@@ -48,7 +47,8 @@ jobs:
         continue-on-error: true
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          PUBLICATION_SLOT: ${{ github.event_name == 'workflow_dispatch' && inputs.slot || '' }}
+          PUBLICATION_SLOT: ${{ github.event_name == 'workflow_dispatch' && inputs.slot || 'morning' }}
+          EDITION_REQUIRE_REVIEW: '1'
         run: node pipeline/build-edition.mjs
 
       - name: Build and validate the exact site before publication
@@ -71,11 +71,15 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           gh auth setup-git
           if [ "$EDITION_OUTCOME" = "success" ] && [ "$EDITION_STATE" = "published" ] && [ "$RELEASE_OUTCOME" = "success" ]; then
-            git add data/edition.json data/edition-attempts.json data/llm-spend.json data/news/
+            git add data/edition.json data/edition-attempts.json data/llm-spend.json data/editions/ data/news/
             message="edition: ${EDITORIAL_DATE} published"
             echo "published=true" >> "$GITHUB_OUTPUT"
+          elif [ "$EDITION_OUTCOME" = "success" ] && [ "$EDITION_STATE" = "review-required" ]; then
+            git add data/candidates/ data/edition-attempts.json data/llm-spend.json data/news/
+            message="[CF-Pages-Skip] edition: ${EDITORIAL_DATE} review required"
+            echo "published=false" >> "$GITHUB_OUTPUT"
           else
-            git add data/edition-attempts.json data/llm-spend.json
+            git add data/edition-attempts.json data/llm-spend.json data/news/
             message="[CF-Pages-Skip] edition: ${EDITORIAL_DATE:-unknown} ${EDITION_STATE:-failed}"
             echo "published=false" >> "$GITHUB_OUTPUT"
           fi
@@ -95,6 +99,21 @@ jobs:
       - name: Fail loudly when generation or the release gate failed
         if: steps.edition.outcome == 'failure' || steps.edition.outputs.state == 'failed' || steps.release.outcome == 'failure'
         run: exit 1
+
+      - name: Mark candidate as awaiting human review
+        if: steps.edition.outcome == 'success' && steps.edition.outputs.state == 'review-required'
+        env:
+          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date }}
+          PUBLICATION_SLOT: ${{ steps.edition.outputs.slot }}
+        run: node pipeline/review-summary.mjs
+
+      - name: Preserve candidate for editorial review
+        if: steps.edition.outcome == 'success' && steps.edition.outputs.state == 'review-required'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: candidate-${{ steps.edition.outputs.editorial_date }}-${{ steps.edition.outputs.slot }}
+          path: data/candidates/
+          retention-days: 14
 
       - name: Verify the exact artifact reached production
         id: production
