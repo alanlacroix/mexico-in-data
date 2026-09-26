@@ -57,6 +57,7 @@ const {
   dateSpend,
   finishAttempt,
   readAttempts,
+  resumeFailedAttempt,
   sameSignatureNoonNoop,
   slotAttempt,
 } = attemptContract;
@@ -493,33 +494,30 @@ function buildWeekStories(priorEdition, stories, editorialDate) {
     .slice(0, MAX_WEEK_STORIES);
 }
 
-function firstSentence(text, locale) {
-  return sentenceParts(text, locale)[0] || clean(text);
-}
-
 function buildWeeklyBrief(stories, editorialDate) {
   const start = mondayOf(editorialDate);
   return {
     start,
     through: editorialDate,
     en: {
-      overview: stories.map((story) => story.en.dek).join(' '),
+      overview: stories.length === 1 ? clean(stories[0]?.en?.dek) : `${stories.length} developments shaping business decisions in Mexico this week.`,
       method: `Ranked by business relevance and urgency. Coverage through ${new Date(`${editorialDate}T12:00:00Z`).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric' })}.`,
     },
     es: {
-      overview: stories.map((story) => story.es.dek).join(' '),
+      overview: stories.length === 1 ? clean(stories[0]?.es?.dek) : `${stories.length} acontecimientos que influyen en las decisiones empresariales en México esta semana.`,
       method: `Ordenados por relevancia empresarial y urgencia. Información al ${new Date(`${editorialDate}T12:00:00Z`).toLocaleDateString('es-MX', { timeZone: 'UTC', day: 'numeric', month: 'long' })}.`,
     },
     items: stories.map((story) => ({
       id: story.id,
+      showThread: false,
       sources: story.evidence.map(({ id, kind, source, url }) => ({ id, kind, source, url })),
       en: {
         headline: story.en.headline,
         change: story.en.dek,
         context: `${story.en.background} ${story.en.view}`.trim(),
         reason: story.en.view,
-        before: firstSentence(story.en.background, 'en'),
-        now: firstSentence(story.en.dek, 'en'),
+        before: '',
+        now: '',
         margin: story.en.watch,
       },
       es: {
@@ -527,8 +525,8 @@ function buildWeeklyBrief(stories, editorialDate) {
         change: story.es.dek,
         context: `${story.es.background} ${story.es.view}`.trim(),
         reason: story.es.view,
-        before: firstSentence(story.es.background, 'es'),
-        now: firstSentence(story.es.dek, 'es'),
+        before: '',
+        now: '',
         margin: story.es.watch,
       },
     })),
@@ -557,10 +555,20 @@ async function main() {
   process.env.LLM_BUDGET_DATE = `${editorialDate}T12:00:00Z`;
 
   let attempts = readAttempts(read(ATTEMPTS_FILE, {}));
-  if (slotAttempt(attempts, editorialDate, slot)) {
+  const priorSlotAttempt = slotAttempt(attempts, editorialDate, slot);
+  const isRecovery = process.env.EDITION_RETRY_FAILED === '1';
+  if (priorSlotAttempt && !isRecovery) {
     console.log(`edition: ${editorialDate}/${slot} already attempted, zero model calls`);
     emitOutcome({ state: 'noop', editorial_date: editorialDate, slot, artifact_hash: '' });
     return;
+  }
+  if (isRecovery && (!priorSlotAttempt || priorSlotAttempt.state !== 'failed')) {
+    throw new Error(`explicit recovery requires a failed attempt: ${editorialDate}/${slot}`);
+  }
+  const recoveryBase = isRecovery ? { calls: Number(priorSlotAttempt.calls) || 0, costUSD: Number(priorSlotAttempt.costUSD) || 0 } : { calls: 0, costUSD: 0 };
+  if (isRecovery) {
+    attempts = resumeFailedAttempt(attempts, { editorialDate, slot, startedAt: now.toISOString() });
+    write(ATTEMPTS_FILE, attempts);
   }
 
   let schedule;
@@ -573,11 +581,11 @@ async function main() {
     universe = await candidateUniverse(now, schedule, editorialDate);
     signature = candidateSignature(universe);
   } catch (error) {
-    attempts = beginAttempt(attempts, {
+    if (!isRecovery) attempts = beginAttempt(attempts, {
       editorialDate, slot, candidateSignature: '0'.repeat(64), startedAt: now.toISOString(),
     });
     attempts = finishAttempt(attempts, editorialDate, slot, {
-      state: 'failed', completedAt: new Date().toISOString(), calls: 0, costUSD: 0,
+      state: 'failed', completedAt: new Date().toISOString(), calls: recoveryBase.calls, costUSD: recoveryBase.costUSD,
       reason: `collection failed: ${clean(error?.message).slice(0, 460)}`,
       collection: collectionReceipt || error?.collection || null,
     });
@@ -598,7 +606,7 @@ async function main() {
     return;
   }
 
-  attempts = beginAttempt(attempts, { editorialDate, slot, candidateSignature: signature, startedAt: now.toISOString() });
+  if (!isRecovery) attempts = beginAttempt(attempts, { editorialDate, slot, candidateSignature: signature, startedAt: now.toISOString() });
   if (collectionReceipt) attempts = finishAttempt(attempts, editorialDate, slot, { collection: collectionReceipt });
   write(ATTEMPTS_FILE, attempts);
   let callCount = 0;
@@ -667,6 +675,7 @@ async function main() {
         i: row.index,
         story: { date: row.item._editorialDate, source: row.item.sourceName || row.item.source, url: row.item.url },
         evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
+        ...(isRecovery ? { previousRejection: arr(priorSlotAttempt.diagnostics).find((item) => item.storyId === storyId(row.item)) || null } : {}),
       }))),
       schema: draftSchema(), maxTokens: 6500,
     });
@@ -771,8 +780,8 @@ async function main() {
     });
     modelUsage = usage();
     attempts = finishAttempt(attempts, editorialDate, slot, {
-      state: target.state, completedAt: new Date().toISOString(), calls: modelUsage.calls,
-      costUSD: Math.round((Number(modelUsage.costUSD) || 0) * 1e6) / 1e6,
+      state: target.state, completedAt: new Date().toISOString(), calls: recoveryBase.calls + modelUsage.calls,
+      costUSD: Math.round((recoveryBase.costUSD + (Number(modelUsage.costUSD) || 0)) * 1e6) / 1e6,
       artifactHash: edition.artifactHash, reason: '',
     });
     write(ATTEMPTS_FILE, attempts);
@@ -784,8 +793,8 @@ async function main() {
       modelUsage = anthropic.usage();
     } catch { /* failed before the model module loaded */ }
     attempts = finishAttempt(attempts, editorialDate, slot, {
-      state: 'failed', completedAt: new Date().toISOString(), calls: modelUsage.calls || callCount,
-      costUSD: Math.round((Number(modelUsage.costUSD) || 0) * 1e6) / 1e6,
+      state: 'failed', completedAt: new Date().toISOString(), calls: recoveryBase.calls + (modelUsage.calls || callCount),
+      costUSD: Math.round((recoveryBase.costUSD + (Number(modelUsage.costUSD) || 0)) * 1e6) / 1e6,
       reason: clean(error?.message).slice(0, 500),
       diagnostics: failureDiagnostics.slice(0, 5),
     });

@@ -18,6 +18,11 @@ on:
         required: false
         default: false
         type: boolean
+      retry_failed:
+        description: Retry the one failed slot once while preserving its ledger and spend
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -55,6 +60,7 @@ jobs:
           PUBLICATION_SLOT: ${{ github.event_name == 'workflow_dispatch' && inputs.slot || 'morning' }}
           EDITION_REQUIRE_REVIEW: '1'
           EDITION_WEEKEND_RECOVERY: ${{ github.event_name == 'workflow_dispatch' && inputs.weekend_recovery && '1' || '0' }}
+          EDITION_RETRY_FAILED: ${{ github.event_name == 'workflow_dispatch' && inputs.retry_failed && '1' || '0' }}
         run: node pipeline/build-edition.mjs
 
       - name: Build and validate the exact site before publication

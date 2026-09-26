@@ -17,6 +17,15 @@ assert.throws(() => attempts.beginAttempt(ledger, {
 }), /already attempted/);
 ledger = attempts.finishAttempt(ledger, '2026-09-02', 'morning', { state: 'failed', costUSD: 0.05, calls: 2 });
 assert.equal(attempts.dateSpend(ledger, '2026-09-02'), 0.05);
+let recovered = attempts.resumeFailedAttempt(ledger, {
+  editorialDate: '2026-09-02', slot: 'morning', startedAt: '2026-09-02T14:00:00Z',
+});
+assert.equal(recovered.attempts[0].recoveries[0].costUSD, 0.05, 'recovery preserves prior spend');
+assert.equal(recovered.attempts[0].recoveries[0].calls, 2, 'recovery preserves prior calls');
+recovered = attempts.finishAttempt(recovered, '2026-09-02', 'morning', { state: 'failed' });
+assert.throws(() => attempts.resumeFailedAttempt(recovered, {
+  editorialDate: '2026-09-02', slot: 'morning', startedAt: '2026-09-02T15:00:00Z',
+}), /recovery limit 1 reached/, 'one cross-run recovery is the hard cap');
 ledger = attempts.finishAttempt(ledger, '2026-09-02', 'morning', { collection: {
   aliveSources: 40, totalSources: 72, wireCount: 20, failedSourceIds: ['one-source'], ok: true,
 } });
