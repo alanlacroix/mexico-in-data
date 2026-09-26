@@ -4,6 +4,7 @@ const crypto = require('node:crypto');
 
 const SCHEMA_VERSION = 1;
 const MAX_MODEL_CALLS = 3;
+const MAX_RECOVERY_RUNS = 1;
 const MONTHLY_LIMIT_USD = 6;
 
 const clean = (value) => String(value || '').trim();
@@ -74,10 +75,26 @@ function beginAttempt(attempts, { editorialDate, slot, candidateSignature: signa
     reason: '',
     diagnostics: [],
     collection: null,
+    recoveries: [],
   });
   out.attempts = out.attempts
     .filter((row) => row.editorialDate >= new Date(Date.parse(`${editorialDate}T12:00:00Z`) - 45 * 864e5).toISOString().slice(0, 10))
     .sort((a, b) => a.editorialDate.localeCompare(b.editorialDate) || slotRank(a.slot) - slotRank(b.slot));
+  return out;
+}
+
+function resumeFailedAttempt(attempts, { editorialDate, slot, startedAt }) {
+  const out = readAttempts(attempts);
+  const row = slotAttempt(out, editorialDate, slot);
+  if (!row) throw new Error(`attempt not found: ${editorialDate}/${slot}`);
+  if (row.state !== 'failed') throw new Error(`only a failed attempt can be recovered: ${editorialDate}/${slot}`);
+  const recoveries = Array.isArray(row.recoveries) ? row.recoveries : [];
+  if (recoveries.length >= MAX_RECOVERY_RUNS) throw new Error(`recovery limit ${MAX_RECOVERY_RUNS} reached: ${editorialDate}/${slot}`);
+  recoveries.push({
+    startedAt: row.startedAt, completedAt: row.completedAt, calls: Number(row.calls) || 0,
+    costUSD: Number(row.costUSD) || 0, reason: row.reason || '', diagnostics: row.diagnostics || [],
+  });
+  Object.assign(row, { state: 'started', startedAt, completedAt: '', reason: '', diagnostics: [], recoveries });
   return out;
 }
 
@@ -91,6 +108,7 @@ function finishAttempt(attempts, date, slot, patch) {
 
 module.exports = {
   MAX_MODEL_CALLS,
+  MAX_RECOVERY_RUNS,
   MONTHLY_LIMIT_USD,
   beginAttempt,
   candidateSignature,
@@ -98,6 +116,7 @@ module.exports = {
   dailyLimit,
   finishAttempt,
   readAttempts,
+  resumeFailedAttempt,
   sameSignatureNoonNoop,
   slotAttempt,
 };
