@@ -821,69 +821,16 @@
       "slot": "noon",
       "candidateSignature": "9edc81b91fd78161db1820b02a11d58bae5842a1610b9f30dafe31a18f7572bf",
       "state": "failed",
-      "startedAt": "2026-09-26T14:22:39.673Z",
-      "completedAt": "2026-09-26T14:23:36.018Z",
-      "calls": 2,
-      "costUSD": 0.028345,
+      "startedAt": "2026-09-26T14:29:17.767Z",
+      "completedAt": "2026-09-26T14:30:03.352Z",
+      "calls": 4,
+      "costUSD": 0.052303,
       "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: banxico-policy-2026-09-24: background: needs an independent source when one is available | n-6aea0488db27: view: first person is not part of the publication voice; watch: watch item has no observable next test | n-16bbf132d68f: model omitted the required story unit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "banxico-policy-2026-09-24",
-          "reasons": [],
-          "fields": {
-            "background": {
-              "en": "Banxico's mandate is price stability in Mexico. Headline inflation rose to 3.42% in early September 2026, driven by tomato, onion, and alcoholic beverage prices. The rate has remained at 6.5% for three consecutive decisions.",
-              "es": "El mandato de Banxico es la estabilidad de precios en México. La inflación general repuntó a 3.42% en septiembre 2026, impulsada por precios del jitomate, la cebolla y bebidas alcohólicas. La tasa se ha mantenido en 6.5% durante tres decisiones consecutivas.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "needs an independent source when one is available"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-6aea0488db27",
-          "reasons": [],
-          "fields": {
-            "view": {
-              "en": "In a podcast with Oso Trava, Slim stated he bought the Apple stake cheaply in 1997 under a contrarian strategy, selling after several years with good profit but far below current values. He said, 'We sold them with good profit, but not the one there is now.",
-              "es": "En un podcast con Oso Trava, Slim afirmó que compró la participación de Apple barataamente en 1997 bajo una estrategia contraria, vendiendo después de varios años con buena ganancia pero muy por debajo de valores actuales. Dijo: 'Las vendimos con buena utilidad, pero no la que hay actualmente.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "first person is not part of the publication voice"
-              ]
-            },
-            "watch": {
-              "en": "No forward-looking observable. The account is retrospective reflection on a closed transaction without disclosed current technology investment strategy or appetite.",
-              "es": "Sin observable prospectivo. La cuenta es reflexión retrospectiva sobre una transacción cerrada sin estrategia de inversión tecnológica actual divulgada o apetito.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "watch item has no observable next test"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-16bbf132d68f",
-          "reasons": [
-            "model omitted the required story unit"
-          ],
-          "fields": {}
-        }
-      ],
+      "reason": "a required scheduled outcome failed the edition gate",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-09-26T14:22:39.673Z",
-        "aliveSources": 69,
+        "collectedAt": "2026-09-26T14:29:17.767Z",
+        "aliveSources": 68,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
@@ -891,9 +838,73 @@
         "failedSourceIds": [
           "insightcrime-mx",
           "retailers-mx",
+          "m4ec-mx",
           "nexos"
         ]
-      }
+      },
+      "recoveries": [
+        {
+          "startedAt": "2026-09-26T14:22:39.673Z",
+          "completedAt": "2026-09-26T14:23:36.018Z",
+          "calls": 2,
+          "costUSD": 0.028345,
+          "reason": "all story drafts failed the deterministic evidence gate: banxico-policy-2026-09-24: background: needs an independent source when one is available | n-6aea0488db27: view: first person is not part of the publication voice; watch: watch item has no observable next test | n-16bbf132d68f: model omitted the required story unit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "banxico-policy-2026-09-24",
+              "reasons": [],
+              "fields": {
+                "background": {
+                  "en": "Banxico's mandate is price stability in Mexico. Headline inflation rose to 3.42% in early September 2026, driven by tomato, onion, and alcoholic beverage prices. The rate has remained at 6.5% for three consecutive decisions.",
+                  "es": "El mandato de Banxico es la estabilidad de precios en México. La inflación general repuntó a 3.42% en septiembre 2026, impulsada por precios del jitomate, la cebolla y bebidas alcohólicas. La tasa se ha mantenido en 6.5% durante tres decisiones consecutivas.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "needs an independent source when one is available"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-6aea0488db27",
+              "reasons": [],
+              "fields": {
+                "view": {
+                  "en": "In a podcast with Oso Trava, Slim stated he bought the Apple stake cheaply in 1997 under a contrarian strategy, selling after several years with good profit but far below current values. He said, 'We sold them with good profit, but not the one there is now.",
+                  "es": "En un podcast con Oso Trava, Slim afirmó que compró la participación de Apple barataamente en 1997 bajo una estrategia contraria, vendiendo después de varios años con buena ganancia pero muy por debajo de valores actuales. Dijo: 'Las vendimos con buena utilidad, pero no la que hay actualmente.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "first person is not part of the publication voice"
+                  ]
+                },
+                "watch": {
+                  "en": "No forward-looking observable. The account is retrospective reflection on a closed transaction without disclosed current technology investment strategy or appetite.",
+                  "es": "Sin observable prospectivo. La cuenta es reflexión retrospectiva sobre una transacción cerrada sin estrategia de inversión tecnológica actual divulgada o apetito.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "watch item has no observable next test"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-16bbf132d68f",
+              "reasons": [
+                "model omitted the required story unit"
+              ],
+              "fields": {}
+            }
+          ]
+        }
+      ]
     }
   ]
 }
