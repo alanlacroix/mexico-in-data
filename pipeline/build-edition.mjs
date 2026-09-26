@@ -493,6 +493,49 @@ function buildWeekStories(priorEdition, stories, editorialDate) {
     .slice(0, MAX_WEEK_STORIES);
 }
 
+function firstSentence(text, locale) {
+  return sentenceParts(text, locale)[0] || clean(text);
+}
+
+function buildWeeklyBrief(stories, editorialDate) {
+  const start = mondayOf(editorialDate);
+  return {
+    start,
+    through: editorialDate,
+    en: {
+      overview: stories.map((story) => story.en.dek).join(' '),
+      method: `Ranked by business relevance and urgency. Coverage through ${new Date(`${editorialDate}T12:00:00Z`).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric' })}.`,
+    },
+    es: {
+      overview: stories.map((story) => story.es.dek).join(' '),
+      method: `Ordenados por relevancia empresarial y urgencia. Información al ${new Date(`${editorialDate}T12:00:00Z`).toLocaleDateString('es-MX', { timeZone: 'UTC', day: 'numeric', month: 'long' })}.`,
+    },
+    items: stories.map((story) => ({
+      id: story.id,
+      sources: story.evidence.map(({ id, kind, source, url }) => ({ id, kind, source, url })),
+      en: {
+        headline: story.en.headline,
+        change: story.en.dek,
+        context: `${story.en.background} ${story.en.view}`.trim(),
+        reason: story.en.view,
+        before: firstSentence(story.en.background, 'en'),
+        now: firstSentence(story.en.dek, 'en'),
+        margin: story.en.watch,
+      },
+      es: {
+        headline: story.es.headline,
+        change: story.es.dek,
+        context: `${story.es.background} ${story.es.view}`.trim(),
+        reason: story.es.view,
+        before: firstSentence(story.es.background, 'es'),
+        now: firstSentence(story.es.dek, 'es'),
+        margin: story.es.watch,
+      },
+    })),
+    dates: [],
+  };
+}
+
 async function main() {
   const now = new Date(process.env.EDITION_NOW_ISO || Date.now());
   if (!Number.isFinite(now.getTime())) throw new Error('EDITION_NOW_ISO is invalid');
@@ -504,7 +547,7 @@ async function main() {
     return;
   }
   if (!['morning', 'noon'].includes(slot)) throw new Error(`invalid publication slot: ${slot}`);
-  if (process.env.EDITION_REQUIRE_REVIEW === '1' && weekendDay(editorialDate)) {
+  if (process.env.EDITION_REQUIRE_REVIEW === '1' && weekendDay(editorialDate) && process.env.EDITION_WEEKEND_RECOVERY !== '1') {
     console.log(`edition: ${editorialDate}/${slot} is a pilot weekend no-op, zero model calls`);
     emitOutcome({ state: 'noop', editorial_date: editorialDate, slot, artifact_hash: '' });
     return;
@@ -581,30 +624,14 @@ async function main() {
       return result;
     };
 
-    const rankedResponse = await call({
-      system: `${TRUST}\n\n${REPORT}\n\nYou are selecting the Mexico Brief, a morning news product for a business reader. Rank actual changes in government policy, regulation, courts, security, trade, macro data, or company investment. Exclude opinion, advice, profiles, previews, routine market moves, announcements without a concrete Mexico consequence, and duplicate angles. Prior coverage is a retrieval index, not verified evidence. Downrank recycled announcements unless the new reporting establishes a material change. Prioritize consequences for operating costs, financing, regulation, investment, and business operations in Mexico. A scheduled official outcome outranks ordinary reporting and must be selected. Return no prose, only the indices and 1-10 importance scores of at most five distinct developments.`,
-      user: JSON.stringify(universe.map((item, i) => ({
-        i, date: item._editorialDate, title: item.title, dek: item.dek,
-        source: item.sourceName || item.source, section: item._section,
-        priorCoverage: editionHistory.relatedMemory(item, memory).map(({ editionDate, headline, reportedChange }) => ({ editionDate, headline, reportedChange })),
-        scheduled: item._scheduled ? { label: item._scheduled.label, importanceFloor: item._scheduled.importanceFloor } : null,
-      }))),
-      schema: rankSchema(), maxTokens: 850,
-    });
-    const ranked = [];
-    const seen = new Set();
-    for (const row of arr(rankedResponse.ranked)) {
-      const index = Number(row?.i);
-      if (!Number.isInteger(index) || index < 0 || index >= universe.length || seen.has(index)) continue;
-      seen.add(index);
-      ranked.push({ index, importance: clamp(row.importance, 1, 10), item: universe[index] });
-    }
-    for (let index = 0; index < universe.length; index += 1) {
-      const item = universe[index];
-      if (!item._scheduled || seen.has(index)) continue;
-      ranked.unshift({ index, importance: clamp(item._scheduled.importanceFloor || 8, 1, 10), item });
-      seen.add(index);
-    }
+    // Candidate priority already combines recency, source trust, scheduled outcomes,
+    // and business consequence. Keeping ranking deterministic reserves one of the
+    // three bounded model calls for a repair pass when the first draft fails.
+    const ranked = universe.slice(0, MAX_RANKED).map((item, index) => ({
+      index,
+      importance: clamp(item._scheduled?.importanceFloor || 7, 1, 10),
+      item,
+    }));
     ranked.sort((a, b) => Number(Boolean(b.item._scheduled)) - Number(Boolean(a.item._scheduled))
       || b.importance - a.importance
       || String(b.item.published_at).localeCompare(String(a.item.published_at)));
@@ -634,7 +661,7 @@ async function main() {
       throw new Error(`no ranked exact-day development has enough evidence for Briefly Explained: ${withoutContext.map((row) => storyId(row.item)).join(', ').slice(0, 300)}`);
     }
 
-    const draftResponse = await call({
+    let draftResponse = await call({
       system: `${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\n${ANALYSIS_SHAPE}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Before returning, verify every headline is at most 20 English words and 24 Spanish words, every dek is at most two sentences, every analysis field is at most three sentences, no field uses a semicolon, and every number appears in its cited evidence. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: explain a supported connection to earlier developments when prior-article-body evidence is present, otherwise supply only the context needed to understand this change. Never imply earlier MexicoBrief coverage unless a prior source was actually retrieved. If evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Our view: a narrow business implication supported by its citations, naming the affected kind of business where the evidence permits, without first person. Do not convert activity into demand, investment pledges into completed investment, or proposals into rules in force. Multiple articles may repeat one source; never imply independent confirmation from source count. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
       user: JSON.stringify(locked.map((row) => ({
         i: row.index,
@@ -643,41 +670,51 @@ async function main() {
       }))),
       schema: draftSchema(), maxTokens: 6500,
     });
-    const draftRejects = [];
-    const rejectionDiagnostics = [];
     const expectedDrafts = new Set(locked.map((row) => row.index));
-    const draftByIndex = new Map();
-    for (const draft of arr(draftResponse.stories)) {
-      const index = Number(draft?.i);
-      if (!expectedDrafts.has(index)) {
-        draftRejects.push(`unexpected draft index ${Number.isFinite(index) ? index : '?'}`);
-        continue;
+    const evaluateDrafts = (response) => {
+      const draftRejects = [];
+      const rejectionDiagnostics = [];
+      const draftByIndex = new Map();
+      for (const draft of arr(response.stories)) {
+        const index = Number(draft?.i);
+        if (!expectedDrafts.has(index)) { draftRejects.push(`unexpected draft index ${Number.isFinite(index) ? index : '?'}`); continue; }
+        if (draftByIndex.has(index)) { draftRejects.push(`duplicate draft index ${index}`); continue; }
+        draftByIndex.set(index, draft);
       }
-      if (draftByIndex.has(index)) {
-        draftRejects.push(`duplicate draft index ${index}`);
-        continue;
-      }
-      draftByIndex.set(index, draft);
+      const deterministicPass = locked.flatMap((row) => {
+        const rawDraft = draftByIndex.get(row.index);
+        if (!rawDraft) {
+          const reason = `${storyId(row.item)}: model omitted the required story unit`;
+          draftRejects.push(reason);
+          rejectionDiagnostics.push({ stage: 'deterministic', storyId: storyId(row.item), reasons: ['model omitted the required story unit'], fields: {} });
+          return [];
+        }
+        const draft = repairOverlongAnalysis(repairUnsupportedAnalysisNumbers(row, rawDraft));
+        const flags = deterministicDraftCheck(row, draft);
+        if (flags.length) {
+          draftRejects.push(`${storyId(row.item)}: ${flags.join('; ')}`);
+          rejectionDiagnostics.push(draftFailureReceipt(row, draft, flags));
+          return [];
+        }
+        return [{ row, draft }];
+      });
+      return { deterministicPass, draftRejects, rejectionDiagnostics };
+    };
+    let evaluated = evaluateDrafts(draftResponse);
+    if (!evaluated.deterministicPass.length && callCount < MAX_MODEL_CALLS - 1) {
+      console.warn('  first draft failed; running one bounded evidence-preserving repair pass');
+      draftResponse = await call({
+        system: `${TRUST}\n\n${REPORT}\n\nRepair every rejected bilingual story unit. Use only its evidence. Keep every number, actor, action, date, procedural stage and certainty supported by the cited evidence. Cite an independent record in background whenever one is available. Remove unsupported claims instead of guessing. Keep headlines under 20 English and 24 Spanish words, deks at two sentences, analysis fields at three sentences, and return every requested index.`,
+        user: JSON.stringify(locked.map((row) => ({
+          i: row.index,
+          evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
+          rejected: evaluated.rejectionDiagnostics.find((item) => item.storyId === storyId(row.item)) || null,
+        }))),
+        schema: draftSchema(), maxTokens: 6500,
+      });
+      evaluated = evaluateDrafts(draftResponse);
     }
-    const deterministicPass = locked.flatMap((row) => {
-      const rawDraft = draftByIndex.get(row.index);
-      if (!rawDraft) {
-        const reason = `${storyId(row.item)}: model omitted the required story unit`;
-        draftRejects.push(reason);
-        rejectionDiagnostics.push({ stage: 'deterministic', storyId: storyId(row.item), reasons: ['model omitted the required story unit'], fields: {} });
-        console.warn(`  reject draft ${reason}`);
-        return [];
-      }
-      const draft = repairOverlongAnalysis(repairUnsupportedAnalysisNumbers(row, rawDraft));
-      const flags = deterministicDraftCheck(row, draft);
-      if (flags.length) {
-        draftRejects.push(`${storyId(row.item)}: ${flags.join('; ')}`);
-        rejectionDiagnostics.push(draftFailureReceipt(row, draft, flags));
-        console.warn(`  reject draft ${storyId(row.item)}: ${flags.join('; ')}`);
-        return [];
-      }
-      return [{ row, draft }];
-    });
+    const { deterministicPass, draftRejects, rejectionDiagnostics } = evaluated;
     if (!deterministicPass.length) {
       failureDiagnostics = rejectionDiagnostics;
       throw new Error(`all story drafts failed the deterministic evidence gate: ${draftRejects.join(' | ').slice(0, 330)}`);
@@ -730,6 +767,7 @@ async function main() {
       summary: { en: passing.map((story) => story.en.dek).join(' '), es: passing.map((story) => story.es.dek).join(' ') },
       stories: passing,
       weekStories: buildWeekStories(priorEdition, passing, editorialDate),
+      weeklyBrief: buildWeeklyBrief(passing, editorialDate),
     });
     modelUsage = usage();
     attempts = finishAttempt(attempts, editorialDate, slot, {
