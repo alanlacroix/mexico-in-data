@@ -13,6 +13,11 @@ on:
         default: morning
         type: choice
         options: [morning, noon]
+      weekend_recovery:
+        description: Explicitly build a reviewed weekend recovery candidate
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -49,6 +54,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PUBLICATION_SLOT: ${{ github.event_name == 'workflow_dispatch' && inputs.slot || 'morning' }}
           EDITION_REQUIRE_REVIEW: '1'
+          EDITION_WEEKEND_RECOVERY: ${{ github.event_name == 'workflow_dispatch' && inputs.weekend_recovery && '1' || '0' }}
         run: node pipeline/build-edition.mjs
 
       - name: Build and validate the exact site before publication
@@ -98,7 +104,9 @@ jobs:
 
       - name: Fail loudly when generation or the release gate failed
         if: steps.edition.outcome == 'failure' || steps.edition.outputs.state == 'failed' || steps.release.outcome == 'failure'
-        run: exit 1
+        run: |
+          node pipeline/failure-summary.mjs
+          exit 1
 
       - name: Mark candidate as awaiting human review
         if: steps.edition.outcome == 'success' && steps.edition.outputs.state == 'review-required'

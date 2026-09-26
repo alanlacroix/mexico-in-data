@@ -14,8 +14,12 @@ assert.match(builder, /english: draft\[field\], spanish: draft\.es\[field\]/,
   'the final independent audit must review Spanish rather than generate and approve it');
 assert.match(builder, /mistranslations, reversed actions, changed subjects/,
   'the independent audit must reject bilingual meaning changes');
-assert.match(builder, /EDITION_REQUIRE_REVIEW === '1' && weekendDay\(editorialDate\)/,
+assert.match(builder, /EDITION_REQUIRE_REVIEW === '1' && weekendDay\(editorialDate\).*EDITION_WEEKEND_RECOVERY/,
   'the human-reviewed pilot skips weekend generation before creating an attempt');
+assert.match(builder, /first draft failed; running one bounded evidence-preserving repair pass/,
+  'a failed first draft must receive one bounded repair without increasing the call cap');
+assert.match(builder, /weeklyBrief: buildWeeklyBrief\(passing, editorialDate\)/,
+  'every generated candidate must carry the weekly presentation shape');
 
 assert.equal(lintReportText({ text: 'The sourceTitle says the rule changed.', inputs: ['The rule changed.'] }).ok, false);
 assert.equal(lintReportText({ text: 'The evidence strings show the amount.', inputs: ['The amount was 5.'] }).ok, false);
