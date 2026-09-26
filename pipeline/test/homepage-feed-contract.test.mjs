@@ -20,9 +20,9 @@ assert.ok(carried.stories.every((story) => story.analysisSources.length >= 1));
 
 const exact = dailyBrief(new Date(`${edition.editorialDate}T18:00:00Z`), { edition }, 'en');
 assert.equal(exact.carryingLastBrief, false);
-assert.equal(exact.todayStories.length + exact.keyDevelopments.length, exact.stories.length);
+assert.equal(exact.todayStories.length + exact.keyDevelopments.length + exact.weekendStories.length + exact.weekRecapStories.length, exact.stories.length);
 assert.ok(exact.todayStories.every((story) => story.date === edition.editorialDate));
-assert.deepEqual(feed().storySections.map((section) => section.kind), ['latest'],
+assert.deepEqual(feed().storySections.map((section) => section.kind), edition.editionType === 'weekend-recap' ? ['week-recap'] : ['latest'],
   'the built weekday label must remain honest when served unchanged on a later day');
 
 const spanish = dailyBrief(new Date(`${edition.editorialDate}T18:00:00Z`), { edition }, 'es');
