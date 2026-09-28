@@ -1037,6 +1037,133 @@
         ]
       },
       "recoveries": []
+    },
+    {
+      "editorialDate": "2026-09-28",
+      "slot": "noon",
+      "candidateSignature": "643f5a3f057a32d55b2d3c7afad46334012878a6791f4b842ec497a1a70d47d4",
+      "state": "failed",
+      "startedAt": "2026-09-28T16:01:24.213Z",
+      "completedAt": "2026-09-28T16:02:30.767Z",
+      "calls": 2,
+      "costUSD": 0.031533,
+      "artifactHash": "",
+      "reason": "all story drafts failed the deterministic evidence gate: n-e4475f0e4f69: headline: Spanish 2 sentences (cap 1); watch: watch item has no observable next test | n-5d50ab76104d: headline: semicolon; headline: 2 sentences (cap 1); headline: Spanish semicolon; headline: Spanish 2 sentences (cap 1); dek: 3 sentences (cap 2); background: 4 sentences (cap 3); watch: watch item has no observa",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-e4475f0e4f69",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexico stocks fall as oil prices surge on U.S.-Iran tensions",
+              "es": "Acciones mexicanas caen por alza de petróleo ante tensiones entre EE.UU. e Irán",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "Spanish 2 sentences (cap 1)"
+              ]
+            },
+            "watch": {
+              "en": "Oil prices will remain the near-term driver of IPC swings.",
+              "es": "Los precios del petróleo seguirán siendo el impulsor cercano de movimientos del IPC.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item has no observable next test"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-5d50ab76104d",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexico reports August trade figures; U.S. inflation and jobs data due this week",
+              "es": "México reporta balanza comercial de agosto; datos de inflación y empleo de EE.UU. esta semana",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "semicolon",
+                "2 sentences (cap 1)",
+                "Spanish semicolon",
+                "Spanish 2 sentences (cap 1)"
+              ]
+            },
+            "dek": {
+              "en": "Mexico releases August merchandise trade balance on September 28, followed by remittance and private-sector confidence data through October 2. U.S. markets await revised GDP, PCE inflation, and August job openings figures.",
+              "es": "México publica balanza comercial de mercancías de agosto el 28 de septiembre, seguido por datos de remesas y confianza del sector privado hasta el 2 de octubre. Mercados estadounidenses aguardan PIB revisado, inflación PCE y ofertas de empleo de agosto.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "3 sentences (cap 2)"
+              ]
+            },
+            "background": {
+              "en": "Mexico received $62.47 billion in remittances in 2025, mostly from U.S. workers, a larger inflow than foreign direct investment. The calendar includes Mexico's September consumer confidence, auto sales, and the U.S. Fed's preferred PCE inflation gauge for August.",
+              "es": "México recibió $62.47 mil millones en remesas en 2025, mayormente de trabajadores estadounidenses, una entrada más grande que la inversión extranjera directa. El calendario incluye confianza del consumidor de septiembre en México, ventas de autos, y el indicador PCE de inflación preferido de la Reserva Federal para agosto.",
+              "refs": [
+                "article",
+                "standing:std-remittances"
+              ],
+              "reasons": [
+                "4 sentences (cap 3)"
+              ]
+            },
+            "watch": {
+              "en": "A widening Mexican trade deficit or slowing remittance growth would signal weakening external support. U.S. PCE significantly above forecast would reinforce persistent inflation fears and tighten financial conditions for emerging markets including Mexico.",
+              "es": "Un déficit comercial mexicano ampliado o crecimiento más lento de remesas señalaría apoyo externo debilitado. PCE estadounidense significativamente por encima del pronóstico reforzaría temores de inflación persistente y endurecería condiciones financieras para mercados emergentes incluyendo México.",
+              "refs": [
+                "article",
+                "standing:std-remittances"
+              ],
+              "reasons": [
+                "watch item has no observable next test"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-c710de07ef31",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Specialists say Banxico has prioritized growth over price stability, with inflation last hitting 3% in May 2020. Repeated forecast delays and persistent service-price pressures erode market confidence in central bank guidance.",
+              "es": "Especialistas dicen que Banxico ha priorizado crecimiento sobre estabilidad de precios, con inflación alcanzando 3% tan recientemente como mayo de 2020. Retrasos de pronósticos repetidos y presiones persistentes en precios de servicios erosionan confianza del mercado en orientación del banco central.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or uncertainty became final in Spanish"
+              ]
+            }
+          }
+        }
+      ],
+      "collection": {
+        "collectedAt": "2026-09-28T16:01:24.213Z",
+        "aliveSources": 66,
+        "totalSources": 72,
+        "wireCount": 57,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "elfin-mercados",
+          "insightcrime-mx",
+          "retailers-mx",
+          "m4ec-mx",
+          "nexos",
+          "mexiconow"
+        ]
+      },
+      "recoveries": []
     }
   ]
 }
