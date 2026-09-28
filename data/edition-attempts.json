@@ -905,6 +905,138 @@
           ]
         }
       ]
+    },
+    {
+      "editorialDate": "2026-09-28",
+      "slot": "morning",
+      "candidateSignature": "d2ee715226f22098c631382c781a26e6af5594a48b3b476709cc55415aadba34",
+      "state": "failed",
+      "startedAt": "2026-09-28T13:01:38.199Z",
+      "completedAt": "2026-09-28T13:02:45.273Z",
+      "calls": 2,
+      "costUSD": 0.031133,
+      "artifactHash": "",
+      "reason": "all story drafts failed the deterministic evidence gate: n-5d50ab76104d: headline: semicolon; headline: Spanish semicolon; view: unsupported evidence qualifier: largest; watch: watch item has no observable next test | n-c710de07ef31: dek: proposal or uncertainty became final in Spanish; background: proposal or uncertainty became final in Spanish; watch: watch item has no observable ne",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-5d50ab76104d",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexico trade and remittances data due this week; US GDP revision in focus",
+              "es": "Datos de comercio y remesas de México esta semana; revisión del PIB de EU en foco",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "semicolon",
+                "Spanish semicolon"
+              ]
+            },
+            "view": {
+              "en": "The week's releases will show the strength of Mexico's two largest external cash flows: trade and remittances. US data on consumer confidence and labor demand signal whether spending and hiring are sustained, which affects demand for Mexican exports and the trajectory of the peso.",
+              "es": "Los reportes de la semana mostrarán la fortaleza de dos de los mayores flujos de efectivo externos de México: comercio y remesas. Los datos estadounidenses sobre confianza del consumidor y demanda laboral indican si el gasto y la contratación se sostienen, lo que afecta la demanda de exportaciones mexicanas y la trayectoria del peso.",
+              "refs": [
+                "article",
+                "standing:std-remittances"
+              ],
+              "reasons": [
+                "unsupported evidence qualifier: largest"
+              ]
+            },
+            "watch": {
+              "en": "Monday's August trade balance report from Inegi will detail manufacturing exports and foreign goods purchases. Tuesday's remittances data and US PCE inflation report (the Federal Reserve's preferred inflation measure) are expected.",
+              "es": "El reporte del balance comercial de agosto del lunes del Inegi detallará las exportaciones manufactureras y las compras de bienes extranjeros. Se esperan datos de remesas del martes e inflación PCE de Estados Unidos (la medida de inflación preferida de la Reserva Federal).",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item has no observable next test"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-c710de07ef31",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Banxico has not met its 3% inflation target since May 2020. Specialists say the central bank has prioritized growth over price stability and repeatedly postponed forecasts.",
+              "es": "Banxico no ha cumplido su meta de inflación del 3% desde mayo de 2020. Los especialistas dicen que el banco central ha priorizado el crecimiento sobre la estabilidad de precios y ha pospuesto repetidamente sus pronósticos.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or uncertainty became final in Spanish"
+              ]
+            },
+            "background": {
+              "en": "Mexico's inflation target is 3% annually. The last time inflation reached exactly 3% was May 2020, during the COVID-19 pandemic.",
+              "es": "La meta de inflación de México es del 3% anual. La última vez que la inflación alcanzó exactamente el 3% fue en mayo de 2020, durante la pandemia de COVID-19.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or uncertainty became final in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "Banxico faces pressure to deploy its policy tools more decisively to meet its constitutional mandate of price stability. Service price persistence remains a constraint on achieving the 3% goal.",
+              "es": "Banxico enfrenta presión para desplegar sus herramientas de política de manera más decisiva para cumplir su mandato constitucional de estabilidad de precios. La persistencia de precios de servicios sigue siendo una limitación para alcanzar el objetivo del 3%.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item has no observable next test"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-0ce25a01194b",
+          "reasons": [],
+          "fields": {
+            "view": {
+              "en": "A US diesel export ban would force Mexican importers to pay premium prices from distant markets, raising the delivered cost of fuel. Mexico's finance ministry currently has fiscal capacity to subsidize retail prices and prevent consumer price shock, but sustained subsidies would drain fiscal resources available for other government priorities.",
+              "es": "Una prohibición de exportación de diésel de Estados Unidos obligaría a los importadores mexicanos a pagar precios premium desde mercados distantes, elevando el costo entregado del combustible. El ministerio de finanzas de México actualmente tiene capacidad fiscal para subsidiar los precios minoristas y prevenir shock de precios al consumidor, pero los subsidios sostenidos drenarían recursos fiscales disponibles para otras prioridades gubernamentales.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "hacienda was dropped in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "The four major importers identified by sector analysts are Exxon, Chevron, Marathon, and Valero. Global diesel markets are currently pressured with low inventories.",
+              "es": "Las cuatro empresas importadoras principales identificadas por analistas del sector son Exxon, Chevron, Marathon y Valero. Los mercados globales de diésel están actualmente presionados con inventarios bajos.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item has no observable next test"
+              ]
+            }
+          }
+        }
+      ],
+      "collection": {
+        "collectedAt": "2026-09-28T13:01:38.199Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 58,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "elfin-mercados",
+          "insightcrime-mx",
+          "retailers-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": []
     }
   ]
 }
