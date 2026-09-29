@@ -1164,6 +1164,197 @@
         ]
       },
       "recoveries": []
+    },
+    {
+      "editorialDate": "2026-09-29",
+      "slot": "morning",
+      "candidateSignature": "9e71b6f74b6ea1e868a5fe9892c4b8c0283247bc3e0c6f7ff58e6a278cc64a60",
+      "state": "failed",
+      "startedAt": "2026-09-29T13:01:30.440Z",
+      "completedAt": "2026-09-29T13:02:35.668Z",
+      "calls": 2,
+      "costUSD": 0.039563,
+      "artifactHash": "",
+      "reason": "all story drafts failed the deterministic evidence gate: n-01773ae9df6b: headline: 2 sentences (cap 1); headline: usmca was dropped in Spanish; dek: 4 sentences (cap 2); background: usmca was dropped in Spanish; view: 4 sentences (cap 3); view: usmca was dropped in Spanish; watch: usmca was dropped in Spanish | n-b65d100586c6: headline: 2 sentences (cap 1); headline: negation was intr",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-01773ae9df6b",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "U.S. unilateral pressure on Chinese investment in Mexico risks USMCA, Tai warns",
+              "es": "Presión unilateral estadounidense sobre inversión china en México riesgo T-MEC, advierte Tai",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "2 sentences (cap 1)",
+                "usmca was dropped in Spanish"
+              ]
+            },
+            "dek": {
+              "en": "Katherine Tai, former U.S. trade representative, cautioned that unilateral U.S. restrictions on Mexican investment from China risk destabilizing the three-nation pact. She urged dialogue rather than conditionality, citing disagreements over energy, corn, and telecoms as serious obstacles.",
+              "es": "Katherine Tai, exrepresentante comercial estadounidense, advirtió que restricciones unilaterales sobre inversión mexicana proveniente de China arriesgan desestabilizar el pacto tripartita. Instó al diálogo más que al condicionamiento, citando desacuerdos sobre energía, maíz y telecomunicaciones como obstáculos serios.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "4 sentences (cap 2)"
+              ]
+            },
+            "background": {
+              "en": "The U.S. declined a 16-year extension at the first USMCA joint review on 1 July 2026, so the three countries now review the agreement every year. The treaty can run through 2036 unless extended or a country withdraws.",
+              "es": "Estados Unidos rechazó una extensión de 16 años en la primera revisión conjunta del T-MEC el 1 de julio de 2026, por lo que los tres países ahora revisan el acuerdo cada año. El tratado puede funcionar hasta 2036 a menos que se extienda o un país se retire.",
+              "refs": [
+                "standing:std-usmca-review"
+              ],
+              "reasons": [
+                "usmca was dropped in Spanish"
+              ]
+            },
+            "view": {
+              "en": "Tai's warning signals disagreement between trade negotiators and current U.S. policy. The U.S. administration appears intent on using USMCA access to extract concessions on Chinese investment, but Tai argues this approach conflates trade rules with investment screening and could trigger instability.",
+              "es": "La advertencia de Tai señala desacuerdo entre negociadores comerciales y la política actual estadounidense. La administración estadounidense parece decidida a usar el acceso del T-MEC para extraer concesiones sobre inversión china, pero Tai sostiene que este enfoque confunde reglas comerciales con examen de inversiones y podría desencadenar inestabilidad.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "4 sentences (cap 3)",
+                "usmca was dropped in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "The next USMCA annual joint review is scheduled for 1 July 2027. Observable signals would be whether the three countries formally extend the agreement, modify its terms in writing, or allow annual reviews to continue.",
+              "es": "La próxima revisión anual del T-MEC está programada para el 1 de julio de 2027. Las señales observables serían si los tres países formalmente extienden el acuerdo, modifican sus términos por escrito, o permiten que las revisiones anuales continúen.",
+              "refs": [
+                "standing:std-usmca-review",
+                "calendar:2027-07-01",
+                "article"
+              ],
+              "reasons": [
+                "usmca was dropped in Spanish"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-b65d100586c6",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexico's non-auto exports surge 45% in 2026 on U.S. data-center demand",
+              "es": "Exportaciones no automotrices mexicanas suben 45% en 2026 por demanda de centros datos",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "2 sentences (cap 1)",
+                "negation was introduced in Spanish"
+              ]
+            },
+            "dek": {
+              "en": "Mexican non-automotive manufactures posted a 45% year-over-year gain through August, driven by U.S. demand for computing equipment and data-center components. Total exports reached 549.4 billion USD in the eight-month period, a 29.3% annual increase and the highest volume on record.",
+              "es": "Las manufacturas no automotrices mexicanas registraron un avance de 45% interanual hasta agosto, impulsado por demanda estadounidense de equipos de cómputo y componentes de centros de datos. Las exportaciones totales alcanzaron 549.4 mil millones de USD en ocho meses, un aumento anual de 29.3% y el volumen más alto en registros.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "3 sentences (cap 2)",
+                "unsupported number: 549.4",
+                "negation was introduced in Spanish",
+                "Spanish unsupported number: 549.4"
+              ]
+            },
+            "background": {
+              "en": "Mexico's exports depend heavily on U.S. demand. The non-automotive manufacturing sector has become the backbone of Mexico's external sector as automotive output stalled and oil revenue declined. According to INEGI data, 84.7% of Mexico's non-oil exports went to the United States, with 65.1% distinct from automotive products.",
+              "es": "Las exportaciones de México dependen fuertemente de la demanda estadounidense. El sector de manufactura no automotriz se ha convertido en la columna vertebral del sector externo de México conforme la producción automotriz se estancó y los ingresos petroleros declinaron. De acuerdo con datos del INEGI, 84.7% de las exportaciones no petroleras de México se destinó a Estados Unidos, con 65.1% distintas a productos automotrices.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "4 sentences (cap 3)",
+                "negation was introduced in Spanish"
+              ]
+            },
+            "view": {
+              "en": "The 45% gain in non-auto manufactures is the largest since records began in 1994 and reflects U.S. capital spending on artificial-intelligence infrastructure. Automotive exports grew only 0.8% in the same period, a sharp contrast that underscores the structural shift toward technology-linked manufacturing.",
+              "es": "El avance de 45% en manufacturas no automotrices es el mayor desde que hay registros en 1994 y refleja gasto de capital estadounidense en infraestructura de inteligencia artificial. Las exportaciones automotrices crecieron solo 0.8% en el mismo período, un contraste acentuado que subraya el cambio estructural hacia manufactura ligada a tecnología.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported evidence qualifier: largest",
+                "vague analysis: \"underscores the\"",
+                "negation was introduced in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "The next observable signal is August and September bilateral trade data. If U.S. tech-sector orders ease or capital expenditure on data centers falls, non-automotive exports will decline sharply. Automotive export trends will also indicate whether the trade shift is durable or cyclical.",
+              "es": "La siguiente señal observable es la información de comercio bilateral de agosto y septiembre. Si los pedidos del sector tecnológico estadounidense se ralentizan o el gasto de capital en centros de datos cae, las exportaciones no automotrices descenderán bruscamente. Las tendencias de exportación automotriz también indicarán si el cambio comercial es duradero o cíclico.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "4 sentences (cap 3)",
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-93902769518e",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Banxico and CNBV proposed a gradual reduction in credit card interchange fees to 1.30%, more than double an earlier 0.60% proposal but still a cut from the current 1.91%. Fifty-three industry commenters, including banks, fintech firms, and payment aggregators, asked for clearer rules on how the new limits would be calculated and applied.",
+              "es": "Banxico y la CNBV propusieron una reducción gradual de las cuotas de intercambio de tarjetas de crédito a 1.30%, más del doble de una propuesta anterior de 0.60% pero aún una reducción respecto a la actual de 1.91%. Cincuenta y tres comentaristas de la industria pidieron reglas más claras sobre cómo se calcularían y aplicarían los nuevos límites.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "53 words (cap 45)"
+              ]
+            },
+            "view": {
+              "en": "The new credit card cap at 1.30% represents a partial rollback of an earlier plan to cut fees to 0.60%. The rise from that stricter proposal suggests regulators responded to industry pushback, though the final rule still reduces interchange by roughly one-third from current levels.",
+              "es": "El nuevo tope de tarjeta de crédito a 1.30% representa un retroceso parcial de un plan anterior de reducir las cuotas a 0.60%. El aumento respecto a esa propuesta más estricta sugiere que los reguladores respondieron a la presión de la industria, aunque la regla final aún reduce el intercambio aproximadamente una tercera parte respecto a los niveles actuales.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "completed action became non-final in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "The consultation period closed on 24 September 2026. The next observable date is when Banxico and CNBV publish final rules specifying the implementation timeline and calculation methodology that 53 commenters flagged as unclear.",
+              "es": "El período de consulta cerró el 24 de septiembre de 2026. La próxima fecha observable es cuando Banxico y la CNBV publiquen las reglas finales especificando el cronograma de implementación y la metodología de cálculo que 53 comentaristas señalaron como poco clara.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item has no observable next test"
+              ]
+            }
+          }
+        }
+      ],
+      "collection": {
+        "collectedAt": "2026-09-29T13:01:30.440Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "retailers-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": []
     }
   ]
 }
