@@ -1355,6 +1355,137 @@
         ]
       },
       "recoveries": []
+    },
+    {
+      "editorialDate": "2026-09-29",
+      "slot": "noon",
+      "candidateSignature": "673f6af5f4ff4833d9067228d4b9edc5ea53eddf24af646fc24e01f6e7641694",
+      "state": "failed",
+      "startedAt": "2026-09-29T16:01:29.623Z",
+      "completedAt": "2026-09-29T16:02:30.503Z",
+      "calls": 2,
+      "costUSD": 0.029953,
+      "artifactHash": "",
+      "reason": "all story drafts failed the deterministic evidence gate: n-285961094e38: dek: 3 sentences (cap 2); view: proposal or uncertainty became final in Spanish; watch: watch item has no observable next test | n-f6d16eb73906: dek: 3 sentences (cap 2); watch: watch item has no observable next test; background: needs an independent source when one is available | n-c53f9e8ab717: view: completed",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-285961094e38",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The Economy Ministry said Mexico prevailed in an international arbitration case filed by Doups Holdings LLC, a U.S. investor seeking more than 600 million pesos under NAFTA. The CIADI tribunal ruled it lacked jurisdiction to hear Doups's claims.",
+              "es": "La Secretaría de Economía informó que México prevaleció en un arbitraje internacional iniciado por Doups Holdings LLC, inversionista estadounidense que buscaba más de 600 millones de pesos conforme al TLCAN. El tribunal del CIADI determinó que carecía de jurisdicción.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "3 sentences (cap 2)"
+              ]
+            },
+            "view": {
+              "en": "Mexico's defense centered on procedural and jurisdictional defects rather than the merits of the parking meter concessions. The tribunal agreed, concluding that Doups had accepted being treated as Mexican with respect to its investment, had not proven control of subsidiary Pagomet, and could not claim the subsidiary's losses as its own.",
+              "es": "La defensa de México se centró en deficiencias procedimentales y de jurisdicción más que en el fondo de las concesiones. El tribunal estuvo de acuerdo y concluyó que Doups había aceptado ser considerada mexicana respecto de su inversión, no acreditó el control de Pagomet e incumplió requisitos procesales.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or uncertainty became final in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "The tribunal ruled in September 2026 that it lacked jurisdiction and dismissed the arbitration entirely. The next procedural window or appellate avenue is not stated in available records.",
+              "es": "El tribunal determinó en septiembre de 2026 que carecía de jurisdicción y desestimó el arbitraje en su totalidad. El siguiente paso procesal o vía de apelación no está consignado en registros disponibles.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item has no observable next test"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-f6d16eb73906",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The Mexican Bolsa climbed above 65,000 for the first time since September 8, with the IPC index rising 0.44% on September 29. FEMSA gained 1.64% to 215.66 pesos, while U.S. markets operated mixed.",
+              "es": "La Bolsa Mexicana subió por encima de 65,000 por primera vez desde el 8 de septiembre, con el IPC subiendo 0.44% el 29 de septiembre. FEMSA ganó 1.64% a 215.66 pesos, mientras que mercados estadounidenses operaron mixtos.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "3 sentences (cap 2)"
+              ]
+            },
+            "background": {
+              "en": "The IPC has followed a zigzag trend since September 24. Wall Street remained mixed that day, with the S&P 500 up 0.06%, the Nasdaq Composite up 0.07%, and the Dow Jones down 0.08%. Inflation pressure globally created caution among investors, though Mexican equities showed relative resilience.",
+              "es": "El IPC ha seguido una tendencia en zigzag desde el 24 de septiembre. Wall Street operó mixto ese día, con el S&P 500 al alza 0.06%, el Nasdaq Composite al alza 0.07%, y el Dow Jones a la baja 0.08%. La presión inflacionaria global creó cautela entre inversionistas, aunque acciones mexicanas mostraron resiliencia relativa.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            },
+            "watch": {
+              "en": "The Mexican market's narrow composition, with 35 listed companies in June 2026 concentrated in consumer staples and materials, means the IPC index reflects a limited portion of the economy and excludes startups, private manufacturers, and foreign-owned factories.",
+              "es": "La composición estrecha del mercado mexicano, con 35 empresas cotizadas en junio de 2026 concentradas en bienes de consumo y materiales, significa que el índice IPC refleja una porción limitada de la economía y excluye empresas emergentes, fabricantes privados y fábricas de capital extranjero.",
+              "refs": [
+                "standing:std-stock-market"
+              ],
+              "reasons": [
+                "watch item has no observable next test"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-c53f9e8ab717",
+          "reasons": [],
+          "fields": {
+            "view": {
+              "en": "The initiative argues the state may establish general principles that sports associations must observe. If approved as written, the Mexican Soccer Federation would retain the ability to define how competition operates but could no longer maintain a system without promotion and relegation. The legislature has not voted.",
+              "es": "La iniciativa argumenta que el Estado puede establecer principios generales que asociaciones deportivas deben observar. Si se aprueba como está redactada, la Federación Mexicana de Futbol retendría la capacidad de definir cómo opera la competencia pero ya no podría mantener un sistema sin ascenso y descenso. La legislatura aún no ha votado.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "completed action became non-final in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "No vote date has been set. The next legislative action on this bill and whether the Senate will move to a floor vote remain unknown.",
+              "es": "Ninguna fecha de votación ha sido fijada. La siguiente acción legislativa sobre este proyecto y si el Senado procederá a votación en pleno permanecen desconocidas.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or draft described as a completed action"
+              ]
+            }
+          }
+        }
+      ],
+      "collection": {
+        "collectedAt": "2026-09-29T16:01:29.623Z",
+        "aliveSources": 67,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "insightcrime-mx",
+          "retailers-mx",
+          "m4ec-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": []
     }
   ]
 }
