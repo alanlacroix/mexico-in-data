@@ -81,8 +81,8 @@ assert.match(workflow, /cron: '20 13 \* \* \*'/);
 
 const { publicationPlan } = await import('../publication-plan.mjs');
 const date = '2026-09-30';
-const plan = (event, rows = [], extra = {}) => publicationPlan({event, date, attempts: {attempts: rows}, ...extra});
-const attempt = (state, extra = {}) => ({editorialDate: date, slot: 'morning', state, ...extra});
+const plan = (event, rows = [], extra = {}) => publicationPlan({event, date, attempts: {attempts: rows}, edition: {editorialDate:date,artifactHash:'current'}, ...extra});
+const attempt = (state, extra = {}) => ({editorialDate: date, slot: 'morning', state, artifactHash:'current', ...extra});
 assert.deepEqual(plan('schedule'), {run: true, slot: 'morning', retry: false});
 assert.equal(plan('workflow_run').run, false, 'a code check alone never starts a new editorial attempt');
 assert.deepEqual(plan('workflow_run', [attempt('failed')]), {run: true, slot: 'morning', retry: true});
@@ -102,3 +102,16 @@ assert.equal(rejectedRelease.attempts[0].costUSD, 0.02);
 assert.equal(rejectedRelease.attempts[0].calls, 2);
 assert.equal(publicationPlan({event:'workflow_run',date,attempts:rejectedRelease}).retry, true);
 assert.ok(workflow.indexOf('node pipeline/record-release-failure.mjs') < workflow.indexOf('git add data/edition.json'));
+
+assert.equal(plan('workflow_run', [attempt('published')]).verify, true);
+assert.throws(() => plan('schedule', [attempt('published')], {edition:{editorialDate:date,artifactHash:'wrong'}}), /does not match/);
+const { claimDeploymentRetry } = await import('../claim-deployment-retry.mjs');
+const deploymentLedger = {attempts:[attempt('published', {calls:2,costUSD:0.03})]};
+claimDeploymentRetry(deploymentLedger,{editorialDate:date,artifactHash:'current'},'2026-09-30T14:00:00Z');
+assert.equal(deploymentLedger.attempts[0].costUSD,0.03);
+assert.throws(() => claimDeploymentRetry(deploymentLedger,{editorialDate:date,artifactHash:'current'}), /exhausted/);
+assert.throws(() => claimDeploymentRetry(deploymentLedger,{editorialDate:date,artifactHash:'wrong'}), /No published attempt/);
+assert.match(workflow, /steps.plan.outputs.verify == 'true'/);
+assert.match(workflow, /node pipeline\/claim-deployment-retry\.mjs/);
+
+assert.equal(plan('workflow_dispatch', [attempt('published')]).verify, true);
