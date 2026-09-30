@@ -17,8 +17,8 @@ assert.doesNotMatch(workflow, /^\s+push:/m, 'pushes must never trigger editorial
 assert.doesNotMatch(workflow, /build-happening|build-brief|translate-es|publication-status|publish-edition/);
 assert.match(workflow, /git add data\/edition\.json data\/edition-attempts\.json data\/llm-spend\.json data\/editions\/ data\/news\//,
   'a successful edition must commit its immutable history alongside the public artifact');
-assert.match(workflow, /EDITION_REQUIRE_REVIEW:\s*'1'/,
-  'the pilot workflow must route completed drafts to human review');
+assert.match(workflow, /EDITION_REQUIRE_REVIEW:\s*'0'/,
+  'authorized daily workflow publishes only after all gates pass');
 assert.match(workflow, /\$EDITION_STATE" = "review-required"[\s\S]*git add data\/candidates\/ data\/edition-attempts\.json data\/llm-spend\.json/,
   'a review-required edition must persist only its candidate and accounting receipts');
 assert.match(workflow, /Mark candidate as awaiting human review/);
@@ -71,3 +71,24 @@ assert.match(workflow, /persist-credentials:\s*false/);
 assert.doesNotMatch(read('.github/workflows/refresh.yml'), /github-script|issues:\s*write/);
 
 console.log('automation contract: ok');
+
+assert.match(workflow, /workflows: \[release-check\]/);
+assert.match(workflow, /github.event.workflow_run.conclusion == 'success'/);
+assert.match(workflow, /github.event.workflow_run.head_branch == 'main'/);
+assert.match(workflow, /node pipeline\/publication-plan\.mjs/);
+assert.match(workflow, /cron: '50 12 \* \* \*'/);
+assert.match(workflow, /cron: '20 13 \* \* \*'/);
+
+const { publicationPlan } = await import('../publication-plan.mjs');
+const date = '2026-09-30';
+const plan = (event, rows = [], extra = {}) => publicationPlan({event, date, attempts: {attempts: rows}, ...extra});
+const attempt = (state, extra = {}) => ({editorialDate: date, slot: 'morning', state, ...extra});
+assert.deepEqual(plan('schedule'), {run: true, slot: 'morning', retry: false});
+assert.equal(plan('workflow_run').run, false, 'a code check alone never starts a new editorial attempt');
+assert.deepEqual(plan('workflow_run', [attempt('failed')]), {run: true, slot: 'morning', retry: true});
+assert.deepEqual(plan('schedule', [attempt('failed', {slot: 'noon'})]), {run: true, slot: 'noon', retry: true});
+for (const state of ['published', 'review-required']) assert.equal(plan('workflow_run', [attempt(state)]).run, false);
+assert.throws(() => plan('schedule', [attempt('failed', {recoveries: [{}]})]), /exhausted/);
+assert.throws(() => plan('workflow_run', [attempt('started')]), /requires diagnosis/);
+assert.equal(plan('workflow_run', [attempt('failed', {editorialDate:'2026-09-29'})]).run, false);
+assert.deepEqual(plan('workflow_dispatch', [], {slot:'noon',retry:true}), {run:true,slot:'noon',retry:true});
