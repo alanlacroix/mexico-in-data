@@ -36,6 +36,20 @@ jobs:
       - name: Build and validate the production artifact
         run: npm run release
 
+      - name: Capture read-only source evidence for an unpublished day
+        continue-on-error: true
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: node pipeline/evidence-preview.mjs > /tmp/editorial-evidence.json
+
+      - name: Preserve recovery evidence briefly
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: editorial-evidence-${{ github.sha }}
+          path: /tmp/editorial-evidence.json
+          if-no-files-found: warn
+          retention-days: 1
+
       - name: Preserve the validated artifact for inspection
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
