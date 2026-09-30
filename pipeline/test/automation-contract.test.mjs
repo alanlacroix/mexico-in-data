@@ -88,7 +88,8 @@ assert.equal(plan('workflow_run').run, false, 'a code check alone never starts a
 assert.deepEqual(plan('workflow_run', [attempt('failed')]), {run: true, slot: 'morning', retry: true});
 assert.deepEqual(plan('schedule', [attempt('failed', {slot: 'noon'})]), {run: true, slot: 'noon', retry: true});
 for (const state of ['published', 'review-required']) assert.equal(plan('workflow_run', [attempt(state)]).run, false);
-assert.throws(() => plan('schedule', [attempt('failed', {recoveries: [{}]})]), /exhausted/);
+assert.deepEqual(plan('workflow_run', [attempt('failed', {recoveries: [{}]})]), {run:true,slot:'noon',retry:false});
+assert.throws(() => plan('schedule', [attempt('failed', {slot:'noon',recoveries: [{}]})]), /exhausted/);
 assert.throws(() => plan('workflow_run', [attempt('started')]), /requires diagnosis/);
 assert.equal(plan('workflow_run', [attempt('failed', {editorialDate:'2026-09-29'})]).run, false);
 assert.deepEqual(plan('workflow_dispatch', [], {slot:'noon',retry:true}), {run:true,slot:'noon',retry:true});
