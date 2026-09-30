@@ -92,3 +92,12 @@ assert.throws(() => plan('schedule', [attempt('failed', {recoveries: [{}]})]), /
 assert.throws(() => plan('workflow_run', [attempt('started')]), /requires diagnosis/);
 assert.equal(plan('workflow_run', [attempt('failed', {editorialDate:'2026-09-29'})]).run, false);
 assert.deepEqual(plan('workflow_dispatch', [], {slot:'noon',retry:true}), {run:true,slot:'noon',retry:true});
+
+const { recordReleaseFailure } = await import('../record-release-failure.mjs');
+const rejectedRelease = recordReleaseFailure({attempts:[attempt('published', {artifactHash:'abc',calls:2,costUSD:0.02})]}, date, 'morning');
+assert.equal(rejectedRelease.attempts[0].state, 'failed');
+assert.equal(rejectedRelease.attempts[0].artifactHash, '');
+assert.equal(rejectedRelease.attempts[0].costUSD, 0.02);
+assert.equal(rejectedRelease.attempts[0].calls, 2);
+assert.equal(publicationPlan({event:'workflow_run',date,attempts:rejectedRelease}).retry, true);
+assert.ok(workflow.indexOf('node pipeline/record-release-failure.mjs') < workflow.indexOf('git add data/edition.json'));

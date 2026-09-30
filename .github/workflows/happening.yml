@@ -84,6 +84,13 @@ jobs:
         continue-on-error: true
         run: npm run release
 
+      - name: Record release rejection as a failed attempt
+        if: always() && steps.edition.outputs.state == 'published' && steps.release.outcome != 'success'
+        env:
+          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date }}
+          PUBLICATION_SLOT: ${{ steps.edition.outputs.slot }}
+        run: node pipeline/record-release-failure.mjs
+
       - name: Persist the result without publishing partial work
         id: persist
         if: always() && steps.plan.outputs.run == 'true'
