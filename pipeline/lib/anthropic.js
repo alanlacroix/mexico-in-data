@@ -52,6 +52,7 @@ const EFFORT_MODELS = new Set([SONNET]);
 // LLM_BUDGET_OVERRIDE=1.
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const MONTHLY_CAP_USD = 6.0;
@@ -88,17 +89,27 @@ function pacedBudgetLimit(priority = 'standard') {
   return budgetLimit(priority) * (now.getUTCDate() / daysInMonth);
 }
 function readLedger() {
-  try { return JSON.parse(fs.readFileSync(LEDGER, 'utf8')); } catch { return {}; }
+  try {
+    const ledger = JSON.parse(fs.readFileSync(LEDGER, 'utf8'));
+    if (!ledger || typeof ledger !== 'object' || Array.isArray(ledger)
+      || Object.values(ledger).some(value => !Number.isFinite(value) || value < 0)) throw new Error('invalid spend ledger');
+    return ledger;
+  } catch (error) {
+    if (error.code === 'ENOENT' && process.env.GITHUB_ACTIONS !== 'true') return {};
+    throw new Error(`Cannot safely read LLM spend ledger: ${error.message}`);
+  }
 }
 function spentThisMonth() {
   return Number(readLedger()[monthKey()]) || 0;
 }
-function settle(costUSD) {
+function settle(costUSD, period = monthKey()) {
   const ledger = readLedger();
-  ledger[monthKey()] = Math.round(((Number(ledger[monthKey()]) || 0) + costUSD) * 1e6) / 1e6;
+  ledger[period] = Math.round(((Number(ledger[period]) || 0) + costUSD) * 1e6) / 1e6;
   // keep only the last 3 months so the file never grows
   for (const k of Object.keys(ledger)) if (k < monthKey() && Object.keys(ledger).length > 3) delete ledger[k];
-  try { fs.writeFileSync(LEDGER, `${JSON.stringify(ledger, null, 1)}\n`); } catch { /* read-only fs: skip */ }
+  const temporary = `${LEDGER}.${process.pid}.tmp`;
+  fs.writeFileSync(temporary, `${JSON.stringify(ledger, null, 1)}\n`);
+  fs.renameSync(temporary, LEDGER);
 }
 function budgetLimit(priority = 'standard') {
   const cap = MONTHLY_CAP_EXCEPTIONS[monthKey()] || MONTHLY_CAP_USD;
@@ -137,7 +148,7 @@ function projectedMaximumCost(body, modelId) {
 let _calls = 0;
 let _badRequests = 0;               // permanent request bugs (HTTP 400), reported by usage()
 const _tok = {};                         // model -> { in, out }
-let _serverCostUSD = 0;
+let _accountedUSD = 0; // Actual charges plus maximum reservations for ambiguous calls.
 const _budgetBlockedPriorities = new Set();
 
 export const hasLLM = () => !!KEY;
@@ -163,14 +174,12 @@ export function budgetStatus(priority = 'standard') {
 
 // Cumulative token usage and cost for the run, priced per model.
 export function usage() {
-  let input = 0, output = 0, costUSD = _serverCostUSD;
-  for (const [m, t] of Object.entries(_tok)) {
-    const rate = RATES[m] || RATES[SONNET];
+  let input = 0, output = 0;
+  for (const t of Object.values(_tok)) {
     input += t.in;
     output += t.out;
-    costUSD += (t.in / 1e6) * rate.in + (t.out / 1e6) * rate.out;
   }
-  return { calls: _calls, badRequests: _badRequests, input, output, costUSD, byModel: { ..._tok } };
+  return { calls: _calls, badRequests: _badRequests, input, output, costUSD: _accountedUSD, byModel: { ..._tok } };
 }
 
 // Ask the model for a JSON answer. With `schema`, structured outputs guarantee the
@@ -190,7 +199,7 @@ export function usage() {
 // This is not a quality knob turned down to save money. Extraction against an explicit
 // rubric is the case where low effort costs nothing real, and Sonnet 5 respects the
 // level strictly, which is exactly what a deterministic pass wants.
-export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL, effort, priority = 'standard', tools, returnMeta = false }) {
+export async function askJSON({ system, user, schema, maxTokens = 1500, model: modelId = DEFAULT_MODEL, effort, priority = 'standard', tools, returnMeta = false, onAccounting, maxCostUSD = Infinity }) {
   if (!KEY) return null;
   if (overBudget(priority)) {
     _budgetBlockedPriorities.add(priority);
@@ -201,6 +210,10 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
     console.warn(`  llm: ${reason} ($${status.spentUSD.toFixed(2)} spent; $${status.pacedLimitUSD.toFixed(2)} available by today) — skipping ${priority} call`);
     return null;
   }
+  if (!Number.isSafeInteger(maxTokens) || maxTokens < 1) throw new Error('Invalid output token bound');
+  if (!RATES[modelId]) throw new Error('Unsupported model billing rate');
+  if ((tools || []).some(tool => !/^web_search_/.test(String(tool?.type || ''))
+    || !Number.isSafeInteger(tool.max_uses) || tool.max_uses < 1)) throw new Error('Unsupported tool billing bound');
   const body = {
     model: modelId,
     max_tokens: maxTokens,
@@ -223,13 +236,29 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
   }
   if (!process.env.LLM_BUDGET_OVERRIDE) {
     const status = budgetStatus(priority);
-    const projectedUSD = projectedMaximumCost(body, modelId);
+    const projectedUSD = Math.ceil(projectedMaximumCost(body, modelId) * 1e6) / 1e6;
     if (status.spentUSD + projectedUSD > status.pacedLimitUSD) {
       _budgetBlockedPriorities.add(priority);
       console.warn(`  llm: call could exceed ${priority} monthly pace ($${status.spentUSD.toFixed(2)} spent + up to $${projectedUSD.toFixed(2)}; $${status.pacedLimitUSD.toFixed(2)} available by today) — skipping`);
       return null;
     }
   }
+  // Reserve before sending. In production the callback must also push the spend and
+  // attempt receipts; a killed runner then leaves a conservative durable charge.
+  // Never infer that a timeout, HTTP error or unreadable body was free.
+  if (process.env.GITHUB_ACTIONS === 'true' && typeof onAccounting !== 'function') {
+    throw new Error('CI model calls require durable accounting');
+  }
+  const reservedUSD = Math.ceil(projectedMaximumCost(body, modelId) * 1e6) / 1e6;
+  const receipt = { id: crypto.randomUUID(), period: monthKey(), model: modelId, reservedUSD, accountedUSD: reservedUSD, state: 'reserved' };
+  if (reservedUSD > maxCostUSD) {
+    console.warn('  llm: exact request reservation exceeds remaining call allowance');
+    return null;
+  }
+  settle(reservedUSD, receipt.period);
+  _accountedUSD = Math.round((_accountedUSD + reservedUSD) * 1e6) / 1e6;
+  _calls++;
+  if (onAccounting) await onAccounting({ ...receipt });
   let r;
   try {
     r = await fetch(ENDPOINT, {
@@ -262,15 +291,28 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
   }
   const j = await r.json().catch(() => null);
   if (!j) return null;
-  _calls++;
+  // Missing or malformed usage cannot safely refund a potentially billed call.
+  const u = j.usage;
+  if (!u || !Number.isSafeInteger(u.input_tokens) || u.input_tokens < 0
+    || !Number.isSafeInteger(u.output_tokens) || u.output_tokens < 0
+    || Number(u.cache_creation_input_tokens || 0) !== 0 || Number(u.cache_read_input_tokens || 0) !== 0
+    || (u.server_tool_use?.web_search_requests !== undefined
+      && (!Number.isSafeInteger(u.server_tool_use.web_search_requests) || u.server_tool_use.web_search_requests < 0))) {
+    console.warn('  llm: missing or unsupported usage; retaining maximum reservation');
+    return null;
+  }
+  const rate = RATES[modelId] || RATES[SONNET];
+  const actualUSD = Math.ceil(((u.input_tokens * rate.in + u.output_tokens * rate.out) / 1e6
+    + (u.server_tool_use?.web_search_requests || 0) * WEB_SEARCH_REQUEST_USD) * 1e6) / 1e6;
   const bucket = (_tok[modelId] ||= { in: 0, out: 0 });
-  bucket.in += j.usage?.input_tokens || 0;
-  bucket.out += j.usage?.output_tokens || 0;
-  {
-    const rate = RATES[modelId] || RATES[SONNET];
-    const searchCost = (Number(j.usage?.server_tool_use?.web_search_requests) || 0) * WEB_SEARCH_REQUEST_USD;
-    _serverCostUSD += searchCost;
-    settle(((j.usage?.input_tokens || 0) / 1e6) * rate.in + ((j.usage?.output_tokens || 0) / 1e6) * rate.out + searchCost);
+  bucket.in += u.input_tokens;
+  bucket.out += u.output_tokens;
+  settle(actualUSD - reservedUSD, receipt.period);
+  _accountedUSD = Math.round((_accountedUSD + actualUSD - reservedUSD) * 1e6) / 1e6;
+  if (onAccounting) await onAccounting({ ...receipt, accountedUSD: actualUSD, state: 'settled' });
+  if (actualUSD > reservedUSD) {
+    _budgetBlockedPriorities.add(priority);
+    throw new Error('Provider usage exceeded maximum reservation');
   }
   if (j.stop_reason === 'refusal') { console.warn('  llm: refusal'); return null; }
   const txt = (j.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');

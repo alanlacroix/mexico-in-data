@@ -5,6 +5,25 @@ import path from 'node:path';
 import newsDay from './lib/news-day.cjs';
 import attemptsContract from './lib/edition-attempts.cjs';
 
+// Shared workflow concurrency guarantees the previous production runner has exited.
+// Only the new durable protocol proves its unknown bill is already accounted for;
+// legacy incomplete attempts still require diagnosis rather than a guessed refund.
+export function recoverInterruptedAttempts(attempts, date, runId, runAttempt = '1') {
+  if (!runId) throw new Error('Interrupted-attempt recovery requires the current workflow run');
+  for (const row of attemptsContract.readAttempts(attempts).attempts) {
+    if (row.editorialDate !== date || row.state !== 'started') continue;
+    const accounting = row.modelAccounting;
+    if (accounting?.version !== 1 || !/^\d+$/.test(accounting.runId || '')
+      || (accounting.runId === String(runId) && String(accounting.runAttempt || '1') === String(runAttempt)) || !accounting.receipts?.length
+      || accounting.receipts.some(receipt => !Number.isFinite(receipt.accountedUSD) || receipt.accountedUSD < 0)
+      || Number(row.costUSD) + 0.000001 < accounting.receipts.reduce((sum, receipt) => sum + receipt.accountedUSD, 0)) continue;
+    row.state = 'failed';
+    row.reason = 'Previous runner interrupted; maximum charges retained for unsettled model calls';
+    row.completedAt = new Date().toISOString();
+  }
+  return attempts;
+}
+
 export function publicationPlan({ event, date, attempts, slot = 'morning', retry = false, edition }) {
   if (!['morning', 'noon'].includes(slot)) throw new Error('Invalid publication slot');
   const rows = attemptsContract.readAttempts(attempts).attempts.filter(row => row.editorialDate === date);
@@ -40,10 +59,15 @@ export function publicationPlan({ event, date, attempts, slot = 'morning', retry
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const data = new URL('../data/edition-attempts.json', import.meta.url);
   const edition = JSON.parse(fs.readFileSync(new URL('../data/edition.json', import.meta.url), 'utf8'));
+  const date = newsDay.editorialDay(new Date());
+  let attempts = attemptsContract.readAccountingAttempts(JSON.parse(fs.readFileSync(data, 'utf8')));
+  if (process.env.GITHUB_ACTIONS === 'true') {
+    attempts = recoverInterruptedAttempts(attempts, date, process.env.GITHUB_RUN_ID, process.env.GITHUB_RUN_ATTEMPT);
+    fs.writeFileSync(data, `${JSON.stringify(attempts, null, 2)}\n`);
+  }
   const plan = publicationPlan({
     edition,
-    event: process.env.TRIGGER_EVENT, date: newsDay.editorialDay(new Date()),
-    attempts: JSON.parse(fs.readFileSync(data, 'utf8')),
+    event: process.env.TRIGGER_EVENT, date, attempts,
     slot: process.env.REQUESTED_SLOT || 'morning', retry: process.env.REQUESTED_RECOVERY === 'true',
   });
   const output = `run=${plan.run}\nslot=${plan.slot}\nretry=${plan.retry ? '1' : '0'}\nverify=${Boolean(plan.verify)}\neditorial_date=${edition.editorialDate}\nartifact_hash=${edition.artifactHash}\n`;

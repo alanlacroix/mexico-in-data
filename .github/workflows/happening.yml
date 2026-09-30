@@ -66,11 +66,21 @@ jobs:
           REQUESTED_RECOVERY: ${{ inputs.retry_failed && 'true' || 'false' }}
         run: node pipeline/publication-plan.mjs
 
+      - name: Prepare durable model accounting
+        if: steps.plan.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "mexico-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          gh auth setup-git
+
       - name: Build one atomic bilingual edition
         id: edition
         if: steps.plan.outputs.run == 'true'
         continue-on-error: true
         env:
+          GH_TOKEN: ${{ github.token }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PUBLICATION_SLOT: ${{ steps.plan.outputs.slot }}
           EDITION_REQUIRE_REVIEW: '0'

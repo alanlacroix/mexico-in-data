@@ -13,6 +13,9 @@ globalThis.fetch = async (_url, init) => {
   sent.push(JSON.parse(init.body));
   return response();
 };
+// This legacy request-shape fixture uses a temporary local ledger. Production
+// durability and CI callbacks are exercised by durable-accounting.test.mjs.
+delete process.env.GITHUB_ACTIONS;
 process.env.ANTHROPIC_API_KEY = 'test-key';
 process.env.LLM_BUDGET_OVERRIDE = '1';
 process.env.LLM_BUDGET_DATE = '2026-08-10T12:00:00Z';
