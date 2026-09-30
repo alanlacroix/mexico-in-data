@@ -1618,28 +1618,38 @@
       "slot": "noon",
       "candidateSignature": "d250aa031023d81ae622f71aa51c83017015f29f74c60d1851d12f20d099edd9",
       "state": "failed",
-      "startedAt": "2026-09-30T14:16:27.200Z",
-      "completedAt": "2026-09-30T14:17:17.912Z",
-      "calls": 1,
+      "startedAt": "2026-09-30T14:23:07.260Z",
+      "completedAt": "2026-09-30T14:23:24.378Z",
+      "calls": 2,
       "costUSD": 0.078789,
       "artifactHash": "",
-      "reason": "model call 1 returned no usable result",
+      "reason": "core LLM request rejected with HTTP 400: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The compiled grammar is too large, which would cause performance issues. Simplify your tool schemas or reduce the",
       "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-09-30T14:16:27.200Z",
-        "aliveSources": 68,
+        "collectedAt": "2026-09-30T14:23:07.260Z",
+        "aliveSources": 67,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
           "insightcrime-mx",
+          "t21",
           "retailers-mx",
           "m4ec-mx",
           "nexos"
         ]
       },
-      "recoveries": []
+      "recoveries": [
+        {
+          "startedAt": "2026-09-30T14:16:27.200Z",
+          "completedAt": "2026-09-30T14:17:17.912Z",
+          "calls": 1,
+          "costUSD": 0.078789,
+          "reason": "model call 1 returned no usable result",
+          "diagnostics": []
+        }
+      ]
     }
   ]
 }
