@@ -33,8 +33,8 @@ const englishFinalText = (value) => String(value || '').replace(/\bif\s+approved
 const OPPOSITE_ACTIONS = [
   {
     label: 'increase/decrease',
-    enPositive: /\b(?:rise|rises|rose|risen|increase[ds]?|increasing|grow(?:s|ing)?|grew|grown|expand(?:s|ed|ing)?|raise[ds]?|raising|higher)\b/i,
-    enNegative: /\b(?:fall|falls|fell|fallen|decrease[ds]?|decreasing|decline[ds]?|declining|drop(?:s|ped|ping)?|shrink(?:s|ing)?|shrank|reduce[ds]?|reducing|cut(?:s|ting)?|lower)\b/i,
+    enPositive: /\b(?:rise|rises|rising|rose|risen|increase[ds]?|increasing|grow(?:s|ing)?|grew|grown|expand(?:s|ed|ing)?|raise[ds]?|raising|higher)\b/i,
+    enNegative: /\b(?:fall|falls|fell|fallen|decrease[ds]?|decreasing|decline[ds]?|declining|drop(?:s|ped|ping)?|shrink(?:s|ing)?|shrank|reduce[ds]?|reducing|cut(?:s|ting)?|lower(?:s|ed|ing)?)\b/i,
     esPositive: /\b(?:subir|sube|subio|subieron|aumentar|aumenta|aumento|aumentaron|crecer|crece|crecio|crecieron|expandir|expande|expandio|elevar|eleva|elevo|incrementar|incrementa|incremento|mayor|mas alto|al alza)\b/i,
     esNegative: /\b(?:caer|cae|cayo|cayeron|bajar|baja|bajo|bajaron|disminuir|disminuye|disminuyo|disminuyeron|descender|desciende|descendio|declinar|declina|declino|reducir|reduce|redujo|redujeron|recortar|recorta|recorto|menor|mas bajo|a la baja)\b/i,
   },

@@ -86,3 +86,9 @@ for (const [english, spanish] of [
 }
 
 console.log('bilingual-fidelity tests: ok');
+
+assert.deepEqual(bilingualFidelityFlags({
+  english:'A stronger peso lowers import costs. The morning rise offers relief.',
+  spanish:'Un peso más fuerte reduce el costo de las importaciones. El avance matutino ofrece alivio.',
+}), [], 'mixed-direction context must recognize lowers as well as lower');
+assert.ok(bilingualFidelityFlags({english:'The price is rising.',spanish:'El precio baja.'}).some(flag=>flag.includes('direction reversed')));

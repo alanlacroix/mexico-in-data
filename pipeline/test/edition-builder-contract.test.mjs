@@ -125,6 +125,22 @@ assert.ok(exactSchema.properties.stories.items.required.includes('es'));
 assert.ok(JSON.stringify(exactSchema).length < 1600, 'avoid compiled-grammar explosion from duplicated story objects');
 assert.equal((builder.match(/model: models.SONNET, effort: 'low'/g) || []).length, 2,
   'bounded evidence-writing calls must not inherit high reasoning that consumes the whole output allowance');
-assert.match(builder, /spent \+ estimate\(selectedModel\) > dayLimit/);
+assert.match(builder, /spent \+ estimate\(selectedModel\) \+ reservedAuditUSD > dayLimit/);
 assert.match(builder, /selectedModel = models.HAIKU/);
 assert.match(builder, /allowedNumericValues: unsupportedNumericTokens/);
+
+assert.equal((builder.match(/reserveUSD: reservedAuditUSD/g) || []).length,2);
+assert.match(builder, /spent \+ projected \+ reservedAuditUSD > dayLimit/);
+assert.match(builder, /exceeds the bounded audit field length/);
+assert.match(builder, /evidenceRefs: draft\[/);
+assert.doesNotMatch(builder, /text, position.*draft\[/, 'audit evidence IDs must not depend on reference order');
+
+assert.match(builder, /projected \+ reservedAuditUSD > monthlyRemaining/);
+const { deterministicDraftCheck } = await import('../build-edition.mjs');
+const longField = 'é'.repeat(310);
+const oversized = {es:{}};
+for(const field of ['headline','dek','background','view','watch']) {
+  oversized[field]=longField;oversized.es[field]=longField;oversized[`${field}Refs`]=['article'];
+}
+assert.ok(deterministicDraftCheck({evidence:[{id:'article',text:longField}]},oversized).some(flag=>flag.includes('bounded audit field length')),
+  'audit bound counts actual JSON UTF-8 bytes, not character count');

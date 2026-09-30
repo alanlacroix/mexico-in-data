@@ -153,21 +153,25 @@ jobs:
 
       - name: Verify the exact artifact reached production
         id: production
-        if: steps.persist.outputs.published == 'true'
+        if: steps.persist.outputs.published == 'true' || steps.plan.outputs.verify == 'true'
         continue-on-error: true
         env:
-          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date }}
-          ARTIFACT_HASH: ${{ steps.edition.outputs.artifact_hash }}
+          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date || steps.plan.outputs.editorial_date }}
+          ARTIFACT_HASH: ${{ steps.edition.outputs.artifact_hash || steps.plan.outputs.artifact_hash }}
         run: node pipeline/verify-production.mjs
 
       - name: Retry deployment once without rerunning editorial generation
-        if: steps.persist.outputs.published == 'true' && steps.production.outcome == 'failure'
+        if: (steps.persist.outputs.published == 'true' || steps.plan.outputs.verify == 'true') && steps.production.outcome == 'failure'
         env:
-          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date }}
-          ARTIFACT_HASH: ${{ steps.edition.outputs.artifact_hash }}
+          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date || steps.plan.outputs.editorial_date }}
+          ARTIFACT_HASH: ${{ steps.edition.outputs.artifact_hash || steps.plan.outputs.artifact_hash }}
           GH_TOKEN: ${{ github.token }}
         run: |
           gh auth setup-git
-          git commit --allow-empty -m "deploy: retry edition ${EDITORIAL_DATE} ${ARTIFACT_HASH}"
+          git config user.name mexico-data-bot
+          git config user.email actions@users.noreply.github.com
+          node pipeline/claim-deployment-retry.mjs
+          git add data/edition-attempts.json
+          git commit -m "deploy: retry edition ${EDITORIAL_DATE} ${ARTIFACT_HASH}"
           git push origin HEAD:main
           node pipeline/verify-production.mjs

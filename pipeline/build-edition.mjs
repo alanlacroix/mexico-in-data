@@ -402,6 +402,9 @@ function deterministicDraftCheck(row, draft) {
   for (const [field, refField, maxWords, maxSentences, role] of checks) {
     if (!validRefs(row, draft[refField])) { flags.push(`${field}: invalid evidence references`); continue; }
     const inputs = citedInputs(row, draft[refField]);
+    if ([draft[field], draft?.es?.[field]].some((text) => new TextEncoder().encode(JSON.stringify(clean(text))).byteLength > 600)) {
+      flags.push(`${field}: exceeds the bounded audit field length`);
+    }
     const result = role === 'report'
       ? lintReportText({ text: draft[field], inputs, maxWords, maxSentences })
       : lintAnalysisText({
@@ -626,14 +629,16 @@ async function main() {
   let failureDiagnostics = [];
   try {
     if (!universe.length) throw new Error('no eligible candidates');
-    const { askJSON, hasLLM, models, usage } = await import('./lib/anthropic.js');
+    const { askJSON, hasLLM, models, usage, budgetStatus } = await import('./lib/anthropic.js');
     if (!hasLLM()) throw new Error('ANTHROPIC_API_KEY is missing');
     const priorDailySpend = dateSpend(attempts, editorialDate);
     const dayLimit = dailyLimit(editorialDate, MONTHLY_LIMIT);
     const call = async (request) => {
       if (callCount >= MAX_MODEL_CALLS) throw new Error(`model call limit ${MAX_MODEL_CALLS} reached`);
-      const inputBytes = new TextEncoder().encode(`${request.system}\n${request.user}`).byteLength + 1024;
+      const inputBytes = new TextEncoder().encode(JSON.stringify({ system: request.system, user: request.user, schema: request.schema })).byteLength + 1024;
       const spent = priorDailySpend + (Number(usage().costUSD) || 0);
+      const reservedAuditUSD = Number(request.reserveUSD) || 0;
+      const monthlyRemaining = budgetStatus('core').pacedRemainingUSD;
       let selectedModel = request.model || models.HAIKU;
       const estimate = (model) => {
         const rates = model === models.SONNET ? { input: 3, output: 15 } : { input: 1, output: 5 };
@@ -641,12 +646,12 @@ async function main() {
       };
       // Prefer the stronger evidence writer only when its maximum bill fits.
       // The mechanical writer remains subject to the exact same evidence/audit gates.
-      if (selectedModel === models.SONNET && spent + estimate(selectedModel) > dayLimit) {
+      if (selectedModel === models.SONNET && (spent + estimate(selectedModel) + reservedAuditUSD > dayLimit || estimate(selectedModel) + reservedAuditUSD > monthlyRemaining)) {
         selectedModel = models.HAIKU;
         console.warn('  daily budget: using bounded mechanical drafting with full evidence gates');
       }
       const projected = estimate(selectedModel);
-      if (spent + projected > dayLimit) throw new Error(`daily model budget would be exceeded (${spent.toFixed(4)} + ${projected.toFixed(4)} > ${dayLimit.toFixed(4)})`);
+      if (spent + projected + reservedAuditUSD > dayLimit || projected + reservedAuditUSD > monthlyRemaining) throw new Error(`daily model budget would be exceeded (${spent.toFixed(4)} + ${projected.toFixed(4)} > ${dayLimit.toFixed(4)})`);
       callCount += 1;
       const result = await askJSON({ ...request, model: selectedModel, priority: 'core' });
       if (!result) throw new Error(`model call ${callCount} returned no usable result`);
@@ -690,6 +695,12 @@ async function main() {
       throw new Error(`no ranked exact-day development has enough evidence for Briefly Explained: ${withoutContext.map((row) => storyId(row.item)).join(', ').slice(0, 300)}`);
     }
 
+    // Reserve the mandatory Haiku audit before spending on writing/repair. Evidence
+    // is sent once per row, and the deterministic 600-byte JSON-field ceiling bounds
+    // both languages. Extra bytes cover refs, JSON framing and the audit instruction.
+    const auditEvidenceBytes = new TextEncoder().encode(JSON.stringify(locked.map((row) => row.evidence))).byteLength;
+    const reservedAuditUSD = (auditEvidenceBytes + locked.length * 5 * 2 * 600 + 8192) / 1e6 + 1800 * 5 / 1e6;
+
     let draftResponse = await call({
       system: `${DRAFT_GATE_CONTRACT}\n\n${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\n${ANALYSIS_SHAPE}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Before returning, verify every headline is at most 20 English words and 24 Spanish words, every dek is at most two sentences, every analysis field is at most three sentences, no field uses a semicolon, and every number appears in its cited evidence. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: explain a supported connection to earlier developments when prior-article-body evidence is present, otherwise supply only the context needed to understand this change. Never imply earlier MexicoBrief coverage unless a prior source was actually retrieved. If evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Our view: a narrow business implication supported by its citations, naming the affected kind of business where the evidence permits, without first person. Do not convert activity into demand, investment pledges into completed investment, or proposals into rules in force. Multiple articles may repeat one source; never imply independent confirmation from source count. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
       user: JSON.stringify(locked.map((row) => ({
@@ -699,7 +710,7 @@ async function main() {
         evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
         ...(isRecovery ? { previousRejection: arr(priorSlotAttempt.diagnostics).find((item) => item.storyId === storyId(row.item)) || null } : {}),
       }))),
-      schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: 4000,
+      schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: 4000, reserveUSD: reservedAuditUSD,
     });
     const expectedDrafts = new Set(locked.map((row) => row.index));
     const evaluateDrafts = (response) => {
@@ -742,7 +753,7 @@ async function main() {
           evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
           rejected: evaluated.rejectionDiagnostics.find((item) => item.storyId === storyId(row.item)) || null,
         }))),
-        schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: 4000,
+        schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: 4000, reserveUSD: reservedAuditUSD,
       });
       evaluated = evaluateDrafts(draftResponse);
     }
@@ -753,12 +764,13 @@ async function main() {
     }
 
     const auditResponse = await call({
-      system: `You are the final independent evidence and bilingual editor. Review each English field only against the exact evidence cited for that field. Independently compare its Spanish translation with both the English field and the same cited evidence. Reject unsupported actors, numbers, comparisons, causal claims, procedural stages, predictions, non sequiturs, mistranslations, reversed actions, changed subjects, or changed degrees of certainty in either language. Do not reject a clearly labeled narrow inference merely for being an inference. Do not rewrite either language. Return one verdict for every input index.`,
+      system: `You are the final independent evidence and bilingual editor. Review each English field only against the records identified by its evidenceRefs in that input’s evidence list. Independently compare its Spanish translation with both the English field and the same cited evidence. Reject unsupported actors, numbers, comparisons, causal claims, procedural stages, predictions, non sequiturs, mistranslations, reversed actions, changed subjects, or changed degrees of certainty in either language. Do not reject a clearly labeled narrow inference merely for being an inference. Do not rewrite either language. Return one verdict for every input index.`,
       user: JSON.stringify(deterministicPass.map(({ row, draft }) => ({
         i: row.index,
+        evidence: row.evidence.map(({ id, text }) => ({ id, text })),
         fields: Object.fromEntries(['headline', 'dek', 'background', 'view', 'watch'].map((field) => [field, {
           english: draft[field], spanish: draft.es[field],
-          evidence: citedInputs(row, draft[`${field}Refs`]).map((text, position) => ({ id: draft[`${field}Refs`][position], text })),
+          evidenceRefs: draft[`${field}Refs`],
         }])),
       }))),
       schema: auditSchema(), maxTokens: 1800,
