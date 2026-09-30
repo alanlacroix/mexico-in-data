@@ -14,7 +14,14 @@ export function publicationPlan({ event, date, attempts, slot = 'morning', retry
   const failed = rows.filter(row => row.state === 'failed')
     .sort((a, b) => Number(b.slot === 'noon') - Number(a.slot === 'noon'))[0];
   if (failed) {
-    if ((failed.recoveries || []).length >= attemptsContract.MAX_RECOVERY_RUNS) throw new Error(`Bounded recovery exhausted: ${date}/${failed.slot}`);
+    if ((failed.recoveries || []).length >= attemptsContract.MAX_RECOVERY_RUNS) {
+      // The separate noon attempt is already part of the daily budget contract.
+      // Once morning recovery is exhausted, it is the only remaining bounded path.
+      if (failed.slot === 'morning' && !rows.some(row => row.slot === 'noon')) {
+        return { run: true, slot: 'noon', retry: false };
+      }
+      throw new Error(`Bounded recovery exhausted: ${date}/${failed.slot}`);
+    }
     return { run: true, slot: failed.slot, retry: true };
   }
   if (rows.some(row => row.state === 'started')) throw new Error(`Incomplete edition attempt requires diagnosis: ${date}`);

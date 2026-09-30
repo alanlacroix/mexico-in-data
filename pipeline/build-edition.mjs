@@ -177,7 +177,7 @@ function rankSchema() {
 // Otherwise the repair is asked to fix symptoms without knowing the release gate.
 const DRAFT_GATE_CONTRACT = `Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. If the evidence cannot support a required field, leave it empty for rejection.`;
 
-function draftSchema() {
+function draftSchema(indices) {
   const refs = { type: 'array', items: { type: 'string' } };
   const translation = {
     type: 'object', additionalProperties: false,
@@ -198,7 +198,12 @@ function draftSchema() {
       es: translation,
     },
   };
-  return { type: 'object', additionalProperties: false, required: ['stories'], properties: { stories: { type: 'array', items: item } } };
+  return { type: 'object', additionalProperties: false, required: ['stories'], properties: { stories: {
+    type: 'object', additionalProperties: false, required: indices.map(String),
+    properties: Object.fromEntries(indices.map((index) => [String(index), {
+      ...item, properties: { ...item.properties, i: { type: 'integer', enum: [index] } },
+    }])),
+  } } };
 }
 function auditSchema() {
   return {
@@ -633,11 +638,13 @@ async function main() {
     const call = async (request) => {
       if (callCount >= MAX_MODEL_CALLS) throw new Error(`model call limit ${MAX_MODEL_CALLS} reached`);
       const inputBytes = new TextEncoder().encode(`${request.system}\n${request.user}`).byteLength + 1024;
-      const projected = inputBytes / 1e6 + (Number(request.maxTokens) || 0) * 5 / 1e6;
+      const selectedModel = request.model || models.HAIKU;
+      const rates = selectedModel === models.SONNET ? { input: 3, output: 15 } : { input: 1, output: 5 };
+      const projected = (inputBytes * rates.input + (Number(request.maxTokens) || 0) * rates.output) / 1e6;
       const spent = priorDailySpend + (Number(usage().costUSD) || 0);
       if (spent + projected > dayLimit) throw new Error(`daily model budget would be exceeded (${spent.toFixed(4)} + ${projected.toFixed(4)} > ${dayLimit.toFixed(4)})`);
       callCount += 1;
-      const result = await askJSON({ ...request, model: models.HAIKU, priority: 'core' });
+      const result = await askJSON({ ...request, model: selectedModel, priority: 'core' });
       if (!result) throw new Error(`model call ${callCount} returned no usable result`);
       return result;
     };
@@ -687,14 +694,14 @@ async function main() {
         evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
         ...(isRecovery ? { previousRejection: arr(priorSlotAttempt.diagnostics).find((item) => item.storyId === storyId(row.item)) || null } : {}),
       }))),
-      schema: draftSchema(), maxTokens: 6500,
+      schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, maxTokens: 4000,
     });
     const expectedDrafts = new Set(locked.map((row) => row.index));
     const evaluateDrafts = (response) => {
       const draftRejects = [];
       const rejectionDiagnostics = [];
       const draftByIndex = new Map();
-      for (const draft of arr(response.stories)) {
+      for (const draft of Object.values(response.stories || {})) {
         const index = Number(draft?.i);
         if (!expectedDrafts.has(index)) { draftRejects.push(`unexpected draft index ${Number.isFinite(index) ? index : '?'}`); continue; }
         if (draftByIndex.has(index)) { draftRejects.push(`duplicate draft index ${index}`); continue; }
@@ -729,7 +736,7 @@ async function main() {
           evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
           rejected: evaluated.rejectionDiagnostics.find((item) => item.storyId === storyId(row.item)) || null,
         }))),
-        schema: draftSchema(), maxTokens: 6500,
+        schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, maxTokens: 4000,
       });
       evaluated = evaluateDrafts(draftResponse);
     }

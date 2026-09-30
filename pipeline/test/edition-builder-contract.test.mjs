@@ -78,6 +78,8 @@ for (const text of [
   'The U.S. investor filed a claim. The tribunal dismissed it.',
   'Acciones mexicanas caen ante tensiones entre EE.UU. e Irán',
   'El comercio con EE. UU. creció.',
+  'The peso gained at 7:12 a.m. local time.',
+  'El peso subió a las 7:12 p.m. hora local.',
 ]) {
   assert.equal(lintReportText({ text, inputs: [text], maxSentences: text.startsWith('The') ? 2 : 1 }).ok, true, text);
 }
@@ -113,3 +115,12 @@ try {
     assert.equal(fs.readFileSync(attemptsFile, 'utf8'), beforeAttempts);
   }
 } finally { fs.rmSync(root, { recursive: true, force: true }); }
+
+assert.match(builder, /required: indices.map\(String\)/, 'every locked story has a required structured-output key');
+assert.match(builder, /model: models.SONNET/, 'draft quality uses the evidence-writing model');
+assert.match(builder, /input: 3, output: 15/, 'daily cap must price the selected model conservatively');
+const schemaSource = builder.slice(builder.indexOf('function draftSchema('), builder.indexOf('function auditSchema('));
+const exactSchema = new Function(`${schemaSource}; return draftSchema([0, 3]);`)();
+assert.deepEqual(exactSchema.properties.stories.required, ['0', '3']);
+assert.deepEqual(exactSchema.properties.stories.properties['3'].properties.i.enum, [3]);
+assert.equal(exactSchema.properties.stories.additionalProperties, false);

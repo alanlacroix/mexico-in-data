@@ -14,7 +14,7 @@ const HASDATE = /\b(20\d{2}|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|W\d{
 // Country abbreviations are not sentence boundaries. Keep the same conservative
 // punctuation split, but protect the two forms used by our bilingual reporting.
 const sentences = (s) => String(s || '')
-  .replace(/\b(?:U\.S\.|EE\.\s?UU\.)/g, (match) => match.replace(/\./g, '\uE000'))
+  .replace(/\b(?:U\.S\.|EE\.\s?UU\.|[ap]\.m\.)/g, (match) => match.replace(/\./g, '\uE000'))
   .split(/[.!?]+(?=\s|$)/)
   .map((x) => x.replace(/\uE000/g, '.').trim()).filter(Boolean);
 const hasNumber = (s) => /\d/.test(s || '') || /\b(one|two|three|four|five|six|seven|eight|nine|ten|dozen|record|first|half|double|triple)\b/i.test(s || '');
