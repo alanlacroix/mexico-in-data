@@ -124,3 +124,8 @@ const exactSchema = new Function(`${schemaSource}; return draftSchema([0, 3]);`)
 assert.deepEqual(exactSchema.properties.stories.required, ['0', '3']);
 assert.deepEqual(exactSchema.properties.stories.properties['3'].properties.i.enum, [3]);
 assert.equal(exactSchema.properties.stories.additionalProperties, false);
+assert.equal((builder.match(/model: models.SONNET, effort: 'low'/g) || []).length, 2,
+  'bounded evidence-writing calls must not inherit high reasoning that consumes the whole output allowance');
+assert.match(builder, /spent \+ estimate\(selectedModel\) > dayLimit/);
+assert.match(builder, /selectedModel = models.HAIKU/);
+assert.match(builder, /allowedNumericValues: unsupportedNumericTokens/);

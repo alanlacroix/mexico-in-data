@@ -175,7 +175,7 @@ function rankSchema() {
 }
 // Use the same hard requirements on the initial draft and the bounded repair.
 // Otherwise the repair is asked to fix symptoms without knowing the release gate.
-const DRAFT_GATE_CONTRACT = `Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. If the evidence cannot support a required field, leave it empty for rejection.`;
+const DRAFT_GATE_CONTRACT = `Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. The allowedNumericValues list is a literal-value checklist, not independent evidence. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. If the evidence cannot support a required field, leave it empty for rejection.`;
 
 function draftSchema(indices) {
   const refs = { type: 'array', items: { type: 'string' } };
@@ -638,10 +638,19 @@ async function main() {
     const call = async (request) => {
       if (callCount >= MAX_MODEL_CALLS) throw new Error(`model call limit ${MAX_MODEL_CALLS} reached`);
       const inputBytes = new TextEncoder().encode(`${request.system}\n${request.user}`).byteLength + 1024;
-      const selectedModel = request.model || models.HAIKU;
-      const rates = selectedModel === models.SONNET ? { input: 3, output: 15 } : { input: 1, output: 5 };
-      const projected = (inputBytes * rates.input + (Number(request.maxTokens) || 0) * rates.output) / 1e6;
       const spent = priorDailySpend + (Number(usage().costUSD) || 0);
+      let selectedModel = request.model || models.HAIKU;
+      const estimate = (model) => {
+        const rates = model === models.SONNET ? { input: 3, output: 15 } : { input: 1, output: 5 };
+        return (inputBytes * rates.input + (Number(request.maxTokens) || 0) * rates.output) / 1e6;
+      };
+      // Prefer the stronger evidence writer only when its maximum bill fits.
+      // The mechanical writer remains subject to the exact same evidence/audit gates.
+      if (selectedModel === models.SONNET && spent + estimate(selectedModel) > dayLimit) {
+        selectedModel = models.HAIKU;
+        console.warn('  daily budget: using bounded mechanical drafting with full evidence gates');
+      }
+      const projected = estimate(selectedModel);
       if (spent + projected > dayLimit) throw new Error(`daily model budget would be exceeded (${spent.toFixed(4)} + ${projected.toFixed(4)} > ${dayLimit.toFixed(4)})`);
       callCount += 1;
       const result = await askJSON({ ...request, model: selectedModel, priority: 'core' });
@@ -690,11 +699,12 @@ async function main() {
       system: `${DRAFT_GATE_CONTRACT}\n\n${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\n${ANALYSIS_SHAPE}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Before returning, verify every headline is at most 20 English words and 24 Spanish words, every dek is at most two sentences, every analysis field is at most three sentences, no field uses a semicolon, and every number appears in its cited evidence. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: explain a supported connection to earlier developments when prior-article-body evidence is present, otherwise supply only the context needed to understand this change. Never imply earlier MexicoBrief coverage unless a prior source was actually retrieved. If evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Our view: a narrow business implication supported by its citations, naming the affected kind of business where the evidence permits, without first person. Do not convert activity into demand, investment pledges into completed investment, or proposals into rules in force. Multiple articles may repeat one source; never imply independent confirmation from source count. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
       user: JSON.stringify(locked.map((row) => ({
         i: row.index,
+        allowedNumericValues: unsupportedNumericTokens(row.evidence.map((item) => item.text).join(' ')),
         story: { date: row.item._editorialDate, source: row.item.sourceName || row.item.source, url: row.item.url },
         evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
         ...(isRecovery ? { previousRejection: arr(priorSlotAttempt.diagnostics).find((item) => item.storyId === storyId(row.item)) || null } : {}),
       }))),
-      schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, maxTokens: 4000,
+      schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: 4000,
     });
     const expectedDrafts = new Set(locked.map((row) => row.index));
     const evaluateDrafts = (response) => {
@@ -733,10 +743,11 @@ async function main() {
         system: `${DRAFT_GATE_CONTRACT}\n\n${TRUST}\n\n${REPORT}\n\nRepair every rejected bilingual story unit. Use only its evidence. Keep every number, actor, action, date, procedural stage and certainty supported by the cited evidence. Cite an independent record in background whenever one is available. Remove unsupported claims instead of guessing. Keep headlines under 20 English and 24 Spanish words, deks at two sentences, analysis fields at three sentences, and return every requested index.`,
         user: JSON.stringify(locked.map((row) => ({
           i: row.index,
+          allowedNumericValues: unsupportedNumericTokens(row.evidence.map((item) => item.text).join(' ')),
           evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
           rejected: evaluated.rejectionDiagnostics.find((item) => item.storyId === storyId(row.item)) || null,
         }))),
-        schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, maxTokens: 4000,
+        schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: 4000,
       });
       evaluated = evaluateDrafts(draftResponse);
     }
