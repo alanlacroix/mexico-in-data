@@ -1,10 +1,15 @@
 name: edition
 
-# The Cloudflare clock dispatches at 06:35 Mexico City. This single weekday
-# backup is 06:50 Mexico City; the persisted slot attempt prevents duplicate calls.
+# The daily clock aims for 06:35 Mexico City. Backups at 06:50 and 07:20
+# also recover one failed attempt; the persisted ledger caps retries and spend.
 on:
   schedule:
-    - cron: '50 12 * * 1-5'
+    - cron: '50 12 * * *'
+    - cron: '20 13 * * *'
+  workflow_run:
+    workflows: [release-check]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       slot:
@@ -33,6 +38,7 @@ concurrency:
 
 jobs:
   edition:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
     # Absolute feed/article/model deadlines plus two bounded deploy verifications fit
     # under this ceiling. The old 15-minute cap could kill a correct recovery run.
@@ -52,15 +58,24 @@ jobs:
       - name: Install exact dependencies
         run: npm ci
 
+      - name: Plan a bounded daily attempt or recovery
+        id: plan
+        env:
+          TRIGGER_EVENT: ${{ github.event_name }}
+          REQUESTED_SLOT: ${{ inputs.slot || 'morning' }}
+          REQUESTED_RECOVERY: ${{ inputs.retry_failed && 'true' || 'false' }}
+        run: node pipeline/publication-plan.mjs
+
       - name: Build one atomic bilingual edition
         id: edition
+        if: steps.plan.outputs.run == 'true'
         continue-on-error: true
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          PUBLICATION_SLOT: ${{ github.event_name == 'workflow_dispatch' && inputs.slot || 'morning' }}
-          EDITION_REQUIRE_REVIEW: '1'
-          EDITION_WEEKEND_RECOVERY: ${{ github.event_name == 'workflow_dispatch' && inputs.weekend_recovery && '1' || '0' }}
-          EDITION_RETRY_FAILED: ${{ github.event_name == 'workflow_dispatch' && inputs.retry_failed && '1' || '0' }}
+          PUBLICATION_SLOT: ${{ steps.plan.outputs.slot }}
+          EDITION_REQUIRE_REVIEW: '0'
+          EDITION_WEEKEND_RECOVERY: '1'
+          EDITION_RETRY_FAILED: ${{ steps.plan.outputs.retry }}
         run: node pipeline/build-edition.mjs
 
       - name: Build and validate the exact site before publication
@@ -69,9 +84,16 @@ jobs:
         continue-on-error: true
         run: npm run release
 
+      - name: Record release rejection as a failed attempt
+        if: always() && steps.edition.outputs.state == 'published' && steps.release.outcome != 'success'
+        env:
+          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date }}
+          PUBLICATION_SLOT: ${{ steps.edition.outputs.slot }}
+        run: node pipeline/record-release-failure.mjs
+
       - name: Persist the result without publishing partial work
         id: persist
-        if: always()
+        if: always() && steps.plan.outputs.run == 'true'
         env:
           EDITION_STATE: ${{ steps.edition.outputs.state }}
           EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date }}

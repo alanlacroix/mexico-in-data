@@ -38,7 +38,6 @@ export function mexicoCityClock(now = new Date()) {
 
 export function dueSlot(now = new Date()) {
   const clock = mexicoCityClock(now);
-  if (!['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(clock.weekday)) return null;
   if (clock.minuteOfDay < MORNING_DISPATCH_MINUTE || clock.minuteOfDay >= MORNING_RETRY_CUTOFF_MINUTE) return null;
   return { editorialDate: clock.editorialDate, slot: 'morning' };
 }
@@ -83,7 +82,7 @@ async function dispatch(settingsValue, token, due) {
 export async function runClock(env, now = new Date()) {
   requireBindings(env);
   const due = dueSlot(now);
-  if (!due) return { action: 'none', reason: 'outside the weekday morning dispatch window', due: null };
+  if (!due) return { action: 'none', reason: 'outside the daily morning dispatch window', due: null };
   const key = claimKey(due);
   if (await env.WATCHDOG_STATE.get(key)) return { action: 'none', reason: 'slot already dispatched', due };
 

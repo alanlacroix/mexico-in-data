@@ -3,8 +3,8 @@ import fs from 'node:fs';
 import worker, { checkHealth, dueSlot, mexicoCityClock, runClock, runScheduledCheck } from '../../ops/publication-watchdog/src/index.mjs';
 
 const config = JSON.parse(fs.readFileSync(new URL('../../ops/publication-watchdog/wrangler.jsonc', import.meta.url), 'utf8'));
-assert.deepEqual(config.triggers.crons, ['*/15 * * * *', '35 12 * * mon-fri'],
-  'the clock must have one exact 6:35am Mexico City weekday trigger plus heartbeat checks');
+assert.deepEqual(config.triggers.crons, ['*/15 * * * *', '35 12 * * *'],
+  'the clock must have one exact 6:35am Mexico City daily trigger plus heartbeat checks');
 
 assert.deepEqual(mexicoCityClock(new Date('2026-07-31T12:35:00Z')), {
   editorialDate: '2026-07-31', minuteOfDay: 395, weekday: 'Fri',
@@ -17,8 +17,8 @@ assert.equal(dueSlot(new Date('2026-07-31T12:50:00Z')), null, 'the dispatch wind
 assert.equal(dueSlot(new Date('2026-07-31T18:00:00Z')), null, 'noon is manual recovery only');
 assert.deepEqual(dueSlot(new Date('2026-01-15T12:35:00Z')), { editorialDate: '2026-01-15', slot: 'morning' },
   'Mexico City stays aligned at UTC-6 in January');
-assert.equal(dueSlot(new Date('2026-08-01T12:35:00Z')), null, 'Saturday has no candidate run');
-assert.equal(dueSlot(new Date('2026-08-02T12:35:00Z')), null, 'Sunday has no candidate run');
+assert.deepEqual(dueSlot(new Date('2026-08-01T12:35:00Z')), { editorialDate: '2026-08-01', slot: 'morning' });
+assert.deepEqual(dueSlot(new Date('2026-08-02T12:35:00Z')), { editorialDate: '2026-08-02', slot: 'morning' });
 
 const values = new Map();
 const state = {

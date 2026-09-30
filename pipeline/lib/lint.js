@@ -11,7 +11,12 @@ const HYPE = /\b(robust|dynamic|landscape|poised|leverage|unlock|game[- ]?change
 const CONTINUITY = /\b(last (week|issue)|as (we|this brief) (noted|reported|flagged|wrote)|prior issue|week\s+\d+\s+of|in our (last|prior)|we (noted|reported|flagged) (last|earlier))\b/i;
 const HASDATE = /\b(20\d{2}|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|W\d{2}|issue \d)\b/i;
 
-const sentences = (s) => (s || '').split(/[.!?]+(?=\s|$)/).map((x) => x.trim()).filter(Boolean);
+// Country abbreviations are not sentence boundaries. Keep the same conservative
+// punctuation split, but protect the two forms used by our bilingual reporting.
+const sentences = (s) => String(s || '')
+  .replace(/\b(?:U\.S\.|EE\.\s?UU\.)/g, (match) => match.replace(/\./g, '\uE000'))
+  .split(/[.!?]+(?=\s|$)/)
+  .map((x) => x.replace(/\uE000/g, '.').trim()).filter(Boolean);
 const hasNumber = (s) => /\d/.test(s || '') || /\b(one|two|three|four|five|six|seven|eight|nine|ten|dozen|record|first|half|double|triple)\b/i.test(s || '');
 
 // A prompt is not an accuracy gate. This guard is for REPORT copy that can reach a
