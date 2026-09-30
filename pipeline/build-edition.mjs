@@ -5,6 +5,7 @@
 // exits non-zero and leaves the previous public edition byte-for-byte unchanged.
 
 import crypto from 'node:crypto';
+import { persistModelAccounting } from './lib/persist-model-accounting.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -57,6 +58,7 @@ const {
   dateSpend,
   finishAttempt,
   readAttempts,
+  readAccountingAttempts,
   resumeFailedAttempt,
   sameSignatureNoonNoop,
   slotAttempt,
@@ -67,7 +69,9 @@ function read(file, fallback) {
 }
 function write(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
+  const temporary = `${file}.${process.pid}.tmp`;
+  fs.writeFileSync(temporary, `${JSON.stringify(value, null, 2)}\n`);
+  fs.renameSync(temporary, file);
 }
 const clean = (value) => String(value || '').trim();
 const arr = (value) => (Array.isArray(value) ? value : []);
@@ -559,9 +563,13 @@ async function main() {
   }
   const priorEdition = read(EDITION_FILE, null);
   const memory = editionHistory.issueMemory(editionHistory.loadHistory({ current: priorEdition }), { before: editorialDate });
-  process.env.LLM_BUDGET_DATE = `${editorialDate}T12:00:00Z`;
+  if (process.env.GITHUB_ACTIONS === 'true' && editorialDate !== editorialDay(new Date())) {
+    throw new Error('Paid CI publication must use the current editorial day');
+  }
+  process.env.LLM_BUDGET_DATE = process.env.GITHUB_ACTIONS === 'true'
+    ? new Date().toISOString() : `${editorialDate}T12:00:00Z`;
 
-  let attempts = readAttempts(read(ATTEMPTS_FILE, {}));
+  let attempts = readAccountingAttempts(JSON.parse(fs.readFileSync(ATTEMPTS_FILE, 'utf8')));
   const priorSlotAttempt = slotAttempt(attempts, editorialDate, slot);
   const isRecovery = process.env.EDITION_RETRY_FAILED === '1';
   if (priorSlotAttempt && !isRecovery) {
@@ -634,6 +642,8 @@ async function main() {
     const priorDailySpend = dateSpend(attempts, editorialDate);
     const dayLimit = dailyLimit(editorialDate, MONTHLY_LIMIT);
     const call = async (request) => {
+      // Bill each call in its actual UTC month, including a run crossing midnight.
+      if (process.env.GITHUB_ACTIONS === 'true') process.env.LLM_BUDGET_DATE = new Date().toISOString();
       if (callCount >= MAX_MODEL_CALLS) throw new Error(`model call limit ${MAX_MODEL_CALLS} reached`);
       const inputBytes = new TextEncoder().encode(JSON.stringify({ system: request.system, user: request.user, schema: request.schema })).byteLength + 1024;
       const spent = priorDailySpend + (Number(usage().costUSD) || 0);
@@ -653,7 +663,23 @@ async function main() {
       const projected = estimate(selectedModel);
       if (spent + projected + reservedAuditUSD > dayLimit || projected + reservedAuditUSD > monthlyRemaining) throw new Error(`daily model budget would be exceeded (${spent.toFixed(4)} + ${projected.toFixed(4)} > ${dayLimit.toFixed(4)})`);
       callCount += 1;
-      const result = await askJSON({ ...request, model: selectedModel, priority: 'core' });
+      const result = await askJSON({
+        ...request, model: selectedModel, priority: 'core',
+        maxCostUSD: Math.min(dayLimit - spent, monthlyRemaining) - reservedAuditUSD,
+        onAccounting: async (receipt) => {
+          const row = slotAttempt(attempts, editorialDate, slot);
+          const receipts = [...(row.modelAccounting?.receipts || [])];
+          const index = receipts.findIndex(item => item.id === receipt.id);
+          if (index < 0) receipts.push(receipt); else receipts[index] = receipt;
+          attempts = finishAttempt(attempts, editorialDate, slot, {
+            calls: recoveryBase.calls + usage().calls,
+            costUSD: Math.round((recoveryBase.costUSD + usage().costUSD) * 1e6) / 1e6,
+            modelAccounting: { version: 1, runId: process.env.GITHUB_RUN_ID || 'local', runAttempt: process.env.GITHUB_RUN_ATTEMPT || '1', receipts },
+          });
+          write(ATTEMPTS_FILE, attempts);
+          if (process.env.GITHUB_ACTIONS === 'true') persistModelAccounting({ cwd: ROOT });
+        },
+      });
       if (!result) throw new Error(`model call ${callCount} returned no usable result`);
       return result;
     };
@@ -828,7 +854,7 @@ async function main() {
       modelUsage = anthropic.usage();
     } catch { /* failed before the model module loaded */ }
     attempts = finishAttempt(attempts, editorialDate, slot, {
-      state: 'failed', completedAt: new Date().toISOString(), calls: recoveryBase.calls + (modelUsage.calls || callCount),
+      state: 'failed', completedAt: new Date().toISOString(), calls: recoveryBase.calls + modelUsage.calls,
       costUSD: Math.round((recoveryBase.costUSD + (Number(modelUsage.costUSD) || 0)) * 1e6) / 1e6,
       reason: clean(error?.message).slice(0, 500),
       diagnostics: failureDiagnostics.slice(0, 5),

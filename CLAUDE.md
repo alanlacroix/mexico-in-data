@@ -46,6 +46,10 @@ deployment live.
   no-op only after that morning successfully published the artifact still on disk.
   Monthly and per-day budgets are hard limits. A failed slot may receive one bounded
   recovery, including after successful main-branch release checks or a scheduled backup.
+- Each paid call reserves its maximum bill in both accounting ledgers and pushes
+  them before contacting the provider. Only verified usage can refund the excess.
+  Interrupted or ambiguous calls retain their full reservation; recovery stays bounded.
+  A failed accounting push blocks the call. Never reset receipts to regain allowance.
 - The Cloudflare Worker is only a clock. It may dispatch each date/slot once; it never
   evaluates, repairs, or republishes content.
 - The six-hour refresh may update only inputs rendered on the homepage. Optional or

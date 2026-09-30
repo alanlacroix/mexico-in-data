@@ -100,11 +100,11 @@ try {
   fs.copyFileSync(new URL('../../data/edition.json', import.meta.url), editionFile);
   const beforeEdition = fs.readFileSync(editionFile);
   for (const state of ['failed', 'started', 'published', 'review-required']) {
-    const beforeAttempts = JSON.stringify({ attempts: [{ editorialDate: '2026-09-30', slot: 'morning', state }] });
+    const beforeAttempts = JSON.stringify({ attempts: [{ editorialDate: '2026-09-30', slot: 'morning', state, calls: 0, costUSD: 0 }] });
     fs.writeFileSync(attemptsFile, beforeAttempts);
     const replay = spawnSync(process.execPath, ['pipeline/build-edition.mjs'], {
       cwd: root, encoding: 'utf8',
-      env: { ...process.env, PUBLICATION_DATE: '2026-09-30', PUBLICATION_SLOT: 'morning',
+      env: { ...process.env, GITHUB_ACTIONS: 'false', PUBLICATION_DATE: '2026-09-30', PUBLICATION_SLOT: 'morning',
         EDITION_REQUIRE_REVIEW: '0', EDITION_RETRY_FAILED: '0', ANTHROPIC_API_KEY: '' },
     });
     const unresolved = ['failed', 'started'].includes(state);

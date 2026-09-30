@@ -29,6 +29,32 @@ function readAttempts(value) {
   return { schemaVersion: SCHEMA_VERSION, attempts };
 }
 
+function readAccountingAttempts(value) {
+  if (!Array.isArray(value?.attempts) || value.attempts.some(row => !row
+    || !Number.isFinite(row.costUSD) || row.costUSD < 0
+    || !Number.isSafeInteger(row.calls) || row.calls < 0)) {
+    throw new Error('Invalid edition accounting ledger');
+  }
+  for (const row of value.attempts) {
+    if (!row.modelAccounting) continue; // Legacy settled rows remain valid.
+    const { version, receipts } = row.modelAccounting;
+    if (version !== 1 || !Array.isArray(receipts) || !receipts.length
+      || receipts.some(receipt => !receipt || typeof receipt.id !== 'string' || !receipt.id
+        || !['reserved', 'settled'].includes(receipt.state)
+        || !Number.isFinite(receipt.reservedUSD) || receipt.reservedUSD < 0
+        || !Number.isFinite(receipt.accountedUSD) || receipt.accountedUSD < 0
+        || (receipt.state === 'reserved' && receipt.accountedUSD < receipt.reservedUSD))
+      || new Set(receipts.map(receipt => receipt.id)).size !== receipts.length
+      || row.calls < receipts.length
+      || row.costUSD + 0.000001 < receipts.reduce((sum, receipt) => sum + receipt.accountedUSD, 0)) {
+      throw new Error('Invalid durable model accounting receipts');
+    }
+  }
+  const keys = value.attempts.map(row => `${row.editorialDate}/${row.slot}`);
+  if (new Set(keys).size !== keys.length) throw new Error('Duplicate edition accounting slots');
+  return readAttempts(value);
+}
+
 function slotAttempt(attempts, date, slot) {
   return readAttempts(attempts).attempts.find((row) => row.editorialDate === date && row.slot === slot);
 }
@@ -116,6 +142,7 @@ module.exports = {
   dailyLimit,
   finishAttempt,
   readAttempts,
+  readAccountingAttempts,
   resumeFailedAttempt,
   sameSignatureNoonNoop,
   slotAttempt,
