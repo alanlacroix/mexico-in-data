@@ -198,12 +198,7 @@ function draftSchema(indices) {
       es: translation,
     },
   };
-  return { type: 'object', additionalProperties: false, required: ['stories'], properties: { stories: {
-    type: 'object', additionalProperties: false, required: indices.map(String),
-    properties: Object.fromEntries(indices.map((index) => [String(index), {
-      ...item, properties: { ...item.properties, i: { type: 'integer', enum: [index] } },
-    }])),
-  } } };
+  return { type: 'object', additionalProperties: false, required: ['stories'], properties: { stories: { type: 'array', items: item } } };
 }
 function auditSchema() {
   return {
@@ -711,7 +706,7 @@ async function main() {
       const draftRejects = [];
       const rejectionDiagnostics = [];
       const draftByIndex = new Map();
-      for (const draft of Object.values(response.stories || {})) {
+      for (const draft of arr(response.stories)) {
         const index = Number(draft?.i);
         if (!expectedDrafts.has(index)) { draftRejects.push(`unexpected draft index ${Number.isFinite(index) ? index : '?'}`); continue; }
         if (draftByIndex.has(index)) { draftRejects.push(`duplicate draft index ${index}`); continue; }
@@ -832,7 +827,9 @@ async function main() {
   }
 }
 
-main().catch((error) => {
+export { candidateUniverse, evidenceFor, deterministicDraftCheck, makeStory, buildWeekStories, buildWeeklyBrief };
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => {
   console.error(`build-edition failed: ${error.stack || error.message}`);
   process.exitCode = 1;
 });

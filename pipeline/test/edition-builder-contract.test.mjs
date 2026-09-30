@@ -116,14 +116,13 @@ try {
   }
 } finally { fs.rmSync(root, { recursive: true, force: true }); }
 
-assert.match(builder, /required: indices.map\(String\)/, 'every locked story has a required structured-output key');
 assert.match(builder, /model: models.SONNET/, 'draft quality uses the evidence-writing model');
 assert.match(builder, /input: 3, output: 15/, 'daily cap must price the selected model conservatively');
 const schemaSource = builder.slice(builder.indexOf('function draftSchema('), builder.indexOf('function auditSchema('));
 const exactSchema = new Function(`${schemaSource}; return draftSchema([0, 3]);`)();
-assert.deepEqual(exactSchema.properties.stories.required, ['0', '3']);
-assert.deepEqual(exactSchema.properties.stories.properties['3'].properties.i.enum, [3]);
-assert.equal(exactSchema.properties.stories.additionalProperties, false);
+assert.equal(exactSchema.properties.stories.type, 'array');
+assert.ok(exactSchema.properties.stories.items.required.includes('es'));
+assert.ok(JSON.stringify(exactSchema).length < 1600, 'avoid compiled-grammar explosion from duplicated story objects');
 assert.equal((builder.match(/model: models.SONNET, effort: 'low'/g) || []).length, 2,
   'bounded evidence-writing calls must not inherit high reasoning that consumes the whole output allowance');
 assert.match(builder, /spent \+ estimate\(selectedModel\) > dayLimit/);
