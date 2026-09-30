@@ -1486,6 +1486,75 @@
         ]
       },
       "recoveries": []
+    },
+    {
+      "editorialDate": "2026-09-30",
+      "slot": "morning",
+      "candidateSignature": "7d269f294d7a9921e04cc3d0ea3197192be5dc6bdc75553508aa49e330673c2f",
+      "state": "failed",
+      "startedAt": "2026-09-30T13:01:53.924Z",
+      "completedAt": "2026-09-30T13:02:33.396Z",
+      "calls": 2,
+      "costUSD": 0.013732,
+      "artifactHash": "",
+      "reason": "all story drafts failed the deterministic evidence gate: n-f044fbbf79e7: headline: unsupported number: 4; headline: Spanish unsupported number: 4; dek: unsupported numbers: 15.7, 11.7; dek: numbers changed in Spanish; watch: watch item has no observable next test; watch: proposal or uncertainty became final in Spanish",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-f044fbbf79e7",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Pemex reports 4 billion dollar fuel import deficit January through August 2026",
+              "es": "Pemex reporta déficit de importación de combustible de 4 mil millones de dólares enero a agosto 2026",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 4",
+                "Spanish unsupported number: 4"
+              ]
+            },
+            "dek": {
+              "en": "Petroleum product imports totaled 15.7 billion dollars against exports of 11.7 billion dollars, a 300 percent annual increase in the negative balance. Mexico consumes roughly 850,000 barrels daily of gasoline while domestic production represents less than 50 percent of demand.",
+              "es": "Las importaciones de productos petroleros totalizaron 15.700 millones de dólares frente a exportaciones de 11.700 millones de dólares, un aumento anual de 300 por ciento en el saldo negativo. México consume aproximadamente 850.000 barriles diarios de gasolina mientras que la producción doméstica representa menos del 50 por ciento de la demanda.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported numbers: 15.7, 11.7",
+                "numbers changed in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "Pemex officials could not be reached for comment as data was released outside business hours. The company is increasing fuel production but current capacity remains insufficient to meet domestic demand.",
+              "es": "Los funcionarios de Pemex no pudieron ser contactados para comentar ya que los datos se difundieron fuera del horario laboral. La compañía está aumentando la producción de combustibles pero la capacidad actual permanece insuficiente para atender la demanda doméstica.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item has no observable next test",
+                "proposal or uncertainty became final in Spanish"
+              ]
+            }
+          }
+        }
+      ],
+      "collection": {
+        "collectedAt": "2026-09-30T13:01:53.924Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "insightcrime-mx",
+          "retailers-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": []
     }
   ]
 }
