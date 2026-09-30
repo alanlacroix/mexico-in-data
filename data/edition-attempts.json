@@ -1617,13 +1617,13 @@
       "editorialDate": "2026-09-30",
       "slot": "noon",
       "candidateSignature": "d250aa031023d81ae622f71aa51c83017015f29f74c60d1851d12f20d099edd9",
-      "state": "failed",
+      "state": "published",
       "startedAt": "2026-09-30T14:23:07.260Z",
-      "completedAt": "2026-09-30T14:23:24.378Z",
+      "completedAt": "2026-09-30T14:32:43.042Z",
       "calls": 2,
       "costUSD": 0.078789,
-      "artifactHash": "",
-      "reason": "core LLM request rejected with HTTP 400: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The compiled grammar is too large, which would cause performance issues. Simplify your tool schemas or reduce the",
+      "artifactHash": "212da8f9703cfa6ef2271da46db4c1720123c89f6dc5ab17f534abe105715ba6",
+      "reason": "Independent editorial recovery passed source, bilingual and deterministic gates",
       "diagnostics": [],
       "collection": {
         "collectedAt": "2026-09-30T14:23:07.260Z",
@@ -1649,7 +1649,13 @@
           "reason": "model call 1 returned no usable result",
           "diagnostics": []
         }
-      ]
+      ],
+      "manualRecovery": {
+        "reviewedAt": "2026-09-30T14:32:43.042Z",
+        "evidenceCapturedAt": "2026-09-30T14:28:31.003Z",
+        "method": "independent field-by-field source and bilingual review",
+        "priorFailure": "core LLM request rejected with HTTP 400: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The compiled grammar is too large, which would cause performance issues. Simplify your tool schemas or reduce the"
+      }
     }
   ]
 }
