@@ -72,3 +72,44 @@ assert.doesNotMatch(collector, /execFileSync|published_at:\s*toISO\(it\.date\)\s
   'collection must be bounded and must not turn fetch time into publication time');
 
 console.log('edition-builder contract: ok');
+
+// Abbreviations in faithful copy must not consume the sentence allowance.
+for (const text of [
+  'The U.S. investor filed a claim. The tribunal dismissed it.',
+  'Acciones mexicanas caen ante tensiones entre EE.UU. e Irán',
+  'El comercio con EE. UU. creció.',
+]) {
+  assert.equal(lintReportText({ text, inputs: [text], maxSentences: text.startsWith('The') ? 2 : 1 }).ok, true, text);
+}
+assert.equal(lintReportText({ text: 'One. Two. Three.', inputs: [], maxSentences: 2 }).ok, false);
+assert.equal((builder.match(/system: `\$\{DRAFT_GATE_CONTRACT\}/g) || []).length, 2,
+  'initial generation and bounded repair must share the actual gate contract');
+
+// Replaying a failed slot is a read-only failure, never a misleading green no-op.
+const { spawnSync } = await import('node:child_process');
+const os = await import('node:os');
+const path = await import('node:path');
+const root = fs.mkdtempSync(path.join(os.tmpdir(), 'brief-failed-replay-'));
+try {
+  fs.cpSync(new URL('../', import.meta.url), path.join(root, 'pipeline'), { recursive: true });
+  fs.mkdirSync(path.join(root, 'data'));
+  const editionFile = path.join(root, 'data/edition.json');
+  const attemptsFile = path.join(root, 'data/edition-attempts.json');
+  fs.copyFileSync(new URL('../../data/edition.json', import.meta.url), editionFile);
+  const beforeEdition = fs.readFileSync(editionFile);
+  for (const state of ['failed', 'started', 'published', 'review-required']) {
+    const beforeAttempts = JSON.stringify({ attempts: [{ editorialDate: '2026-09-30', slot: 'morning', state }] });
+    fs.writeFileSync(attemptsFile, beforeAttempts);
+    const replay = spawnSync(process.execPath, ['pipeline/build-edition.mjs'], {
+      cwd: root, encoding: 'utf8',
+      env: { ...process.env, PUBLICATION_DATE: '2026-09-30', PUBLICATION_SLOT: 'morning',
+        EDITION_REQUIRE_REVIEW: '0', EDITION_RETRY_FAILED: '0', ANTHROPIC_API_KEY: '' },
+    });
+    const unresolved = ['failed', 'started'].includes(state);
+    assert.equal(replay.status, unresolved ? 1 : 0, replay.stderr);
+    assert.match(replay.stdout, unresolved ? /state=failed/ : /state=noop/);
+    if (unresolved) assert.match(replay.stderr, /use explicit failed-attempt recovery after diagnosis/);
+    assert.deepEqual(fs.readFileSync(editionFile), beforeEdition);
+    assert.equal(fs.readFileSync(attemptsFile, 'utf8'), beforeAttempts);
+  }
+} finally { fs.rmSync(root, { recursive: true, force: true }); }

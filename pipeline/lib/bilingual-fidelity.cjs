@@ -15,12 +15,19 @@ const ENTITIES = [
   { id: 'hacienda', aliases: [/\bhacienda\b/, /\bshcp\b/, /\bfinance ministry\b/] },
   { id: 'usmca', aliases: [/\busmca\b/, /\bt mec\b/] },
 ];
-const EN_NEGATION = /\b(?:no|not|never|without|neither|unchanged)\b/i;
+const EN_NEGATION = /\b(?:no|not|never|without|neither|unchanged)\b|\bnon[-\u2010\u2011](?=[a-z])/i;
 const ES_NEGATION = /\b(?:no|nunca|sin|ningun[oa]?|tampoco|sin cambios)\b/i;
 const EN_PROPOSAL = /\b(?:proposal|proposed|proposes?|draft|would|could|may|might|plans? to|seeks? to)\b/i;
 const ES_PROPOSAL = /\b(?:propuesta|propone|proponen|proyecto|anteproyecto|puede|pueden|podria|podrian|planea|busca|\w+ria|\w+rian)\b/i;
 const EN_FINAL = /\b(?:approved|enacted|implemented|entered into force|took effect|is in force|final rule)\b/i;
 const ES_FINAL = /\b(?:aprobo|aprobaron|aprobado|aprobada|promulgo|promulgaron|implemento|implementaron|entro en vigor|esta en vigor|regla definitiva|reforma definitiva)\b/i;
+// Preserve genuine modals and completed actions elsewhere in the same field.
+// These phrases have specific non-modal/non-final meanings in reporting.
+const englishProposalText = (value) => String(value || '')
+  .replace(/\b(?:in|since|during|through|until|before|after|by|from|of)\s+May\b/g, '')
+  .replace(/\bMay\s+\d{1,4}\b/g, '')
+  .replace(/\bcould not be reached\b/gi, '');
+const englishFinalText = (value) => String(value || '').replace(/\bif\s+approved\b/gi, '');
 // Names and numbers can survive a translation even when its meaning is reversed.
 // These pairs catch only clear opposites; neutral paraphrases remain valid.
 const OPPOSITE_ACTIONS = [
@@ -82,9 +89,9 @@ function bilingualFidelityFlags({ english = '', spanish = '', evidence = [] } = 
   }
   if (EN_NEGATION.test(english) && !ES_NEGATION.test(spanish)) flags.push('negation was dropped in Spanish');
   if (ES_NEGATION.test(spanish) && !EN_NEGATION.test(english)) flags.push('negation was introduced in Spanish');
-  if (EN_PROPOSAL.test(english) && !ES_PROPOSAL.test(es)) flags.push('proposal or uncertainty became final in Spanish');
-  if (ES_FINAL.test(es) && !EN_FINAL.test(english)) flags.push('completed action was introduced in Spanish');
-  if (EN_FINAL.test(english) && !ES_FINAL.test(es)) flags.push('completed action became non-final in Spanish');
+  if (EN_PROPOSAL.test(englishProposalText(english)) && !ES_PROPOSAL.test(es)) flags.push('proposal or uncertainty became final in Spanish');
+  if (ES_FINAL.test(es) && !EN_FINAL.test(englishFinalText(english))) flags.push('completed action was introduced in Spanish');
+  if (EN_FINAL.test(englishFinalText(english)) && !ES_FINAL.test(es)) flags.push('completed action became non-final in Spanish');
   for (const action of OPPOSITE_ACTIONS) {
     const enPositive = action.enPositive.test(en);
     const enNegative = action.enNegative.test(en);
