@@ -1661,16 +1661,16 @@
       "editorialDate": "2026-10-01",
       "slot": "morning",
       "candidateSignature": "4ed7b87a4c3718ad0d889b03abb36848412ef8d332a3042bd56dd0a093170841",
-      "state": "failed",
-      "startedAt": "2026-10-01T13:02:07.628Z",
-      "completedAt": "2026-10-01T13:03:24.666Z",
-      "calls": 3,
-      "costUSD": 0.094851,
+      "state": "started",
+      "startedAt": "2026-10-01T13:12:48.986Z",
+      "completedAt": "",
+      "calls": 4,
+      "costUSD": 0.13453,
       "artifactHash": "",
-      "reason": "Exact site release validation failed; the last good public edition was retained",
+      "reason": "",
       "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-01T13:02:07.628Z",
+        "collectedAt": "2026-10-01T13:12:48.986Z",
         "aliveSources": 68,
         "totalSources": 72,
         "wireCount": 60,
@@ -1683,10 +1683,19 @@
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-01T13:02:07.628Z",
+          "completedAt": "2026-10-01T13:03:24.666Z",
+          "calls": 3,
+          "costUSD": 0.094851,
+          "reason": "Exact site release validation failed; the last good public edition was retained",
+          "diagnostics": []
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "36865794766",
+        "runId": "36867007630",
         "runAttempt": "1",
         "receipts": [
           {
@@ -1712,6 +1721,14 @@
             "reservedUSD": 0.016717,
             "accountedUSD": 0.002078,
             "state": "settled"
+          },
+          {
+            "id": "b861f54a-ed08-49be-b3b9-f3bec2fbf40d",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.039679,
+            "accountedUSD": 0.039679,
+            "state": "reserved"
           }
         ]
       }
