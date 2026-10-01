@@ -1656,6 +1656,49 @@
         "method": "independent field-by-field source and bilingual review",
         "priorFailure": "core LLM request rejected with HTTP 400: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The compiled grammar is too large, which would cause performance issues. Simplify your tool schemas or reduce the"
       }
+    },
+    {
+      "editorialDate": "2026-10-01",
+      "slot": "morning",
+      "candidateSignature": "4ed7b87a4c3718ad0d889b03abb36848412ef8d332a3042bd56dd0a093170841",
+      "state": "started",
+      "startedAt": "2026-10-01T13:02:07.628Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.119007,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-01T13:02:07.628Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "dof-sumario",
+          "retailers-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "36865794766",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "7fd40466-b3d3-4286-82f7-3fd03b4ba98e",
+            "period": "2026-10",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.119007,
+            "accountedUSD": 0.119007,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
