@@ -115,3 +115,8 @@ assert.match(workflow, /steps.plan.outputs.verify == 'true'/);
 assert.match(workflow, /node pipeline\/claim-deployment-retry\.mjs/);
 
 assert.equal(plan('workflow_dispatch', [attempt('published')]).verify, true);
+
+assert.match(workflow, /Preserve audited edition after a release rejection/);
+assert.match(workflow, /always\(\) && steps\.edition\.outputs\.state == 'published' && steps\.release\.outcome == 'failure'/);
+assert.ok(workflow.indexOf('name: held-edition-') < workflow.indexOf('Record release rejection'));
+assert.match(workflow, /EDITION_STATE="release-failed"/);
