@@ -19,7 +19,8 @@ deployment live.
 
 - The Brief is the reason the site exists. Ranking, factual accuracy, plain language,
   freshness, and useful Briefly Explained context come before new features.
-- Rank up to five candidates, lock the top three, and publish one to three key developments. Every
+- Rank up to eight candidates and target three to five strong developments per daily edition.
+  Size the batch within the unchanged budget, preserve the independent audit, and never pad with weak stories. Every
   published development has visible reporting, business implications, context, and a
   sourced next milestone. The primary reading path has no dashboard, calendar or weekly shelf.
 - AI compares new reporting with prior coverage. Archived prose is a retrieval index,
@@ -50,6 +51,10 @@ deployment live.
   them before contacting the provider. Only verified usage can refund the excess.
   Interrupted or ambiguous calls retain their full reservation; recovery stays bounded.
   A failed accounting push blocks the call. Never reset receipts to regain allowance.
+- A release-only failure preserves the exact audited candidate and provenance for zero-model
+  recovery. Invalid held content fails closed; never regenerate to hide preservation failure.
+- Begin at 06:05 Mexico City, with GitHub backups at 06:20 and 06:40, targeting live
+  verified delivery by 07:00. Worker code/config changes require a separate verified deployment.
 - The Cloudflare Worker is only a clock. It may dispatch each date/slot once; it never
   evaluates, repairs, or republishes content.
 - The six-hour refresh may update only inputs rendered on the homepage. Optional or

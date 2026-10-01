@@ -31,8 +31,8 @@ assert.equal((workflow.match(/node pipeline\/verify-production\.mjs/g) || []).le
   'production gets one verification and one bounded deploy-only recovery');
 
 assert.match(builder, /const MAX_CANDIDATES = 24/);
-assert.match(builder, /const MAX_RANKED = 5/);
-assert.match(builder, /const MAX_VISIBLE = 3/);
+assert.match(builder, /const MAX_RANKED = 8/);
+assert.match(builder, /const MAX_VISIBLE = 5/);
 assert.match(builder, /MAX_MODEL_CALLS/);
 assert.doesNotMatch(builder, /web_search_|while\s*\([^)]*(?:retry|attempt)/i, 'publication has no search or internal retry loop');
 assert.equal((builder.match(/atomicWriteEdition\(target\.file/g) || []).length, 1,
@@ -76,8 +76,8 @@ assert.match(workflow, /workflows: \[release-check\]/);
 assert.match(workflow, /github.event.workflow_run.conclusion == 'success'/);
 assert.match(workflow, /github.event.workflow_run.head_branch == 'main'/);
 assert.match(workflow, /node pipeline\/publication-plan\.mjs/);
-assert.match(workflow, /cron: '50 12 \* \* \*'/);
-assert.match(workflow, /cron: '20 13 \* \* \*'/);
+assert.match(workflow, /cron: '20 12 \* \* \*'/);
+assert.match(workflow, /cron: '40 12 \* \* \*'/);
 
 const { publicationPlan } = await import('../publication-plan.mjs');
 const date = '2026-09-30';

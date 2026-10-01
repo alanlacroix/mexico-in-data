@@ -1,11 +1,12 @@
 name: edition
 
-# The daily clock aims for 06:35 Mexico City. Backups at 06:50 and 07:20
+# Start at 06:05 Mexico City, with recovery time before the 07:00 target.
+# Backups at 06:20 and 06:40
 # also recover one failed attempt; the persisted ledger caps retries and spend.
 on:
   schedule:
-    - cron: '50 12 * * *'
-    - cron: '20 13 * * *'
+    - cron: '20 12 * * *'
+    - cron: '40 12 * * *'
   workflow_run:
     workflows: [release-check]
     types: [completed]
@@ -131,7 +132,7 @@ jobs:
             message="[CF-Pages-Skip] edition: ${EDITORIAL_DATE} review required"
             echo "published=false" >> "$GITHUB_OUTPUT"
           else
-            git add data/edition-attempts.json data/llm-spend.json data/news/
+            git add data/edition-attempts.json data/llm-spend.json data/news/ data/candidates/
             if [ "$RELEASE_OUTCOME" = "failure" ]; then EDITION_STATE="release-failed"; fi
             message="[CF-Pages-Skip] edition: ${EDITORIAL_DATE:-unknown} ${EDITION_STATE:-failed}"
             echo "published=false" >> "$GITHUB_OUTPUT"

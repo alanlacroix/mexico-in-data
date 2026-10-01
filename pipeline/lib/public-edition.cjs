@@ -71,7 +71,7 @@ function validateEdition(edition) {
   if (edition.weeklyBrief) errors.push(...require('./weekly-brief.cjs').validateWeekly(edition.weeklyBrief, edition.editorialDate));
   const stories = Array.isArray(edition.stories) ? edition.stories : [];
   const weekStories = Array.isArray(edition.weekStories) ? edition.weekStories : [];
-  if (stories.length < 1 || stories.length > 3) errors.push('stories must contain 1 to 3 items');
+  if (stories.length < 1 || stories.length > 5) errors.push('stories must contain 1 to 5 items');
   if (weekStories.length < 1 || weekStories.length > 21) errors.push('weekStories must contain 1 to 21 items');
   const ids = new Set();
   const urls = new Set();

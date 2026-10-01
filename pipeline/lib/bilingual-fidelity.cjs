@@ -13,9 +13,9 @@ const ENTITIES = [
   { id: 'sheinbaum', aliases: [/\bsheinbaum\b/] },
   { id: 'morena', aliases: [/\bmorena\b/] },
   { id: 'hacienda', aliases: [/\bhacienda\b/, /\bshcp\b/, /\bfinance ministry\b/] },
-  { id: 'usmca', aliases: [/\busmca\b/, /\bt mec\b/] },
+  { id: 'usmca', aliases: [/\busmca\b/, /\bt[-\s]?mec\b/] },
 ];
-const EN_NEGATION = /\b(?:no|not|never|without|neither|unchanged)\b|\bnon[-\u2010\u2011](?=[a-z])/i;
+const EN_NEGATION = /\b(?:no|not|never|without|neither|unchanged|unregistered)\b|\bnon[-\u2010\u2011](?=[a-z])/i;
 const ES_NEGATION = /\b(?:no|nunca|sin|ningun[oa]?|tampoco|sin cambios)\b/i;
 const EN_PROPOSAL = /\b(?:proposal|proposed|proposes?|draft|would|could|may|might|plans? to|seeks? to)\b/i;
 const ES_PROPOSAL = /\b(?:propuesta|propone|proponen|proyecto|anteproyecto|puede|pueden|podria|podrian|planea|busca|\w+ria|\w+rian)\b/i;

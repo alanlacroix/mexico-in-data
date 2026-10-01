@@ -9,7 +9,7 @@
 module.exports = {
   en: {
     lang: 'en', htmlLang: 'en', otherUrl: '/es/', otherLabel: 'ES',
-    tagline: 'Mexico’s economic, political, security and business news, all in one place.',
+    tagline: 'Mexico’s most important stories, selected from 50+ news sources. A daily brief for investors, founders, and anyone doing business in Mexico.',
     brief: 'The brief', weekendBrief: 'Weekend recap', updated: 'Updated', latestBrief: 'Latest brief',
     quietToday: 'No major developments yet today.',
     updateDelayed: "Today's update is delayed. The date above is the last complete edition.",
@@ -32,7 +32,7 @@ module.exports = {
   },
   es: {
     lang: 'es', htmlLang: 'es-MX', otherUrl: '/', otherLabel: 'EN',
-    tagline: 'La economía, la política y la seguridad de México, en un solo lugar.',
+    tagline: 'Las noticias más importantes de México, seleccionadas de más de 50 fuentes. Un resumen diario para inversionistas, emprendedores y quienes hacen negocios en México.',
     brief: 'El resumen', weekendBrief: 'Resumen del fin de semana', updated: 'Actualizado', latestBrief: 'Último resumen',
     quietToday: 'Todavía no hay acontecimientos importantes hoy.',
     updateDelayed: 'La actualización de hoy está retrasada. La fecha de arriba corresponde a la última edición completa.',

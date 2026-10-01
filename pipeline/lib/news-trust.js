@@ -12,8 +12,11 @@ export const TRUSTED_NEWS_DOMAINS = new Set([
   'dw.com', 'cnn.com', 'npr.org', 'pbs.org', 'time.com', 'thehill.com', 'elpais.com',
 ]);
 
-const MEXICO_NEWS_SIGNAL = /m[eé]xic|mexican|\bcdmx\b|banxico|\bcnbv\b|sheinbaum|\bpemex\b|\bmorena\b|nearshor|monterrey|guadalajara|\bbmv\b|banorte|\bfemsa\b|\boxxo\b|remittanc|remesas|maquila|t-?mec|usmca|infonavit|harfuch|alsea|telcel|carlos slim|\bcfe\b|\binegi\b|\bdof\b|hacienda|\bsat\b|\bmxn\b/i;
-const MEXICO_PESO_SIGNAL = /\bpeso\b.{0,45}\bd[oó]lar|\bd[oó]lar\b.{0,45}\bpeso\b|tipo de cambio|usd\s*[\/-]\s*mxn/i;
+// Hacienda, remittances, nearshoring and the peso are not uniquely Mexican.
+// Require a country, institution, company or currency anchor in the reporting.
+// A foreign actor remains eligible when the story names its Mexico connection.
+const MEXICO_NEWS_SIGNAL = /m[eé]xic|mexican|\bcdmx\b|banxico|\bcnbv\b|sheinbaum|\bpemex\b|\bmorena\b|monterrey|guadalajara|\bbmv\b|banorte|\bfemsa\b|\boxxo\b|\bt-?mec\b|\busmca\b|infonavit|harfuch|alsea|telcel|carlos slim|\bcfe\b|\binegi\b|\bdof\b|\bshcp\b|secretar[ií]a de hacienda y cr[eé]dito p[uú]blico|\bmxn\b/i;
+const MEXICO_TAX_SIGNAL = /\bSAT\b/;
 const PUBLIC_HEADLINE_NOISE = /hor[óo]scopo|receta|\bstreaming\b|\bnfl\b|\bnba\b|\bmlb\b|liga mx|fichaje|premios|(?:^|\s)vs\.?\s|c[oó]mo ver|en vivo|resultado|final del mundial|[?¿]|^[“"'‘]|:\s*[“"'‘]|^(?:why|how|what)\b|^qu[eé]\b|as[ií] est[aá]|qu[eé] esperar|la historia de|\b(?:batman|mother courage|avenging|bombshell|nightmare|shocking|stunning)\b/i;
 
 const NAMED_ENTITIES = { aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', uuml: 'ü', Aacute: 'Á', Eacute: 'É', Iacute: 'Í', Oacute: 'Ó', Uacute: 'Ú', Ntilde: 'Ñ', iquest: '¿', iexcl: '¡', laquo: '«', raquo: '»', deg: '°', ordm: 'º', ordf: 'ª', ldquo: '“', rdquo: '”', lsquo: '‘', rsquo: '’', ndash: '–', mdash: '—', hellip: '…' };
@@ -22,6 +25,12 @@ const decodeOnce = (value) => value.replace(/&amp;/g, '&').replace(/&lt;/g, '<')
   .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/&nbsp;/g, ' ')
   .replace(/&([A-Za-z]+);/g, (match, name) => NAMED_ENTITIES[name] || match);
 
+export function stripNewsBoilerplate(value) {
+  // Require the publisher's closing phrase. An ordinary sentence beginning
+  // "La publicación del decreto" must remain available as actual reporting.
+  return String(value || '').replace(/\s*(?:The post|El art[ií]culo|La entrada|La publicaci[oó]n)\s+[\s\S]*?\s+(?:appeared first on|apareci[oó] primero en)\s+[\s\S]*$/i, '').trim();
+}
+
 export function cleanNewsText(input) {
   let value = String(input || '').replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1');
   for (let i = 0; i < 3; i += 1) {
@@ -29,7 +38,7 @@ export function cleanNewsText(input) {
     if (decoded === value) break;
     value = decoded;
   }
-  return value.replace(/<[^>]+>/g, ' ').replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim();
+  return stripNewsBoilerplate(value.replace(/<[^>]+>/g, ' ').replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' '));
 }
 
 export function newsCollectionHealth({ aliveSources, totalSources, wireCount }) {
@@ -39,8 +48,8 @@ export function newsCollectionHealth({ aliveSources, totalSources, wireCount }) 
 }
 
 export function mexicoRelevant(value) {
-  const text = String(value || '');
-  return MEXICO_NEWS_SIGNAL.test(text) || MEXICO_PESO_SIGNAL.test(text);
+  const text = stripNewsBoilerplate(value);
+  return MEXICO_NEWS_SIGNAL.test(text) || MEXICO_TAX_SIGNAL.test(text);
 }
 
 export function publicHeadlineEligible(value) {

@@ -1,5 +1,16 @@
 // Verify the exact immutable edition, not a second operational receipt.
 import publicEdition from './lib/public-edition.cjs';
+import uiStrings from '../_data/uiStrings.js';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+export function validateProductionPage(html, route, expectedHash) {
+  if (!html.includes(`data-artifact-hash="${expectedHash}"`)) throw new Error(`${route} does not render the approved artifact`);
+  const tagline = uiStrings[route === '/es/' ? 'es' : 'en'].tagline;
+  if (!html.includes(tagline)) throw new Error(`${route} does not render the current bilingual header`);
+}
+
+async function main() {
 
 const { validateEdition } = publicEdition;
 const expectedDate = String(process.env.EDITORIAL_DATE || '').trim();
@@ -19,7 +30,7 @@ async function fetchEdition() {
 }
 
 let last = 'not checked';
-for (let attempt = 1; attempt <= 12; attempt += 1) {
+for (let attempt = 1; attempt <= 24; attempt += 1) {
   try {
     const edition = await fetchEdition();
     const validation = validateEdition(edition);
@@ -30,13 +41,18 @@ for (let attempt = 1; attempt <= 12; attempt += 1) {
       const response = await fetch(`${base}${route}?hash=${expectedHash}`, { signal: AbortSignal.timeout(15000), headers: { 'cache-control': 'no-cache' } });
       if (!response.ok) throw new Error(`${route} returned HTTP ${response.status}`);
       const html = await response.text();
-      if (!html.includes(`data-artifact-hash="${expectedHash}"`)) throw new Error(`${route} does not render the approved artifact`);
+      validateProductionPage(html, route, expectedHash);
     }
-    console.log(`production verified: ${edition.editorialDate} · ${edition.stories.length} stories · ${edition.artifactHash}`);
+    console.log(`production verified: ${edition.editorialDate} · ${edition.stories.length} stories · ${edition.artifactHash} · EN/ES header verified`);
     process.exit(0);
   } catch (error) {
     last = error.message;
-    if (attempt < 12) await new Promise((resolve) => setTimeout(resolve, 5000));
+    if (attempt < 24) await new Promise((resolve) => setTimeout(resolve, 5000));
   }
 }
 throw new Error(`production did not serve the committed edition: ${last}`);
+
+}
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch(error => { console.error(error); process.exitCode = 1; });
+}

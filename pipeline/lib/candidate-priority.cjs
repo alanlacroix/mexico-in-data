@@ -9,30 +9,44 @@ const { officialnessEvidence } = require('./importance-rubric.cjs');
 // busy morning of weather, sport, profiles and how-tos from crowding a prior-evening
 // policy or trade development out before the curator can score it.
 const ROUTINE_RX = /^(?:opinion|from the archive|how|what|who|where|when|why)\b|^¿|\b(?:clima|weather|hor[oó]scop|deportes?|partido|match|receta|recipe|gu[ií]a|guide|tips?|c[oó]mo ahorrar|celebration|profile|los hombres detr[aá]s)\b/i;
-const STATE_CHANGE_RX = /\b(?:aprueb|autoriza|publica|emite|firma|acuerd|reanuda|reactiva|restablec|suspend|proh[ií]b|rechaza|reduce|aumenta|recorta|mantiene|holds?|raises?|cuts?|approves?|rejects?|signs?|rules?|reopens?|resumes?|suspends?|sanctions?|tariffs?|begins? production|starts? production|announces? investment|acquires?|merges?)\w*/i;
-const CONSEQUENCE_RX = /\b(?:gobierno|congreso|senado|corte|tribunal|banxico|banco de m[eé]xico|hacienda|president|secretar[ií]a|regulad|comisi[oó]n|cofepris|cfe|pemex|estados unidos|ee\.?\s*uu\.?|u\.?s\.?|arancel|tariff|t-?mec|usmca|trade agreement|import|export|inspecci[oó]n|inspection|inflaci[oó]n|inflation|tasa|interest rate|impuesto|tax|ley|law|reforma|election|diplom[aá]tic|security|seguridad|deuda|debt)\w*/i;
-const ADVOCACY_RX = /\b(?:abog(?:a|ó)|consider(?:a|ó)|opin(?:a|ó)|adviert(?:e|ó)|llam(?:a|ó) a|calls? for|urges?|warn(?:s|ed)?|argues?|believes?)\b/i;
-const FORMAL_ACTION_RX = /\b(?:introduces?|files?|submits?|approves?|adopts?|signs?|orders?|announces?|presenta (?:iniciativa|reforma)|somete|aprueba|ordena|instruye|anuncia|emite|publica|firma)\b/i;
+const STATE_CHANGE_RX = /\b(?:aprueba[ns]?|aprobo|aprobaron|autoriza[n]?|autorizo|autorizaron|publica[n]?|publico|publicaron|emite[n]?|emitio|emitieron|firma[n]?|firmo|firmaron|acuerda[n]?|acordo|acordaron|reanuda[n]?|reanudo|reactiva[n]?|reactivo|restablece[n]?|restablecio|suspende[n]?|suspendio|prohibe[n]?|prohibio|rechaza[n]?|rechazo|reduce[n]?|redujo|aumenta[n]?|aumento|recorta[n]?|recorto|mantiene[n]?|mantuvo|da(?:n)? luz verde|dio luz verde|(?:da|dan|dio) (?:su |el )?visto bueno|holds?|held|raises?|raised|cuts?|approves?|approved|rejects?|rejected|signs?|signed|rules?|ruled|reopens?|reopened|resumes?|resumed|suspends?|suspended|sanctions?|sanctioned|begins? production|starts? production|announces? investment|acquires?|acquired|merges?|merged)\b/i;
+const CONSEQUENCE_RX = /\b(?:gobierno|congreso|senado|corte|tribunal|banxico|banco de mexico|hacienda|president\w*|secretaria|regulad\w*|comision|cofepris|cfe|pemex|inspeccion\w*|inspection\w*|inflacion|inflation|tasas?|interest rates?|impuestos?|tax\w*|ley(?:es)?|laws?|reformas?|elections?|diplomatic\w*|security|seguridad|deuda|debt)\b/i;
+const TRADE_RX = /\b(?:trade agreement|arancel(?:es|ari[oa]s?)?|tariffs?|import(?:s|ed|ing|acion|aciones)?|export(?:s|ed|ing|acion|aciones)?|borders?|fronteras?)\b/i;
+// Do not let US abbreviations become prefixes: "usurpación", "usuarios" and
+// "use" are not United States connections, and English "us" is a pronoun.
+const US_REFERENCE_RX = /\b(?:united states|estados unidos|ee\.?\s*uu\.?|u\.s\.?|usmca|t-?mec)(?![a-z0-9_])/i;
+const ADVOCACY_RX = /\b(?:abog(?:a|o)|consider(?:a|o)|opin(?:a|o)|advierte|advirtio|llam(?:a|o) a|calls? for|urges?|warn(?:s|ed)?|argues?|believes?)\b/i;
+const FORMAL_ACTION_RX = /\b(?:introduces?|files?|submits?|approves?|approved|adopts?|signs?|orders?|announces?|presenta (?:iniciativa|reforma)|somete|aprueba|aprobo|ordena|instruye|anuncia|emite|publica|firma|da(?:n)? luz verde|dio luz verde|(?:da|dan|dio) (?:su |el )?visto bueno)\b/i;
+
+function candidateText(candidate) {
+  // Old ledgers retain the same RSS suffix now cleaned at collection. Do not let
+  // "La publicación" manufacture a fresh official action during replay.
+  const clean = (value) => String(value || '').replace(/\s*(?:The post|El art[ií]culo|La entrada|La publicaci[oó]n)\s+[\s\S]*?\s+(?:appeared first on|apareci[oó] primero en)\s+[\s\S]*$/i, '');
+  return `${clean(candidate?.title)} ${clean(candidate?.dek)}`.normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+const hasUsReference = (text) => US_REFERENCE_RX.test(text) || /\bUS\b/.test(text);
 
 function commentaryOnlyCandidate(candidate) {
-  const text = `${candidate?.title || ''} ${candidate?.dek || ''}`;
+  const text = candidateText(candidate);
   return ADVOCACY_RX.test(text) && !FORMAL_ACTION_RX.test(text);
 }
 
 function attentionSignal(candidate) {
-  const text = `${candidate?.title || ''} ${candidate?.dek || ''}`.trim();
+  const text = candidateText(candidate);
   if (!text) return 0;
   if (ROUTINE_RX.test(text)) return -1;
-  return Number(STATE_CHANGE_RX.test(text)) + Number(CONSEQUENCE_RX.test(text));
+  return Number(STATE_CHANGE_RX.test(text)) + Number(CONSEQUENCE_RX.test(text) || TRADE_RX.test(text) || hasUsReference(text));
 }
 
 function fallbackImportanceComponents(candidate) {
-  const text = `${candidate?.title || ''} ${candidate?.dek || ''}`.trim();
+  const text = candidateText(candidate);
   const empty = { nationalConsequence: 0, usMexicoStakes: 0, modelImpact: 0, durability: 0, officialness: 0 };
   if (!text || attentionSignal(candidate) < 0) return empty;
   const publicActor = /\b(?:government|gobierno|congress|congreso|senate|senado|court|corte|tribunal|banxico|banco de m[eé]xico|hacienda|president|secretar[ií]a|regulator|regulad|commission|comisi[oó]n|cofepris|cfe|pemex)\b/i.test(text);
-  const usMexico = /\b(?:united states|estados unidos|ee\.?\s*uu\.?|u\.?s\.?|usmca|t-?mec|trade agreement|arancel|tariff|import|export|border|frontera)\w*/i.test(text);
-  const operatingModel = /\b(?:investment|inversi[oó]n|acqui|merger|plant|factory|production|manufactur|energy|energ[ií]a|infrastructure|infraestructura|bank|fintech|payment|technology|tecnolog[ií]a|artificial intelligence|trade|comercio|export|import)\w*/i.test(text);
+  const usMexico = hasUsReference(text) || TRADE_RX.test(text);
+  const operatingModel = /\b(?:investment|inversion|adquisicion|adquir\w*|acqui\w*|mergers?|plants?|factory|production|produccion|manufactur\w*|energy|energia|infrastructure|infraestructura|banks?|fintech|payments?|technology|tecnologia|artificial intelligence|trade|comercio|export(?:s|acion|aciones)?|import(?:s|acion|aciones)?)\b/i.test(text);
   const companyMove = /\b(?:company|empresa|launch|lanza|starts?|inicia|begins?|acquires?|invierte|invests?)\w*/i.test(text);
   const changed = STATE_CHANGE_RX.test(text);
   return {

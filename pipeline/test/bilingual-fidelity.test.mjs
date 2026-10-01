@@ -92,3 +92,8 @@ assert.deepEqual(bilingualFidelityFlags({
   spanish:'Un peso más fuerte reduce el costo de las importaciones. El avance matutino ofrece alivio.',
 }), [], 'mixed-direction context must recognize lowers as well as lower');
 assert.ok(bilingualFidelityFlags({english:'The price is rising.',spanish:'El precio baja.'}).some(flag=>flag.includes('direction reversed')));
+
+assert.deepEqual(bilingualFidelityFlags({english:'Trade under USMCA continues.',spanish:'El comercio bajo el T-MEC continúa.'}),[]);
+assert.deepEqual(bilingualFidelityFlags({english:'Operators use unregistered servers.',spanish:'Los operadores usan servidores no registrados.'}),[]);
+assert.ok(bilingualFidelityFlags({english:'Operators use registered servers.',spanish:'Los operadores usan servidores no registrados.'}).some(flag=>flag.includes('negation')));
+assert.ok(bilingualFidelityFlags({english:'Operators use unregistered servers.',spanish:'Los operadores usan servidores registrados.'}).some(flag=>flag.includes('negation')));
