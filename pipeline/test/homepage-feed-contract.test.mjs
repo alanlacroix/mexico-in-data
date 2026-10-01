@@ -69,9 +69,10 @@ function renderFixture(artifact) {
   });
   return module.exports;
 }
+const baseWeekStory = edition.weekStories.find(story => story.id === edition.stories[0].id);
 const fixture = publicEdition.withArtifactHash({ ...edition, stories: [{ ...edition.stories[0], section: 'energy' }], weekStories: [
-  { ...edition.weekStories[0], section: 'energy' },
-  { ...edition.weekStories[1] || edition.weekStories[0], id: 'fixture-economy', section: 'economy' },
+  { ...baseWeekStory, section: 'energy' },
+  { ...edition.weekStories[1] || baseWeekStory, id: 'fixture-economy', section: 'economy' },
 ] });
 const reordered = renderFixture(fixture)('es');
 assert.equal(reordered.groups[0].items[0].id, 'fixture-economy');
@@ -81,8 +82,8 @@ wrongCopy.groups[0].items[0].title = fixture.weekStories[0].en.headline;
 assert.throws(() => assertShelfCopies(wrongCopy, fixture, 'es'), /atomically published/);
 
 const crowded = publicEdition.withArtifactHash({ ...edition, stories: [{ ...edition.stories[0], id: 'fixture-crowded-0', section: 'economy' }], weekStories: Array.from({ length: 6 }, (_, i) => ({
-  ...edition.weekStories[0], id: `fixture-crowded-${i}`, section: i % 2 ? 'money' : 'economy',
-  url: i === 0 ? edition.weekStories[0].url : `${edition.weekStories[0].url}#fixture-${i}`,
+  ...baseWeekStory, id: `fixture-crowded-${i}`, section: i % 2 ? 'money' : 'economy',
+  url: i === 0 ? baseWeekStory.url : `${baseWeekStory.url}#fixture-${i}`,
 })) });
 const limited = renderFixture(crowded)('es');
 assert.deepEqual(Array.from(limited.groups[0].items, story => story.id),
