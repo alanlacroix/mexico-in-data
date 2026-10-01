@@ -1661,50 +1661,14 @@
       "editorialDate": "2026-10-01",
       "slot": "morning",
       "candidateSignature": "4ed7b87a4c3718ad0d889b03abb36848412ef8d332a3042bd56dd0a093170841",
-      "state": "failed",
+      "state": "published",
       "startedAt": "2026-10-01T13:12:48.986Z",
-      "completedAt": "2026-10-01T13:13:29.547Z",
+      "completedAt": "2026-10-01T13:20:31.914394+00:00",
       "calls": 5,
       "costUSD": 0.113026,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-9f9c62dbec61: view: 5 sentences (cap 3); view: negation was introduced in Spanish; view: Spanish 5 sentences (cap 3) | n-bea9edbf718c: model omitted the required story unit | n-a9215d34eba4: model omitted the required story unit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-9f9c62dbec61",
-          "reasons": [],
-          "fields": {
-            "view": {
-              "en": "The blocking operation reflects aggressive government action but faces practical limits. Of 5,209 requested domain blocks, Anatel has completed 2,387. Operators can migrate to unregistered servers or rebrand. The damage claims depend on court proceedings with unclear timelines. The government also targeted 300 Facebook pages, 90 Instagram profiles and 186 apps.",
-              "es": "La operación de bloqueo refleja acciones gubernamentales agresivas pero enfrenta límites prácticos. De 5,209 bloqueos de dominios solicitados, Anatel ha completado 2,387. Los operadores pueden migrar a servidores no registrados o cambiar marca. Las demandas de daños dependen de procedimientos judiciales con cronogramas inciertos. El gobierno también se enfocó en 300 páginas de Facebook, 90 perfiles de Instagram y 186 aplicaciones.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "5 sentences (cap 3)",
-                "negation was introduced in Spanish",
-                "Spanish 5 sentences (cap 3)"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-bea9edbf718c",
-          "reasons": [
-            "model omitted the required story unit"
-          ],
-          "fields": {}
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-a9215d34eba4",
-          "reasons": [
-            "model omitted the required story unit"
-          ],
-          "fields": {}
-        }
-      ],
+      "artifactHash": "2055da1071e1ef1e2d1a52d602132b14d8c4e798ac66535d674ed4541cbe15c1",
+      "reason": "Independent editorial recovery passed source, bilingual and deterministic gates",
+      "diagnostics": [],
       "collection": {
         "collectedAt": "2026-10-01T13:12:48.986Z",
         "aliveSources": 68,
@@ -1773,6 +1737,49 @@
             "reservedUSD": 0.035887,
             "accountedUSD": 0.008541,
             "state": "settled"
+          }
+        ]
+      },
+      "manualRecovery": {
+        "reviewedAt": "2026-10-01T13:20:31.914394+00:00",
+        "evidenceCapturedAt": "2026-10-01T13:12:19.400Z",
+        "method": "independent field-by-field source, bilingual and editorial-usefulness review",
+        "priorFailure": "all story drafts failed the deterministic evidence gate: n-9f9c62dbec61: view: 5 sentences (cap 3); view: negation was introduced in Spanish; view: Spanish 5 sentences (cap 3) | n-bea9edbf718c: model omitted the required story unit | n-a9215d34eba4: model omitted the required story unit",
+        "priorDiagnostics": [
+          {
+            "stage": "deterministic",
+            "storyId": "n-9f9c62dbec61",
+            "reasons": [],
+            "fields": {
+              "view": {
+                "en": "The blocking operation reflects aggressive government action but faces practical limits. Of 5,209 requested domain blocks, Anatel has completed 2,387. Operators can migrate to unregistered servers or rebrand. The damage claims depend on court proceedings with unclear timelines. The government also targeted 300 Facebook pages, 90 Instagram profiles and 186 apps.",
+                "es": "La operación de bloqueo refleja acciones gubernamentales agresivas pero enfrenta límites prácticos. De 5,209 bloqueos de dominios solicitados, Anatel ha completado 2,387. Los operadores pueden migrar a servidores no registrados o cambiar marca. Las demandas de daños dependen de procedimientos judiciales con cronogramas inciertos. El gobierno también se enfocó en 300 páginas de Facebook, 90 perfiles de Instagram y 186 aplicaciones.",
+                "refs": [
+                  "article"
+                ],
+                "reasons": [
+                  "5 sentences (cap 3)",
+                  "negation was introduced in Spanish",
+                  "Spanish 5 sentences (cap 3)"
+                ]
+              }
+            }
+          },
+          {
+            "stage": "deterministic",
+            "storyId": "n-bea9edbf718c",
+            "reasons": [
+              "model omitted the required story unit"
+            ],
+            "fields": {}
+          },
+          {
+            "stage": "deterministic",
+            "storyId": "n-a9215d34eba4",
+            "reasons": [
+              "model omitted the required story unit"
+            ],
+            "fields": {}
           }
         ]
       }
