@@ -47,6 +47,7 @@ const lastGood = fs.readFileSync(file);
 
 const invalidCandidates = [
   { label: 'zero stories', value: edition([]) },
+  { label: 'six stories', value: edition(Array.from({length:6},(_,i)=>story({id:`story-${i}`,url:`https://example.com/story-${i}`}))) },
   { label: 'no exact-day story', value: edition([story({ date: '2026-09-01', lane: 'key-development' })]) },
   { label: 'partial English', value: (() => { const value = edition(); value.stories[0].en.view = ''; return value; })() },
   { label: 'partial Spanish', value: (() => { const value = edition(); value.stories[0].es.watch = ''; return value; })() },
@@ -88,3 +89,5 @@ const weekend = publicEdition.withArtifactHash({
 assert.equal(publicEdition.validateEdition(weekend).ok, true, 'weekend recap accepts current-week stories');
 
 console.log('public-edition tests: ok');
+
+assert.equal(publicEdition.validateEdition(edition(Array.from({length:5},(_,i)=>story({id:`five-${i}`,url:`https://example.com/five-${i}`})))).ok,true,'five fully verified stories are supported');

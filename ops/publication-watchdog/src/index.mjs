@@ -18,8 +18,8 @@ function settings(env) {
   };
 }
 
-const MORNING_DISPATCH_MINUTE = 6 * 60 + 35;
-const MORNING_RETRY_CUTOFF_MINUTE = 6 * 60 + 50;
+const MORNING_DISPATCH_MINUTE = 6 * 60 + 5;
+const MORNING_RETRY_CUTOFF_MINUTE = 6 * 60 + 20;
 
 export function mexicoCityClock(now = new Date()) {
   const date = now instanceof Date ? now : new Date(now);

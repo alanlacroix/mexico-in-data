@@ -16,7 +16,7 @@ assert.match(builder, /mistranslations, reversed actions, changed subjects/,
   'the independent audit must reject bilingual meaning changes');
 assert.match(builder, /EDITION_REQUIRE_REVIEW === '1' && weekendDay\(editorialDate\).*EDITION_WEEKEND_RECOVERY/,
   'the human-reviewed pilot skips weekend generation before creating an attempt');
-assert.match(builder, /first draft failed; running one bounded evidence-preserving repair pass/,
+assert.match(builder, /repairing only missing or rejected story units within the existing call budget/,
   'a failed first draft must receive one bounded repair without increasing the call cap');
 assert.match(builder, /weeklyBrief: buildWeeklyBrief\(passing, editorialDate\)/,
   'every generated candidate must carry the weekly presentation shape');
@@ -63,8 +63,8 @@ const matched = scheduledCandidate.linkScheduledCandidate({
 assert.equal(matched?.id, 'banxico-policy-test', 'a rates-unchanged outcome must be deterministically seeded');
 assert.match(builder, /seedScheduledCandidate/);
 assert.match(builder, /await candidateUniverse/);
-assert.match(builder, /ranked\.filter\(\(row\) => row\.item\._scheduled \|\| row\.importance >= 6\)/,
-  'low-value stories must not replace the last-good edition');
+assert.match(builder, /attentionSignal\(row\.item\) >= 0 && !commentaryOnlyCandidate\(row\.item\)/,
+  'routine content and commentary do not substitute for factual developments');
 
 const collector = fs.readFileSync(new URL('../collect-news.js', import.meta.url), 'utf8');
 assert.match(collector, /mapLimit\(REG\.sources, 10/);
@@ -120,8 +120,11 @@ assert.match(builder, /model: models.SONNET/, 'draft quality uses the evidence-w
 assert.match(builder, /input: 3, output: 15/, 'daily cap must price the selected model conservatively');
 const schemaSource = builder.slice(builder.indexOf('function draftSchema('), builder.indexOf('function auditSchema('));
 const exactSchema = new Function(`${schemaSource}; return draftSchema([0, 3]);`)();
-assert.equal(exactSchema.properties.stories.type, 'array');
-assert.ok(exactSchema.properties.stories.items.required.includes('es'));
+assert.equal(exactSchema.properties.stories.type, 'object');
+assert.deepEqual(exactSchema.properties.stories.required, ['s0', 's3']);
+assert.equal(exactSchema.properties.stories.properties.s3.$ref, '#/definitions/story');
+assert.ok(exactSchema.definitions.story.required.includes('es'));
+assert.equal(exactSchema.properties.stories.additionalProperties, false);
 assert.ok(JSON.stringify(exactSchema).length < 1600, 'avoid compiled-grammar explosion from duplicated story objects');
 assert.equal((builder.match(/model: models.SONNET, effort: 'low'/g) || []).length, 2,
   'bounded evidence-writing calls must not inherit high reasoning that consumes the whole output allowance');
@@ -129,7 +132,8 @@ assert.match(builder, /spent \+ estimate\(selectedModel\) \+ reservedAuditUSD > 
 assert.match(builder, /selectedModel = models.HAIKU/);
 assert.match(builder, /allowedNumericValues: unsupportedNumericTokens/);
 
-assert.equal((builder.match(/reserveUSD: reservedAuditUSD/g) || []).length,2);
+assert.match(builder, /reserveUSD: auditReservation\(rows\)/);
+assert.match(builder, /reserveUSD: reservedAuditUSD/);
 assert.match(builder, /spent \+ projected \+ reservedAuditUSD > dayLimit/);
 assert.match(builder, /exceeds the bounded audit field length/);
 assert.match(builder, /evidenceRefs: draft\[/);
@@ -144,3 +148,30 @@ for(const field of ['headline','dek','background','view','watch']) {
 }
 assert.ok(deterministicDraftCheck({evidence:[{id:'article',text:longField}]},oversized).some(flag=>flag.includes('bounded audit field length')),
   'audit bound counts actual JSON UTF-8 bytes, not character count');
+
+const { draftSchema, auditSchema, keyedUnits, repairOverlongAnalysis, sectionOf } = await import('../build-edition.mjs');
+assert.deepEqual(auditSchema([0, 3]).properties.reviews.required, ['s0', 's3']);
+assert.deepEqual(keyedUnits({s0:{headline:'first'},s3:{headline:'third'}}).map(unit=>unit.i),[0,3]);
+assert.deepEqual(keyedUnits([]),[],'old loose arrays cannot silently masquerade as complete output');
+assert.ok(Number.isNaN(keyedUnits({wrong:{}})[0].i));
+assert.equal(sectionOf({title:'Pemex reduce importaciones de diésel',beat:'fintech'}),'energy');
+assert.equal(sectionOf({title:'CFE amplía la red eléctrica',beat:'fintech'}),'energy');
+assert.equal(sectionOf({title:'Nuevo sistema de pagos digitales SPEI',beat:'energy'}),'payments');
+const overlong={es:{}};
+for(const f of ['background','view','watch']){overlong[f]='One. Two. Three. Four. Five.';overlong.es[f]='Uno. Dos. Tres. Cuatro. Cinco.';}
+const bounded=repairOverlongAnalysis(overlong);
+assert.equal(bounded.view,'One. Two. Three.');assert.equal(bounded.es.view,'Uno. Dos. Tres.');
+assert.match(builder,/evaluated\.rejectionDiagnostics\.length && callCount/,'partial failures get the remaining repair opportunity');
+assert.match(builder,/user: JSON\.stringify\(rejectedRows\.map/,'passing drafts are not regenerated');
+assert.match(builder,/optionalOnBudget: publicationCoverage/);
+assert.doesNotMatch(builder,/\$\{ANALYSIS_SHAPE\}/,'the daily writer must not import the contradictory return-no-analysis instruction');
+
+const {publicationCoverage,removableBudgetRow}=await import('../build-edition.mjs');
+const coverageRows=[0,1,2].map(index=>({index,item:{_scheduled:{id:`required-${index}`},_editorialDate:'2026-09-30'}}));
+coverageRows.push({index:3,item:{_editorialDate:'2026-10-01'}},{index:4,item:{_editorialDate:'2026-09-30'}});
+assert.equal(removableBudgetRow(coverageRows,'2026-10-01'),4);
+assert.equal(removableBudgetRow(coverageRows.slice(0,4),'2026-10-01'),-1,'budget shrink must retain exact-day coverage alongside required outcomes');
+assert.equal(publicationCoverage(coverageRows.slice(0,3),coverageRows,'2026-10-01'),false);
+assert.equal(publicationCoverage(coverageRows.slice(0,2),coverageRows,'2026-10-01'),false,'two drafts cannot spend on a guaranteed unusable final audit');
+assert.match(builder,/minStories: MIN_VISIBLE, maxStories: MAX_VISIBLE/);
+assert.match(builder,/refusing an unusable paid audit/);

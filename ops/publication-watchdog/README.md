@@ -1,9 +1,9 @@
 # Edition clock
 
 This Worker is only a clock. It dispatches `.github/workflows/happening.yml` once
-every day at 6:35 a.m. in `America/Mexico_City`, targeting a validated edition
+every day at 6:05 a.m. in `America/Mexico_City`, targeting a validated edition
 by 7:00 a.m. The 15-minute trigger maintains the health heartbeat and provides
-one bounded dispatch retry at 6:45 if the 6:35 GitHub request fails. A KV claim
+one bounded dispatch retry at 6:15 if the 6:05 GitHub request fails. A KV claim
 suppresses ordinary repeats; the publication command's committed slot ledger is
 the authoritative duplicate guard if Cloudflare and GitHub race.
 
@@ -12,6 +12,11 @@ workflow's manual recovery input and must not be added to the Worker schedule.
 
 It does not inspect the website, rewrite editorial state, retry failed content,
 or publish anything. `GET /` and `GET /health` are read-only.
+
+GitHub backups run at 6:20 and 6:40 a.m. Daily source-backed generation, bounded
+repair and deployment must finish before the 7:00 a.m. readiness target. Schedule
+configuration in this repository does not update an already deployed Worker. Verify
+the deployed cron and heartbeat after deployment.
 
 ## Deploy
 
@@ -27,9 +32,9 @@ npx wrangler deploy
 
 The existing `WATCHDOG_STATE` KV namespace contains only slot claims and a health
 heartbeat. Cloudflare Cron Triggers use UTC, so the exact daily trigger is
-`35 12 * * *`; the Worker verifies the corresponding local time in
+`5 12 * * *`; the Worker verifies the corresponding local time in
 `America/Mexico_City` before dispatching. Mexico City's current UTC-6 clock makes
-12:35 UTC equal to 6:35 a.m. local time.
+12:05 UTC equal to 6:05 a.m. local time.
 
 ## Test
 

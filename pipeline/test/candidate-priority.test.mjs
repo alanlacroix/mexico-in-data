@@ -92,4 +92,55 @@ assert.equal(commentaryOnlyCandidate({
   dek: 'La presidenta propone cambios al Congreso.',
 }), false, 'a current decision-maker formally filing a proposal is a development');
 
+const cfeInvestigation = {
+  title: 'CFE: Plazas pirata, sueldos inflados y señalamientos de nepotismo',
+  dek: 'Trabajadores denuncian usurpación de plazas, nepotismo y sueldos inflados. La publicación CFE: Plazas pirata, sueldos inflados y señalamientos de nepotismo apareció primero en EL CEO .',
+  tier: 2, _editorialDate: '2026-10-01', published_at: '2026-10-01T08:00:52Z',
+};
+assert.equal(attentionSignal(cfeInvestigation), 1,
+  'the actual Oct 1 RSS footer must not turn an investigation into a new official action');
+assert.equal(fallbackImportanceComponents(cfeInvestigation).usMexicoStakes, 0,
+  'usurpación must not match the U.S. abbreviation');
+assert.equal(fallbackImportanceComponents(cfeInvestigation).durability, 1);
+assert.equal(attentionSignal({title:'La publicación del informe de CFE genera debate.'}), 1,
+  'publication nouns are not the verb publica even without an RSS footer');
+assert.equal(attentionSignal({title:'CFE publicó un informe operativo.'}), 2,
+  'accented past-tense official actions remain recognized');
+
+const movistarApproval = {
+  title: 'CNA da luz verde a OXIO para comprar Movistar México por 450 millones de dólares',
+  dek: 'La Comisión Nacional Antimonopolio dio su visto bueno a la operación mediante la cual Melisa Acquisition adquirirá Telefónica México.',
+  tier: 2, _editorialDate: '2026-10-01', published_at: '2026-10-01T12:12:48Z',
+};
+const senateReform = {
+  title:'Senado aprueba reforma a ley de IED: va a Diputados',
+  dek:'La Comisión de Economía presentó los cambios sobre inversión internacional.',
+  tier:2, _editorialDate:'2026-10-01', published_at:'2026-10-01T06:59:30Z',
+};
+assert.equal(attentionSignal(movistarApproval), 2,
+  'da luz verde and visto bueno describe the actual Oct 1 regulatory approval');
+assert.equal(commentaryOnlyCandidate({...movistarApproval, dek:`${movistarApproval.dek} Un analista advierte riesgos.`}), false,
+  'an approval accompanied by a warning remains a formal development');
+assert.equal(commentaryOnlyCandidate({title:'Carstens abogó por revisar el T-MEC.'}), true,
+  'accent normalization preserves past-tense advocacy detection');
+assert.equal(fallbackImportanceComponents(movistarApproval).durability, 2);
+assert.equal(fallbackImportanceComponents(movistarApproval).modelImpact, 2);
+assert.deepEqual(prioritizeCandidates([cfeInvestigation, senateReform, movistarApproval], {editorialDate:'2026-10-01'}),
+  [movistarApproval, senateReform, cfeInvestigation],
+  'formal approval and legislative action precede an investigation inflated by feed plumbing');
+
+for (const title of ['Usuarios de CFE presentan una queja.', 'CFE denuncia usurpación de plazas.', 'Operators ask us for important guidance.']) {
+  assert.equal(fallbackImportanceComponents({title,tier:2}).usMexicoStakes, 0,
+    `neither U.S. prefixes nor import in important create trade stakes: ${title}`);
+}
+assert.equal(fallbackImportanceComponents({title:'Important guidance for Mexican firms.',tier:2}).modelImpact, 0,
+  'important is not an import activity');
+for (const actor of ['U.S.', 'US', 'United States', 'EE.UU.', 'EE. UU.', 'Estados Unidos']) {
+  assert.equal(fallbackImportanceComponents({title:`${actor} resumes inspections in Mexico.`,tier:2}).usMexicoStakes, 2,
+    `retain the actual cross-border actor ${actor}`);
+}
+for (const title of ['México aumenta importaciones de gas.', 'Exportaciones mexicanas crecen.', 'Se negocian aranceles para México.', 'USMCA review resumes.']) {
+  assert.equal(fallbackImportanceComponents({title,tier:2}).usMexicoStakes, 2, title);
+}
+
 console.log('candidate-priority tests: ok');

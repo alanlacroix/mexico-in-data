@@ -6,12 +6,13 @@
 
 import crypto from 'node:crypto';
 import { persistModelAccounting } from './lib/persist-model-accounting.mjs';
+import { restoreHeldEdition } from './lib/held-edition-recovery.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { collectNews } from './collect-news.js';
 import { fetchArticle } from './lib/fetch-article.js';
-import { editorialSourceTier, eventCandidateEligible, mexicoRelevant, registeredSourceFor } from './lib/news-trust.js';
+import { editorialSourceTier, eventCandidateEligible, mexicoRelevant, registeredSourceFor, stripNewsBoilerplate } from './lib/news-trust.js';
 import {
   lintAnalysisText, lintReportText, reportContextDistinct, unsupportedNumericTokens,
 } from './lib/lint.js';
@@ -23,7 +24,7 @@ import analysisEvidence from './lib/analysis-evidence.cjs';
 import publicEdition from './lib/public-edition.cjs';
 import attemptContract from './lib/edition-attempts.cjs';
 import { plainSourceName } from './lib/plain-language.cjs';
-import { REPORT, TRUST, SEAM, EARNED_LINE, BAN, ANALYSIS_SHAPE } from './lib/voice.js';
+import { REPORT, TRUST, SEAM, EARNED_LINE, BAN } from './lib/voice.js';
 import { validateNarrativeText } from './lib/publication-contract.js';
 import { articleUrlAllowed, sourceHosts } from './lib/url-safety.js';
 import bilingualFidelity from './lib/bilingual-fidelity.cjs';
@@ -36,8 +37,9 @@ const DATA = path.join(ROOT, 'data');
 const EDITION_FILE = path.join(DATA, 'edition.json');
 const ATTEMPTS_FILE = path.join(DATA, 'edition-attempts.json');
 const MAX_CANDIDATES = 24;
-const MAX_RANKED = 5;
-const MAX_VISIBLE = 3;
+const MAX_RANKED = 8;
+const MAX_VISIBLE = 5;
+const MIN_VISIBLE = 3;
 const MAX_WEEK_STORIES = 21;
 const MONTHLY_LIMIT = 6;
 const ANALYSIS_POLICY = 'atomic-bilingual-edition-v1';
@@ -46,7 +48,7 @@ const NEWS_SOURCES = read(path.join(__dirname, 'news-sources.json'), { sources: 
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
 const { dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate } = scheduledCandidate;
-const { prioritizeCandidates } = candidatePriority;
+const { prioritizeCandidates, fallbackImportanceComponents, attentionSignal, commentaryOnlyCandidate } = candidatePriority;
 const { calendarScore, standingScore } = analysisEvidence;
 const { atomicWriteEdition, mondayOf, previousDay, weekendDay } = publicEdition;
 const { bilingualFidelityFlags } = bilingualFidelity;
@@ -77,7 +79,8 @@ const clean = (value) => String(value || '').trim();
 const arr = (value) => (Array.isArray(value) ? value : []);
 const clamp = (value, low, high) => Math.max(low, Math.min(high, Math.round(Number(value) || low)));
 const sectionOf = (item) => {
-  const text = `${item.title || ''} ${item.dek || ''} ${item.beat || ''}`;
+  // Classify the article, not the publisher's broad registry beat.
+  const text = `${item.title || ''} ${item.dek || ''}`;
   if (/fintech|sistema de pagos|payment system|spei|codi|tarjeta|card fee|banca digital/i.test(text)) return 'payments';
   if (/homicid|violen|c[aá]rtel|narco|crimen|segurid|fentanil|desaparec/i.test(text)) return 'security';
   if (/usmca|t-?mec|arancel|tariff|frontera|border|ustr|deporta|migra|remesa|remittanc/i.test(text)) return 'us-mexico';
@@ -130,7 +133,8 @@ async function candidateUniverse(now, schedule, editorialDate) {
     isoWeek(now),
     isoWeek(new Date(now.getTime() - 7 * 864e5)),
   ]);
-  const all = [...files].flatMap((week) => read(path.join(DATA, 'news', `${week}.json`), []));
+  const all = [...files].flatMap((week) => read(path.join(DATA, 'news', `${week}.json`), []))
+    .map(item => ({ ...item, title: stripNewsBoilerplate(item.title), dek: stripNewsBoilerplate(item.dek) }));
   const byUrl = new Map();
   for (const item of all) {
     const date = editorialDay(item?.published_at);
@@ -179,7 +183,9 @@ function rankSchema() {
 }
 // Use the same hard requirements on the initial draft and the bounded repair.
 // Otherwise the repair is asked to fix symptoms without knowing the release gate.
-const DRAFT_GATE_CONTRACT = `Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. The allowedNumericValues list is a literal-value checklist, not independent evidence. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. If the evidence cannot support a required field, leave it empty for rejection.`;
+const DRAFT_GATE_CONTRACT = `Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. The allowedNumericValues list is a literal-value checklist, not independent evidence. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. Each field must fit within 600 JSON UTF-8 bytes. Return every requested story as a required s<index> key in the stories object, never an array. If evidence cannot support a field, keep its story key and leave that field empty for rejection.`;
+
+const DAILY_EDITORIAL_CONTRACT = `Preserve the difference between an official completed action, a proposal and a reported claim. Prefer primary records supplied in the evidence, and name the reporting source or claimant when a primary record is absent. Include the observation period and relevant denominator for numerical comparisons. Background adds necessary context rather than repeating the headline. The view explains a narrow business mechanism or practical limit supported by the evidence, not generic importance. The watch names a sourced observable decision or release and what it would establish. Unsupported substance must remain empty for rejection; never invent a fact to complete the shape.`;
 
 function draftSchema(indices) {
   const refs = { type: 'array', items: { type: 'string' } };
@@ -191,9 +197,8 @@ function draftSchema(indices) {
   };
   const item = {
     type: 'object', additionalProperties: false,
-    required: ['i', 'headline', 'headlineRefs', 'dek', 'dekRefs', 'background', 'backgroundRefs', 'view', 'viewRefs', 'watch', 'watchRefs', 'es'],
+    required: ['headline', 'headlineRefs', 'dek', 'dekRefs', 'background', 'backgroundRefs', 'view', 'viewRefs', 'watch', 'watchRefs', 'es'],
     properties: {
-      i: { type: 'integer' },
       headline: { type: 'string' }, headlineRefs: refs,
       dek: { type: 'string' }, dekRefs: refs,
       background: { type: 'string' }, backgroundRefs: refs,
@@ -202,19 +207,50 @@ function draftSchema(indices) {
       es: translation,
     },
   };
-  return { type: 'object', additionalProperties: false, required: ['stories'], properties: { stories: { type: 'array', items: item } } };
-}
-function auditSchema() {
   return {
-    type: 'object', additionalProperties: false, required: ['reviews'], properties: {
-      reviews: { type: 'array', items: {
-        type: 'object', additionalProperties: false, required: ['i', 'ok', 'problems'], properties: {
-          i: { type: 'integer' }, ok: { type: 'boolean' },
-          problems: { type: 'array', items: { type: 'string' } },
-        },
-      } },
-    },
+    type: 'object', additionalProperties: false, required: ['stories'],
+    definitions: { story: item },
+    properties: { stories: {
+      type: 'object', additionalProperties: false,
+      required: indices.map(index => `s${index}`),
+      properties: Object.fromEntries(indices.map(index => [`s${index}`, { $ref: '#/definitions/story' }])),
+    } },
   };
+}
+function auditSchema(indices) {
+  return {
+    type: 'object', additionalProperties: false, required: ['reviews'],
+    definitions: { review: {
+      type: 'object', additionalProperties: false, required: ['ok', 'problems'],
+      properties: { ok: { type: 'boolean' }, problems: { type: 'array', items: { type: 'string' } } },
+    } },
+    properties: { reviews: {
+      type: 'object', additionalProperties: false,
+      required: indices.map(index => `s${index}`),
+      properties: Object.fromEntries(indices.map(index => [`s${index}`, { $ref: '#/definitions/review' }])),
+    } },
+  };
+}
+
+function keyedUnits(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return [];
+  return Object.entries(value).map(([key, unit]) => ({ ...unit, i: /^s\d+$/.test(key) ? Number(key.slice(1)) : NaN }));
+}
+
+function publicationCoverage(rows, locked, editorialDate) {
+  const ids = new Set(rows.map(row => row.index));
+  return rows.length >= MIN_VISIBLE && rows.length <= MAX_VISIBLE
+    && (weekendDay(editorialDate) || rows.some(row => row.item._editorialDate === editorialDate))
+    && locked.filter(row => row.item._scheduled).every(row => ids.has(row.index));
+}
+
+function removableBudgetRow(rows, editorialDate) {
+  for (let index = rows.length - 1; index >= 0; index--) {
+    if (rows[index].item._scheduled) continue;
+    const remaining = rows.filter((_, i) => i !== index);
+    if (publicationCoverage(remaining, rows, editorialDate)) return index;
+  }
+  return -1;
 }
 
 function evidenceRecord({ id, kind, source, url, text }) {
@@ -311,15 +347,16 @@ function repairOverlongAnalysis(draft) {
   ]) {
     const english = sentenceParts(repaired[field], 'en');
     const spanish = sentenceParts(repaired?.es?.[field], 'es');
-    while (wordCount(english.join(' ')) > englishCap || wordCount(spanish.join(' ')) > spanishCap) {
+    while (english.length > 3 || spanish.length > 3
+      || wordCount(english.join(' ')) > englishCap || wordCount(spanish.join(' ')) > spanishCap) {
       if (english.length === spanish.length && english.length > 1) {
         english.pop();
         spanish.pop();
         continue;
       }
       let changed = false;
-      if (wordCount(english.join(' ')) > englishCap && english.length > 1) { english.pop(); changed = true; }
-      if (wordCount(spanish.join(' ')) > spanishCap && spanish.length > 1) { spanish.pop(); changed = true; }
+      if ((english.length > 3 || wordCount(english.join(' ')) > englishCap) && english.length > 1) { english.pop(); changed = true; }
+      if ((spanish.length > 3 || wordCount(spanish.join(' ')) > spanishCap) && spanish.length > 1) { spanish.pop(); changed = true; }
       if (!changed) break;
     }
     repaired[field] = english.join(' ').trim();
@@ -592,6 +629,26 @@ async function main() {
     write(ATTEMPTS_FILE, attempts);
   }
 
+  if (isRecovery && priorSlotAttempt.heldEdition !== undefined) {
+    try {
+      const held = restoreHeldEdition({ attempts, dataDirectory: DATA, date: editorialDate, slot, now, minStories: MIN_VISIBLE, maxStories: MAX_VISIBLE });
+      attempts = finishAttempt(attempts, editorialDate, slot, {
+        state: 'published', completedAt: new Date().toISOString(), artifactHash: held.artifactHash,
+        reason: 'Restored the exact audited edition for full release revalidation; zero model calls',
+      });
+      write(ATTEMPTS_FILE, attempts);
+      emitOutcome({ state: 'published', editorial_date: editorialDate, slot, artifact_hash: held.artifactHash });
+      return;
+    } catch (error) {
+      attempts = finishAttempt(attempts, editorialDate, slot, {
+        state: 'failed', completedAt: new Date().toISOString(), reason: `Held edition recovery failed: ${clean(error.message)}`,
+      });
+      write(ATTEMPTS_FILE, attempts);
+      emitOutcome({ state: 'failed', editorial_date: editorialDate, slot, artifact_hash: '' });
+      throw error;
+    }
+  }
+
   let schedule;
   let universe;
   let signature;
@@ -645,7 +702,7 @@ async function main() {
       // Bill each call in its actual UTC month, including a run crossing midnight.
       if (process.env.GITHUB_ACTIONS === 'true') process.env.LLM_BUDGET_DATE = new Date().toISOString();
       if (callCount >= MAX_MODEL_CALLS) throw new Error(`model call limit ${MAX_MODEL_CALLS} reached`);
-      const inputBytes = new TextEncoder().encode(JSON.stringify({ system: request.system, user: request.user, schema: request.schema })).byteLength + 1024;
+      const inputBytes = new TextEncoder().encode(JSON.stringify({ system: request.system, user: request.user, schema: request.schema })).byteLength + 1536;
       const spent = priorDailySpend + (Number(usage().costUSD) || 0);
       const reservedAuditUSD = Number(request.reserveUSD) || 0;
       const monthlyRemaining = budgetStatus('core').pacedRemainingUSD;
@@ -661,7 +718,10 @@ async function main() {
         console.warn('  daily budget: using bounded mechanical drafting with full evidence gates');
       }
       const projected = estimate(selectedModel);
-      if (spent + projected + reservedAuditUSD > dayLimit || projected + reservedAuditUSD > monthlyRemaining) throw new Error(`daily model budget would be exceeded (${spent.toFixed(4)} + ${projected.toFixed(4)} > ${dayLimit.toFixed(4)})`);
+      if (spent + projected + reservedAuditUSD > dayLimit || projected + reservedAuditUSD > monthlyRemaining) {
+        if (request.optionalOnBudget) return null;
+        throw new Error(`daily model budget would be exceeded (${spent.toFixed(4)} + ${projected.toFixed(4)} > ${dayLimit.toFixed(4)})`);
+      }
       callCount += 1;
       const result = await askJSON({
         ...request, model: selectedModel, priority: 'core',
@@ -680,26 +740,22 @@ async function main() {
           if (process.env.GITHUB_ACTIONS === 'true') persistModelAccounting({ cwd: ROOT });
         },
       });
-      if (!result) throw new Error(`model call ${callCount} returned no usable result`);
+      if (!result && !request.optionalOnBudget) throw new Error(`model call ${callCount} returned no usable result`);
       return result;
     };
 
     // Candidate priority already combines recency, source trust, scheduled outcomes,
     // and business consequence. Keeping ranking deterministic reserves one of the
     // three bounded model calls for a repair pass when the first draft fails.
-    const ranked = universe.slice(0, MAX_RANKED).map((item, index) => ({
-      index,
-      importance: clamp(item._scheduled?.importanceFloor || 7, 1, 10),
-      item,
-    }));
-    ranked.sort((a, b) => Number(Boolean(b.item._scheduled)) - Number(Boolean(a.item._scheduled))
-      || b.importance - a.importance
-      || String(b.item.published_at).localeCompare(String(a.item.published_at)));
-    // Rank once, then apply the product's independent-evidence requirement to that
-    // fixed order. Looking through the bounded top five is not a post-writing rerank:
-    // it prevents a card that could never support Briefly Explained from consuming
-    // one of the three edition positions. No replacement happens after drafting.
-    const rankedPool = ranked.filter((row) => row.item._scheduled || row.importance >= 6)
+    // No replacement happens after drafting: evidence filtering locks this ranked pool.
+    const rankedPool = universe.map((item, index) => ({
+      index, item,
+      importance: clamp(item._scheduled?.importanceFloor
+        || Object.values(fallbackImportanceComponents(item)).reduce((sum, value) => sum + value, 0), 1, 10),
+    })).filter(row => row.item._scheduled || (attentionSignal(row.item) >= 0 && !commentaryOnlyCandidate(row.item)))
+      .sort((a, b) => Number(Boolean(b.item._scheduled)) - Number(Boolean(a.item._scheduled))
+        || Number(b.item._editorialDate === editorialDate) - Number(a.item._editorialDate === editorialDate)
+        || b.importance - a.importance || a.index - b.index)
       .slice(0, MAX_RANKED);
     if (!rankedPool.length) throw new Error('ranking selected no developments');
     if (!weekendDay(editorialDate) && !rankedPool.some((row) => row.item._editorialDate === editorialDate)) {
@@ -715,8 +771,8 @@ async function main() {
     for (const row of withoutContext) {
       console.warn(`  skip ranked story without usable evidence: ${storyId(row.item)} | ${plainSourceName(row.item.sourceName || row.item.source)} | ${clean(row.item.title).slice(0, 120)}`);
     }
-    const locked = evidenceRows.filter(evidenceReady).slice(0, MAX_VISIBLE);
-    if (!locked.length) throw new Error('no ranked development has enough evidence for Briefly Explained');
+    let locked = evidenceRows.filter(evidenceReady).slice(0, MAX_VISIBLE);
+    if (locked.length < MIN_VISIBLE) throw new Error(`only ${locked.length} strong sourced developments available; need at least ${MIN_VISIBLE} without padding`);
     if (!weekendDay(editorialDate) && !locked.some((row) => row.item._editorialDate === editorialDate)) {
       throw new Error(`no ranked exact-day development has enough evidence for Briefly Explained: ${withoutContext.map((row) => storyId(row.item)).join(', ').slice(0, 300)}`);
     }
@@ -724,26 +780,42 @@ async function main() {
     // Reserve the mandatory Haiku audit before spending on writing/repair. Evidence
     // is sent once per row, and the deterministic 600-byte JSON-field ceiling bounds
     // both languages. Extra bytes cover refs, JSON framing and the audit instruction.
-    const auditEvidenceBytes = new TextEncoder().encode(JSON.stringify(locked.map((row) => row.evidence))).byteLength;
-    const reservedAuditUSD = (auditEvidenceBytes + locked.length * 5 * 2 * 600 + 8192) / 1e6 + 1800 * 5 / 1e6;
-
-    let draftResponse = await call({
-      system: `${DRAFT_GATE_CONTRACT}\n\n${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\n${ANALYSIS_SHAPE}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Before returning, verify every headline is at most 20 English words and 24 Spanish words, every dek is at most two sentences, every analysis field is at most three sentences, no field uses a semicolon, and every number appears in its cited evidence. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: explain a supported connection to earlier developments when prior-article-body evidence is present, otherwise supply only the context needed to understand this change. Never imply earlier MexicoBrief coverage unless a prior source was actually retrieved. If evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Our view: a narrow business implication supported by its citations, naming the affected kind of business where the evidence permits, without first person. Do not convert activity into demand, investment pledges into completed investment, or proposals into rules in force. Multiple articles may repeat one source; never imply independent confirmation from source count. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
-      user: JSON.stringify(locked.map((row) => ({
+    const auditReservation = rows => {
+      const bytes = new TextEncoder().encode(JSON.stringify(rows.map(row => row.evidence))).byteLength;
+      return (bytes + rows.length * 5 * 2 * 600 + 8192) / 1e6 + 2400 * 5 / 1e6;
+    };
+    const draftRequest = (rows) => ({
+      system: `${DRAFT_GATE_CONTRACT}\n\n${DAILY_EDITORIAL_CONTRACT}\n\n${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Before returning, verify every headline is at most 20 English words and 24 Spanish words, every dek is at most two sentences, every analysis field is at most three sentences, no field uses a semicolon, and every number appears in its cited evidence. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: explain a supported connection to earlier developments when prior-article-body evidence is present, otherwise supply only the context needed to understand this change. Never imply earlier MexicoBrief coverage unless a prior source was actually retrieved. If evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Our view: a narrow business implication supported by its citations, naming the affected kind of business where the evidence permits, without first person. Do not convert activity into demand, investment pledges into completed investment, or proposals into rules in force. Multiple articles may repeat one source; never imply independent confirmation from source count. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
+      user: JSON.stringify(rows.map((row) => ({
         i: row.index,
         allowedNumericValues: unsupportedNumericTokens(row.evidence.map((item) => item.text).join(' ')),
         story: { date: row.item._editorialDate, source: row.item.sourceName || row.item.source, url: row.item.url },
         evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
         ...(isRecovery ? { previousRejection: arr(priorSlotAttempt.diagnostics).find((item) => item.storyId === storyId(row.item)) || null } : {}),
       }))),
-      schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: 4000, reserveUSD: reservedAuditUSD,
+      schema: draftSchema(rows.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: rows.length * 1300 + 100, reserveUSD: auditReservation(rows),
     });
+    // Prefer three complete stories with the stronger writer over a five-story
+    // batch that would force a cheaper writer. A larger edition is used when its
+    // maximum writing bill plus the mandatory audit fits the unchanged allowance.
+    const availableForEdition = Math.min(dayLimit - priorDailySpend, budgetStatus('core').pacedRemainingUSD);
+    while (locked.length > MIN_VISIBLE) {
+      const request = draftRequest(locked);
+      const bytes = new TextEncoder().encode(JSON.stringify({system:request.system,user:request.user,schema:request.schema})).byteLength + 1536;
+      const maximum = (bytes * 3 + request.maxTokens * 15) / 1e6 + request.reserveUSD;
+      if (maximum <= availableForEdition) break;
+      const removable = removableBudgetRow(locked, editorialDate);
+      if (removable < 0) break;
+      locked = locked.filter((_, index) => index !== removable);
+    }
+    const reservedAuditUSD = auditReservation(locked);
+    let draftResponse = await call(draftRequest(locked));
     const expectedDrafts = new Set(locked.map((row) => row.index));
     const evaluateDrafts = (response) => {
       const draftRejects = [];
       const rejectionDiagnostics = [];
       const draftByIndex = new Map();
-      for (const draft of arr(response.stories)) {
+      for (const draft of keyedUnits(response.stories)) {
         const index = Number(draft?.i);
         if (!expectedDrafts.has(index)) { draftRejects.push(`unexpected draft index ${Number.isFinite(index) ? index : '?'}`); continue; }
         if (draftByIndex.has(index)) { draftRejects.push(`duplicate draft index ${index}`); continue; }
@@ -769,19 +841,25 @@ async function main() {
       return { deterministicPass, draftRejects, rejectionDiagnostics };
     };
     let evaluated = evaluateDrafts(draftResponse);
-    if (!evaluated.deterministicPass.length && callCount < MAX_MODEL_CALLS - 1) {
-      console.warn('  first draft failed; running one bounded evidence-preserving repair pass');
+    if (evaluated.rejectionDiagnostics.length && callCount < MAX_MODEL_CALLS - 1) {
+      const passingIndices = new Set(evaluated.deterministicPass.map(entry => entry.row.index));
+      const rejectedRows = locked.filter(row => !passingIndices.has(row.index));
+      console.warn('  repairing only missing or rejected story units within the existing call budget');
       draftResponse = await call({
-        system: `${DRAFT_GATE_CONTRACT}\n\n${TRUST}\n\n${REPORT}\n\nRepair every rejected bilingual story unit. Use only its evidence. Keep every number, actor, action, date, procedural stage and certainty supported by the cited evidence. Cite an independent record in background whenever one is available. Remove unsupported claims instead of guessing. Keep headlines under 20 English and 24 Spanish words, deks at two sentences, analysis fields at three sentences, and return every requested index.`,
-        user: JSON.stringify(locked.map((row) => ({
+        optionalOnBudget: publicationCoverage(evaluated.deterministicPass.map(entry => entry.row), locked, editorialDate),
+        system: `${DRAFT_GATE_CONTRACT}\n\n${DAILY_EDITORIAL_CONTRACT}\n\n${TRUST}\n\n${REPORT}\n\nRepair every rejected bilingual story unit. Use only its evidence. Keep every number, actor, action, date, procedural stage and certainty supported by the cited evidence. Cite an independent record in background whenever one is available. Remove unsupported claims instead of guessing. Keep headlines under 20 English and 24 Spanish words, deks at two sentences, analysis fields at three sentences, and return every requested index.`,
+        user: JSON.stringify(rejectedRows.map((row) => ({
           i: row.index,
           allowedNumericValues: unsupportedNumericTokens(row.evidence.map((item) => item.text).join(' ')),
           evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
           rejected: evaluated.rejectionDiagnostics.find((item) => item.storyId === storyId(row.item)) || null,
         }))),
-        schema: draftSchema(locked.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: 4000, reserveUSD: reservedAuditUSD,
+        schema: draftSchema(rejectedRows.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: rejectedRows.length * 1300 + 100, reserveUSD: reservedAuditUSD,
       });
-      evaluated = evaluateDrafts(draftResponse);
+      evaluated = evaluateDrafts({ stories: {
+        ...Object.fromEntries(evaluated.deterministicPass.map(entry => [`s${entry.row.index}`, entry.draft])),
+        ...(draftResponse?.stories || {}),
+      } });
     }
     const { deterministicPass, draftRejects, rejectionDiagnostics } = evaluated;
     if (!deterministicPass.length) {
@@ -789,8 +867,13 @@ async function main() {
       throw new Error(`all story drafts failed the deterministic evidence gate: ${draftRejects.join(' | ').slice(0, 330)}`);
     }
 
+    if (!publicationCoverage(deterministicPass.map(entry => entry.row), locked, editorialDate)) {
+      failureDiagnostics = rejectionDiagnostics;
+      throw new Error(`drafts cannot meet the ${MIN_VISIBLE}–${MAX_VISIBLE} story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit`);
+    }
+
     const auditResponse = await call({
-      system: `You are the final independent evidence and bilingual editor. Review each English field only against the records identified by its evidenceRefs in that input’s evidence list. Independently compare its Spanish translation with both the English field and the same cited evidence. Reject unsupported actors, numbers, comparisons, causal claims, procedural stages, predictions, non sequiturs, mistranslations, reversed actions, changed subjects, or changed degrees of certainty in either language. Do not reject a clearly labeled narrow inference merely for being an inference. Do not rewrite either language. Return one verdict for every input index.`,
+      system: `You are the final independent evidence and bilingual editor. Review each English field only against the records identified by its evidenceRefs in that input’s evidence list. Independently compare its Spanish translation with both the English field and the same cited evidence. Reject unsupported actors, numbers, comparisons, causal claims, procedural stages, predictions, non sequiturs, mistranslations, reversed actions, changed subjects, or changed degrees of certainty in either language. Do not reject a clearly labeled narrow inference merely for being an inference. Do not rewrite either language. Return a reviews object with one required s<index> verdict for every input index, never an array.`,
       user: JSON.stringify(deterministicPass.map(({ row, draft }) => ({
         i: row.index,
         evidence: row.evidence.map(({ id, text }) => ({ id, text })),
@@ -799,9 +882,9 @@ async function main() {
           evidenceRefs: draft[`${field}Refs`],
         }])),
       }))),
-      schema: auditSchema(), maxTokens: 1800,
+      schema: auditSchema(deterministicPass.map(entry => entry.row.index)), maxTokens: 2400,
     });
-    const reviews = new Map(arr(auditResponse.reviews).map((review) => [Number(review.i), review]));
+    const reviews = new Map(keyedUnits(auditResponse.reviews).map((review) => [Number(review.i), review]));
     const passing = [];
     for (const entry of deterministicPass) {
       const review = reviews.get(entry.row.index);
@@ -819,6 +902,7 @@ async function main() {
     const passingIds = new Set(passing.map((story) => story.id));
     if (selectedScheduled.some((id) => !passingIds.has(id))) throw new Error('a required scheduled outcome failed the edition gate');
     if (!passing.length) throw new Error('all selected stories failed the independent evidence audit');
+    if (passing.length < MIN_VISIBLE) throw new Error(`only ${passing.length} stories passed every editorial gate; need at least ${MIN_VISIBLE} without padding`);
     if (!weekendDay(editorialDate) && !passing.some((story) => story.date === editorialDate)) {
       throw new Error('no exact-day story survived the edition gate');
     }
@@ -865,7 +949,7 @@ async function main() {
   }
 }
 
-export { candidateUniverse, evidenceFor, deterministicDraftCheck, makeStory, buildWeekStories, buildWeeklyBrief };
+export { main, candidateUniverse, evidenceFor, deterministicDraftCheck, makeStory, buildWeekStories, buildWeeklyBrief, draftSchema, auditSchema, keyedUnits, repairOverlongAnalysis, sectionOf, publicationCoverage, removableBudgetRow };
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => {
   console.error(`build-edition failed: ${error.stack || error.message}`);
