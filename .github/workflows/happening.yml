@@ -94,6 +94,14 @@ jobs:
         continue-on-error: true
         run: npm run release
 
+      - name: Preserve audited edition after a release rejection
+        if: always() && steps.edition.outputs.state == 'published' && steps.release.outcome == 'failure'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: held-edition-${{ steps.edition.outputs.editorial_date }}-${{ steps.edition.outputs.slot }}
+          path: data/edition.json
+          retention-days: 7
+
       - name: Record release rejection as a failed attempt
         if: always() && steps.edition.outputs.state == 'published' && steps.release.outcome != 'success'
         env:
@@ -124,6 +132,7 @@ jobs:
             echo "published=false" >> "$GITHUB_OUTPUT"
           else
             git add data/edition-attempts.json data/llm-spend.json data/news/
+            if [ "$RELEASE_OUTCOME" = "failure" ]; then EDITION_STATE="release-failed"; fi
             message="[CF-Pages-Skip] edition: ${EDITORIAL_DATE:-unknown} ${EDITION_STATE:-failed}"
             echo "published=false" >> "$GITHUB_OUTPUT"
           fi

@@ -1,4 +1,8 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -34,15 +38,57 @@ const built = feed();
 assert.equal(built.stories.length, edition.stories.length, 'the live feed must keep the full last-good edition');
 assert.ok(built.stories.every((story) => story.be), 'every edition card must expose Briefly Explained');
 assert.deepEqual(feedEs().stories.map((story) => story.id), built.stories.map((story) => story.id));
-assert.deepEqual(
-  weeklyTop('en').groups.flatMap((group) => group.items).map((story) => story.id).sort(),
-  edition.weekStories.map((story) => story.id).sort(),
-  'the topic shelf must come only from the same edition artifact',
-);
-assert.equal(
-  weeklyTop('es').groups.flatMap((group) => group.items)[0].title,
-  edition.weekStories[0].es.headline,
-  'the weekly shelf must use the Spanish copy published atomically with English',
-);
+function assertShelfCopies(shelf, artifact, locale) {
+  const sourceById = new Map(artifact.weekStories.map(story => [story.id, story]));
+  const rows = shelf.groups.flatMap(group => group.items);
+  assert.ok(rows.length >= Math.min(4, artifact.weekStories.length));
+  assert.equal(new Set(rows.map(story => story.id)).size, rows.length);
+  for (const group of shelf.groups) assert.ok(group.items.length <= 4);
+  for (const story of rows) {
+    const source = sourceById.get(story.id);
+    assert.ok(source, 'the topic shelf must come only from the same edition artifact');
+    assert.equal(story.title, source[locale].headline,
+      'each grouped story must use its own atomically published language copy');
+    assert.equal(story.dek, source[locale].dek);
+  }
+}
+for (const locale of ['en', 'es']) assertShelfCopies(weeklyTop(locale), edition, locale);
+assert.deepEqual(weeklyTop('en').groups.map(group => group.items.map(story => story.id)),
+  weeklyTop('es').groups.map(group => group.items.map(story => story.id)));
+
+// Topic grouping can move yesterday's economy story ahead of today's energy story.
+// Exercise the actual renderer against a valid fixture in memory; never edit data/.
+const publicEdition = require('../lib/public-edition.cjs');
+const rendererPath = fileURLToPath(new URL('../../_data/weeklyTop.js', import.meta.url));
+function renderFixture(artifact) {
+  const module = { exports: {} };
+  vm.runInNewContext(fs.readFileSync(rendererPath, 'utf8'), {
+    module, __dirname: path.dirname(rendererPath),
+    require: id => id === 'node:fs' ? { readFileSync: () => JSON.stringify(artifact) }
+      : id === '../pipeline/lib/public-edition.cjs' ? publicEdition : require(id),
+  });
+  return module.exports;
+}
+const fixture = publicEdition.withArtifactHash({ ...edition, stories: [{ ...edition.stories[0], section: 'energy' }], weekStories: [
+  { ...edition.weekStories[0], section: 'energy' },
+  { ...edition.weekStories[1] || edition.weekStories[0], id: 'fixture-economy', section: 'economy' },
+] });
+const reordered = renderFixture(fixture)('es');
+assert.equal(reordered.groups[0].items[0].id, 'fixture-economy');
+assertShelfCopies(reordered, fixture, 'es');
+const wrongCopy = JSON.parse(JSON.stringify(reordered));
+wrongCopy.groups[0].items[0].title = fixture.weekStories[0].en.headline;
+assert.throws(() => assertShelfCopies(wrongCopy, fixture, 'es'), /atomically published/);
+
+const crowded = publicEdition.withArtifactHash({ ...edition, stories: [{ ...edition.stories[0], id: 'fixture-crowded-0', section: 'economy' }], weekStories: Array.from({ length: 6 }, (_, i) => ({
+  ...edition.weekStories[0], id: `fixture-crowded-${i}`, section: i % 2 ? 'money' : 'economy',
+  url: i === 0 ? edition.weekStories[0].url : `${edition.weekStories[0].url}#fixture-${i}`,
+})) });
+const limited = renderFixture(crowded)('es');
+assert.deepEqual(Array.from(limited.groups[0].items, story => story.id),
+  ['fixture-crowded-0', 'fixture-crowded-1', 'fixture-crowded-2', 'fixture-crowded-3'],
+  'the topic shelf intentionally displays the first four per topic');
+assertShelfCopies(limited, crowded, 'es');
+assert.equal(limited.totalWeek, 6, 'the count includes artifact stories beyond the visible topic cap');
 
 console.log('homepage-feed contract: ok');
