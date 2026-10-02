@@ -7,6 +7,7 @@
 import crypto from 'node:crypto';
 import { persistModelAccounting } from './lib/persist-model-accounting.mjs';
 import { restoreHeldEdition } from './lib/held-edition-recovery.mjs';
+import { requirePublicationRequest } from './lib/publication-request.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -588,6 +589,7 @@ function buildWeeklyBrief(stories, editorialDate) {
 }
 
 async function main() {
+  requirePublicationRequest();
   const now = new Date(process.env.EDITION_NOW_ISO || Date.now());
   if (!Number.isFinite(now.getTime())) throw new Error('EDITION_NOW_ISO is invalid');
   const editorialDate = clean(process.env.PUBLICATION_DATE) || editorialDay(now);
@@ -705,6 +707,7 @@ async function main() {
     const priorDailySpend = dateSpend(attempts, editorialDate);
     const dayLimit = dailyLimit(editorialDate, MONTHLY_LIMIT);
     const call = async (request) => {
+      requirePublicationRequest();
       // Bill each call in its actual UTC month, including a run crossing midnight.
       if (process.env.GITHUB_ACTIONS === 'true') process.env.LLM_BUDGET_DATE = new Date().toISOString();
       if (callCount >= MAX_MODEL_CALLS) throw new Error(`model call limit ${MAX_MODEL_CALLS} reached`);
@@ -744,6 +747,9 @@ async function main() {
           });
           write(ATTEMPTS_FILE, attempts);
           if (process.env.GITHUB_ACTIONS === 'true') persistModelAccounting({ cwd: ROOT });
+          // A slow accounting push must not let a request expire before fetch.
+          // Settlement remains allowed after expiry so verified usage is retained.
+          if (receipt.state === 'reserved') requirePublicationRequest();
         },
       });
       if (!result && !request.optionalOnBudget) throw new Error(`model call ${callCount} returned no usable result`);

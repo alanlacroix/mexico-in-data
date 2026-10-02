@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Short-lived edition dispatch request",
+  "description": "Change ops/publication-request.json on main only when an edition run is authorized. The planner also requires today's America/Mexico_City editorial date and an expiry strictly in the future, at most 30 minutes away. Existing attempt, recovery, accounting and publication gates still apply. This schema file does not request a run.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["editorialDate", "slot", "expiresAt", "purpose"],
+  "properties": {
+    "editorialDate": { "type": "string", "format": "date" },
+    "slot": { "type": "string", "enum": ["morning", "noon"] },
+    "expiresAt": { "type": "string", "format": "date-time", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$" },
+    "purpose": { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "^[^\\u0000-\\u001f\\u007f]*\\S[^\\u0000-\\u001f\\u007f]*$" }
+  }
+}

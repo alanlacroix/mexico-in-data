@@ -13,7 +13,8 @@ const worker = read('ops/publication-watchdog/src/index.mjs');
 const weekly = read('_data/weeklyTop.js');
 
 assert.equal((workflow.match(/node pipeline\/build-edition\.mjs/g) || []).length, 1, 'one command must own edition generation');
-assert.doesNotMatch(workflow, /^\s+push:/m, 'pushes must never trigger editorial generation');
+assert.match(workflow, /push:\s+branches: \[main\]\s+paths: \['ops\/publication-request\.json'\]/,
+  'only an explicit repository request path may trigger the push fallback');
 assert.doesNotMatch(workflow, /build-happening|build-brief|translate-es|publication-status|publish-edition/);
 assert.match(workflow, /git add data\/edition\.json data\/edition-attempts\.json data\/llm-spend\.json data\/editions\/ data\/news\//,
   'a successful edition must commit its immutable history alongside the public artifact');

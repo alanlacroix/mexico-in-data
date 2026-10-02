@@ -4,6 +4,9 @@ name: edition
 # Backups at 06:20 and 06:40
 # also recover one failed attempt; the persisted ledger caps retries and spend.
 on:
+  push:
+    branches: [main]
+    paths: ['ops/publication-request.json']
   schedule:
     - cron: '20 12 * * *'
     - cron: '40 12 * * *'
@@ -81,6 +84,7 @@ jobs:
         if: steps.plan.outputs.run == 'true'
         continue-on-error: true
         env:
+          TRIGGER_EVENT: ${{ github.event_name }}
           GH_TOKEN: ${{ github.token }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PUBLICATION_SLOT: ${{ steps.plan.outputs.slot }}
