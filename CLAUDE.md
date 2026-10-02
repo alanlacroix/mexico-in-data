@@ -53,8 +53,17 @@ deployment live.
   A failed accounting push blocks the call. Never reset receipts to regain allowance.
 - A release-only failure preserves the exact audited candidate and provenance for zero-model
   recovery. Invalid held content fails closed; never regenerate to hide preservation failure.
+- After independent audit, retain exact drafts, evidence, verdicts and final validation
+  diagnostics in a one-day Actions artifact outside Git and the public build. This is
+  diagnostic material, not permission to publish. Changed prose needs fresh review.
+- Run the public artifact's evidence-free bilingual checks before paying for audit,
+  alongside cited-evidence checks, so final validation cannot introduce a second dialect
+  of the translation rules.
 - Begin at 06:05 Mexico City, with GitHub backups at 06:20 and 06:40, targeting live
   verified delivery by 07:00. Worker code/config changes require a separate verified deployment.
+- Successful main-branch morning collection can also start the bounded edition during
+  06:05–06:45 Mexico City. Evening/late collections cannot initiate paid generation.
+  This is a second GitHub trigger, not a guarantee against GitHub scheduling delays.
 - The Cloudflare Worker is only a clock. It may dispatch each date/slot once; it never
   evaluates, repairs, or republishes content.
 - A main-branch push changing only the dispatch path `ops/publication-request.json`

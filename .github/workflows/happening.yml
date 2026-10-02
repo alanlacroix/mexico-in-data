@@ -11,7 +11,7 @@ on:
     - cron: '20 12 * * *'
     - cron: '40 12 * * *'
   workflow_run:
-    workflows: [release-check]
+    workflows: [release-check, collect-news]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -66,6 +66,7 @@ jobs:
         id: plan
         env:
           TRIGGER_EVENT: ${{ github.event_name }}
+          TRIGGER_WORKFLOW: ${{ github.event.workflow_run.name || '' }}
           REQUESTED_SLOT: ${{ inputs.slot || 'morning' }}
           REQUESTED_RECOVERY: ${{ inputs.retry_failed && 'true' || 'false' }}
         run: node pipeline/publication-plan.mjs
@@ -91,7 +92,18 @@ jobs:
           EDITION_REQUIRE_REVIEW: '0'
           EDITION_WEEKEND_RECOVERY: '1'
           EDITION_RETRY_FAILED: ${{ steps.plan.outputs.retry }}
+          EDITION_QUARANTINE_DIRECTORY: ${{ runner.temp }}/edition-quarantine
         run: node pipeline/build-edition.mjs
+
+      - name: Preserve generated edition diagnostics
+        if: always() && steps.edition.outputs.quarantine_ready == 'true'
+        continue-on-error: true
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: edition-quarantine-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/edition-quarantine/candidate.json
+          if-no-files-found: ignore
+          retention-days: 1
 
       - name: Build and validate the exact site before publication
         id: release

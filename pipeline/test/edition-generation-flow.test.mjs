@@ -7,11 +7,68 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import crypto from 'node:crypto';
+import { createEditionQuarantine } from '../lib/edition-quarantine.mjs';
+import editionContract from '../lib/public-edition.cjs';
+import { deterministicDraftCheck } from '../build-edition.mjs';
+import { bilingualFidelityFlags } from '../lib/bilingual-fidelity.cjs';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixture = JSON.parse(fs.readFileSync(path.join(root, 'data/editions/2026-10-01.json')));
 const priorFixture = JSON.parse(fs.readFileSync(path.join(root, 'data/editions/2026-09-30.json')));
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mb-flow-'));
+const artifacts = fs.mkdtempSync(path.join(os.tmpdir(), 'mb-quarantine-test-'));
 try {
+  // A rejected candidate is diagnostic evidence, never an alternate public file.
+  const evidence = [{ id: 'article', url: 'https://example.com/report', text: 'Exact bounded source evidence.' }];
+  const auditedDrafts = [{ index: 0, storyId: 'test-story', draft: { en: 'Exact draft' }, evidence }];
+  const audit = { inputs: [{ i: 0 }], response: { reviews: { s0: { ok: true, problems: [] } } } };
+  const capture = createEditionQuarantine({ repositoryRoot: tmp, directory: path.join(artifacts, 'unit'),
+    metadata: { editorialDate: '2026-10-01', slot: 'morning' }, drafts: auditedDrafts, audit });
+  const invalidCandidate = editionContract.withArtifactHash({ ...fixture, slot: 'invalid' });
+  const lastGood = path.join(tmp, 'last-good.json');
+  fs.writeFileSync(lastGood, JSON.stringify(priorFixture));
+  const originalBytes = fs.readFileSync(lastGood);
+  capture.recordCandidate(invalidCandidate);
+  try { editionContract.atomicWriteEdition(lastGood, invalidCandidate); assert.fail('invalid candidate was published'); }
+  catch (error) { capture.recordFailure(error, 'final-artifact-validation'); }
+  const saved = JSON.parse(fs.readFileSync(capture.file));
+  assert.deepEqual(saved.candidate, invalidCandidate);
+  assert.equal(saved.candidateHash, editionContract.editionHash(invalidCandidate));
+  assert.deepEqual(saved.drafts, auditedDrafts);
+  assert.deepEqual(saved.audit, audit);
+  assert.equal(saved.auditedPayloadHash, crypto.createHash('sha256').update(JSON.stringify({ drafts: auditedDrafts, audit })).digest('hex'));
+  assert.equal(saved.validation.ok, false);
+  assert.ok(saved.failure.reasons.some(reason => reason.includes('slot must be')));
+  assert.equal(saved.publicationAllowed, false);
+  assert.deepEqual(fs.readFileSync(lastGood), originalBytes);
+  const missingAudit = createEditionQuarantine({ repositoryRoot: tmp, directory: path.join(artifacts, 'missing-audit'),
+    metadata: {}, drafts: auditedDrafts, audit: null });
+  assert.equal(JSON.parse(fs.readFileSync(missingAudit.file)).publicationAllowed, false,
+    'a saved draft with no audit cannot acquire publication permission');
+  assert.throws(() => createEditionQuarantine({ repositoryRoot: tmp, directory: path.join(tmp, 'data/quarantine'),
+    metadata: {}, drafts: auditedDrafts, audit }), /outside the repository/);
+  const linked = path.join(artifacts, 'repo-link');
+  fs.symlinkSync(tmp, linked);
+  assert.throws(() => createEditionQuarantine({ repositoryRoot: tmp, directory: linked,
+    metadata: {}, drafts: auditedDrafts, audit }), /outside the repository/);
+
+  // Evidence-only actor additions must fail before paying for an audit, using
+  // the same evidence-free gate as the final public artifact.
+  const english = 'The authority published a report.';
+  const spanish = 'Banxico publicó un informe.';
+  assert.deepEqual(bilingualFidelityFlags({ english, spanish, evidence: ['Banxico published a report.'] }), []);
+  const identityDraft = { ...fixture.stories[0].en, es: { ...fixture.stories[0].es },
+    ...Object.fromEntries(['headline','dek','background','view','watch'].map(field => [`${field}Refs`, ['article']])) };
+  identityDraft.background = english;
+  identityDraft.es.background = spanish;
+  const identityRow = { evidence: [{ id: 'article', text: 'Banxico published a report.' }] };
+  assert.ok(deterministicDraftCheck(identityRow, identityDraft).some(flag => flag === 'background: banxico was introduced in Spanish'));
+  identityDraft.background = 'The Finance Committee sent the bill to the full chamber.';
+  identityDraft.es.background = 'La Comisión de Hacienda envió el dictamen al pleno.';
+  identityRow.evidence[0].text = `${identityDraft.background} ${identityDraft.es.background}`;
+  assert.ok(!deterministicDraftCheck(identityRow, identityDraft).some(flag => /background: (?:hacienda|finance committee) was/.test(flag)),
+    'recognized committee translation still passes the early identity gate');
+
   fs.cpSync(path.join(root,'pipeline'),path.join(tmp,'pipeline'),{recursive:true});
   fs.writeFileSync(path.join(tmp,'package.json'),'{"type":"module"}');
   const sources=JSON.parse(fs.readFileSync(path.join(root,'pipeline/news-sources.json'))).sources;
@@ -27,16 +84,39 @@ try {
   const runner=`
     import fs from 'node:fs';
     import dns from 'node:dns/promises';
+    import editionContract from './pipeline/lib/public-edition.cjs';
+    if (process.env.FLOW_CASE === 'artifact-reject') {
+      // Inject a final-boundary rejection after the real deterministic and audit
+      // flow. The unit case above independently exercises a real invalid artifact.
+      editionContract.atomicWriteEdition = () => { throw new Error('Injected final artifact rejection'); };
+    }
+    if (process.env.FLOW_CASE.startsWith('diagnostic-write-fail')) {
+      const writeFileSync = fs.writeFileSync;
+      let diagnosticWrites = 0;
+      fs.writeFileSync = (file, ...args) => {
+        if (String(file).startsWith(process.env.EDITION_QUARANTINE_DIRECTORY + '/') && ++diagnosticWrites > 1) {
+          throw Object.assign(new Error('Injected diagnostic disk failure'), { code: 'ENOSPC' });
+        }
+        return writeFileSync(file, ...args);
+      };
+    }
+    if (process.env.FLOW_CASE === 'diagnostic-write-fail-invalid') {
+      // Produce genuinely invalid final content while keeping the real atomic
+      // validator intact. Diagnostic write failures cannot bypass this gate.
+      const withArtifactHash = editionContract.withArtifactHash;
+      editionContract.withArtifactHash = candidate => withArtifactHash({ ...candidate, slot: 'invalid' });
+    }
     dns.lookup=async()=>[{address:'93.184.216.34',family:4}];
     const drafts=${JSON.stringify(drafts)};
     const calls=[];
     globalThis.fetch=async(url,init)=>{
       if(String(url).includes('api.anthropic.com')){
         const body=JSON.parse(init.body);const inputs=JSON.parse(body.messages[0].content);
+        if (!body.output_config.format.schema.required.includes('reviews') && !body.system.includes('If cited evidence spells a quantity in words, preserve it in words in both languages; do not convert it to digits. For example, casi un millón stays almost one million / casi un millón.')) throw new Error('Writer must preserve word-form quantities');
         const audit=body.output_config.format.schema.required.includes('reviews');
         calls.push({audit,indices:inputs.map(row=>row.i)});
         const key=audit?'reviews':'stories';
-        let values=inputs.map((row,index)=>['s'+row.i,audit?{ok:process.env.FLOW_CASE!=='audit-reject',problems:[]}:drafts[row.story?.url]||drafts[Object.keys(drafts).find(url=>inputs.length===1)]]);
+        let values=inputs.map((row,index)=>['s'+row.i,audit?{ok:!['audit-reject','diagnostic-capture-fail-audit-reject'].includes(process.env.FLOW_CASE),problems:[]}:drafts[row.story?.url]||drafts[Object.keys(drafts).find(url=>inputs.length===1)]]);
         if(!audit && calls.length===1 && ['partial','partial-unrepairable'].includes(process.env.FLOW_CASE))values=values.slice(0,1);
         if(!audit && calls.length===2){
           values=inputs.map(row=>{const url=row.evidence.find(e=>e.id==='article').url;return ['s'+row.i,drafts[url]];});
@@ -54,7 +134,7 @@ try {
     await main();
   `;
   fs.writeFileSync(path.join(tmp,'run.mjs'),runner);
-  for(const scenario of ['complete','partial','partial-unrepairable','audit-reject','budget-block']){
+  for(const scenario of ['complete','partial','partial-unrepairable','audit-reject','artifact-reject','budget-block','diagnostic-capture-fail','diagnostic-capture-fail-audit-reject','diagnostic-write-fail','diagnostic-write-fail-invalid']){
     fs.mkdirSync(path.join(tmp,'data/news'),{recursive:true});
     fs.writeFileSync(path.join(tmp,'data/edition.json'),JSON.stringify(priorFixture));
     fs.writeFileSync(path.join(tmp,'data/edition-attempts.json'),'{"schemaVersion":1,"attempts":[]}');
@@ -63,17 +143,26 @@ try {
     fs.writeFileSync(path.join(tmp,'data/standing.json'),'{"facts":[]}');
     fs.writeFileSync(path.join(tmp,'data/news/2026-W40.json'),JSON.stringify(rows));
     fs.rmSync(path.join(tmp,'calls.json'),{force:true});
+    const diagnosticDirectory=path.join(artifacts,scenario);
+    if(scenario.startsWith('diagnostic-capture-fail'))fs.writeFileSync(diagnosticDirectory,'not a directory');
     const before=fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8');
     const result=spawnSync(process.execPath,['run.mjs'],{cwd:tmp,encoding:'utf8',timeout:30000,
       env:{...process.env,GITHUB_ACTIONS:'false',ANTHROPIC_API_KEY:'test-only',LLM_BUDGET_OVERRIDE:'',
         LLM_LEDGER_PATH:path.join(tmp,'data/llm-spend.json'),EDITION_NOW_ISO:'2026-10-01T12:30:00Z',
+        EDITION_QUARANTINE_DIRECTORY:diagnosticDirectory,
         PUBLICATION_DATE:'2026-10-01',PUBLICATION_SLOT:'morning',EDITION_SKIP_COLLECTION:'1',
         EDITION_RETRY_FAILED:'0',EDITION_REQUIRE_REVIEW:'0',FLOW_CASE:scenario}});
     const calls=fs.existsSync(path.join(tmp,'calls.json'))?JSON.parse(fs.readFileSync(path.join(tmp,'calls.json'))):[];
-    if(scenario==='complete'||scenario==='partial'){
+    if(['complete','partial','diagnostic-capture-fail','diagnostic-write-fail'].includes(scenario)){
       assert.equal(result.status,0,`${scenario}: ${result.stderr}\n${result.stdout}`);
       const out=JSON.parse(fs.readFileSync(path.join(tmp,'data/edition.json')));
       assert.equal(out.stories.length,3,scenario);
+      assert.equal(editionContract.validateEdition(out).ok,true,'diagnostic failure cannot excuse invalid publication');
+      assert.ok(calls.some(call=>call.audit),'publication always includes independent audit');
+      if(scenario.startsWith('diagnostic-')){
+        assert.match(result.stderr,/Optional edition diagnostics unavailable|Could not save optional edition candidate diagnostics/);
+        assert.notEqual(fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8'),before,'valid publication survives optional storage failure');
+      }
       assert.equal(calls.length,scenario==='partial'?3:2,scenario);
       if(scenario==='partial'){
         assert.equal(calls[1].indices.length,2,'only missing units are repaired');
@@ -85,8 +174,42 @@ try {
       assert.equal(fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8'),before,'failure preserves last-good bytes');
       if(scenario==='budget-block')assert.equal(calls.length,0,'budget refusal occurs before provider fetch');
       if(scenario==='partial-unrepairable')assert.equal(calls.filter(call=>call.audit).length,0,'an unaffordable partial draft must not spend on an unusable audit');
+      if(scenario==='diagnostic-capture-fail-audit-reject'){
+        assert.equal(calls.length,2);
+        assert.match(result.stderr,/Optional edition diagnostics unavailable/);
+        assert.match(result.stderr,/all selected stories failed the independent evidence audit/);
+      }
+      if(scenario==='diagnostic-write-fail-invalid'){
+        assert.equal(calls.length,2,'mandatory final gate still follows independent audit');
+        assert.match(result.stderr,/Could not save optional edition candidate diagnostics/);
+        assert.match(result.stderr,/Could not append quarantine failure details/);
+        assert.match(result.stderr,/invalid edition: slot must be/,'original gate error survives diagnostic append failure');
+      }
+      if(scenario==='artifact-reject'){
+        assert.equal(calls.length,2,'the final rejection follows the independent audit');
+        const record=JSON.parse(fs.readFileSync(path.join(artifacts,scenario,'candidate.json')));
+        assert.equal(record.failure.stage,'final-artifact-validation');
+        assert.match(record.failure.message,/Injected final artifact rejection/);
+        assert.deepEqual(record.failure.reasons,['Injected final artifact rejection']);
+        assert.equal(record.candidate.stories.length,3);
+        assert.equal(record.candidateHash,record.candidate.artifactHash);
+        assert.equal(record.candidateHash,editionContract.editionHash(record.candidate));
+        assert.ok(record.drafts.every(row=>row.evidence.every(item=>typeof item.text==='string')));
+        assert.ok(record.audit.inputs.length===3 && Object.values(record.audit.response.reviews).every(review=>review.ok));
+        assert.equal(record.publicationAllowed,false);
+        assert.match(result.stdout,/quarantine_ready=true/);
+        assert.equal(fs.existsSync(path.join(tmp,'data/candidates')),false,'raw evidence never enters committed candidates');
+      }
     }
     assert.ok(calls.length<=3,'no internal model retry runaway');
+    if(scenario.startsWith('diagnostic-')){
+      assert.equal(fs.existsSync(path.join(tmp,'data/candidates')),false,'diagnostic failure never falls back to source evidence in Git');
+      assert.equal(fs.existsSync(path.join(tmp,'edition-quarantine')),false);
+    }
   }
   console.log('edition generation flow: ok');
-} finally {fs.rmSync(tmp,{recursive:true,force:true});}
+  const workflow=fs.readFileSync(path.join(root,'.github/workflows/happening.yml'),'utf8');
+  assert.match(workflow,/if: always\(\) && steps\.edition\.outputs\.quarantine_ready == 'true'/);
+  assert.match(workflow,/path: \$\{\{ runner\.temp \}\}\/edition-quarantine\/candidate\.json\s+if-no-files-found: ignore\s+retention-days: 1/);
+  assert.doesNotMatch(workflow,/git add[^\n]*quarantine/);
+} finally {fs.rmSync(tmp,{recursive:true,force:true});fs.rmSync(artifacts,{recursive:true,force:true});}

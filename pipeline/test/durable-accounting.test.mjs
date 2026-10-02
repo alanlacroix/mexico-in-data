@@ -26,11 +26,16 @@ const valid = () => ({ok:true, json:async()=>({usage:{input_tokens:1,output_toke
 try {
   let f = await fixture();
   let events = [];
+  const initialReceipts = [];
   globalThis.fetch = async () => { events.push('fetch'); assert.ok(f.read() > 0); return valid(); };
-  await f.askJSON({...request,onAccounting:async receipt=>{events.push(receipt.state);assert.equal(f.read(),receipt.accountedUSD);}});
+  await f.askJSON({...request,onAccounting:async receipt=>{events.push(receipt.state);initialReceipts.push(receipt);assert.equal(f.read(),receipt.accountedUSD);}});
   assert.deepEqual(events,['reserved','fetch','settled']);
   assert.equal(f.read(),0.000006);
   assert.equal(f.usage().costUSD,0.000006);
+  assert.deepEqual(initialReceipts[1].usage,{input_tokens:1,output_tokens:1});
+  assert.equal('usage' in initialReceipts[0],false,'reservations must not invent observed tokens');
+  assert.equal('responseModel' in initialReceipts[1],false);
+  assert.equal('stopReason' in initialReceipts[1],false);
 
   for (const response of [
     () => {throw new Error('network timeout');},
@@ -38,6 +43,8 @@ try {
     () => ({ok:false,status:500,text:async()=>''}),
     () => ({ok:true,json:async()=>({usage:{input_tokens:-1,output_tokens:1}})}),
     () => ({ok:true,json:async()=>({usage:{input_tokens:'1',output_tokens:1}})}),
+    () => ({ok:true,json:async()=>({usage:{input_tokens:1,output_tokens:1,cache_creation_input_tokens:1}})}),
+    () => ({ok:true,json:async()=>({usage:{input_tokens:1,output_tokens:1,cache_read_input_tokens:1}})}),
     () => ({ok:true,json:async()=>({content:[]})}),
   ]) {
     f = await fixture(); events=[];
@@ -47,6 +54,9 @@ try {
     assert.equal(f.read(),events[0].reservedUSD);
     assert.equal(f.usage().calls,1);
     assert.equal(f.usage().costUSD,events[0].reservedUSD);
+    assert.equal('usage' in events[0],false,'ambiguous calls retain the maximum without invented usage');
+    assert.equal('responseModel' in events[0],false);
+    assert.equal('stopReason' in events[0],false);
   }
   f = await fixture(); let fetched=0;
   globalThis.fetch = async()=>{fetched++;return valid();};
@@ -114,6 +124,38 @@ try {
   const durableSpend=JSON.parse(git(remote,'show','main:data/llm-spend.json'))['2026-09'];
   assert.equal(durableReceipt.state,'reserved');
   assert.equal(Math.round((durableSpend-0.1)*1e6)/1e6,durableReceipt.reservedUSD);
+  assert.equal('usage' in durableReceipt,false);
+
+  // Provider-reported metrics survive the same durable persistence path even when
+  // output is truncated. The accounting receipt never retains response prose.
+  const metricsRepo=path.join(tmp,'metrics');git(tmp,'clone','--branch','main',remote,metricsRepo);
+  git(metricsRepo,'config','user.name','test');git(metricsRepo,'config','user.email','test@example.invalid');
+  f=await fixture({'2026-09':durableSpend});
+  globalThis.fetch=async()=>({ok:true,json:async()=>({
+    model:'claude-haiku-4-5-provider-version',stop_reason:'max_tokens',
+    usage:{input_tokens:123,output_tokens:10,cache_creation_input_tokens:0,cache_read_input_tokens:0,unrelated:'private response data'},
+    content:[{type:'text',text:'{"unfinished":'}],
+  })});
+  assert.equal(await f.askJSON({...request,onAccounting:async receipt=>{
+    fs.copyFileSync(f.file,path.join(metricsRepo,ACCOUNTING_FILES[0]));
+    fs.writeFileSync(path.join(metricsRepo,ACCOUNTING_FILES[1]),JSON.stringify({attempts:[{
+      editorialDate:'2026-09-30',slot:'morning',calls:f.usage().calls,costUSD:f.usage().costUSD,
+      modelAccounting:{version:1,receipts:[receipt]},
+    }]}));
+    persistModelAccounting({cwd:metricsRepo});
+  }}),null);
+  const persistedMetrics=JSON.parse(git(remote,'show','main:data/edition-attempts.json'));
+  assert.doesNotThrow(()=>attemptsContract.readAccountingAttempts(persistedMetrics));
+  const settledReceipt=persistedMetrics.attempts[0].modelAccounting.receipts[0];
+  assert.equal(settledReceipt.state,'settled');
+  assert.equal(settledReceipt.model,request.model,'the requested billing route remains unchanged');
+  assert.equal(settledReceipt.responseModel,'claude-haiku-4-5-provider-version');
+  assert.equal(settledReceipt.stopReason,'max_tokens');
+  assert.deepEqual(settledReceipt.usage,{input_tokens:123,output_tokens:10,cache_creation_input_tokens:0,cache_read_input_tokens:0});
+  assert.equal(settledReceipt.accountedUSD,0.000173);
+  assert.equal(JSON.parse(git(remote,'show','main:data/llm-spend.json'))['2026-09'],f.read());
+  assert.equal(JSON.stringify(persistedMetrics).includes('private response data'),false);
+  assert.equal(JSON.stringify(persistedMetrics).includes('unfinished'),false);
 
   // An actual response can be reconciled locally even if the second push fails;
   // remote remains conservatively reserved and no subsequent call is made.
