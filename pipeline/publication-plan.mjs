@@ -25,7 +25,18 @@ export function recoverInterruptedAttempts(attempts, date, runId, runAttempt = '
   return attempts;
 }
 
-export function publicationPlan({ event, date, attempts, slot = 'morning', retry = false, edition, publicationRequest, now = new Date() }) {
+export function morningCollectionWindow(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'America/Mexico_City', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(now);
+  const minutes = Number(parts.find(part => part.type === 'hour').value) * 60
+    + Number(parts.find(part => part.type === 'minute').value);
+  return minutes >= 6 * 60 + 5 && minutes <= 6 * 60 + 45;
+}
+
+export function publicationPlan({ event, workflow = '', date, attempts, slot = 'morning', retry = false, edition, publicationRequest, now = new Date() }) {
+  const collectionTrigger = event === 'workflow_run' && workflow === 'collect-news';
+  if (collectionTrigger && (!morningCollectionWindow(now) || newsDay.editorialDay(now) !== date)) {
+    return { run: false, slot: 'morning', retry: false };
+  }
   if (event === 'push') {
     const requested = validatePublicationRequest(publicationRequest, now);
     if (!requested || requested.editorialDate !== date) return { run: false, slot: 'morning', retry: false };
@@ -59,7 +70,7 @@ export function publicationPlan({ event, date, attempts, slot = 'morning', retry
   }
   if (rows.some(row => row.state === 'started')) throw new Error(`Incomplete edition attempt requires diagnosis: ${date}`);
   // A successful code check can recover a failure, never start unsolicited generation.
-  return { run: event === 'schedule' || event === 'push', slot, retry: false };
+  return { run: event === 'schedule' || event === 'push' || collectionTrigger, slot, retry: false };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -80,7 +91,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   }
   const plan = publicationPlan({
     edition,
-    event, date, attempts, publicationRequest, now,
+    event, workflow: process.env.TRIGGER_WORKFLOW, date, attempts, publicationRequest, now,
     slot: process.env.REQUESTED_SLOT || 'morning', retry: process.env.REQUESTED_RECOVERY === 'true',
   });
   const output = `run=${plan.run}\nslot=${plan.slot}\nretry=${plan.retry ? '1' : '0'}\nverify=${Boolean(plan.verify)}\neditorial_date=${edition.editorialDate}\nartifact_hash=${edition.artifactHash}\n`;

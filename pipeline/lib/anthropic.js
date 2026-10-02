@@ -309,7 +309,17 @@ export async function askJSON({ system, user, schema, maxTokens = 1500, model: m
   bucket.out += u.output_tokens;
   settle(actualUSD - reservedUSD, receipt.period);
   _accountedUSD = Math.round((_accountedUSD + actualUSD - reservedUSD) * 1e6) / 1e6;
-  if (onAccounting) await onAccounting({ ...receipt, accountedUSD: actualUSD, state: 'settled' });
+  // Retain only observed billing diagnostics, never the prompt or response content.
+  // Missing optional provider fields stay absent; a reservation is not token usage.
+  const observedUsage = { input_tokens: u.input_tokens, output_tokens: u.output_tokens };
+  for (const field of ['cache_creation_input_tokens', 'cache_read_input_tokens']) {
+    if (Number.isSafeInteger(u[field]) && u[field] >= 0) observedUsage[field] = u[field];
+  }
+  if (onAccounting) await onAccounting({
+    ...receipt, accountedUSD: actualUSD, state: 'settled', usage: observedUsage,
+    ...(typeof j.model === 'string' && j.model ? { responseModel: j.model } : {}),
+    ...(typeof j.stop_reason === 'string' && j.stop_reason ? { stopReason: j.stop_reason } : {}),
+  });
   if (actualUSD > reservedUSD) {
     _budgetBlockedPriorities.add(priority);
     throw new Error('Provider usage exceeded maximum reservation');

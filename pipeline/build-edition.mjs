@@ -8,6 +8,7 @@ import crypto from 'node:crypto';
 import { persistModelAccounting } from './lib/persist-model-accounting.mjs';
 import { restoreHeldEdition } from './lib/held-edition-recovery.mjs';
 import { requirePublicationRequest } from './lib/publication-request.mjs';
+import { createEditionQuarantine } from './lib/edition-quarantine.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -51,7 +52,7 @@ const { groupEvents, mergeCoverage } = newsThreads;
 const { dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate } = scheduledCandidate;
 const { prioritizeCandidates, fallbackImportanceComponents, attentionSignal, commentaryOnlyCandidate } = candidatePriority;
 const { calendarScore, standingScore } = analysisEvidence;
-const { atomicWriteEdition, mondayOf, previousDay, weekendDay } = publicEdition;
+const { atomicWriteEdition, withArtifactHash, mondayOf, previousDay, weekendDay } = publicEdition;
 const { bilingualFidelityFlags } = bilingualFidelity;
 const {
   MAX_MODEL_CALLS,
@@ -189,7 +190,7 @@ function rankSchema() {
 }
 // Use the same hard requirements on the initial draft and the bounded repair.
 // Otherwise the repair is asked to fix symptoms without knowing the release gate.
-const DRAFT_GATE_CONTRACT = `Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. The allowedNumericValues list is a literal-value checklist, not independent evidence. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. Each field must fit within 600 JSON UTF-8 bytes. Return every requested story as a required s<index> key in the stories object, never an array. If evidence cannot support a field, keep its story key and leave that field empty for rejection.`;
+const DRAFT_GATE_CONTRACT = `Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. The allowedNumericValues list is a literal-value checklist, not independent evidence. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. If cited evidence spells a quantity in words, preserve it in words in both languages; do not convert it to digits. For example, casi un millón stays almost one million / casi un millón. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. Each field must fit within 600 JSON UTF-8 bytes. Return every requested story as a required s<index> key in the stories object, never an array. If evidence cannot support a field, keep its story key and leave that field empty for rejection.`;
 
 const DAILY_EDITORIAL_CONTRACT = `Preserve the difference between an official completed action, a proposal and a reported claim. Prefer primary records supplied in the evidence, and name the reporting source or claimant when a primary record is absent. Include the observation period and relevant denominator for numerical comparisons. Background adds necessary context rather than repeating the headline. The view explains a narrow business mechanism or practical limit supported by the evidence, not generic importance. The watch names a sourced observable decision or release and what it would establish. Unsupported substance must remain empty for rejection; never invent a fact to complete the shape.`;
 
@@ -464,7 +465,13 @@ function deterministicDraftCheck(row, draft) {
       flags.push(`${field}: Spanish translation is empty`);
       continue;
     }
-    for (const flag of bilingualFidelityFlags({ english: draft[field], spanish, evidence: inputs })) {
+    // The public artifact cannot carry source prose. Apply its evidence-free
+    // actor/meaning check here too, before spending on the independent audit.
+    const fidelityFlags = new Set([
+      ...bilingualFidelityFlags({ english: draft[field], spanish, evidence: inputs }),
+      ...bilingualFidelityFlags({ english: draft[field], spanish }),
+    ]);
+    for (const flag of fidelityFlags) {
       flags.push(`${field}: ${flag}`);
     }
     const spanishEvidence = lintReportText({
@@ -700,6 +707,8 @@ async function main() {
   // Preserve the complete deterministic rejection evidence in the attempt ledger.
   // The short reason remains suitable for the commit subject and workflow summary.
   let failureDiagnostics = [];
+  let quarantine = null;
+  let quarantineStage = 'independent-audit';
   try {
     if (!universe.length) throw new Error('no eligible candidates');
     const { askJSON, hasLLM, models, usage, budgetStatus } = await import('./lib/anthropic.js');
@@ -884,18 +893,41 @@ async function main() {
       throw new Error(`drafts cannot meet the ${MIN_VISIBLE}–${MAX_VISIBLE} story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit`);
     }
 
+    const auditInputs = deterministicPass.map(({ row, draft }) => ({
+      i: row.index,
+      evidence: row.evidence.map(({ id, text }) => ({ id, text })),
+      fields: Object.fromEntries(['headline', 'dek', 'background', 'view', 'watch'].map((field) => [field, {
+        english: draft[field], spanish: draft.es[field],
+        evidenceRefs: draft[`${field}Refs`],
+      }])),
+    }));
     const auditResponse = await call({
       system: `You are the final independent evidence and bilingual editor. Review each English field only against the records identified by its evidenceRefs in that input’s evidence list. Independently compare its Spanish translation with both the English field and the same cited evidence. Reject unsupported actors, numbers, comparisons, causal claims, procedural stages, predictions, non sequiturs, mistranslations, reversed actions, changed subjects, or changed degrees of certainty in either language. Do not reject a clearly labeled narrow inference merely for being an inference. Do not rewrite either language. Return a reviews object with one required s<index> verdict for every input index, never an array.`,
-      user: JSON.stringify(deterministicPass.map(({ row, draft }) => ({
-        i: row.index,
-        evidence: row.evidence.map(({ id, text }) => ({ id, text })),
-        fields: Object.fromEntries(['headline', 'dek', 'background', 'view', 'watch'].map((field) => [field, {
-          english: draft[field], spanish: draft.es[field],
-          evidenceRefs: draft[`${field}Refs`],
-        }])),
-      }))),
+      user: JSON.stringify(auditInputs),
       schema: auditSchema(deterministicPass.map(entry => entry.row.index)), maxTokens: 2400,
     });
+    try {
+      quarantine = createEditionQuarantine({
+        repositoryRoot: ROOT,
+        directory: process.env.EDITION_QUARANTINE_DIRECTORY,
+        metadata: {
+          editorialDate, slot, candidateSignature: signature, generatedAt: now.toISOString(),
+          workflowRunId: process.env.GITHUB_RUN_ID || null,
+          workflowRunAttempt: process.env.GITHUB_RUN_ATTEMPT || null,
+          workflowHeadSha: process.env.GITHUB_SHA || null,
+          priorArtifactHash: priorEdition?.artifactHash || null,
+          modelAccounting: slotAttempt(attempts, editorialDate, slot).modelAccounting || null,
+        },
+        drafts: deterministicPass.map(({ row, draft }) => ({
+          index: row.index, storyId: storyId(row.item), draft, evidence: row.evidence,
+        })),
+        audit: { inputs: auditInputs, response: auditResponse },
+      });
+      emitOutcome({ quarantine_ready: 'true' });
+    } catch (preservationError) {
+      console.warn(`Optional edition diagnostics unavailable: ${clean(preservationError.message)}`);
+    }
+    quarantineStage = 'audited-draft-assembly';
     const reviews = new Map(keyedUnits(auditResponse.reviews).map((review) => [Number(review.i), review]));
     const passing = [];
     for (const entry of deterministicPass) {
@@ -922,7 +954,7 @@ async function main() {
     const target = reviewGate.publicationTarget({
       dataDirectory: DATA, editorialDate, slot, requireReview: process.env.EDITION_REQUIRE_REVIEW === '1',
     });
-    const edition = atomicWriteEdition(target.file, {
+    const candidate = withArtifactHash({
       schemaVersion: 1,
       editorialDate,
       generatedAt: now.toISOString(),
@@ -935,6 +967,15 @@ async function main() {
       weekStories: buildWeekStories(priorEdition, passing, editorialDate),
       weeklyBrief: buildWeeklyBrief(passing, editorialDate),
     });
+    quarantineStage = 'final-artifact-validation';
+    if (quarantine) {
+      try { quarantine.recordCandidate(candidate); }
+      catch (preservationError) {
+        console.warn(`Could not save optional edition candidate diagnostics: ${clean(preservationError.message)}`);
+      }
+    }
+    const edition = atomicWriteEdition(target.file, candidate);
+    quarantineStage = 'attempt-finalization';
     modelUsage = usage();
     attempts = finishAttempt(attempts, editorialDate, slot, {
       state: target.state, completedAt: new Date().toISOString(), calls: recoveryBase.calls + modelUsage.calls,
@@ -945,6 +986,12 @@ async function main() {
     console.log(`edition: ${target.state} ${editorialDate}/${slot} · ${passing.length} stories · ${edition.artifactHash}`);
     emitOutcome({ state: target.state, editorial_date: editorialDate, slot, artifact_hash: edition.artifactHash });
   } catch (error) {
+    if (quarantine) {
+      try { quarantine.recordFailure(error, quarantineStage); }
+      catch (preservationError) {
+        console.error(`Could not append quarantine failure details: ${clean(preservationError.message)}`);
+      }
+    }
     try {
       const anthropic = await import('./lib/anthropic.js');
       modelUsage = anthropic.usage();

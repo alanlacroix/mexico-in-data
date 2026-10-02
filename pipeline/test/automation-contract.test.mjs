@@ -73,7 +73,10 @@ assert.doesNotMatch(read('.github/workflows/refresh.yml'), /github-script|issues
 
 console.log('automation contract: ok');
 
-assert.match(workflow, /workflows: \[release-check\]/);
+assert.match(workflow, /workflows: \[release-check, collect-news\]/);
+assert.match(workflow, /TRIGGER_WORKFLOW:.*github\.event\.workflow_run\.name/);
+assert.match(workflow, /name: Preserve generated edition diagnostics\s+if:.*\s+continue-on-error: true/,
+  'diagnostic upload outages must not block an otherwise validated publication');
 assert.match(workflow, /github.event.workflow_run.conclusion == 'success'/);
 assert.match(workflow, /github.event.workflow_run.head_branch == 'main'/);
 assert.match(workflow, /node pipeline\/publication-plan\.mjs/);
@@ -94,6 +97,24 @@ assert.throws(() => plan('schedule', [attempt('failed', {slot:'noon',recoveries:
 assert.throws(() => plan('workflow_run', [attempt('started')]), /requires diagnosis/);
 assert.equal(plan('workflow_run', [attempt('failed', {editorialDate:'2026-09-29'})]).run, false);
 assert.deepEqual(plan('workflow_dispatch', [], {slot:'noon',retry:true}), {run:true,slot:'noon',retry:true});
+
+const collection = {workflow:'collect-news', now:new Date('2026-09-30T12:22:00Z')};
+assert.deepEqual(plan('workflow_run', [], collection), {run:true,slot:'morning',retry:false});
+for (const at of ['2026-09-30T12:04:59Z','2026-09-30T12:46:00Z','2026-09-30T22:22:00Z']) {
+  assert.equal(plan('workflow_run', [], {...collection,now:new Date(at)}).run,false);
+}
+for (const at of ['2026-09-30T12:05:00Z','2026-09-30T12:45:59Z']) {
+  assert.equal(plan('workflow_run', [], {...collection,now:new Date(at)}).run,true);
+}
+assert.equal(plan('workflow_run', [], {...collection,workflow:'release-check'}).run,false);
+assert.equal(plan('workflow_run', [], {...collection,workflow:'unknown'}).run,false);
+assert.equal(plan('workflow_run', [attempt('published')], collection).verify,true);
+assert.equal(plan('workflow_run', [attempt('review-required')], collection).run,false);
+assert.equal(plan('workflow_run', [attempt('failed')], collection).retry,true);
+assert.throws(() => plan('workflow_run', [attempt('started')], collection), /requires diagnosis/);
+assert.throws(() => plan('workflow_run', [attempt('failed',{slot:'noon',recoveries:[{}]})], collection), /exhausted/);
+assert.equal(publicationPlan({event:'workflow_run',workflow:'collect-news',date:'2026-10-03',now:new Date('2026-10-03T12:22:00Z'),attempts:{attempts:[]}}).run,true,
+  'the morning collection fallback also covers weekends');
 
 const { recordReleaseFailure } = await import('../record-release-failure.mjs');
 const rejectedRelease = recordReleaseFailure({attempts:[attempt('published', {artifactHash:'abc',calls:2,costUSD:0.02})]}, date, 'morning');

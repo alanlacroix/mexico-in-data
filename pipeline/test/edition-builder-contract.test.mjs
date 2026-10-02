@@ -25,6 +25,8 @@ assert.equal(lintReportText({ text: 'The sourceTitle says the rule changed.', in
 assert.equal(lintReportText({ text: 'The evidence strings show the amount.', inputs: ['The amount was 5.'] }).ok, false);
 assert.equal(lintReportText({ text: 'Exports reached 81.4 billion dollars.', inputs: ['Exports reached 80 billion dollars.'] }).ok, false);
 assert.deepEqual(unsupportedNumericTokens('The reform followed the 2024 election.', ['The reform was presented.']), ['2024']);
+assert.deepEqual(unsupportedNumericTokens('Almost 1 million jobs.', ['casi un millón de empleos']), ['1'],
+  'retain literal numeric evidence rather than accepting an incomplete written-quantity grammar');
 assert.match(builder, /repairUnsupportedAnalysisNumbers/,
   'one unsupported number in analysis should remove its sentence before discarding the story');
 assert.match(builder, /repairOverlongAnalysis\(repairUnsupportedAnalysisNumbers\(row, rawDraft\)\)/,
