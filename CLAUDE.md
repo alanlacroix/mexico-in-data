@@ -57,6 +57,11 @@ deployment live.
   verified delivery by 07:00. Worker code/config changes require a separate verified deployment.
 - The Cloudflare Worker is only a clock. It may dispatch each date/slot once; it never
   evaluates, repairs, or republishes content.
+- A main-branch push changing only the dispatch path `ops/publication-request.json`
+  can request a bounded fallback run. Its four-field schema is in
+  `ops/publication-request.schema.json`: current Mexico editorial date, morning/noon
+  slot, UTC expiry at most 30 minutes away, and a short purpose. Expired or malformed
+  requests do nothing; published and exhausted attempts cannot regain model allowance.
 - The six-hour refresh may update only inputs rendered on the homepage. Optional or
   historical datasets do not belong on the critical path.
 - Machine-generated `data/` changes win conflicts. Rebase before editing and never
