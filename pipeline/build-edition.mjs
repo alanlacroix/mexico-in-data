@@ -126,9 +126,11 @@ function emitOutcome(values) {
 const titleKey = (value) => clean(value).toLowerCase().replace(/[^a-z0-9áéíóúñ]+/g, ' ').replace(/\s+/g, ' ');
 const storyId = (item) => clean(item._scheduled?.id) || `n-${crypto.createHash('sha1').update(clean(item.url) || clean(item.title)).digest('hex').slice(0, 12)}`;
 
-async function candidateUniverse(now, schedule, editorialDate) {
+async function candidateUniverse(now, schedule, editorialDate,
+  publishedEditions = editionHistory.loadHistory({ current: read(EDITION_FILE, null) })) {
   const weekStart = mondayOf(editorialDate);
   const allowedStart = weekendDay(editorialDate) ? weekStart : previousDay(editorialDate);
+  const publishedUrls = editionHistory.publishedArticleUrls(publishedEditions, { through: editorialDate });
   const files = new Set([
     isoWeek(now),
     isoWeek(new Date(now.getTime() - 7 * 864e5)),
@@ -139,6 +141,9 @@ async function candidateUniverse(now, schedule, editorialDate) {
   for (const item of all) {
     const date = editorialDay(item?.published_at);
     if (!item?.url || !item?.title || !sourceAllowed(item) || date < allowedStart || date > editorialDate) continue;
+    // Filter before grouping and the 24-item cap so old lead URLs cannot displace
+    // a new follow-up. Required scheduled outcomes remain eligible even on reused URLs.
+    if (publishedUrls.has(item.url) && !linkScheduledCandidate(item, schedule, date)?.requiredForBrief) continue;
     if (!byUrl.has(item.url)) byUrl.set(item.url, { ...item, _editorialDate: date });
   }
   const grouped = groupEvents([...byUrl.values()]).map((group) => {
@@ -599,7 +604,8 @@ async function main() {
     return;
   }
   const priorEdition = read(EDITION_FILE, null);
-  const memory = editionHistory.issueMemory(editionHistory.loadHistory({ current: priorEdition }), { before: editorialDate });
+  const publishedEditions = editionHistory.loadHistory({ current: priorEdition });
+  const memory = editionHistory.issueMemory(publishedEditions, { before: editorialDate });
   if (process.env.GITHUB_ACTIONS === 'true' && editorialDate !== editorialDay(new Date())) {
     throw new Error('Paid CI publication must use the current editorial day');
   }
@@ -656,7 +662,7 @@ async function main() {
   try {
     if (process.env.EDITION_SKIP_COLLECTION !== '1') collectionReceipt = await collectNews({ now });
     schedule = read(path.join(DATA, 'events.json'), { events: [] });
-    universe = await candidateUniverse(now, schedule, editorialDate);
+    universe = await candidateUniverse(now, schedule, editorialDate, publishedEditions);
     signature = candidateSignature(universe);
   } catch (error) {
     if (!isRecovery) attempts = beginAttempt(attempts, {
