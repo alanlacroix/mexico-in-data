@@ -1793,35 +1793,16 @@
       "editorialDate": "2026-10-02",
       "slot": "morning",
       "candidateSignature": "9d6892c3a14dc037e0a5c14fcdd19e4c940c2ccbcea287d15e26c8c6bf5f08d6",
-      "state": "failed",
-      "startedAt": "2026-10-02T12:41:41.132Z",
-      "completedAt": "2026-10-02T12:42:48.012Z",
-      "calls": 2,
-      "costUSD": 0.09555,
+      "state": "started",
+      "startedAt": "2026-10-02T12:43:09.470Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.133213,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-58ee8354308b",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "Julio Berdegué said Mexico will reject any seasonal restriction on its fruit and vegetable exports to the US. He warned almost 1 million jobs tied to those products could be threatened if such restrictions are applied.",
-              "es": "Julio Berdegué dijo que México rechazará cualquier restricción estacional a sus exportaciones de frutas y hortalizas a EU. Advirtió que casi 1 millón de empleos vinculados a estos productos podrían estar amenazados si se aplican tales restricciones.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported number: 1",
-                "Spanish unsupported number: 1"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-02T12:41:41.132Z",
+        "collectedAt": "2026-10-02T12:43:09.470Z",
         "aliveSources": 69,
         "totalSources": 72,
         "wireCount": 60,
@@ -1833,10 +1814,38 @@
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-02T12:41:41.132Z",
+          "completedAt": "2026-10-02T12:42:48.012Z",
+          "calls": 2,
+          "costUSD": 0.09555,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-58ee8354308b",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "Julio Berdegué said Mexico will reject any seasonal restriction on its fruit and vegetable exports to the US. He warned almost 1 million jobs tied to those products could be threatened if such restrictions are applied.",
+                  "es": "Julio Berdegué dijo que México rechazará cualquier restricción estacional a sus exportaciones de frutas y hortalizas a EU. Advirtió que casi 1 millón de empleos vinculados a estos productos podrían estar amenazados si se aplican tales restricciones.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported number: 1",
+                    "Spanish unsupported number: 1"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "37008197635",
+        "runId": "37008254556",
         "runAttempt": "1",
         "receipts": [
           {
@@ -1854,6 +1863,14 @@
             "reservedUSD": 0.049563,
             "accountedUSD": 0.030795,
             "state": "settled"
+          },
+          {
+            "id": "87f9bfdc-986c-4d46-9f4c-1e09d43f4ae4",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.037663,
+            "accountedUSD": 0.037663,
+            "state": "reserved"
           }
         ]
       }
