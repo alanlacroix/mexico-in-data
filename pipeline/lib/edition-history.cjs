@@ -70,6 +70,16 @@ function archiveRoutes(editions) {
   });
 }
 
+// Only the exact lead URLs of published cards count as already covered. Evidence
+// links may point to future follow-ups or shared official pages, so do not suppress
+// them. The weekly shelf preserves cards from earlier editions of the same day.
+function publishedArticleUrls(editions, { through } = {}) {
+  return new Set(editions.filter(edition => edition.publicationStatus !== 'candidate'
+    && (!through || edition.editorialDate <= through)).flatMap(edition =>
+    [...edition.stories, ...(edition.weekStories || [])].map(story => story.url)
+  ));
+}
+
 // Prior published copy is a retrieval index, never independent evidence. The draft
 // writer must reopen its source URLs before treating any remembered claim as fact.
 function issueMemory(editions, { before, limit = 30 } = {}) {
@@ -98,4 +108,4 @@ function relatedMemory(item, memory, limit = 2) {
     .slice(0, limit).map(result => result.row);
 }
 
-module.exports = { archivePublishedEdition, loadHistory, editionPath, archiveRoutes, issueMemory, relatedMemory };
+module.exports = { archivePublishedEdition, loadHistory, editionPath, archiveRoutes, publishedArticleUrls, issueMemory, relatedMemory };

@@ -9,6 +9,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixture = JSON.parse(fs.readFileSync(path.join(root, 'data/editions/2026-10-01.json')));
+const priorFixture = JSON.parse(fs.readFileSync(path.join(root, 'data/editions/2026-09-30.json')));
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mb-flow-'));
 try {
   fs.cpSync(path.join(root,'pipeline'),path.join(tmp,'pipeline'),{recursive:true});
@@ -55,7 +56,7 @@ try {
   fs.writeFileSync(path.join(tmp,'run.mjs'),runner);
   for(const scenario of ['complete','partial','partial-unrepairable','audit-reject','budget-block']){
     fs.mkdirSync(path.join(tmp,'data/news'),{recursive:true});
-    fs.writeFileSync(path.join(tmp,'data/edition.json'),JSON.stringify(fixture));
+    fs.writeFileSync(path.join(tmp,'data/edition.json'),JSON.stringify(priorFixture));
     fs.writeFileSync(path.join(tmp,'data/edition-attempts.json'),'{"schemaVersion":1,"attempts":[]}');
     fs.writeFileSync(path.join(tmp,'data/llm-spend.json'),JSON.stringify({'2026-10':scenario==='budget-block'?6:scenario==='partial-unrepairable'?0.02:0}));
     fs.writeFileSync(path.join(tmp,'data/events.json'),'{"events":[]}');
