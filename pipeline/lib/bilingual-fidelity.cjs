@@ -12,7 +12,12 @@ const ENTITIES = [
   { id: 'inegi', aliases: [/\binegi\b/, /\binstituto nacional de estadistica\b/] },
   { id: 'sheinbaum', aliases: [/\bsheinbaum\b/] },
   { id: 'morena', aliases: [/\bmorena\b/] },
-  { id: 'hacienda', aliases: [/\bhacienda\b/, /\bshcp\b/, /\bfinance ministry\b/] },
+  // A legislative Finance Committee is not the executive finance ministry.
+  // Ignore only its full Spanish name when detecting the ministry, then check
+  // the committee independently so neither institution can replace the other.
+  { id: 'hacienda', aliases: [/\bhacienda\b/, /\bshcp\b/, /\bfinance ministry\b/],
+    exclude: /\bcomision de hacienda(?: y credito publico)?\b|\bfinance(?: and public credit)? committee\s*\(hacienda\)/g },
+  { id: 'finance committee', aliases: [/\bfinance(?: and public credit)? committee\b/, /\bcomision de hacienda(?: y credito publico)?\b/] },
   { id: 'usmca', aliases: [/\busmca\b/, /\bt[-\s]?mec\b/] },
 ];
 const EN_NEGATION = /\b(?:no|not|never|without|neither|unchanged|unregistered)\b|\bnon[-\u2010\u2011](?=[a-z])/i;
@@ -72,7 +77,9 @@ const MONTHS = [
   ['may', 'mayo'], ['june', 'junio'], ['july', 'julio'], ['august', 'agosto'],
   ['september', 'septiembre'], ['october', 'octubre'], ['november', 'noviembre'], ['december', 'diciembre'],
 ];
-const mentions = (text, entity) => entity.aliases.some((pattern) => pattern.test(text));
+const mentions = (text, entity) => entity.aliases.some((pattern) => pattern.test(
+  entity.exclude ? text.replace(entity.exclude, ' ') : text,
+));
 
 function bilingualFidelityFlags({ english = '', spanish = '', evidence = [] } = {}) {
   const en = fold(english);

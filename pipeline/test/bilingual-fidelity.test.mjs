@@ -3,6 +3,35 @@ import bilingualFidelity from '../lib/bilingual-fidelity.cjs';
 
 const { bilingualFidelityFlags } = bilingualFidelity;
 
+// The October 2 customs-law source names the Chamber of Deputies' Comisión de
+// Hacienda. It must not be mistaken for SHCP at the evidence-free artifact gate.
+// These are constructed regressions, not the unavailable failed model output.
+for (const [english, spanish] of [
+  ["The Chamber of Deputies' Finance Committee sent the bill to the full chamber.",
+    'La Comisión de Hacienda de la Cámara de Diputados envió el dictamen al pleno.'],
+  ['The Finance and Public Credit Committee discussed the customs bill.',
+    'La Comisión de Hacienda y Crédito Público discutió el dictamen aduanero.'],
+  ['The finance ministry submitted its report to the Finance Committee.',
+    'Hacienda entregó su informe a la Comisión de Hacienda.'],
+]) assert.deepEqual(bilingualFidelityFlags({ english, spanish }), [], 'committee/ministry identity survives without evidence text');
+
+// Exact October 2 curated fallback wording, including its committee-name gloss.
+assert.deepEqual(bilingualFidelityFlags({
+  english: "The lower house's Finance Committee (Hacienda) approved changes targeting undervalued imports and fuel smuggling on Thursday, Bloomberg Línea reports. The bill goes to the Chamber of Deputies for discussion next week.",
+  spanish: 'La Comisión de Hacienda aprobó el jueves cambios contra la subvaluación de importaciones y el contrabando de combustibles, informa Bloomberg Línea. El dictamen pasa al pleno de la Cámara de Diputados para su discusión la próxima semana.',
+}), []);
+
+for (const [english, spanish, expected] of [
+  ['The finance ministry sent the bill.', 'La Comisión de Hacienda envió el dictamen.', /hacienda was dropped/],
+  ['The Finance Committee sent the bill.', 'Hacienda envió el dictamen.', /hacienda was introduced/],
+  ['The Finance Committee sent the bill.', 'SHCP envió el dictamen.', /hacienda was introduced/],
+  ['The Finance Committee (Hacienda) sent the bill.', 'SHCP envió el dictamen.', /hacienda was introduced/],
+  ['The committee sent the bill.', 'La Comisión de Hacienda envió el dictamen.', /finance committee was introduced/],
+  ['The Finance Committee discussed the bill.', 'La comisión discutió el dictamen.', /finance committee was dropped/],
+  ['The finance ministry submitted its report to the Finance Committee.',
+    'La Comisión de Hacienda recibió el informe.', /hacienda was dropped/],
+]) assert.ok(bilingualFidelityFlags({ english, spanish }).some(flag => expected.test(flag)), `${english} must reject actor substitution or loss`);
+
 const valid = bilingualFidelityFlags({
   english: 'Banxico did not change its 6.50% rate in September.',
   spanish: 'Banxico no cambió su tasa de 6.50% en septiembre.',
