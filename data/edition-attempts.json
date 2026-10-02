@@ -1788,6 +1788,48 @@
         "attempts": 1,
         "claimedAt": "2026-10-01T13:25:55.840Z"
       }
+    },
+    {
+      "editorialDate": "2026-10-02",
+      "slot": "morning",
+      "candidateSignature": "9d6892c3a14dc037e0a5c14fcdd19e4c940c2ccbcea287d15e26c8c6bf5f08d6",
+      "state": "started",
+      "startedAt": "2026-10-02T12:41:41.132Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.112788,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-02T12:41:41.132Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "dof-sumario",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "37008197635",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "d39ba6df-d442-41ac-a2e3-e9e3c2a06742",
+            "period": "2026-10",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.112788,
+            "accountedUSD": 0.112788,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
