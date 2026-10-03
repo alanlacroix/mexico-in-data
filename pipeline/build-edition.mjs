@@ -10,6 +10,7 @@ import { restoreHeldEdition } from './lib/held-edition-recovery.mjs';
 import { requirePublicationRequest } from './lib/publication-request.mjs';
 import { createEditionQuarantine } from './lib/edition-quarantine.mjs';
 import { createFieldRepairPlan, mergeFieldRepairs } from './lib/edition-field-repair.mjs';
+import { articleIdentity, publishedProvenanceUrls } from './lib/article-identity.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -133,7 +134,14 @@ async function candidateUniverse(now, schedule, editorialDate,
   publishedEditions = editionHistory.loadHistory({ current: read(EDITION_FILE, null) })) {
   const weekStart = mondayOf(editorialDate);
   const allowedStart = weekendDay(editorialDate) ? weekStart : previousDay(editorialDate);
-  const publishedUrls = editionHistory.publishedArticleUrls(publishedEditions, { through: editorialDate });
+  const registeredHosts = NEWS_SOURCES.flatMap(sourceHosts);
+  const provenanceFile = path.join(DATA, 'editorial-source-provenance.json');
+  const provenance = fs.existsSync(provenanceFile)
+    ? JSON.parse(fs.readFileSync(provenanceFile, 'utf8')) : { schemaVersion: 1, records: [] };
+  const publishedUrls = new Set([
+    ...editionHistory.publishedArticleUrls(publishedEditions, { through: editorialDate }),
+    ...publishedProvenanceUrls(publishedEditions, provenance, { through: editorialDate, registeredHosts }),
+  ].map(url => articleIdentity(url, registeredHosts)));
   const files = new Set([
     isoWeek(now),
     isoWeek(new Date(now.getTime() - 7 * 864e5)),
@@ -146,7 +154,7 @@ async function candidateUniverse(now, schedule, editorialDate,
     if (!item?.url || !item?.title || !sourceAllowed(item) || date < allowedStart || date > editorialDate) continue;
     // Filter before grouping and the 24-item cap so old lead URLs cannot displace
     // a new follow-up. Required scheduled outcomes remain eligible even on reused URLs.
-    if (publishedUrls.has(item.url) && !linkScheduledCandidate(item, schedule, date)?.requiredForBrief) continue;
+    if (publishedUrls.has(articleIdentity(item.url, registeredHosts)) && !linkScheduledCandidate(item, schedule, date)?.requiredForBrief) continue;
     if (!byUrl.has(item.url)) byUrl.set(item.url, { ...item, _editorialDate: date });
   }
   const grouped = groupEvents([...byUrl.values()]).map((group) => {

@@ -87,6 +87,44 @@ try {
       `${day}: exclude the exact published URL while retaining a new URL on the same topic`);
   }
 
+  // Canonical host aliases must not revive a published article. Query values,
+  // query order, fragments and distinct follow-up paths remain separate identities.
+  const aliasUrl = lead.url.includes('://www.') ? lead.url.replace('://www.', '://') : lead.url.replace('://', '://www.');
+  const queryFollowup = { ...repeated, id: 'query-followup', url: `${lead.url}?edition=2` };
+  for (const newReport of [followup, queryFollowup]) {
+    fs.writeFileSync(newsFile, JSON.stringify([{ ...repeated, url: aliasUrl }, newReport]));
+    assert.deepEqual((await candidateUniverse(new Date('2026-10-02T12:30:00Z'), [], '2026-10-02')).map(item => item.url),
+      [newReport.url], 'known www aliases are excluded without broad topic or query suppression');
+  }
+
+  // A primary-source lead can preserve the original feed identity through an
+  // exact artifact-bound provenance record without rewriting public copy.
+  const primary = structuredClone(fixture);
+  const primaryUrl = 'https://www.banxico.org.mx/official/dated-notice.pdf';
+  primary.stories[0].url = primaryUrl;
+  primary.stories[0].evidence.find(record => record.id === 'article').url = primaryUrl;
+  for (const story of primary.weekStories) if (story.id === lead.id) story.url = primaryUrl;
+  primary.artifactHash = publicEdition.editionHash(primary);
+  const provenanceFile = path.join(selectionRoot, 'data/editorial-source-provenance.json');
+  const provenance = { schemaVersion: 1, records: [{ editorialDate: primary.editorialDate,
+    artifactHash: primary.artifactHash, storyId: lead.id, publishedUrl: primaryUrl, feedUrl: lead.url }] };
+  fs.writeFileSync(currentFile, JSON.stringify(primary));
+  fs.writeFileSync(newsFile, JSON.stringify([repeated, followup]));
+  fs.writeFileSync(provenanceFile, JSON.stringify(provenance));
+  assert.deepEqual((await candidateUniverse(new Date('2026-10-02T12:30:00Z'), [], '2026-10-02')).map(item => item.url),
+    [followupUrl], 'primary-source publication suppresses only its recorded original feed article');
+  provenance.records[0].artifactHash = '0'.repeat(64);
+  fs.writeFileSync(newsFile, JSON.stringify([repeated]));
+  fs.writeFileSync(provenanceFile, JSON.stringify(provenance));
+  assert.deepEqual(new Set((await candidateUniverse(new Date('2026-10-02T12:30:00Z'), [], '2026-10-02')).map(item => item.url)),
+    new Set([lead.url]), 'unmatched provenance cannot hide a story');
+  fs.writeFileSync(provenanceFile, '{invalid');
+  await assert.rejects(candidateUniverse(new Date('2026-10-02T12:30:00Z'), [], '2026-10-02'), SyntaxError,
+    'malformed provenance is visible before model calls');
+  fs.rmSync(provenanceFile);
+  fs.writeFileSync(currentFile, JSON.stringify(fixture));
+  fs.writeFileSync(newsFile, JSON.stringify([repeated, followup]));
+
   fs.mkdirSync(path.join(selectionRoot, 'data/editions'));
   fs.writeFileSync(path.join(selectionRoot, 'data/editions/2026-10-01.json'), JSON.stringify(fixture));
   fs.rmSync(currentFile);
