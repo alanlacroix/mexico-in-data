@@ -1889,6 +1889,50 @@
         "priorFailure": "invalid edition: n-ee507d119b21.change: hacienda was introduced in Spanish; n-ee507d119b21.context: hacienda was introduced in Spanish; stories[2].dek hacienda was introduced in Spanish; stories[2].background hacienda was introduced in Spanish",
         "priorDiagnostics": []
       }
+    },
+    {
+      "editorialDate": "2026-10-03",
+      "slot": "morning",
+      "candidateSignature": "2d28c46aba42750a3cf235393a9e56758293066da0143b8cf13ab6b0fbff4186",
+      "state": "started",
+      "startedAt": "2026-10-03T12:28:09.940Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.118428,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-03T12:28:09.940Z",
+        "aliveSources": 67,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "dof-sumario",
+          "m4ec-mx",
+          "mexico-evalua",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "37122961337",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "8244a311-68c6-4a07-8ebd-7d830d31c8b8",
+            "period": "2026-10",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.118428,
+            "accountedUSD": 0.118428,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
