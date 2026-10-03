@@ -70,9 +70,11 @@ function renderFixture(artifact) {
   return module.exports;
 }
 const baseWeekStory = edition.weekStories.find(story => story.id === edition.stories[0].id);
+const otherWeekStory = edition.weekStories.find(story => story.id !== baseWeekStory.id && story.url !== baseWeekStory.url)
+  || { ...baseWeekStory, url: `${baseWeekStory.url}#fixture-economy` };
 const fixture = publicEdition.withArtifactHash({ ...edition, stories: [{ ...edition.stories[0], section: 'energy' }], weekStories: [
   { ...baseWeekStory, section: 'energy' },
-  { ...edition.weekStories[1] || baseWeekStory, id: 'fixture-economy', section: 'economy' },
+  { ...otherWeekStory, id: 'fixture-economy', section: 'economy' },
 ] });
 const reordered = renderFixture(fixture)('es');
 assert.equal(reordered.groups[0].items[0].id, 'fixture-economy');
