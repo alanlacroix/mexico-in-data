@@ -1894,14 +1894,62 @@
       "editorialDate": "2026-10-03",
       "slot": "morning",
       "candidateSignature": "2d28c46aba42750a3cf235393a9e56758293066da0143b8cf13ab6b0fbff4186",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-03T12:28:09.940Z",
-      "completedAt": "",
+      "completedAt": "2026-10-03T12:29:53.093Z",
       "calls": 2,
       "costUSD": 0.078587,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-44bf7aedc147",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The finance ministry reduced the fiscal stimulus on regular gasoline from 72% to 63%, equal to MXN$4.2 per liter for October 3-9, 2026. Mexico has accumulated four consecutive weeks without collecting the full diesel tax while also cutting the extra diesel subsidy to MXN$0.6 per liter.",
+              "es": "El ministerio de hacienda redujo el estímulo fiscal a la gasolina regular de 72% a 63%, equivalente a MXN$4,2 por litro para el 3 al 9 de octubre de 2026. México acumula cuatro semanas consecutivas sin recaudar el impuesto al diésel completo mientras también baja el subsidio complementario a MXN$0,6 por litro.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "46 words (cap 45)"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-3881fc031999",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexican officials are negotiating with the US to lower tariffs on light vehicles from 25% to 15%, with an effective rate of 10% to 12% after regional content discounts. Mexico is also pushing to reduce the 50% US tariffs on steel and aluminum, though the extent of potential cuts remains undetermined.",
+              "es": "Funcionarios mexicanos negocian con EU bajar aranceles a vehículos ligeros de 25% a 15%, con una tasa efectiva de 10% a 12% tras descuentos por contenido regional. México también busca reducir los aranceles de 50% de EU al acero y aluminio, aunque el alcance de posibles recortes sigue sin determinarse.",
+              "refs": [
+                "article",
+                "history:n-bea9edbf718c"
+              ],
+              "reasons": [
+                "51 words (cap 45)",
+                "negation was introduced in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "Watch whether Washington and Mexico finalize the interim agreement establishing the 15% nominal auto tariff, which would confirm the 10% to 12% effective rate or leave that and the metals tariff reductions unresolved.",
+              "es": "Habrá que observar si Washington y México concretan el acuerdo interino que establece el arancel nominal de 15% a autos, lo que confirmaría la tasa efectiva de 10% a 12% o dejaría sin resolver ese y los recortes de aranceles a metales.",
+              "refs": [
+                "article",
+                "history:n-bea9edbf718c"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-03T12:28:09.940Z",
         "aliveSources": 67,
