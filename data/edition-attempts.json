@@ -1894,14 +1894,96 @@
       "editorialDate": "2026-10-03",
       "slot": "morning",
       "candidateSignature": "2d28c46aba42750a3cf235393a9e56758293066da0143b8cf13ab6b0fbff4186",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-03T12:30:08.211Z",
-      "completedAt": "",
+      "completedAt": "2026-10-03T12:31:49.538Z",
       "calls": 4,
       "costUSD": 0.108734,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-44bf7aedc147: dek: 47 words (cap 45) | n-e1f683922f71: view: negation was introduced in Spanish; watch: invalid evidence references | n-008e30cc377a: dek: 47 words (cap 45); background: proposal or draft described as a completed action; watch: empty report text; watch: watch item has no observable next test; watch: Spanish tra",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-44bf7aedc147",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico reduced its regular gasoline subsidy from 72% to 63%, equivalent to 4.2 pesos per liter, for the week of October 3-9, 2026. The country has failed to collect the full diesel tax for four consecutive weeks while maintaining an additional subsidy of 0.6 pesos per liter.",
+              "es": "México redujo su subsidio a la gasolina regular de 72% a 63%, equivalente a 4.2 pesos por litro, para la semana del 3 al 9 de octubre de 2026. El país ha dejado de recaudar el impuesto al diésel completo durante cuatro semanas consecutivas mientras mantiene un subsidio complementario de 0.6 pesos por litro.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "47 words (cap 45)"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-e1f683922f71",
+          "reasons": [],
+          "fields": {
+            "view": {
+              "en": "The government's strategy targets a documented consumption loop where social platforms amplify attack planning and glorification. Disrupting content spread requires platform cooperation and enforcement capacity that remains untested in Mexico's regulatory environment.",
+              "es": "La estrategia del gobierno se enfoca en un ciclo de consumo documentado donde las plataformas amplifican la planificación y glorificación de ataques. Interrumpir la difusión de contenido requiere cooperación de plataformas y capacidad de cumplimiento que permanece sin probar en el ambiente regulatorio de México.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [],
+              "reasons": [
+                "invalid evidence references"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-008e30cc377a",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Amazon began offering free hourlong tours at its largest Mexican distribution center in Tepotzotlán, where six of every ten packages leaving Mexico are processed. The facility handles up to three million products per week, and the program has delivered approximately 6,000 tours since launch one year ago.",
+              "es": "Amazon comenzó a ofrecer recorridos gratuitos de una hora en su centro de distribución más grande de México en Tepotzotlán, donde se procesan seis de cada diez paquetes que salen de México. La instalación maneja hasta tres millones de productos por semana, y el programa ha ofrecido aproximadamente 6,000 recorridos desde su lanzamiento hace un año.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "47 words (cap 45)"
+              ]
+            },
+            "background": {
+              "en": "Amazon Tours operates only in Mexico and Brazil across Latin America. Individual visitors can register directly on amazontours.com/mx, while groups of 10 to 25 people require a special form submission. Tours run Monday through Friday in two available time slots, with Amazon recommending visitors arrive 15 minutes early and avoid large bags or backpacks.",
+              "es": "Amazon Tours opera solo en México y Brasil en América Latina. Los visitantes individuales pueden registrarse directamente en amazontours.com/mx, mientras que los grupos de 10 a 25 personas requieren envío de un formato especial. Los recorridos se ofrecen de lunes a viernes en dos horarios disponibles, con Amazon recomendando que los visitantes lleguen 15 minutos antes y eviten bolsas o mochilas voluminosas.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or draft described as a completed action"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-03T12:30:08.211Z",
         "aliveSources": 67,
