@@ -96,3 +96,24 @@ larger budget is not a demonstrated fix. Automatic drafts must still pass all
 fields and the independent audit; source-backed operator recovery remains the
 accepted contingency when they do not. The three-call ceiling makes one call per
 story unsuitable because it would consume the audit allowance.
+
+## Original reporting identity
+
+Repeat filtering folds only the leading `www.` host alias for registered source
+hosts. It preserves the original path, explicit port, query bytes/order and
+fragment. It does not remove tracking parameters or infer that two articles on
+the same topic are the same development.
+
+When curated recovery chooses a canonical or primary source instead of the feed
+article, record that original feed URL in `data/editorial-source-provenance.json`
+as part of the reviewed recovery PR. Each record binds the editorial date,
+artifact hash, story ID and exact published lead URL to the original feed URL.
+Only a matching validated published edition can suppress that feed article;
+unmatched records, unpublished candidates and background citations cannot.
+Required scheduled outcomes retain their existing exception.
+
+This sidecar is selection provenance, not public editorial content or evidence
+for a claim. It is not copied to the public site. The October 3 backfill records
+the reviewed OXIO, Directo a México and sugar-permit origins while preserving the
+published edition and receipt hash unchanged. Future genuinely new follow-up
+URLs remain eligible and need their own evidence and editorial review.

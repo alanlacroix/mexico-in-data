@@ -77,6 +77,10 @@ deployment live.
   requests do nothing; published and exhausted attempts cannot regain model allowance.
 - The six-hour refresh may update only inputs rendered on the homepage. Optional or
   historical datasets do not belong on the critical path.
+- If curated recovery changes a feed lead to a canonical or primary source, include its
+  original feed URL in `data/editorial-source-provenance.json`, bound to the exact
+  published date, artifact hash, story ID and lead URL. Never infer coverage from
+  background citations or broad topic similarity.
 - Machine-generated `data/` changes win conflicts. Rebase before editing and never
   hand-resolve generated data in favor of an old editorial branch.
 - `_data/releaseManifest.json` is the exact artifact contract. An unclassified HTML
