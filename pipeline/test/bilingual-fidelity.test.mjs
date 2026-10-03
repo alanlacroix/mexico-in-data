@@ -126,3 +126,58 @@ assert.deepEqual(bilingualFidelityFlags({english:'Trade under USMCA continues.',
 assert.deepEqual(bilingualFidelityFlags({english:'Operators use unregistered servers.',spanish:'Los operadores usan servidores no registrados.'}),[]);
 assert.ok(bilingualFidelityFlags({english:'Operators use registered servers.',spanish:'Los operadores usan servidores no registrados.'}).some(flag=>flag.includes('negation')));
 assert.ok(bilingualFidelityFlags({english:'Operators use unregistered servers.',spanish:'Los operadores usan servidores registrados.'}).some(flag=>flag.includes('negation')));
+
+// Exact rejected October 3 fields from edition-attempts.json. Lexical English
+// negatives and their explicit Spanish equivalents preserve the same state.
+for (const [english, spanish] of [
+  [
+    'Mexican officials are negotiating with the US to lower tariffs on light vehicles from 25% to 15%, with an effective rate of 10% to 12% after regional content discounts. Mexico is also pushing to reduce the 50% US tariffs on steel and aluminum, though the extent of potential cuts remains undetermined.',
+    'Funcionarios mexicanos negocian con EU bajar aranceles a vehículos ligeros de 25% a 15%, con una tasa efectiva de 10% a 12% tras descuentos por contenido regional. México también busca reducir los aranceles de 50% de EU al acero y aluminio, aunque el alcance de posibles recortes sigue sin determinarse.',
+  ],
+  [
+    'Watch whether Washington and Mexico finalize the interim agreement establishing the 15% nominal auto tariff, which would confirm the 10% to 12% effective rate or leave that and the metals tariff reductions unresolved.',
+    'Habrá que observar si Washington y México concretan el acuerdo interino que establece el arancel nominal de 15% a autos, lo que confirmaría la tasa efectiva de 10% a 12% o dejaría sin resolver ese y los recortes de aranceles a metales.',
+  ],
+  [
+    "The government's strategy targets a documented consumption loop where social platforms amplify attack planning and glorification. Disrupting content spread requires platform cooperation and enforcement capacity that remains untested in Mexico's regulatory environment.",
+    'La estrategia del gobierno se enfoca en un ciclo de consumo documentado donde las plataformas amplifican la planificación y glorificación de ataques. Interrumpir la difusión de contenido requiere cooperación de plataformas y capacidad de cumplimiento que permanece sin probar en el ambiente regulatorio de México.',
+  ],
+  ['The capacity remains untested. The authority did not change the rules.',
+    'La capacidad permanece sin probar. La autoridad no cambió las reglas.'],
+  ['The outcome is unresolved while the size remains undetermined.',
+    'El resultado sigue sin resolver mientras el tamaño sigue sin determinarse.'],
+  ['The capacity remains untested and the issue is not resolved.',
+    'La capacidad permanece sin probar y el asunto sigue sin resolver.'],
+  ['The outcome remains unresolved.', 'El resultado sigue pendiente.'],
+  ['The size remains undetermined.', 'El tamaño sigue indeterminado.'],
+  ['The plan is unresolved and no deadline exists.',
+    'El plan está sin resolver y no existe ninguna fecha límite.'],
+]) assert.deepEqual(bilingualFidelityFlags({ english, spanish }), [], `${english} preserves its negative state`);
+
+for (const [english, spanish] of [
+  ['The capacity remains untested.', 'La capacidad permanece sin resolver.'],
+  ['The capacity remains untested.', 'La capacidad permanece sin probar y no funciona.'],
+  ['The capacity remains untested. The authority changed the rules.',
+    'La capacidad permanece sin probar. La autoridad no cambió las reglas.'],
+  ['The first system remains untested. The second system is tested.',
+    'El primer sistema está probado. El segundo sistema permanece sin probar.'],
+  ['The first system remains untested while the second system is tested.',
+    'El primer sistema está probado mientras el segundo sistema permanece sin probar.'],
+  ['The first system remains untested and the second system is tested.',
+    'El primer sistema está probado y el segundo sistema permanece sin probar.'],
+  ['The first system remains untested or the second system is tested.',
+    'El primer sistema está probado o el segundo sistema permanece sin probar.'],
+  ['The first issue is unresolved and the second issue is resolved.',
+    'El primer asunto está resuelto y el segundo asunto sigue sin resolver.'],
+  ['The first amount is undetermined and the second amount is determined.',
+    'El primer monto está determinado y el segundo monto sigue sin determinarse.'],
+  ['The capacity remains untested and the outcome is unresolved.',
+    'La capacidad está probada y el resultado sigue sin resolver.'],
+  ['The outcome remains unresolved while the size is undetermined.',
+    'El resultado sigue sin determinarse mientras el tamaño sigue sin resolver.'],
+  ['The outcome is unresolved and the size is undetermined.',
+    'El resultado sigue sin determinarse y el tamaño sigue sin resolver.'],
+  ['The capacity remains untested.',
+    'La capacidad permanece sin probar y el sistema también está sin probar.'],
+]) assert.ok(bilingualFidelityFlags({ english, spanish }).some((flag) => /negation|negated state/.test(flag)),
+  `${english} must not exempt an unpaired, extra, changed, or ambiguously attached Spanish negative: ${spanish}`);

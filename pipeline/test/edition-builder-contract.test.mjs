@@ -164,7 +164,7 @@ for(const f of ['background','view','watch']){overlong[f]='One. Two. Three. Four
 const bounded=repairOverlongAnalysis(overlong);
 assert.equal(bounded.view,'One. Two. Three.');assert.equal(bounded.es.view,'Uno. Dos. Tres.');
 assert.match(builder,/evaluated\.rejectionDiagnostics\.length && callCount/,'partial failures get the remaining repair opportunity');
-assert.match(builder,/user: JSON\.stringify\(rejectedRows\.map/,'passing drafts are not regenerated');
+assert.match(builder,/createFieldRepairPlan\(rejectedRows\.map/,'passing drafts are not regenerated');
 assert.match(builder,/optionalOnBudget: publicationCoverage/);
 assert.doesNotMatch(builder,/\$\{ANALYSIS_SHAPE\}/,'the daily writer must not import the contradictory return-no-analysis instruction');
 

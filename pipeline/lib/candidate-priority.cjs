@@ -60,18 +60,21 @@ function fallbackImportanceComponents(candidate) {
 
 function prioritizeCandidates(candidates, options = {}) {
   const editorialDate = String(options.editorialDate || '').trim();
+  const weekend = options.weekend === true;
   const dateOf = typeof options.dateOf === 'function'
     ? options.dateOf
     : (candidate) => String(candidate?._editorialDate || candidate?.date || '').trim();
+  const importanceOf = (candidate) => Object.values(fallbackImportanceComponents(candidate))
+    .reduce((sum, value) => sum + value, 0);
   return (Array.isArray(candidates) ? candidates : []).slice().sort((a, b) =>
     Number(Boolean(b?._scheduled)) - Number(Boolean(a?._scheduled))
     || Number(Boolean(a?._alreadyPublished)) - Number(Boolean(b?._alreadyPublished))
-    // The curator's bounded input is first a daily-edition budget. Exact-day rows
-    // cannot be crowded out by an older three-day backlog before they are assessed.
-    || (editorialDate
-      ? Number(dateOf(b) === editorialDate) - Number(dateOf(a) === editorialDate)
-      : 0)
-    // Inside each date lane, obvious weather/how-to/sports volume remains last.
+    // Weekends recap the eligible week: use the existing business rubric before
+    // attention/recency so a weak Saturday item cannot crowd out a stronger Friday
+    // development. Weekday editions retain their exact-day assessment budget.
+    || (weekend ? importanceOf(b) - importanceOf(a)
+      : editorialDate ? Number(dateOf(b) === editorialDate) - Number(dateOf(a) === editorialDate) : 0)
+    // Within each priority lane, obvious weather/how-to/sports volume remains last.
     || Number(attentionSignal(b) >= 0) - Number(attentionSignal(a) >= 0)
     || attentionSignal(b) - attentionSignal(a)
     || (Date.parse(b?.published_at || b?.publishedAt || '') || 0)

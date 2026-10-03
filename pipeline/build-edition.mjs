@@ -9,6 +9,7 @@ import { persistModelAccounting } from './lib/persist-model-accounting.mjs';
 import { restoreHeldEdition } from './lib/held-edition-recovery.mjs';
 import { requirePublicationRequest } from './lib/publication-request.mjs';
 import { createEditionQuarantine } from './lib/edition-quarantine.mjs';
+import { createFieldRepairPlan, mergeFieldRepairs } from './lib/edition-field-repair.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -173,6 +174,7 @@ async function candidateUniverse(now, schedule, editorialDate,
   }
   return prioritizeCandidates(complete, {
     editorialDate,
+    weekend: weekendDay(editorialDate),
     dateOf: (item) => item._editorialDate,
   }).slice(0, MAX_CANDIDATES);
 }
@@ -190,7 +192,7 @@ function rankSchema() {
 }
 // Use the same hard requirements on the initial draft and the bounded repair.
 // Otherwise the repair is asked to fix symptoms without knowing the release gate.
-const DRAFT_GATE_CONTRACT = `Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. The allowedNumericValues list is a literal-value checklist, not independent evidence. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. If cited evidence spells a quantity in words, preserve it in words in both languages; do not convert it to digits. For example, casi un millón stays almost one million / casi un millón. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. Each field must fit within 600 JSON UTF-8 bytes. Return every requested story as a required s<index> key in the stories object, never an array. If evidence cannot support a field, keep its story key and leave that field empty for rejection.`;
+const DRAFT_GATE_CONTRACT = `Aim for a 10–14-word English headline, a 25–35-word English dek, and one concise 20–35-word sentence per English analysis field. These are drafting targets below the hard ceilings, not permission to omit material facts or caveats. Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. The allowedNumericValues list is a literal-value checklist, not independent evidence. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. If cited evidence spells a quantity in words, preserve it in words in both languages; do not convert it to digits. For example, casi un millón stays almost one million / casi un millón. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. Each field must fit within 600 JSON UTF-8 bytes. Return every requested story as a required s<index> key in the stories object, never an array. If evidence cannot support a field, keep its story key and leave that field empty for rejection.`;
 
 const DAILY_EDITORIAL_CONTRACT = `Preserve the difference between an official completed action, a proposal and a reported claim. Prefer primary records supplied in the evidence, and name the reporting source or claimant when a primary record is absent. Include the observation period and relevant denominator for numerical comparisons. Background adds necessary context rather than repeating the headline. The view explains a narrow business mechanism or practical limit supported by the evidence, not generic importance. The watch names a sourced observable decision or release and what it would establish. Unsupported substance must remain empty for rejection; never invent a fact to complete the shape.`;
 
@@ -775,7 +777,7 @@ async function main() {
         || Object.values(fallbackImportanceComponents(item)).reduce((sum, value) => sum + value, 0), 1, 10),
     })).filter(row => row.item._scheduled || (attentionSignal(row.item) >= 0 && !commentaryOnlyCandidate(row.item)))
       .sort((a, b) => Number(Boolean(b.item._scheduled)) - Number(Boolean(a.item._scheduled))
-        || Number(b.item._editorialDate === editorialDate) - Number(a.item._editorialDate === editorialDate)
+        || (!weekendDay(editorialDate) && (Number(b.item._editorialDate === editorialDate) - Number(a.item._editorialDate === editorialDate)))
         || b.importance - a.importance || a.index - b.index)
       .slice(0, MAX_RANKED);
     if (!rankedPool.length) throw new Error('ranking selected no developments');
@@ -830,9 +832,33 @@ async function main() {
       locked = locked.filter((_, index) => index !== removable);
     }
     const reservedAuditUSD = auditReservation(locked);
+    const diagnosticRows = response => {
+      const byIndex = new Map(keyedUnits(response?.stories).map(draft => [Number(draft.i), draft]));
+      return locked.map(row => ({ index: row.index, storyId: storyId(row.item),
+        draft: byIndex.get(row.index) || null, evidence: row.evidence }));
+    };
+    const captureGeneration = (stage, response, details = {}) => {
+      try {
+        if (!quarantine) quarantine = createEditionQuarantine({
+          repositoryRoot: ROOT, directory: process.env.EDITION_QUARANTINE_DIRECTORY,
+          metadata: { editorialDate, slot, candidateSignature: signature, generatedAt: now.toISOString(),
+            workflowRunId: process.env.GITHUB_RUN_ID || null,
+            workflowRunAttempt: process.env.GITHUB_RUN_ATTEMPT || null,
+            workflowHeadSha: process.env.GITHUB_SHA || null,
+            priorArtifactHash: priorEdition?.artifactHash || null },
+        });
+        quarantine.recordGeneration(stage, diagnosticRows(response), { response, ...details,
+          modelAccounting: slotAttempt(attempts, editorialDate, slot).modelAccounting || null });
+        emitOutcome({ quarantine_ready: 'true' });
+      } catch (preservationError) {
+        console.warn(`Optional edition diagnostics unavailable: ${clean(preservationError.message)}`);
+      }
+    };
+    quarantineStage = 'initial-draft';
     let draftResponse = await call(draftRequest(locked));
+    captureGeneration('initial-draft', draftResponse);
     const expectedDrafts = new Set(locked.map((row) => row.index));
-    const evaluateDrafts = (response) => {
+    const evaluateDrafts = (response, patchErrors = {}) => {
       const draftRejects = [];
       const rejectionDiagnostics = [];
       const draftByIndex = new Map();
@@ -851,7 +877,8 @@ async function main() {
           return [];
         }
         const draft = repairOverlongAnalysis(repairUnsupportedAnalysisNumbers(row, rawDraft));
-        const flags = deterministicDraftCheck(row, draft);
+        draftByIndex.set(row.index, draft);
+        const flags = [...deterministicDraftCheck(row, draft), ...(patchErrors[row.index] || [])];
         if (flags.length) {
           draftRejects.push(`${storyId(row.item)}: ${flags.join('; ')}`);
           rejectionDiagnostics.push(draftFailureReceipt(row, draft, flags));
@@ -859,29 +886,34 @@ async function main() {
         }
         return [{ row, draft }];
       });
-      return { deterministicPass, draftRejects, rejectionDiagnostics };
+      return { deterministicPass, draftRejects, rejectionDiagnostics, draftByIndex };
     };
     let evaluated = evaluateDrafts(draftResponse);
+    captureGeneration('initial-deterministic-result', draftResponse, { rejections: evaluated.rejectionDiagnostics });
+    quarantineStage = 'deterministic-repair';
     if (evaluated.rejectionDiagnostics.length && callCount < MAX_MODEL_CALLS - 1) {
       const passingIndices = new Set(evaluated.deterministicPass.map(entry => entry.row.index));
       const rejectedRows = locked.filter(row => !passingIndices.has(row.index));
       console.warn('  repairing only missing or rejected story units within the existing call budget');
-      draftResponse = await call({
+      const repairPlan = createFieldRepairPlan(rejectedRows.map(row => ({
+        index: row.index, evidence: row.evidence, draft: evaluated.draftByIndex.get(row.index),
+        rejection: evaluated.rejectionDiagnostics.find(item => item.storyId === storyId(row.item)),
+      })));
+      const patchResponse = await call({
         optionalOnBudget: publicationCoverage(evaluated.deterministicPass.map(entry => entry.row), locked, editorialDate),
-        system: `${DRAFT_GATE_CONTRACT}\n\n${DAILY_EDITORIAL_CONTRACT}\n\n${TRUST}\n\n${REPORT}\n\nRepair every rejected bilingual story unit. Use only its evidence. Keep every number, actor, action, date, procedural stage and certainty supported by the cited evidence. Cite an independent record in background whenever one is available. Remove unsupported claims instead of guessing. Keep headlines under 20 English and 24 Spanish words, deks at two sentences, analysis fields at three sentences, and return every requested index.`,
-        user: JSON.stringify(rejectedRows.map((row) => ({
-          i: row.index,
-          allowedNumericValues: unsupportedNumericTokens(row.evidence.map((item) => item.text).join(' ')),
-          evidence: row.evidence.map(({ id, kind, source, url, text }) => ({ id, kind, source, url, text })),
-          rejected: evaluated.rejectionDiagnostics.find((item) => item.storyId === storyId(row.item)) || null,
-        }))),
-        schema: draftSchema(rejectedRows.map((row) => row.index)), model: models.SONNET, effort: 'low', maxTokens: rejectedRows.length * 1300 + 100, reserveUSD: reservedAuditUSD,
+        system: `${DRAFT_GATE_CONTRACT}\n\n${DAILY_EDITORIAL_CONTRACT}\n\n${TRUST}\n\n${REPORT}\n\nRepair only the named bilingual fields. Return repairs keyed by s<index>, containing only the requested field names, each with en, es and refs. Use only that story's evidence and exact evidence IDs. Preserved fields are context and must not be returned or changed. Keep every number, actor, action, date, procedural stage and certainty supported. If a requested next step has no source support, leave its text empty for rejection rather than inventing one.`,
+        user: JSON.stringify(repairPlan.inputs), schema: repairPlan.schema,
+        model: models.SONNET, effort: 'low', maxTokens: repairPlan.maxTokens, reserveUSD: reservedAuditUSD,
       });
-      evaluated = evaluateDrafts({ stories: {
+      const merged = mergeFieldRepairs(repairPlan, patchResponse);
+      draftResponse = { stories: {
         ...Object.fromEntries(evaluated.deterministicPass.map(entry => [`s${entry.row.index}`, entry.draft])),
-        ...(draftResponse?.stories || {}),
-      } });
+        ...merged.stories,
+      } };
+      captureGeneration('field-repair-response', draftResponse, { patchResponse, patchErrors: merged.errorsByIndex });
+      evaluated = evaluateDrafts(draftResponse, merged.errorsByIndex);
     }
+    captureGeneration('final-deterministic-result', draftResponse, { rejections: evaluated.rejectionDiagnostics });
     const { deterministicPass, draftRejects, rejectionDiagnostics } = evaluated;
     if (!deterministicPass.length) {
       failureDiagnostics = rejectionDiagnostics;
@@ -901,27 +933,25 @@ async function main() {
         evidenceRefs: draft[`${field}Refs`],
       }])),
     }));
+    quarantineStage = 'independent-audit';
     const auditResponse = await call({
       system: `You are the final independent evidence and bilingual editor. Review each English field only against the records identified by its evidenceRefs in that input’s evidence list. Independently compare its Spanish translation with both the English field and the same cited evidence. Reject unsupported actors, numbers, comparisons, causal claims, procedural stages, predictions, non sequiturs, mistranslations, reversed actions, changed subjects, or changed degrees of certainty in either language. Do not reject a clearly labeled narrow inference merely for being an inference. Do not rewrite either language. Return a reviews object with one required s<index> verdict for every input index, never an array.`,
       user: JSON.stringify(auditInputs),
       schema: auditSchema(deterministicPass.map(entry => entry.row.index)), maxTokens: 2400,
     });
     try {
-      quarantine = createEditionQuarantine({
-        repositoryRoot: ROOT,
-        directory: process.env.EDITION_QUARANTINE_DIRECTORY,
-        metadata: {
-          editorialDate, slot, candidateSignature: signature, generatedAt: now.toISOString(),
+      const auditedDrafts = deterministicPass.map(({ row, draft }) => ({
+        index: row.index, storyId: storyId(row.item), draft, evidence: row.evidence,
+      }));
+      if (quarantine) quarantine.recordAudit({ inputs: auditInputs, response: auditResponse }, auditedDrafts);
+      else quarantine = createEditionQuarantine({
+        repositoryRoot: ROOT, directory: process.env.EDITION_QUARANTINE_DIRECTORY,
+        metadata: { editorialDate, slot, candidateSignature: signature, generatedAt: now.toISOString(),
           workflowRunId: process.env.GITHUB_RUN_ID || null,
           workflowRunAttempt: process.env.GITHUB_RUN_ATTEMPT || null,
           workflowHeadSha: process.env.GITHUB_SHA || null,
-          priorArtifactHash: priorEdition?.artifactHash || null,
-          modelAccounting: slotAttempt(attempts, editorialDate, slot).modelAccounting || null,
-        },
-        drafts: deterministicPass.map(({ row, draft }) => ({
-          index: row.index, storyId: storyId(row.item), draft, evidence: row.evidence,
-        })),
-        audit: { inputs: auditInputs, response: auditResponse },
+          priorArtifactHash: priorEdition?.artifactHash || null },
+        drafts: auditedDrafts, audit: { inputs: auditInputs, response: auditResponse },
       });
       emitOutcome({ quarantine_ready: 'true' });
     } catch (preservationError) {

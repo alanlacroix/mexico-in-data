@@ -42,6 +42,65 @@ const dailyBatch = prioritizeCandidates([...olderEqualSignal, ...todayEqualSigna
 assert.ok(todayEqualSignal.every((candidate) => dailyBatch.slice(0, 24).some((row) => row.id === candidate.id)),
   'every same-day equal-signal report must enter the bounded batch before the old backlog');
 
+// Regression from the Oct 3 pool: a low-value Saturday visit guide outranked
+// stronger prior-day policy solely because it matched the editorial date.
+const saturdayTours = {
+  id: 'saturday-amazon-tours',
+  title: 'Amazon México ya ofrece tours gratuitos en su mayor centro de distribución: cómo reservar un recorrido',
+  dek: 'Los tours permiten a los visitantes vivir el proceso que sigue una orden de Amazon en el centro que procesa hasta 3 millones de productos semanales.',
+  tier: 2, _editorialDate: '2026-10-03', published_at: '2026-10-03T08:00:00.000Z',
+};
+const fridayPolicy = {
+  id: 'friday-sugar-controls',
+  title: 'México pone freno a las importaciones de azúcar, pero aplaza nuevos controles hasta noviembre',
+  dek: 'México aplazó al 2 de noviembre los nuevos controles al azúcar importado, tras un aumento de 1,542 por ciento en las compras al exterior entre 2023 y 2025.',
+  tier: 2, _editorialDate: '2026-10-02', published_at: '2026-10-03T03:12:33.000Z',
+};
+const fridayInvestment = {
+  id: 'friday-cfe-investment',
+  title: 'CFE Presents US$37.5 Billion Expansion Roadmap',
+  dek: "The Federal Electricity Commission (CFE) presented a US$37.5 billion expansion plan for 2025–2030 to nearly 250 institutional investors, establishing a co-investment framework to modernize Mexico's generation and transmission networks.",
+  tier: 'specialist', _editorialDate: '2026-10-02', published_at: '2026-10-02T22:24:25.000Z',
+};
+const weekendOptions = { editorialDate: '2026-10-03', weekend: true };
+assert.equal(total(fallbackImportanceComponents(saturdayTours)), 1);
+assert.equal(total(fallbackImportanceComponents(fridayPolicy)), 7);
+assert.equal(total(fallbackImportanceComponents(fridayInvestment)), 7);
+assert.deepEqual(prioritizeCandidates([saturdayTours, fridayInvestment, fridayPolicy], weekendOptions),
+  [fridayPolicy, fridayInvestment, saturdayTours],
+  'a weekend recap ranks the whole eligible week by business importance');
+const laterInvestment = { ...fridayInvestment, published_at: '2026-10-03T04:00:00Z' };
+assert.deepEqual(prioritizeCandidates([laterInvestment, fridayPolicy], weekendOptions),
+  [fridayPolicy, laterInvestment], 'attention breaks equal weekend importance before recency');
+assert.deepEqual(prioritizeCandidates([fridayPolicy, saturdayTours], { editorialDate: '2026-10-03' }),
+  [saturdayTours, fridayPolicy], 'daily mode keeps exact-day protection unless weekend mode is explicitly enabled');
+const thursdayPolicy = { ...fridayPolicy, id: 'thursday-policy', _editorialDate: '2026-10-01', published_at: '2026-10-01T20:00:00Z' };
+const fridayTours = { ...saturdayTours, _editorialDate: '2026-10-02', published_at: '2026-10-02T08:00:00Z' };
+assert.deepEqual(prioritizeCandidates([thursdayPolicy, fridayTours], { editorialDate: '2026-10-02', weekend: false }),
+  [fridayTours, thursdayPolicy], 'Friday daily editions still reserve assessment space for weaker exact-day reports');
+assert.deepEqual(prioritizeCandidates([thursdayPolicy, fridayPolicy], weekendOptions),
+  [fridayPolicy, thursdayPolicy], 'recency breaks equal weekend importance and attention scores');
+const tiedPolicy = { ...fridayPolicy, id: 'tied-policy' };
+assert.deepEqual(prioritizeCandidates([tiedPolicy, fridayPolicy], weekendOptions),
+  [tiedPolicy, fridayPolicy], 'complete ties retain deterministic input order');
+const weakWeekVolume = Array.from({ length: 30 }, (_, index) => ({
+  id: `weak-week-${index}`, title: 'Gobierno aprueba una ley', tier: 'aggregator',
+  _editorialDate: '2026-09-28', published_at: '2026-09-28T12:00:00Z',
+}));
+assert.ok(attentionSignal(weakWeekVolume[0]) > attentionSignal(fridayInvestment));
+const weekendBatch = prioritizeCandidates([...weakWeekVolume, saturdayTours, fridayInvestment], weekendOptions);
+assert.equal(weekendBatch[0], fridayInvestment,
+  'old volume with higher keyword attention cannot crowd out stronger business importance before the cap');
+assert.ok(weekendBatch.slice(0, 24).includes(fridayInvestment));
+const publishedPolicy = { ...fridayPolicy, id: 'published-policy', _alreadyPublished: true };
+const scheduledWeekend = { ...scheduled, _scheduled: { ...scheduled._scheduled, requiredForBrief: true } };
+assert.deepEqual(prioritizeCandidates([publishedPolicy, saturdayTours, scheduledWeekend], weekendOptions),
+  [scheduledWeekend, saturdayTours, publishedPolicy],
+  'required scheduled outcomes retain priority while already-published coverage stays behind unseen reports');
+const weekendInput = [saturdayTours, fridayPolicy];
+prioritizeCandidates(weekendInput, weekendOptions);
+assert.deepEqual(weekendInput, [saturdayTours, fridayPolicy], 'weekend sorting must not mutate the candidate input');
+
 const routineMorning = Array.from({ length: 60 }, (_, index) => ({
   id: `routine-${index}`,
   title: index % 2 ? 'How to save on school supplies this weekend' : 'Weather in Mexico this Sunday',
