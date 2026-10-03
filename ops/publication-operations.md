@@ -59,3 +59,40 @@ and fifth depend on evidence, quality and available budget. A three-story batch 
 no spare if one story fails. Do not increase limits or weaken the audit to claim success.
 Measure clean automated deliveries and actual usage before deciding whether a budget
 or model change would address the remaining reliability problem.
+
+## October 3 convergence repair
+
+The October 3 automatic attempts settled four calls at $0.108734 and stopped
+without an independently audited publishable candidate. A separately audited
+four-story recovery reached production at 06:38 Mexico City. All four provider
+responses ended normally; this is not evidence that a higher output limit or
+monthly budget would solve the failure.
+
+The retained rejected fields demonstrate overlong summaries and unusable watch
+fields alongside three false translation alarms (undetermined/sin determinarse,
+unresolved/sin resolver, untested/sin probar). Empty diagnostic fields describe
+post-processing output, not necessarily the provider's original response.
+
+- Repair requests now contain only the rejected bilingual fields and their
+  citations. Passing fields remain byte-for-byte intact. Unknown fields, story
+  keys and invalid references fail closed; the full deterministic and independent
+  audit still review the resulting complete stories.
+- Field-specific writing targets leave room below the release limits. The output
+  reservation scales with repaired fields: one summary uses 360 tokens including
+  framing instead of a whole-story 1,400. Input overhead also counts, so existing
+  daily and monthly reservation checks remain authoritative.
+- Weekend recap ranking uses existing business-importance scores across the week.
+  Saturday how-to coverage no longer outranks stronger weekday reporting solely
+  because of its date. Weekday exact-date coverage and required outcomes remain.
+- Diagnostic artifacts retain initial raw responses, field patches, source text
+  and rejection stages before the audit, with a null audit hash until an audit
+  actually exists. They stay outside the public site, with normal repository Actions access and
+  one-day retention; they cannot authorize publication.
+
+Remaining editorial limits are specific: keyword importance can still miss or
+mis-rank relevant developments, and an extracted article body does not establish
+that it contains a supported next milestone. A broad future-tense filter or a
+larger budget is not a demonstrated fix. Automatic drafts must still pass all
+fields and the independent audit; source-backed operator recovery remains the
+accepted contingency when they do not. The three-call ceiling makes one call per
+story unsuitable because it would consume the audit allowance.

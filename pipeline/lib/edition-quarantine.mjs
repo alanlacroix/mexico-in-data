@@ -9,7 +9,7 @@ import editionContract from './public-edition.cjs';
 const copy = value => JSON.parse(JSON.stringify(value));
 const digest = value => crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 
-export function createEditionQuarantine({ repositoryRoot, directory, metadata, drafts, audit }) {
+export function createEditionQuarantine({ repositoryRoot, directory, metadata, drafts = [], audit = null }) {
   const destination = directory || fs.mkdtempSync(path.join(os.tmpdir(), 'mexico-edition-quarantine-'));
   const relative = path.relative(path.resolve(repositoryRoot), path.resolve(destination));
   if (!relative || (relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative))) {
@@ -21,8 +21,10 @@ export function createEditionQuarantine({ repositoryRoot, directory, metadata, d
     throw new Error('Edition quarantine must be outside the repository');
   }
   const file = path.join(destination, 'candidate.json');
-  // Capture what actually reached the audit. Missing/negative verdicts remain
-  // visible; merely having a quarantine file never implies audit acceptance.
+  // Capture generation before a deterministic gate can reject it. Once an audit
+  // is recorded, drafts and auditedPayloadHash describe that exact audit input;
+  // append-only generation snapshots retain earlier raw or repaired responses.
+  // Missing/negative verdicts never imply audit acceptance or publication rights.
   const envelope = {
     schemaVersion: 1,
     kind: 'edition-diagnostic-quarantine',
@@ -31,7 +33,8 @@ export function createEditionQuarantine({ repositoryRoot, directory, metadata, d
     metadata: copy(metadata),
     drafts: copy(drafts),
     audit: copy(audit),
-    auditedPayloadHash: digest({ drafts, audit }),
+    auditedPayloadHash: audit === null ? null : digest({ drafts, audit }),
+    generationStages: [],
     candidate: null,
     candidateHash: null,
     validation: null,
@@ -50,6 +53,26 @@ export function createEditionQuarantine({ repositoryRoot, directory, metadata, d
   save();
   return {
     file,
+    recordGeneration(stage, drafts, details = null) {
+      const snapshot = {
+        stage,
+        recordedAt: new Date().toISOString(),
+        drafts: copy(drafts),
+        details: copy(details),
+      };
+      envelope.generationStages.push(snapshot);
+      if (envelope.audit === null) envelope.drafts = copy(snapshot.drafts);
+      save();
+    },
+    recordAudit(audit, drafts = envelope.drafts) {
+      const auditedDrafts = copy(drafts);
+      const recordedAudit = copy(audit);
+      envelope.drafts = auditedDrafts;
+      envelope.audit = recordedAudit;
+      envelope.auditedPayloadHash = recordedAudit === null ? null
+        : digest({ drafts: auditedDrafts, audit: recordedAudit });
+      save();
+    },
     recordCandidate(candidate) {
       envelope.candidate = copy(candidate);
       envelope.candidateHash = editionContract.editionHash(candidate);

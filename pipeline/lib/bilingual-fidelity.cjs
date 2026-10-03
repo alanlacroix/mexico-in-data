@@ -22,6 +22,67 @@ const ENTITIES = [
 ];
 const EN_NEGATION = /\b(?:no|not|never|without|neither|unchanged|unregistered)\b|\bnon[-\u2010\u2011](?=[a-z])/i;
 const ES_NEGATION = /\b(?:no|nunca|sin|ningun[oa]?|tampoco|sin cambios)\b/i;
+// A lexical negative can become an explicit Spanish negative without changing
+// meaning. Pair only the demonstrated predicates, in corresponding sentences or
+// contrast clauses. Adding them to EN_NEGATION alone would let "untested" hide an
+// unrelated Spanish "no", and matching anywhere would permit subject swaps.
+const NEGATIVE_STATES = [
+  { en: /\buntested\b/g, es: /\bsin probar\b/g, affirmativeEn: /\btested\b/, affirmativeEs: /\bprobad[oa]s?\b/ },
+  { en: /\bunresolved\b/g, es: /\bsin resolver\b/g, affirmativeEn: /\bresolved\b/, affirmativeEs: /\bresuelt[oa]s?\b/ },
+  { en: /\bundetermined\b/g, es: /\bsin determinarse\b/g, affirmativeEn: /\bdetermined\b/, affirmativeEs: /\bdeterminad[oa]s?\b/ },
+];
+const negationParts = (value, language) => fold(value)
+  .replace(/\b(?:u\.s\.|ee\.\s?uu\.|[ap]\.m\.)/g, (match) => match.replace(/\./g, '\uE000'))
+  .split(language === 'en'
+    ? /[.!?;]+(?=\s|$)|,?\s+\b(?:but|whereas|while|although|though)\b\s*/
+    : /[.!?;]+(?=\s|$)|,?\s+\b(?:pero|mientras(?: que)?|aunque)\b\s*/)
+  .map((part) => part.trim()).filter(Boolean);
+const matchCount = (text, pattern) => (text.match(new RegExp(pattern.source, 'gi')) || []).length;
+const explicitNegationFlags = (english, spanish) => [
+  ...(EN_NEGATION.test(english) && !ES_NEGATION.test(spanish) ? ['negation was dropped in Spanish'] : []),
+  ...(ES_NEGATION.test(spanish) && !EN_NEGATION.test(english) ? ['negation was introduced in Spanish'] : []),
+];
+
+function negationFlags(english, spanish) {
+  const originalFlags = explicitNegationFlags(english, spanish);
+  // Only exempt this demonstrated false positive. Preserve all other existing
+  // behavior, including Spanish negative concord ("no ... ninguna").
+  if (originalFlags.length !== 1 || originalFlags[0] !== 'negation was introduced in Spanish') return originalFlags;
+  const states = NEGATIVE_STATES.filter((state) => matchCount(english, state.en));
+  // This is an exception only for an observed explicit pair. Other paraphrases
+  // (for example unresolved/pendiente) retain the existing gate's behavior.
+  if (!states.some((state) => matchCount(spanish, state.es))) return originalFlags;
+  const enParts = negationParts(english, 'en');
+  const esParts = negationParts(spanish, 'es');
+  // Do not infer a correspondence when translators have rearranged the clauses.
+  // The independent evidence audit still owns general subject/claim equivalence.
+  if (enParts.length !== esParts.length) return originalFlags;
+  for (let index = 0; index < enParts.length; index++) {
+    const en = enParts[index];
+    let es = esParts[index];
+    // Different state types in one coordinated clause can exchange subjects while
+    // preserving each count. Keep the original rejection when pairing is ambiguous.
+    if (states.filter((state) => matchCount(en, state.en) || matchCount(es, state.es)).length > 1) return originalFlags;
+    // A mixed positive/negative predicate in one clause can attach to different
+    // subjects across "and/y" or "or/o". Do not grant this exception when that
+    // attachment is ambiguous. Splitting every conjunction would split noun lists
+    // in the real tariff receipt, so retain the original check in this case.
+    if (states.some((state) => (matchCount(en, state.en) || matchCount(es, state.es))
+      && (state.affirmativeEn.test(en) || state.affirmativeEs.test(es)))) {
+      return originalFlags;
+    }
+    for (const state of states) {
+      const enCount = matchCount(en, state.en);
+      const esCount = matchCount(es, state.es);
+      if (enCount !== esCount) return originalFlags;
+      es = es.replace(state.es, ' ');
+    }
+    // English has no ordinary negation in this exception. Every Spanish negative
+    // must belong to an aligned state pair; an extra "no" remains a rejection.
+    if (ES_NEGATION.test(es)) return originalFlags;
+  }
+  return [];
+}
 const EN_PROPOSAL = /\b(?:proposal|proposed|proposes?|draft|would|could|may|might|plans? to|seeks? to)\b/i;
 const ES_PROPOSAL = /\b(?:propuesta|propone|proponen|proyecto|anteproyecto|puede|pueden|podria|podrian|planea|busca|\w+ria|\w+rian)\b/i;
 const EN_FINAL = /\b(?:approved|enacted|implemented|entered into force|took effect|is in force|final rule)\b/i;
@@ -94,8 +155,7 @@ function bilingualFidelityFlags({ english = '', spanish = '', evidence = [] } = 
     if (inEnglish && !inSpanish) flags.push(`${entity.id} was dropped in Spanish`);
     if (inSpanish && !inSupport) flags.push(`${entity.id} was introduced in Spanish`);
   }
-  if (EN_NEGATION.test(english) && !ES_NEGATION.test(spanish)) flags.push('negation was dropped in Spanish');
-  if (ES_NEGATION.test(spanish) && !EN_NEGATION.test(english)) flags.push('negation was introduced in Spanish');
+  flags.push(...negationFlags(english, spanish));
   if (EN_PROPOSAL.test(englishProposalText(english)) && !ES_PROPOSAL.test(es)) flags.push('proposal or uncertainty became final in Spanish');
   if (ES_FINAL.test(es) && !EN_FINAL.test(englishFinalText(english))) flags.push('completed action was introduced in Spanish');
   if (EN_FINAL.test(englishFinalText(english)) && !ES_FINAL.test(es)) flags.push('completed action became non-final in Spanish');

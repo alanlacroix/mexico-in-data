@@ -114,12 +114,23 @@ try {
         const body=JSON.parse(init.body);const inputs=JSON.parse(body.messages[0].content);
         if (!body.output_config.format.schema.required.includes('reviews') && !body.system.includes('If cited evidence spells a quantity in words, preserve it in words in both languages; do not convert it to digits. For example, casi un millón stays almost one million / casi un millón.')) throw new Error('Writer must preserve word-form quantities');
         const audit=body.output_config.format.schema.required.includes('reviews');
-        calls.push({audit,indices:inputs.map(row=>row.i)});
-        const key=audit?'reviews':'stories';
+        const patch=body.output_config.format.schema.required.includes('repairs');
+        calls.push({audit,patch,maxTokens:body.max_tokens,indices:inputs.map(row=>row.i),fields:patch?inputs.map(row=>Object.keys(row.repairFields)):[]});
+        const key=audit?'reviews':patch?'repairs':'stories';
         let values=inputs.map((row,index)=>['s'+row.i,audit?{ok:!['audit-reject','diagnostic-capture-fail-audit-reject'].includes(process.env.FLOW_CASE),problems:[]}:drafts[row.story?.url]||drafts[Object.keys(drafts).find(url=>inputs.length===1)]]);
         if(!audit && calls.length===1 && ['partial','partial-unrepairable'].includes(process.env.FLOW_CASE))values=values.slice(0,1);
-        if(!audit && calls.length===2){
-          values=inputs.map(row=>{const url=row.evidence.find(e=>e.id==='article').url;return ['s'+row.i,drafts[url]];});
+        if(!audit && calls.length===1 && ['field-patch','extra-patch-field'].includes(process.env.FLOW_CASE)){
+          values[0][1]=structuredClone(values[0][1]);
+          values[0][1].dek+=' '+values[0][1].dek;
+          values[0][1].es.dek+=' '+values[0][1].es.dek;
+        }
+        if(patch){
+          values=inputs.map(row=>{
+            const url=row.evidence.find(e=>e.id==='article').url; const d=drafts[url];
+            const fields=Object.fromEntries(Object.keys(row.repairFields).map(f=>[f,{en:d[f],es:d.es[f],refs:d[f+'Refs']}]));
+            if(process.env.FLOW_CASE==='extra-patch-field')fields.headline={en:'Unrequested replacement',es:'Cambio no solicitado',refs:['article']};
+            return ['s'+row.i,fields];
+          });
         }
         fs.writeFileSync('calls.json',JSON.stringify(calls));
         const maximumUsage=process.env.FLOW_CASE==='partial-unrepairable' && calls.length===1;
@@ -134,7 +145,7 @@ try {
     await main();
   `;
   fs.writeFileSync(path.join(tmp,'run.mjs'),runner);
-  for(const scenario of ['complete','partial','partial-unrepairable','audit-reject','artifact-reject','budget-block','diagnostic-capture-fail','diagnostic-capture-fail-audit-reject','diagnostic-write-fail','diagnostic-write-fail-invalid']){
+  for(const scenario of ['complete','partial','field-patch','extra-patch-field','partial-unrepairable','audit-reject','artifact-reject','budget-block','diagnostic-capture-fail','diagnostic-capture-fail-audit-reject','diagnostic-write-fail','diagnostic-write-fail-invalid']){
     fs.mkdirSync(path.join(tmp,'data/news'),{recursive:true});
     fs.writeFileSync(path.join(tmp,'data/edition.json'),JSON.stringify(priorFixture));
     fs.writeFileSync(path.join(tmp,'data/edition-attempts.json'),'{"schemaVersion":1,"attempts":[]}');
@@ -153,7 +164,7 @@ try {
         PUBLICATION_DATE:'2026-10-01',PUBLICATION_SLOT:'morning',EDITION_SKIP_COLLECTION:'1',
         EDITION_RETRY_FAILED:'0',EDITION_REQUIRE_REVIEW:'0',FLOW_CASE:scenario}});
     const calls=fs.existsSync(path.join(tmp,'calls.json'))?JSON.parse(fs.readFileSync(path.join(tmp,'calls.json'))):[];
-    if(['complete','partial','diagnostic-capture-fail','diagnostic-write-fail'].includes(scenario)){
+    if(['complete','partial','field-patch','diagnostic-capture-fail','diagnostic-write-fail'].includes(scenario)){
       assert.equal(result.status,0,`${scenario}: ${result.stderr}\n${result.stdout}`);
       const out=JSON.parse(fs.readFileSync(path.join(tmp,'data/edition.json')));
       assert.equal(out.stories.length,3,scenario);
@@ -163,7 +174,18 @@ try {
         assert.match(result.stderr,/Optional edition diagnostics unavailable|Could not save optional edition candidate diagnostics/);
         assert.notEqual(fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8'),before,'valid publication survives optional storage failure');
       }
-      assert.equal(calls.length,scenario==='partial'?3:2,scenario);
+      assert.equal(calls.length,['partial','field-patch'].includes(scenario)?3:2,scenario);
+      if(scenario==='field-patch'){
+        assert.equal(calls[1].patch,true);
+        assert.deepEqual(calls[1].fields,[['dek']],'only failed summary is regenerated');
+        assert.ok(calls[1].maxTokens<1400,'small patch reserves less than a whole story');
+        assert.equal(calls[2].audit,true,'all complete stories still reach independent audit');
+        const published=JSON.parse(fs.readFileSync(path.join(tmp,'data/edition.json')));
+        for(const story of published.stories)for(const field of ['headline','background','view','watch']){
+          assert.equal(story.en[field],drafts[story.url][field]);
+          assert.equal(story.es[field],drafts[story.url].es[field]);
+        }
+      }
       if(scenario==='partial'){
         assert.equal(calls[1].indices.length,2,'only missing units are repaired');
         assert.ok(!calls[1].indices.includes(calls[0].indices[0]),'passing unit is preserved');
@@ -172,6 +194,18 @@ try {
     }else{
       assert.notEqual(result.status,0,scenario);
       assert.equal(fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8'),before,'failure preserves last-good bytes');
+      if(scenario==='extra-patch-field'){
+        assert.equal(calls.filter(call=>call.audit).length,0,'an unrequested mutation never reaches audit or publication');
+        const record=JSON.parse(fs.readFileSync(path.join(diagnosticDirectory,'candidate.json')));
+        assert.equal(record.audit,null);
+        assert.equal(record.auditedPayloadHash,null);
+        assert.equal(record.publicationAllowed,false);
+        assert.ok(record.generationStages.some(stage=>stage.stage==='initial-draft'));
+        const patchStage=record.generationStages.find(stage=>stage.stage==='field-repair-response');
+        assert.ok(patchStage.details.patchResponse.repairs,'exact invalid provider patch is preserved');
+        assert.ok(record.drafts.every(row=>row.evidence.every(item=>typeof item.text==='string')));
+        assert.equal(record.failure.stage,'deterministic-repair');
+      }
       if(scenario==='budget-block')assert.equal(calls.length,0,'budget refusal occurs before provider fetch');
       if(scenario==='partial-unrepairable')assert.equal(calls.filter(call=>call.audit).length,0,'an unaffordable partial draft must not spend on an unusable audit');
       if(scenario==='diagnostic-capture-fail-audit-reject'){

@@ -53,9 +53,13 @@ deployment live.
   A failed accounting push blocks the call. Never reset receipts to regain allowance.
 - A release-only failure preserves the exact audited candidate and provenance for zero-model
   recovery. Invalid held content fails closed; never regenerate to hide preservation failure.
-- After independent audit, retain exact drafts, evidence, verdicts and final validation
-  diagnostics in a one-day Actions artifact outside Git and the public build. This is
-  diagnostic material, not permission to publish. Changed prose needs fresh review.
+- Retain raw initial drafts, field-repair responses, evidence, audit verdicts and validation
+  diagnostics in a one-day Actions artifact outside Git and the public build. A missing
+  audit keeps its hash null. Diagnostic material never grants publication permission.
+- Repair only rejected bilingual fields and citations; preserve passing fields exactly.
+  Revalidate complete stories and run the mandatory independent audit after merging patches.
+- Weekend recaps rank the permitted week by business importance before recency. Weekday
+  editions still require exact-day coverage; neither mode may pad with weak reporting.
 - Run the public artifact's evidence-free bilingual checks before paying for audit,
   alongside cited-evidence checks, so final validation cannot introduce a second dialect
   of the translation rules.
