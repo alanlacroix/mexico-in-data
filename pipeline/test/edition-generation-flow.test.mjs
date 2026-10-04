@@ -109,11 +109,16 @@ try {
     dns.lookup=async()=>[{address:'93.184.216.34',family:4}];
     const drafts=${JSON.stringify(drafts)};
     const calls=[];
+    let priorFetches=0;
     globalThis.fetch=async(url,init)=>{
       if(String(url).includes('api.anthropic.com')){
         const body=JSON.parse(init.body);const inputs=JSON.parse(body.messages[0].content);
         if (!body.output_config.format.schema.required.includes('reviews') && !body.system.includes('If cited evidence spells a quantity in words, preserve it in words in both languages; do not convert it to digits. For example, casi un millón stays almost one million / casi un millón.')) throw new Error('Writer must preserve word-form quantities');
         const audit=body.output_config.format.schema.required.includes('reviews');
+        if(process.env.FLOW_CASE==='full-evidence') for(const input of inputs){
+          const source=input.evidence.find(e=>e.id==='article');
+          if(!source.text.endsWith('The exception remains conditional until formal approval.')) throw Error('A complete source caveat was clipped before writing or audit');
+        }
         const patch=body.output_config.format.schema.required.includes('repairs');
         calls.push({audit,patch,maxTokens:body.max_tokens,indices:inputs.map(row=>row.i),fields:patch?inputs.map(row=>Object.keys(row.repairFields)):[]});
         const key=audit?'reviews':patch?'repairs':'stories';
@@ -136,16 +141,31 @@ try {
         const maximumUsage=process.env.FLOW_CASE==='partial-unrepairable' && calls.length===1;
         return {ok:true,json:async()=>({usage:{input_tokens:maximumUsage?new TextEncoder().encode(JSON.stringify(body)).byteLength+1024:1,output_tokens:maximumUsage?body.max_tokens:1},content:[{type:'text',text:JSON.stringify({[key]:Object.fromEntries(values)})}]})};
       }
+      if(process.env.FLOW_CASE==='oversized-prior-evidence' && String(url)==='https://example.com/prior-policy'){
+        priorFetches++;
+        return new Response('<article class=\"article-body\"><p>'+('Long historical source context. '.repeat(1400))+'</p></article>',{headers:{'content-type':'text/html'}});
+      }
       const draft=drafts[String(url)];
       if(!draft)return new Response('',{status:404});
-      const text=[...Object.values(draft.es),...['headline','dek','background','view','watch'].map(f=>draft[f])].join(' ');
+      let text=[...Object.values(draft.es),...['headline','dek','background','view','watch'].map(f=>draft[f])].join(' ');
+      if(process.env.FLOW_CASE==='full-evidence')text+=' '+('Additional neutral context. '.repeat(90))+'The exception remains conditional until formal approval.';
+      if(['oversized-evidence','oversized-scheduled-evidence'].includes(process.env.FLOW_CASE))text+=' '+('Oversized source context. '.repeat(1000));
       return new Response('<html><article class="article-body"><p>'+text+'</p></article></html>',{headers:{'content-type':'text/html'}});
     };
-    const {main}=await import('./pipeline/build-edition.mjs');
+    const {main,evidenceFor}=await import('./pipeline/build-edition.mjs');
+    if(process.env.FLOW_CASE==='oversized-scheduled-evidence'){
+      await evidenceFor({url:Object.keys(drafts)[0],title:'Required scheduled outcome',sourceName:'Official source',_scheduled:{requiredForBrief:true}},[],[],[]);
+    }
+    if(process.env.FLOW_CASE==='oversized-prior-evidence'){
+      const url=Object.keys(drafts)[0]; const title=drafts[url].headline; const prior='https://example.com/prior-policy';
+      const evidence=await evidenceFor({url,title,sourceName:'Current source',_coverage:[{url:prior,source:'Previous source',title,summary:'Short RSS fallback must not reintroduce an oversized verified source.'}]},[],[],[{id:'prior',editionDate:'2026-09-30',headline:title,reportedChange:title,sourceUrls:[prior]}]);
+      if(priorFetches!==1)throw Error('Historical source regression did not reopen its source');
+      if(evidence.some(row=>row.url===prior))throw Error('Oversized historical source was downgraded to RSS evidence');
+    }
     await main();
   `;
   fs.writeFileSync(path.join(tmp,'run.mjs'),runner);
-  for(const scenario of ['complete','partial','field-patch','extra-patch-field','partial-unrepairable','audit-reject','artifact-reject','budget-block','diagnostic-capture-fail','diagnostic-capture-fail-audit-reject','diagnostic-write-fail','diagnostic-write-fail-invalid']){
+  for(const scenario of ['complete','full-evidence','oversized-prior-evidence','oversized-evidence','oversized-scheduled-evidence','partial','field-patch','extra-patch-field','partial-unrepairable','audit-reject','artifact-reject','budget-block','diagnostic-capture-fail','diagnostic-capture-fail-audit-reject','diagnostic-write-fail','diagnostic-write-fail-invalid']){
     fs.mkdirSync(path.join(tmp,'data/news'),{recursive:true});
     fs.writeFileSync(path.join(tmp,'data/edition.json'),JSON.stringify(priorFixture));
     fs.writeFileSync(path.join(tmp,'data/edition-attempts.json'),'{"schemaVersion":1,"attempts":[]}');
@@ -164,7 +184,7 @@ try {
         PUBLICATION_DATE:'2026-10-01',PUBLICATION_SLOT:'morning',EDITION_SKIP_COLLECTION:'1',
         EDITION_RETRY_FAILED:'0',EDITION_REQUIRE_REVIEW:'0',FLOW_CASE:scenario}});
     const calls=fs.existsSync(path.join(tmp,'calls.json'))?JSON.parse(fs.readFileSync(path.join(tmp,'calls.json'))):[];
-    if(['complete','partial','field-patch','diagnostic-capture-fail','diagnostic-write-fail'].includes(scenario)){
+    if(['complete','full-evidence','oversized-prior-evidence','partial','field-patch','diagnostic-capture-fail','diagnostic-write-fail'].includes(scenario)){
       assert.equal(result.status,0,`${scenario}: ${result.stderr}\n${result.stdout}`);
       const out=JSON.parse(fs.readFileSync(path.join(tmp,'data/edition.json')));
       assert.equal(out.stories.length,3,scenario);
@@ -205,6 +225,16 @@ try {
         assert.ok(patchStage.details.patchResponse.repairs,'exact invalid provider patch is preserved');
         assert.ok(record.drafts.every(row=>row.evidence.every(item=>typeof item.text==='string')));
         assert.equal(record.failure.stage,'deterministic-repair');
+      }
+      if(scenario==='oversized-scheduled-evidence'){
+        assert.equal(calls.length,0,'an oversized required scheduled source fails before any provider call');
+        assert.match(result.stderr,/Required scheduled article exceeds complete evidence limit/);
+      }
+      if(scenario==='oversized-evidence'){
+        assert.equal(calls.length,0,'oversized complete sources must fail before provider fetch');
+        assert.match(result.stderr,/skip article exceeding complete evidence limit/);
+        const ledger=JSON.parse(fs.readFileSync(path.join(tmp,'data/edition-attempts.json')));
+        assert.equal(ledger.attempts[0].costUSD,0);
       }
       if(scenario==='budget-block')assert.equal(calls.length,0,'budget refusal occurs before provider fetch');
       if(scenario==='partial-unrepairable')assert.equal(calls.filter(call=>call.audit).length,0,'an unaffordable partial draft must not spend on an unusable audit');

@@ -117,3 +117,37 @@ for a claim. It is not copied to the public site. The October 3 backfill records
 the reviewed OXIO, Directo a México and sugar-permit origins while preserving the
 published edition and receipt hash unchanged. Future genuinely new follow-up
 URLs remain eligible and need their own evidence and editorial review.
+
+## October 4 source integrity repair
+
+October 4 was verified live through independently audited curated recovery at 06:07
+Mexico City, with four stories and no provider calls. It does not demonstrate
+autonomous generation. The normal shortlist still mixed repeated events with
+new reporting, and the selected article packets lacked the required milestones.
+
+The observed legacy Diario Oficial layout stores the policy in a unique
+`DivDetalleNota` container with an embedded body. Extraction now recognizes only
+that verified official layout, including its final conditions and transitory
+clauses. Ambiguous or unsupported official containers remain unusable.
+
+Extracted current and prior article records now preserve complete text up to
+16 KiB of serialized UTF-8, including metadata and JSON escaping. Oversized
+records are rejected before paid drafting rather than clipped. An oversized
+optional lead is skipped, optional historical context is omitted, and a required
+scheduled lead fails closed. When a verified body exists, its RSS summary is
+omitted because it can itself be a truncated duplicate. Other snippet/context
+records retain their existing bounded format.
+
+Offline tests show complete source caveats reach both drafting and audit. The
+retained vehicle, remittance, IMF and DOF records all fit the bound. Existing
+daily/monthly reservations still size the batch and may select the cheaper
+writer when longer evidence cannot reserve the stronger writer plus audit.
+No budget or factual/translation gate changed, and no paid test was performed.
+
+Completeness does not manufacture missing evidence. The vehicle article does
+not contain the October 7 calendar release, the remittance article does not
+contain the official first-banking-day schedule, and the IMF fiscal report does
+not contain the Board-review milestone. Those require separately retrieved
+source records. General cross-outlet event identity also remains unresolved:
+company/topic overlap alone cannot distinguish new metrics, periods or stages.
+The date-specific selection prototype was not deployed.

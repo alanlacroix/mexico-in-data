@@ -11,6 +11,7 @@ import { requirePublicationRequest } from './lib/publication-request.mjs';
 import { createEditionQuarantine } from './lib/edition-quarantine.mjs';
 import { createFieldRepairPlan, mergeFieldRepairs } from './lib/edition-field-repair.mjs';
 import { articleIdentity, publishedProvenanceUrls } from './lib/article-identity.mjs';
+import { shapeEvidenceRecord } from './lib/source-evidence.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -271,7 +272,7 @@ function removableBudgetRow(rows, editorialDate) {
 }
 
 function evidenceRecord({ id, kind, source, url, text }) {
-  return { id: clean(id), kind: clean(kind), source: plainSourceName(source), url: clean(url), text: clean(text).slice(0, 2200) };
+  return shapeEvidenceRecord({ id, kind, source, url, text });
 }
 
 async function evidenceFor(item, standing, calendar, memory = []) {
@@ -279,16 +280,24 @@ async function evidenceFor(item, standing, calendar, memory = []) {
   const article = await fetchArticle(item.url, {
     allowedHosts: registered ? sourceHosts(registered) : [new URL(item.url).hostname],
   }).catch(() => ({ ok: false, text: '' }));
-  const evidence = [evidenceRecord({
+  const leadEvidence = evidenceRecord({
     id: 'article', kind: article.articleBody ? 'article-body' : 'article', source: item.sourceName || item.source, url: item.url,
     // Whole-page fallbacks may contain navigation, consent text, or unrelated cards.
     // Only an explicitly located story body may add fetched prose to the evidence packet.
-    text: [item.title, item.dek, article.articleBody ? article.text : ''].filter(Boolean).join('\n'),
-  })];
+    text: (article.articleBody ? [item.title, article.text] : [item.title, item.dek]).filter(Boolean).join('\n'),
+  });
+  // An overlong verified body is not downgraded to an incomplete RSS excerpt.
+  if (!leadEvidence) {
+    if (item._scheduled?.requiredForBrief) throw new Error(`Required scheduled article exceeds complete evidence limit: ${item.url}`);
+    console.warn(`  skip article exceeding complete evidence limit: ${item.url}`);
+    return [];
+  }
+  const evidence = [leadEvidence];
   const seen = new Set([item.url]);
   const push = (record) => {
     if (!record?.url || seen.has(record.url) || !/^https:\/\//i.test(record.url)) return;
     const shaped = evidenceRecord(record);
+    if (!shaped) { seen.add(record.url); return; }
     if (!shaped.text || !shaped.source) return;
     seen.add(record.url);
     evidence.push(shaped);
