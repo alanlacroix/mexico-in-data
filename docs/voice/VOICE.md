@@ -28,6 +28,18 @@ against this. Locked 2026-07-09 (data-layer register, from Atlas / CIA Factbook 
 operator" voice became the governing **prose** voice; the old plain-factual law was
 retained, unchanged, for the **data layer**.
 
+## Plain-language direction, October 5, 2026
+
+Keep the background, context and explanation of why a story matters. Clarity is a
+change in wording, not permission to remove those sections or reduce their useful
+detail. Use familiar words, direct verbs and short, connected sentences in English
+and natural Mexican Spanish. Explain necessary technical terms. Split a crowded
+sentence rather than squeezing several ideas into one sentence.
+
+Keep every material fact, amount, comparison, date, source attribution and caveat.
+Do not round a figure, change legal scope or make a tentative step sound certain
+just to make the copy smoother. Keep the concrete next step and what it would show.
+
 ## How this document works — three layers, strict priority
 
 1. **Trust rules (§1)** — why readers believe the site. Immutable. Every surface. They win every conflict. Warmth never buys a pass on a number.
