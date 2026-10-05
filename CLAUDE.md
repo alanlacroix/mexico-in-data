@@ -23,6 +23,10 @@ deployment live.
   Size the batch within the unchanged budget, preserve the independent audit, and never pad with weak stories. Every
   published development has visible reporting, business implications, context, and a
   sourced next milestone. The primary reading path has no dashboard, calendar or weekly shelf.
+- Write in clear, everyday English and natural Mexican Spanish. Retain background,
+  context, why it matters and the next step. Simplify wording and sentence structure,
+  not the substance, facts, attribution or uncertainty. Explain necessary technical
+  terms and use two short sentences when clearer than one long sentence.
 - AI compares new reporting with prior coverage. Archived prose is a retrieval index,
   never independent evidence; reopen original source articles before citing a connection.
 - As authorized September 30, validated bilingual editions publish automatically every

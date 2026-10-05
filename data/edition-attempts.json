@@ -2164,13 +2164,13 @@
     {
       "editorialDate": "2026-10-05",
       "slot": "morning",
-      "candidateSignature": "e534828e1f984911cb3d4038371981ac2e339d02483c877324be39553e6c4492",
+      "candidateSignature": "c69956205b6b8e54fa0ddb9c0df9c36a95d15b2593d2cf2a1ff2c29fc1159e2a",
       "state": "published",
       "startedAt": "2026-10-05T10:39:46.208Z",
       "completedAt": "2026-10-05T10:39:46.215Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "b14a21ab2d6746d9200f932305d6c30cb0d3664a26d00c93fe0eb9494c8228e7",
+      "artifactHash": "c536837decc2e7180fac63e1d063535a17bcf031f41b8ae25c1eb4cf6eea0d15",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2196,7 +2196,24 @@
         "generationProvenance": "operator-curated; zero provider generation or audit calls",
         "preventiveReason": "Unpaid replay excludes genuine rail and fuel reports at the metadata geography gate while ranking repeated IMF and vehicle events; incomplete supporting milestones also remain",
         "releaseRepair": "PR34 restores the already-permitted previous-day lane across Monday rollover without changing source dates or freshness requirements"
-      }
+      },
+      "editorialRevisions": [
+        {
+          "kind": "user-approved-plain-language-revision",
+          "previousArtifactHash": "b14a21ab2d6746d9200f932305d6c30cb0d3664a26d00c93fe0eb9494c8228e7",
+          "artifactHash": "c536837decc2e7180fac63e1d063535a17bcf031f41b8ae25c1eb4cf6eea0d15",
+          "previousCandidateSignature": "e534828e1f984911cb3d4038371981ac2e339d02483c877324be39553e6c4492",
+          "candidateSignature": "c69956205b6b8e54fa0ddb9c0df9c36a95d15b2593d2cf2a1ff2c29fc1159e2a",
+          "reviewedAt": "2026-10-05T12:55:44.140429+00:00",
+          "draftSHA256": "f0d65cef8778a31d1be8b3008b1f776feb5f08279903c8f032860a28dd794a10",
+          "auditSHA256": "dd38f7683241e8b990a37b9e1b7ef8dc1a60cee447b4b26e3ec79278ebd4069e",
+          "reviewedFields": 30,
+          "method": "Independent English/Spanish wording and factual-parity review; background, context, why it matters, next steps, exact figures, dates and uncertainty retained",
+          "providerCalls": 0,
+          "costUSD": 0
+        }
+      ],
+      "lastEditorialRevisionAt": "2026-10-05T12:55:44.140429+00:00"
     }
   ]
 }
