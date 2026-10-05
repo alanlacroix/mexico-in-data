@@ -2160,6 +2160,43 @@
         "generationProvenance": "operator-curated; no provider generation or audit calls",
         "preventiveReason": "Known repeated-event ranking and incomplete writer-facing evidence packets; stronger new reporting reviewed before the morning window"
       }
+    },
+    {
+      "editorialDate": "2026-10-05",
+      "slot": "morning",
+      "candidateSignature": "e534828e1f984911cb3d4038371981ac2e339d02483c877324be39553e6c4492",
+      "state": "published",
+      "startedAt": "2026-10-05T10:39:46.208Z",
+      "completedAt": "2026-10-05T10:39:46.215Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "b14a21ab2d6746d9200f932305d6c30cb0d3664a26d00c93fe0eb9494c8228e7",
+      "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
+      "diagnostics": [],
+      "collection": null,
+      "recoveries": [],
+      "manualRecovery": {
+        "reviewedAt": "2026-10-05T10:31:17.514Z",
+        "method": "Independent review of 30 English and Spanish narrative fields against original reporting, procurement metadata and official records; exact candidate and release gates passed",
+        "draftSHA256": "ebd3d393e8a7964dbd43803bdb778b7a4024406be08ba233579ee90039d70b47",
+        "auditSHA256": "5cb23d24df0f6d878509e236e95e3ff638fe1aeb703668a272c933158c9c5d5e",
+        "sourceProvenance": "Fresh registered El Economista RSS reporting for rail and fuel; official SIDOF daily index and published IMSS agreement; original and previous official fuel schedules",
+        "primaryDiscoveries": [
+          {
+            "storyId": "n-8caddd6ff370",
+            "url": "https://sidof.segob.gob.mx/notas/docFuente/5800295",
+            "sourceDiscovery": "official SIDOF daily index",
+            "discoveryUrl": "https://sidof.segob.gob.mx/",
+            "metadataUrl": "https://sidof.segob.gob.mx/notas/5800295",
+            "publicationDate": "2026-10-05",
+            "publicationPrecision": "date",
+            "feedRecordClaimed": false
+          }
+        ],
+        "generationProvenance": "operator-curated; zero provider generation or audit calls",
+        "preventiveReason": "Unpaid replay excludes genuine rail and fuel reports at the metadata geography gate while ranking repeated IMF and vehicle events; incomplete supporting milestones also remain",
+        "releaseRepair": "PR34 restores the already-permitted previous-day lane across Monday rollover without changing source dates or freshness requirements"
+      }
     }
   ]
 }
