@@ -181,7 +181,16 @@ function validateEdition(edition) {
     else if (weekIds.has(story.id)) errors.push(`${label}.id is duplicated`);
     weekIds.add(story?.id);
     if (!validDay(story?.date)) errors.push(`${label}.date must be YYYY-MM-DD`);
-    else if (weekStart && (story.date < weekStart || story.date > edition.editorialDate)) errors.push(`${label}.date falls outside the edition week`);
+    else if (weekStart && (story.date < weekStart || story.date > edition.editorialDate)) {
+      // Monday's daily brief may include Sunday's allowed key development. Its
+      // required weekly mirror retains that source date; unrelated old archive
+      // rows still cannot enter the new week's index.
+      const currentPriorDay = edition.editionType === 'daily'
+        && story.date === previousDay(edition.editorialDate)
+        && stories.some(current => current?.id === story.id && current.date === story.date
+          && current.lane === 'key-development');
+      if (!currentPriorDay) errors.push(`${label}.date falls outside the edition week`);
+    }
     if (!validIso(story?.publishedAt)) errors.push(`${label}.publishedAt must be an ISO timestamp`);
     if (!clean(story?.section)) errors.push(`${label}.section is missing`);
     if (!clean(story?.source)) errors.push(`${label}.source is missing`);

@@ -69,10 +69,16 @@ function renderFixture(artifact) {
   });
   return module.exports;
 }
-const baseWeekStory = edition.weekStories.find(story => story.id === edition.stories[0].id);
-const otherWeekStory = edition.weekStories.find(story => story.id !== baseWeekStory.id && story.url !== baseWeekStory.url)
+// Synthetic one-story editions must keep an exact-day card and cannot borrow
+// Sunday's special current-story mirror after removing its corresponding card.
+const baseCurrentStory = edition.editionType === 'daily'
+  ? edition.stories.find(story => story.date === edition.editorialDate) : edition.stories[0];
+const baseWeekStory = edition.weekStories.find(story => story.id === baseCurrentStory.id);
+const currentWeekStart = edition.weeklyBrief?.start || edition.editorialDate;
+const otherWeekStory = edition.weekStories.find(story => story.id !== baseWeekStory.id
+  && story.url !== baseWeekStory.url && story.date >= currentWeekStart)
   || { ...baseWeekStory, url: `${baseWeekStory.url}#fixture-economy` };
-const fixture = publicEdition.withArtifactHash({ ...edition, stories: [{ ...edition.stories[0], section: 'energy' }], weekStories: [
+const fixture = publicEdition.withArtifactHash({ ...edition, stories: [{ ...baseCurrentStory, section: 'energy' }], weekStories: [
   { ...baseWeekStory, section: 'energy' },
   { ...otherWeekStory, id: 'fixture-economy', section: 'economy' },
 ] });
@@ -83,7 +89,7 @@ const wrongCopy = JSON.parse(JSON.stringify(reordered));
 wrongCopy.groups[0].items[0].title = fixture.weekStories[0].en.headline;
 assert.throws(() => assertShelfCopies(wrongCopy, fixture, 'es'), /atomically published/);
 
-const crowded = publicEdition.withArtifactHash({ ...edition, stories: [{ ...edition.stories[0], id: 'fixture-crowded-0', section: 'economy' }], weekStories: Array.from({ length: 6 }, (_, i) => ({
+const crowded = publicEdition.withArtifactHash({ ...edition, stories: [{ ...baseCurrentStory, id: 'fixture-crowded-0', section: 'economy' }], weekStories: Array.from({ length: 6 }, (_, i) => ({
   ...baseWeekStory, id: `fixture-crowded-${i}`, section: i % 2 ? 'money' : 'economy',
   url: i === 0 ? baseWeekStory.url : `${baseWeekStory.url}#fixture-${i}`,
 })) });
