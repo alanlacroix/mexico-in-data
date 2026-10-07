@@ -35,6 +35,7 @@ bodyClass: brief-page
 
   {% if f.weeklyBrief %}
   {% set weeklyBrief = f.weeklyBrief %}
+  {% set weeklyStories = f.weeklyStories %}
   {% include "partials/weekly-brief.njk" %}
   {% else %}
   <section class="developments" aria-label="{% if locale == 'es' %}Noticias{% else %}Stories{% endif %}" data-edition-stories>

@@ -31,6 +31,9 @@ deployment live.
   mechanism, who gains or faces a constraint, and what the reported measure can and
   cannot establish. Generic advice to check orders or watch developments is not analysis.
   Choose relevant questions; do not impose a recurring trade template or pad every card.
+  Read the complete story in its actual visible order. Define necessary terms before
+  use, explain with concrete examples, and omit statistics whose caveats obscure their
+  insight. Verify the rendered English and Spanish, including context before analysis.
 - AI compares new reporting with prior coverage. Archived prose is a retrieval index,
   never independent evidence; reopen original source articles before citing a connection.
 - As authorized September 30, validated bilingual editions publish automatically every

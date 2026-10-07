@@ -26,6 +26,7 @@ articleType: NewsArticle
   {% set locale = archived.locale %}
   {% if archived.edition.weeklyBrief %}
   {% set weeklyBrief = archived.edition.weeklyBrief %}
+  {% set weeklyStories = archived.edition.stories %}
   {% include "partials/weekly-brief.njk" %}
   {% else %}
   {% for story in archived.stories %}{% include "partials/brief-story.njk" %}{% endfor %}

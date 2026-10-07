@@ -309,6 +309,7 @@ function buildFeed(locale = 'en') {
     updated: brief.publishedAt || brief.newsThrough,
     artifactHash: brief.artifactHash,
     weeklyBrief: brief.weeklyBrief,
+    weeklyStories: brief.weeklyStories,
     carrying: brief.carryingLastBrief,
     weekend: brief.weekendEdition,
     briefTitle: brief.briefTitle,

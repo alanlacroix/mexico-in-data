@@ -28,7 +28,7 @@ export const BAN = `BANNED (delete on sight): em-dashes; semicolons; buzzwords (
 
 // ---- register blocks (one per surface) ----
 
-export const REPORT = `REGISTER: FACTUAL COPY. Write like a careful person explaining the week to a smart friend. Use short, connected paragraphs. State what happened, the useful comparison, and the next known date when there is one. Do not announce that something is important. Avoid generic importance claims in the factual summary. Keep useful background, context and why-it-matters reasoning in the dedicated analysis fields. Explain the actual mechanism and consequence in everyday words, using sourced context instead of generic advice. Use two short sentences when they explain the point more clearly than one long sentence. Simplifying the tone must not remove detail, sections, attribution or caveats.`;
+export const REPORT = `REGISTER: FACTUAL COPY. Explain the news to a curious reader without specialist knowledge. Use familiar words and short, connected sentences. Define necessary terms before using them. Keep useful background, why it matters, attribution, uncertainty and the next step. Explain with concrete sourced examples, not generic advice or an importance claim. Use a number only when its insight justifies the explanation it needs. Read the whole story in its displayed order: summary, context, why it matters. Each sentence should make the next easier to understand. Simplify wording without cutting useful substance.`;
 
 export const ANALYSIS_SHAPE = `ALAN'S APPROVED ANALYSIS PATTERN (HARD PUBLICATION RULE):
 - State the view in the first sentence, in ordinary language.
