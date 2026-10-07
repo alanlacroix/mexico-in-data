@@ -40,6 +40,16 @@ Keep every material fact, amount, comparison, date, source attribution and cavea
 Do not round a figure, change legal scope or make a tentative step sound certain
 just to make the copy smoother. Keep the concrete next step and what it would show.
 
+## Reader check, October 7, 2026
+
+Read each complete story in the order the reader sees it: summary, context, then
+why it matters. Check the actual English and Spanish pages, not only isolated
+JSON fields. Context and analysis remain separate, short labeled paragraphs.
+Define unfamiliar terms before using them. Prefer a concrete explanation, such
+as how imported computer parts relate to the finished product's selling price,
+to a chain of abstract economic labels. Keep useful depth and material caveats,
+but do not add a statistic that needs more caveats than the insight it provides.
+
 ## Deeper context, October 7, 2026
 
 Choose the one or two questions that would help a reader understand this particular
