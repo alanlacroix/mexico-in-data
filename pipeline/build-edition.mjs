@@ -12,6 +12,7 @@ import { createEditionQuarantine } from './lib/edition-quarantine.mjs';
 import { createFieldRepairPlan, mergeFieldRepairs } from './lib/edition-field-repair.mjs';
 import { articleIdentity, publishedProvenanceUrls } from './lib/article-identity.mjs';
 import { shapeEvidenceRecord } from './lib/source-evidence.mjs';
+import { createCensusCalendarLoader } from './lib/census-release-calendar.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -275,7 +276,7 @@ function evidenceRecord({ id, kind, source, url, text }) {
   return shapeEvidenceRecord({ id, kind, source, url, text });
 }
 
-async function evidenceFor(item, standing, calendar, memory = []) {
+async function evidenceFor(item, standing, calendar, memory = [], censusCalendar = null) {
   const registered = registeredSourceFor(item, NEWS_SOURCES);
   const article = await fetchArticle(item.url, {
     allowedHosts: registered ? sourceHosts(registered) : [new URL(item.url).hostname],
@@ -302,6 +303,12 @@ async function evidenceFor(item, standing, calendar, memory = []) {
     seen.add(record.url);
     evidence.push(shaped);
   };
+
+  // Only a complete located lead can receive this freshly fetched source. Keep it
+  // before optional context so the evidence cap cannot discard the release date.
+  if (censusCalendar && leadEvidence.kind === 'article-body') {
+    push(await censusCalendar(item, leadEvidence, article.text));
+  }
 
   // Memory proposes sources to reopen; old synthesized prose is never passed as
   // evidence. Fetch at most two original articles, and only use extracted bodies.
@@ -804,8 +811,9 @@ async function main() {
 
     const standing = arr(read(path.join(DATA, 'standing.json'), { facts: [] }).facts);
     const calendar = arr(schedule.events).filter((event) => event?.date >= previousDay(editorialDate));
+    const censusCalendar = createCensusCalendarLoader({ now });
     const evidenceRows = await Promise.all(rankedPool.map(async (row) => ({
-      ...row, evidence: await evidenceFor(row.item, standing, calendar, memory),
+      ...row, evidence: await evidenceFor(row.item, standing, calendar, memory, censusCalendar),
     })));
     const withoutContext = evidenceRows.filter((row) => !evidenceReady(row));
     for (const row of withoutContext) {
