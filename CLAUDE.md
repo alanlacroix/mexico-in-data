@@ -63,6 +63,10 @@ deployment live.
 - Preserve complete extracted article evidence within a 16 KiB serialized UTF-8 record.
   An oversized body is unusable, never silently clipped or replaced with its RSS snippet.
   Skip oversized optional leads before paid work; required scheduled outcomes fail closed.
+- A complete Census-attributed U.S.–Mexico goods report may receive one freshly fetched
+  FT900 calendar entry. Validate the official table before emitting a complete scoped row;
+  never substitute advance/steel dates, invent a date, or promote an RSS-only lead with it.
+  Calendar evidence does not establish novelty or waive any writing, audit or budget gate.
 - Repair only rejected bilingual fields and citations; preserve passing fields exactly.
   Revalidate complete stories and run the mandatory independent audit after merging patches.
 - Weekend recaps rank the permitted week by business importance before recency. Weekday
