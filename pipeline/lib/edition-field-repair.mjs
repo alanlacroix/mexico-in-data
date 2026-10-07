@@ -7,8 +7,8 @@ export const STORY_FIELDS = Object.freeze(['headline', 'dek', 'background', 'vie
 export const FIELD_REPAIR_CONTRACTS = Object.freeze({
   headline: 'Shortest accurate account. Aim for 8–14 English words and one sentence. Hard limits: 20 English words, 24 Spanish words, one sentence in each language.',
   dek: 'Add one sourced fact beyond the preserved headline. Aim for 25–35 English words and one sentence. Hard limits: 45 English words and two sentences; 65 Spanish words and three sentences.',
-  background: 'Add necessary context, citing an independent record when supplied. Aim for 20–35 English words in one or two sentences. Hard limits: 55 English words, 65 Spanish words, three sentences in each language.',
-  view: 'Explain one narrow business implication supported by the cited evidence. Aim for 20–35 English words in one or two sentences. Hard limits: 55 English words, 65 Spanish words, three sentences in each language.',
+  background: 'Answer this story’s key explanatory question with sourced context, citing an independent record when supplied. Aim for 20–35 English words in one or two sentences. Hard limits: 55 English words, 65 Spanish words, three sentences in each language.',
+  view: 'Explain the supported mechanism and consequence for people or the economy, including the evidence’s limits. Avoid generic advice. Aim for 20–35 English words in one or two sentences. Hard limits: 55 English words, 65 Spanish words, three sentences in each language.',
   watch: 'Name a sourced next decision, release or result and the observable test it resolves. Do not invent a milestone. Aim for 20–35 English words in one sentence. Hard limits: 55 English words, 65 Spanish words, three sentences in each language.',
 });
 

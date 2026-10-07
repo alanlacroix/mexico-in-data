@@ -35,7 +35,7 @@ Additional source bytes are included in the existing budget calculation.
 The retained October 7 full-feed replay adds the scheduled entry to all three
 matching trade reports, performs one calendar fetch, and leaves the locked set
 unchanged. Its three-story Sonnet-plus-audit ceiling moves from $0.189980 to
-$0.193014, within that day's unchanged $0.193548 limit. These are conservative
+$0.193314 with the October 7 context guidance, within that day's unchanged $0.193548 limit. These are conservative
 request ceilings, not billed calls or a model-output test. The duplicate trade
 coverage and the separate FDI article's missing milestone remain unresolved.
 

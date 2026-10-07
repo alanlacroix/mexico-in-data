@@ -40,6 +40,26 @@ Keep every material fact, amount, comparison, date, source attribution and cavea
 Do not round a figure, change legal scope or make a tentative step sound certain
 just to make the copy smoother. Keep the concrete next step and what it would show.
 
+## Deeper context, October 7, 2026
+
+Choose the one or two questions that would help a reader understand this particular
+development. Explain the mechanism with sourced facts: what the reported measure
+includes, who creates value or bears a cost, what constraint changes, and how the
+effect reaches people or the economy. These are prompts for editorial judgment,
+not a required checklist or a repeated paragraph template.
+
+Replace generic advice such as telling suppliers to check their own orders with
+an actual explanation. For a trade story, gross shipments, domestic value added
+and income accruing to residents are different measures. Historical sector data
+can explain the structure, but cannot measure the local content of a current
+month's shipments. Apply equally specific questions to other topics instead of
+forcing every story into a trade or GDP framework.
+
+Keep the explanation easy to read and preserve useful depth. Name missing evidence
+precisely, and do not treat a scheduled data release as answering a question that
+its statistics cannot resolve. Never invent a mechanism, denominator or local
+benefit merely to make a story sound insightful.
+
 ## How this document works — three layers, strict priority
 
 1. **Trust rules (§1)** — why readers believe the site. Immutable. Every surface. They win every conflict. Warmth never buys a pass on a number.

@@ -2243,13 +2243,13 @@
     {
       "editorialDate": "2026-10-07",
       "slot": "morning",
-      "candidateSignature": "d4eb5be94992489bea8327b17247f2449bca65efaa787b31329e7ba727210573",
+      "candidateSignature": "1932f74d680965cf5627fb61a0fd5d3255f8c4faa6c04e19265d32455bda1d2a",
       "state": "published",
       "startedAt": "2026-10-07T10:29:21.462Z",
       "completedAt": "2026-10-07T10:29:21.469Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "1660b2a6042554bf373c57367783677a2c623233cb6401b4e67d0cbb8c6023cb",
+      "artifactHash": "3852b56c37e7f6d8c2b0874e3725fcb061c32f8a9f8670975d2308e1e3fbf8ae",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2280,7 +2280,25 @@
         ],
         "generationProvenance": "operator-curated; zero provider generation or audit calls",
         "preventiveReason": "Unpaid full-feed replay and source-packet review found overlapping US trade coverage and insufficient sourced next milestones in the automatic selection"
-      }
+      },
+      "editorialRevisions": [
+        {
+          "kind": "user-requested-trade-context-revision",
+          "previousArtifactHash": "1660b2a6042554bf373c57367783677a2c623233cb6401b4e67d0cbb8c6023cb",
+          "artifactHash": "3852b56c37e7f6d8c2b0874e3725fcb061c32f8a9f8670975d2308e1e3fbf8ae",
+          "previousCandidateSignature": "d4eb5be94992489bea8327b17247f2449bca65efaa787b31329e7ba727210573",
+          "candidateSignature": "1932f74d680965cf5627fb61a0fd5d3255f8c4faa6c04e19265d32455bda1d2a",
+          "reviewedAt": "2026-10-07T14:14:14.484376+00:00",
+          "draftSHA256": "8798301e42ceaf82e7727a6cfebd27ee4cb3bc164114d742dea222b5f18aa4fc",
+          "auditSHA256": "719b3c8dedf7d37128db9593714f3a80ccaae5c5a47c0119b343efce0e71689e",
+          "reviewedFields": 10,
+          "preservedOtherNarrativeFields": 40,
+          "method": "Independent original-source, measurement-scope and English/Spanish review of the trade explanation; other four stories preserved; historical input/value-added benchmarks explicitly distinguished from current gross trade",
+          "providerCalls": 0,
+          "costUSD": 0
+        }
+      ],
+      "lastEditorialRevisionAt": "2026-10-07T14:14:14.484376+00:00"
     }
   ]
 }

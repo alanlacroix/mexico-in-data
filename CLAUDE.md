@@ -27,6 +27,10 @@ deployment live.
   context, why it matters and the next step. Simplify wording and sentence structure,
   not the substance, facts, attribution or uncertainty. Explain necessary technical
   terms and use two short sentences when clearer than one long sentence.
+- Context answers the particular story's most useful explanatory question. Show the
+  mechanism, who gains or faces a constraint, and what the reported measure can and
+  cannot establish. Generic advice to check orders or watch developments is not analysis.
+  Choose relevant questions; do not impose a recurring trade template or pad every card.
 - AI compares new reporting with prior coverage. Archived prose is a retrieval index,
   never independent evidence; reopen original source articles before citing a connection.
 - As authorized September 30, validated bilingual editions publish automatically every
