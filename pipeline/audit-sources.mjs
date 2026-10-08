@@ -7,6 +7,8 @@ import { sourceHosts } from './lib/url-safety.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchArticle } from './lib/fetch-article.js';
+import { createInegiMonthlyLoader, isMonthlyInegiCpi, validatedInegiArticle } from './lib/inegi-monthly-cpi.mjs';
+import newsDay from './lib/news-day.cjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const registry = JSON.parse(await fs.readFile(path.join(root, 'pipeline/news-sources.json'), 'utf8'));
@@ -108,11 +110,25 @@ const sources = CORE_IDS.map((id) => registry.sources.find((source) => source.id
 if (sources.some((source) => !source)) throw new Error('A proposed core source is missing from pipeline/news-sources.json');
 const results = [];
 for (const source of sources) results.push(await audit(source));
+const checkedAt = new Date();
+const editorialDate = newsDay.editorialDay(checkedAt);
+const localHour = Number(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Mexico_City', hour: '2-digit', hourCycle: 'h23' }).format(checkedAt));
+const schedule = JSON.parse(await fs.readFile(path.join(root, 'data/events.json'), 'utf8'));
+const monthlyDue = schedule.events.find(row => row.date === editorialDate && isMonthlyInegiCpi(row));
+let inegiMonthly = { checked: false, reason: 'No monthly INPC release is due in the current publication window' };
+if (monthlyDue && localHour >= 6) {
+  const item = await createInegiMonthlyLoader({ now: checkedAt })(monthlyDue);
+  const article = item && validatedInegiArticle(item);
+  inegiMonthly = { checked: true, ok: Boolean(article), editorialDate, providerCalls: 0,
+    url: item?.url || null, publishedAt: item?.published_at || null,
+    completeTextBytes: article ? Buffer.byteLength(article.text) : 0 };
+  console.error(`INEGI monthly source audit: ${JSON.stringify({ environment, ...inegiMonthly })}`);
+}
 const output = {
   schemaVersion: 2, environment,
   productionRunnerVerified: environment === 'github-actions',
   productionRunnerMeaning: 'Audit executed on GitHub Actions; this does not verify a deployed runtime.',
-  results,
+  results, inegiMonthly,
 };
 
 if (process.argv.includes('--markdown')) {
