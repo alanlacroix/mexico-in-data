@@ -12,6 +12,7 @@ for(const mutate of [w=>w.through='2026-09-25',w=>w.items[1].id=w.items[0].id,w=
 }
 const env=new nunjucks.Environment();env.addFilter('longDate',d=>d);
 env.addFilter('weeklyReading', reading.weeklyReading);
+env.addFilter('uniqueSourceLinks', reading.uniqueSourceLinks);
 const template=fs.readFileSync('_includes/partials/weekly-brief.njk','utf8');
 for(const locale of ['en','es']){const html=env.renderString(template,{weeklyBrief:edition.weeklyBrief,locale});assert.equal((html.match(/class="weekly-item"/g)||[]).length,3);assert.ok(!html.includes(`${edition.weeklyBrief.start} — ${edition.weeklyBrief.through}`),'the weekly heading must not repeat an ISO date range');assert.ok(!html.includes('class="editor-margin"'),'repetitive weekly margins stay hidden');assert.ok(html.indexOf('class="weekly-reading"')<html.indexOf('class="weekly-thread"'),'story context must precede the supporting comparison');assert.ok(html.includes(locale==='es'?'Contexto':'Context'),'the explanatory paragraph must be labeled');for(const i of edition.weeklyBrief.items){assert.ok(html.includes(i[locale].headline));for(const s of i.sources)assert.ok(html.includes(s.url));}assert.ok(weekly.readingMinutes(edition.weeklyBrief,locale)<=5);}
 const withSubstantiveMargin=structuredClone(edition.weeklyBrief);withSubstantiveMargin.items[0].showMargin=true;
@@ -52,3 +53,19 @@ for (const locale of ['en', 'es']) {
  assert.ok(daily.includes('Next step.'));
 }
 console.log('weekly reading: separate ordered blocks and untouched legacy explanations pass');
+
+const repeatedLinks = [{ source: 'First', url: 'https://example.com/report?edition=1' },
+ { source: 'Same document, second evidence section', url: 'https://example.com/report?edition=1' },
+ { source: 'Different edition', url: 'https://example.com/report?edition=2' },
+ { source: 'Specific page', url: 'https://example.com/report?edition=1#page=2' }];
+const unchangedLinks = JSON.stringify(repeatedLinks);
+assert.deepEqual(reading.uniqueSourceLinks(repeatedLinks), [repeatedLinks[0], repeatedLinks[2], repeatedLinks[3]]);
+assert.equal(JSON.stringify(repeatedLinks), unchangedLinks, 'display filtering never mutates evidence');
+for (const locale of ['en', 'es']) {
+ const repeated = structuredClone(edition.weeklyBrief); repeated.items[0].sources = repeatedLinks;
+ const html = env.renderString(template, { weeklyBrief: repeated, locale });
+ assert.equal(html.split('href="https://example.com/report?edition=1"').length - 1, 1);
+ assert.ok(html.includes('href="https://example.com/report?edition=2"'));
+ assert.ok(html.includes('href="https://example.com/report?edition=1#page=2"'));
+}
+console.log('weekly source links: exact duplicate display removed without changing evidence or distinct URLs');

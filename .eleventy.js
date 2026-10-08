@@ -8,6 +8,7 @@ module.exports = function (ec) {
   // final browser boundary; the few intentional HTML fragments use an explicit | safe.
   ec.setNunjucksEnvironmentOptions({ autoescape: true });
   ec.addFilter('weeklyReading', require('./pipeline/lib/weekly-reading.cjs').weeklyReading);
+  ec.addFilter('uniqueSourceLinks', require('./pipeline/lib/weekly-reading.cjs').uniqueSourceLinks);
   // Only the public stylesheet ships. The design directory also contains internal
   // working notes and must never be copied wholesale into the production artifact.
   ec.addPassthroughCopy({ 'design/mckinsey-mx.css': 'design/mckinsey-mx.css' });
