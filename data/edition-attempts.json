@@ -2314,6 +2314,53 @@
         }
       ],
       "lastEditorialRevisionAt": "2026-10-07T15:11:13.494293+00:00"
+    },
+    {
+      "editorialDate": "2026-10-08",
+      "slot": "morning",
+      "candidateSignature": "d946c6a7710df8154d4b242cc0fe715e1de5610b59c68a71158f1c98b8cd9ae4",
+      "state": "published",
+      "startedAt": "2026-10-08T12:15:08.054Z",
+      "completedAt": "2026-10-08T12:15:08.072Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "8d1f1d030e285bbaf514224ea0c42e6ccf69b640f68af7b1160c6b9319858778",
+      "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
+      "diagnostics": [],
+      "collection": null,
+      "recoveries": [],
+      "manualRecovery": {
+        "reviewedAt": "2026-10-08T12:14:36.499273+00:00",
+        "method": "Independent review of all 50 English and Spanish fields against complete INEGI inflation and vehicle releases, official IMSS notices, BMV documents and ASUR reports; complete rendered bilingual reader review and exact candidate/release gates passed",
+        "draftSHA256": "d7e8f86b249b960cd909154383f2c2c4e529ad47b992d68382c76651cd63002d",
+        "auditSHA256": "852c58c61dc002bf4822fd53fd7d8e3cdedf740f00a0b69ffdf6ee64654169c8",
+        "sourceProvenance": "Observed El Financiero, Bloomberg Linea and El CEO feed records retained alongside original primary sources; direct official October8 INPC and IMSS discovery recorded with honest day precision",
+        "primaryDiscoveries": [
+          {
+            "storyId": "n-ac62f9d7cd37",
+            "url": "https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/inpc/inpc_2q2026_10.pdf",
+            "sourceDiscovery": "Direct official INEGI monthly release obtained from public news metadata endpoint after scheduled publication",
+            "discoveryUrl": "https://www.inegi.org.mx/temas/inpc/default.html",
+            "metadataUrl": "https://www.inegi.org.mx/app/api/saladeprensa/api/saladeprensa/ObtenerInfoNoticia/v3",
+            "publicationDate": "2026-10-08",
+            "publicationPrecision": "day",
+            "feedRecordClaimed": false
+          },
+          {
+            "storyId": "n-2102b2d90ada",
+            "url": "https://sidof.segob.gob.mx/notas/docFuente/5800739",
+            "sourceDiscovery": "Direct official October8 DOF notice",
+            "discoveryUrl": "https://sidof.segob.gob.mx/notas/docFuente/5800739",
+            "metadataUrl": "https://sidof.segob.gob.mx/notas/docFuente/5800739",
+            "publicationDate": "2026-10-08",
+            "publicationPrecision": "day",
+            "feedRecordClaimed": false
+          }
+        ],
+        "readerCopySHA256": "fd9e21bd526b1686d9412a0df51e8503af7733190c6a828cababe652d11b787a",
+        "generationProvenance": "operator-curated; zero provider generation or audit calls",
+        "preventiveReason": "The required September CPI release was available from official INEGI news metadata/PDF, but absent from automatic feed inputs and the configured application-shell landing page in two post-release unpaid full-feed checks; no provider generation attempted"
+      }
     }
   ]
 }

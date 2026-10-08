@@ -13,4 +13,13 @@ function weeklyReading(item, stories, locale) {
   return { background: copy.background, view: copy.view };
 }
 
-module.exports = { weeklyReading };
+function uniqueSourceLinks(sources) {
+  const seen = new Set();
+  return (Array.isArray(sources) ? sources : []).filter(source => {
+    if (seen.has(source.url)) return false;
+    seen.add(source.url);
+    return true;
+  });
+}
+
+module.exports = { weeklyReading, uniqueSourceLinks };
