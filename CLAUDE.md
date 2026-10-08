@@ -74,6 +74,10 @@ deployment live.
   FT900 calendar entry. Validate the official table before emitting a complete scoped row;
   never substitute advance/steel dates, invent a date, or promote an RSS-only lead with it.
   Calendar evidence does not establish novelty or waive any writing, audit or budget gate.
+- Required monthly INPC outcomes use INEGI's exact dated news metadata and complete
+  official PDF, never its incomplete teaser or application-shell topic page. Validate
+  the publication day, observation month and every page before admitting evidence;
+  a generic RSS match cannot bypass this check. See `docs/inegi-monthly-ingestion.md`.
 - Repair only rejected bilingual fields and citations; preserve passing fields exactly.
   Revalidate complete stories and run the mandatory independent audit after merging patches.
 - Weekend recaps rank the permitted week by business importance before recency. Weekday

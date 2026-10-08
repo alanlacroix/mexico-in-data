@@ -18,6 +18,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { collectNews } from './collect-news.js';
 import { fetchArticle } from './lib/fetch-article.js';
+import { createInegiMonthlyLoader, requiresInegiMonthlySource, validatedInegiArticle } from './lib/inegi-monthly-cpi.mjs';
 import { editorialSourceTier, eventCandidateEligible, mexicoRelevant, registeredSourceFor, stripNewsBoilerplate } from './lib/news-trust.js';
 import {
   lintAnalysisText, lintReportText, reportContextDistinct, unsupportedNumericTokens,
@@ -168,9 +169,19 @@ async function candidateUniverse(now, schedule, editorialDate,
     return item;
   });
   const allDue = dueScheduledRows(schedule, allowedStart, editorialDate);
+  // A same-day RSS mention cannot establish the reference month of a required INPC
+  // outcome. Validate the official monthly document even when the generic linker matched.
+  const monthlyIds = new Set(allDue.filter(requiresInegiMonthlySource).map(row => row.id));
+  for (const item of grouped) if (monthlyIds.has(item._scheduled?.id)) item._scheduled = null;
+  const monthlyInegi = createInegiMonthlyLoader({ now });
   const linkedIds = new Set(grouped.map((item) => item._scheduled?.id).filter(Boolean));
   const due = allDue.filter((row) => !linkedIds.has(row.id));
   const seeded = (await Promise.all(due.map(async (row) => {
+    if (requiresInegiMonthlySource(row)) {
+      const item = await monthlyInegi(row);
+      if (item) item._section = sectionOf(item);
+      return item;
+    }
     const outcomeUrl = row.outcomeSourceUrl || row.sourceUrl;
     const page = await fetchArticle(outcomeUrl, { allowedHosts: [new URL(outcomeUrl).hostname] });
     const item = page.ok ? seedScheduledCandidate(row, page.text) : null;
@@ -278,7 +289,11 @@ function evidenceRecord({ id, kind, source, url, text }) {
 
 async function evidenceFor(item, standing, calendar, memory = [], censusCalendar = null) {
   const registered = registeredSourceFor(item, NEWS_SOURCES);
-  const article = await fetchArticle(item.url, {
+  const official = validatedInegiArticle(item);
+  if (requiresInegiMonthlySource(item._scheduled) && !official) {
+    throw new Error('Required INPC candidate has no trusted complete monthly PDF evidence');
+  }
+  const article = official || await fetchArticle(item.url, {
     allowedHosts: registered ? sourceHosts(registered) : [new URL(item.url).hostname],
   }).catch(() => ({ ok: false, text: '' }));
   const leadEvidence = evidenceRecord({
