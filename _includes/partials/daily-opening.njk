@@ -1,0 +1,5 @@
+<section class="weekly-opening" aria-labelledby="daily-title">
+  <p class="weekly-kicker">{% if locale == 'es' %}El resumen del día{% else %}The daily brief{% endif %}</p>
+  <h1 id="daily-title">{% if locale == 'es' %}Hoy en México{% else %}Today in Mexico{% endif %}</h1>
+  <p class="weekly-overview">{% if isArchivedEdition %}{% if locale == 'es' %}Las noticias de esta edición, con contexto y una explicación de por qué importan.{% else %}The stories in this edition, with context and an explanation of why they matter.{% endif %}{% elif locale == 'es' %}De tres a cinco noticias importantes de México, con contexto y una explicación de por qué importan.{% else %}Three to five important stories from Mexico, with context and an explanation of why they matter.{% endif %}</p>
+</section>
