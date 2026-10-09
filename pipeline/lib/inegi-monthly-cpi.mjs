@@ -2,6 +2,7 @@ import { Worker } from 'node:worker_threads';
 import { fetchBounded } from './url-safety.js';
 import { shapeEvidenceRecord } from './source-evidence.mjs';
 import newsDay from './news-day.cjs';
+import publicEdition from './public-edition.cjs';
 
 export const INEGI_NEWS_URL = 'https://www.inegi.org.mx/app/api/saladeprensa/api/saladeprensa/ObtenerInfoNoticia/v3';
 const LANDING_URL = 'https://www.inegi.org.mx/temas/inpc/default.html';
@@ -24,6 +25,23 @@ const referencePeriod = day => {
 
 export const requiresInegiMonthlySource = row => /^inegi-cpi-\d{4}-\d{2}-\d{2}$/.test(row?.id || '');
 
+const monthlyPdfPath = day => `/saladeprensa/boletines/${day.slice(0,4)}/inpc/inpc_2q${day.slice(0,4)}_${day.slice(5,7)}.pdf`;
+
+// Only the visible lead of the current validated publication can discharge an
+// older obligation. A topic match, archive/shelf entry or supporting link cannot.
+export function alreadyPublishedMonthlyCpi(row, edition, editorialDate) {
+  if (!isMonthlyInegiCpi(row) || !validDay(editorialDate) || row.date >= editorialDate
+      || !edition || ![undefined, 'approved'].includes(edition.publicationStatus)
+      || !validDay(edition.editorialDate)
+      || edition.editorialDate < row.date || edition.editorialDate >= editorialDate
+      || !publicEdition.validateEdition(edition).ok) return false;
+  const url = `https://www.inegi.org.mx/contenidos${monthlyPdfPath(row.date)}`;
+  return edition.stories.some(story => story.url === url && story.date === row.date
+    && story.publishedAt === row.date && story.evidence?.some(evidence =>
+      evidence.id === 'article' && evidence.kind === 'article-body' && evidence.url === url
+      && story.evidenceRefs?.headline?.includes('article')));
+}
+
 export function isMonthlyInegiCpi(row) {
   if (!validDay(row?.date) || row.id !== `inegi-cpi-${row.date}` || row.source !== 'INEGI'
       || row.kind !== 'inegi' || row.outcome?.actor !== 'inegi' || row.outcome?.topic !== 'inflation'
@@ -40,7 +58,7 @@ export function parseMonthlyMetadata(records, row) {
       .some(key => typeof record[key] !== 'string')) return null;
   const [year, month, day] = row.date.split('-');
   const reference = referencePeriod(row.date);
-  const path = `/saladeprensa/boletines/${year}/inpc/inpc_2q${year}_${month}.pdf`;
+  const path = monthlyPdfPath(row.date);
   if (record?.idFuente !== '950' || record.tipoPublicacion !== '7'
       || record.fechaInformacion !== `${day}/${month}/${year}`
       || parseSpanishDate(record.fechaPublicacion) !== row.date

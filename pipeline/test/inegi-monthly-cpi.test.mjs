@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { fetchBounded } from '../lib/url-safety.js';
 import { shapeEvidenceRecord } from '../lib/source-evidence.mjs';
 import { INEGI_NEWS_URL, isMonthlyInegiCpi, requiresInegiMonthlySource, parseMonthlyMetadata,
-  validateMonthlyPages, extractInegiPdf, createInegiMonthlyLoader, validatedInegiArticle } from '../lib/inegi-monthly-cpi.mjs';
+  validateMonthlyPages, extractInegiPdf, createInegiMonthlyLoader, validatedInegiArticle, alreadyPublishedMonthlyCpi } from '../lib/inegi-monthly-cpi.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixture = name => fs.readFileSync(new URL(`fixtures/${name}`, import.meta.url));
@@ -16,6 +16,62 @@ const fortnight = JSON.parse(fixture('inegi-inpc-first-half-september-2026.json'
 const pdf = new Uint8Array(fixture('inegi-inpc-september-2026.pdf'));
 const row = JSON.parse(fs.readFileSync(path.join(root, 'data/events.json'))).events.find(r => r.id === 'inegi-cpi-2026-10-08');
 const now = new Date('2026-10-08T12:05:00Z');
+const { default: publicEdition } = await import('../lib/public-edition.cjs');
+const published = JSON.parse(fs.readFileSync(path.join(root, 'data/editions/2026-10-08.json')));
+assert.equal(alreadyPublishedMonthlyCpi(row, published, '2026-10-09'), true);
+assert.equal(alreadyPublishedMonthlyCpi(row, published, row.date), false, 'same-day obligation remains due');
+assert.equal(alreadyPublishedMonthlyCpi({...row, id:'inegi-cpi-2026-11-09',date:'2026-11-09',label:'INEGI CPI — monthly (INPC, October; headline + core)'},published,'2026-11-10'),false,'new monthly outcome remains due');
+assert.equal(alreadyPublishedMonthlyCpi(row,null,'2026-10-09'),false);
+assert.equal(alreadyPublishedMonthlyCpi(row,{...published,artifactHash:'0'.repeat(64)},'2026-10-09'),false,'hash-invalid publication');
+for (const mutate of [
+ e => e.publicationStatus = 'candidate',
+ e => e.publicationStatus = 'draft',
+ e => e.editorialDate = '2026-09-31',
+ e => e.stories[0].evidence[0].id = 'unrelated-body',
+ e => e.stories[0].url += '?copy=1',
+ e => e.stories[0].url = e.stories[0].url.replace('2q','1q'),
+ e => e.stories[0].url = e.stories[0].url.replace('_10.pdf','_09.pdf'),
+ e => e.stories[0].url = e.stories[0].url.replace('www.inegi.org.mx','evil.example'),
+ e => e.stories[0].date = '2026-10-07',
+ e => e.stories[0].publishedAt = '2026-10-07',
+ e => e.stories[0].evidence[0].kind = 'calendar',
+ e => e.stories[0].evidence[0].url += '#page=1',
+ e => e.stories[0].evidenceRefs.headline = ['inflation-august'],
+ e => e.stories = e.stories.slice(1),
+]) {
+ const changed=structuredClone(published);mutate(changed);
+ assert.equal(alreadyPublishedMonthlyCpi(row,publicEdition.withArtifactHash(changed),'2026-10-09'),false,'no topic, shelf or evidence-only discharge');
+}
+
+const original = published.stories[0].url;
+const cases = [
+  ['query', e => { e.stories[0].url += '?copy=1'; e.stories[0].evidence[0].url = e.stories[0].url; }],
+  ['fragment', e => { e.stories[0].url += '#page=1'; e.stories[0].evidence[0].url = e.stories[0].url; }],
+  ['host alias', e => { e.stories[0].url = e.stories[0].url.replace('www.inegi', 'inegi'); e.stories[0].evidence[0].url = e.stories[0].url; }],
+  ['fortnight', e => { e.stories[0].url = e.stories[0].url.replace('2q', '1q'); e.stories[0].evidence[0].url = e.stories[0].url; }],
+  ['old month', e => { e.stories[0].url = e.stories[0].url.replace('_10.pdf', '_09.pdf'); e.stories[0].evidence[0].url = e.stories[0].url; }],
+  ['wrong story day', e => { e.stories[0].date = '2026-10-07'; e.stories[0].lane = 'key-development'; }],
+  ['timestamp not exact date', e => { e.stories[0].publishedAt = '2026-10-08T12:00:00Z'; }],
+  ['secondary body exact URL', e => { e.stories[0].evidence[0].kind = 'rss'; e.stories[0].evidence.push({ ...e.stories[0].evidence[0], id: 'other', kind: 'article-body' }); e.stories[0].evidenceRefs.headline = ['other']; }],
+  ['evidence only', e => { e.stories[0].url = 'https://www.inegi.org.mx/another-story'; e.stories[0].evidence[0].url = e.stories[0].url; e.stories[0].evidence.push({ ...e.stories[0].evidence[0], id: 'other', url: original }); e.stories[0].evidenceRefs.headline = ['other']; }],
+  ['weekly only', e => { e.stories = e.stories.slice(1); }],
+  ['draft', e => { e.publicationStatus = 'draft'; }],
+  ['headline other source', e => { e.stories[0].evidenceRefs.headline = ['inflation-august']; }],
+];
+
+for (const [name, mutate] of cases) {
+  let edition = structuredClone(published);
+  mutate(edition);
+  for (const story of edition.stories) {
+    const weekly = edition.weekStories.find(item => item.id === story.id);
+    for (const field of ['url', 'date', 'publishedAt']) weekly[field] = story[field];
+  }
+  edition = publicEdition.withArtifactHash(edition);
+  assert.equal(publicEdition.validateEdition(edition).ok, true, `${name}: not testing an invalid artifact`);
+  assert.equal(alreadyPublishedMonthlyCpi(row, edition, '2026-10-09'), false, name);
+
+}
+
 assert.equal(isMonthlyInegiCpi(row), true);
 const metadata = parseMonthlyMetadata(records, row);
 assert.ok(metadata);
@@ -135,6 +191,15 @@ try {
     assert.equal(universe.find(x=>x.id==='old-inflation')?._scheduled,null,'retrospective RSS cannot satisfy the monthly obligation');
     const evidence=await evidenceFor(official[0],[],[],[]);assert.equal(evidence[0].kind,'article-body');assert.equal(evidence[0].url,official[0].url);assert.ok(evidence[0].text.includes('Página 6/6'));assert.equal(files,1,'trusted PDF is not fetched as HTML');
     await assert.rejects(evidenceFor({...official[0]},[],[],[]),/no trusted complete/);
+    fs.writeFileSync('data/edition.json',JSON.stringify(${JSON.stringify(published)}));
+    const next=await candidateUniverse(new Date('2026-10-09T12:05:00Z'),{events:[row]},'2026-10-09');
+    assert.ok(!next.some(x=>x._scheduled?.id===row.id),'covered yesterday is not forced again');
+    assert.ok(next.some(x=>x.id==='old-inflation'),'different source reporting remains eligible without broad topic suppression');
+    assert.equal(api,1,'covered outcome requires no source fetch');assert.equal(files,1);
+    fs.unlinkSync('data/edition.json');
+    const uncovered=await candidateUniverse(new Date('2026-10-09T12:05:00Z'),{events:[row]},'2026-10-09');
+    assert.ok(uncovered.some(x=>x._scheduled?.id===row.id),'uncovered yesterday remains required');
+    assert.equal(api,2);assert.equal(files,2);
     records[0].periodoInformacion='Primera quincena de septiembre de 2026';
     await assert.rejects(candidateUniverse(now,{events:[row]},'2026-10-08'),/required scheduled outcome unavailable/,'RSS cannot bypass failed official validation');
   `;
