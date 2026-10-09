@@ -306,6 +306,7 @@ function buildFeed(locale = 'en') {
 
   return {
     date: brief.editorialDate,
+    editionType: brief.editionType,
     updated: brief.publishedAt || brief.newsThrough,
     artifactHash: brief.artifactHash,
     weeklyBrief: brief.weeklyBrief,

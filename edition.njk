@@ -24,6 +24,9 @@ articleType: NewsArticle
   <p>{% if es %}Esta edición conserva el contexto de su fecha de publicación.{% else %}This edition reflects the information available when it was published.{% endif %}</p>
   <section class="developments" aria-label="{% if es %}Acontecimientos{% else %}Developments{% endif %}">
   {% set locale = archived.locale %}
+  {% set editionType = archived.edition.editionType %}
+  {% set isArchivedEdition = true %}
+  {% if editionType == 'daily' %}{% include "partials/daily-opening.njk" %}{% endif %}
   {% if archived.edition.weeklyBrief %}
   {% set weeklyBrief = archived.edition.weeklyBrief %}
   {% set weeklyStories = archived.edition.stories %}

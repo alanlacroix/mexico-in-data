@@ -19,15 +19,15 @@ function isDelayed(editionDate, now, weekly = false) {
   const published = { getAttribute: () => `${editionDate}T13:00:00Z`, textContent: '' };
   class Clock extends Date { constructor(...args) { super(...(args.length ? args : [now])); } static now() { return new Date(now).getTime(); } }
   const selectedScript = weekly ? script.replace(/var through = new Date\("[\d-]+"/, `var through = new Date("${editionDate}"`) : script.replace(/var through =[\s\S]*?return;/, '');
-  vm.runInNewContext(selectedScript.replace(/alertBox.hidden = "[\d-]+" >=/, `alertBox.hidden = "${editionDate}" >=`), {
+  vm.runInNewContext(selectedScript.replace(/var editionDate = "[\d-]+";/, `var editionDate = "${editionDate}";`), {
     Date: Clock, Intl, document: {
       querySelector: () => published, getElementById: () => alertBox,
     },
   });
   return !alertBox.hidden;
 }
-assert.equal(isDelayed('2026-09-18', '2026-09-20T18:00:00Z'), false, 'Friday remains valid over weekend');
-assert.equal(isDelayed('2026-09-18', '2026-09-21T12:59:00Z'), false, 'Monday before Mexico City deadline');
+assert.equal(isDelayed('2026-09-18', '2026-09-20T18:00:00Z'), true, 'Friday is stale after the Sunday deadline');
+assert.equal(isDelayed('2026-09-20', '2026-09-21T12:59:00Z'), false, 'Monday before Mexico City deadline');
 assert.equal(isDelayed('2026-09-18', '2026-09-21T13:00:00Z'), true, 'Monday deadline marks old edition delayed');
 assert.equal(isDelayed('2026-09-21', '2026-09-21T18:00:00Z'), false);
 assert.equal(isDelayed('2026-09-07', '2026-09-22T18:00:00Z'), true, 'frozen page still reveals staleness');

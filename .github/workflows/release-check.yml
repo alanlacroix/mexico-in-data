@@ -36,6 +36,18 @@ jobs:
       - name: Build and validate the production artifact
         run: npm run release
 
+      - name: Verify rendered English and Spanish pages in Chrome
+        run: node pipeline/test/browser-presentation.mjs
+
+      - name: Preserve browser review evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mexico-brief-browser-${{ github.sha }}
+          path: /tmp/mexico-brief-browser-qa/
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Capture read-only source evidence for an unpublished day
         continue-on-error: true
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
