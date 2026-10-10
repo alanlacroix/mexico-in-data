@@ -2402,13 +2402,13 @@
     {
       "editorialDate": "2026-10-10",
       "slot": "morning",
-      "candidateSignature": "9d1c3d1b25d87c21b151a7498c1d91fa088727c5a44793a2c285af99e600afaf",
+      "candidateSignature": "75b56a3558ac2675ee1c57b56c09cd27f50d466be0b432174fe916b13d778a9a",
       "state": "published",
       "startedAt": "2026-10-10T12:07:10.409Z",
       "completedAt": "2026-10-10T12:07:10.416Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "cab4dc5b2d71ebd7282a8dcd0ce79e6601649fa942bbacaa810f3c52b5a529ef",
+      "artifactHash": "31e1793794b95efdd0389e7420beaf10ff720a7db69f8a0095d88df8ee212ea7",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2458,9 +2458,34 @@
             "priorBulletinRetained": true
           },
           "reason": "NHC reported materially wider tropical-storm-force wind reach and revised Sunday timing; maximum sustained wind and warning area unchanged"
+        },
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "cab4dc5b2d71ebd7282a8dcd0ce79e6601649fa942bbacaa810f3c52b5a529ef",
+          "artifactHash": "31e1793794b95efdd0389e7420beaf10ff720a7db69f8a0095d88df8ee212ea7",
+          "previousCandidateSignature": "9d1c3d1b25d87c21b151a7498c1d91fa088727c5a44793a2c285af99e600afaf",
+          "candidateSignature": "75b56a3558ac2675ee1c57b56c09cd27f50d466be0b432174fe916b13d778a9a",
+          "reviewedAt": "2026-10-10T21:05:14.602502+00:00",
+          "draftSHA256": "59b8b258eb3663dc5d7f72fec4ad878432ef372a17a5ea0e2dfe7f8af424fa8c",
+          "auditSHA256": "4fd3a7da3924cb545126f6b3373865d56d95ffad817d4e9c276a300883bb148e",
+          "reviewedFields": 40,
+          "approvedCopySHA256": "99e0ae20d8fc40cd53c5ede0aa07999adaf9228c8b5477ab46000d53a11e6db4",
+          "method": "Independent source and bilingual review of the updated 15:00 Mexico City NHC Advisory14; three other stories and operator paragraph unchanged; root reviewed exact bilingual copy and rendered presentation",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-bf21e8260115",
+            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.013.shtml",
+            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.014.shtml",
+            "previousPublishedAt": "2026-10-10T15:00:00Z",
+            "publishedAt": "2026-10-10T21:00:00Z",
+            "sourceDiscovery": "Direct-primary scheduled follow-up. Official NHC complete Advisory 14 and its Spanish translation were retrieved at 21:01:22 UTC and checked against the stable official archive. The complete technical Discussion 14 supports retained track uncertainty. The previously published story ID is preserved as the same weather event. No older feed is presented as carrying this update. Official operator notice, original letter and current first-page announcement index were rechecked at 21:02:07 UTC.",
+            "priorBulletinRetained": false
+          },
+          "reason": "NHC updated tropical-storm-force wind extent to 150 km, superseding the widening-wind headline; stable descriptive headline retains Category 4 and coastal warning, with Sunday coastal approach and Monday inland forecast qualified"
         }
       ],
-      "lastEditorialRevisionAt": "2026-10-10T15:08:18.223913+00:00"
+      "lastEditorialRevisionAt": "2026-10-10T21:05:14.602502+00:00"
     }
   ]
 }
