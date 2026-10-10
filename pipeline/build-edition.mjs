@@ -18,7 +18,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { collectNews } from './collect-news.js';
 import { fetchArticle } from './lib/fetch-article.js';
-import { createInegiMonthlyLoader, requiresInegiMonthlySource, validatedInegiArticle, alreadyPublishedMonthlyCpi } from './lib/inegi-monthly-cpi.mjs';
+import { createInegiMonthlyLoader, requiresInegiMonthlySource, validatedInegiArticle, alreadyPublishedMonthlyCpi, alreadyPublishedMonthlyCpiInHistory } from './lib/inegi-monthly-cpi.mjs';
 import { editorialSourceTier, eventCandidateEligible, mexicoRelevant, registeredSourceFor, stripNewsBoilerplate } from './lib/news-trust.js';
 import {
   lintAnalysisText, lintReportText, reportContextDistinct, unsupportedNumericTokens,
@@ -134,14 +134,16 @@ const titleKey = (value) => clean(value).toLowerCase().replace(/[^a-z0-9áéíó
 const storyId = (item) => clean(item._scheduled?.id) || `n-${crypto.createHash('sha1').update(clean(item.url) || clean(item.title)).digest('hex').slice(0, 12)}`;
 
 async function candidateUniverse(now, schedule, editorialDate,
-  publishedEditions = editionHistory.loadHistory({ current: read(EDITION_FILE, null) })) {
+  publishedEditions = editionHistory.loadHistory({ current: read(EDITION_FILE, null) }),
+  publicationReceipts = attemptContract.readAccountingAttempts(read(ATTEMPTS_FILE, { schemaVersion: 1, attempts: [] }))) {
   const weekStart = mondayOf(editorialDate);
   const allowedStart = weekendDay(editorialDate) ? weekStart : previousDay(editorialDate);
   const currentPublication = read(EDITION_FILE, null);
   const scheduleRows = Array.isArray(schedule) ? schedule : schedule?.events || [];
   // Apply the same exact-event discharge to linking, seeding and required coverage.
   // New reports about inflation remain ordinary eligible news candidates.
-  schedule = scheduleRows.filter(row => !alreadyPublishedMonthlyCpi(row, currentPublication, editorialDate));
+  schedule = scheduleRows.filter(row => !alreadyPublishedMonthlyCpi(row, currentPublication, editorialDate)
+    && !alreadyPublishedMonthlyCpiInHistory(row, publishedEditions, publicationReceipts, editorialDate));
   const registeredHosts = NEWS_SOURCES.flatMap(sourceHosts);
   const provenanceFile = path.join(DATA, 'editorial-source-provenance.json');
   const provenance = fs.existsSync(provenanceFile)

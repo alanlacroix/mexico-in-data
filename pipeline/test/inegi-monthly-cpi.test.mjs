@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { fetchBounded } from '../lib/url-safety.js';
 import { shapeEvidenceRecord } from '../lib/source-evidence.mjs';
 import { INEGI_NEWS_URL, isMonthlyInegiCpi, requiresInegiMonthlySource, parseMonthlyMetadata,
-  validateMonthlyPages, extractInegiPdf, createInegiMonthlyLoader, validatedInegiArticle, alreadyPublishedMonthlyCpi } from '../lib/inegi-monthly-cpi.mjs';
+  validateMonthlyPages, extractInegiPdf, createInegiMonthlyLoader, validatedInegiArticle, alreadyPublishedMonthlyCpi, alreadyPublishedMonthlyCpiInHistory } from '../lib/inegi-monthly-cpi.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixture = name => fs.readFileSync(new URL(`fixtures/${name}`, import.meta.url));
@@ -43,6 +43,17 @@ for (const mutate of [
  assert.equal(alreadyPublishedMonthlyCpi(row,publicEdition.withArtifactHash(changed),'2026-10-09'),false,'no topic, shelf or evidence-only discharge');
 }
 
+const receipt = { editorialDate: published.editorialDate, slot: 'morning', state: 'published', artifactHash: published.artifactHash, calls: 0, costUSD: 0 };
+const ledger = value => ({ schemaVersion: 1, attempts: value });
+assert.equal(alreadyPublishedMonthlyCpiInHistory(row, [published], ledger([receipt]), '2026-10-10'), true);
+for (const changed of [null, ledger([]), ledger([{...receipt, state:'failed'}]), ledger([{...receipt, state:'review-required'}]),
+  ledger([{...receipt, editorialDate:'2026-10-07'}]), ledger([{...receipt, artifactHash:'0'.repeat(64)}])]) {
+  assert.equal(alreadyPublishedMonthlyCpiInHistory(row, [published], changed, '2026-10-10'), false, 'history needs exact published receipt');
+}
+assert.equal(alreadyPublishedMonthlyCpiInHistory(row, [{...published, artifactHash:'0'.repeat(64)}], ledger([{...receipt, artifactHash:'0'.repeat(64)}]), '2026-10-10'), false, 'matching corrupted hashes cannot establish publication');
+assert.equal(alreadyPublishedMonthlyCpiInHistory(row, [published], ledger([receipt]), row.date), false, 'same-day receipt cannot discharge obligation');
+assert.equal(alreadyPublishedMonthlyCpiInHistory({...row, id:'inegi-cpi-2026-11-09',date:'2026-11-09',label:'INEGI CPI — monthly (INPC, October; headline + core)'}, [published], ledger([receipt]), '2026-11-10'), false, 'newer monthly release still required');
+
 const original = published.stories[0].url;
 const cases = [
   ['query', e => { e.stories[0].url += '?copy=1'; e.stories[0].evidence[0].url = e.stories[0].url; }],
@@ -69,6 +80,7 @@ for (const [name, mutate] of cases) {
   edition = publicEdition.withArtifactHash(edition);
   assert.equal(publicEdition.validateEdition(edition).ok, true, `${name}: not testing an invalid artifact`);
   assert.equal(alreadyPublishedMonthlyCpi(row, edition, '2026-10-09'), false, name);
+  assert.equal(alreadyPublishedMonthlyCpiInHistory(row, [edition], ledger([{...receipt, artifactHash:edition.artifactHash}]), '2026-10-10'), false, `history: ${name}`);
 
 }
 
@@ -200,6 +212,18 @@ try {
     const uncovered=await candidateUniverse(new Date('2026-10-09T12:05:00Z'),{events:[row]},'2026-10-09');
     assert.ok(uncovered.some(x=>x._scheduled?.id===row.id),'uncovered yesterday remains required');
     assert.equal(api,2);assert.equal(files,2);
+    fs.mkdirSync('data/editions',{recursive:true});
+    fs.writeFileSync('data/editions/2026-10-08.json',JSON.stringify(${JSON.stringify(published)}));
+    fs.writeFileSync('data/edition.json',JSON.stringify(${fs.readFileSync(path.join(root,'data/editions/2026-10-09.json'),'utf8')}));
+    fs.writeFileSync('data/edition-attempts.json',JSON.stringify(${JSON.stringify(ledger([receipt]))}));
+    const weekend=await candidateUniverse(new Date('2026-10-10T12:05:00Z'),{events:[row]},'2026-10-10');
+    assert.ok(!weekend.some(x=>x._scheduled?.id===row.id),'exact historical published receipt discharges weekend repeat');
+    assert.ok(weekend.some(x=>x.id==='old-inflation'),'new reporting remains eligible');
+    assert.equal(api,2,'historical proof performs no new source calls');assert.equal(files,2);
+    fs.writeFileSync('data/edition-attempts.json',JSON.stringify({schemaVersion:1,attempts:[]}));
+    const unreceipted=await candidateUniverse(new Date('2026-10-10T12:05:00Z'),{events:[row]},'2026-10-10');
+    assert.ok(unreceipted.some(x=>x._scheduled?.id===row.id),'archive without receipt remains required');
+    assert.equal(api,3);assert.equal(files,3);
     records[0].periodoInformacion='Primera quincena de septiembre de 2026';
     await assert.rejects(candidateUniverse(now,{events:[row]},'2026-10-08'),/required scheduled outcome unavailable/,'RSS cannot bypass failed official validation');
   `;

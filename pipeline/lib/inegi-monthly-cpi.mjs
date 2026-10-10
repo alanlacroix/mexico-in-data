@@ -27,8 +27,8 @@ export const requiresInegiMonthlySource = row => /^inegi-cpi-\d{4}-\d{2}-\d{2}$/
 
 const monthlyPdfPath = day => `/saladeprensa/boletines/${day.slice(0,4)}/inpc/inpc_2q${day.slice(0,4)}_${day.slice(5,7)}.pdf`;
 
-// Only the visible lead of the current validated publication can discharge an
-// older obligation. A topic match, archive/shelf entry or supporting link cannot.
+// Exact visible lead proof for a validated publication. Historical artifacts also
+// require a matching published ledger receipt below; shelf/supporting links cannot count.
 export function alreadyPublishedMonthlyCpi(row, edition, editorialDate) {
   if (!isMonthlyInegiCpi(row) || !validDay(editorialDate) || row.date >= editorialDate
       || !edition || ![undefined, 'approved'].includes(edition.publicationStatus)
@@ -40,6 +40,16 @@ export function alreadyPublishedMonthlyCpi(row, edition, editorialDate) {
     && story.publishedAt === row.date && story.evidence?.some(evidence =>
       evidence.id === 'article' && evidence.kind === 'article-body' && evidence.url === url
       && story.evidenceRefs?.headline?.includes('article')));
+}
+
+// History is evidence of prior publication only when its immutable hash and day
+// match a settled published ledger row. An archive file alone is insufficient.
+export function alreadyPublishedMonthlyCpiInHistory(row, editions, attempts, editorialDate) {
+  if (!Array.isArray(editions) || attempts?.schemaVersion !== 1 || !Array.isArray(attempts.attempts)) return false;
+  return editions.some(edition => alreadyPublishedMonthlyCpi(row, edition, editorialDate)
+    && attempts.attempts.some(receipt => receipt?.state === 'published'
+      && receipt.editorialDate === edition.editorialDate
+      && receipt.artifactHash === edition.artifactHash));
 }
 
 export function isMonthlyInegiCpi(row) {

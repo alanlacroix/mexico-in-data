@@ -48,6 +48,9 @@ The next day's lookback does not force the same release again. An older monthly
 obligation is discharged only when the current hash-valid published edition has
 a visible story with the exact official monthly PDF lead, matching publication
 and story dates, and the matching primary article evidence cited by its headline.
-Candidate, held, invalid, archive-only, weekly-only and supporting-link matches do
-not count. Same-day and newer releases remain required; unrelated new inflation
+A historical artifact can also discharge that exact event only when its validated
+visible lead meets the same checks and a published accounting receipt matches both
+its editorial date and immutable artifact hash. An archive file without that receipt,
+a failed or held attempt, mismatched date/hash, candidate, weekly-only or supporting
+link does not count. Same-day and newer releases remain required; unrelated new inflation
 reporting remains eligible. This is exact event coverage, not a topic exclusion.
