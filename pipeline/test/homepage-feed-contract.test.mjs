@@ -26,8 +26,22 @@ const exact = dailyBrief(new Date(`${edition.editorialDate}T18:00:00Z`), { editi
 assert.equal(exact.carryingLastBrief, false);
 assert.equal(exact.todayStories.length + exact.keyDevelopments.length + exact.weekendStories.length + exact.weekRecapStories.length, exact.stories.length);
 assert.ok(exact.todayStories.every((story) => story.date === edition.editorialDate));
-assert.deepEqual(feed().storySections.map((section) => section.kind), edition.editionType === 'weekend-recap' ? ['week-recap'] : ['latest'],
-  'the built weekday label must remain honest when served unchanged on a later day');
+function assertDatedSections(rendered, artifact) {
+  const kinds = artifact.editionType === 'weekend-recap'
+    ? ['weekend', 'week-recap'].filter(kind => artifact.stories.some(story => story.lane === kind))
+    : ['latest'];
+  assert.deepEqual(Array.from(rendered.storySections, section => section.kind), kinds,
+    'every populated dated lane must have its own honest section');
+  for (const section of rendered.storySections) {
+    const expected = section.kind === 'latest'
+      ? ['today', 'key-development'].flatMap(lane => artifact.stories.filter(story => story.lane === lane))
+      : artifact.stories.filter(story => story.lane === section.kind);
+    assert.deepEqual(Array.from(section.stories, story => story.id), expected.map(story => story.id),
+      'stories must remain in their own dated section');
+  }
+}
+assertDatedSections(feed(), edition);
+assertDatedSections(feedEs(), edition);
 
 const spanish = dailyBrief(new Date(`${edition.editorialDate}T18:00:00Z`), { edition }, 'es');
 assert.deepEqual(spanish.stories.map((story) => story.id), exact.stories.map((story) => story.id));
@@ -59,6 +73,71 @@ assert.deepEqual(weeklyTop('en').groups.map(group => group.items.map(story => st
 // Topic grouping can move yesterday's economy story ahead of today's energy story.
 // Exercise the actual renderer against a valid fixture in memory; never edit data/.
 const publicEdition = require('../lib/public-edition.cjs');
+// A weekend can contain both a new Saturday development and earlier coverage.
+// Use fixed synthetic dates so weekday-only data cannot hide this regression.
+function sectionFixture(lanes) {
+  const stories = lanes.map((lane, index) => ({
+    ...structuredClone(edition.stories[0]), id: `section-fixture-${index}`, lane,
+    date: lane === 'weekend' ? '2026-09-05' : '2026-09-04',
+    publishedAt: lane === 'weekend' ? '2026-09-05T12:00:00Z' : '2026-09-04T12:00:00Z',
+    url: `https://example.com/section-fixture-${index}`,
+  }));
+  for (const story of stories) story.evidence.find(item => item.id === 'article').url = story.url;
+  return publicEdition.withArtifactHash({
+    ...edition, editorialDate: '2026-09-05', generatedAt: '2026-09-05T12:00:00Z',
+    editionType: 'weekend-recap', weeklyBrief: undefined, stories,
+    weekStories: stories.map(({ id, date, section, source, url, publishedAt, en, es }) => ({
+      id, date, section, source, url, publishedAt,
+      en: { headline: en.headline, dek: en.dek }, es: { headline: es.headline, dek: es.dek },
+    })),
+  });
+}
+function renderSectionFixture(artifact, locale) {
+  const filename = fileURLToPath(new URL('../../_data/feed.js', import.meta.url));
+  const fixtureRequire = createRequire(filename);
+  const module = { exports: {} };
+  vm.runInNewContext(fs.readFileSync(filename, 'utf8'), {
+    module, __dirname: path.dirname(filename),
+    require: id => id === './dailyBrief.js'
+      ? (_now, _sources, language) => dailyBrief(new Date('2026-09-06T18:00:00Z'), { edition: artifact }, language)
+      : fixtureRequire(id),
+  });
+  return module.exports.forLocale(locale);
+}
+for (const lanes of [['weekend', 'week-recap'], ['week-recap'], ['weekend']]) {
+  const fixture = sectionFixture(lanes);
+  assert.deepEqual(publicEdition.validateEdition(fixture).errors, []);
+  for (const locale of ['en', 'es']) {
+    const rendered = renderSectionFixture(fixture, locale);
+    assertDatedSections(rendered, fixture);
+    const missing = structuredClone(rendered);
+    missing.storySections.pop();
+    assert.throws(() => assertDatedSections(missing, fixture), /populated dated lane/);
+    const misplaced = structuredClone(rendered);
+    misplaced.storySections[0].stories[0].id = 'wrong-dated-story';
+    assert.throws(() => assertDatedSections(misplaced, fixture), /own dated section/);
+  }
+}
+const mislabeledFriday = sectionFixture(['weekend']);
+mislabeledFriday.stories[0].date = '2026-09-04';
+mislabeledFriday.stories[0].publishedAt = '2026-09-04T12:00:00Z';
+mislabeledFriday.weekStories[0].date = '2026-09-04';
+mislabeledFriday.weekStories[0].publishedAt = '2026-09-04T12:00:00Z';
+assert.deepEqual(publicEdition.validateEdition(publicEdition.withArtifactHash(mislabeledFriday)).errors,
+  ['stories[0] weekend lane is not Saturday or Sunday'],
+  'a Friday story cannot be labeled as new weekend coverage');
+const reversedDaily = sectionFixture(['week-recap', 'weekend']);
+reversedDaily.editorialDate = '2026-09-04';
+reversedDaily.editionType = 'daily';
+for (const [index, story] of reversedDaily.stories.entries()) {
+  story.lane = index === 0 ? 'key-development' : 'today';
+  story.date = index === 0 ? '2026-09-03' : '2026-09-04';
+  story.publishedAt = `${story.date}T12:00:00Z`;
+  Object.assign(reversedDaily.weekStories[index], { date: story.date, publishedAt: story.publishedAt });
+}
+const dailyFixture = publicEdition.withArtifactHash(reversedDaily);
+assert.deepEqual(publicEdition.validateEdition(dailyFixture).errors, []);
+for (const locale of ['en', 'es']) assertDatedSections(renderSectionFixture(dailyFixture, locale), dailyFixture);
 const rendererPath = fileURLToPath(new URL('../../_data/weeklyTop.js', import.meta.url));
 function renderFixture(artifact) {
   const module = { exports: {} };
