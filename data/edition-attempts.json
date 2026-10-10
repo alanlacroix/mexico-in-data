@@ -2402,13 +2402,13 @@
     {
       "editorialDate": "2026-10-10",
       "slot": "morning",
-      "candidateSignature": "5225f04217e599c005191b105d0a159343cef4b47bd190e90ad3c248234aaf21",
+      "candidateSignature": "9d1c3d1b25d87c21b151a7498c1d91fa088727c5a44793a2c285af99e600afaf",
       "state": "published",
       "startedAt": "2026-10-10T12:07:10.409Z",
       "completedAt": "2026-10-10T12:07:10.416Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "7a6d93fd226f4067cde8a1b29a93e308ec38bdc8610c3246aa90fc588e45ef03",
+      "artifactHash": "cab4dc5b2d71ebd7282a8dcd0ce79e6601649fa942bbacaa810f3c52b5a529ef",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2432,7 +2432,35 @@
         "readerCopySHA256": "1ea374fe136843a630ce8ddab7d857d08abde9ae5f7d2efc9c178d0f04904dc1",
         "generationProvenance": "operator-curated; zero provider generation or audit calls",
         "preventiveReason": "Unpaid replay after the exact archive-and-ledger CPI discharge fix found that the budget-trimmed automatic selection repeated the August Census trade event already published October7 and lacked its next milestone; curated selection used complete source evidence, independent bilingual audit and root reader review, with no provider generation attempted"
-      }
+      },
+      "editorialRevisions": [
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "7a6d93fd226f4067cde8a1b29a93e308ec38bdc8610c3246aa90fc588e45ef03",
+          "artifactHash": "cab4dc5b2d71ebd7282a8dcd0ce79e6601649fa942bbacaa810f3c52b5a529ef",
+          "previousCandidateSignature": "5225f04217e599c005191b105d0a159343cef4b47bd190e90ad3c248234aaf21",
+          "candidateSignature": "9d1c3d1b25d87c21b151a7498c1d91fa088727c5a44793a2c285af99e600afaf",
+          "reviewedAt": "2026-10-10T15:08:18.223913+00:00",
+          "draftSHA256": "b4c53391553b6b605ce01b9d15d8cddf72fb2409c968a79c2aa4c2e167a141de",
+          "auditSHA256": "76e27bd3ba0424c9776a65ecbed492d3d84dba21aed0bb41e42219b7c26c3655",
+          "reviewedFields": 40,
+          "approvedCopySHA256": "0a4db044305d9097da0622eec62c069164fe33f786afbdcc2852e74f2722c541",
+          "method": "Independent source and bilingual review of the updated 09:00 Mexico City NHC Advisory13; three other stories and operator paragraph unchanged; root reviewed exact bilingual copy and rendered presentation",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-bf21e8260115",
+            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.012.shtml",
+            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.013.shtml",
+            "previousPublishedAt": "2026-10-10T12:00:00Z",
+            "publishedAt": "2026-10-10T15:00:00Z",
+            "sourceDiscovery": "Direct-primary scheduled follow-up. Official NHC complete Advisory13 and matching Spanish version were directly retrieved at15:00:44UTC and checked against the stable official archive. The previously published weather story identity is intentionally retained; rawId is the existing event identity, not a claim that an older feed contained this new bulletin. Official operator notice and current announcement index were rechecked at the same time.",
+            "priorBulletinRetained": true
+          },
+          "reason": "NHC reported materially wider tropical-storm-force wind reach and revised Sunday timing; maximum sustained wind and warning area unchanged"
+        }
+      ],
+      "lastEditorialRevisionAt": "2026-10-10T15:08:18.223913+00:00"
     }
   ]
 }
