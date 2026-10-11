@@ -5,6 +5,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
+import { browserCleanup } from '../lib/browser-cleanup.mjs';
 
 // CI-only real-browser release check. No model/API calls or publication writes.
 const root = path.resolve('_site');
@@ -29,6 +30,7 @@ const chrome = spawn(process.env.CHROME_BIN || '/usr/bin/google-chrome', [
   '--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-background-networking',
   '--no-first-run', '--no-default-browser-check', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank',
 ], { stdio: ['ignore', 'ignore', 'pipe'] });
+const cleanupBrowser = browserCleanup(chrome, profile);
 let browserErrors = ''; chrome.stderr.on('data', b => { browserErrors += b; });
 let launchError; chrome.on('error', error => { launchError = error; });
 let ws;
@@ -119,7 +121,6 @@ try {
   throw error;
 } finally {
   if (ws?.readyState === WebSocket.OPEN) { try { await send('Browser.close'); } catch {} ws.close(); }
-  chrome.kill();
   server.close();
-  await fs.rm(profile, { recursive: true, force: true });
+  await cleanupBrowser();
 }
