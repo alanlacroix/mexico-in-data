@@ -2515,13 +2515,13 @@
     {
       "editorialDate": "2026-10-11",
       "slot": "morning",
-      "candidateSignature": "1d3837952a61f64261d808909e9c37a38820a91d1e96c438c1404d61fad960d3",
+      "candidateSignature": "0431d453a7028fe71c394aa69f68b95fb85578e2e9ece744d15cd2f6a0cc14a9",
       "state": "published",
       "startedAt": "2026-10-11T12:09:25.399Z",
       "completedAt": "2026-10-11T12:09:25.406Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "445066188c4f1b5d20874d9e0674bd0e1f1e7020732707097aea2405f1d6eb89",
+      "artifactHash": "5dbb6e613124ac8a30c47095a107b18e7c893a71e6684a4c7f854764d3af80d5",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2545,7 +2545,35 @@
         "readerCopySHA256": "1ac21eff147c44e193c611fdb65b8ab177ba74c618642114718aa41601d21090",
         "generationProvenance": "operator-curated; zero provider generation or audit calls",
         "preventiveReason": "Unpaid Sunday replay found that the capped weekend pool and budget-trimmed automatic selection repeated the August Census trade event already published October 7 and lacked its source-backed next milestone. Curated selection used complete sources, independent bilingual audit and root reader review. The selected-story weekly-history cap regression was separately repaired and tested before assembly; no provider generation was attempted"
-      }
+      },
+      "editorialRevisions": [
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "445066188c4f1b5d20874d9e0674bd0e1f1e7020732707097aea2405f1d6eb89",
+          "artifactHash": "5dbb6e613124ac8a30c47095a107b18e7c893a71e6684a4c7f854764d3af80d5",
+          "previousCandidateSignature": "1d3837952a61f64261d808909e9c37a38820a91d1e96c438c1404d61fad960d3",
+          "candidateSignature": "0431d453a7028fe71c394aa69f68b95fb85578e2e9ece744d15cd2f6a0cc14a9",
+          "reviewedAt": "2026-10-11T15:06:27.927324+00:00",
+          "draftSHA256": "53ce066abd4dca30b6a194bf66c5cd37208b5211493d6da7934e3e792e6e9c85",
+          "auditSHA256": "9631d30f01809db65e4364a5f8ad455ea3d589468768a9e66a742f6080496447",
+          "reviewedFields": 30,
+          "approvedCopySHA256": "2f86de081253b1a286eb7bcb04c7ca23a33fbd1fcd6e2050bdda4c776a114c33",
+          "method": "Independent source and bilingual review of the updated 09:00 Mexico City October 11 NHC Advisory17 and Discussion17; two other stories and airport paragraph unchanged; root reviewed exact bilingual copy and rendered presentation",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-e4f3fa551142",
+            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.016.shtml",
+            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.017.shtml",
+            "previousPublishedAt": "2026-10-11T12:00:00Z",
+            "publishedAt": "2026-10-11T15:00:00Z",
+            "sourceDiscovery": "Direct official NHC Advisory 17 and complete technical Discussion 17 retrieved at 15:00:54 UTC October 11; both official GAP notices, complete PDFs and press index rechecked unchanged at 15:01 UTC. Same published weather event identity retained. Original evidence and review history preserved separately.",
+            "priorBulletinRetained": false
+          },
+          "reason": "NHC revised the forecast to very near the coast Sunday and close to it Monday, with high track uncertainty; current sustained winds are 230 km/h, still Category 4. Sunday cancellations and conditional airport reopening notices were rechecked unchanged"
+        }
+      ],
+      "lastEditorialRevisionAt": "2026-10-11T15:06:27.927324+00:00"
     }
   ]
 }
