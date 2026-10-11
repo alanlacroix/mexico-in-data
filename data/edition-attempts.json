@@ -2515,13 +2515,13 @@
     {
       "editorialDate": "2026-10-11",
       "slot": "morning",
-      "candidateSignature": "0431d453a7028fe71c394aa69f68b95fb85578e2e9ece744d15cd2f6a0cc14a9",
+      "candidateSignature": "b35e8143a7cc71a82883bb6952ea336eea3ddc6cbbd1c69d958d20d64071ba14",
       "state": "published",
       "startedAt": "2026-10-11T12:09:25.399Z",
       "completedAt": "2026-10-11T12:09:25.406Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "5dbb6e613124ac8a30c47095a107b18e7c893a71e6684a4c7f854764d3af80d5",
+      "artifactHash": "f8c56cbff8af782116c80e970e0c30b5b550437bdea51a68be862e080f962680",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2571,9 +2571,34 @@
             "priorBulletinRetained": false
           },
           "reason": "NHC revised the forecast to very near the coast Sunday and close to it Monday, with high track uncertainty; current sustained winds are 230 km/h, still Category 4. Sunday cancellations and conditional airport reopening notices were rechecked unchanged"
+        },
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "5dbb6e613124ac8a30c47095a107b18e7c893a71e6684a4c7f854764d3af80d5",
+          "artifactHash": "f8c56cbff8af782116c80e970e0c30b5b550437bdea51a68be862e080f962680",
+          "previousCandidateSignature": "0431d453a7028fe71c394aa69f68b95fb85578e2e9ece744d15cd2f6a0cc14a9",
+          "candidateSignature": "b35e8143a7cc71a82883bb6952ea336eea3ddc6cbbd1c69d958d20d64071ba14",
+          "reviewedAt": "2026-10-11T21:08:37.578465+00:00",
+          "draftSHA256": "858d601b228bc8ddb1ab303efd67738c834de7ea617a490614f628ba61eaed73",
+          "auditSHA256": "6258991ae6a835517004ee0e280058d005951d7f51a26757dac3289bb999a93e",
+          "reviewedFields": 30,
+          "approvedCopySHA256": "925539899dafc3b0d71c03c31f3e8a8a923ba1869a2f89be6e7085262328ce8d",
+          "method": "Independent source and bilingual review of the updated 15:00 Mexico City October 11 NHC Advisory18 and Discussion18; two other stories unchanged, airport operational facts preserved with current GAP update and qualified rain geography added; root reviewed exact bilingual copy and rendered presentation",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-e4f3fa551142",
+            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.017.shtml",
+            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.018.shtml",
+            "previousPublishedAt": "2026-10-11T15:00:00Z",
+            "publishedAt": "2026-10-11T21:00:00Z",
+            "sourceDiscovery": "Direct official NHC Advisory 18 and complete technical Discussion 18 retrieved at 21:00:14 UTC October 11; both official GAP notices, complete PDFs and press index rechecked at 21:00:52 UTC, including the October 11 ZLO update that preserves Sunday commercial cancellations. Same published weather event identity retained. Original evidence and review history preserved separately.",
+            "priorBulletinRetained": false
+          },
+          "reason": "NHC added a hurricane watch north of El Roblito to Bahia Tempehuaya, forecast farther offshore Monday and toward Mexico Wednesday, and extended the rain hazard through early Thursday. Current sustained winds are 215 km/h, still Category 4. Sunday passenger cancellations and conditional reopening remain supported by current GAP notices"
         }
       ],
-      "lastEditorialRevisionAt": "2026-10-11T15:06:27.927324+00:00"
+      "lastEditorialRevisionAt": "2026-10-11T21:08:37.578465+00:00"
     }
   ]
 }
