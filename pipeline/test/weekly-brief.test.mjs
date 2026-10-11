@@ -69,3 +69,47 @@ for (const locale of ['en', 'es']) {
  assert.ok(html.includes('href="https://example.com/report?edition=1#page=2"'));
 }
 console.log('weekly source links: exact duplicate display removed without changing evidence or distinct URLs');
+
+// Capacity applies to prior history only after preserving current story mirrors.
+const { buildWeekStories } = await import('../build-edition.mjs');
+const historyStory = (id, publishedAt, overrides = {}) => ({
+ id, date: publishedAt.slice(0, 10), section: 'economy', source: 'Official source',
+ url: `https://example.com/${id}`, publishedAt,
+ en: { headline: `English ${id}`, dek: `English summary ${id}` },
+ es: { headline: `Español ${id}`, dek: `Resumen ${id}` }, ...overrides,
+});
+const historyRows = Array.from({ length: 21 }, (_, i) => historyStory(`prior-${i}`, `2026-10-10T${String(i).padStart(2, '0')}:00:00Z`));
+const olderSelected = historyStory('selected-old', '2026-10-06T12:00:00Z');
+const inputs = { weekStories: [...historyRows].reverse() };
+const inputsBefore = JSON.stringify(inputs);
+const selectedBefore = JSON.stringify(olderSelected);
+let retained = buildWeekStories(inputs, [olderSelected], '2026-10-11');
+assert.equal(retained.length, 21);
+assert.deepEqual(retained.at(-1), olderSelected);
+assert.ok(!retained.some(row => row.id === 'prior-0'));
+assert.equal(JSON.stringify(inputs), inputsBefore);
+assert.equal(JSON.stringify(olderSelected), selectedBefore);
+const otherSelected = historyStory('selected-other', '2026-10-05T12:00:00Z');
+retained = buildWeekStories({ weekStories: [...historyRows.slice(10), ...historyRows.slice(0, 10), historyRows[20]] }, [olderSelected, otherSelected], '2026-10-11');
+assert.equal(retained.length, 21);
+assert.ok(retained.some(row => row.id === olderSelected.id));
+assert.ok(retained.some(row => row.id === otherSelected.id));
+assert.ok(!retained.some(row => ['prior-0', 'prior-1'].includes(row.id)));
+assert.deepEqual(retained.map(row => row.publishedAt), retained.map(row => row.publishedAt).sort().reverse());
+const oldCopy = { ...olderSelected, publishedAt: '2026-10-10T23:00:00Z', en: { headline: 'Old', dek: 'Old copy' } };
+const sameUrl = historyStory('different-id', '2026-10-10T22:00:00Z', { url: olderSelected.url });
+const firstDuplicate = historyStory('first-copy', '2026-10-07T10:00:00Z');
+retained = buildWeekStories({ weekStories: [oldCopy, sameUrl, firstDuplicate, { ...firstDuplicate, publishedAt: '2026-10-10T23:00:00Z' }, ...historyRows] }, [olderSelected, olderSelected], '2026-10-11');
+assert.equal(retained.filter(row => row.id === olderSelected.id).length, 1);
+assert.deepEqual(retained.find(row => row.id === olderSelected.id), olderSelected);
+assert.ok(!retained.some(row => row.id === 'different-id'));
+const duplicateResult = buildWeekStories({ weekStories: [firstDuplicate, { ...firstDuplicate, publishedAt: '2026-10-10T23:00:00Z' }] }, [], '2026-10-11');
+assert.deepEqual(duplicateResult, [firstDuplicate], 'first-seen historical duplicate remains authoritative');
+const sunday = historyStory('sunday', '2026-10-11T09:00:00Z');
+const monday = historyStory('monday', '2026-10-12T09:00:00Z');
+const future = historyStory('future', '2026-10-13T09:00:00Z');
+assert.deepEqual(buildWeekStories({ weekStories: [olderSelected, sunday, future] }, [sunday, monday], '2026-10-12'), [monday, sunday]);
+const recent = historyStory('recent', '2026-10-11T09:00:00Z');
+assert.deepEqual(buildWeekStories({ weekStories: historyRows }, [recent], '2026-10-11'), [recent, ...historyRows.slice(1).reverse()]);
+assert.throws(() => buildWeekStories(null, Array.from({ length: 22 }, (_, i) => historyStory(`overflow-${i}`, '2026-10-11T09:00:00Z')), '2026-10-11'), /exceed weekly history capacity/);
+console.log('weekly history: current mirrors, bounded capacity, first-seen dedupe, chronology and date boundaries pass');
