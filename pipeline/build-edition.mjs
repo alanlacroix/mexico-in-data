@@ -599,8 +599,14 @@ function buildWeekStories(priorEdition, stories, editorialDate) {
     seen.add(story.url);
     kept.push(story);
   }
-  return kept.sort((left, right) => String(right.publishedAt).localeCompare(String(left.publishedAt)))
-    .slice(0, MAX_WEEK_STORIES);
+  const newestFirst = (left, right) => String(right.publishedAt).localeCompare(String(left.publishedAt));
+  const currentIds = new Set(current.map((story) => story.id));
+  const selected = kept.filter((story) => currentIds.has(story.id));
+  // Every selected story must remain mirrored, even when a weekend selection
+  // predates a full week of newer history. Fill only the remaining history slots.
+  if (selected.length > MAX_WEEK_STORIES) throw new Error('current stories exceed weekly history capacity');
+  const history = kept.filter((story) => !currentIds.has(story.id)).sort(newestFirst);
+  return [...selected, ...history.slice(0, MAX_WEEK_STORIES - selected.length)].sort(newestFirst);
 }
 
 function buildWeeklyBrief(stories, editorialDate) {
