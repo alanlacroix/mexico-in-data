@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { mock } from 'node:test';
 import { articleUrlAllowed, fetchBoundedText, hostAllowed, isPublicIp, mapLimit, safeHttpsUrl, sourceHosts } from '../lib/url-safety.js';
 
 assert.deepEqual(sourceHosts({ id: 'elpais-mexico', url: 'https://feeds.elpais.com/rss' }), ['feeds.elpais.com', 'elpais.com']);
@@ -28,27 +29,67 @@ assert.deepEqual(results, [2, 4, 6, 8, 10, 12]);
 assert.equal(peak, 3, 'collection concurrency must be bounded');
 
 const publicLookup = async () => [{ address: '8.8.8.8', family: 4 }];
-let redirects = 0;
-const slowRedirectFetch = async (url, { signal }) => {
-  await new Promise((resolve, reject) => {
-    const timer = setTimeout(resolve, 18);
-    signal.addEventListener('abort', () => { clearTimeout(timer); reject(signal.reason); }, { once: true });
+// Advance the request clock explicitly: loaded CI runners need not execute a
+// real timer within an arbitrary wall-clock allowance.
+mock.timers.enable({ apis: ['setTimeout'] });
+try {
+  const starts = [Promise.withResolvers(), Promise.withResolvers()];
+  const signals = [];
+  let redirects = 0;
+  const request = fetchBoundedText('https://example.com/start', {
+    allowedHosts: ['example.com'], timeoutMs: 35, redirects: 4,
+    lookup: publicLookup,
+    fetchImpl: async (url, { signal }) => {
+      const hop = signals.length;
+      signals.push(signal);
+      starts[hop].resolve();
+      await new Promise((resolve, reject) => {
+        const timer = setTimeout(resolve, 18);
+        signal.addEventListener('abort', () => {
+          clearTimeout(timer);
+          reject(signal.reason);
+        }, { once: true });
+      });
+      redirects += 1;
+      return new Response('', { status: 302, headers: { location: `/hop-${redirects}` } });
+    },
   });
-  redirects += 1;
-  return new Response('', { status: 302, headers: { location: `/hop-${redirects}` } });
-};
-const redirectStart = Date.now();
-await assert.rejects(fetchBoundedText('https://example.com/start', {
-  allowedHosts: ['example.com'], timeoutMs: 35, redirects: 4,
-  lookup: publicLookup, fetchImpl: slowRedirectFetch,
-}), /deadline|abort/i);
-assert.ok(Date.now() - redirectStart < 120, 'redirects must share one absolute deadline');
+  const rejected = assert.rejects(request, /deadline|abort/i);
+  await starts[0].promise;
+  mock.timers.tick(18);
+  await starts[1].promise;
+  assert.equal(signals[1], signals[0], 'redirects must share the request cancellation signal');
+  mock.timers.tick(16);
+  assert.equal(signals[0].aborted, false, 'deadline must not expire before 35ms');
+  mock.timers.tick(1);
+  assert.equal(signals[0].aborted, true, 'the original deadline must expire during the second hop');
+  await rejected;
+  assert.equal(redirects, 1, 'the second redirect must be cancelled at the shared deadline');
+} finally {
+  mock.timers.reset();
+}
 
-const dnsStart = Date.now();
-await assert.rejects(fetchBoundedText('https://example.com/start', {
-  allowedHosts: ['example.com'], timeoutMs: 25,
-  lookup: async () => new Promise(() => {}), fetchImpl: async () => { throw new Error('must not fetch'); },
-}), /deadline|abort/i);
-assert.ok(Date.now() - dnsStart < 100, 'DNS must share the same absolute deadline');
+mock.timers.enable({ apis: ['setTimeout'] });
+try {
+  const lookupStarted = Promise.withResolvers();
+  let fetchCalls = 0;
+  let settled = false;
+  const request = fetchBoundedText('https://example.com/start', {
+    allowedHosts: ['example.com'], timeoutMs: 25,
+    lookup: async () => { lookupStarted.resolve(); return new Promise(() => {}); },
+    fetchImpl: async () => { fetchCalls += 1; throw new Error('must not fetch'); },
+  });
+  const rejected = assert.rejects(request, /deadline|abort/i).then(() => { settled = true; });
+  await lookupStarted.promise;
+  mock.timers.tick(24);
+  // Flush promise rejection handlers without advancing the mocked deadline.
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(settled, false, 'DNS must remain pending before the deadline');
+  mock.timers.tick(1);
+  await rejected;
+  assert.equal(fetchCalls, 0, 'a DNS timeout must prevent any HTTP request');
+} finally {
+  mock.timers.reset();
+}
 
 console.log('url-safety tests: ok');
