@@ -6,6 +6,7 @@ import os from 'node:os';
 import { spawn } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import { browserCleanup } from '../lib/browser-cleanup.mjs';
+import { waitForBrowserEndpoint } from '../lib/browser-startup.mjs';
 
 // CI-only real-browser release check. No model/API calls or publication writes.
 const root = path.resolve('_site');
@@ -26,14 +27,16 @@ const server = http.createServer(async (req, res) => {
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const origin = `http://127.0.0.1:${server.address().port}`;
 const profile = await fs.mkdtemp(path.join(os.tmpdir(), 'mexico-brief-chrome-'));
-const chrome = spawn(process.env.CHROME_BIN || '/usr/bin/google-chrome', [
+const executable = process.env.CHROME_BIN || '/usr/bin/google-chrome';
+const chrome = spawn(executable, [
   '--headless=new', '--no-sandbox', '--disable-dev-shm-usage', '--disable-background-networking',
   '--no-first-run', '--no-default-browser-check', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank',
 ], { stdio: ['ignore', 'ignore', 'pipe'] });
 const cleanupBrowser = browserCleanup(chrome, profile);
-let browserErrors = ''; chrome.stderr.on('data', b => { browserErrors += b; });
+let browserErrors = ''; chrome.stderr.on('data', b => { browserErrors = (browserErrors + b).slice(-16384); });
 let launchError; chrome.on('error', error => { launchError = error; });
 let ws;
+let browserLaunch;
 const pending = new Map();
 let sequence = 0;
 const exceptions = [];
@@ -46,14 +49,9 @@ function send(method, params = {}, sessionId) {
   });
 }
 try {
-  let active;
-  for (let attempt = 0; attempt < 100; attempt++) {
-    if (launchError) throw launchError;
-    if (chrome.exitCode !== null || chrome.signalCode) throw new Error(`Chrome exited: ${browserErrors}`);
-    try { active = await fs.readFile(path.join(profile, 'DevToolsActivePort'), 'utf8'); break; } catch { await delay(100); }
-  }
-  assert.ok(active, `Chrome did not start: ${browserErrors}`);
-  const [port, socketPath] = active.trim().split('\n');
+  if (launchError) throw launchError;
+  const { port, socketPath, launch } = await waitForBrowserEndpoint(chrome, profile, { executable });
+  browserLaunch = launch;
   ws = new WebSocket(`ws://127.0.0.1:${port}${socketPath}`);
   await new Promise((resolve, reject) => { ws.addEventListener('open', resolve, { once: true }); ws.addEventListener('error', reject, { once: true }); });
   ws.addEventListener('message', ({ data }) => {
@@ -113,11 +111,11 @@ try {
     await send('Target.closeTarget', { targetId });
   }
   assert.deepEqual(exceptions, [], 'page JavaScript exceptions');
-  const report = { status: 'PASS', checkedAt: new Date().toISOString(), editionDate: edition.editorialDate, artifactHash: edition.artifactHash, browser: 'Installed Google Chrome, headless, desktop and mobile viewports', results };
+  const report = { status: 'PASS', checkedAt: new Date().toISOString(), editionDate: edition.editorialDate, artifactHash: edition.artifactHash, browser: 'Installed Google Chrome, headless, desktop and mobile viewports', browserLaunch, results };
   await fs.writeFile(path.join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
   console.log(JSON.stringify(report, null, 2));
 } catch (error) {
-  await fs.writeFile(path.join(output, 'failure.json'), JSON.stringify({ status: 'FAIL', checkedAt: new Date().toISOString(), message: error.message, browserErrors }, null, 2) + '\n');
+  await fs.writeFile(path.join(output, 'failure.json'), JSON.stringify({ status: 'FAIL', checkedAt: new Date().toISOString(), message: error.message, browserLaunch: error.browserLaunch || browserLaunch, browserErrors }, null, 2) + '\n');
   throw error;
 } finally {
   if (ws?.readyState === WebSocket.OPEN) { try { await send('Browser.close'); } catch {} ws.close(); }
