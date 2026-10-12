@@ -2515,13 +2515,13 @@
     {
       "editorialDate": "2026-10-11",
       "slot": "morning",
-      "candidateSignature": "b35e8143a7cc71a82883bb6952ea336eea3ddc6cbbd1c69d958d20d64071ba14",
+      "candidateSignature": "794769c2ce1baa3da5aa2fc010e779013edf9c71c03ed9532772ccea18c18972",
       "state": "published",
       "startedAt": "2026-10-11T12:09:25.399Z",
       "completedAt": "2026-10-11T12:09:25.406Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "f8c56cbff8af782116c80e970e0c30b5b550437bdea51a68be862e080f962680",
+      "artifactHash": "8173420dfa70db71d2335acb2e385fabd921a7e6f99e123b17f37bfdf19c947d",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2596,9 +2596,34 @@
             "priorBulletinRetained": false
           },
           "reason": "NHC added a hurricane watch north of El Roblito to Bahia Tempehuaya, forecast farther offshore Monday and toward Mexico Wednesday, and extended the rain hazard through early Thursday. Current sustained winds are 215 km/h, still Category 4. Sunday passenger cancellations and conditional reopening remain supported by current GAP notices"
+        },
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "f8c56cbff8af782116c80e970e0c30b5b550437bdea51a68be862e080f962680",
+          "artifactHash": "8173420dfa70db71d2335acb2e385fabd921a7e6f99e123b17f37bfdf19c947d",
+          "previousCandidateSignature": "b35e8143a7cc71a82883bb6952ea336eea3ddc6cbbd1c69d958d20d64071ba14",
+          "candidateSignature": "794769c2ce1baa3da5aa2fc010e779013edf9c71c03ed9532772ccea18c18972",
+          "reviewedAt": "2026-10-12T00:08:24.564071+00:00",
+          "draftSHA256": "5f2c8eb216d4579e9873e3bcff05f25670a2339079724bf16ca6aa58c1f09079",
+          "auditSHA256": "c6ce6c4c680649b1fbbb4dd54feb1d1a1226c87d04e073ad07adec3ee0d0f633",
+          "reviewedFields": 30,
+          "approvedCopySHA256": "a3c75bef4865ccab147472c02589b211e55798314c0023c90f531b745293628b",
+          "method": "Independent source and bilingual review of NHC Intermediate Advisory18A valid 18:00 Mexico City October 11 and GAP joint closure extension dated October 11; two other stories unchanged, airport closure endpoints updated without implying confirmed reopening; root reviewed exact bilingual copy and rendered presentation",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-e4f3fa551142",
+            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.018.shtml",
+            "url": "https://www.aeropuertosgap.com.mx/files/Comunicados/20261011_Actualizacion_Se_extiende_Cierre_de_Aeropuertos_por_Huracan_Simon.pdf",
+            "previousPublishedAt": "2026-10-11T21:00:00Z",
+            "publishedAt": "2026-10-11",
+            "sourceDiscovery": "Direct official NHC Intermediate Advisory 18A retrieved at 00:00:43 UTC October 12, valid 18:00 Mexico City October 11; current joint GAP closure extension dated October 11 retrieved and visually verified at 00:01 UTC October 12. Both airport closure endpoints are conditional on safe weather and operations. Same published weather event identity retained. Original evidence and review history preserved separately.",
+            "priorBulletinRetained": false
+          },
+          "reason": "GAP extended all-operation closures to October 13 at 08:00 local in Puerto Vallarta and October 12 at 08:00 local in Manzanillo, conditional on safe weather and operations. NHC now rates Simon Category 3 with 205 km/h winds; warning/watch geography, coastal forecast and early-Thursday rain hazard remain. Both local times are planned endpoints, not verified reopening."
         }
       ],
-      "lastEditorialRevisionAt": "2026-10-11T21:08:37.578465+00:00"
+      "lastEditorialRevisionAt": "2026-10-12T00:08:24.564071+00:00"
     }
   ]
 }
