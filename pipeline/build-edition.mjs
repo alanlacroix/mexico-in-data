@@ -380,8 +380,11 @@ function validRefs(row, refs) {
 }
 
 function evidenceReady(row) {
-  return row.evidence.length >= 2
-    || row.evidence.some((item) => item.id === 'article' && item.kind === 'article-body' && item.url === row.item.url);
+  // Context quantity cannot establish a missing lead. evidenceFor assigns this
+  // kind only after located-body extraction (or the trusted official adapter),
+  // and retains the requested URL after the existing validated redirect path.
+  return row.evidence.some((item) => item.id === 'article' && item.kind === 'article-body'
+    && item.url === row.item.url && clean(item.text));
 }
 
 function sentenceParts(text, locale) {
@@ -845,7 +848,7 @@ async function main() {
     })));
     const withoutContext = evidenceRows.filter((row) => !evidenceReady(row));
     for (const row of withoutContext) {
-      console.warn(`  skip ranked story without usable evidence: ${storyId(row.item)} | ${plainSourceName(row.item.sourceName || row.item.source)} | ${clean(row.item.title).slice(0, 120)}`);
+      console.warn(`  skip ranked story: missing-complete-lead | ${storyId(row.item)} | ${plainSourceName(row.item.sourceName || row.item.source)} | ${clean(row.item.title).slice(0, 120)}`);
     }
     let locked = evidenceRows.filter(evidenceReady).slice(0, MAX_VISIBLE);
     if (locked.length < MIN_VISIBLE) throw new Error(`only ${locked.length} strong sourced developments available; need at least ${MIN_VISIBLE} without padding`);
@@ -1091,7 +1094,7 @@ async function main() {
   }
 }
 
-export { main, candidateUniverse, evidenceFor, deterministicDraftCheck, makeStory, buildWeekStories, buildWeeklyBrief, draftSchema, auditSchema, keyedUnits, repairOverlongAnalysis, sectionOf, publicationCoverage, removableBudgetRow };
+export { main, candidateUniverse, evidenceFor, evidenceReady, deterministicDraftCheck, makeStory, buildWeekStories, buildWeeklyBrief, draftSchema, auditSchema, keyedUnits, repairOverlongAnalysis, sectionOf, publicationCoverage, removableBudgetRow };
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => {
   console.error(`build-edition failed: ${error.stack || error.message}`);

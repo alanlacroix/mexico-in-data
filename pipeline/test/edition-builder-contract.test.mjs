@@ -43,8 +43,8 @@ assert.match(builder, /model omitted the required story unit/,
   'missing model rows must be visible in the persisted failure reason');
 assert.match(builder, /evidenceRows\.filter\(evidenceReady\)\.slice\(0, MAX_VISIBLE\)/,
   'the fixed top-five ranking must choose only cards that can support Briefly Explained');
-assert.match(builder, /item\.kind === 'article-body' && item\.url === row\.item\.url/,
-  'a one-source fallback must require a verified body from the exact selected article');
+assert.match(builder, /item\.kind === 'article-body'\s*&& item\.url === row\.item\.url/,
+  'ordinary drafting requires a located body from the exact selected article');
 assert.match(builder, /No replacement happens after drafting/,
   'writing convenience must never rerank the selected developments');
 assert.match(builder, /function draftFailureReceipt/,
