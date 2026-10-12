@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { collectNews } from './collect-news.js';
 import { fetchArticle } from './lib/fetch-article.js';
 import { createInegiMonthlyLoader, requiresInegiMonthlySource, validatedInegiArticle, alreadyPublishedMonthlyCpi, alreadyPublishedMonthlyCpiInHistory } from './lib/inegi-monthly-cpi.mjs';
+import { createImaiLoader, isOptionalImaiRelease, validatedImaiArticle } from './lib/inegi-imai.mjs';
 import { editorialSourceTier, eventCandidateEligible, mexicoRelevant, registeredSourceFor, stripNewsBoilerplate } from './lib/news-trust.js';
 import {
   lintAnalysisText, lintReportText, reportContextDistinct, unsupportedNumericTokens,
@@ -195,7 +196,14 @@ async function candidateUniverse(now, schedule, editorialDate,
     if (item) item._section = sectionOf(item);
     return item;
   }))).filter(Boolean);
-  const complete = [...seeded, ...grouped];
+  // Verified advisory releases compete normally. They do not inherit the required
+  // schedule lane, and already-published URLs remain excluded as for ordinary news.
+  const imai = createImaiLoader({ now });
+  const optional = (await Promise.all(schedule.filter(row => isOptionalImaiRelease(row)
+    && row.date >= allowedStart && row.date <= editorialDate).map(row => imai(row)))).filter(item =>
+      item && !publishedUrls.has(articleIdentity(item.url, registeredHosts)));
+  for (const item of optional) item._section = sectionOf(item);
+  const complete = mergeOptionalCandidates(seeded, grouped, optional, registeredHosts);
   const missingDue = missingScheduledRows(allDue, complete);
   if (missingDue.length) {
     throw new Error(`required scheduled outcome unavailable: ${missingDue.map((row) => row.id).join(', ')}`);
@@ -205,6 +213,18 @@ async function candidateUniverse(now, schedule, editorialDate,
     weekend: weekendDay(editorialDate),
     dateOf: (item) => item._editorialDate,
   }).slice(0, MAX_CANDIDATES);
+}
+
+function mergeOptionalCandidates(seeded, grouped, optional, registeredHosts) {
+  const identity = item => articleIdentity(item.url, registeredHosts);
+  const required = new Set([...seeded, ...grouped.filter(item => item._scheduled)].map(identity));
+  const ordinary = new Map();
+  for (const item of optional) if (!required.has(identity(item)) && !ordinary.has(identity(item))) {
+    ordinary.set(identity(item), item);
+  }
+  // Keep the original trusted object, never a serialized or spread copy. Optional
+  // source deduplication cannot remove or replace a required scheduled candidate.
+  return [...seeded, ...ordinary.values(), ...grouped.filter(item => !ordinary.has(identity(item)))];
 }
 
 function rankSchema() {
@@ -296,9 +316,12 @@ function evidenceRecord({ id, kind, source, url, text }) {
 
 async function evidenceFor(item, standing, calendar, memory = [], censusCalendar = null) {
   const registered = registeredSourceFor(item, NEWS_SOURCES);
-  const official = validatedInegiArticle(item);
+  const official = validatedInegiArticle(item) || validatedImaiArticle(item);
   if (requiresInegiMonthlySource(item._scheduled) && !official) {
     throw new Error('Required INPC candidate has no trusted complete monthly PDF evidence');
+  }
+  if (String(item.id || '').startsWith('official:inegi-imai-') && !official) {
+    throw new Error('Optional IMAI candidate has no trusted complete monthly PDF evidence');
   }
   const article = official || await fetchArticle(item.url, {
     allowedHosts: registered ? sourceHosts(registered) : [new URL(item.url).hostname],
@@ -1094,7 +1117,7 @@ async function main() {
   }
 }
 
-export { main, candidateUniverse, evidenceFor, evidenceReady, deterministicDraftCheck, makeStory, buildWeekStories, buildWeeklyBrief, draftSchema, auditSchema, keyedUnits, repairOverlongAnalysis, sectionOf, publicationCoverage, removableBudgetRow };
+export { main, candidateUniverse, mergeOptionalCandidates, evidenceFor, evidenceReady, deterministicDraftCheck, makeStory, buildWeekStories, buildWeeklyBrief, draftSchema, auditSchema, keyedUnits, repairOverlongAnalysis, sectionOf, publicationCoverage, removableBudgetRow };
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => {
   console.error(`build-edition failed: ${error.stack || error.message}`);

@@ -4,10 +4,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { fetchBounded } from '../lib/url-safety.js';
 import { shapeEvidenceRecord } from '../lib/source-evidence.mjs';
 import { INEGI_NEWS_URL, isMonthlyInegiCpi, requiresInegiMonthlySource, parseMonthlyMetadata,
-  validateMonthlyPages, extractInegiPdf, createInegiMonthlyLoader, validatedInegiArticle, alreadyPublishedMonthlyCpi, alreadyPublishedMonthlyCpiInHistory } from '../lib/inegi-monthly-cpi.mjs';
+  validateMonthlyPages, extractInegiPdf, createInegiMonthlyLoader, validatedInegiArticle, validatedInegiReleaseDescriptor, alreadyPublishedMonthlyCpi, alreadyPublishedMonthlyCpiInHistory } from '../lib/inegi-monthly-cpi.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixture = name => fs.readFileSync(new URL(`fixtures/${name}`, import.meta.url));
@@ -159,6 +160,13 @@ assert.equal(requests[1].method, undefined, 'PDF is GET');
 assert.equal(item.published_at, '2026-10-08', 'date precision preserved');
 assert.equal(item.first_seen, now.toISOString());
 assert.equal(validatedInegiArticle(item).text, body);
+const descriptor = validatedInegiReleaseDescriptor(item);
+assert.deepEqual(descriptor, { authority: 'INEGI', series: 'inpc.monthly', referencePeriod: '2026-09',
+  publicationDate: '2026-10-08', bulletin: '619/26', sourceUrl: metadata.url,
+  sourceSha256: createHash('sha256').update(pdf).digest('hex'), revision: null, adapterVersion: 'inegi-monthly-cpi-v1' });
+assert.ok(Object.isFrozen(descriptor));
+assert.throws(() => { descriptor.referencePeriod = '2026-08'; }, TypeError);
+assert.equal(validatedInegiReleaseDescriptor({ ...item, descriptor }), null, 'source identity cannot be injected through JSON');
 assert.equal(validatedInegiArticle({ ...item, _articleBody: body }), null, 'JSON properties cannot grant evidence trust');
 const originalUrl = item.url; item.url = 'https://example.com/changed.pdf';
 assert.equal(validatedInegiArticle(item), null); item.url = originalUrl;

@@ -1,4 +1,5 @@
 import { Worker } from 'node:worker_threads';
+import { createHash } from 'node:crypto';
 import { fetchBounded } from './url-safety.js';
 import { shapeEvidenceRecord } from './source-evidence.mjs';
 import newsDay from './news-day.cjs';
@@ -81,7 +82,7 @@ export function parseMonthlyMetadata(records, row) {
     period: reference.text, url: `https://www.inegi.org.mx/contenidos${path}` };
 }
 
-export function validateMonthlyPages(pages, metadata) {
+function validateMonthlyDocument(pages, metadata) {
   if (!metadata || !Array.isArray(pages) || !pages.length || pages.length > 16) return null;
   let bulletin;
   for (const [index, page] of pages.entries()) {
@@ -100,7 +101,11 @@ export function validateMonthlyPages(pages, metadata) {
   const text = pages.map(page => page.replace(/\s+/g, ' ').trim()).join('\n\n');
   const record = shapeEvidenceRecord({ id: 'article', kind: 'article-body', source: 'INEGI',
     url: metadata.url, text: `${metadata.title}\n${text}` });
-  return record ? text : null;
+  return record ? { text, bulletin } : null;
+}
+
+export function validateMonthlyPages(pages, metadata) {
+  return validateMonthlyDocument(pages, metadata)?.text ?? null;
 }
 
 export function extractInegiPdf(bytes, { timeoutMs = 5000, workerUrl = new URL('./inegi-pdf-worker.mjs', import.meta.url) } = {}) {
@@ -137,6 +142,12 @@ export function validatedInegiArticle(item) {
   return { ok: true, articleBody: true, text: record.text, finalUrl: record.url };
 }
 
+// Source identity only: this descriptor makes no claim that an edition published
+// the release. Only the loader's still-valid private binding can expose it.
+export function validatedInegiReleaseDescriptor(item) {
+  return validatedInegiArticle(item) ? trusted.get(item).descriptor : null;
+}
+
 export function createInegiMonthlyLoader({ now, fetchBytes = fetchBounded, fetchImpl = globalThis.fetch, extractPdf = extractInegiPdf } = {}) {
   const cache = new Map();
   return async row => {
@@ -155,13 +166,20 @@ export function createInegiMonthlyLoader({ now, fetchBytes = fetchBounded, fetch
         const pdf = await fetchBytes(metadata.url, { allowedHosts: ['www.inegi.org.mx'], redirects: 0,
           timeoutMs: 15000, maxBytes: 2 * 1024 * 1024, headers: { Accept: 'application/pdf' }, fetchImpl });
         if (pdf.url !== metadata.url) return rejectSource('unexpected PDF location');
-        const text = validateMonthlyPages(await extractPdf(pdf.body), metadata);
-        if (!text) return rejectSource('PDF identity, complete pages or evidence size did not validate');
+        const document = validateMonthlyDocument(await extractPdf(pdf.body), metadata);
+        if (!document) return rejectSource('PDF identity, complete pages or evidence size did not validate');
+        const { text, bulletin } = document;
         const item = { id: `scheduled:${row.id}`, url: metadata.url, title: metadata.title, dek: '',
           source: 'inegi.org.mx', sourceName: 'INEGI', tier: 1, beat: 'economy', lang: 'es',
           published_at: row.date, first_seen: now.toISOString(), _editorialDate: row.date,
           _coverage: [], _scheduled: structuredClone(row) };
-        trusted.set(item, { ...metadata, text, scheduledId: row.id });
+        const reference = referencePeriod(row.date);
+        const descriptor = Object.freeze({ authority: 'INEGI', series: 'inpc.monthly',
+          referencePeriod: `${reference.year}-${String(reference.month + 1).padStart(2, '0')}`,
+          publicationDate: row.date, bulletin, sourceUrl: metadata.url,
+          sourceSha256: createHash('sha256').update(pdf.body).digest('hex'),
+          revision: null, adapterVersion: 'inegi-monthly-cpi-v1' });
+        trusted.set(item, { ...metadata, text, scheduledId: row.id, descriptor });
         return item;
       } catch { return rejectSource('bounded source fetch or complete PDF extraction failed'); }
     })());
