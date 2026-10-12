@@ -148,11 +148,20 @@ try {
       const draft=drafts[String(url)];
       if(!draft)return new Response('',{status:404});
       let text=[...Object.values(draft.es),...['headline','dek','background','view','watch'].map(f=>draft[f])].join(' ');
+      if(process.env.FLOW_CASE==='snippet-with-context')return new Response('<html><nav>'+text+'</nav></html>',{headers:{'content-type':'text/html'}});
       if(process.env.FLOW_CASE==='full-evidence')text+=' '+('Additional neutral context. '.repeat(90))+'The exception remains conditional until formal approval.';
       if(['oversized-evidence','oversized-scheduled-evidence'].includes(process.env.FLOW_CASE))text+=' '+('Oversized source context. '.repeat(1000));
       return new Response('<html><article class="article-body"><p>'+text+'</p></article></html>',{headers:{'content-type':'text/html'}});
     };
     const {main,evidenceFor}=await import('./pipeline/build-edition.mjs');
+    if(process.env.FLOW_CASE==='snippet-with-context'){
+      const fixtureRows=JSON.parse(fs.readFileSync('data/news/2026-W40.json'));
+      const facts=JSON.parse(fs.readFileSync('data/standing.json')).facts;
+      for(const item of fixtureRows){
+        const packet=await evidenceFor(item,facts,[],[]);
+        if(packet.length<2 || packet[0].kind!=='article')throw Error('Snippet regression requires lead snippet plus actual eligible context');
+      }
+    }
     if(process.env.FLOW_CASE==='oversized-scheduled-evidence'){
       await evidenceFor({url:Object.keys(drafts)[0],title:'Required scheduled outcome',sourceName:'Official source',_scheduled:{requiredForBrief:true}},[],[],[]);
     }
@@ -165,14 +174,18 @@ try {
     await main();
   `;
   fs.writeFileSync(path.join(tmp,'run.mjs'),runner);
-  for(const scenario of ['complete','full-evidence','oversized-prior-evidence','oversized-evidence','oversized-scheduled-evidence','partial','field-patch','extra-patch-field','partial-unrepairable','audit-reject','artifact-reject','budget-block','diagnostic-capture-fail','diagnostic-capture-fail-audit-reject','diagnostic-write-fail','diagnostic-write-fail-invalid']){
+  for(const scenario of ['complete','full-evidence','snippet-with-context','oversized-prior-evidence','oversized-evidence','oversized-scheduled-evidence','partial','field-patch','extra-patch-field','partial-unrepairable','audit-reject','artifact-reject','budget-block','diagnostic-capture-fail','diagnostic-capture-fail-audit-reject','diagnostic-write-fail','diagnostic-write-fail-invalid']){
     fs.mkdirSync(path.join(tmp,'data/news'),{recursive:true});
     fs.writeFileSync(path.join(tmp,'data/edition.json'),JSON.stringify(priorFixture));
     fs.writeFileSync(path.join(tmp,'data/edition-attempts.json'),'{"schemaVersion":1,"attempts":[]}');
     fs.writeFileSync(path.join(tmp,'data/llm-spend.json'),JSON.stringify({'2026-10':scenario==='budget-block'?6:scenario==='partial-unrepairable'?0.02:0}));
     fs.writeFileSync(path.join(tmp,'data/events.json'),'{"events":[]}');
-    fs.writeFileSync(path.join(tmp,'data/standing.json'),'{"facts":[]}');
-    fs.writeFileSync(path.join(tmp,'data/news/2026-W40.json'),JSON.stringify(rows));
+    const scenarioRows=scenario==='snippet-with-context' ? rows.map(row=>({...row,
+      title:drafts[row.url].headline.replace('foreign-investment','foreign direct investment'),
+      dek:drafts[row.url].dek+' Information about Mexico.'})) : rows;
+    fs.writeFileSync(path.join(tmp,'data/standing.json'),JSON.stringify({facts:scenario==='snippet-with-context'
+      ? scenarioRows.map((row,i)=>({id:'context-'+i,title:row.title,fact:row.dek,source:'Independent context',url:'https://example.com/context-'+i})) : []}));
+    fs.writeFileSync(path.join(tmp,'data/news/2026-W40.json'),JSON.stringify(scenarioRows));
     fs.rmSync(path.join(tmp,'calls.json'),{force:true});
     const diagnosticDirectory=path.join(artifacts,scenario);
     if(scenario.startsWith('diagnostic-capture-fail'))fs.writeFileSync(diagnosticDirectory,'not a directory');
@@ -214,6 +227,15 @@ try {
     }else{
       assert.notEqual(result.status,0,scenario);
       assert.equal(fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8'),before,'failure preserves last-good bytes');
+      if(scenario==='snippet-with-context'){
+        assert.equal(calls.length,0,'snippets plus context fail before any provider call');
+        assert.match(result.stderr,/missing-complete-lead/);
+        const ledger=JSON.parse(fs.readFileSync(path.join(tmp,'data/edition-attempts.json')));
+        assert.equal(ledger.attempts[0].costUSD,0);
+        assert.equal(ledger.attempts[0].calls,0);
+        assert.equal(ledger.attempts[0].state,'failed','failed readiness remains a bounded recorded attempt');
+        assert.equal(JSON.parse(fs.readFileSync(path.join(tmp,'data/llm-spend.json')))['2026-10'],0);
+      }
       if(scenario==='extra-patch-field'){
         assert.equal(calls.filter(call=>call.audit).length,0,'an unrequested mutation never reaches audit or publication');
         const record=JSON.parse(fs.readFileSync(path.join(diagnosticDirectory,'candidate.json')));
