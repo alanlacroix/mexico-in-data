@@ -2653,13 +2653,13 @@
     {
       "editorialDate": "2026-10-12",
       "slot": "morning",
-      "candidateSignature": "1d8482b3aac3c3a1cfbced4c553723faa3ffdcd5bc8645ac1cb8d1c841582f8e",
+      "candidateSignature": "fbdcbf6dd779bfc41ffe434068a05605e1e1f50e1e52ff914e7131149df78656",
       "state": "published",
       "startedAt": "2026-10-12T12:10:43.705Z",
       "completedAt": "2026-10-12T12:10:43.712Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "08d11883f52eed2ab61f657801bc36ca23b44a1e16582636c46a07aefe380c02",
+      "artifactHash": "5b301a0c2338812e8a1ea1533dfa7d4b0e08b96566e0e0ee7a84e2c380bc066e",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2694,7 +2694,35 @@
         "readerCopySHA256": "dcb0b6c701707682926a19fd9260e7414654255fd42e01a64b35804450ca3182",
         "generationProvenance": "operator-curated; zero provider generation or audit calls",
         "preventiveReason": "Unpaid October12 replay selected no exact-day development and the industrial release lacks supported automatic ingestion. The current official industrial PDF became available after noon metadata; complete primary evidence, independent bilingual review, root reader review and actual-browser checks support this curated daily edition. No provider generation was attempted"
-      }
+      },
+      "editorialRevisions": [
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "08d11883f52eed2ab61f657801bc36ca23b44a1e16582636c46a07aefe380c02",
+          "artifactHash": "5b301a0c2338812e8a1ea1533dfa7d4b0e08b96566e0e0ee7a84e2c380bc066e",
+          "previousCandidateSignature": "1d8482b3aac3c3a1cfbced4c553723faa3ffdcd5bc8645ac1cb8d1c841582f8e",
+          "candidateSignature": "fbdcbf6dd779bfc41ffe434068a05605e1e1f50e1e52ff914e7131149df78656",
+          "reviewedAt": "2026-10-12T15:15:07.470610+00:00",
+          "draftSHA256": "f32c4150537c37a97257f55186c78d44f25dd15728d0c0d3cf953a27408eabf8",
+          "auditSHA256": "8a1aa294e3a738b4bd6471a0011cbef966a72e8f9ae8e8f75fae0df84ca52cf3",
+          "reviewedFields": 30,
+          "approvedCopySHA256": "6f66654e51de2b2c87ace9665b88307bc120104312f487eea05629f1fa73a3e9",
+          "method": "Independent exact source, timezone and bilingual audit of NHC Advisory21 and Discussion21 valid15UTC/09MexicoCity October12. Full GAP notice and eight related resources rechecked, unchanged. Other two stories byte-identical and original audit retained. Root reviewed full exact bilingual copy/template, with exact-head real browser review required before merge.",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-02ad1f02b92f",
+            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.020.shtml",
+            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.021.shtml",
+            "previousPublishedAt": "2026-10-12T12:00:00Z",
+            "publishedAt": "2026-10-12T15:00:00Z",
+            "sourceDiscovery": "Official NHC Advisory21 and Discussion21 valid15UTC October12 captured at stable archive URLs. Spanish generic refresh still carries20A and is not evidence for current copy. All nine GAP resources rechecked15UTC, unchanged; expired planned Manzanillo endpoint does not establish actual reopening or continued closure.",
+            "priorBulletinRetained": false
+          },
+          "reason": "Hurricane warning now only Islas Marias; possible hurricane conditions north of Cabo Corrientes to Bahia Tempehuaya and tropical-storm warning Playa Perula to Cabo Corrientes. Current winds175km/h, uncertain approach Wednesday into Thursday with possible restrengthening. Regional rainfall risk retained. Airport times attributed to latest conditional plan; elapsed Manzanillo planned endpoint does not establish current operations."
+        }
+      ],
+      "lastEditorialRevisionAt": "2026-10-12T15:15:07.470610+00:00"
     }
   ]
 }
