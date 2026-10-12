@@ -2515,13 +2515,13 @@
     {
       "editorialDate": "2026-10-11",
       "slot": "morning",
-      "candidateSignature": "794769c2ce1baa3da5aa2fc010e779013edf9c71c03ed9532772ccea18c18972",
+      "candidateSignature": "5284283a0a5d51c47a1e7855bcd3325c75b6b9d10cb6dff4fa5e5b6cd5e2e38d",
       "state": "published",
       "startedAt": "2026-10-11T12:09:25.399Z",
       "completedAt": "2026-10-11T12:09:25.406Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "8173420dfa70db71d2335acb2e385fabd921a7e6f99e123b17f37bfdf19c947d",
+      "artifactHash": "80a48c920f8283308ace325b4273b9de8db68f0675dc1e805ce87a6c28b6f316",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2621,9 +2621,34 @@
             "priorBulletinRetained": false
           },
           "reason": "GAP extended all-operation closures to October 13 at 08:00 local in Puerto Vallarta and October 12 at 08:00 local in Manzanillo, conditional on safe weather and operations. NHC now rates Simon Category 3 with 205 km/h winds; warning/watch geography, coastal forecast and early-Thursday rain hazard remain. Both local times are planned endpoints, not verified reopening."
+        },
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "8173420dfa70db71d2335acb2e385fabd921a7e6f99e123b17f37bfdf19c947d",
+          "artifactHash": "80a48c920f8283308ace325b4273b9de8db68f0675dc1e805ce87a6c28b6f316",
+          "previousCandidateSignature": "794769c2ce1baa3da5aa2fc010e779013edf9c71c03ed9532772ccea18c18972",
+          "candidateSignature": "5284283a0a5d51c47a1e7855bcd3325c75b6b9d10cb6dff4fa5e5b6cd5e2e38d",
+          "reviewedAt": "2026-10-12T03:07:51.481993+00:00",
+          "draftSHA256": "abf1b71aed247b92347ee6e36cbeaf77d8567f0431180b361882127d1e253e74",
+          "auditSHA256": "ed14fa742cb6491bcbfb8747eba18b88741b5890098c2b56e3f26feba8151b26",
+          "reviewedFields": 30,
+          "approvedCopySHA256": "5948b8d1d69b65bc007be0a383462b23fdcba8338cfc98f0d86dfe9c51c5981b",
+          "method": "Independent source, timezone and bilingual review of NHC Advisory19 and Discussion19 valid 21:00 Mexico City October11; GAP joint closure extension rechecked unchanged. Two other stories and airport closure conditions unchanged. Explicit derived timezone annotation checked against original UTC/MST; root reviewed exact bilingual copy and rendered presentation",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-e4f3fa551142",
+            "previousUrl": "https://www.aeropuertosgap.com.mx/files/Comunicados/20261011_Actualizacion_Se_extiende_Cierre_de_Aeropuertos_por_Huracan_Simon.pdf",
+            "url": "https://www.aeropuertosgap.com.mx/files/Comunicados/20261011_Actualizacion_Se_extiende_Cierre_de_Aeropuertos_por_Huracan_Simon.pdf",
+            "previousPublishedAt": "2026-10-11",
+            "publishedAt": "2026-10-11",
+            "sourceDiscovery": "Current NHC Advisory19 and Discussion19 retrieved at 03:00:36 UTC October12, valid 21:00 Mexico City October11; explicit derived timezone conversion from source UTC/MST retained separately. GAP joint closure notice and all nine official resources rechecked unchanged at 03:01 UTC. GAP date-only lead publication precision preserved. Same event identity and prior review history retained.",
+            "priorBulletinRetained": true
+          },
+          "reason": "NHC discontinued the warning south of Playa Perula; warning now begins there and extends to El Roblito, with Islas Marias and the northern watch unchanged. Forecast now states inland movement around midweek as a hurricane; current winds are 195 km/h, Category3. Early-Thursday rain risk and conditional GAP airport closures remain. Current source time converted explicitly from 20:00MST to21:00MexicoCity."
         }
       ],
-      "lastEditorialRevisionAt": "2026-10-12T00:08:24.564071+00:00"
+      "lastEditorialRevisionAt": "2026-10-12T03:07:51.481993+00:00"
     }
   ]
 }
