@@ -2653,13 +2653,13 @@
     {
       "editorialDate": "2026-10-12",
       "slot": "morning",
-      "candidateSignature": "fbdcbf6dd779bfc41ffe434068a05605e1e1f50e1e52ff914e7131149df78656",
+      "candidateSignature": "5ceff3d6fc00b7c934b95f8a39b97b77e173446bd9631f435f88cfae814bbd9e",
       "state": "published",
       "startedAt": "2026-10-12T12:10:43.705Z",
       "completedAt": "2026-10-12T12:10:43.712Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "5b301a0c2338812e8a1ea1533dfa7d4b0e08b96566e0e0ee7a84e2c380bc066e",
+      "artifactHash": "ea9cab4c166b7b4a5eb61bdcd3807aa7ad11c0306e2c58cddb6f44f541b659f0",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2720,9 +2720,34 @@
             "priorBulletinRetained": false
           },
           "reason": "Hurricane warning now only Islas Marias; possible hurricane conditions north of Cabo Corrientes to Bahia Tempehuaya and tropical-storm warning Playa Perula to Cabo Corrientes. Current winds175km/h, uncertain approach Wednesday into Thursday with possible restrengthening. Regional rainfall risk retained. Airport times attributed to latest conditional plan; elapsed Manzanillo planned endpoint does not establish current operations."
+        },
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "5b301a0c2338812e8a1ea1533dfa7d4b0e08b96566e0e0ee7a84e2c380bc066e",
+          "artifactHash": "ea9cab4c166b7b4a5eb61bdcd3807aa7ad11c0306e2c58cddb6f44f541b659f0",
+          "previousCandidateSignature": "fbdcbf6dd779bfc41ffe434068a05605e1e1f50e1e52ff914e7131149df78656",
+          "candidateSignature": "5ceff3d6fc00b7c934b95f8a39b97b77e173446bd9631f435f88cfae814bbd9e",
+          "reviewedAt": "2026-10-12T21:04:37.862612+00:00",
+          "draftSHA256": "3bb5982e7373a057c1ff1088b1360b3eb987eace1977b1909ad4de23ea82ff92",
+          "auditSHA256": "983d09aa1e4ce627184f963d94f85c0ce86a88a188e5849187de38349b71b465",
+          "reviewedFields": 30,
+          "approvedCopySHA256": "1bcf2a55e3ccf50081b424c924ee573644a2b61bd16de544f855911636dd7f39",
+          "method": "Independent exact source, timezone and bilingual audit of NHC Advisory 22 and Discussion 22 valid 21:00 UTC / 15:00 Mexico City on October 12. Full GAP notice and eight related resources rechecked, unchanged. Other two stories byte-identical and original audit retained. Root reviewed full exact bilingual copy/template, with exact-head real browser review required before merge.",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-02ad1f02b92f",
+            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.021.shtml",
+            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.022.shtml",
+            "previousPublishedAt": "2026-10-12T15:00:00Z",
+            "publishedAt": "2026-10-12T21:00:00Z",
+            "sourceDiscovery": "Official NHC Advisory22 and Discussion22 valid21UTC October12 retained at stable archive URLs. All nine GAP index/notice resources rechecked21UTC, unchanged; expired planned Manzanillo endpoint establishes neither actual reopening nor continuing closure.",
+            "priorBulletinRetained": false
+          },
+          "reason": "Tropical-storm warning from Playa Perula to Cabo Corrientes discontinued. Hurricane warning for Islas Marias retained; possible hurricane conditions from Cabo Corrientes to Bahia Tempehuaya. Current winds 155 km/h, uncertain Wednesday–Thursday approach and possible restrengthening by Wednesday. Rain guidance updated to coastal west-central Mexico and Sinaloa through Thursday. Airport times attributed to latest conditional plan; elapsed Manzanillo planned endpoint does not establish current operations."
         }
       ],
-      "lastEditorialRevisionAt": "2026-10-12T15:15:07.470610+00:00"
+      "lastEditorialRevisionAt": "2026-10-12T21:04:37.862612+00:00"
     }
   ]
 }
