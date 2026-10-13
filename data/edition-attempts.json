@@ -2653,13 +2653,13 @@
     {
       "editorialDate": "2026-10-12",
       "slot": "morning",
-      "candidateSignature": "5ceff3d6fc00b7c934b95f8a39b97b77e173446bd9631f435f88cfae814bbd9e",
+      "candidateSignature": "d02ea61a82589c672cfc2647a3675b9ca3ec441e06b7f80ccd8f51e5e24bc2b3",
       "state": "published",
       "startedAt": "2026-10-12T12:10:43.705Z",
       "completedAt": "2026-10-12T12:10:43.712Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "ea9cab4c166b7b4a5eb61bdcd3807aa7ad11c0306e2c58cddb6f44f541b659f0",
+      "artifactHash": "91f29b5f3c630561dbc1cb7aba3c0d5a8983e725a2b648574695d69dd44e5b57",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2745,9 +2745,34 @@
             "priorBulletinRetained": false
           },
           "reason": "Tropical-storm warning from Playa Perula to Cabo Corrientes discontinued. Hurricane warning for Islas Marias retained; possible hurricane conditions from Cabo Corrientes to Bahia Tempehuaya. Current winds 155 km/h, uncertain Wednesday–Thursday approach and possible restrengthening by Wednesday. Rain guidance updated to coastal west-central Mexico and Sinaloa through Thursday. Airport times attributed to latest conditional plan; elapsed Manzanillo planned endpoint does not establish current operations."
+        },
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "ea9cab4c166b7b4a5eb61bdcd3807aa7ad11c0306e2c58cddb6f44f541b659f0",
+          "artifactHash": "91f29b5f3c630561dbc1cb7aba3c0d5a8983e725a2b648574695d69dd44e5b57",
+          "previousCandidateSignature": "5ceff3d6fc00b7c934b95f8a39b97b77e173446bd9631f435f88cfae814bbd9e",
+          "candidateSignature": "d02ea61a82589c672cfc2647a3675b9ca3ec441e06b7f80ccd8f51e5e24bc2b3",
+          "reviewedAt": "2026-10-13T00:07:37.000420+00:00",
+          "draftSHA256": "94c10d3078ea592a36ee5e4b56db2d6ee2250091063c09b2ad3bdaa1c51a171a",
+          "auditSHA256": "9b5008ac0ba2ec62ef855e9be9fc78e67e0bfb7bee9715f3775ef4a493ccd1a8",
+          "reviewedFields": 30,
+          "approvedCopySHA256": "8e987c75fb7faf428012aa4616b04d7f8536efd16a86f042adcf9ac1d351c3d4",
+          "method": "Independent exact source, timezone and bilingual audit of NHC Intermediate Advisory 22A valid 00:00 UTC October 13 / 18:00 Mexico City October 12, current Discussion 22, and both complete official GAP airport reopening notices. Other two stories byte-identical and original audit retained. Root reviewed full exact bilingual copy/template, with exact-head real browser review required before merge.",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-02ad1f02b92f",
+            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.022.shtml",
+            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.022.shtml",
+            "previousPublishedAt": "2026-10-12T21:00:00Z",
+            "publishedAt": "2026-10-13T00:00:00Z",
+            "sourceDiscovery": "Official NHC Intermediate Advisory22A valid00UTC October13, equivalent to18:00MexicoCity October12, retained with current Discussion22. GAP index newly links full October12 Manzanillo confirmed resumption and PuertoVallarta phased reopening notices, captured shortly after00UTC. No publication time is invented for the day-dated GAP notices; their stated operating times are preserved.",
+            "priorBulletinRetained": false
+          },
+          "reason": "GAP confirms Manzanillo airport operations resumed October 12. Puerto Vallarta allows official aircraft only from 14:30 local October 12 and plans commercial operations from October 13, dependent on airline schedules. Superseded 08:00 Puerto Vallarta plan removed. Current timestamped hurricane forecast and rainfall risks retained; no flight movement or guaranteed passenger reopening inferred."
         }
       ],
-      "lastEditorialRevisionAt": "2026-10-12T21:04:37.862612+00:00"
+      "lastEditorialRevisionAt": "2026-10-13T00:07:37.000420+00:00"
     }
   ]
 }
