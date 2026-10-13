@@ -2653,13 +2653,13 @@
     {
       "editorialDate": "2026-10-12",
       "slot": "morning",
-      "candidateSignature": "d02ea61a82589c672cfc2647a3675b9ca3ec441e06b7f80ccd8f51e5e24bc2b3",
+      "candidateSignature": "1b647ba445cfc9e581cee3dc140f232a234c7868946a2785ed13ca8af0801bfa",
       "state": "published",
       "startedAt": "2026-10-12T12:10:43.705Z",
       "completedAt": "2026-10-12T12:10:43.712Z",
       "calls": 0,
       "costUSD": 0,
-      "artifactHash": "91f29b5f3c630561dbc1cb7aba3c0d5a8983e725a2b648574695d69dd44e5b57",
+      "artifactHash": "135d12c7a31bcbc806b5ada6fb94115e06e4a0ef8c21f59d11646641bb862669",
       "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
       "diagnostics": [],
       "collection": null,
@@ -2770,9 +2770,34 @@
             "priorBulletinRetained": false
           },
           "reason": "GAP confirms Manzanillo airport operations resumed October 12. Puerto Vallarta allows official aircraft only from 14:30 local October 12 and plans commercial operations from October 13, dependent on airline schedules. Superseded 08:00 Puerto Vallarta plan removed. Current timestamped hurricane forecast and rainfall risks retained; no flight movement or guaranteed passenger reopening inferred."
+        },
+        {
+          "kind": "audited-material-weather-update",
+          "previousArtifactHash": "91f29b5f3c630561dbc1cb7aba3c0d5a8983e725a2b648574695d69dd44e5b57",
+          "artifactHash": "135d12c7a31bcbc806b5ada6fb94115e06e4a0ef8c21f59d11646641bb862669",
+          "previousCandidateSignature": "d02ea61a82589c672cfc2647a3675b9ca3ec441e06b7f80ccd8f51e5e24bc2b3",
+          "candidateSignature": "1b647ba445cfc9e581cee3dc140f232a234c7868946a2785ed13ca8af0801bfa",
+          "reviewedAt": "2026-10-13T03:06:17.084479+00:00",
+          "draftSHA256": "6823a3ee0acd668fec0b62e95d08a5aa67ba5ee15da2f036f1ea5ffc81732b1e",
+          "auditSHA256": "7deb15587f131bd619c6f4433feac1fe255269b7a2153fe7ede6286f3bc7e93f",
+          "reviewedFields": 30,
+          "approvedCopySHA256": "1dd942683f4db9388384b7480684e56ba73d48c4953b646f0e3041d77927ab50",
+          "method": "Independent exact source, timezone and bilingual audit of archived NHC Advisory 23 and Discussion 23 valid 03:00 UTC October 13 / 21:00 Mexico City October 12. Both complete GAP reopening PDFs, notice pages and index freshly rechecked byte-identical. Other two stories and airport headline/view preserved exactly. Root reviewed full bilingual copy/template, with exact-head real-browser screenshot review required before merge.",
+          "providerCalls": 0,
+          "costUSD": 0,
+          "sourceUpdate": {
+            "storyId": "n-02ad1f02b92f",
+            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.022.shtml",
+            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.023.shtml",
+            "previousPublishedAt": "2026-10-13T00:00:00Z",
+            "publishedAt": "2026-10-13T03:00:00Z",
+            "sourceDiscovery": "Official NHC Advisory 23 and Discussion 23 valid 03:00 UTC October 13 / 21:00 Mexico City October 12 captured from stable archives. Both GAP full reopening PDFs, their notice pages and index freshly rechecked and byte-identical. Editorial date remains October 12 in Mexico City.",
+            "priorBulletinRetained": false
+          },
+          "reason": "Official hurricane watch narrowed to north of Escuinapa through Bahia Tempehuaya; Cabo Corrientes to Escuinapa now under tropical-storm watch. Islas Marias hurricane warning and regional rain risk retained. Current sustained winds remain 155 km/h; uncertain later-week approach attributed to Discussion 23. Airport operations and airline-dependent passenger plans unchanged."
         }
       ],
-      "lastEditorialRevisionAt": "2026-10-13T00:07:37.000420+00:00"
+      "lastEditorialRevisionAt": "2026-10-13T03:06:17.084479+00:00"
     }
   ]
 }
