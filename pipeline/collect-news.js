@@ -86,20 +86,82 @@ function parseJsonApi(text, baseUrl) {
 // rules or money and drops the routine administrative prints.
 const DOF_SIGNIFICANT = /\bdecretos?\b|\bley(es)?\b|reforma|arancel|\bcupos?\b|circular\s*(n[uú]m\.?\s*)?\d|disposiciones de car[aá]cter general|comisi[oó]n nacional bancaria|\bcnbv\b|comercio exterior|inversi[oó]n extranjera|salarios? m[ií]nimos?/i;
 const DOF_ROUTINE = /tipo de cambio para solventar|tasas? de inter[eé]s interbancari|unidad(es)? de inversi[oó]n|se comunica a las dependencias|desincorpora del r[eé]gimen|veda temporal|ingresos, egresos, saldos/i;
-function parseDof(xml) {
+export function parseDof(xml, { includeFiltered = false } = {}) {
   const items = [];
-  for (const b of xml.match(/<item\b[\s\S]*?<\/item>/gi) || []) {
+  const blocks = includeFiltered
+    ? xml.match(/<item(?:\s[^>]*)?>[\s\S]*?<\/item\s*>/gi)
+    : xml.match(/<item\b[\s\S]*?<\/item>/gi);
+  for (const b of blocks || []) {
     const dept = clean(pick(b, 'title'));
     const desc = clean(pick(b, 'description'));
     const link = clean(pick(b, 'link'));
     if (!desc || !link) continue;
-    if (DOF_ROUTINE.test(desc) || !DOF_SIGNIFICANT.test(dept + ' ' + desc)) continue;
+    if (!includeFiltered && (DOF_ROUTINE.test(desc) || !DOF_SIGNIFICANT.test(dept + ' ' + desc))) continue;
     const m = link.match(/fecha=(\d{2})\/(\d{2})\/(\d{4})/);
     const date = m ? `${m[3]}-${m[2]}-${m[1]}T12:00:00Z` : '';
     const cut = desc.length > 200 ? desc.slice(0, 200).replace(/\s+\S*$/, '') + '…' : desc;
     items.push({ title: cut, link, dek: 'DOF · ' + dept, date });
   }
   return items;
+}
+
+// The health-only path must not mistake an HTML error or truncated feed for
+// a valid gazette merely because it contains a complete item fragment.
+function dofHealthItems(xml, source) {
+  // Validate nesting before the permissive editorial parser sees item blocks.
+  // Comments and CDATA are opaque; neither can contribute fake item tags.
+  const stack = [];
+  let offset = 0, rootSeen = false, channelSeen = false, liveXml = '';
+  const tokens = /<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>|<\?xml\b[\s\S]*?\?>|<[^>]*>/g;
+  for (const match of xml.matchAll(tokens)) {
+    const between = xml.slice(offset, match.index);
+    if (between.includes('<') || (!stack.length && between.trim())) return [];
+    liveXml += between;
+    const token = match[0];
+    offset = match.index + token.length;
+    if (token.startsWith('<!--')) continue;
+    if (token.startsWith('<![CDATA[')) {
+      if (!stack.length) return [];
+      liveXml += token.slice(9, -3).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      continue;
+    }
+    if (token.startsWith('<?xml')) {
+      if (rootSeen || stack.length) return [];
+      continue;
+    }
+    const tag = token.match(/^<(\/)?([A-Za-z][\w:.-]*)((?:\s+[A-Za-z_:][\w:.-]*\s*=\s*(?:"[^"<>]*"|'[^'<>]*'))*)\s*(\/?)>$/);
+    if (!tag) return [];
+    const [, closing, name, , selfClosing] = tag;
+    if (closing) {
+      if (selfClosing || !/^<\/[A-Za-z][\w:.-]*\s*>$/.test(token) || stack.pop() !== name) return [];
+    } else {
+      const parent = stack.at(-1);
+      if (!parent) {
+        if (name !== 'rss' || rootSeen) return [];
+        rootSeen = true;
+      } else if (parent === 'rss') {
+        if (name !== 'channel' || channelSeen) return [];
+        channelSeen = true;
+      }
+      if (name === 'rss' && parent) return [];
+      if (name === 'channel' && parent !== 'rss') return [];
+      if (name === 'item' && stack.join('/') !== 'rss/channel') return [];
+      if (!selfClosing) stack.push(name);
+    }
+    liveXml += token;
+  }
+  if (stack.length || !rootSeen || !channelSeen || xml.slice(offset).trim()) return [];
+  return parseDof(liveXml, { includeFiltered: true }).filter(item => {
+    if (!articleUrlAllowed(source, item.link)) return false;
+    const sourceDates = new URL(item.link).searchParams.getAll('fecha');
+    if (sourceDates.length !== 1) return false;
+    const sourceDate = sourceDates[0];
+    const match = sourceDate?.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!match || item.date !== `${match[3]}-${match[2]}-${match[1]}T12:00:00Z`) return false;
+    const date = toISO(item.date);
+    return item.dek !== 'DOF · ' && articleUrlAllowed(source, item.link)
+      && date && date.slice(0, 10) === item.date.slice(0, 10);
+  });
 }
 
 // Pemex's SharePoint feed titles items with an internal slug ("2026_69_nacional");
@@ -167,7 +229,13 @@ export async function collectNews({ now = new Date() } = {}) {
         : s.format === 'dof' ? parseDof(xml)
         : parseFeed(xml);
       if (s.id === 'pemex-nacionales') items = items.map(fixPemex);
-      return { source: s, ok: items.length > 0, items };
+      // A valid gazette may contain no acts eligible for this brief. Measure
+      // source availability before the editorial filter, without promoting
+      // filtered items into the ledger or substituting collection time for dates.
+      const healthItems = s.format === 'dof'
+        ? dofHealthItems(xml, s)
+        : items;
+      return { source: s, ok: healthItems.length > 0, items, healthItems };
     } catch {
       return { source: s, ok: false, items: [] };
     }
@@ -199,8 +267,9 @@ export async function collectNews({ now = new Date() } = {}) {
     health[s.id] = {
       name: s.name, last_run: now.toISOString(),
       fetch_ok: result.ok,
-      newest_published_at: result.items.map(item => toISO(item.date)).filter(Boolean).sort().at(-1) || null,
-      parsed_items: result.items.length,
+      newest_published_at: (result.healthItems || []).map(item => toISO(item.date)).filter(Boolean).sort().at(-1) || null,
+      parsed_items: (result.healthItems || []).length,
+      ...(s.format === 'dof' ? { eligible_items: result.items.length } : {}),
       last_success: result.ok ? now.toISOString() : (prior.last_success || null),
       new_items: n, consecutive_failures: result.ok ? 0 : (prior.consecutive_failures || 0) + 1,
     };
