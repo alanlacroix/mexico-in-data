@@ -70,6 +70,8 @@ try {
     }
     const health = JSON.parse(fs.readFileSync(path.join(dir, 'health.json')))['dof-sumario'];
     assert.equal(health.fetch_ok, count > 0, label);
+    assert.equal(health.error_code, count ? null : status === 503 ? 'HTTP_ERROR' : throws ? 'FETCH_ERROR' : 'EMPTY_FEED', label);
+    assert.equal(health.error_http_status, status === 503 ? 503 : null, label);
     assert.equal(health.parsed_items, count, label);
     assert.equal(health.eligible_items, selected, label);
     assert.equal(health.newest_published_at, count ? '2026-10-16T12:00:00.000Z' : null, label);
