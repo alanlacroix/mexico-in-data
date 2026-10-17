@@ -29,6 +29,34 @@ async function fetchText(source) {
   return result.text;
 }
 
+// Persist only fixed diagnostic codes, never publisher-controlled exception text.
+// The phase distinguishes actual parser exceptions from fetch failures; an empty
+// parser result remains the existing unhealthy outcome, without new validation.
+export function collectionErrorDetails(error, phase = 'fetch') {
+  if (phase === 'parse') return { error_code: 'PARSE_ERROR', error_http_status: null };
+  const message = typeof error?.message === 'string' ? error.message : '';
+  const http = /^HTTP ([1-5]\d{2})$/.exec(message);
+  if (http) return { error_code: 'HTTP_ERROR', error_http_status: Number(http[1]) };
+  const known = new Map([
+    ['request deadline exceeded', 'DEADLINE_EXCEEDED'],
+    ['response exceeds size limit', 'SIZE_LIMIT'],
+    ['redirect limit reached', 'REDIRECT_LIMIT'],
+    ['redirect left the allowed public destination', 'UNSAFE_REDIRECT'],
+    ['URL is not an allowed public HTTPS destination', 'UNSAFE_DESTINATION'],
+    ['destination is not public', 'UNSAFE_DESTINATION'],
+    ['destination did not resolve exclusively to public addresses', 'UNSAFE_DESTINATION'],
+  ]);
+  if (known.has(message)) return { error_code: known.get(message), error_http_status: null };
+  const codes = [error?.code, error?.cause?.code];
+  if (codes.some(code => ['EAI_AGAIN', 'ENOTFOUND', 'ENODATA', 'EAI_FAIL'].includes(code))) {
+    return { error_code: 'DNS_ERROR', error_http_status: null };
+  }
+  if (codes.some(code => ['ECONNRESET', 'ECONNREFUSED', 'ETIMEDOUT', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_SOCKET', 'CERT_HAS_EXPIRED', 'UNABLE_TO_VERIFY_LEAF_SIGNATURE'].includes(code))) {
+    return { error_code: 'TRANSPORT_ERROR', error_http_status: null };
+  }
+  return { error_code: 'FETCH_ERROR', error_http_status: null };
+}
+
 // ---- minimal RSS/Atom parsing (zero-dep) ----
 const clean = cleanNewsText;
 // WordPress feeds append "The post X appeared first on Y" / "El artículo X apareció
@@ -223,8 +251,10 @@ export async function collectNews({ now = new Date() } = {}) {
   let added = 0;
 
   const collected = await mapLimit(REG.sources, 10, async (s) => {
+    let phase = 'fetch';
     try {
       const xml = await fetchText(s);
+      phase = 'parse';
       let items = s.format === 'jsonapi' ? parseJsonApi(xml, s.baseUrl || s.url)
         : s.format === 'dof' ? parseDof(xml)
         : parseFeed(xml);
@@ -235,9 +265,10 @@ export async function collectNews({ now = new Date() } = {}) {
       const healthItems = s.format === 'dof'
         ? dofHealthItems(xml, s)
         : items;
-      return { source: s, ok: healthItems.length > 0, items, healthItems };
-    } catch {
-      return { source: s, ok: false, items: [] };
+      return { source: s, ok: healthItems.length > 0, items, healthItems,
+        error_code: healthItems.length ? null : 'EMPTY_FEED', error_http_status: null };
+    } catch (error) {
+      return { source: s, ok: false, items: [], ...collectionErrorDetails(error, phase) };
     }
   });
 
@@ -267,13 +298,14 @@ export async function collectNews({ now = new Date() } = {}) {
     health[s.id] = {
       name: s.name, last_run: now.toISOString(),
       fetch_ok: result.ok,
+      error_code: result.error_code, error_http_status: result.error_http_status,
       newest_published_at: (result.healthItems || []).map(item => toISO(item.date)).filter(Boolean).sort().at(-1) || null,
       parsed_items: (result.healthItems || []).length,
       ...(s.format === 'dof' ? { eligible_items: result.items.length } : {}),
       last_success: result.ok ? now.toISOString() : (prior.last_success || null),
       new_items: n, consecutive_failures: result.ok ? 0 : (prior.consecutive_failures || 0) + 1,
     };
-    console.log(`  ${result.ok ? '✓' : '✗'} ${s.id.padEnd(20)} +${n}`);
+    console.log(`  ${result.ok ? '✓' : '✗'} ${s.id.padEnd(20)} +${n}${result.error_code ? ` [${result.error_code}${result.error_http_status ? ` ${result.error_http_status}` : ''}]` : ''}`);
   }
 
   ledger.sort((a, b) => String(b.published_at).localeCompare(String(a.published_at)));
