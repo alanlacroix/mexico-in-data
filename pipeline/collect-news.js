@@ -88,7 +88,10 @@ const DOF_SIGNIFICANT = /\bdecretos?\b|\bley(es)?\b|reforma|arancel|\bcupos?\b|c
 const DOF_ROUTINE = /tipo de cambio para solventar|tasas? de inter[eé]s interbancari|unidad(es)? de inversi[oó]n|se comunica a las dependencias|desincorpora del r[eé]gimen|veda temporal|ingresos, egresos, saldos/i;
 export function parseDof(xml, { includeFiltered = false } = {}) {
   const items = [];
-  for (const b of xml.match(/<item\b[\s\S]*?<\/item>/gi) || []) {
+  const blocks = includeFiltered
+    ? xml.match(/<item(?:\s[^>]*)?>[\s\S]*?<\/item\s*>/gi)
+    : xml.match(/<item\b[\s\S]*?<\/item>/gi);
+  for (const b of blocks || []) {
     const dept = clean(pick(b, 'title'));
     const desc = clean(pick(b, 'description'));
     const link = clean(pick(b, 'link'));

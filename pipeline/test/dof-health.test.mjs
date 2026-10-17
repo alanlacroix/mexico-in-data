@@ -33,7 +33,7 @@ try {
     ['observed filtered-only', realFeed, 200, false, 16, 0],
     ['eligible', eligible, 200, false, 1, 1],
     ['normal closing whitespace', feed(item('Aviso administrativo.')).replace('</channel>', '</channel >').replace('</rss>', '</rss >'), 200, false, 1, 0],
-    ['valid extension name', feed('<item-extension>metadata</item-extension>' + item('Aviso administrativo.')), 200, false, 1, 0],
+    ['valid extension name', feed(item('Aviso administrativo.').replace('<item>', '<item-extension>').replace('</item>', '</item-extension>').replace('16/10/2026', '17/10/2026') + item('Aviso administrativo.')), 200, false, 1, 0],
     ['malformed', '<rss><channel><item><title>Broken', 200, false, 0, 0],
     ['HTML error', '<html><body>Unavailable</body></html>', 200, false, 0, 0],
     ['HTML item fragment', `<html>${item('Aviso administrativo.')}</html>`, 200, false, 0, 0],
