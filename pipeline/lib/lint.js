@@ -134,13 +134,31 @@ function evidenceSupportsCurrentRole(evidence, family) {
   return false;
 }
 
-function evidenceShowsEnactment(evidenceRows) {
+// A completed action elsewhere in a packet cannot finalize this claim. Keep the
+// deterministic exception deliberately literal: only the same complete affirmative
+// sentence can establish it here. Paraphrases and translations still need the
+// ordinary factual review; do not guess actor or instrument identity from overlap.
+// Sentence identity is not semantic proof: the independent audit must still read
+// the surrounding evidence, including qualifications in other sentences.
+function evidenceShowsEnactment(evidenceRows, claim) {
+  const normalize = value => String(value || '').trim().replace(/\s+/g, ' ').toLowerCase();
+  const claims = sentences(claim);
+  if (claims.length !== 1 || /[?¿]/.test(claim)) return false;
+  const wanted = normalize(claims[0]);
   for (const row of evidenceRows) {
+    // The sentence splitter drops question marks. Never turn a question into an
+    // affirmative assertion through that normalization.
+    if (/[?¿]/.test(row)) continue;
     for (const sentence of sentences(row)) {
+      if (!wanted || normalize(sentence) !== wanted) continue;
+      // Do not discard a denial, quotation or uncertainty later in the same
+      // sentence merely because an earlier verb resembles an approval.
+      if (/["“”«»]|(?:^|\s)['‘]|['’]$|n['’]t\b|\b(?:not|never|no|nunca|denied|denies|deny|niega|negó|if|unless|suppose|supposing|assuming|imagine|provided|would|could|may|might|will|expected|podría|podrían|será|serían|debería|deberían|si)\b/i.test(sentence)) continue;
       ENACTMENT_ASSERTION.lastIndex = 0;
       for (const match of sentence.matchAll(ENACTMENT_ASSERTION)) {
         const prefix = sentence.slice(Math.max(0, match.index - 55), match.index);
-        if (!NONFINAL_EVIDENCE_PREFIX.test(prefix)) return true;
+        if (!NONFINAL_EVIDENCE_PREFIX.test(prefix)
+          && !/\b(?:not|never|no|nunca|denied|denies|deny|niega|negó)\b/i.test(prefix)) return true;
       }
     }
   }
@@ -161,9 +179,10 @@ function evidenceFidelityFlags({ title = '', context = '', inputs = [] }) {
   const flags = [];
   const evidenceRows = inputs.map((value) => String(value || '').trim()).filter(Boolean);
   const evidence = evidenceRows.join(' ');
-  if (PROPOSAL_EVIDENCE.test(evidence) && !evidenceShowsEnactment(evidenceRows)) {
+  if (PROPOSAL_EVIDENCE.test(evidence)) {
     for (const claim of [title, ...sentences(context)]) {
-      if (COMPLETED_ACTION.test(claim) && !nonfinalActionClaim(claim)) {
+      if (COMPLETED_ACTION.test(claim) && !nonfinalActionClaim(claim)
+        && !evidenceShowsEnactment(evidenceRows, claim)) {
         flags.push('proposal or draft described as a completed action');
         break;
       }
