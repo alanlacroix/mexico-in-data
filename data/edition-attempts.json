@@ -2999,14 +2999,51 @@
       "editorialDate": "2026-10-19",
       "slot": "morning",
       "candidateSignature": "037d5b9eec766476098ad5f82ba5dc11eb3d738b257fc8a47f7fde0822e734ef",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-19T13:00:51.872Z",
-      "completedAt": "",
+      "completedAt": "2026-10-19T13:02:26.323Z",
       "calls": 2,
       "costUSD": 0.037352,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-242da2e2f548",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-6638fcd2e601",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "Pemex published an October 14 agreement eliminating 197 supplier registration questions, including inquiries about whether company owners, executives, or key employees have ties to government officials or politically exposed persons. The change removes a preventive screening mechanism that specialists say helped identify potential conflicts of interest.",
+              "es": "Pemex publicó el 14 de octubre un acuerdo que elimina 197 preguntas de registro de proveedores, incluyendo indagaciones sobre si accionistas, ejecutivos o empleados clave tienen vínculos con funcionarios públicos o personas políticamente expuestas. El cambio retira un mecanismo de filtro preventivo que especialistas dicen ayudaba a identificar posibles conflictos de interés.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or draft described as a completed action"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-19T13:00:51.872Z",
         "aliveSources": 65,
