@@ -2998,52 +2998,15 @@
     {
       "editorialDate": "2026-10-19",
       "slot": "morning",
-      "candidateSignature": "037d5b9eec766476098ad5f82ba5dc11eb3d738b257fc8a47f7fde0822e734ef",
-      "state": "failed",
-      "startedAt": "2026-10-19T13:00:51.872Z",
-      "completedAt": "2026-10-19T13:02:26.323Z",
+      "candidateSignature": "325492f012801c1fd5ac88ef6d8c3b9dfceab38d4f2f40b9385740c04db96afb",
+      "state": "published",
+      "startedAt": "2026-10-19T13:26:27.932Z",
+      "completedAt": "2026-10-19T13:26:27.933Z",
       "calls": 2,
       "costUSD": 0.037352,
-      "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-242da2e2f548",
-          "reasons": [],
-          "fields": {
-            "watch": {
-              "en": "",
-              "es": "",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "empty report text",
-                "watch item has no observable next test",
-                "Spanish translation is empty"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-6638fcd2e601",
-          "reasons": [],
-          "fields": {
-            "background": {
-              "en": "Pemex published an October 14 agreement eliminating 197 supplier registration questions, including inquiries about whether company owners, executives, or key employees have ties to government officials or politically exposed persons. The change removes a preventive screening mechanism that specialists say helped identify potential conflicts of interest.",
-              "es": "Pemex publicó el 14 de octubre un acuerdo que elimina 197 preguntas de registro de proveedores, incluyendo indagaciones sobre si accionistas, ejecutivos o empleados clave tienen vínculos con funcionarios públicos o personas políticamente expuestas. El cambio retira un mecanismo de filtro preventivo que especialistas dicen ayudaba a identificar posibles conflictos de interés.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or draft described as a completed action"
-              ]
-            }
-          }
-        }
-      ],
+      "artifactHash": "da1ced37950c64ba9d4aebf1c0b9585fc30d1795c800cf6fc909e58ef32255f7",
+      "reason": "Independently audited curated recovery after failed automated drafting; no additional provider calls",
+      "diagnostics": [],
       "collection": {
         "collectedAt": "2026-10-19T13:00:51.872Z",
         "aliveSources": 65,
@@ -3061,7 +3024,53 @@
           "gcma"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-19T13:00:51.872Z",
+          "completedAt": "2026-10-19T13:02:26.323Z",
+          "calls": 2,
+          "costUSD": 0.037352,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-242da2e2f548",
+              "reasons": [],
+              "fields": {
+                "watch": {
+                  "en": "",
+                  "es": "",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "empty report text",
+                    "watch item has no observable next test",
+                    "Spanish translation is empty"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-6638fcd2e601",
+              "reasons": [],
+              "fields": {
+                "background": {
+                  "en": "Pemex published an October 14 agreement eliminating 197 supplier registration questions, including inquiries about whether company owners, executives, or key employees have ties to government officials or politically exposed persons. The change removes a preventive screening mechanism that specialists say helped identify potential conflicts of interest.",
+                  "es": "Pemex publicó el 14 de octubre un acuerdo que elimina 197 preguntas de registro de proveedores, incluyendo indagaciones sobre si accionistas, ejecutivos o empleados clave tienen vínculos con funcionarios públicos o personas políticamente expuestas. El cambio retira un mecanismo de filtro preventivo que especialistas dicen ayudaba a identificar posibles conflictos de interés.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "proposal or draft described as a completed action"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
         "runId": "39256545731",
@@ -3100,6 +3109,41 @@
             "stopReason": "end_turn"
           }
         ]
+      },
+      "manualRecovery": {
+        "reviewedAt": "2026-10-19T13:26:12.252653Z",
+        "method": "Independent source and translation audit of all 30 fields, final artifact byte binding, root full-template reader review and exact-head release/browser gates",
+        "draftSHA256": "27f998edc809ef2a12e83fdf1c7255e7e729ea0e59e38c27ccef09be9eb66b84",
+        "auditSHA256": "d78855269e2580e90969435ef97eef05c9c2b34629570ce3fc8ac198536fcf17",
+        "readerCopySHA256": "8f966345059ce0e579d8376d9be8946bff8c97f405ae0e5f328c74c249057b37",
+        "sourceProvenance": "Original Monday Hyundai interview, Sunday meat-industry interview with independently verified official quota baselines, and municipal construction update with primary Daido company context. Actual source dates preserved.",
+        "primaryDiscoveries": [
+          {
+            "storyId": "n-9ac9d050341d",
+            "url": "https://www.milenio.com/negocios/hyundai-concentrara-estrategia-en-autos-hibridos",
+            "sourceDiscovery": "Independent original-source research and source-bound bilingual review",
+            "discoveryUrl": "https://www.milenio.com/negocios/hyundai-concentrara-estrategia-en-autos-hibridos",
+            "publicationDate": "2026-10-19T00:05:01-06:00",
+            "eventDate": null,
+            "eventDatePrecision": "not independently established; displayed date is source publication",
+            "publicationPrecision": "timestamp",
+            "feedRecordClaimed": false
+          },
+          {
+            "storyId": "n-c6c4257c7315",
+            "url": "https://www.tlajomulco.gob.mx/comunicacion-institucional/con-inversion-privada-de-mil-mdp-tlajo-consolida-su-atractivo-industrial",
+            "sourceDiscovery": "Independent original-source research and source-bound bilingual review",
+            "discoveryUrl": "https://www.tlajomulco.gob.mx/comunicacion-institucional/con-inversion-privada-de-mil-mdp-tlajo-consolida-su-atractivo-industrial",
+            "publicationDate": "2026-10-18T12:48:39-05:00",
+            "eventDate": null,
+            "eventDatePrecision": "not independently established; displayed date is source publication",
+            "publicationPrecision": "timestamp",
+            "feedRecordClaimed": false
+          }
+        ],
+        "generationProvenance": "operator-curated recovery; zero additional provider generation or audit calls; prior two failed automated calls and costs retained",
+        "priorCandidateSignature": "037d5b9eec766476098ad5f82ba5dc11eb3d738b257fc8a47f7fde0822e734ef",
+        "preventiveReason": "Automated drafts failed sourced-next-step and factual wording checks. Unpaid original-source research found three useful independently reviewed developments, including exact-day reporting. No freshness, factual, translation, call or budget gate was relaxed."
       }
     }
   ]
