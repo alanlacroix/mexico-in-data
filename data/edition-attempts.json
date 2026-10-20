@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-04",
-      "slot": "morning",
-      "candidateSignature": "9002f10dfc31c608c60242ad85336a85867600cf07b08e77951002371ee4540f",
-      "state": "published",
-      "startedAt": "2026-09-04T13:01:07.193Z",
-      "completedAt": "2026-09-04T13:01:55.920Z",
-      "calls": 3,
-      "costUSD": 0.028857,
-      "artifactHash": "4f653ee66f9b0d9db34061a76478c0b2c5de08ebdb2f99a57e7a57d013d62713",
-      "reason": ""
-    },
-    {
-      "editorialDate": "2026-09-04",
-      "slot": "noon",
-      "candidateSignature": "810bd1841017f45e28ab6374a01297091899d9363f3ae63e2114655a196085c9",
-      "state": "failed",
-      "startedAt": "2026-09-04T16:01:09.032Z",
-      "completedAt": "2026-09-04T16:01:58.832Z",
-      "calls": 2,
-      "costUSD": 0.028812,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-be808b482841: background: semicolon; background: Spanish semicolon | n-d0a424da3169: headline: proposal or uncertainty became final in Spanish; background: semicolon; background: Spanish semicolon; view: unsupported evidence qualifier: highest | n-fc15eef7475c: background: semicolon; background: Spanish semicolon; watch: watch"
-    },
-    {
       "editorialDate": "2026-09-05",
       "slot": "morning",
       "candidateSignature": "591f2f849cb599da79406998c67b7604920d7a977ee9e9afdf23af6a4506b672",
@@ -3144,6 +3120,48 @@
         "generationProvenance": "operator-curated recovery; zero additional provider generation or audit calls; prior two failed automated calls and costs retained",
         "priorCandidateSignature": "037d5b9eec766476098ad5f82ba5dc11eb3d738b257fc8a47f7fde0822e734ef",
         "preventiveReason": "Automated drafts failed sourced-next-step and factual wording checks. Unpaid original-source research found three useful independently reviewed developments, including exact-day reporting. No freshness, factual, translation, call or budget gate was relaxed."
+      }
+    },
+    {
+      "editorialDate": "2026-10-20",
+      "slot": "morning",
+      "candidateSignature": "1fd7edac9393cfdc9131805f4a1ccf0852cb03595146031d82c7095b8c5ec801",
+      "state": "started",
+      "startedAt": "2026-10-20T13:00:37.871Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.048036,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-20T13:00:37.871Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "39426756206",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "27e9a543-9c59-46dc-8283-eee583001486",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.048036,
+            "accountedUSD": 0.048036,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
