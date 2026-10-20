@@ -3232,65 +3232,17 @@
       "editorialDate": "2026-10-20",
       "slot": "noon",
       "candidateSignature": "5a19488198ddd912192cb80e15ed7c5f7312acdae91b25dd924af97ff7dd68f6",
-      "state": "failed",
-      "startedAt": "2026-10-20T16:00:43.223Z",
-      "completedAt": "2026-10-20T16:01:55.823Z",
-      "calls": 2,
-      "costUSD": 0.031228,
+      "state": "started",
+      "startedAt": "2026-10-20T17:16:19.741Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.081869,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-fff1c2a39b21",
-          "reasons": [],
-          "fields": {
-            "background": {
-              "en": "El Niño brought drought to Honduras, affecting at least 234 of the country's 298 municipalities. The government adopted cloud-seeding after the private sugar company Azucarera La Grecia proposed the idea as an emergency response.",
-              "es": "El Niño provocó sequía en Honduras, afectando al menos 234 de los 298 municipios del país. El gobierno adoptó la siembra de nubes después de que la empresa privada azucarera Azucarera La Grecia propusiera la idea como respuesta de emergencia.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or draft described as a completed action",
-                "proposal or uncertainty became final in Spanish"
-              ]
-            },
-            "view": {
-              "en": "Cloud-seeding does not create rain but uses silver-iodide to encourage precipitation from clouds already present. The technique targets agriculture, livestock, hydropower, and drinking water in the dry corridor, where about 708,000 people in 103 municipalities may need humanitarian aid.",
-              "es": "La siembra de nubes no crea lluvia sino que usa yoduro de plata para fomentar la precipitación de nubes ya presentes. La técnica se orienta a la agricultura, el ganado, la hidroelectricidad y el agua potable en el corredor seco, donde aproximadamente 708.000 personas en 103 municipios podrían necesitar ayuda humanitaria.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or draft described as a completed action"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-8aab3a997434",
-          "reasons": [],
-          "fields": {
-            "watch": {
-              "en": "",
-              "es": "",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "empty report text",
-                "watch item has no observable next test",
-                "Spanish translation is empty"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-20T16:00:43.223Z",
-        "aliveSources": 69,
+        "collectedAt": "2026-10-20T17:16:19.741Z",
+        "aliveSources": 68,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
@@ -3298,13 +3250,71 @@
         "failedSourceIds": [
           "mexico-business-news",
           "insightcrime-mx",
+          "energiaadebate",
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-20T16:00:43.223Z",
+          "completedAt": "2026-10-20T16:01:55.823Z",
+          "calls": 2,
+          "costUSD": 0.031228,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-fff1c2a39b21",
+              "reasons": [],
+              "fields": {
+                "background": {
+                  "en": "El Niño brought drought to Honduras, affecting at least 234 of the country's 298 municipalities. The government adopted cloud-seeding after the private sugar company Azucarera La Grecia proposed the idea as an emergency response.",
+                  "es": "El Niño provocó sequía en Honduras, afectando al menos 234 de los 298 municipios del país. El gobierno adoptó la siembra de nubes después de que la empresa privada azucarera Azucarera La Grecia propusiera la idea como respuesta de emergencia.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "proposal or draft described as a completed action",
+                    "proposal or uncertainty became final in Spanish"
+                  ]
+                },
+                "view": {
+                  "en": "Cloud-seeding does not create rain but uses silver-iodide to encourage precipitation from clouds already present. The technique targets agriculture, livestock, hydropower, and drinking water in the dry corridor, where about 708,000 people in 103 municipalities may need humanitarian aid.",
+                  "es": "La siembra de nubes no crea lluvia sino que usa yoduro de plata para fomentar la precipitación de nubes ya presentes. La técnica se orienta a la agricultura, el ganado, la hidroelectricidad y el agua potable en el corredor seco, donde aproximadamente 708.000 personas en 103 municipios podrían necesitar ayuda humanitaria.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "proposal or draft described as a completed action"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-8aab3a997434",
+              "reasons": [],
+              "fields": {
+                "watch": {
+                  "en": "",
+                  "es": "",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "empty report text",
+                    "watch item has no observable next test",
+                    "Spanish translation is empty"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "39453584098",
+        "runId": "39464576893",
         "runAttempt": "1",
         "receipts": [
           {
@@ -3338,6 +3348,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "b74e923d-ad06-4bab-949f-22f0107c7a6f",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.050641,
+            "accountedUSD": 0.050641,
+            "state": "reserved"
           }
         ]
       }
