@@ -3385,14 +3385,42 @@
       "editorialDate": "2026-10-21",
       "slot": "morning",
       "candidateSignature": "5a7c81276e29b4cd8e7391968c5144d96ac200d86b6ced88e87412313cd014a1",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-21T13:00:43.653Z",
-      "completedAt": "",
+      "completedAt": "2026-10-21T13:01:58.572Z",
       "calls": 2,
       "costUSD": 0.08085,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-af6998a02ebc",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico's Senate unanimously passed, with 108 votes, reforms requiring written parental consent before companies process children's personal data and banning profiling for ads, sending the bill to the Chamber of Deputies.",
+              "es": "El Senado de México aprobó por unanimidad, con 108 votos, reformas que exigen consentimiento escrito de los tutores antes de tratar datos de menores y prohíben el perfilado publicitario, y turnó la minuta a la Cámara de Diputados.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "completed action was introduced in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "Watch whether the Chamber of Deputies approves the bill, since once enacted the data protection authority would have 180 days to issue guidelines, and companies another 180 days to comply.",
+              "es": "Habrá que ver si la Cámara de Diputados aprueba la minuta, pues una vez promulgada, la autoridad garante tendría 180 días naturales para emitir lineamientos, y las empresas otros 180 días para cumplir.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "completed action became non-final in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-21T13:00:43.653Z",
         "aliveSources": 65,
