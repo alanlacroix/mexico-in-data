@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-05",
-      "slot": "morning",
-      "candidateSignature": "591f2f849cb599da79406998c67b7604920d7a977ee9e9afdf23af6a4506b672",
-      "state": "failed",
-      "startedAt": "2026-09-05T13:01:02.799Z",
-      "completedAt": "2026-09-05T13:02:06.159Z",
-      "calls": 2,
-      "costUSD": 0.018812,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: presidential-informe-2026-09-01: dek: unsupported number: 69; dek: Spanish unsupported number: 69; view: invalid evidence references; watch: watch item has no observable next test | n-d95ac85b065e: background: unsupported evidence qualifier: lowest | n-51dbb90ed2a4: background: proposal or draft described as a completed action;"
-    },
-    {
-      "editorialDate": "2026-09-05",
-      "slot": "noon",
-      "candidateSignature": "06541f4d9172ecc68e7c34ab140399d1da58160e5e0115aba6c29b16ef857cb2",
-      "state": "failed",
-      "startedAt": "2026-09-05T16:00:56.575Z",
-      "completedAt": "2026-09-05T16:02:12.878Z",
-      "calls": 3,
-      "costUSD": 0.027191,
-      "artifactHash": "",
-      "reason": "a required scheduled outcome failed the edition gate"
-    },
-    {
       "editorialDate": "2026-09-06",
       "slot": "morning",
       "candidateSignature": "a078deaf1b054ada5df9fbb1dd15b6c8039bdf0caa551674a468bdc7bc4e2a5e",
@@ -3403,6 +3379,52 @@
         "artifactHash": "5dc7396f52c3cdc7a6853cbafa78145771aa18a8267b8fe425660e8a15110c61",
         "attempts": 1,
         "claimedAt": "2026-10-20T17:19:51.328Z"
+      }
+    },
+    {
+      "editorialDate": "2026-10-21",
+      "slot": "morning",
+      "candidateSignature": "5a7c81276e29b4cd8e7391968c5144d96ac200d86b6ced88e87412313cd014a1",
+      "state": "started",
+      "startedAt": "2026-10-21T13:00:43.653Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.130746,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-21T13:00:43.653Z",
+        "aliveSources": 65,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "insightcrime-mx",
+          "energiaadebate",
+          "dialogue-earth-es",
+          "border-report",
+          "iad-dialogue",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "39604214175",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "692eaea4-0023-49a9-9539-a76d849ba347",
+            "period": "2026-10",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.130746,
+            "accountedUSD": 0.130746,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
