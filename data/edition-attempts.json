@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-06",
-      "slot": "morning",
-      "candidateSignature": "a078deaf1b054ada5df9fbb1dd15b6c8039bdf0caa551674a468bdc7bc4e2a5e",
-      "state": "failed",
-      "startedAt": "2026-09-06T13:01:34.603Z",
-      "completedAt": "2026-09-06T13:02:26.817Z",
-      "calls": 3,
-      "costUSD": 0.027292,
-      "artifactHash": "",
-      "reason": "a required scheduled outcome failed the edition gate"
-    },
-    {
-      "editorialDate": "2026-09-06",
-      "slot": "noon",
-      "candidateSignature": "44716a94d796aacf4faaf7c829edc8f6098bcfe720010bfa4ea128a0b295ae6c",
-      "state": "failed",
-      "startedAt": "2026-09-06T16:01:02.329Z",
-      "completedAt": "2026-09-06T16:02:06.605Z",
-      "calls": 2,
-      "costUSD": 0.020812,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: presidential-informe-2026-09-01: view: empty report text; view: Spanish translation is empty; watch: empty report text; watch: watch item has no observable next test; watch: Spanish translation is empty | n-6c91da0fee2a: watch: watch item has no observable next test | n-b99fe28cd66d: headline: 2 sentences (cap 1); background: 5"
-    },
-    {
       "editorialDate": "2026-09-07",
       "slot": "morning",
       "candidateSignature": "229f94677e16f487f569e213d909faaf1f3938226bf2515878d98db354cf6852",
@@ -3535,6 +3511,49 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-10-22",
+      "slot": "morning",
+      "candidateSignature": "16348f3d56597bd7633a2204a9f406e855504988ea9cac94dcbf14c44c4a8192",
+      "state": "started",
+      "startedAt": "2026-10-22T13:01:19.045Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.055872,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-22T13:01:19.045Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "insightcrime-mx",
+          "m4ec-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "39783170548",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "c64b019d-9296-4597-93b1-bc7a93079c86",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.055872,
+            "accountedUSD": 0.055872,
+            "state": "reserved"
           }
         ]
       }
