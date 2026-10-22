@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-22T04:37:55.845Z",
-  "runId": "20261022043755",
+  "generatedAt": "2026-10-22T11:45:45.273Z",
+  "runId": "20261022114545",
   "geoEpoch": {
     "epoch": "mg-2020",
     "source": "INEGI Marco Geoestadístico",
@@ -8,22 +8,13 @@
     "count": 2478
   },
   "summary": {
-    "ok": 8,
+    "ok": 9,
     "flagged": 1,
-    "failed": 1,
+    "failed": 0,
     "skipped": 0,
     "darkSources": []
   },
-  "alerts": [
-    {
-      "id": "fred-ust10",
-      "source": "FRED, Federal Reserve Bank of St. Louis",
-      "metric": "us_10y",
-      "severity": "error",
-      "message": "fetch failed after 4 tries: This operation was aborted",
-      "at": "2026-10-22T04:37:55.845Z"
-    }
-  ],
+  "alerts": [],
   "reconciliation": [],
   "sources": [
     {
@@ -40,12 +31,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-22T04:37:55.845Z",
+      "startedAt": "2026-10-22T11:45:45.273Z",
       "vintage": "2026-07-01",
-      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
       "rowCount": 57,
       "file": "data/series/banxico-igae.json",
-      "finishedAt": "2026-10-22T04:37:56.320Z"
+      "finishedAt": "2026-10-22T11:45:45.912Z"
     },
     {
       "id": "banxico-tasa-objetivo",
@@ -61,12 +52,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-22T04:37:55.845Z",
+      "startedAt": "2026-10-22T11:45:45.273Z",
       "vintage": "2026-10-22",
-      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
       "rowCount": 365,
       "file": "data/series/banxico-tasa-objetivo.json",
-      "finishedAt": "2026-10-22T04:37:56.476Z"
+      "finishedAt": "2026-10-22T11:45:46.068Z"
     },
     {
       "id": "banxico-usdmxn-fix",
@@ -82,12 +73,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-22T04:37:55.845Z",
+      "startedAt": "2026-10-22T11:45:45.273Z",
       "vintage": "2026-10-21",
-      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
       "rowCount": 251,
       "file": "data/series/banxico-usdmxn-fix.json",
-      "finishedAt": "2026-10-22T04:37:56.655Z"
+      "finishedAt": "2026-10-22T11:45:46.234Z"
     },
     {
       "id": "banxico-bmv-ipc",
@@ -103,12 +94,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-22T04:37:55.845Z",
+      "startedAt": "2026-10-22T11:45:45.273Z",
       "vintage": "2026-10-21",
-      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
       "rowCount": 251,
       "file": "data/series/banxico-bmv-ipc.json",
-      "finishedAt": "2026-10-22T04:37:56.818Z"
+      "finishedAt": "2026-10-22T11:45:46.399Z"
     },
     {
       "id": "banxico-cetes-28d",
@@ -124,12 +115,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-22T04:37:55.845Z",
+      "startedAt": "2026-10-22T11:45:45.273Z",
       "vintage": "2026-10-21",
-      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
       "rowCount": 251,
       "file": "data/series/banxico-cetes-28d.json",
-      "finishedAt": "2026-10-22T04:37:56.972Z"
+      "finishedAt": "2026-10-22T11:45:46.553Z"
     },
     {
       "id": "banxico-remesas",
@@ -145,12 +136,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-22T04:37:55.845Z",
+      "startedAt": "2026-10-22T11:45:45.273Z",
       "vintage": "2026-08-01",
-      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
       "rowCount": 22,
       "file": "data/series/banxico-remesas.json",
-      "finishedAt": "2026-10-22T04:37:57.121Z"
+      "finishedAt": "2026-10-22T11:45:46.688Z"
     },
     {
       "id": "banxico-exports-total",
@@ -168,12 +159,12 @@
       "flags": [
         "series_jump_2020-06-01_82pct"
       ],
-      "startedAt": "2026-10-22T04:37:55.845Z",
+      "startedAt": "2026-10-22T11:45:45.273Z",
       "vintage": "2026-08-01",
-      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
       "rowCount": 322,
       "file": "data/series/banxico-exports-total.json",
-      "finishedAt": "2026-10-22T04:37:57.264Z"
+      "finishedAt": "2026-10-22T11:45:46.828Z"
     },
     {
       "id": "banxico-inflacion",
@@ -189,12 +180,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-22T04:37:55.845Z",
+      "startedAt": "2026-10-22T11:45:45.273Z",
       "vintage": "2026-09-01",
-      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
       "rowCount": 23,
       "file": "data/series/banxico-inflacion.json",
-      "finishedAt": "2026-10-22T04:37:57.409Z"
+      "finishedAt": "2026-10-22T11:45:46.968Z"
     },
     {
       "id": "cre-gasolina-regular",
@@ -210,12 +201,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-22T04:37:55.845Z",
+      "startedAt": "2026-10-22T11:45:45.273Z",
       "vintage": "2026-10-22",
-      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
       "rowCount": 101,
       "file": "data/series/cre-gasolina-regular.json",
-      "finishedAt": "2026-10-22T04:37:57.710Z"
+      "finishedAt": "2026-10-22T11:45:47.492Z"
     },
     {
       "id": "fred-ust10",
@@ -229,14 +220,14 @@
       "cadence": "daily",
       "freshnessGraceDays": null,
       "canonicalSource": true,
-      "status": "failed",
+      "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-22T04:37:55.845Z",
-      "hard": false,
-      "message": "fetch failed after 4 tries: This operation was aborted",
-      "servingVintage": "2026-10-19",
-      "stale": false,
-      "finishedAt": "2026-10-22T04:40:27.405Z"
+      "startedAt": "2026-10-22T11:45:45.273Z",
+      "vintage": "2026-10-20",
+      "fetchedAt": "2026-10-22T11:45:45.273Z",
+      "rowCount": 2951,
+      "file": "data/series/fred-ust10.json",
+      "finishedAt": "2026-10-22T11:45:48.092Z"
     }
   ]
 }
