@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-21T21:38:32.448Z",
-  "runId": "20261021213832",
+  "generatedAt": "2026-10-22T04:37:55.845Z",
+  "runId": "20261022043755",
   "geoEpoch": {
     "epoch": "mg-2020",
     "source": "INEGI Marco Geoestadístico",
@@ -20,8 +20,8 @@
       "source": "FRED, Federal Reserve Bank of St. Louis",
       "metric": "us_10y",
       "severity": "error",
-      "message": "fetch failed after 4 tries: expected JSON but got HTML from https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key=***&file_type=json&observation_start=2015-01-01&sort_order=asc",
-      "at": "2026-10-21T21:38:32.448Z"
+      "message": "fetch failed after 4 tries: This operation was aborted",
+      "at": "2026-10-22T04:37:55.845Z"
     }
   ],
   "reconciliation": [],
@@ -40,12 +40,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-21T21:38:32.448Z",
+      "startedAt": "2026-10-22T04:37:55.845Z",
       "vintage": "2026-07-01",
-      "fetchedAt": "2026-10-21T21:38:32.448Z",
+      "fetchedAt": "2026-10-22T04:37:55.845Z",
       "rowCount": 57,
       "file": "data/series/banxico-igae.json",
-      "finishedAt": "2026-10-21T21:38:33.351Z"
+      "finishedAt": "2026-10-22T04:37:56.320Z"
     },
     {
       "id": "banxico-tasa-objetivo",
@@ -61,12 +61,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-21T21:38:32.448Z",
-      "vintage": "2026-10-21",
-      "fetchedAt": "2026-10-21T21:38:32.448Z",
+      "startedAt": "2026-10-22T04:37:55.845Z",
+      "vintage": "2026-10-22",
+      "fetchedAt": "2026-10-22T04:37:55.845Z",
       "rowCount": 365,
       "file": "data/series/banxico-tasa-objetivo.json",
-      "finishedAt": "2026-10-21T21:38:33.485Z"
+      "finishedAt": "2026-10-22T04:37:56.476Z"
     },
     {
       "id": "banxico-usdmxn-fix",
@@ -82,12 +82,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-21T21:38:32.448Z",
+      "startedAt": "2026-10-22T04:37:55.845Z",
       "vintage": "2026-10-21",
-      "fetchedAt": "2026-10-21T21:38:32.448Z",
-      "rowCount": 252,
+      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "rowCount": 251,
       "file": "data/series/banxico-usdmxn-fix.json",
-      "finishedAt": "2026-10-21T21:38:33.626Z"
+      "finishedAt": "2026-10-22T04:37:56.655Z"
     },
     {
       "id": "banxico-bmv-ipc",
@@ -103,12 +103,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-21T21:38:32.448Z",
-      "vintage": "2026-10-20",
-      "fetchedAt": "2026-10-21T21:38:32.448Z",
+      "startedAt": "2026-10-22T04:37:55.845Z",
+      "vintage": "2026-10-21",
+      "fetchedAt": "2026-10-22T04:37:55.845Z",
       "rowCount": 251,
       "file": "data/series/banxico-bmv-ipc.json",
-      "finishedAt": "2026-10-21T21:38:33.764Z"
+      "finishedAt": "2026-10-22T04:37:56.818Z"
     },
     {
       "id": "banxico-cetes-28d",
@@ -124,12 +124,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-21T21:38:32.448Z",
-      "vintage": "2026-10-20",
-      "fetchedAt": "2026-10-21T21:38:32.448Z",
+      "startedAt": "2026-10-22T04:37:55.845Z",
+      "vintage": "2026-10-21",
+      "fetchedAt": "2026-10-22T04:37:55.845Z",
       "rowCount": 251,
       "file": "data/series/banxico-cetes-28d.json",
-      "finishedAt": "2026-10-21T21:38:33.903Z"
+      "finishedAt": "2026-10-22T04:37:56.972Z"
     },
     {
       "id": "banxico-remesas",
@@ -145,12 +145,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-21T21:38:32.448Z",
+      "startedAt": "2026-10-22T04:37:55.845Z",
       "vintage": "2026-08-01",
-      "fetchedAt": "2026-10-21T21:38:32.448Z",
+      "fetchedAt": "2026-10-22T04:37:55.845Z",
       "rowCount": 22,
       "file": "data/series/banxico-remesas.json",
-      "finishedAt": "2026-10-21T21:38:34.022Z"
+      "finishedAt": "2026-10-22T04:37:57.121Z"
     },
     {
       "id": "banxico-exports-total",
@@ -168,12 +168,12 @@
       "flags": [
         "series_jump_2020-06-01_82pct"
       ],
-      "startedAt": "2026-10-21T21:38:32.448Z",
+      "startedAt": "2026-10-22T04:37:55.845Z",
       "vintage": "2026-08-01",
-      "fetchedAt": "2026-10-21T21:38:32.448Z",
+      "fetchedAt": "2026-10-22T04:37:55.845Z",
       "rowCount": 322,
       "file": "data/series/banxico-exports-total.json",
-      "finishedAt": "2026-10-21T21:38:34.149Z"
+      "finishedAt": "2026-10-22T04:37:57.264Z"
     },
     {
       "id": "banxico-inflacion",
@@ -189,12 +189,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-21T21:38:32.448Z",
+      "startedAt": "2026-10-22T04:37:55.845Z",
       "vintage": "2026-09-01",
-      "fetchedAt": "2026-10-21T21:38:32.448Z",
+      "fetchedAt": "2026-10-22T04:37:55.845Z",
       "rowCount": 23,
       "file": "data/series/banxico-inflacion.json",
-      "finishedAt": "2026-10-21T21:38:34.269Z"
+      "finishedAt": "2026-10-22T04:37:57.409Z"
     },
     {
       "id": "cre-gasolina-regular",
@@ -210,12 +210,12 @@
       "canonicalSource": true,
       "status": "ok",
       "flags": [],
-      "startedAt": "2026-10-21T21:38:32.448Z",
-      "vintage": "2026-10-21",
-      "fetchedAt": "2026-10-21T21:38:32.448Z",
-      "rowCount": 100,
+      "startedAt": "2026-10-22T04:37:55.845Z",
+      "vintage": "2026-10-22",
+      "fetchedAt": "2026-10-22T04:37:55.845Z",
+      "rowCount": 101,
       "file": "data/series/cre-gasolina-regular.json",
-      "finishedAt": "2026-10-21T21:38:34.668Z"
+      "finishedAt": "2026-10-22T04:37:57.710Z"
     },
     {
       "id": "fred-ust10",
@@ -231,12 +231,12 @@
       "canonicalSource": true,
       "status": "failed",
       "flags": [],
-      "startedAt": "2026-10-21T21:38:32.448Z",
+      "startedAt": "2026-10-22T04:37:55.845Z",
       "hard": false,
-      "message": "fetch failed after 4 tries: expected JSON but got HTML from https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key=***&file_type=json&observation_start=2015-01-01&sort_order=asc",
+      "message": "fetch failed after 4 tries: This operation was aborted",
       "servingVintage": "2026-10-19",
       "stale": false,
-      "finishedAt": "2026-10-21T21:38:44.315Z"
+      "finishedAt": "2026-10-22T04:40:27.405Z"
     }
   ]
 }
