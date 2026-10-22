@@ -3653,80 +3653,91 @@
       "editorialDate": "2026-10-22",
       "slot": "noon",
       "candidateSignature": "53d5d39a3e6d9bc1277567a8352dfe955ab83f930d0092ab4ee86502ea4e8326",
-      "state": "failed",
-      "startedAt": "2026-10-22T16:01:21.119Z",
-      "completedAt": "2026-10-22T16:02:46.329Z",
-      "calls": 2,
-      "costUSD": 0.033921,
+      "state": "started",
+      "startedAt": "2026-10-22T17:16:52.783Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.083934,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-8842e9fc4c64",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "Pemex reduced its financial debt to 77 thousand 500 million dollars by mid-2026 from 2024 levels, a 21 percent decline. It plans spending of 1 billion 845 thousand 647 million pesos between 2025 and 2030 on exploration, refining and petrochemicals.",
-              "es": "Pemex redujo su deuda financiera a 77 mil 500 millones de dólares a mediados de 2026 respecto a 2024, una caída de 21 por ciento. Planea gastos de 1 billón 845 mil 647 millones de pesos entre 2025 y 2030 en exploración, refinación y petroquímicos.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported number: 1",
-                "Spanish unsupported number: 1"
-              ]
-            },
-            "background": {
-              "en": "The oil company's debt reduction came partly from federal government transfers, not entirely from its own cash flow. Energy analyst Nay Marrufo noted that Pemex's free cash flow, measured as operating revenue minus investment costs, remains negative, meaning it still depends on government support to reduce debt.",
-              "es": "La reducción de deuda de la petrolera provino parcialmente de transferencias del Gobierno federal, no completamente de su propio flujo de efectivo. La analista de energía Nay Marrufo señaló que el flujo libre de Pemex, medido como ingresos operativos menos costos de inversión, permanece negativo, lo que significa que aún depende del apoyo gubernamental para reducir deuda.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "needs an independent source when one is available"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-7edee419b6ea",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "Chinese auto exports reached 129 thousand 108 million dollars in the first eight months of 2026, exceeding the combined exports of Mexico, the United States and Canada. North American auto sales fell 10.4 percent year-over-year in the same period.",
-              "es": "Las exportaciones de autos de China alcanzaron 129 mil 108 millones de dólares en los primeros ocho meses de 2026, superando las exportaciones combinadas de México, Estados Unidos y Canadá. Las ventas automotrices de Norteamérica cayeron 10.4 por ciento interanual en el mismo período.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported numbers: 129, 108",
-                "Spanish unsupported numbers: 129, 108"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-22T16:01:21.119Z",
-        "aliveSources": 67,
+        "collectedAt": "2026-10-22T17:16:52.783Z",
+        "aliveSources": 65,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
+          "ciep",
           "mexico-business-news",
           "insightcrime-mx",
-          "mexico-evalua",
-          "nexos",
-          "gcma"
+          "m4ec-mx",
+          "justice-in-mexico",
+          "iad-dialogue",
+          "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-22T16:01:21.119Z",
+          "completedAt": "2026-10-22T16:02:46.329Z",
+          "calls": 2,
+          "costUSD": 0.033921,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-8842e9fc4c64",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "Pemex reduced its financial debt to 77 thousand 500 million dollars by mid-2026 from 2024 levels, a 21 percent decline. It plans spending of 1 billion 845 thousand 647 million pesos between 2025 and 2030 on exploration, refining and petrochemicals.",
+                  "es": "Pemex redujo su deuda financiera a 77 mil 500 millones de dólares a mediados de 2026 respecto a 2024, una caída de 21 por ciento. Planea gastos de 1 billón 845 mil 647 millones de pesos entre 2025 y 2030 en exploración, refinación y petroquímicos.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported number: 1",
+                    "Spanish unsupported number: 1"
+                  ]
+                },
+                "background": {
+                  "en": "The oil company's debt reduction came partly from federal government transfers, not entirely from its own cash flow. Energy analyst Nay Marrufo noted that Pemex's free cash flow, measured as operating revenue minus investment costs, remains negative, meaning it still depends on government support to reduce debt.",
+                  "es": "La reducción de deuda de la petrolera provino parcialmente de transferencias del Gobierno federal, no completamente de su propio flujo de efectivo. La analista de energía Nay Marrufo señaló que el flujo libre de Pemex, medido como ingresos operativos menos costos de inversión, permanece negativo, lo que significa que aún depende del apoyo gubernamental para reducir deuda.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "needs an independent source when one is available"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-7edee419b6ea",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "Chinese auto exports reached 129 thousand 108 million dollars in the first eight months of 2026, exceeding the combined exports of Mexico, the United States and Canada. North American auto sales fell 10.4 percent year-over-year in the same period.",
+                  "es": "Las exportaciones de autos de China alcanzaron 129 mil 108 millones de dólares en los primeros ocho meses de 2026, superando las exportaciones combinadas de México, Estados Unidos y Canadá. Las ventas automotrices de Norteamérica cayeron 10.4 por ciento interanual en el mismo período.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported numbers: 129, 108",
+                    "Spanish unsupported numbers: 129, 108"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "39810231421",
+        "runId": "39821214157",
         "runAttempt": "1",
         "receipts": [
           {
@@ -3760,6 +3771,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "89f455eb-f7eb-4892-bf69-1e913386c82f",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.050013,
+            "accountedUSD": 0.050013,
+            "state": "reserved"
           }
         ]
       }
