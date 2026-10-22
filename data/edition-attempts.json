@@ -3519,14 +3519,81 @@
       "editorialDate": "2026-10-22",
       "slot": "morning",
       "candidateSignature": "16348f3d56597bd7633a2204a9f406e855504988ea9cac94dcbf14c44c4a8192",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-22T13:01:19.045Z",
-      "completedAt": "",
+      "completedAt": "2026-10-22T13:02:55.448Z",
       "calls": 2,
       "costUSD": 0.042505,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-8842e9fc4c64: dek: unsupported number: 77500; dek: numbers changed in Spanish; background: negation was introduced in Spanish; background: needs an independent source when one is available | n-7edee419b6ea: dek: unsupported numbers: 129, 108, 86, 136, 36, 526; dek: Spanish unsupported numbers: 129, 108, 86, 136, 36, 526 | n-da",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-8842e9fc4c64",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Pemex reduced financial debt to 77,500 million dollars by June 2026 from 2024 levels. It projects spending one trillion 845 thousand 647 million pesos on exploration, refining and petrochemicals between 2025 and 2030.",
+              "es": "Pemex redujo deuda financiera a 77 mil 500 millones de dólares al cierre de junio de 2026 respecto a 2024. Proyecta gastar un billón 845 mil 647 millones de pesos en exploración, refinación y petroquímicos entre 2025 y 2030.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 77500",
+                "numbers changed in Spanish"
+              ]
+            },
+            "background": {
+              "en": "The state oil company cut its financial liabilities by 20 thousand million dollars in less than two years. An energy analyst noted that this improvement depends on federal government transfers because Pemex's free cash flow remains negative and cannot fund investment or reduce debt on its own.",
+              "es": "La empresa petrolera estatal redujo sus pasivos financieros en 20 mil millones de dólares en menos de dos años. Una analista de energía señaló que esta mejora depende de transferencias del gobierno federal porque el flujo libre de caja de Pemex sigue siendo negativo y no puede financiar inversión ni reducir deuda por cuenta propia.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish",
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-7edee419b6ea",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Chinese vehicle shipments reached 129 thousand 108 million dollars from January through August 2026, exceeding the combined 86 thousand 136 million dollars from Mexico, the United States and Canada. Mexico led North America at 36 thousand 526 million dollars, down 7.8 percent year over year.",
+              "es": "Las exportaciones de vehículos de China alcanzaron 129 mil 108 millones de dólares de enero a agosto de 2026, superando los 86 mil 136 millones de dólares combinados de México, Estados Unidos y Canadá. México lideró Norteamérica con 36 mil 526 millones de dólares, caída de 7.8 por ciento interanual.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported numbers: 129, 108, 86, 136, 36, 526",
+                "Spanish unsupported numbers: 129, 108, 86, 136, 36, 526"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-dab30dddac54",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico's Supreme Court postponed decisions in 138 outstanding lawsuits challenging articles of a biometric identification system enacted July 16, 2025. The court cited the need to establish uniform criteria before ruling on constitutional grounds.",
+              "es": "La Corte Suprema de México aplazó decisiones en 138 demandas pendientes que impugnan artículos de un sistema de identificación biométrica promulgado el 16 de julio de 2025. La Corte citó la necesidad de establecer criterios uniformes antes de fallar sobre bases constitucionales.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 2025",
+                "completed action became non-final in Spanish",
+                "Spanish unsupported number: 2025"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-22T13:01:19.045Z",
         "aliveSources": 68,
