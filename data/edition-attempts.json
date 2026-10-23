@@ -3877,83 +3877,90 @@
       "slot": "noon",
       "candidateSignature": "81928be66ce118aa1589b16900a1adbefcfc7af8f4690d023dc3e91a5b22a40b",
       "state": "failed",
-      "startedAt": "2026-10-23T16:01:32.431Z",
-      "completedAt": "2026-10-23T16:03:23.143Z",
+      "startedAt": "2026-10-23T17:14:55.428Z",
+      "completedAt": "2026-10-23T17:15:17.187Z",
       "calls": 3,
       "costUSD": 0.037018,
       "artifactHash": "",
-      "reason": "only 2 stories passed every editorial gate; need at least 3 without padding",
-      "diagnostics": [
-        {
-          "stage": "independent-audit",
-          "storyId": "n-76a356815f6d",
-          "reasons": [
-            "The dek states '18 journalists died in office during that span' but the evidence says '18 comunicadores asesinados' (18 journalists assassinated/killed), not specifically that they died 'in office.' This mischaracterizes the nature of their deaths.",
-            "The watch field references 'October 2027' for the National Conference on Criminal Prosecution agenda, but the evidence states the conference is 'prevista para 2027' (scheduled for 2027) without specifying October. This adds a specificity not supported by the source.",
-            "The Spanish translation of the watch field says 'octubre de 2027' but the evidence does not specify October, only that it is scheduled for 2027."
-          ],
-          "fields": {
-            "headline": {
-              "en": "Mexico has advanced only 27% of press freedom commitments made to Reporters Without Borders",
-              "es": "México ha avanzado solo en 27% de los compromisos de libertad de prensa ante Reporteros Sin Fronteras",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            },
-            "dek": {
-              "en": "Two years into Claudia Sheinbaum's term, just 27% of 22 pledges made in 2024 to strengthen journalism showed any progress, while 18 journalists died in office during that span.",
-              "es": "A dos años del inicio de la administración de Claudia Sheinbaum, solo 27% de 22 promesas hechas en 2024 para fortalecer el periodismo mostró algún avance, mientras 18 periodistas murieron en el cargo durante ese lapso.",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            },
-            "background": {
-              "en": "In 2024, the Sheinbaum administration made 22 commitments to Reporters Without Borders to improve press freedom. RSF's assessment, released October 22, found one pledge showed positive evolution, five had insufficient progress, and ten showed no substantial verified advances.",
-              "es": "En 2024, la administración Sheinbaum hizo 22 compromisos a Reporteros Sin Fronteras para mejorar la libertad de prensa. La evaluación de RSF, publicada el 22 de octubre, encontró que una promesa mostró evolución positiva, cinco tuvieron progreso insuficiente, y diez no mostraron avances sustanciales verificables.",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            },
-            "view": {
-              "en": "Between July 2010 and June 2026, Mexico's Special Prosecutor for Crimes Against Freedom of Expression opened 1,909 investigations but secured only 53 convictions. Just 11 convictions involved journalist murders. RSF counted 169 journalist homicides over two decades, with 168 remaining essentially unsolved because the intellectual author or motive was never established.",
-              "es": "Entre julio de 2010 y junio de 2026, la Fiscalía Especial para Atención de Delitos Contra Libertad de Expresión abrió 1,909 investigaciones pero aseguró solo 53 condenas. Solo 11 condenas involucraron asesinatos de periodistas. RSF contabilizó 169 homicidios de periodistas en dos décadas, con 168 permaneciendo esencialmente sin esclarecer porque nunca se identificó al autor intelectual o motivo.",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            },
-            "watch": {
-              "en": "If the government delivers on Godoy's commitment to train prosecutors on press freedom issues and add the topic to the October 2027 National Conference on Criminal Prosecution agenda, that would test whether enforcement capacity can revive. The metrics to confirm stronger action would be increased convictions in journalist cases and faster resolution times.",
-              "es": "Si el gobierno cumple el compromiso de Godoy de capacitar fiscales en temas de libertad de prensa e incluir el tema en la agenda de octubre de 2027 de la Conferencia Nacional de Procuración de Justicia, eso probaría si la capacidad de ejecución puede revivir. Las métricas para confirmar acción más fuerte serían condenas aumentadas en casos de periodistas y tiempos de resolución más rápidos.",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            }
-          }
-        }
-      ],
+      "reason": "daily model budget would be exceeded (0.1058 + 0.0476 > 0.1935)",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-23T16:01:32.431Z",
-        "aliveSources": 65,
+        "collectedAt": "2026-10-23T17:14:55.428Z",
+        "aliveSources": 67,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
-          "iupana",
           "contxto",
           "mexico-business-news",
-          "gnews-security",
           "insightcrime-mx",
-          "m4ec-mx",
+          "mexico-evalua",
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-23T16:01:32.431Z",
+          "completedAt": "2026-10-23T16:03:23.143Z",
+          "calls": 3,
+          "costUSD": 0.037018,
+          "reason": "only 2 stories passed every editorial gate; need at least 3 without padding",
+          "diagnostics": [
+            {
+              "stage": "independent-audit",
+              "storyId": "n-76a356815f6d",
+              "reasons": [
+                "The dek states '18 journalists died in office during that span' but the evidence says '18 comunicadores asesinados' (18 journalists assassinated/killed), not specifically that they died 'in office.' This mischaracterizes the nature of their deaths.",
+                "The watch field references 'October 2027' for the National Conference on Criminal Prosecution agenda, but the evidence states the conference is 'prevista para 2027' (scheduled for 2027) without specifying October. This adds a specificity not supported by the source.",
+                "The Spanish translation of the watch field says 'octubre de 2027' but the evidence does not specify October, only that it is scheduled for 2027."
+              ],
+              "fields": {
+                "headline": {
+                  "en": "Mexico has advanced only 27% of press freedom commitments made to Reporters Without Borders",
+                  "es": "México ha avanzado solo en 27% de los compromisos de libertad de prensa ante Reporteros Sin Fronteras",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "dek": {
+                  "en": "Two years into Claudia Sheinbaum's term, just 27% of 22 pledges made in 2024 to strengthen journalism showed any progress, while 18 journalists died in office during that span.",
+                  "es": "A dos años del inicio de la administración de Claudia Sheinbaum, solo 27% de 22 promesas hechas en 2024 para fortalecer el periodismo mostró algún avance, mientras 18 periodistas murieron en el cargo durante ese lapso.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "background": {
+                  "en": "In 2024, the Sheinbaum administration made 22 commitments to Reporters Without Borders to improve press freedom. RSF's assessment, released October 22, found one pledge showed positive evolution, five had insufficient progress, and ten showed no substantial verified advances.",
+                  "es": "En 2024, la administración Sheinbaum hizo 22 compromisos a Reporteros Sin Fronteras para mejorar la libertad de prensa. La evaluación de RSF, publicada el 22 de octubre, encontró que una promesa mostró evolución positiva, cinco tuvieron progreso insuficiente, y diez no mostraron avances sustanciales verificables.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "view": {
+                  "en": "Between July 2010 and June 2026, Mexico's Special Prosecutor for Crimes Against Freedom of Expression opened 1,909 investigations but secured only 53 convictions. Just 11 convictions involved journalist murders. RSF counted 169 journalist homicides over two decades, with 168 remaining essentially unsolved because the intellectual author or motive was never established.",
+                  "es": "Entre julio de 2010 y junio de 2026, la Fiscalía Especial para Atención de Delitos Contra Libertad de Expresión abrió 1,909 investigaciones pero aseguró solo 53 condenas. Solo 11 condenas involucraron asesinatos de periodistas. RSF contabilizó 169 homicidios de periodistas en dos décadas, con 168 permaneciendo esencialmente sin esclarecer porque nunca se identificó al autor intelectual o motivo.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "watch": {
+                  "en": "If the government delivers on Godoy's commitment to train prosecutors on press freedom issues and add the topic to the October 2027 National Conference on Criminal Prosecution agenda, that would test whether enforcement capacity can revive. The metrics to confirm stronger action would be increased convictions in journalist cases and faster resolution times.",
+                  "es": "Si el gobierno cumple el compromiso de Godoy de capacitar fiscales en temas de libertad de prensa e incluir el tema en la agenda de octubre de 2027 de la Conferencia Nacional de Procuración de Justicia, eso probaría si la capacidad de ejecución puede revivir. Las métricas para confirmar acción más fuerte serían condenas aumentadas en casos de periodistas y tiempos de resolución más rápidos.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
         "runId": "39983215735",
