@@ -3771,14 +3771,52 @@
       "editorialDate": "2026-10-23",
       "slot": "morning",
       "candidateSignature": "09fd2a9b1aaaf226acec6fdc7b5122492ae34ba849c580a6fcc025d6b6c67c96",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-23T13:01:12.365Z",
-      "completedAt": "",
+      "completedAt": "2026-10-23T13:02:37.173Z",
       "calls": 2,
       "costUSD": 0.068825,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-c689d409cdb7",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Three ratings agencies say state oil company Pemex cannot sustain itself without ongoing Treasury funding, despite reducing debt from $97,600 million in 2024 to $77,500 million by mid-2026.",
+              "es": "Tres agencias calificadoras sostienen que la petrolera estatal Pemex no puede sostenerse sin financiamiento continuo de la Secretaría de Hacienda, a pesar de reducir su deuda de 97,600 millones de dólares en 2024 a 77,500 millones a mediados de 2026.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "hacienda was introduced in Spanish"
+              ]
+            },
+            "background": {
+              "en": "Pemex's financial debt fell to $77,500 million at the close of the first half of 2026, down from $97,600 million in 2024 and $85,200 million in 2025. Moody's and HR Ratings warn that without Treasury backing, Pemex could default and net debt would again exceed $100,000 million.",
+              "es": "La deuda financiera de Pemex cayó a 77,500 millones de dólares al cierre del primer semestre de 2026, desde 97,600 millones en 2024 y 85,200 millones en 2025. Moody's y HR Ratings advierten que sin respaldo de la Secretaría de Hacienda, Pemex podría incumplir pagos y la deuda neta volvería a superar los 100,000 millones de dólares.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "hacienda was introduced in Spanish"
+              ]
+            },
+            "view": {
+              "en": "The debt reduction reflects government transfers rather than improved company operations. Pemex needs to expand projects, increase production, improve fuel quality and generate its own cash flow to reduce reliance on the state. Delayed supplier payments threaten exploration and production work, the company's most profitable business, by raising supplier financing costs and blocking credit access.",
+              "es": "La reducción de deuda refleja transferencias gubernamentales y no una mejora operativa de la empresa. Pemex necesita ampliar proyectos, aumentar producción, mejorar calidad de combustibles y generar flujo de caja propio para reducir su dependencia estatal. Los pagos retrasados a proveedores amenazan trabajos de exploración y producción, el negocio más rentable, al elevar costos de financiamiento de proveedores y bloquear el acceso al crédito.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-23T13:01:12.365Z",
         "aliveSources": 68,
