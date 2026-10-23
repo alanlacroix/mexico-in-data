@@ -3871,6 +3871,52 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-10-23",
+      "slot": "noon",
+      "candidateSignature": "81928be66ce118aa1589b16900a1adbefcfc7af8f4690d023dc3e91a5b22a40b",
+      "state": "started",
+      "startedAt": "2026-10-23T16:01:32.431Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.047122,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-23T16:01:32.431Z",
+        "aliveSources": 65,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "iupana",
+          "contxto",
+          "mexico-business-news",
+          "gnews-security",
+          "insightcrime-mx",
+          "m4ec-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "39983215735",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "3bef63fd-8368-4c4c-bbea-950fed02d07d",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.047122,
+            "accountedUSD": 0.047122,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
