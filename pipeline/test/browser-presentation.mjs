@@ -82,7 +82,8 @@ try {
       date: document.querySelector('.edition-date').innerText,
       title: document.querySelector('#daily-title, #weekly-title').innerText,
       storyCount: document.querySelectorAll('.weekly-item, [data-edition-stories] .development').length,
-      warnings: [...document.querySelectorAll('.freshness-alert, .data-alert')].map(e => ({text:e.textContent.trim(),hidden:e.hidden,display:getComputedStyle(e).display,visible:!!(e.offsetWidth||e.offsetHeight||e.getClientRects().length)})),
+      now: Date.now(),
+      warnings: [...document.querySelectorAll('.freshness-alert, .data-alert')].map(e => ({kind:e.classList.contains('freshness-alert')?'freshness':'data',text:e.textContent.trim(),hidden:e.hidden,display:getComputedStyle(e).display,visible:!!(e.offsetWidth||e.offsetHeight||e.getClientRects().length)})),
       horizontalOverflow: document.documentElement.scrollWidth > innerWidth,
       visibleText: document.body.innerText
     }))` }, sessionId);
@@ -97,8 +98,25 @@ try {
     assert.equal(state.artifactHash, edition.artifactHash);
     assert.equal(state.storyCount, edition.stories.length);
     assert.equal(state.horizontalOverflow, false, `${locale}/${size} horizontal overflow`);
-    assert.ok(state.warnings.length >= 2);
-    assert.ok(state.warnings.every(warning => !warning.visible), `${locale}/${size} visible warning: ${JSON.stringify(state.warnings)}`);
+    const freshness = state.warnings.filter(warning => warning.kind === 'freshness');
+    const dataWarnings = state.warnings.filter(warning => warning.kind === 'data');
+    assert.equal(freshness.length, 1);
+    assert.ok(dataWarnings.length >= 1);
+    assert.ok(dataWarnings.every(warning => !warning.visible), `${locale}/${size} visible data warning: ${JSON.stringify(dataWarnings)}`);
+    // A retained edition must keep its truthful date and visible freshness notice.
+    // The daily deadline is 07:00 Mexico City; recaps carry for seven days.
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Mexico_City', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23',
+    }).formatToParts(new Date(state.now)).map(part => [part.type, part.value]));
+    const localToday = `${parts.year}-${parts.month}-${parts.day}`;
+    const due = new Date(`${localToday}T00:00:00Z`);
+    if (Number(parts.hour) < 7) due.setUTCDate(due.getUTCDate() - 1);
+    const stale = edition.editionType === 'weekend-recap'
+      ? state.now - Date.parse(`${edition.weeklyBrief.through}T23:59:59-06:00`) >= 7 * 86400000
+      : edition.editorialDate < due.toISOString().slice(0, 10) || edition.editorialDate > localToday;
+    assert.equal(freshness[0].hidden, !stale, `${locale}/${size} freshness hidden state`);
+    assert.equal(freshness[0].visible, stale, `${locale}/${size} freshness visibility`);
+    assert.equal(freshness[0].text, locale === 'es' ? 'Aún no hay una edición más reciente.' : 'A newer edition is not yet available.');
     if (edition.editionType === 'daily') {
       assert.equal(state.title, locale === 'es' ? 'Hoy en México' : 'Today in Mexico');
       const date = new Date(`${edition.editorialDate}T12:00:00Z`).toLocaleDateString(locale === 'es' ? 'es-MX' : 'en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
