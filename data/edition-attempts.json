@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-08",
-      "slot": "morning",
-      "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
-      "state": "failed",
-      "startedAt": "2026-09-08T13:01:02.935Z",
-      "completedAt": "2026-09-08T13:01:16.857Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "",
-      "reason": "collection failed: required scheduled outcome unavailable: federal-budget-package-2027-2026-09-08"
-    },
-    {
-      "editorialDate": "2026-09-08",
-      "slot": "noon",
-      "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
-      "state": "failed",
-      "startedAt": "2026-09-08T16:01:02.892Z",
-      "completedAt": "2026-09-08T16:01:17.423Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "",
-      "reason": "collection failed: required scheduled outcome unavailable: federal-budget-package-2027-2026-09-08"
-    },
-    {
       "editorialDate": "2026-09-09",
       "slot": "morning",
       "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -4013,6 +3989,48 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-10-24",
+      "slot": "morning",
+      "candidateSignature": "faa34e19ad52e1505ed14e21e6bf8ce513f5b1718c3ae125c27c7bd8e60f9412",
+      "state": "started",
+      "startedAt": "2026-10-24T13:01:10.495Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.129673,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-24T13:01:10.495Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "t21",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "40096331860",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "558278b1-e013-440d-9bf7-35bd5244e82c",
+            "period": "2026-10",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.129673,
+            "accountedUSD": 0.129673,
+            "state": "reserved"
           }
         ]
       }
