@@ -3997,14 +3997,77 @@
       "editorialDate": "2026-10-24",
       "slot": "morning",
       "candidateSignature": "faa34e19ad52e1505ed14e21e6bf8ce513f5b1718c3ae125c27c7bd8e60f9412",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-24T13:01:10.495Z",
-      "completedAt": "",
+      "completedAt": "2026-10-24T13:02:32.829Z",
       "calls": 2,
       "costUSD": 0.075171,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-1dc81798ed26: dek: negation was introduced in Spanish; dek: repeats the headline without adding context; background: needs an independent source when one is available | n-b754cbfb4333: background: needs an independent source when one is available | n-6d58bfdfe607: dek: repeats the headline without adding context",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-1dc81798ed26",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico's steel deficit with the US hit $5,244 million from January to August 2026, up 65.3% year on year, as US tariffs on steel remained at 25 to 50% while Mexican customs charged none, according to US Commerce Department data.",
+              "es": "El déficit de acero de México con EU llegó a 5,244 millones de dólares de enero a agosto de 2026, un alza de 65.3% anual, mientras los aranceles estadounidenses sobre acero se mantuvieron entre 25 y 50% y las aduanas mexicanas no cobraron ninguno, según datos del Departamento de Comercio de EU.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish",
+                "repeats the headline without adding context"
+              ]
+            },
+            "background": {
+              "en": "US tariffs on steel, aluminum and copper under Section 232 apply broadly with limited USMCA exemptions. Mexico's steel imports from the US rose 14.2% to $10,311 million while exports fell 13.5% to $5,067 million from January to August 2026, according to the Department of Commerce.",
+              "es": "Los aranceles estadounidenses al acero, aluminio y cobre bajo la Sección 232 aplican de forma amplia con exenciones limitadas del T-MEC. Las importaciones mexicanas de acero desde EU subieron 14.2% a 10,311 millones de dólares mientras las exportaciones cayeron 13.5% a 5,067 millones de enero a agosto de 2026, según el Departamento de Comercio.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-b754cbfb4333",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "From January to July 2026, the US and Canada took 84.5% of Mexican agrifood exports and supplied 68.8% of imports. Mexico's surplus with both partners was $8,088.5 million, down 11.8% from the prior year, according to the agricultural consulting group GCMA using Banco de México data.",
+              "es": "De enero a julio de 2026, EU y Canadá concentraron 84.5% de las exportaciones agroalimentarias mexicanas y aportaron 68.8% de las importaciones. El superávit de México con ambos socios fue de 8,088.5 millones de dólares, 11.8% menor que un año antes, según el grupo consultor GCMA con datos de Banxico.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-6d58bfdfe607",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico suspended all Brazilian poultry imports, including live birds and fertile eggs, after Brazil detected Newcastle disease in a commercial turkey farm. Brazil exports 30% of its chicken production, with Mexico among its top destinations.",
+              "es": "México suspendió todas las importaciones avícolas de Brasil, incluidas aves vivas y huevo fértil, tras detectar Brasil enfermedad de Newcastle en una granja comercial de pavos. Brasil exporta 30% de su producción de pollo, con México entre sus principales destinos.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "repeats the headline without adding context"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-24T13:01:10.495Z",
         "aliveSources": 69,
