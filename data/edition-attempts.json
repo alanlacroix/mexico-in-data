@@ -4126,14 +4126,109 @@
       "editorialDate": "2026-10-24",
       "slot": "noon",
       "candidateSignature": "faa34e19ad52e1505ed14e21e6bf8ce513f5b1718c3ae125c27c7bd8e60f9412",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-24T16:01:08.053Z",
-      "completedAt": "",
+      "completedAt": "2026-10-24T16:03:16.858Z",
       "calls": 2,
       "costUSD": 0.037536,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-1dc81798ed26: watch: watch item is grammatically incomplete; background: needs an independent source when one is available | n-b754cbfb4333: dek: unsupported number: 4931; dek: Spanish unsupported number: 4931; watch: watch item is grammatically incomplete; background: needs an independent source when one is available | n-6d58",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-1dc81798ed26",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "Mexico imports steel for construction, automotive manufacturing, energy pipelines, industrial machinery and consumer goods. The US applies 25 to 50 percent tariffs on imported steel, aluminum and copper regardless of origin, with limited exceptions under the USMCA. Mexico's customs do not charge tariffs on US steel.",
+              "es": "México importa acero para construcción, manufactura automotriz, oleoductos y gasoductos de energía, maquinaria industrial y bienes de consumo. Estados Unidos aplica aranceles de 25 a 50 por ciento a las importaciones de acero, aluminio y cobre independientemente de su origen, con excepciones limitadas bajo el T-MEC. Las aduanas mexicanas no cobran aranceles sobre el acero estadounidense.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            },
+            "watch": {
+              "en": "If Mexico and the US sign a partial trade agreement on tariffs before the annual USMCA review on July 1 2027, whether it narrows the steel deficit by reducing US tariff rates would confirm whether tariff alignment is a priority negotiating point.",
+              "es": "Si México y Estados Unidos suscriben un acuerdo parcial sobre aranceles antes de la revisión anual del T-MEC el 1 de julio de 2027, si se reduce el déficit de acero al bajar los aranceles estadounidenses confirmaría si la alineación de aranceles es un punto de negociación prioritario.",
+              "refs": [
+                "standing:std-usmca-review",
+                "calendar:2027-07-01"
+              ],
+              "reasons": [
+                "watch item is grammatically incomplete"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-b754cbfb4333",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico's agrifood surplus dropped to 4,283 million dollars through August 2026 from 4,931 million a year earlier as imports grew faster than exports. The US and Canada accounted for 84.5 percent of Mexican farm exports and 68.8 percent of farm imports.",
+              "es": "El superávit agroalimentario de México bajó a 4,283 millones de dólares hasta agosto de 2026 de 4,931 millones hace un año cuando las importaciones crecieron más rápido que las exportaciones. Estados Unidos y Canadá representaron 84.5 por ciento de las exportaciones agrícolas mexicanas y 68.8 por ciento de las importaciones agrícolas.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 4931",
+                "Spanish unsupported number: 4931"
+              ]
+            },
+            "background": {
+              "en": "Tequila and cattle exports grew in August while avocado, sugar, beer and berries exports fell combined 631 million dollars. The sector faces uneven performance across product lines, with price and volume swings affecting different crops differently beyond tariff effects alone.",
+              "es": "Las exportaciones de tequila y ganado bovino crecieron en agosto mientras que las exportaciones de aguacate, azúcar, cerveza y berries cayeron 631 millones de dólares combinados. El sector enfrenta desempeño desigual entre líneas de productos, con fluctuaciones de precio y volumen que afectan diferentes cultivos de manera distinta más allá de los efectos de aranceles solamente.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            },
+            "watch": {
+              "en": "If Mexico negotiates USMCA terms protecting preferential market access for farm products by the US Trade Representative comment deadline on January 12 2027, whether the surplus stabilizes in early 2027 would test whether tariff certainty supports export recovery.",
+              "es": "Si México negocia términos del T-MEC que protejan el acceso preferencial al mercado para productos agrícolas antes del 12 de enero de 2027 cuando vence el plazo de comentarios del Representante Comercial de Estados Unidos, si el superávit se estabiliza a principios de 2027 probaría si la certidumbre de aranceles apoya la recuperación de exportaciones.",
+              "refs": [
+                "article",
+                "calendar:2027-07-01"
+              ],
+              "reasons": [
+                "watch item is grammatically incomplete"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-6d58bfdfe607",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico halted imports of chicken meat, live poultry and fertile eggs from Brazil after authorities detected Newcastle disease in a commercial turkey farm in Brazil's south. Brazil exports 30 percent of its chicken production globally.",
+              "es": "México detuvo las importaciones de carne de pollo, aves vivas y huevo fértil de Brasil después de que autoridades detectaron enfermedad de Newcastle en una granja comercial de pavos en el sur de Brasil. Brasil exporta 30 por ciento de su producción de pollo a nivel mundial.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "repeats the headline without adding context"
+              ]
+            },
+            "watch": {
+              "en": "If Brazil controls the Newcastle outbreak and reports disease-free status to Mexico within 30 days, whether Mexico resumes poultry imports would indicate how quickly supply disruptions reverse.",
+              "es": "Si Brasil controla el brote de Newcastle e informa a México el estado libre de enfermedad dentro de 30 días, si México reanuda las importaciones de aves indicaría qué tan rápidamente se revierten las disrupciones de suministro.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item is grammatically incomplete"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-24T16:01:08.053Z",
         "aliveSources": 68,
