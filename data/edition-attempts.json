@@ -4272,14 +4272,33 @@
       "editorialDate": "2026-10-25",
       "slot": "morning",
       "candidateSignature": "dda6dc24a6149ddfb20d277790b7ceb9b6f46fcfcfb4578653001ffebc81cdc4",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-25T12:18:17.377Z",
-      "completedAt": "",
+      "completedAt": "2026-10-25T12:19:48.561Z",
       "calls": 2,
       "costUSD": 0.077864,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-b754cbfb4333",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "Watch the USTR consultation deadline of January 12, 2027, to see whether Mexico develops a coordinated position on USMCA that could confirm or weaken the sector's case for preferential market access and reduced unilateral trade restrictions.",
+              "es": "Habrá que observar la fecha límite de la consulta del USTR el 12 de enero de 2027, para ver si México desarrolla una posición coordinada sobre el T-MEC que pueda confirmar o debilitar el caso del sector por acceso preferencial a mercados y reducción de restricciones comerciales unilaterales.",
+              "refs": [
+                "article",
+                "calendar:2027-07-01"
+              ],
+              "reasons": [
+                "proposal or uncertainty became final in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-25T12:18:17.377Z",
         "aliveSources": 70,
