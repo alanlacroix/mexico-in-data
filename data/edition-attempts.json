@@ -4272,14 +4272,98 @@
       "editorialDate": "2026-10-25",
       "slot": "morning",
       "candidateSignature": "dda6dc24a6149ddfb20d277790b7ceb9b6f46fcfcfb4578653001ffebc81cdc4",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-25T12:20:09.961Z",
-      "completedAt": "",
+      "completedAt": "2026-10-25T12:22:13.492Z",
       "calls": 4,
       "costUSD": 0.114626,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-1dc81798ed26: dek: negation was introduced in Spanish; background: needs an independent source when one is available | n-b754cbfb4333: dek: 46 words (cap 45); background: needs an independent source when one is available | n-6d58bfdfe607: dek: unsupported numbers: 21, 2026; dek: Spanish unsupported numbers: 21, 2026; view: pro",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-1dc81798ed26",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico posted a 5.244 billion dollar steel deficit with the United States from January to August 2026, driven by imports rising 14.2% while exports fell 13.5%. U.S. steel importers pay tariffs of 25 to 50% regardless of origin, while Mexican customs charge none.",
+              "es": "México registró un déficit de 5.244 mil millones de dólares en acero con Estados Unidos de enero a agosto de 2026, impulsado por importaciones que subieron 14.2% mientras exportaciones cayeron 13.5%. Los importadores estadounidenses de acero pagan aranceles de 25 a 50% sin importar el origen, mientras aduanas mexicanas no cobran ninguno.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            },
+            "background": {
+              "en": "From January to August 2026, Mexico imported 10.311 billion dollars in steel and products from the U.S., a 14.2% annual increase, while Mexican exports fell to 5.067 billion dollars, down 13.5%. The U.S. uses imported steel mainly for construction, automotive manufacturing, energy infrastructure, industrial machinery and consumer goods, according to the U.S. Department of Commerce.",
+              "es": "De enero a agosto de 2026, México importó 10.311 mil millones de dólares en acero y productos de EE.UU., alza de 14.2% anual, mientras exportaciones mexicanas cayeron a 5.067 mil millones, baja de 13.5%. EE.UU. usa acero importado principalmente en construcción, manufactura automotriz, infraestructura energética, maquinaria industrial y bienes de consumo, según datos del Departamento de Comercio estadounidense.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-b754cbfb4333",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico's agrifood surplus narrowed to 4.283 billion dollars from January to August 2026, down 648 million dollars from the same 2025 period, as imports grew faster than exports. The United States and Canada accounted for 84.5% of Mexican farm exports and supplied 68.8% of farm imports.",
+              "es": "El superávit agroalimentario de México se redujo a 4.283 mil millones de dólares de enero a agosto de 2026, reducción de 648 millones respecto al mismo período de 2025, cuando las importaciones crecieron más rápido que las exportaciones. Estados Unidos y Canadá representaron 84.5% de exportaciones agroalimentarias mexicanas y aportaron 68.8% de importaciones.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "46 words (cap 45)"
+              ]
+            },
+            "background": {
+              "en": "From January to August 2026, Mexican agrifood exports totaled 36.035 billion dollars while imports reached 31.752 billion dollars.",
+              "es": "De enero a agosto de 2026, exportaciones agroalimentarias mexicanas sumaron 36.035 mil millones de dólares e importaciones alcanzaron 31.752 mil millones.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-6d58bfdfe607",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico suspended chicken and fertile egg imports from Brazil on October 21, 2026 after officials detected a Newcastle disease outbreak in a commercial turkey farm in southern Brazil. Newcastle is a contagious respiratory infection causing nerve damage, reduced egg output and high bird death rates.",
+              "es": "México suspendió importaciones de pollo y huevo fértil de Brasil el 21 de octubre de 2026 después de que funcionarios detectaran un brote de enfermedad de Newcastle en una granja comercial de pavos en el sur de Brasil. Newcastle es una infección respiratoria contagiosa que causa daño nervioso, reducción de producción de huevo y altas tasas de mortalidad aviar.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported numbers: 21, 2026",
+                "Spanish unsupported numbers: 21, 2026",
+                "repeats the headline without adding context"
+              ]
+            },
+            "view": {
+              "en": "This suspension marks Mexico's second poultry halt from Brazil in eighteen months. In May and June 2025, Mexico, China, the European Union and other Latin American countries stopped Brazilian chicken imports during an avian flu outbreak, according to Mexican authorities.",
+              "es": "Esta suspensión es el segundo cierre de importaciones avícolas de Brasil en dieciocho meses. En mayo y junio de 2025, México, China, la Unión Europea y otros países latinoamericanos frenaron importaciones de pollo brasileño durante un brote de gripe aviar, según autoridades mexicanas.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or uncertainty became final in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-25T12:20:09.961Z",
         "aliveSources": 70,
