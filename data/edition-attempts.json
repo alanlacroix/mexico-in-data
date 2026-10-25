@@ -4272,35 +4272,16 @@
       "editorialDate": "2026-10-25",
       "slot": "morning",
       "candidateSignature": "dda6dc24a6149ddfb20d277790b7ceb9b6f46fcfcfb4578653001ffebc81cdc4",
-      "state": "failed",
-      "startedAt": "2026-10-25T12:18:17.377Z",
-      "completedAt": "2026-10-25T12:19:48.561Z",
-      "calls": 2,
-      "costUSD": 0.077864,
+      "state": "started",
+      "startedAt": "2026-10-25T12:20:09.961Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.121155,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-b754cbfb4333",
-          "reasons": [],
-          "fields": {
-            "watch": {
-              "en": "Watch the USTR consultation deadline of January 12, 2027, to see whether Mexico develops a coordinated position on USMCA that could confirm or weaken the sector's case for preferential market access and reduced unilateral trade restrictions.",
-              "es": "Habrá que observar la fecha límite de la consulta del USTR el 12 de enero de 2027, para ver si México desarrolla una posición coordinada sobre el T-MEC que pueda confirmar o debilitar el caso del sector por acceso preferencial a mercados y reducción de restricciones comerciales unilaterales.",
-              "refs": [
-                "article",
-                "calendar:2027-07-01"
-              ],
-              "reasons": [
-                "proposal or uncertainty became final in Spanish"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-25T12:18:17.377Z",
+        "collectedAt": "2026-10-25T12:20:09.961Z",
         "aliveSources": 70,
         "totalSources": 72,
         "wireCount": 60,
@@ -4311,10 +4292,38 @@
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-25T12:18:17.377Z",
+          "completedAt": "2026-10-25T12:19:48.561Z",
+          "calls": 2,
+          "costUSD": 0.077864,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-b754cbfb4333",
+              "reasons": [],
+              "fields": {
+                "watch": {
+                  "en": "Watch the USTR consultation deadline of January 12, 2027, to see whether Mexico develops a coordinated position on USMCA that could confirm or weaken the sector's case for preferential market access and reduced unilateral trade restrictions.",
+                  "es": "Habrá que observar la fecha límite de la consulta del USTR el 12 de enero de 2027, para ver si México desarrolla una posición coordinada sobre el T-MEC que pueda confirmar o debilitar el caso del sector por acceso preferencial a mercados y reducción de restricciones comerciales unilaterales.",
+                  "refs": [
+                    "article",
+                    "calendar:2027-07-01"
+                  ],
+                  "reasons": [
+                    "proposal or uncertainty became final in Spanish"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "40192496476",
+        "runId": "40192591095",
         "runAttempt": "1",
         "receipts": [
           {
@@ -4348,6 +4357,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "42fbbe58-38ea-462f-81f3-8fa345b1e5e4",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.043291,
+            "accountedUSD": 0.043291,
+            "state": "reserved"
           }
         ]
       }
