@@ -4276,7 +4276,7 @@
       "startedAt": "2026-10-25T12:18:17.377Z",
       "completedAt": "",
       "calls": 1,
-      "costUSD": 0.129673,
+      "costUSD": 0.067806,
       "artifactHash": "",
       "reason": "",
       "diagnostics": [],
@@ -4303,8 +4303,16 @@
             "period": "2026-10",
             "model": "claude-sonnet-5",
             "reservedUSD": 0.129673,
-            "accountedUSD": 0.129673,
-            "state": "reserved"
+            "accountedUSD": 0.067806,
+            "state": "settled",
+            "usage": {
+              "input_tokens": 8422,
+              "output_tokens": 2836,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "responseModel": "claude-sonnet-5",
+            "stopReason": "end_turn"
           }
         ]
       }
