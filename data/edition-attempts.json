@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-09",
-      "slot": "morning",
-      "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
-      "state": "failed",
-      "startedAt": "2026-09-09T13:01:00.239Z",
-      "completedAt": "2026-09-09T13:01:14.182Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "",
-      "reason": "collection failed: required scheduled outcome unavailable: inegi-cpi-2026-09-09"
-    },
-    {
-      "editorialDate": "2026-09-09",
-      "slot": "noon",
-      "candidateSignature": "4531c2912c7bc7620a1472c87ba5bac99b4f52ff8fbea4fd7761d1c7056492d9",
-      "state": "failed",
-      "startedAt": "2026-09-09T16:00:55.180Z",
-      "completedAt": "2026-09-09T16:02:12.019Z",
-      "calls": 2,
-      "costUSD": 0.024722,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: federal-budget-package-2027-2026-09-08: headline: 33 words (cap 20); headline: Spanish 43 words (cap 24); watch: negation was introduced in Spanish | inegi-cpi-2026-09-09: headline: semicolon; headline: 27 words (cap 20); headline: Spanish semicolon; headline: Spanish 30 words (cap 24); dek: unsupported number: 3; dek: Spanish u"
-    },
-    {
       "editorialDate": "2026-09-10",
       "slot": "morning",
       "candidateSignature": "dda5c841a69b0b33220c42e8f804240f2aa5b24310c0efd555569fdb60deb34d",
@@ -4288,6 +4264,47 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-10-25",
+      "slot": "morning",
+      "candidateSignature": "dda6dc24a6149ddfb20d277790b7ceb9b6f46fcfcfb4578653001ffebc81cdc4",
+      "state": "started",
+      "startedAt": "2026-10-25T12:18:17.377Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.129673,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-25T12:18:17.377Z",
+        "aliveSources": 70,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "40192496476",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "92ba4e96-ae42-4220-b8c2-0eda3a07cc0a",
+            "period": "2026-10",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.129673,
+            "accountedUSD": 0.129673,
+            "state": "reserved"
           }
         ]
       }
