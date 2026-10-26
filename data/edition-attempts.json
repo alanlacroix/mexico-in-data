@@ -4694,14 +4694,66 @@
       "editorialDate": "2026-10-26",
       "slot": "noon",
       "candidateSignature": "7d2e5f506cf2576c1382fbcdfdec2d3fe5986a94d97d83d772cbff18e8413dbc",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-26T12:30:57.151Z",
-      "completedAt": "",
+      "completedAt": "2026-10-26T12:32:18.754Z",
       "calls": 3,
       "costUSD": 0.038094,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "only 2 stories passed every editorial gate; need at least 3 without padding",
+      "diagnostics": [
+        {
+          "stage": "independent-audit",
+          "storyId": "n-e10fca63e113",
+          "reasons": [
+            "Spanish headline mistranslates 'convicted drug trafficker' as 'campeón olímpico de snowboard traficante de drogas condenado' (Olympic snowboard champion convicted drug trafficker), but the evidence states Wedding 'was convicted' and 'was detenido' (detained/arrested) in Mexico in January 2025, not that he was previously convicted. The English correctly uses 'convicted drug trafficker' as a descriptor of his current status, but the Spanish phrasing suggests a formal conviction before capture.",
+            "The 'view' field claims Wedding 'was accused of directing multiple murders' but the evidence states he was 'presunto responsable de varios asesinatos' (presumed responsible for several murders), which indicates accusation/suspicion rather than the slightly stronger 'accused of directing.' The Spanish version accurately preserves this distinction while the English shifts to 'accused of directing' which, while close, subtly strengthens the claim beyond 'presumed responsible.'",
+            "The watch field makes a prediction about future extraditions ('If Mexican authorities locate and extradite the remaining five') but the evidence does not support discussion of how many remain on the list or whether they are still fugitives. The article discusses five captures from the top ten, but does not enumerate or discuss the status of remaining fugitives."
+          ],
+          "fields": {
+            "headline": {
+              "en": "Mexico captures five FBI's most-wanted fugitives, including Olympic snowboarder convicted drug trafficker",
+              "es": "México captura cinco de los fugitivos más buscados del FBI, incluyendo el campeón olímpico de snowboard traficante de drogas condenado",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "dek": {
+              "en": "The government has detained and extradited 178 people linked to organized crime since January 2025, including five individuals from the FBI's top ten list, as part of security cooperation with the United States.",
+              "es": "El gobierno ha detenido y extraditado 178 personas vinculadas al crimen organizado desde enero de 2025, incluyendo cinco individuos de la lista de los diez más buscados del FBI, como parte de cooperación de seguridad con Estados Unidos.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "background": {
+              "en": "The relationship between Mexico and the United States has navigated commercial tensions and security demands over the past two years. President Claudia Sheinbaum cited these captures as evidence of collaboration.",
+              "es": "La relación entre México y Estados Unidos ha navegado tensiones comerciales y demandas de seguridad durante los últimos dos años. La presidenta Claudia Sheinbaum citó estas capturas como evidencia de colaboración.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "view": {
+              "en": "Ryan Wedding, a Canadian Olympic snowboarder who competed in parallel giant slalom at the 2002 Winter Games in Salt Lake City at age 21, became a major cocaine trafficker for the Cartel of Sinaloa and was accused of directing multiple murders including of US citizens.",
+              "es": "Ryan Wedding, esquiador olímpico canadiense que compitió en eslalom gigante paralelo en los Juegos de Invierno de 2002 en Salt Lake City a los 21 años, se convirtió en traficante importante de cocaína para el Cártel de Sinaloa y fue acusado de dirigir múltiples asesinatos incluyendo de ciudadanos estadounidenses.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "watch": {
+              "en": "If Mexican authorities locate and extradite the remaining five fugitives from the FBI's top ten list, it would demonstrate whether cooperation rates can sustain beyond current captures.",
+              "es": "Si las autoridades mexicanas localizan y extraditan a los cinco fugitivos restantes de la lista de los diez más buscados del FBI, demostraría si las tasas de cooperación pueden sostenerse más allá de las capturas actuales.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-26T12:30:57.151Z",
         "aliveSources": 69,
