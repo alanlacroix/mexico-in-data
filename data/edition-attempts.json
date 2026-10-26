@@ -4492,14 +4492,70 @@
       "editorialDate": "2026-10-26",
       "slot": "morning",
       "candidateSignature": "7d2e5f506cf2576c1382fbcdfdec2d3fe5986a94d97d83d772cbff18e8413dbc",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-26T12:25:58.457Z",
-      "completedAt": "",
+      "completedAt": "2026-10-26T12:27:15.325Z",
       "calls": 2,
       "costUSD": 0.033648,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-5153251c0658: view: negation was introduced in Spanish | n-e10fca63e113: watch: empty report text; watch: watch item has no observable next test; watch: Spanish translation is empty | n-76c763caaaee: watch: empty report text; watch: watch item has no observable next test; watch: Spanish translation is empty",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-5153251c0658",
+          "reasons": [],
+          "fields": {
+            "view": {
+              "en": "Industrial users, transporters and farmers depend on affordable diesel for operations, so sustained subsidies reduce immediate cost pressures across the supply chain. However, seven consecutive weeks of uncollected fuel tax revenue strain federal finances and delay the price adjustment that market conditions would otherwise impose.",
+              "es": "Usuarios industriales, transportistas y agricultores dependen del diésel asequible para sus operaciones, por lo que los subsidios sostenidos reducen presiones de costos inmediatos en toda la cadena de suministro. Sin embargo, siete semanas consecutivas de ingresos fiscales combustibles no recaudados carga las finanzas federales y retrasa el ajuste de precios que las condiciones de mercado de otro modo impondrían.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-e10fca63e113",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-76c763caaaee",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-26T12:25:58.457Z",
         "aliveSources": 68,
