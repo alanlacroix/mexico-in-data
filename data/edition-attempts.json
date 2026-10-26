@@ -4689,6 +4689,48 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-10-26",
+      "slot": "noon",
+      "candidateSignature": "7d2e5f506cf2576c1382fbcdfdec2d3fe5986a94d97d83d772cbff18e8413dbc",
+      "state": "started",
+      "startedAt": "2026-10-26T12:30:57.151Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.049402,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-26T12:30:57.151Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "elfin-mercados",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "40323081630",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "cfb4698f-3a8c-4895-8a68-34d5269c3b88",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.049402,
+            "accountedUSD": 0.049402,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
