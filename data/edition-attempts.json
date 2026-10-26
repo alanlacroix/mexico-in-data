@@ -4492,14 +4492,53 @@
       "editorialDate": "2026-10-26",
       "slot": "morning",
       "candidateSignature": "7d2e5f506cf2576c1382fbcdfdec2d3fe5986a94d97d83d772cbff18e8413dbc",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-26T12:27:31.935Z",
-      "completedAt": "",
+      "completedAt": "2026-10-26T12:28:42.259Z",
       "calls": 4,
       "costUSD": 0.063458,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-76c763caaaee",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article",
+                "standing:std-energy-constraint"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-183b90169e16",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The government approved operational standards for battery storage integration in April 2024, and 10,501 megawatts of renewable capacity from two permit rounds will require at least 3,150 megawatts-hour of storage over four years.",
+              "es": "El gobierno aprobó estándares operacionales para integración de almacenamiento en baterías en abril 2024, y 10,501 megawatts de capacidad renovable de dos rondas de permisos requerirán al menos 3,150 megawatts-hora de almacenamiento durante cuatro años.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported numbers: 10501, 3150",
+                "Spanish unsupported numbers: 10501, 3150"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-26T12:27:31.935Z",
         "aliveSources": 69,
