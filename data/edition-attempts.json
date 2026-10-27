@@ -4977,27 +4977,35 @@
       "slot": "noon",
       "candidateSignature": "e9381ec95fb727dec11a42c7f51a3dc9c0d49e412795c08f7454da70a74289ab",
       "state": "failed",
-      "startedAt": "2026-10-27T12:12:37.814Z",
-      "completedAt": "2026-10-27T12:13:17.890Z",
+      "startedAt": "2026-10-27T12:13:39.877Z",
+      "completedAt": "2026-10-27T12:13:48.085Z",
       "calls": 1,
       "costUSD": 0.021303,
       "artifactHash": "",
-      "reason": "daily model budget would be exceeded (0.0890 + 0.0461 > 0.1935)",
+      "reason": "daily model budget would be exceeded (0.0890 + 0.0516 > 0.1935)",
       "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-27T12:12:37.814Z",
-        "aliveSources": 69,
+        "collectedAt": "2026-10-27T12:13:39.877Z",
+        "aliveSources": 70,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
-          "mexico-business-news",
           "insightcrime-mx",
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-27T12:12:37.814Z",
+          "completedAt": "2026-10-27T12:13:17.890Z",
+          "calls": 1,
+          "costUSD": 0.021303,
+          "reason": "daily model budget would be exceeded (0.0890 + 0.0461 > 0.1935)",
+          "diagnostics": []
+        }
+      ],
       "modelAccounting": {
         "version": 1,
         "runId": "40501944541",
