@@ -4813,14 +4813,52 @@
       "editorialDate": "2026-10-27",
       "slot": "morning",
       "candidateSignature": "e9381ec95fb727dec11a42c7f51a3dc9c0d49e412795c08f7454da70a74289ab",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-27T12:08:23.802Z",
-      "completedAt": "",
+      "completedAt": "2026-10-27T12:09:39.839Z",
       "calls": 2,
       "costUSD": 0.035048,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-4e3857f057f5",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-837ee34b1a9e",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The United States collected 14 thousand 439 million dollars in tariffs on Mexican imports from January through August 2026, representing 8.3 percent of 173 thousand 500 million dollars in total U.S. tariff revenue during that period.",
+              "es": "Estados Unidos recaudó 14 mil 439 millones de dólares en aranceles sobre importaciones mexicanas de enero a agosto de 2026, representando 8.3 por ciento de 173 mil 500 millones de dólares en ingresos arancelarios estadounidenses totales en ese período.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 2026",
+                "Spanish unsupported number: 2026"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-27T12:08:23.802Z",
         "aliveSources": 67,
