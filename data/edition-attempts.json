@@ -4813,14 +4813,33 @@
       "editorialDate": "2026-10-27",
       "slot": "morning",
       "candidateSignature": "e9381ec95fb727dec11a42c7f51a3dc9c0d49e412795c08f7454da70a74289ab",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-27T12:09:57.169Z",
-      "completedAt": "",
+      "completedAt": "2026-10-27T12:10:51.359Z",
       "calls": 4,
       "costUSD": 0.067727,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-837ee34b1a9e",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Pemsa reported third quarter 2026 revenue of 55.4 million dollars and Ebitda of 14.7 million dollars after restarting four platforms that had been idled by Pemex nonpayment, yet sales remain 68.9 percent below 2024 levels.",
+              "es": "Pemsa reportó ingresos del tercer trimestre de 2026 de 55.4 millones de dólares y Ebitda de 14.7 millones de dólares tras reiniciar cuatro plataformas que habían sido paralizadas por falta de pago de Pemex, pero las ventas permanecen 68.9 por ciento por debajo de niveles de 2024.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported numbers: 2026, 55.4, 14.7, 68.9, 2024",
+                "Spanish unsupported numbers: 2026, 55.4, 14.7, 68.9, 2024"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-27T12:09:57.169Z",
         "aliveSources": 70,
