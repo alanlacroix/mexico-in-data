@@ -5010,14 +5010,89 @@
       "editorialDate": "2026-10-28",
       "slot": "morning",
       "candidateSignature": "db13267ede2d71d97edfd0e02e053461a3e8ad2a7fd2326855535ee1a4287c56",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-28T12:09:41.410Z",
-      "completedAt": "",
+      "completedAt": "2026-10-28T12:10:48.559Z",
       "calls": 4,
       "costUSD": 0.078279,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-de4a2ef95cc6: headline: unsupported number: 77797; headline: numbers changed in Spanish; dek: unsupported number: 627194; dek: numbers changed in Spanish | n-ccc678b8780c: background: negation was introduced in Spanish; background: needs an independent source when one is available | n-a0f8f1bb1203: background: proposal or draf",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-de4a2ef95cc6",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexican exports surge 37.8% in September to 77,797 million dollars",
+              "es": "Exportaciones mexicanas se disparan 37.8% en septiembre a 77 mil 797 millones de dólares",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 77797",
+                "numbers changed in Spanish"
+              ]
+            },
+            "dek": {
+              "en": "Non-automotive manufacturing exports jumped 53% annually and represented 74.1% of total manufacturing output. Mexico's third-quarter exports reached a record 627,194 million dollars through September, up 30.3% from 2010.",
+              "es": "Las exportaciones de manufactura no automotriz se dispararon 53% anual y representaron 74.1% de la producción manufacturera total. Las exportaciones del tercer trimestre de México alcanzaron un récord de 627 mil 194 millones de dólares hasta septiembre, con alza de 30.3% desde 2010.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 627194",
+                "numbers changed in Spanish"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-ccc678b8780c",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "Shayna Feinman, age 38, was reported missing in rural Yavapai County, Arizona in March 2024 after failing to arrive at an acquaintance's home. Her car was found abandoned nearby with her wallet and identification inside, and her cellphone was recovered on nearby land.",
+              "es": "Shayna Feinman, de 38 años, fue reportada desaparecida en el condado rural de Yavapai, Arizona en marzo de 2024 después de no llegar a casa de un conocido. Su auto fue encontrado abandonado cerca con su cartera e identificación adentro, y su teléfono celular fue recuperado en tierra cercana.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish",
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-a0f8f1bb1203",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "Mexico City's tourism promotion fund director proposed eliminating cash at hotels as part of the federal Digital Economy Law, which will expand digital payments starting with gas stations and toll booths. The secretariat of finance will define which other sectors adopt the measure.",
+              "es": "El director del fondo de promoción turística de la Ciudad de México propuso eliminar efectivo en hoteles como parte de la Ley de Economía Digital federal, que expandirá pagos digitales comenzando con gasolineras y casetas de peaje. La secretaría de finanzas definirá qué otros sectores adoptan la medida.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or draft described as a completed action"
+              ]
+            },
+            "view": {
+              "en": "Cash-free hotel payments would make lodging tax collection more transparent and prevent income underreporting. Hotels already identify guests and process transactions digitally, making implementation easier than for smaller merchants.",
+              "es": "Los pagos sin efectivo en hoteles harían la recaudación del impuesto sobre hospedaje más transparente y prevendrían el subregistro de ingresos. Los hoteles ya identifican huéspedes y procesan transacciones digitalmente, haciendo la implementación más fácil que para comercios más pequeños.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-28T12:09:41.410Z",
         "aliveSources": 70,
