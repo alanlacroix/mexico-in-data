@@ -5010,105 +5010,113 @@
       "editorialDate": "2026-10-28",
       "slot": "morning",
       "candidateSignature": "db13267ede2d71d97edfd0e02e053461a3e8ad2a7fd2326855535ee1a4287c56",
-      "state": "failed",
-      "startedAt": "2026-10-28T12:07:50.924Z",
-      "completedAt": "2026-10-28T12:09:26.271Z",
-      "calls": 2,
-      "costUSD": 0.039422,
+      "state": "started",
+      "startedAt": "2026-10-28T12:09:41.410Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.090203,
       "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-de4a2ef95cc6: watch: watch item is grammatically incomplete | n-ccc678b8780c: view: proposal or draft described as a completed action; watch: watch item is grammatically incomplete; background: needs an independent source when one is available | n-a0f8f1bb1203: watch: proposal or draft described as a completed action; watch: w",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-de4a2ef95cc6",
-          "reasons": [],
-          "fields": {
-            "watch": {
-              "en": "If the United States and Mexico reach a new T-MEC agreement on steel, aluminum and automotive rules of origin, whether Mexico's export growth accelerates or slows will test whether the boom depends on sustained US demand or bilateral trade friction.",
-              "es": "Si Estados Unidos y México alcanzan un nuevo acuerdo del T-MEC sobre acero, aluminio y reglas de origen automotriz, ya sea que el crecimiento de exportaciones de México se acelere o se desacelere probará si el auge depende de demanda estadounidense sostenida o fricción comercial bilateral.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "watch item is grammatically incomplete"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-ccc678b8780c",
-          "reasons": [],
-          "fields": {
-            "background": {
-              "en": "Shayna Feinman, age 38, disappeared in rural Yavapai County, Arizona in March 2024 while walking to an acquaintance's home. Her car was found abandoned with her wallet and identification inside, and her cellphone was recovered on nearby land.",
-              "es": "Shayna Feinman, de 38 años, desapareció en el condado rural de Yavapai, Arizona en marzo de 2024 mientras caminaba hacia la casa de un conocido. Su coche fue encontrado abandonado con su cartera e identificación adentro, y su teléfono celular fue recuperado en tierras cercanas.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "needs an independent source when one is available"
-              ]
-            },
-            "view": {
-              "en": "The case shows how unconfirmed social media reports and premature official statements can create false hope. The Yavapai County Sheriff's Office confirmed using physical evidence Tuesday that the woman located in Tijuana was not Feinman.",
-              "es": "El caso muestra cómo reportes no confirmados en redes sociales y declaraciones oficiales prematuras pueden crear falsas esperanzas. La Oficina del Sheriff del Condado de Yavapai confirmó utilizando evidencia física el martes que la mujer localizada en Tijuana no era Feinman.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or draft described as a completed action"
-              ]
-            },
-            "watch": {
-              "en": "If Yavapai County authorities recover new physical evidence or locate additional witnesses, whether such findings narrow the search for Feinman or clarify her status will indicate the direction of the ongoing investigation.",
-              "es": "Si las autoridades del Condado de Yavapai recuperan nueva evidencia física o localizan testigos adicionales, ya sea que tales hallazgos cierren la búsqueda de Feinman o aclaren su situación indicará la dirección de la investigación en curso.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "watch item is grammatically incomplete"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-a0f8f1bb1203",
-          "reasons": [],
-          "fields": {
-            "watch": {
-              "en": "If Mexico's finance ministry formally designates hotels as required Digital Economy Law participants by end of 2026, whether hotels meet implementation deadlines and whether lodging sector tax revenue increases will test whether cashless mandates effectively reduce evasion.",
-              "es": "Si la secretaría de hacienda de México designa formalmente hoteles como participantes requeridos de la Ley de Economía Digital antes de fin de 2026, ya sea que hoteles cumplan plazos de implementación e ingresos fiscales del sector hospedaje aumenten probará si mandatos sin efectivo reducen efectivamente la evasión.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or draft described as a completed action",
-                "watch item is grammatically incomplete",
-                "negation was introduced in Spanish"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-28T12:07:50.924Z",
-        "aliveSources": 69,
+        "collectedAt": "2026-10-28T12:09:41.410Z",
+        "aliveSources": 70,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
-          "mexico-business-news",
           "insightcrime-mx",
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-28T12:07:50.924Z",
+          "completedAt": "2026-10-28T12:09:26.271Z",
+          "calls": 2,
+          "costUSD": 0.039422,
+          "reason": "all story drafts failed the deterministic evidence gate: n-de4a2ef95cc6: watch: watch item is grammatically incomplete | n-ccc678b8780c: view: proposal or draft described as a completed action; watch: watch item is grammatically incomplete; background: needs an independent source when one is available | n-a0f8f1bb1203: watch: proposal or draft described as a completed action; watch: w",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-de4a2ef95cc6",
+              "reasons": [],
+              "fields": {
+                "watch": {
+                  "en": "If the United States and Mexico reach a new T-MEC agreement on steel, aluminum and automotive rules of origin, whether Mexico's export growth accelerates or slows will test whether the boom depends on sustained US demand or bilateral trade friction.",
+                  "es": "Si Estados Unidos y México alcanzan un nuevo acuerdo del T-MEC sobre acero, aluminio y reglas de origen automotriz, ya sea que el crecimiento de exportaciones de México se acelere o se desacelere probará si el auge depende de demanda estadounidense sostenida o fricción comercial bilateral.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "watch item is grammatically incomplete"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-ccc678b8780c",
+              "reasons": [],
+              "fields": {
+                "background": {
+                  "en": "Shayna Feinman, age 38, disappeared in rural Yavapai County, Arizona in March 2024 while walking to an acquaintance's home. Her car was found abandoned with her wallet and identification inside, and her cellphone was recovered on nearby land.",
+                  "es": "Shayna Feinman, de 38 años, desapareció en el condado rural de Yavapai, Arizona en marzo de 2024 mientras caminaba hacia la casa de un conocido. Su coche fue encontrado abandonado con su cartera e identificación adentro, y su teléfono celular fue recuperado en tierras cercanas.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "needs an independent source when one is available"
+                  ]
+                },
+                "view": {
+                  "en": "The case shows how unconfirmed social media reports and premature official statements can create false hope. The Yavapai County Sheriff's Office confirmed using physical evidence Tuesday that the woman located in Tijuana was not Feinman.",
+                  "es": "El caso muestra cómo reportes no confirmados en redes sociales y declaraciones oficiales prematuras pueden crear falsas esperanzas. La Oficina del Sheriff del Condado de Yavapai confirmó utilizando evidencia física el martes que la mujer localizada en Tijuana no era Feinman.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "proposal or draft described as a completed action"
+                  ]
+                },
+                "watch": {
+                  "en": "If Yavapai County authorities recover new physical evidence or locate additional witnesses, whether such findings narrow the search for Feinman or clarify her status will indicate the direction of the ongoing investigation.",
+                  "es": "Si las autoridades del Condado de Yavapai recuperan nueva evidencia física o localizan testigos adicionales, ya sea que tales hallazgos cierren la búsqueda de Feinman o aclaren su situación indicará la dirección de la investigación en curso.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "watch item is grammatically incomplete"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-a0f8f1bb1203",
+              "reasons": [],
+              "fields": {
+                "watch": {
+                  "en": "If Mexico's finance ministry formally designates hotels as required Digital Economy Law participants by end of 2026, whether hotels meet implementation deadlines and whether lodging sector tax revenue increases will test whether cashless mandates effectively reduce evasion.",
+                  "es": "Si la secretaría de hacienda de México designa formalmente hoteles como participantes requeridos de la Ley de Economía Digital antes de fin de 2026, ya sea que hoteles cumplan plazos de implementación e ingresos fiscales del sector hospedaje aumenten probará si mandatos sin efectivo reducen efectivamente la evasión.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "proposal or draft described as a completed action",
+                    "watch item is grammatically incomplete",
+                    "negation was introduced in Spanish"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "40685275252",
+        "runId": "40685384833",
         "runAttempt": "1",
         "receipts": [
           {
@@ -5142,6 +5150,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "7e18511c-79bb-4260-8507-f21b47e4d6e5",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.050781,
+            "accountedUSD": 0.050781,
+            "state": "reserved"
           }
         ]
       }
