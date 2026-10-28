@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-12",
-      "slot": "morning",
-      "candidateSignature": "8eae52588829a7c9385241a322079fedeead3bd35a540c1c850d0c7e51ff7626",
-      "state": "failed",
-      "startedAt": "2026-09-12T13:00:54.545Z",
-      "completedAt": "2026-09-12T13:02:05.017Z",
-      "calls": 3,
-      "costUSD": 0.023574,
-      "artifactHash": "",
-      "reason": "a required scheduled outcome failed the edition gate"
-    },
-    {
-      "editorialDate": "2026-09-12",
-      "slot": "noon",
-      "candidateSignature": "7eccc16669549e2d2e6db9a7819ce52cc968c6d5a0f1251d47df127e2defd485",
-      "state": "failed",
-      "startedAt": "2026-09-12T16:00:55.667Z",
-      "completedAt": "2026-09-12T16:01:35.845Z",
-      "calls": 2,
-      "costUSD": 0.021849,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: federal-budget-package-2027-2026-09-08: headline: 29 words (cap 20); headline: Spanish 32 words (cap 24); background: proposal or draft described as a completed action | inegi-cpi-2026-09-09: view: vague analysis: \"indicates that\" | n-28b21d8d7bc3: headline: 23 words (cap 20); headline: Spanish 30 words (cap 24); view: proposal"
-    },
-    {
       "editorialDate": "2026-09-13",
       "slot": "morning",
       "candidateSignature": "cd2c0ed6ae298b5840db43bca9440d6fe5a16252572fbaf3b74cd14bc16b961c",
@@ -5026,6 +5002,48 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-10-28",
+      "slot": "morning",
+      "candidateSignature": "db13267ede2d71d97edfd0e02e053461a3e8ad2a7fd2326855535ee1a4287c56",
+      "state": "started",
+      "startedAt": "2026-10-28T12:07:50.924Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.0507,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-28T12:07:50.924Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "40685275252",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "0928f652-0362-40ca-bfe4-1bb288254ce7",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.0507,
+            "accountedUSD": 0.0507,
+            "state": "reserved"
           }
         ]
       }
