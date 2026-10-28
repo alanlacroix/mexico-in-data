@@ -5266,27 +5266,36 @@
       "slot": "noon",
       "candidateSignature": "4cff0fe241bf1475914aef3c3519ad94aa619721f97e69e9358882b87a3c0a9f",
       "state": "failed",
-      "startedAt": "2026-10-28T12:13:59.521Z",
-      "completedAt": "2026-10-28T12:14:42.966Z",
+      "startedAt": "2026-10-28T12:15:04.815Z",
+      "completedAt": "2026-10-28T12:15:23.159Z",
       "calls": 1,
       "costUSD": 0.019994,
       "artifactHash": "",
-      "reason": "daily model budget would be exceeded (0.0983 + 0.0464 > 0.1935)",
+      "reason": "daily model budget would be exceeded (0.0983 + 0.0512 > 0.1935)",
       "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-28T12:13:59.521Z",
+        "collectedAt": "2026-10-28T12:15:04.815Z",
         "aliveSources": 69,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
-          "ceey",
           "insightcrime-mx",
+          "energiaadebate",
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-28T12:13:59.521Z",
+          "completedAt": "2026-10-28T12:14:42.966Z",
+          "calls": 1,
+          "costUSD": 0.019994,
+          "reason": "daily model budget would be exceeded (0.0983 + 0.0464 > 0.1935)",
+          "diagnostics": []
+        }
+      ],
       "modelAccounting": {
         "version": 1,
         "runId": "40686089850",
