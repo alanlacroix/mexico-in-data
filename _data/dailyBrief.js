@@ -45,7 +45,7 @@ function toStory(story, locale) {
     beat: section.beat,
     date: story.date,
     lane: story.lane,
-    title: headline(copy.headline).replace(/\.\s*$/, ''),
+    title: headline(copy.headline),
     summary: explanation(copy.dek),
     bg: explanation(copy.background),
     view: explanation(copy.view),
