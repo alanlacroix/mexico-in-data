@@ -104,6 +104,33 @@ function renderSectionFixture(artifact, locale) {
   });
   return module.exports.forLocale(locale);
 }
+
+// Reviewed headlines are artifact content, not typography for the renderer to
+// rewrite. Keep punctuation in both languages even when live data lacks it.
+for (const ending of ['.', '...', '…', '?', '!', '.”', '']) {
+  const punctuationFixture = structuredClone(edition);
+  for (const story of punctuationFixture.stories) {
+    for (const locale of ['en', 'es']) {
+      story[locale].headline = `${story[locale].headline.replace(/[.!?…]+$/, '')}${ending}`;
+      const weekStory = punctuationFixture.weekStories.find(item => item.id === story.id);
+      if (weekStory) weekStory[locale].headline = story[locale].headline;
+    }
+  }
+  const artifact = publicEdition.withArtifactHash(punctuationFixture);
+  assert.deepEqual(publicEdition.validateEdition(artifact).errors, []);
+  const artifactBeforeRendering = JSON.stringify(artifact);
+  for (const locale of ['en', 'es']) {
+    const expected = artifact.stories.map(story => story[locale].headline);
+    const brief = dailyBrief(new Date(`${artifact.editorialDate}T18:00:00Z`), { edition: artifact }, locale);
+    assert.deepEqual(brief.stories.map(story => story.title), expected,
+      `${locale} daily brief must preserve reviewed headline punctuation: ${JSON.stringify(ending)}`);
+    const rendered = renderSectionFixture(artifact, locale);
+    assert.deepEqual(Array.from(rendered.stories, story => story.title), expected,
+      `${locale} homepage feed must preserve reviewed headline punctuation: ${JSON.stringify(ending)}`);
+  }
+  assert.equal(JSON.stringify(artifact), artifactBeforeRendering, 'rendering must not mutate the reviewed artifact');
+}
+
 for (const lanes of [['weekend', 'week-recap'], ['week-recap'], ['weekend']]) {
   const fixture = sectionFixture(lanes);
   assert.deepEqual(publicEdition.validateEdition(fixture).errors, []);

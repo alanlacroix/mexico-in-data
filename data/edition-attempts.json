@@ -5300,13 +5300,13 @@
       "editorialDate": "2026-10-29",
       "slot": "morning",
       "candidateSignature": "809e1f03a81cf9acc760ab46faa6d8890d01cfc5ec74b425751324c38e895e6d",
-      "state": "failed",
+      "state": "published",
       "startedAt": "2026-10-29T12:09:11.308Z",
-      "completedAt": "2026-10-29T12:10:21.512Z",
+      "completedAt": "2026-10-29T12:27:47Z",
       "calls": 5,
       "costUSD": 0.090997,
-      "artifactHash": "",
-      "reason": "Exact site release validation failed; the last good public edition was retained",
+      "artifactHash": "506061cf270f4ddae999fc976e4a3e67bf9b1990f607113e96b182c85ac89774",
+      "reason": "Independently audited curated recovery after release rejection; no additional provider calls",
       "diagnostics": [],
       "collection": {
         "collectedAt": "2026-10-29T12:09:11.308Z",
@@ -5495,6 +5495,25 @@
         "heldAt": "2026-10-29T12:10:36.961Z",
         "workflowRunId": "40870790419",
         "workflowRunAttempt": "1"
+      },
+      "manualRecovery": {
+        "reviewedAt": "2026-10-29T12:26:48Z",
+        "method": "Independent field-by-field source and translation review, unchanged cited-evidence and public-edition validation, with exact artifact and review binding",
+        "artifactHash": "506061cf270f4ddae999fc976e4a3e67bf9b1990f607113e96b182c85ac89774",
+        "draftSHA256": "3640c947dbab56790db99271ab8d94a6e5a2681cedef28cf54db96a15399708a",
+        "auditSHA256": "3d5ad03a373e8842cf696a9b0d186349163d5b86ae047f067817a3eb86059a19",
+        "deterministicReviewSHA256": "e0e49bcaa973b941f8055f80f3920721168b6823243024688e322e7f3990f81d",
+        "sourceEvidenceSHA256": "7b5adabd7036f4fe6c979855856a63c397a567bd700967e650f77fc5d185542a",
+        "priorState": "failed",
+        "priorFailure": "Exact site release validation failed; the last good public edition was retained",
+        "priorDiagnostics": [],
+        "priorCompletedAt": "2026-10-29T12:10:21.512Z",
+        "priorArtifactHash": "",
+        "heldArtifactHash": "0fc1fe70001f08171ae5d6556c67629758fcd41b18d6defc535a94af7e4662dc",
+        "sourceProvenance": "Retained complete official DOF evidence for the two legal orders, with independent official indexed publication corroboration; freshly opened original El Economista reporting for Guadalajara water works. Full legal pages could not be freshly reopened. Original source dates and lead URLs retained.",
+        "generationProvenance": "Operator-curated recovery; zero additional provider generation or audit calls. All prior five calls, 0.090997 USD, five receipts, one paid recovery, held candidate and release-failure history retained. The original automated audit is not approval of these corrected bytes.",
+        "readerCopySHA256": "a1dd1f85042289d1e851e33e7c3088e1d07bc7a99e78e1b8a9d3f9c875a9e72c",
+        "renderedReviewScope": "Actual EN/ES homepage template text: 24 displayed headline, dek, background and view fields match the audited artifact. Six watch fields remain source-audited in the artifact and intentionally hidden by the preexisting optional-margin presentation contract."
       }
     }
   ]
