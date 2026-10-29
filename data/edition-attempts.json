@@ -5300,13 +5300,13 @@
       "editorialDate": "2026-10-29",
       "slot": "morning",
       "candidateSignature": "809e1f03a81cf9acc760ab46faa6d8890d01cfc5ec74b425751324c38e895e6d",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-29T12:09:11.308Z",
-      "completedAt": "",
+      "completedAt": "2026-10-29T12:10:21.512Z",
       "calls": 5,
       "costUSD": 0.090997,
       "artifactHash": "",
-      "reason": "",
+      "reason": "Exact site release validation failed; the last good public edition was retained",
       "diagnostics": [],
       "collection": {
         "collectedAt": "2026-10-29T12:09:11.308Z",
@@ -5471,6 +5471,30 @@
             "stopReason": "end_turn"
           }
         ]
+      },
+      "releaseFailures": [
+        {
+          "failedAt": "2026-10-29T12:10:36.961Z",
+          "artifactHash": "0fc1fe70001f08171ae5d6556c67629758fcd41b18d6defc535a94af7e4662dc",
+          "reason": "Exact site release validation failed; the last good public edition was retained",
+          "previousReason": "",
+          "diagnostics": []
+        }
+      ],
+      "heldEdition": {
+        "schemaVersion": 1,
+        "reason": "release-gate-failure",
+        "editorialDate": "2026-10-29",
+        "slot": "morning",
+        "artifactHash": "0fc1fe70001f08171ae5d6556c67629758fcd41b18d6defc535a94af7e4662dc",
+        "candidateSignature": "809e1f03a81cf9acc760ab46faa6d8890d01cfc5ec74b425751324c38e895e6d",
+        "generatedAt": "2026-10-29T12:09:11.308Z",
+        "generationCompletedAt": "2026-10-29T12:10:21.512Z",
+        "generationCalls": 5,
+        "generationCostUSD": 0.090997,
+        "heldAt": "2026-10-29T12:10:36.961Z",
+        "workflowRunId": "40870790419",
+        "workflowRunAttempt": "1"
       }
     }
   ]
