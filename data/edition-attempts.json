@@ -5300,86 +5300,94 @@
       "editorialDate": "2026-10-29",
       "slot": "morning",
       "candidateSignature": "809e1f03a81cf9acc760ab46faa6d8890d01cfc5ec74b425751324c38e895e6d",
-      "state": "failed",
-      "startedAt": "2026-10-29T12:07:20.195Z",
-      "completedAt": "2026-10-29T12:08:52.577Z",
-      "calls": 2,
-      "costUSD": 0.042493,
+      "state": "started",
+      "startedAt": "2026-10-29T12:09:11.308Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.108729,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-0e8e1085399f",
-          "reasons": [],
-          "fields": {
-            "view": {
-              "en": "The permit requirement lets government track and channel investment into new automotive assembly capacity. By conditioning tariff-free access on prior approval, policymakers aim to direct production lines toward new or expanded facilities rather than allowing unrestricted duty savings to existing operations.",
-              "es": "El requisito de permiso permite al gobierno rastrear y canalizar inversión hacia capacidad nueva de ensamble automotriz. Al condicionar el acceso libre de aranceles a aprobación previa, los formuladores de política buscan dirigir líneas de producción hacia instalaciones nuevas o expandidas en lugar de permitir ahorros de aranceles sin restricciones en operaciones existentes.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "negation was introduced in Spanish"
-              ]
-            },
-            "watch": {
-              "en": "If the government approves permits for assembly plants announced after October 13, whether new production lines begin construction and component imports increase within 12 months would confirm the incentive attracts or expands capacity rather than merely reducing costs for existing operations.",
-              "es": "Si el gobierno aprueba permisos para plantas de ensamble anunciadas después del 13 de octubre, si las nuevas líneas de producción comienzan construcción e importaciones de componentes aumentan dentro de 12 meses confirmaría que el incentivo atrae o expande capacidad en lugar de meramente reducir costos para operaciones existentes.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "watch item is grammatically incomplete"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-5eef51168d7e",
-          "reasons": [],
-          "fields": {
-            "background": {
-              "en": "Guadalajara's metro area has suffered service disruptions and contamination of drinking water sources. The first aqueduct runs 42 kilometers from Santa Cruz pump station to a tank at Cerro del Cuatro with capacity for 8,000 liters per second and costs 9,300 million pesos.",
-              "es": "El área metropolitana de Guadalajara ha sufrido interrupciones de servicio y contaminación de fuentes de agua potable. El primer acueducto corre 42 kilómetros desde la planta de bombeo de Santa Cruz hasta un tanque en Cerro del Cuatro con capacidad de 8,000 litros por segundo y cuesta 9,300 millones de pesos.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "needs an independent source when one is available"
-              ]
-            },
-            "view": {
-              "en": "The infrastructure expansion addresses water stress affecting industrial output and household service in Mexico's second-largest metro region. Public operation by the state water utility avoids private-sector overhead but depends on sustained maintenance funding and tariff discipline to succeed.",
-              "es": "La expansión de infraestructura aborda estrés hídrico que afecta la producción industrial y el servicio doméstico en la segunda región metropolitana más grande de México. La operación pública a cargo del organismo operador estatal evita sobrecostos del sector privado pero depende del financiamiento de mantenimiento sostenido y disciplina tarifaria para tener éxito.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported evidence qualifier: largest"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-29T12:07:20.195Z",
-        "aliveSources": 69,
+        "collectedAt": "2026-10-29T12:09:11.308Z",
+        "aliveSources": 70,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
-          "mexico-business-news",
           "insightcrime-mx",
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-29T12:07:20.195Z",
+          "completedAt": "2026-10-29T12:08:52.577Z",
+          "calls": 2,
+          "costUSD": 0.042493,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-0e8e1085399f",
+              "reasons": [],
+              "fields": {
+                "view": {
+                  "en": "The permit requirement lets government track and channel investment into new automotive assembly capacity. By conditioning tariff-free access on prior approval, policymakers aim to direct production lines toward new or expanded facilities rather than allowing unrestricted duty savings to existing operations.",
+                  "es": "El requisito de permiso permite al gobierno rastrear y canalizar inversión hacia capacidad nueva de ensamble automotriz. Al condicionar el acceso libre de aranceles a aprobación previa, los formuladores de política buscan dirigir líneas de producción hacia instalaciones nuevas o expandidas en lugar de permitir ahorros de aranceles sin restricciones en operaciones existentes.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "negation was introduced in Spanish"
+                  ]
+                },
+                "watch": {
+                  "en": "If the government approves permits for assembly plants announced after October 13, whether new production lines begin construction and component imports increase within 12 months would confirm the incentive attracts or expands capacity rather than merely reducing costs for existing operations.",
+                  "es": "Si el gobierno aprueba permisos para plantas de ensamble anunciadas después del 13 de octubre, si las nuevas líneas de producción comienzan construcción e importaciones de componentes aumentan dentro de 12 meses confirmaría que el incentivo atrae o expande capacidad en lugar de meramente reducir costos para operaciones existentes.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "watch item is grammatically incomplete"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-5eef51168d7e",
+              "reasons": [],
+              "fields": {
+                "background": {
+                  "en": "Guadalajara's metro area has suffered service disruptions and contamination of drinking water sources. The first aqueduct runs 42 kilometers from Santa Cruz pump station to a tank at Cerro del Cuatro with capacity for 8,000 liters per second and costs 9,300 million pesos.",
+                  "es": "El área metropolitana de Guadalajara ha sufrido interrupciones de servicio y contaminación de fuentes de agua potable. El primer acueducto corre 42 kilómetros desde la planta de bombeo de Santa Cruz hasta un tanque en Cerro del Cuatro con capacidad de 8,000 litros por segundo y cuesta 9,300 millones de pesos.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "needs an independent source when one is available"
+                  ]
+                },
+                "view": {
+                  "en": "The infrastructure expansion addresses water stress affecting industrial output and household service in Mexico's second-largest metro region. Public operation by the state water utility avoids private-sector overhead but depends on sustained maintenance funding and tariff discipline to succeed.",
+                  "es": "La expansión de infraestructura aborda estrés hídrico que afecta la producción industrial y el servicio doméstico en la segunda región metropolitana más grande de México. La operación pública a cargo del organismo operador estatal evita sobrecostos del sector privado pero depende del financiamiento de mantenimiento sostenido y disciplina tarifaria para tener éxito.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported evidence qualifier: largest"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "40870658696",
+        "runId": "40870790419",
         "runAttempt": "1",
         "receipts": [
           {
@@ -5413,6 +5421,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "891f9ebd-8b34-40d1-8c13-e1e6c0c4145e",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.066236,
+            "accountedUSD": 0.066236,
+            "state": "reserved"
           }
         ]
       }
