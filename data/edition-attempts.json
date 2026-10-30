@@ -5496,14 +5496,32 @@
       "editorialDate": "2026-10-30",
       "slot": "morning",
       "candidateSignature": "6ce93e7dfb34b91405e121118ce9d26b664e44782dbf7b2d1fac39106775851c",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-10-30T12:08:43.936Z",
-      "completedAt": "",
+      "completedAt": "2026-10-30T12:10:08.747Z",
       "calls": 4,
       "costUSD": 0.076242,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-bb000e4e2dab",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "If apprehension levels remain low through the coming months and zero-release policy continues uninterrupted, as reported by U.S. Border Patrol statistics, it would confirm sustained enforcement of the bilateral security strategy.",
+              "es": "Si los niveles de detención permanecen bajos en próximos meses y la política de cero liberaciones continúa sin interrupción, según estadísticas reportadas por la Patrulla Fronteriza estadounidense, confirmaría aplicación sostenida de la estrategia de seguridad bilateral.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-10-30T12:08:43.936Z",
         "aliveSources": 69,
