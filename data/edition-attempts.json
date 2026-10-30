@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-14",
-      "slot": "morning",
-      "candidateSignature": "5dc5546b24ba8ac2507dd8112113f7db04c31115f2c7a1bccf975a9ce285bf8f",
-      "state": "failed",
-      "startedAt": "2026-09-14T13:00:57.386Z",
-      "completedAt": "2026-09-14T13:01:43.678Z",
-      "calls": 2,
-      "costUSD": 0.013651,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-e853f4216a57: view: proposal or draft described as a completed action; watch: proposal or draft described as a completed action; watch: watch item has no observable next test | n-a26fa172756c: model omitted the required story unit | n-0d30c2a70650: model omitted the required story unit"
-    },
-    {
-      "editorialDate": "2026-09-14",
-      "slot": "noon",
-      "candidateSignature": "96768b20bafb0ba04682f80a06d2972856255526b438dae6c24aa652bdf3fd1f",
-      "state": "failed",
-      "startedAt": "2026-09-14T16:05:59.557Z",
-      "completedAt": "2026-09-14T16:07:07.093Z",
-      "calls": 2,
-      "costUSD": 0.02488,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-e853f4216a57: dek: negation was introduced in Spanish; view: proposal or draft described as a completed action; watch: proposal or draft described as a completed action | n-a26fa172756c: background: 4 sentences (cap 3); background: Spanish 4 sentences (cap 3); watch: watch item has no observable next test | n-87501ec1e675: bac"
-    },
-    {
       "editorialDate": "2026-09-15",
       "slot": "morning",
       "candidateSignature": "3856056b5d1b247213c1baaeb38093531555a294d9ad4a95277d65b5abf63970",
@@ -5514,6 +5490,47 @@
         "generationProvenance": "Operator-curated recovery; zero additional provider generation or audit calls. All prior five calls, 0.090997 USD, five receipts, one paid recovery, held candidate and release-failure history retained. The original automated audit is not approval of these corrected bytes.",
         "readerCopySHA256": "a1dd1f85042289d1e851e33e7c3088e1d07bc7a99e78e1b8a9d3f9c875a9e72c",
         "renderedReviewScope": "Actual EN/ES homepage template text: 24 displayed headline, dek, background and view fields match the audited artifact. Six watch fields remain source-audited in the artifact and intentionally hidden by the preexisting optional-margin presentation contract."
+      }
+    },
+    {
+      "editorialDate": "2026-10-30",
+      "slot": "morning",
+      "candidateSignature": "6ce93e7dfb34b91405e121118ce9d26b664e44782dbf7b2d1fac39106775851c",
+      "state": "started",
+      "startedAt": "2026-10-30T12:06:52.416Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.055272,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-30T12:06:52.416Z",
+        "aliveSources": 70,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "41052901078",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "b3d4f006-69b6-4925-9229-59822b1909e5",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.055272,
+            "accountedUSD": 0.055272,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
