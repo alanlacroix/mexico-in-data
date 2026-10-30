@@ -5496,76 +5496,86 @@
       "editorialDate": "2026-10-30",
       "slot": "morning",
       "candidateSignature": "6ce93e7dfb34b91405e121118ce9d26b664e44782dbf7b2d1fac39106775851c",
-      "state": "failed",
-      "startedAt": "2026-10-30T12:06:52.416Z",
-      "completedAt": "2026-10-30T12:08:20.936Z",
-      "calls": 2,
-      "costUSD": 0.039682,
+      "state": "started",
+      "startedAt": "2026-10-30T12:08:43.936Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.089049,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-d18a2abe7599",
-          "reasons": [],
-          "fields": {
-            "headline": {
-              "en": "Texas claims nine Rio Bravo islands; Mexico invokes 1970 border treaty and international commission",
-              "es": "Texas reclama nueve islas en el Río Bravo; México invoca tratado de 1970 y comisión internacional",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "semicolon",
-                "Spanish semicolon"
-              ]
-            },
-            "dek": {
-              "en": "Texas authorized its National Guard to access and patrol nine Rio Bravo islands it claims as state territory for border security. Mexico said the 1970 border treaty reserves island-ownership decisions to the bilateral International Boundary and Water Commission.",
-              "es": "Texas autorizó a su Guardia Nacional acceder y patrullar nueve islas del Río Bravo que reclama como territorio estatal por seguridad fronteriza. México dijo que el tratado de 1970 reserva decisiones sobre propiedad de islas a la Comisión Internacional de Límites y Aguas bilateral.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "repeats the headline without adding context"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-6e6e379d75fe",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "Mexico's state power utility CFE reported labor obligations of 555,617 million pesos at September 30, 2026, up 25.7 percent from 441,903 million pesos a year earlier. CFE posted third-quarter losses of 23,310 million pesos, its worst performance since late 2024.",
-              "es": "La empresa estatal de energía CFE de México reportó obligaciones laborales de 555,617 millones de pesos al 30 de septiembre de 2026, arriba de 441,903 millones de pesos hace un año. CFE registró pérdidas en el tercer trimestre de 23,310 millones de pesos, su peor desempeño desde fines de 2024.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "numbers changed in Spanish"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-30T12:06:52.416Z",
-        "aliveSources": 70,
+        "collectedAt": "2026-10-30T12:08:43.936Z",
+        "aliveSources": 69,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
+          "mexico-business-news",
           "insightcrime-mx",
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-30T12:06:52.416Z",
+          "completedAt": "2026-10-30T12:08:20.936Z",
+          "calls": 2,
+          "costUSD": 0.039682,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-d18a2abe7599",
+              "reasons": [],
+              "fields": {
+                "headline": {
+                  "en": "Texas claims nine Rio Bravo islands; Mexico invokes 1970 border treaty and international commission",
+                  "es": "Texas reclama nueve islas en el Río Bravo; México invoca tratado de 1970 y comisión internacional",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "semicolon",
+                    "Spanish semicolon"
+                  ]
+                },
+                "dek": {
+                  "en": "Texas authorized its National Guard to access and patrol nine Rio Bravo islands it claims as state territory for border security. Mexico said the 1970 border treaty reserves island-ownership decisions to the bilateral International Boundary and Water Commission.",
+                  "es": "Texas autorizó a su Guardia Nacional acceder y patrullar nueve islas del Río Bravo que reclama como territorio estatal por seguridad fronteriza. México dijo que el tratado de 1970 reserva decisiones sobre propiedad de islas a la Comisión Internacional de Límites y Aguas bilateral.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "repeats the headline without adding context"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-6e6e379d75fe",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "Mexico's state power utility CFE reported labor obligations of 555,617 million pesos at September 30, 2026, up 25.7 percent from 441,903 million pesos a year earlier. CFE posted third-quarter losses of 23,310 million pesos, its worst performance since late 2024.",
+                  "es": "La empresa estatal de energía CFE de México reportó obligaciones laborales de 555,617 millones de pesos al 30 de septiembre de 2026, arriba de 441,903 millones de pesos hace un año. CFE registró pérdidas en el tercer trimestre de 23,310 millones de pesos, su peor desempeño desde fines de 2024.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "numbers changed in Spanish"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "41052901078",
+        "runId": "41053006759",
         "runAttempt": "1",
         "receipts": [
           {
@@ -5599,6 +5609,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "a4e8c2c5-941a-47bf-8413-2fae97c18be4",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.049367,
+            "accountedUSD": 0.049367,
+            "state": "reserved"
           }
         ]
       }
