@@ -5496,13 +5496,13 @@
       "editorialDate": "2026-10-30",
       "slot": "morning",
       "candidateSignature": "6ce93e7dfb34b91405e121118ce9d26b664e44782dbf7b2d1fac39106775851c",
-      "state": "failed",
+      "state": "published",
       "startedAt": "2026-10-30T12:08:43.936Z",
-      "completedAt": "2026-10-30T12:10:08.747Z",
+      "completedAt": "2026-10-30T12:24:33Z",
       "calls": 4,
       "costUSD": 0.076242,
-      "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "artifactHash": "bc44770fba76ffb4b8a2495b4f6d7b0ccc90036efa4fe7e62d4464141eff7a0a",
+      "reason": "Independently audited operator-curated recovery after automated pre-audit failures; no additional provider calls",
       "diagnostics": [
         {
           "stage": "deterministic",
@@ -5661,6 +5661,67 @@
             "stopReason": "end_turn"
           }
         ]
+      },
+      "manualRecovery": {
+        "reviewedAt": "2026-10-30T12:23:04Z",
+        "recoveryKind": "operator-curated-after-preaudit-generation-failure",
+        "method": "Fresh independent field-by-field source and translation review, unchanged cited-evidence, public-edition and scheduled-coverage gates, exact artifact and review-input binding",
+        "artifactHash": "bc44770fba76ffb4b8a2495b4f6d7b0ccc90036efa4fe7e62d4464141eff7a0a",
+        "draftSHA256": "f4c62ca056c9be6444308e7278103c0e006ecd0cc071fe660e463b1bc228f225",
+        "auditSHA256": "4d861e3f8672999269b8f1212c4f16fe38eea2c348ea26c87ad22ab5153db533",
+        "deterministicReviewSHA256": "84d574a1d83f046c1ab06ed7517b0d84f1c90cc7f2718eaca3305ffe8c141899",
+        "reviewInputsSHA256": "26f27ac8eaf323e0e9fca6a2fe00b85eb709b08458e66cf9f526bd6f6856c035",
+        "priorState": "failed",
+        "priorFailure": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+        "priorDiagnostics": [
+          {
+            "stage": "deterministic",
+            "storyId": "n-bb000e4e2dab",
+            "reasons": [],
+            "fields": {
+              "watch": {
+                "en": "If apprehension levels remain low through the coming months and zero-release policy continues uninterrupted, as reported by U.S. Border Patrol statistics, it would confirm sustained enforcement of the bilateral security strategy.",
+                "es": "Si los niveles de detención permanecen bajos en próximos meses y la política de cero liberaciones continúa sin interrupción, según estadísticas reportadas por la Patrulla Fronteriza estadounidense, confirmaría aplicación sostenida de la estrategia de seguridad bilateral.",
+                "refs": [
+                  "article"
+                ],
+                "reasons": [
+                  "negation was introduced in Spanish"
+                ]
+              }
+            }
+          }
+        ],
+        "priorCompletedAt": "2026-10-30T12:10:08.747Z",
+        "priorArtifactHash": "",
+        "priorPublishedArtifactHash": "506061cf270f4ddae999fc976e4a3e67bf9b1990f607113e96b182c85ac89774",
+        "candidateSignatureProvenance": "Retained original shared candidate-universe signature from both automated runs. It is not a hash of curated prose or the expanded supporting evidence; those are separately bound above.",
+        "originalQuarantines": [
+          {
+            "kind": "initial",
+            "workflowRunId": 41052901078,
+            "artifactId": 12975801277,
+            "fileSHA256": "fa65148b4306e93dafecf000ce3903a01285b23ba9a166a6e223423426feaaab",
+            "audit": null,
+            "auditedPayloadHash": null,
+            "candidate": null,
+            "publicationAllowed": false
+          },
+          {
+            "kind": "recovery",
+            "workflowRunId": 41053006759,
+            "artifactId": 12975432483,
+            "fileSHA256": "5fcc3e95995c089fd11274149f0123bbd9ae297631ec55bb464ad1bb7726cb3c",
+            "audit": null,
+            "auditedPayloadHash": null,
+            "candidate": null,
+            "publicationAllowed": false
+          }
+        ],
+        "sourceProvenance": "Original full DOF steel-rule text, El CEO CFE reporting and El Pais border-islands reporting retained with original lead URLs and publication dates. Complete Texas GLO primary corroboration added for the existing islands story; unrelated CENACE context removed. Independent reviewer freshly opened the primary steel/GLO records and both original news articles.",
+        "generationProvenance": "Operator-curated source-backed recovery with zero additional provider generation or audit calls. Neither failed automated run reached its independent model audit or produced an approved candidate; original audit values remain null. All four prior calls, 0.076242 USD, four settled receipts, one paid recovery, diagnostics and collection history retained.",
+        "readerCopySHA256": "1d3e3637ee35e13004cf23c54d54957e087e37e744f1b8a13ef659eb6d04ebdb",
+        "renderedReviewScope": "Actual built English and Spanish DOM/text: all 24 visible headline, dek, background and view fields match the audited artifact; six optional watch fields remain intentionally hidden under the unchanged weekly-template contract. Browser and responsive QA are separate release-check CI gates."
       }
     }
   ]
