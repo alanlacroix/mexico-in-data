@@ -5705,28 +5705,35 @@
       "slot": "morning",
       "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
       "state": "failed",
-      "startedAt": "2026-10-31T12:11:04.068Z",
-      "completedAt": "2026-10-31T12:11:46.938Z",
+      "startedAt": "2026-10-31T12:12:14.789Z",
+      "completedAt": "2026-10-31T12:12:59.311Z",
       "calls": 0,
       "costUSD": 0,
       "artifactHash": "",
       "reason": "collection failed: required scheduled outcome unavailable: federal-revenue-law-2027-2026-10-31",
       "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-10-31T12:11:04.068Z",
-        "aliveSources": 68,
+        "collectedAt": "2026-10-31T12:12:14.789Z",
+        "aliveSources": 70,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
           "insightcrime-mx",
-          "m4ec-mx",
-          "nexos",
-          "gcma"
+          "nexos"
         ]
       },
-      "recoveries": []
+      "recoveries": [
+        {
+          "startedAt": "2026-10-31T12:11:04.068Z",
+          "completedAt": "2026-10-31T12:11:46.938Z",
+          "calls": 0,
+          "costUSD": 0,
+          "reason": "collection failed: required scheduled outcome unavailable: federal-revenue-law-2027-2026-10-31",
+          "diagnostics": []
+        }
+      ]
     }
   ]
 }
