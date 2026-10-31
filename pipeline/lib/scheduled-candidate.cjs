@@ -65,7 +65,7 @@ function linkScheduledCandidate(candidate, schedule, explicitDay = '') {
   ].filter(Boolean).join(' '));
 
   for (const row of scheduleRows(schedule)) {
-    if (!row?.id || row.date !== day || row.approx === true || row.outcomeRequired !== true) continue;
+    if (row?.resolvedOutcome || !row?.id || row.date !== day || row.approx === true || row.outcomeRequired !== true) continue;
     const actor = String(row.outcome?.actor || '').trim();
     const topic = String(row.outcome?.topic || '').trim();
     const actorPattern = ACTORS[actor];
@@ -128,7 +128,56 @@ function missingScheduledRows(dueRows, candidates) {
 // contains the scheduled date and the configured actor/topic/outcome. The calendar
 // entry alone can never become news, and an older result on the same landing page
 // cannot satisfy today's obligation.
+// A reviewed, already-completed deadline remains mandatory. Do not turn its
+// deadline into a new event date or let a generic RSS mention close it. This
+// deliberately narrow adapter validates the specific official 2027 revenue-law
+// report on every seed; configuration alone never supplies an outcome.
+function seedResolvedRevenueDeadline(row, pageText) {
+  const resolution = row?.resolvedOutcome;
+  const url = 'https://www.canaldelcongreso.gob.mx/noticias/10338';
+  if (row?.id !== 'federal-revenue-law-2027-2026-10-31'
+    || row.date !== '2026-10-31' || row.approx === true
+    || row.requiredForBrief !== true || row.outcomeRequired !== true
+    || row.outcome?.actor !== 'congress' || row.outcome?.topic !== 'revenue-law'
+    || resolution?.status !== 'approved-and-sent-to-executive'
+    || resolution.reportedOn !== '2026-10-28'
+    || resolution.source !== 'Canal del Congreso'
+    || resolution.sourceUrl !== url || row.outcomeSourceUrl !== url) return null;
+  const text = fold(pageText);
+  const evidence = [
+    '28 de octubre de 2026',
+    'Senado aprueba Ley de Ingresos 2027 por 10.6 billones de pesos',
+    'Con 75 votos a favor y 34 en contra, la Ley de Ingresos para 2027 fue aprobada en lo general por el Senado de la República.',
+    'En lo particular, se logró 73 en pro y 33 en contra, por lo que quedó en sus términos y fue enviada al Ejecutivo Federal.',
+  ].map(fold);
+  // Require the actual article's consecutive opening, not scattered archive cards.
+  const opening = `${evidence[0]} ${evidence[1]} senado de la republica `;
+  const afterOpening = text.startsWith(opening) ? text.slice(opening.length) : '';
+  const outcomeText = afterOpening.replace(/^\d[\d,.]* vistas /, '');
+  if (!afterOpening || outcomeText === afterOpening
+    || !outcomeText.startsWith(`${evidence[2]} ${evidence[3]}`)
+    || /\b(?:no fue aprobada|no fue enviada|no se aprobo|no se envio|rechazo la ley|fe de erratas|correccion|actualizacion|update|pendiente|devuelta)\b/.test(text)) return null;
+  return {
+    id: `scheduled:${row.id}`, url,
+    title: 'Senado aprueba Ley de Ingresos 2027 y la envía al Ejecutivo; resultado reportado el 28 de octubre, antes del plazo del 31 de octubre',
+    dek: 'Canal del Congreso reportó la aprobación en lo general y en lo particular. La publicación en el DOF y la entrada en vigor son etapas distintas, no verificadas por este resultado.',
+    source: 'canaldelcongreso.gob.mx', sourceName: resolution.source,
+    tier: 1, beat: row.kind || 'fiscal', lang: 'es',
+    published_at: resolution.reportedOn,
+    _editorialDate: resolution.reportedOn, _coverage: [],
+    _scheduled: {
+      id: row.id, date: row.date,
+      label: 'Senate approval deadline; approval already reported October 28, not a new October 31 vote',
+      source: row.source, sourceUrl: row.sourceUrl,
+      importanceFloor: Number(row.importanceFloor) || 0,
+      requiredForBrief: true, outcomeRequired: true,
+      actor: 'congress', topic: 'revenue-law',
+    },
+  };
+}
+
 function seedScheduledCandidate(row, pageText) {
+  if (row?.resolvedOutcome) return seedResolvedRevenueDeadline(row, pageText);
   const outcomeUrl = row?.outcomeSourceUrl || row?.sourceUrl;
   if (!row?.id || !row?.date || !outcomeUrl || !String(pageText || '').trim()) return null;
   const markers = dateMarkers(row.date);
