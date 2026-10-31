@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-15",
-      "slot": "morning",
-      "candidateSignature": "3856056b5d1b247213c1baaeb38093531555a294d9ad4a95277d65b5abf63970",
-      "state": "failed",
-      "startedAt": "2026-09-15T13:00:56.731Z",
-      "completedAt": "2026-09-15T13:02:04.253Z",
-      "calls": 2,
-      "costUSD": 0.025044,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-39ea63a580fd: headline: semicolon; headline: Spanish semicolon; dek: 48 words (cap 45); watch: semicolon; watch: Spanish semicolon | n-066ac3642372: background: 4 sentences (cap 3); background: unsupported evidence qualifier: lowest; background: negation was introduced in Spanish; background: Spanish 4 sentences (cap 3); view:"
-    },
-    {
-      "editorialDate": "2026-09-15",
-      "slot": "noon",
-      "candidateSignature": "895e3411100e3609da06389b98ea6af505aa192217fd5a0cbb8d2b358cdb9b63",
-      "state": "failed",
-      "startedAt": "2026-09-15T16:00:57.763Z",
-      "completedAt": "2026-09-15T16:01:40.592Z",
-      "calls": 2,
-      "costUSD": 0.013424,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-e4addc961bab: dek: proposal or uncertainty became final in Spanish; background: 4 sentences (cap 3); background: proposal or uncertainty became final in Spanish; background: Spanish 4 sentences (cap 3); view: 4 sentences (cap 3) | n-39ea63a580fd: model omitted the required story unit | n-2bfc44089296: model omitted the require"
-    },
-    {
       "editorialDate": "2026-09-16",
       "slot": "morning",
       "candidateSignature": "660fcbd21bdef2c33267540b6ec779fd8ae04c67712cd5d581267805e529d77f",
@@ -5723,6 +5699,34 @@
         "readerCopySHA256": "1d3e3637ee35e13004cf23c54d54957e087e37e744f1b8a13ef659eb6d04ebdb",
         "renderedReviewScope": "Actual built English and Spanish DOM/text: all 24 visible headline, dek, background and view fields match the audited artifact; six optional watch fields remain intentionally hidden under the unchanged weekly-template contract. Browser and responsive QA are separate release-check CI gates."
       }
+    },
+    {
+      "editorialDate": "2026-10-31",
+      "slot": "morning",
+      "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
+      "state": "failed",
+      "startedAt": "2026-10-31T12:11:04.068Z",
+      "completedAt": "2026-10-31T12:11:46.938Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "",
+      "reason": "collection failed: required scheduled outcome unavailable: federal-revenue-law-2027-2026-10-31",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-31T12:11:04.068Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "m4ec-mx",
+          "nexos",
+          "gcma"
+        ]
+      },
+      "recoveries": []
     }
   ]
 }
