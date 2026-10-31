@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
@@ -101,3 +102,37 @@ assert.equal(seedScheduledCandidate(informe,
 informe.id, 'un unrelated forecast elsewhere on an archive page must not hide the dated official outcome');
 
 console.log('scheduled-candidate tests: ok');
+
+// Resolved statutory deadline: keep the required coverage, preserve the actual
+// report date, and demand the reviewed official outcome on every fetch.
+const revenue = JSON.parse(fs.readFileSync(new URL('../../data/events.json', import.meta.url))).events
+  .find(row => row.id === 'federal-revenue-law-2027-2026-10-31');
+const officialOpening = '28 de octubre de 2026 Senado aprueba Ley de Ingresos 2027 por 10.6 billones de pesos Senado de la República 776 vistas Con 75 votos a favor y 34 en contra, la Ley de Ingresos para 2027 fue aprobada en lo general por el Senado de la República. En lo particular, se logró 73 en pro y 33 en contra, por lo que quedó en sus términos y fue enviada al Ejecutivo Federal.';
+const resolved = seedScheduledCandidate(revenue, officialOpening);
+assert.ok(resolved);
+assert.equal(resolved._editorialDate, '2026-10-28');
+assert.equal(resolved.published_at, '2026-10-28');
+assert.equal(resolved._scheduled.date, '2026-10-31');
+assert.equal(resolved._scheduled.requiredForBrief, true);
+assert.deepEqual(dueScheduledRows([revenue], '2026-10-31'), [revenue]);
+assert.deepEqual(missingScheduledRows([revenue], []), [revenue]);
+assert.deepEqual(missingScheduledRows([revenue], [resolved]), []);
+assert.equal(linkScheduledCandidate({ title: officialOpening }, [revenue], '2026-10-31'), null);
+for (const body of ['', officialOpening.replace('Senado aprueba', 'Otra noticia. Archivo. Senado aprueba'), officialOpening.replaceAll('2027', '2026'),
+  officialOpening.replace('28 de octubre', '31 de octubre'),
+  officialOpening.replace('fue aprobada', 'sería aprobada'),
+  officialOpening.replace('fue enviada', 'sería enviada'),
+  officialOpening + ' Corrección: no fue aprobada.',
+  officialOpening + ' Actualización: la Ley de Ingresos 2027 no se aprobó en lo particular y no se envió al Ejecutivo Federal.',
+  officialOpening + ' Actualización: la votación quedó pendiente y la minuta fue devuelta a Diputados.',
+  officialOpening.replace('En lo particular,', 'En otra nota. En lo particular,')]) {
+  assert.equal(seedScheduledCandidate(revenue, body), null, 'unverified or contradictory outcome fails closed');
+}
+for (const change of [{ outcomeSourceUrl: 'https://example.com/fake' },
+  { date: '2026-10-30' }, { requiredForBrief: false }, { outcomeRequired: false },
+  { resolvedOutcome: { ...revenue.resolvedOutcome, reportedOn: '2026-10-31' } },
+  { resolvedOutcome: { ...revenue.resolvedOutcome, sourceUrl: 'https://example.com/fake' } },
+  { resolvedOutcome: { ...revenue.resolvedOutcome, status: 'effective' } }]) {
+  assert.equal(seedScheduledCandidate({ ...revenue, ...change }, officialOpening), null);
+}
+console.log('resolved revenue deadline tests: ok');
