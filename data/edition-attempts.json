@@ -5739,65 +5739,14 @@
       "editorialDate": "2026-10-31",
       "slot": "noon",
       "candidateSignature": "c7e431d0b65824c6464aaef8d91f7025ec4dc4d7347cd9d212761e905f4a9f93",
-      "state": "failed",
-      "startedAt": "2026-10-31T12:22:31.238Z",
-      "completedAt": "2026-10-31T12:24:20.754Z",
+      "state": "published",
+      "startedAt": "2026-10-31T12:25:37.000Z",
+      "completedAt": "2026-10-31T12:33:02.490Z",
       "calls": 3,
       "costUSD": 0.041596,
-      "artifactHash": "",
-      "reason": "only 2 stories passed every editorial gate; need at least 3 without padding",
-      "diagnostics": [
-        {
-          "stage": "independent-audit",
-          "storyId": "n-b1373621d1ac",
-          "reasons": [
-            "background field claims Mexico supplies computer equipment to support U.S. AI infrastructure expansion, with advanced technology shipments exceeding 2025 totals by nearly 2 billion dollars between January-August 2026. However, the cited article contains no evidence of shipments to support U.S. AI infrastructure or comparative data between January-August 2026 and full-year 2025. The article discusses Mexico's export growth generally and mentions Comce projections for 2026, but does not provide th",
-            "background field in Spanish contains identical unsupported claims about AI infrastructure support and the January-August 2026 versus 2025 comparison."
-          ],
-          "fields": {
-            "headline": {
-              "en": "Mexico's business council urges urgent expansion of energy production for export growth",
-              "es": "Consejo empresarial de México urge expansión urgente de producción de energía para crecimiento de exportaciones",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            },
-            "dek": {
-              "en": "Mexican exports and imports are projected to exceed 1.6 trillion dollars combined in 2026, with growth driven by computer equipment plants and data centers requiring more electrical supply.",
-              "es": "Las exportaciones e importaciones de México se proyecta superen 1.6 billones de dólares combinados en 2026, con crecimiento impulsado por plantas de equipo de cómputo y centros de datos que requieren más suministro eléctrico.",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            },
-            "background": {
-              "en": "Mexico supplies computer equipment and electronics to support U.S. AI infrastructure expansion. Between January and August 2026, advanced technology shipments exceeded the total for all of 2025 by nearly 2 billion dollars.",
-              "es": "México suministra equipo de cómputo y electrónica para apoyar la expansión de infraestructura de IA estadounidense. Entre enero y agosto de 2026, los envíos de tecnología avanzada superaron el total de todo 2025 por casi 2 mil millones de dólares.",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            },
-            "view": {
-              "en": "Industrial parks have increased capacity utilization as new manufacturing plants arrive, but renewable energy investments stalled in the previous administration. Enel and Eni, Italian companies operating in Mexico's energy sector, have invested more than 4,000 million dollars combined and remain active despite global competition for energy capital.",
-              "es": "Los parques industriales han aumentado la utilización de capacidad conforme llegan nuevas plantas de manufactura, pero las inversiones en energías renovables se estancaron en la administración anterior. Enel y Eni, empresas italianas que operan en el sector energético de México, han invertido más de 4,000 millones de dólares combinados y permanecen activas a pesar de la competencia global por capital energético.",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            },
-            "watch": {
-              "en": "If intermediate imports continue growing faster than exports, it would weaken the view that Mexico is building lasting competitive advantage.",
-              "es": "Si las importaciones intermedias siguen creciendo más rápido que las exportaciones, debilitaría la opinión de que México está construyendo ventaja competitiva duradera.",
-              "refs": [
-                "article"
-              ],
-              "reasons": []
-            }
-          }
-        }
-      ],
+      "artifactHash": "99aaff53cd021a4ec09364e9c4ab21ccc2b0f0727ea5ee61607156b2efac9916",
+      "reason": "Independently audited curated recovery after automatic audit rejected the three-story assembly; zero additional model calls",
+      "diagnostics": [],
       "collection": {
         "collectedAt": "2026-10-31T12:22:31.238Z",
         "aliveSources": 70,
@@ -5810,7 +5759,67 @@
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-10-31T12:22:31.238Z",
+          "completedAt": "2026-10-31T12:24:20.754Z",
+          "calls": 3,
+          "costUSD": 0.041596,
+          "reason": "only 2 stories passed every editorial gate; need at least 3 without padding",
+          "diagnostics": [
+            {
+              "stage": "independent-audit",
+              "storyId": "n-b1373621d1ac",
+              "reasons": [
+                "background field claims Mexico supplies computer equipment to support U.S. AI infrastructure expansion, with advanced technology shipments exceeding 2025 totals by nearly 2 billion dollars between January-August 2026. However, the cited article contains no evidence of shipments to support U.S. AI infrastructure or comparative data between January-August 2026 and full-year 2025. The article discusses Mexico's export growth generally and mentions Comce projections for 2026, but does not provide th",
+                "background field in Spanish contains identical unsupported claims about AI infrastructure support and the January-August 2026 versus 2025 comparison."
+              ],
+              "fields": {
+                "headline": {
+                  "en": "Mexico's business council urges urgent expansion of energy production for export growth",
+                  "es": "Consejo empresarial de México urge expansión urgente de producción de energía para crecimiento de exportaciones",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "dek": {
+                  "en": "Mexican exports and imports are projected to exceed 1.6 trillion dollars combined in 2026, with growth driven by computer equipment plants and data centers requiring more electrical supply.",
+                  "es": "Las exportaciones e importaciones de México se proyecta superen 1.6 billones de dólares combinados en 2026, con crecimiento impulsado por plantas de equipo de cómputo y centros de datos que requieren más suministro eléctrico.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "background": {
+                  "en": "Mexico supplies computer equipment and electronics to support U.S. AI infrastructure expansion. Between January and August 2026, advanced technology shipments exceeded the total for all of 2025 by nearly 2 billion dollars.",
+                  "es": "México suministra equipo de cómputo y electrónica para apoyar la expansión de infraestructura de IA estadounidense. Entre enero y agosto de 2026, los envíos de tecnología avanzada superaron el total de todo 2025 por casi 2 mil millones de dólares.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "view": {
+                  "en": "Industrial parks have increased capacity utilization as new manufacturing plants arrive, but renewable energy investments stalled in the previous administration. Enel and Eni, Italian companies operating in Mexico's energy sector, have invested more than 4,000 million dollars combined and remain active despite global competition for energy capital.",
+                  "es": "Los parques industriales han aumentado la utilización de capacidad conforme llegan nuevas plantas de manufactura, pero las inversiones en energías renovables se estancaron en la administración anterior. Enel y Eni, empresas italianas que operan en el sector energético de México, han invertido más de 4,000 millones de dólares combinados y permanecen activas a pesar de la competencia global por capital energético.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "watch": {
+                  "en": "If intermediate imports continue growing faster than exports, it would weaken the view that Mexico is building lasting competitive advantage.",
+                  "es": "Si las importaciones intermedias siguen creciendo más rápido que las exportaciones, debilitaría la opinión de que México está construyendo ventaja competitiva duradera.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
         "runId": "41200802509",
@@ -5865,6 +5874,348 @@
             "stopReason": "end_turn"
           }
         ]
+      },
+      "manualRecovery": {
+        "reviewedAt": "2026-10-31T12:32:30Z",
+        "recoveryKind": "operator-curated-after-independent-audit-assembly-failure",
+        "method": "Independent exact-byte source and translation audit, unchanged deterministic and scheduled-coverage gates, actual built bilingual reader review, full release and browser gates",
+        "artifactHash": "99aaff53cd021a4ec09364e9c4ab21ccc2b0f0727ea5ee61607156b2efac9916",
+        "draftSHA256": "8234165440aab24757d3bd0e948e912af0fcf54751e792563f7711b6bb30f487",
+        "auditSHA256": "1831b533ba71c33f0855ecdd5f2ffb8b4df60e63bb91de301d15410b94c052fd",
+        "reviewInputsSHA256": "8086c5b5aee43a54cf70c74cc65534c95a1155bf199f5ee549f5737174f159f4",
+        "deterministicReviewSHA256": "a45a76c23f6538a75907a119cef362fabd32fa8fe1be19a45c91f687154791ba",
+        "readerCopySHA256": "3a35bacb58e88e06f091623a806087d2d5a50aa801118d21d68d58a3a49d8f96",
+        "priorAttempt": {
+          "editorialDate": "2026-10-31",
+          "slot": "noon",
+          "candidateSignature": "c7e431d0b65824c6464aaef8d91f7025ec4dc4d7347cd9d212761e905f4a9f93",
+          "state": "failed",
+          "startedAt": "2026-10-31T12:22:31.238Z",
+          "completedAt": "2026-10-31T12:24:20.754Z",
+          "calls": 3,
+          "costUSD": 0.041596,
+          "artifactHash": "",
+          "reason": "only 2 stories passed every editorial gate; need at least 3 without padding",
+          "diagnostics": [
+            {
+              "stage": "independent-audit",
+              "storyId": "n-b1373621d1ac",
+              "reasons": [
+                "background field claims Mexico supplies computer equipment to support U.S. AI infrastructure expansion, with advanced technology shipments exceeding 2025 totals by nearly 2 billion dollars between January-August 2026. However, the cited article contains no evidence of shipments to support U.S. AI infrastructure or comparative data between January-August 2026 and full-year 2025. The article discusses Mexico's export growth generally and mentions Comce projections for 2026, but does not provide th",
+                "background field in Spanish contains identical unsupported claims about AI infrastructure support and the January-August 2026 versus 2025 comparison."
+              ],
+              "fields": {
+                "headline": {
+                  "en": "Mexico's business council urges urgent expansion of energy production for export growth",
+                  "es": "Consejo empresarial de México urge expansión urgente de producción de energía para crecimiento de exportaciones",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "dek": {
+                  "en": "Mexican exports and imports are projected to exceed 1.6 trillion dollars combined in 2026, with growth driven by computer equipment plants and data centers requiring more electrical supply.",
+                  "es": "Las exportaciones e importaciones de México se proyecta superen 1.6 billones de dólares combinados en 2026, con crecimiento impulsado por plantas de equipo de cómputo y centros de datos que requieren más suministro eléctrico.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "background": {
+                  "en": "Mexico supplies computer equipment and electronics to support U.S. AI infrastructure expansion. Between January and August 2026, advanced technology shipments exceeded the total for all of 2025 by nearly 2 billion dollars.",
+                  "es": "México suministra equipo de cómputo y electrónica para apoyar la expansión de infraestructura de IA estadounidense. Entre enero y agosto de 2026, los envíos de tecnología avanzada superaron el total de todo 2025 por casi 2 mil millones de dólares.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "view": {
+                  "en": "Industrial parks have increased capacity utilization as new manufacturing plants arrive, but renewable energy investments stalled in the previous administration. Enel and Eni, Italian companies operating in Mexico's energy sector, have invested more than 4,000 million dollars combined and remain active despite global competition for energy capital.",
+                  "es": "Los parques industriales han aumentado la utilización de capacidad conforme llegan nuevas plantas de manufactura, pero las inversiones en energías renovables se estancaron en la administración anterior. Enel y Eni, empresas italianas que operan en el sector energético de México, han invertido más de 4,000 millones de dólares combinados y permanecen activas a pesar de la competencia global por capital energético.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                },
+                "watch": {
+                  "en": "If intermediate imports continue growing faster than exports, it would weaken the view that Mexico is building lasting competitive advantage.",
+                  "es": "Si las importaciones intermedias siguen creciendo más rápido que las exportaciones, debilitaría la opinión de que México está construyendo ventaja competitiva duradera.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": []
+                }
+              }
+            }
+          ],
+          "collection": {
+            "collectedAt": "2026-10-31T12:22:31.238Z",
+            "aliveSources": 70,
+            "totalSources": 72,
+            "wireCount": 60,
+            "minimumAlive": 36,
+            "ok": true,
+            "failedSourceIds": [
+              "insightcrime-mx",
+              "nexos"
+            ]
+          },
+          "recoveries": [],
+          "modelAccounting": {
+            "version": 1,
+            "runId": "41200802509",
+            "runAttempt": "1",
+            "receipts": [
+              {
+                "id": "3d7cba5e-f6e8-4d5b-8eea-9720d2b4e69d",
+                "period": "2026-10",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.04908,
+                "accountedUSD": 0.020626,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 7311,
+                  "output_tokens": 2663,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "b9d4d994-3b13-4361-b72b-7888b921c048",
+                "period": "2026-10",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.04403,
+                "accountedUSD": 0.01347,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 9125,
+                  "output_tokens": 869,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "99b807b3-04c7-43a1-971c-5ab0e8958480",
+                "period": "2026-10",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.039125,
+                "accountedUSD": 0.0075,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 6545,
+                  "output_tokens": 191,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              }
+            ]
+          }
+        },
+        "originalQuarantine": {
+          "workflowRunId": 41200802509,
+          "artifactId": 13042064456,
+          "fileSHA256": "0251c79d6675686e202389a1a7e202fef4f047c429e4821f58949720a4ed5a11",
+          "publicationAllowed": false,
+          "audit": {
+            "inputs": [
+              {
+                "i": 0,
+                "evidence": [
+                  {
+                    "id": "article",
+                    "text": "Senado aprueba Ley de Ingresos 2027 y la envía al Ejecutivo; resultado reportado el 28 de octubre, antes del plazo del 31 de octubre\n28 de octubre de 2026 Senado aprueba Ley de Ingresos 2027 por 10.6 billones de pesos Senado de la República 776 vistas Con 75 votos a favor y 34 en contra, la Ley de Ingresos para 2027 fue aprobada en lo general por el Senado de la República. En lo particular, se logró 73 en pro y 33 en contra, por lo que quedó en sus términos y fue enviada al Ejecutivo Federal. El dictamen proyecta recursos por 10 billones 636 mil 488.1 millones de pesos. Además se estima que la principal fuente de recaudación serán los impuestos, con una estimación de 6 billones 263 mil 886.8 millones de pesos. La legislación autoriza al Ejecutivo Federal a contratar deuda interna por hasta un billón 700 mil millones de pesos para financiar el Presupuesto de Egresos de 2027. Para Petróleos Mexicanos se establecen límites de endeudamiento neto de 160 mil 619.5 millones de pesos en el mercado interno y 5 mil 259.4 millones de dólares en el externo. En el caso de la Comisión Federal de Electricidad, se autorizó un endeudamiento neto de hasta 16 mil 742 millones de pesos en el mercado interno y 725 millones de dólares en el externo. Al fundamentar el proyecto, el presidente de la Comisión de Hacienda y Crédito Público, el senador Miguel Ángel Yunes Márquez (Morena) explicó que el 58.9 por ciento de los ingresos estimados para 2027 provendrá de la recaudación tributaria. Detalló que se prevén 3 billones 288 mil 975.3 millones de pesos por ISR, un billón 768 mil 717.3 millones por IVA y 828 mil 256 millones por IEPS. Al defender el proyecto de ingresos, el senador Francisco Chíguil Figueroa (Morena) aseguró que el financiamiento público se reduce de manera responsable y que la deuda mantiene una trayectoria estable. También sostuvo que la política fiscal elimina privilegios y exige a los grandes contribuyentes cumplir con sus obligaciones. La senadora Imelda Sanmiguel Sánchez, del PAN, cuestionó el impacto de la política fiscal en la población y advirtió que podrían aumentar los cobros por servicios de salud sin que exista garantía de mejores hospitales, medicamentos o salarios para el personal médico. Acusó al gobierno de buscar mayores ingresos a costa de los ciudadanos, pese a las carencias del sistema sanitario. Por su parte, la senadora María del Rocío Corona Nakamura (PVEM) pidió que la política fiscal coloque a las personas en el centro y no se mida únicamente por la recaudación. Señaló que también debe evaluarse por su capacidad para garantizar derechos y servicios públicos, especialmente para las familias que necesitan atención médica cercana. Al referirse al régimen fiscal para pequeños negocios, la senadora Lizeth Sánchez García (PT) destacó que más contribuyentes podrán acceder o permanecer en este esquema si cumplen los requisitos. Explicó que las facilidades previstas buscan simplificar las obligaciones fiscales de los negocios y favorecer su crecimiento y la inversión productiva. En contra de los cambios fiscales, la senadora Carolina Viggiano Austria (PRI) criticó los límites a las deducciones empresariales. Advirtió que una empresa podría registrar pérdidas y aún así tener que pagar impuestos como si hubiera obtenido ganancias, por lo que calificó la medida como un impuesto mínimo disfrazado. La senadora Alejandra Barrales Magdaleno, de Movimiento Ciudadano, cuestionó que las proyecciones de ingresos puedan cumplirse y afirmó que no existen garantías suficientes para alcanzar la recaudación estimada. Además, sostuvo que el paquete fiscal implica un mayor endeudamiento para las y los mexicanos. @NoticiaCongreso Compartir: Regresar"
+                  },
+                  {
+                    "id": "standing:std-fiscal-path",
+                    "text": "Broad public debt rose from 52.0% of GDP in 2024 to 53.2% in 2025 and is projected near 54.7% in 2026 — moderate by large-economy standards, but pensions, interest payments and support for Pemex crowd out electricity, water, security and health spending, and a low tax take (narrowed by informality) limits the room."
+                  },
+                  {
+                    "id": "calendar:federal-revenue-law-2027-2026-10-31",
+                    "text": "2026-10-31: Ley de Ingresos 2027 — Senate approval deadline. Senate approval deadline, not a scheduled vote. Approval and referral to the Executive were reported on October 28; DOF publication and entry into force are separate stages."
+                  }
+                ],
+                "fields": {
+                  "headline": {
+                    "english": "Mexico's Senate approves 10.6 trillion peso revenue law for 2027",
+                    "spanish": "Senado de México aprueba ley de ingresos de 10.6 billones de pesos para 2027",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  },
+                  "dek": {
+                    "english": "The Senate approved the 10.6 trillion peso revenue law with 75 votes in favor and 34 against on October 28, three days before the constitutional deadline.",
+                    "spanish": "El Senado aprobó la ley de ingresos de 10.6 billones de pesos con 75 votos a favor y 34 en contra el 28 de octubre, tres días antes del plazo constitucional.",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  },
+                  "background": {
+                    "english": "Mexico's public debt rose from 52.0% of GDP in 2024 to 53.2% in 2025 and is projected near 54.7% in 2026. Pensions, interest payments and support for Pemex limit funds available for electricity, water, security and health spending.",
+                    "spanish": "La deuda pública de México pasó de 52.0% del PIB en 2024 a 53.2% en 2025 y se proyecta cercana a 54.7% en 2026. Las pensiones, pagos de intereses y apoyo a Pemex limitan fondos disponibles para electricidad, agua, seguridad y salud.",
+                    "evidenceRefs": [
+                      "standing:std-fiscal-path",
+                      "article"
+                    ]
+                  },
+                  "view": {
+                    "english": "The law constrains spending growth across competing departments. Senators from multiple parties questioned whether tax increases on businesses and health service fees would generate promised revenue or whether debt would simply shift costs to citizens.",
+                    "spanish": "La ley limita el crecimiento del gasto en departamentos en competencia. Senadores de múltiples partidos cuestionaron si los aumentos fiscales a negocios y cuotas de servicios de salud generarían los ingresos prometidos o si la deuda simplemente trasladaría costos a los ciudadanos.",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  },
+                  "watch": {
+                    "english": "If projected tax revenue of 6 trillion 263 thousand 886.8 million pesos materializes as estimated, it would confirm the administration's fiscal forecast, whether revenue falls short by requiring spending cuts or debt increases.",
+                    "spanish": "Si los ingresos tributarios proyectados de 6 billones 263 mil 886.8 millones de pesos se materializan conforme se estima, confirmaría el pronóstico fiscal de la administración, o si caen por debajo requerirían recortes de gasto o aumentos de deuda.",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  }
+                }
+              },
+              {
+                "i": 3,
+                "evidence": [
+                  {
+                    "id": "article",
+                    "text": "Crecimiento de exportaciones de México demanda más producción de energía: Comce\nMonterrey, NL. El crecimiento de exportaciones de México demanda una mayor producción de energía, instó el Consejo Empresarial Mexicano de Comercio Exterior, Inversión y Tecnología (Comce). En el 32.º Congreso de Comercio Exterior Mexicano, Sergio Contreras, presidente ejecutivo del Comce, proyectó que las exportaciones e importaciones mexicanas de productos alcanzarán una suma conjunta de más de 1.6 billones de dólares en 2026 (superando los 800,000 millones de exportaciones y 800,000 millones de importaciones, lo que implicaría alzas interanuales de al menos 20.3 y 20.4 por ciento). Te puede interesar EconoHábitat Desarrolladores industriales frenan proyectos ante la incertidumbre del T-MEC Empresas Exportaciones marcan alza y nivel récord a septiembre Tecnópolis América Latina quiere desarrollar IA propia ante el dominio de las grandes tecnológicas “Es urgente el abastecimiento de energía”, expresó Juan Pablo Casteñón, vicepresidente del Comce. El crecimiento del comercio internacional de México ha aumentado la capacidad de utilización de los parques industriales y se basa también en la llegada de nuevas plantas de equipo de cómputo. Además se han detonado fuertes inversiones en la creación de centros de datos y hubo un estancamiento en las inversiones de energías renovables en el sexenio pasado. Lorenzo Vianello, presidente del Comité Empresarial Bilateral México-Italia del Comce, expuso que se requiere una regulación “clara y sencilla” en la regulación mexicana para atraer nuevas inversiones en el sector. Italia, el país “invitado” a este Congreso, es un actor relevante en el sector energético de México, a través de las empresas Enel y Eni. Enel es el operador privado más grande de energía renovable en el país. Desarrolla y opera proyectos de generación eólica y solar (con cerca de 2 GW de capacidad instalada distribuidos en diversos parques en México), además de ofrecer soluciones de suministro eléctrico para clientes industriales dentro del Mercado Eléctrico Mayorista. A su vez, Eni es el principal operador privado en la producción de hidrocarburos (petróleo y gas) en México. Representa alrededor de 5% de la extracción de crudo en México. Opera en aguas someras del Golfo de México (principalmente en la cuenca del Sureste, destacando el desarrollo de los campos Amoca, Miztón y Tecoalli en el Área 1). Vianello refirió que Enel y Eni han invertido en conjunto más de 4,000 millones de dólares en México. Por su parte, el embajador de Italia en México, Alessandro Modiano, refirió que Enel y Eni siguen manteniendo sus inversiones en México. Pero agregó que hay una gran competencia por capitales energéticos a nivel mundial. Puso por ejemplo que Eni explora inversiones petroleras en Venezuela y Argentina. El 31 de octubre de 2024, las reformas constitucionales a los artículos 25, 27 y 28 (el Decreto de Reforma Energética) transformaron el régimen jurídico de PEMEX, pasando de ser una empresa productiva del Estado a una empresa pública del Estado. La legislación que instrumenta el Decreto de Reforma Energética (la legislación secundaria) se publicó en el Diario Oficial el 18 de marzo de 2025. En conjunto, el Decreto de Reforma Energética y la legislación secundaria introdujeron cambios significativos en el marco jurídico, la estructura corporativa y la gobernanza de Pemex. A la fecha, Pemex sigue siendo el mayor participante en el sector. La Ley de Transición Energética tiene como objetivo combatir el cambio climático mediante la promoción de fuentes de energía más limpias. Esta ley establece un programa de certificados de energías limpias y fija como meta para México que, para el año 2024, al menos 35% de su suministro eléctrico provenga de fuentes de energía limpias. Según el “Programa de Desarrollo del Sistema Eléctrico Nacional 2024-2038” (PRODESEN), 39.2% de la capacidad instalada total de México —cifra que incluye la operación comercial, las pruebas y la generación solar distribuida, pero excluye el suministro aislado— provino de energías limpias y sistemas de almacenamiento mediante baterías en 2023. roberto.morales@eleconomista. mx Temas relacionados Comce Exportaciones mexicanas Parques industriales Roberto Morales Comenta esta noticia Compartir por WhatsApp Compartir por Twitter Compartir por Facebook Compartir por Linkedin Ver comentarios"
+                  }
+                ],
+                "fields": {
+                  "headline": {
+                    "english": "Mexico's business council urges urgent expansion of energy production for export growth",
+                    "spanish": "Consejo empresarial de México urge expansión urgente de producción de energía para crecimiento de exportaciones",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  },
+                  "dek": {
+                    "english": "Mexican exports and imports are projected to exceed 1.6 trillion dollars combined in 2026, with growth driven by computer equipment plants and data centers requiring more electrical supply.",
+                    "spanish": "Las exportaciones e importaciones de México se proyecta superen 1.6 billones de dólares combinados en 2026, con crecimiento impulsado por plantas de equipo de cómputo y centros de datos que requieren más suministro eléctrico.",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  },
+                  "background": {
+                    "english": "Mexico supplies computer equipment and electronics to support U.S. AI infrastructure expansion. Between January and August 2026, advanced technology shipments exceeded the total for all of 2025 by nearly 2 billion dollars.",
+                    "spanish": "México suministra equipo de cómputo y electrónica para apoyar la expansión de infraestructura de IA estadounidense. Entre enero y agosto de 2026, los envíos de tecnología avanzada superaron el total de todo 2025 por casi 2 mil millones de dólares.",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  },
+                  "view": {
+                    "english": "Industrial parks have increased capacity utilization as new manufacturing plants arrive, but renewable energy investments stalled in the previous administration. Enel and Eni, Italian companies operating in Mexico's energy sector, have invested more than 4,000 million dollars combined and remain active despite global competition for energy capital.",
+                    "spanish": "Los parques industriales han aumentado la utilización de capacidad conforme llegan nuevas plantas de manufactura, pero las inversiones en energías renovables se estancaron en la administración anterior. Enel y Eni, empresas italianas que operan en el sector energético de México, han invertido más de 4,000 millones de dólares combinados y permanecen activas a pesar de la competencia global por capital energético.",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  },
+                  "watch": {
+                    "english": "If intermediate imports continue growing faster than exports, it would weaken the view that Mexico is building lasting competitive advantage.",
+                    "spanish": "Si las importaciones intermedias siguen creciendo más rápido que las exportaciones, debilitaría la opinión de que México está construyendo ventaja competitiva duradera.",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  }
+                }
+              },
+              {
+                "i": 5,
+                "evidence": [
+                  {
+                    "id": "article",
+                    "text": "Mexico’s Advanced Tech Exports Triple on AI Demand\nMexico’s exports of advanced technology equipment to the United States have tripled in just over five years, surpassing US$100 billion annually as demand for AI infrastructure accelerates. The surge is contributing to record Mexican export growth, particularly in non-automotive manufacturing, but also raises questions about domestic value creation, dependence on imported components and Mexico’s ability to move beyond assembly toward higher-value activities in the technology supply chain. Mexico’s exports of advanced technology equipment to the United States have tripled in just over five years, reflecting the growing demand for hardware, computer equipment and electronics associated with AI. According to data from the US Census Bureau, shipments of these goods exceeded US$100 billion annually beginning in 2024, as US investment in AI infrastructure reshapes North American manufacturing and trade. The acceleration forms part of a broader expansion in Mexico’s external trade. In September 2026, Mexican exports reached US$77.8 billion , increasing 37.8% year over year and extending the streak of double-digit annual growth to eight months, according to the National Institute of Statistics and Geography (INEGI). Non-automotive manufacturing has emerged as a major driver, benefiting from demand for electronic equipment and other industrial goods. The figures point to a growing role for Mexico in supplying the hardware needed to expand US computing capacity. However, the increase in export value does not necessarily translate into an equivalent expansion of domestic technological capabilities, particularly when production depends on imported components and manufacturing processes controlled elsewhere. AI Demand Reshapes Mexico’s Export Mix The growth in advanced technology shipments accelerated in 2024, when annual exports to the United States surpassed US$100 billion. The trend continued into 2026: between January and August, the value of these shipments exceeded the total recorded throughout 2025 by nearly US$2 billion, according to US Census Bureau data. Mexican trade statistics reinforce this trajectory. In August, manufacturing shipments increased 42.6% year over year, while exports of electrical and electronic equipment rose 122.3%, reflecting demand primarily from the United States. Grupo Financiero Banorte identified the expansion of AI infrastructure and equipment in the United States as a continuing driver of cross-border flows. “In the short term, external demand will remain supported by the boom in AI-related products,” the financial institution said . The September figures provide further evidence of the shift. Total Mexican exports reached US$77.8 billion , up 37.8% annually, while manufactured goods increased 39%. Within manufacturing, non-automotive exports grew 53%, compared with 5.7% for automotive exports. Non-automotive manufacturing accounted for 74.1% of manufactured exports in September, while non-oil sales to the United States increased 43.5% year over year. Within that category, non-automotive exports rose 57.2%, significantly outpacing the 8.5% increase in automotive shipments. For the first nine months of 2026, Mexican exports totaled US$627.2 billion, up 30.3% year over year. Non-automotive manufactured goods generated US$436.6 billion, representing approximately 70% of the total and growing 46%. These figures indicate that Mexico’s export expansion extends beyond the traditional automotive sector. Electronics and computer equipment are becoming increasingly important to the country's manufacturing relationship with the United States, as companies expand the infrastructure required to train and operate AI systems. Ernesto O’Farrill , President, Bursamétrica, told El Financiero that Mexico is consolidating its position as a supplier to the high-technology industry as US investment in AI infrastructure increases. He also highlighted the acceleration of non-automotive exports, describing Mexico as an increasingly important link in the reconfiguration of supply chains, particularly for electronics and computing equipment. Export Growth Raises Questions About Domestic Value Creation The expansion presents an opportunity for Mexican manufacturers, but the structure of production remains a central concern. Export values measure the goods crossing the border, not the share of their value generated within Mexico. Manuel Valencia , Professor, Tecnológico de Monterrey, described the increase in advanced technology shipments as positive for the country while acknowledging the debate over regional content. The distinction matters because assembling sophisticated equipment does not necessarily mean that a country also develops its underlying technology, designs its components or controls its intellectual property. “Some will call this triangulation, while others will understand it as a product of the industry's value chain,” says Valencia. He added that Mexico does not carry out the design and development of much of this technology, but participates in product preparation, assembly and final testing. “However, that is also technology and reflects the strength offered by the country's skilled and technologically trained workforce,” he said. The debate gained prominence during the American Society of Mexico's binational convention, where former Minister of Economy Ildefonso Guajardo argued that Mexican electronics exports contain only 5% domestic components, compared with as much as 35% for automotive exports. The figures, as presented in the source material, underscore the difference between export performance and domestic participation in production. The distinction is particularly relevant as companies reorganize supply chains to serve the US market. Valencia attributed Mexico's growing role partly to protectionist policies under the administration of US President Donald Trump, which have affected countries such as China, and to nearshoring. Mexican manufacturing facilities are increasingly integrated into advanced supply networks, allowing companies to produce or assemble equipment closer to US customers. Yet rising exports alone cannot establish how much value Mexico retains. A fuller assessment requires examining the domestic content of exported goods, the origin of intermediate inputs and the extent to which Mexican companies participate in engineering, component production and technological development. Mexico’s Next Challenge Is Moving Up the Technology Chain The surge in electronics exports also coincides with a substantial increase in imports. In September, Mexico imported US$78.4 billion in goods, up 33.1% annually, with intermediate goods imports rising 38.8%. For the year to date, imports of intermediate inputs had increased 33.4%, according to the figures reported by El Financiero. These purchases support manufacturing activity, but they also highlight a structural limitation: a larger export industry can remain dependent on components and technology sourced from abroad. Delia Paredes , a strategic adviser on macroeconomic and geoeconomic risk, warned that the increase in exports was accompanied by a similar expansion in intermediate imports, arguing that Mexico continues to capture a relatively limited share of value through assembly. The opportunity, therefore, extends beyond supplying equipment to US technology companies. Greater domestic participation in component manufacturing, engineering and product development could allow Mexican firms to capture more value from the same production networks. Trade policy will also shape the outlook. Janneth Quiroz, Director of Economic, Foreign Exchange, and Stock Market Analysis, Grupo Financiero Monex, said the performance of Mexico's external sector will depend on bilateral negotiations with the United States and the review of the USMCA. Rules of origin, industrial supply chains and trade conditions remain relevant to how companies organize production across North America."
+                  },
+                  {
+                    "id": "standing:std-us-dependence",
+                    "text": "About 80% of Mexico's exports go to the United States — the deepest single-partner dependence of any large economy."
+                  }
+                ],
+                "fields": {
+                  "headline": {
+                    "english": "Mexico's exports of advanced technology equipment to U.S. surpass $100 billion annually",
+                    "spanish": "Las exportaciones de equipo de tecnología avanzada de México a EE.UU. superan $100 mil millones anuales",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  },
+                  "dek": {
+                    "english": "Shipments have tripled over five years on AI infrastructure demand. In the first nine months of 2026, exports totaled $627.2 billion, up 30.3% year over year, with non-automotive goods reaching $436.6 billion.",
+                    "spanish": "Los envíos se han triplicado en cinco años por la demanda de infraestructura de IA. En los primeros nueve meses de 2026, las exportaciones totalizaron $627.2 mil millones, subiendo 30.3% interanual, con bienes no automotrices alcanzando $436.6 mil millones.",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  },
+                  "background": {
+                    "english": "Mexico depends on imported energy to support manufacturing growth. About 80% of Mexico's exports go to the United States, concentrating trade dependence.",
+                    "spanish": "México depende de energía importada para apoyar el crecimiento manufacturero. Alrededor del 80% de las exportaciones de México van a Estados Unidos, concentrando la dependencia comercial.",
+                    "evidenceRefs": [
+                      "article",
+                      "standing:std-us-dependence"
+                    ]
+                  },
+                  "view": {
+                    "english": "Mexico captures less value than export values suggest. A professor at Tecnológico de Monterrey noted that advanced technology shipments reflect assembly and final testing rather than design, component manufacturing or intellectual property control.",
+                    "spanish": "México captura menos valor de lo que sugieren los valores de exportación. Un profesor del Tecnológico de Monterrey señaló que los envíos de tecnología avanzada reflejan ensamblaje y pruebas finales en lugar de diseño, manufactura de componentes o control de propiedad intelectual.",
+                    "evidenceRefs": [
+                      "article",
+                      "standing:std-us-dependence"
+                    ]
+                  },
+                  "watch": {
+                    "english": "If intermediate imports continue growing faster than export revenue, it would confirm that Mexico remains in assembly-dependent production with limited value retention.",
+                    "spanish": "Si las importaciones intermedias siguen creciendo más rápido que los ingresos de exportación, confirmaría que México permanece en producción dependiente de ensamblaje con retención limitada de valor.",
+                    "evidenceRefs": [
+                      "article"
+                    ]
+                  }
+                }
+              }
+            ],
+            "response": {
+              "reviews": {
+                "s0": {
+                  "ok": true,
+                  "problems": []
+                },
+                "s3": {
+                  "ok": false,
+                  "problems": [
+                    "background field claims Mexico supplies computer equipment to support U.S. AI infrastructure expansion, with advanced technology shipments exceeding 2025 totals by nearly 2 billion dollars between January-August 2026. However, the cited article contains no evidence of shipments to support U.S. AI infrastructure or comparative data between January-August 2026 and full-year 2025. The article discusses Mexico's export growth generally and mentions Comce projections for 2026, but does not provide the specific shipment comparison claimed.",
+                    "background field in Spanish contains identical unsupported claims about AI infrastructure support and the January-August 2026 versus 2025 comparison."
+                  ]
+                },
+                "s5": {
+                  "ok": true,
+                  "problems": []
+                }
+              }
+            }
+          },
+          "auditedPayloadHash": "03548f26ab4130aea707829b39fe9ca19f2eff11f322ec585dfcd248f4f6853d",
+          "candidate": null,
+          "candidateHash": null,
+          "validation": null,
+          "failure": {
+            "stage": "audited-draft-assembly",
+            "recordedAt": "2026-10-31T12:24:20.752Z",
+            "name": "Error",
+            "message": "only 2 stories passed every editorial gate; need at least 3 without padding",
+            "reasons": [
+              "only 2 stories passed every editorial gate; need at least 3 without padding"
+            ]
+          }
+        },
+        "sourceProvenance": "Primary INEGI October 30 GDP estimate and Pemex October 30 quarterly financial report, plus Canal del Congreso October 28 report of Senate approval and referral to the Executive and LFPRH article 42 IV. Full original documents retained outside public artifact. GDP and Pemex timestamps normalized to noon UTC on the verified publication date, not independently established clock times. Law timestamp is the unchanged scheduled-seed date representation. No invented October 31 vote or claim of official publication or effectiveness.",
+        "generationProvenance": "Operator-curated recovery; zero additional provider generation or audit calls. The original automated independent audit rejected unsupported export comparisons and assembly had only two passing stories. Its audit and publicationAllowed=false quarantine remain unchanged; this new candidate has a separate independent human-agent review. Original three calls, 0.041596 USD, settled receipts, collection diagnostics and both failed morning attempts preserved.",
+        "candidateSignatureProvenance": "Retained original noon candidate-universe signature; this is not a curated-prose hash. Exact curated bytes and expanded review sources are separately bound.",
+        "renderedReviewScope": "Static built DOM/text binding, not responsive or browser-runtime certification"
       }
     }
   ]
