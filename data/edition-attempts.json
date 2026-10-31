@@ -5734,6 +5734,47 @@
           "diagnostics": []
         }
       ]
+    },
+    {
+      "editorialDate": "2026-10-31",
+      "slot": "noon",
+      "candidateSignature": "c7e431d0b65824c6464aaef8d91f7025ec4dc4d7347cd9d212761e905f4a9f93",
+      "state": "started",
+      "startedAt": "2026-10-31T12:22:31.238Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.04908,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-10-31T12:22:31.238Z",
+        "aliveSources": 70,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "41200802509",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "3d7cba5e-f6e8-4d5b-8eea-9720d2b4e69d",
+            "period": "2026-10",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.04908,
+            "accountedUSD": 0.04908,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
