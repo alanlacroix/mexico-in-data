@@ -81,6 +81,26 @@ jobs:
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
           node-version: '24'
+      - name: Verify resolved revenue deadline against the live official report
+        if: github.event_name == 'pull_request' && github.head_ref == 'repair/revenue-deadline-resolved-2026-10-31'
+        # One repair-specific, zero-model production-fetch check. No publication or ledger writes.
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import { fetchArticle } from './pipeline/lib/fetch-article.js';
+          import scheduled from './pipeline/lib/scheduled-candidate.cjs';
+          const row = JSON.parse(fs.readFileSync('data/events.json')).events.find(row => row.id === 'federal-revenue-law-2027-2026-10-31');
+          const page = await fetchArticle(row.outcomeSourceUrl);
+          assert.equal(page.ok, true, 'Official report must be available through the production fetcher');
+          assert.equal(page.articleBody, true, 'Complete article body must be located');
+          assert.equal(page.finalUrl, row.outcomeSourceUrl, 'Exact official article identity must be preserved');
+          const candidate = scheduled.seedScheduledCandidate(row, page.text);
+          assert.ok(candidate, 'Actual fetched official outcome must satisfy the required deadline');
+          assert.equal(candidate._editorialDate, '2026-10-28');
+          assert.equal(candidate._scheduled.requiredForBrief, true);
+          console.log(JSON.stringify({ verified: true, url: page.finalUrl, reportDate: candidate._editorialDate, deadline: row.date, articleBody: page.articleBody }));
+          JS
       - name: Check core sources from the production runner environment
         # The monthly INPC source check uses the same pinned PDF reader as publication.
         # No provider calls, edition writes or accounting mutations are performed.
