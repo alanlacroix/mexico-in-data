@@ -6386,6 +6386,242 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-11-01",
+      "slot": "noon",
+      "candidateSignature": "4f92e0e1149ddf743a85ed1bf8572399c1ef3a610def69ec209a7001087d40aa",
+      "state": "published",
+      "startedAt": "2026-11-01T12:19:00.000Z",
+      "completedAt": "2026-11-01T12:22:30.682Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "18edfef44370f1ffc0a4de9fd6cbc788c3aa2b824584b40f420f287daf112d36",
+      "reason": "",
+      "diagnostics": [],
+      "collection": null,
+      "recoveries": [],
+      "manualRecovery": {
+        "recoveryKind": "operator-curated-independent-source-and-translation-review",
+        "method": "Zero-model independently audited curated edition. Existing deterministic bilingual and numeric checks, public contract and full release unchanged. Exact-head CI and Chrome gates required before merge.",
+        "reviewedAt": "2026-11-01T12:22:30.682Z",
+        "artifactHash": "18edfef44370f1ffc0a4de9fd6cbc788c3aa2b824584b40f420f287daf112d36",
+        "draftSHA256": "34008f5de719a4b70f07380843f12c8a99462bbfb5b8ee92eb50a5004e612666",
+        "auditSHA256": "3322e5fbaef27d5a06ee290a89464cc65a192edb9cbedd6014af52b5f124e04a",
+        "reviewInputsSHA256": "2910c560c8d7b261ef1d934d9bcb8a17640c82fa66cc0d0c38a69a5c09bb137b",
+        "deterministicReviewSHA256": "8b87ab949c5f3dcd651aa161c93ae52e45578e47b8a5788b1a704e2a32461ac1",
+        "readerEnglishSHA256": "d29cce038d132fc8c48fc00389f4d233fd2829e7d609b2447c4ccde6ce12d509",
+        "readerSpanishSHA256": "f8335d92bd0bcaa4fb64225e8b75d1463c61c04b3bc4ee37a4cbe9fc38029ed4",
+        "priorFailedMorning": {
+          "editorialDate": "2026-11-01",
+          "slot": "morning",
+          "candidateSignature": "59810c5df9bac7d4b69ccd9cfc884aa2863fac8a9d85879f649e376622c6e8b0",
+          "state": "failed",
+          "startedAt": "2026-11-01T12:13:02.343Z",
+          "completedAt": "2026-11-01T12:14:26.770Z",
+          "calls": 5,
+          "costUSD": 0.109136,
+          "artifactHash": "",
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "federal-revenue-law-2027-2026-10-31",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "The Senate approved 10.6 trillion pesos in 2027 revenues on October 28, with tax receipts projected at 6 trillion 263 billion 886.8 million pesos and federal debt authorization of up to 1 trillion 700 billion pesos. The vote arrived three days before the constitutional deadline.",
+                  "es": "El Senado aprobó 10.6 billones de pesos en ingresos para 2027 el 28 de octubre, con recaudación tributaria proyectada de 6 billones 263 mil 886.8 millones de pesos y autorización de deuda federal hasta por 1 billón 700 mil millones de pesos. La votación llegó tres días antes del plazo constitucional.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported number: 1",
+                    "Spanish unsupported number: 1"
+                  ]
+                }
+              }
+            }
+          ],
+          "collection": {
+            "collectedAt": "2026-11-01T12:13:02.343Z",
+            "aliveSources": 70,
+            "totalSources": 72,
+            "wireCount": 60,
+            "minimumAlive": 36,
+            "ok": true,
+            "failedSourceIds": [
+              "insightcrime-mx",
+              "nexos"
+            ]
+          },
+          "recoveries": [
+            {
+              "startedAt": "2026-11-01T12:10:33.212Z",
+              "completedAt": "2026-11-01T12:12:47.304Z",
+              "calls": 3,
+              "costUSD": 0.073666,
+              "reason": "only 2 stories passed every editorial gate; need at least 3 without padding",
+              "diagnostics": [
+                {
+                  "stage": "independent-audit",
+                  "storyId": "n-b1373621d1ac",
+                  "reasons": [
+                    "The headline claims the export surge is 'driven by AI demand' and 'highlights import dependence,' but the article does not establish that AI demand itself drives import dependence. The article discusses AI demand driving export growth and separately discusses imports of intermediate goods, but does not causally link AI demand to import dependence.",
+                    "The headline states the situation 'strains energy supply' but the article provided (about exports and energy) does not directly state that AI-driven exports strain energy supply. The energy strain is discussed in terms of general export growth and new data centers, not specifically as a consequence of AI-driven exports.",
+                    "The Spanish headline 'El auge de exportaciones de México impulsado por demanda de IA tensa el suministro de energía' translates to approximately the same problematic causal claim as the English version and compounds the unsupported causation."
+                  ],
+                  "fields": {
+                    "headline": {
+                      "en": "Mexico's export surge driven by AI demand strains energy supply and highlights import dependence",
+                      "es": "El auge de exportaciones de México impulsado por demanda de IA tensa el suministro de energía",
+                      "refs": [
+                        "article"
+                      ],
+                      "reasons": []
+                    },
+                    "dek": {
+                      "en": "At Comce's 32nd Foreign Trade Congress, Sergio Contreras projected Mexico's combined exports and imports will exceed 1.6 trillion dollars in 2026, with exports and imports each above 800,000 million dollars.",
+                      "es": "En el 32.º Congreso de Comercio Exterior del Comce, Sergio Contreras proyectó que las exportaciones e importaciones combinadas de México superarán 1.6 billones de dólares en 2026, con exportaciones e importaciones cada una por encima de 800,000 millones de dólares.",
+                      "refs": [
+                        "article"
+                      ],
+                      "reasons": []
+                    },
+                    "background": {
+                      "en": "Mexico's 2024 energy reform turned Pemex into a public state company, with secondary legislation published in March 2025. A law sets a target of 35 percent clean electricity by 2024, but only 39.2 percent of installed capacity was clean in 2023.",
+                      "es": "La reforma energética de 2024 convirtió a Pemex en una empresa pública del Estado, con legislación secundaria publicada en marzo de 2025. Una ley fija una meta de 35 por ciento de electricidad limpia para 2024, pero solo 39.2 por ciento de la capacidad instalada fue limpia en 2023.",
+                      "refs": [
+                        "article"
+                      ],
+                      "reasons": []
+                    },
+                    "view": {
+                      "en": "Comce warns that export growth needs more energy, but renewable investment stalled in the last administration. Enel and Eni, with about 2 GW of renewable capacity and 4,000 million dollars invested, say unclear regulation discourages new projects.",
+                      "es": "El Comce advierte que el crecimiento de exportaciones necesita más energía, pero la inversión en renovables se estancó en el sexenio pasado. Enel y Eni, con cerca de 2 GW de capacidad renovable y 4,000 millones de dólares invertidos, dicen que la regulación poco clara desalienta nuevos proyectos.",
+                      "refs": [
+                        "article"
+                      ],
+                      "reasons": []
+                    },
+                    "watch": {
+                      "en": "If energy constraints worsen, manufacturers may relocate capacity elsewhere.",
+                      "es": "Si las restricciones de energía empeoran, los fabricantes pueden reubicar capacidad en otro lado.",
+                      "refs": [
+                        "article"
+                      ],
+                      "reasons": []
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "modelAccounting": {
+            "version": 1,
+            "runId": "41305303602",
+            "runAttempt": "1",
+            "receipts": [
+              {
+                "id": "7663475e-8a51-4c67-bca7-32bfc430aef2",
+                "period": "2026-11",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.04908,
+                "accountedUSD": 0.021201,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 7311,
+                  "output_tokens": 2778,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "ed56643f-028b-456d-adc7-ba7acc5d311d",
+                "period": "2026-11",
+                "model": "claude-sonnet-5",
+                "reservedUSD": 0.102069,
+                "accountedUSD": 0.04464,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 9305,
+                  "output_tokens": 1115,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-sonnet-5",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "c5c66d70-1c13-40b3-9478-f5ec0b7cac30",
+                "period": "2026-11",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.039653,
+                "accountedUSD": 0.007825,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 6655,
+                  "output_tokens": 234,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "6f7cf09d-e238-4ed9-83bf-ba1f75d9a13f",
+                "period": "2026-11",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.049161,
+                "accountedUSD": 0.022378,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 7333,
+                  "output_tokens": 3009,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "0fec49c3-51ac-4ca0-b5ac-f6fb77debe0e",
+                "period": "2026-11",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.043302,
+                "accountedUSD": 0.013092,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 9092,
+                  "output_tokens": 800,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              }
+            ]
+          }
+        },
+        "originalDiagnosticArtifacts": [
+          {
+            "runId": "41305190017",
+            "artifactId": "13083307258",
+            "publicationAllowed": false
+          },
+          {
+            "runId": "41305303602",
+            "artifactId": "13082872204",
+            "publicationAllowed": false
+          }
+        ],
+        "generationProvenance": "Three newly selected source-backed stories, with zero additional model calls or provider audit calls. Morning failure and its exhausted recovery, all five settled receipts and USD 0.109136 remain unchanged. The unused noon slot records this independently audited recovery; no allowance or cap was reset.",
+        "sourceProvenance": "Full El País November 1 report, T21 October 30 report and official BBVA October 29 release independently read. Source HTML and complete extracted text plus verified publication metadata retained outside public artifact. Exact publication timestamps taken from source metadata. BBVA original feed lead linked in editorial-source-provenance.json.",
+        "candidateSignatureProvenance": "SHA256 of new curated candidate identity metadata, separate from exact artifact and independent audit hashes.",
+        "renderedReviewScope": "Independent full ordered EN/ES built HTML/text review. Local Chrome startup failed SIGABRT; remote exact-head Chrome gate remains required before merging."
+      }
     }
   ]
 }
