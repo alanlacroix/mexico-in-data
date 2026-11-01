@@ -6198,14 +6198,33 @@
       "editorialDate": "2026-11-01",
       "slot": "morning",
       "candidateSignature": "59810c5df9bac7d4b69ccd9cfc884aa2863fac8a9d85879f649e376622c6e8b0",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-01T12:13:02.343Z",
-      "completedAt": "",
+      "completedAt": "2026-11-01T12:14:26.770Z",
       "calls": 5,
       "costUSD": 0.109136,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "federal-revenue-law-2027-2026-10-31",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The Senate approved 10.6 trillion pesos in 2027 revenues on October 28, with tax receipts projected at 6 trillion 263 billion 886.8 million pesos and federal debt authorization of up to 1 trillion 700 billion pesos. The vote arrived three days before the constitutional deadline.",
+              "es": "El Senado aprobó 10.6 billones de pesos en ingresos para 2027 el 28 de octubre, con recaudación tributaria proyectada de 6 billones 263 mil 886.8 millones de pesos y autorización de deuda federal hasta por 1 billón 700 mil millones de pesos. La votación llegó tres días antes del plazo constitucional.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 1",
+                "Spanish unsupported number: 1"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-01T12:13:02.343Z",
         "aliveSources": 70,
