@@ -6198,14 +6198,66 @@
       "editorialDate": "2026-11-01",
       "slot": "morning",
       "candidateSignature": "59810c5df9bac7d4b69ccd9cfc884aa2863fac8a9d85879f649e376622c6e8b0",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-01T12:10:33.212Z",
-      "completedAt": "",
+      "completedAt": "2026-11-01T12:12:47.304Z",
       "calls": 3,
       "costUSD": 0.073666,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "only 2 stories passed every editorial gate; need at least 3 without padding",
+      "diagnostics": [
+        {
+          "stage": "independent-audit",
+          "storyId": "n-b1373621d1ac",
+          "reasons": [
+            "The headline claims the export surge is 'driven by AI demand' and 'highlights import dependence,' but the article does not establish that AI demand itself drives import dependence. The article discusses AI demand driving export growth and separately discusses imports of intermediate goods, but does not causally link AI demand to import dependence.",
+            "The headline states the situation 'strains energy supply' but the article provided (about exports and energy) does not directly state that AI-driven exports strain energy supply. The energy strain is discussed in terms of general export growth and new data centers, not specifically as a consequence of AI-driven exports.",
+            "The Spanish headline 'El auge de exportaciones de México impulsado por demanda de IA tensa el suministro de energía' translates to approximately the same problematic causal claim as the English version and compounds the unsupported causation."
+          ],
+          "fields": {
+            "headline": {
+              "en": "Mexico's export surge driven by AI demand strains energy supply and highlights import dependence",
+              "es": "El auge de exportaciones de México impulsado por demanda de IA tensa el suministro de energía",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "dek": {
+              "en": "At Comce's 32nd Foreign Trade Congress, Sergio Contreras projected Mexico's combined exports and imports will exceed 1.6 trillion dollars in 2026, with exports and imports each above 800,000 million dollars.",
+              "es": "En el 32.º Congreso de Comercio Exterior del Comce, Sergio Contreras proyectó que las exportaciones e importaciones combinadas de México superarán 1.6 billones de dólares en 2026, con exportaciones e importaciones cada una por encima de 800,000 millones de dólares.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "background": {
+              "en": "Mexico's 2024 energy reform turned Pemex into a public state company, with secondary legislation published in March 2025. A law sets a target of 35 percent clean electricity by 2024, but only 39.2 percent of installed capacity was clean in 2023.",
+              "es": "La reforma energética de 2024 convirtió a Pemex en una empresa pública del Estado, con legislación secundaria publicada en marzo de 2025. Una ley fija una meta de 35 por ciento de electricidad limpia para 2024, pero solo 39.2 por ciento de la capacidad instalada fue limpia en 2023.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "view": {
+              "en": "Comce warns that export growth needs more energy, but renewable investment stalled in the last administration. Enel and Eni, with about 2 GW of renewable capacity and 4,000 million dollars invested, say unclear regulation discourages new projects.",
+              "es": "El Comce advierte que el crecimiento de exportaciones necesita más energía, pero la inversión en renovables se estancó en el sexenio pasado. Enel y Eni, con cerca de 2 GW de capacidad renovable y 4,000 millones de dólares invertidos, dicen que la regulación poco clara desalienta nuevos proyectos.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "watch": {
+              "en": "If energy constraints worsen, manufacturers may relocate capacity elsewhere.",
+              "es": "Si las restricciones de energía empeoran, los fabricantes pueden reubicar capacidad en otro lado.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-01T12:10:33.212Z",
         "aliveSources": 69,
