@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-16",
-      "slot": "morning",
-      "candidateSignature": "660fcbd21bdef2c33267540b6ec779fd8ae04c67712cd5d581267805e529d77f",
-      "state": "failed",
-      "startedAt": "2026-09-16T13:01:08.254Z",
-      "completedAt": "2026-09-16T13:02:19.121Z",
-      "calls": 2,
-      "costUSD": 0.026104,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-b0e1b76f1ef1: background: negation was introduced in Spanish | n-019fa74a4f57: background: negation was introduced in Spanish | n-210b4c0dccd2: headline: unsupported number: 1188; headline: Spanish 27 words (cap 24); headline: Spanish unsupported number: 1188"
-    },
-    {
-      "editorialDate": "2026-09-16",
-      "slot": "noon",
-      "candidateSignature": "d424dab9ebbfbe0b9e19bbe1395ad418024a29aeec58d84e6d3e5c81a9b639c0",
-      "state": "failed",
-      "startedAt": "2026-09-16T16:01:26.277Z",
-      "completedAt": "2026-09-16T16:02:03.501Z",
-      "calls": 2,
-      "costUSD": 0.016988,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-b0e1b76f1ef1: headline: completed action became non-final in Spanish; watch: semicolon; watch: vague analysis: \"indicate that\"; watch: Spanish semicolon | n-210b4c0dccd2: headline: 2 sentences (cap 1); headline: Spanish 2 sentences (cap 1); dek: 3 sentences (cap 2); dek: unsupported number: 1188; dek: Spanish unsupported numbe"
-    },
-    {
       "editorialDate": "2026-09-17",
       "slot": "morning",
       "candidateSignature": "28f157ffe0601b1f53fc50665ca46032da5db984715087c45788ee95adb9e6c2",
@@ -6216,6 +6192,48 @@
         "generationProvenance": "Operator-curated recovery; zero additional provider generation or audit calls. The original automated independent audit rejected unsupported export comparisons and assembly had only two passing stories. Its audit and publicationAllowed=false quarantine remain unchanged; this new candidate has a separate independent human-agent review. Original three calls, 0.041596 USD, settled receipts, collection diagnostics and both failed morning attempts preserved.",
         "candidateSignatureProvenance": "Retained original noon candidate-universe signature; this is not a curated-prose hash. Exact curated bytes and expanded review sources are separately bound.",
         "renderedReviewScope": "Static built DOM/text binding, not responsive or browser-runtime certification"
+      }
+    },
+    {
+      "editorialDate": "2026-11-01",
+      "slot": "morning",
+      "candidateSignature": "59810c5df9bac7d4b69ccd9cfc884aa2863fac8a9d85879f649e376622c6e8b0",
+      "state": "started",
+      "startedAt": "2026-11-01T12:10:33.212Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.04908,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-01T12:10:33.212Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "insightcrime-mx",
+          "energiaadebate",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "41305190017",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "7663475e-8a51-4c67-bca7-32bfc430aef2",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.04908,
+            "accountedUSD": 0.04908,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
