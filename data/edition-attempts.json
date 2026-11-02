@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-17",
-      "slot": "morning",
-      "candidateSignature": "28f157ffe0601b1f53fc50665ca46032da5db984715087c45788ee95adb9e6c2",
-      "state": "failed",
-      "startedAt": "2026-09-17T13:01:01.668Z",
-      "completedAt": "2026-09-17T13:02:06.732Z",
-      "calls": 3,
-      "costUSD": 0.023422,
-      "artifactHash": "",
-      "reason": "all selected stories failed the independent evidence audit"
-    },
-    {
-      "editorialDate": "2026-09-17",
-      "slot": "noon",
-      "candidateSignature": "71a55927d7e35be4e9f459123b499855b1660367c806cc5dc79fd0e6a7c1682a",
-      "state": "failed",
-      "startedAt": "2026-09-17T16:01:38.840Z",
-      "completedAt": "2026-09-17T16:02:29.305Z",
-      "calls": 2,
-      "costUSD": 0.023277,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-91442c5df168: dek: unsupported numbers: 89.2, 68.5, 8.5; dek: numbers changed in Spanish; dek: Spanish unsupported number: 8; view: vague newsroom phrase: \"mounting pressure\" | n-7543510a6a6b: dek: negation was introduced in Spanish | n-6801c4260f58: headline: unsupported number: 306; headline: Spanish unsupported number: 306;"
-    },
-    {
       "editorialDate": "2026-09-18",
       "slot": "morning",
       "candidateSignature": "e930a4eab6ad82e26fa8a336f95b363af7cfe77674ca9ff1065e2c3c12147f6f",
@@ -6621,6 +6597,49 @@
         "sourceProvenance": "Full El País November 1 report, T21 October 30 report and official BBVA October 29 release independently read. Source HTML and complete extracted text plus verified publication metadata retained outside public artifact. Exact publication timestamps taken from source metadata. BBVA original feed lead linked in editorial-source-provenance.json.",
         "candidateSignatureProvenance": "SHA256 of new curated candidate identity metadata, separate from exact artifact and independent audit hashes.",
         "renderedReviewScope": "Independent full ordered EN/ES built HTML/text review. Local Chrome startup failed SIGABRT; remote exact-head Chrome gate remains required before merging."
+      }
+    },
+    {
+      "editorialDate": "2026-11-02",
+      "slot": "morning",
+      "candidateSignature": "c4f02851f91907c7cc1db96437f31106fdd540071bfbeed182101ac47309cf20",
+      "state": "started",
+      "startedAt": "2026-11-02T12:10:48.791Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.142359,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-02T12:10:48.791Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "elfin-mercados",
+          "mexico-business-news",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "41442543453",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "da34d7d3-ec28-41df-aa27-f7f0fdb0c237",
+            "period": "2026-11",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.142359,
+            "accountedUSD": 0.142359,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
