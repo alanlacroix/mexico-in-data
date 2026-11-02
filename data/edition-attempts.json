@@ -6603,14 +6603,32 @@
       "editorialDate": "2026-11-02",
       "slot": "morning",
       "candidateSignature": "c4f02851f91907c7cc1db96437f31106fdd540071bfbeed182101ac47309cf20",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-02T12:10:48.791Z",
-      "completedAt": "",
+      "completedAt": "2026-11-02T12:11:48.279Z",
       "calls": 2,
       "costUSD": 0.080535,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-6d670c50f406",
+          "reasons": [],
+          "fields": {
+            "view": {
+              "en": "Rising sales costs of 981,366 million pesos and a tax burden of 179,242 million pesos, up 17.8% annually, kept Pemex unprofitable despite higher revenue. Refining throughput used only 55% of installed capacity, far below the 78% target in its strategic plan.",
+              "es": "El alza en costos de ventas de 981,366 millones de pesos y la carga fiscal de 179,242 millones, 17.8% más que el año previo, mantuvieron a Pemex sin ganancias pese a mayores ingresos. El procesamiento de crudo utilizó solo 55% de la capacidad instalada, muy por debajo de la meta de 78% en el Plan Estratégico.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-02T12:10:48.791Z",
         "aliveSources": 68,
