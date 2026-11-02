@@ -6603,14 +6603,42 @@
       "editorialDate": "2026-11-02",
       "slot": "morning",
       "candidateSignature": "c4f02851f91907c7cc1db96437f31106fdd540071bfbeed182101ac47309cf20",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-02T12:12:08.372Z",
-      "completedAt": "",
+      "completedAt": "2026-11-02T12:13:25.118Z",
       "calls": 4,
       "costUSD": 0.112328,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-09f3c0e782d4",
+          "reasons": [],
+          "fields": {
+            "view": {
+              "en": "Suppliers, particularly small and medium enterprises, report that payment delays have forced company closures and job losses. The Petroleum Services Employers Association reported that two years ago member companies lost 5,000 direct jobs and 30,000 indirect positions due to non-payment.",
+              "es": "Los proveedores, particularmente empresas pequeñas y medianas, reportan que los retrasos en pagos han forzado cierres de empresas y pérdidas de empleos. La Asociación Mexicana de Empresas de Servicio Petroleros reportó que hace dos años sus empresas agremiadas perdieron 5,000 empleos directos y 30,000 indirectos por falta de pago.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was dropped in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "If Pemex announces details of its supplier payment plan before year end, whether it includes restructuring terms or new liquidity arrangements will test whether the company can stabilize vendor relationships without further operational disruptions or contractor failures.",
+              "es": "Si Pemex anuncia detalles de su plan de pago a proveedores antes de cierre de año, si incluye términos de reestructuración o nuevos arreglos de liquidez probará si la empresa puede estabilizar relaciones con proveedores sin más disrupciones operativas o fracasos de contratistas.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item is grammatically incomplete"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-02T12:12:08.372Z",
         "aliveSources": 69,
