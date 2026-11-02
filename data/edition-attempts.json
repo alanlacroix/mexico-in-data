@@ -6751,6 +6751,202 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-11-02",
+      "slot": "noon",
+      "candidateSignature": "8446a69e3fbb8ed28d7840186b2ca4102338007af70230709d1e5c4517f8e1f2",
+      "state": "published",
+      "startedAt": "2026-11-02T12:29:50.000Z",
+      "completedAt": "2026-11-02T12:29:51.989Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "00b1f5537742fa6c69dd282a79fd0328370494bc4ae474e5247d3b424728f336",
+      "reason": "",
+      "diagnostics": [],
+      "collection": null,
+      "recoveries": [],
+      "manualRecovery": {
+        "recoveryKind": "operator-curated-independent-source-and-translation-review",
+        "method": "Zero-model independently audited curated edition. Existing deterministic bilingual and numeric checks, public contract and full release unchanged. Exact-head CI and Chrome gates required before merge.",
+        "reviewedAt": "2026-11-02T12:29:51.989Z",
+        "artifactHash": "00b1f5537742fa6c69dd282a79fd0328370494bc4ae474e5247d3b424728f336",
+        "draftSHA256": "32218832e0cbb908b6850edd0db1ad3c4c6ad530e7a15a429b62e67670aa6124",
+        "auditSHA256": "98386ab24835497aa1f514f4dfcf172c4f152e35b1083a716714ec3481c9e993",
+        "reviewInputsSHA256": "fcbce1a8cc1759b5c8d5196a4535cf93740bb8e9e7500232ffdb04bc3c394f57",
+        "deterministicReviewSHA256": "be90def91ae60dbfd2973666785cc561ac88cb1954898c879a089cbfa5450da8",
+        "readerEnglishSHA256": "6231133d4753d3900907b9aa09becb446f8e9a898dbaa64e507c10752e28501c",
+        "readerSpanishSHA256": "c0e8bf35fcf48791af9be5094e72ef422b5bc59542718b71000307124b38c33f",
+        "priorFailedMorning": {
+          "editorialDate": "2026-11-02",
+          "slot": "morning",
+          "candidateSignature": "c4f02851f91907c7cc1db96437f31106fdd540071bfbeed182101ac47309cf20",
+          "state": "failed",
+          "startedAt": "2026-11-02T12:12:08.372Z",
+          "completedAt": "2026-11-02T12:13:25.118Z",
+          "calls": 4,
+          "costUSD": 0.112328,
+          "artifactHash": "",
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-09f3c0e782d4",
+              "reasons": [],
+              "fields": {
+                "view": {
+                  "en": "Suppliers, particularly small and medium enterprises, report that payment delays have forced company closures and job losses. The Petroleum Services Employers Association reported that two years ago member companies lost 5,000 direct jobs and 30,000 indirect positions due to non-payment.",
+                  "es": "Los proveedores, particularmente empresas pequeñas y medianas, reportan que los retrasos en pagos han forzado cierres de empresas y pérdidas de empleos. La Asociación Mexicana de Empresas de Servicio Petroleros reportó que hace dos años sus empresas agremiadas perdieron 5,000 empleos directos y 30,000 indirectos por falta de pago.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "negation was dropped in Spanish"
+                  ]
+                },
+                "watch": {
+                  "en": "If Pemex announces details of its supplier payment plan before year end, whether it includes restructuring terms or new liquidity arrangements will test whether the company can stabilize vendor relationships without further operational disruptions or contractor failures.",
+                  "es": "Si Pemex anuncia detalles de su plan de pago a proveedores antes de cierre de año, si incluye términos de reestructuración o nuevos arreglos de liquidez probará si la empresa puede estabilizar relaciones con proveedores sin más disrupciones operativas o fracasos de contratistas.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "watch item is grammatically incomplete"
+                  ]
+                }
+              }
+            }
+          ],
+          "collection": {
+            "collectedAt": "2026-11-02T12:12:08.372Z",
+            "aliveSources": 69,
+            "totalSources": 72,
+            "wireCount": 60,
+            "minimumAlive": 36,
+            "ok": true,
+            "failedSourceIds": [
+              "elfin-mercados",
+              "insightcrime-mx",
+              "nexos"
+            ]
+          },
+          "recoveries": [
+            {
+              "startedAt": "2026-11-02T12:10:48.791Z",
+              "completedAt": "2026-11-02T12:11:48.279Z",
+              "calls": 2,
+              "costUSD": 0.080535,
+              "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+              "diagnostics": [
+                {
+                  "stage": "deterministic",
+                  "storyId": "n-6d670c50f406",
+                  "reasons": [],
+                  "fields": {
+                    "view": {
+                      "en": "Rising sales costs of 981,366 million pesos and a tax burden of 179,242 million pesos, up 17.8% annually, kept Pemex unprofitable despite higher revenue. Refining throughput used only 55% of installed capacity, far below the 78% target in its strategic plan.",
+                      "es": "El alza en costos de ventas de 981,366 millones de pesos y la carga fiscal de 179,242 millones, 17.8% más que el año previo, mantuvieron a Pemex sin ganancias pese a mayores ingresos. El procesamiento de crudo utilizó solo 55% de la capacidad instalada, muy por debajo de la meta de 78% en el Plan Estratégico.",
+                      "refs": [
+                        "article"
+                      ],
+                      "reasons": [
+                        "negation was introduced in Spanish"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "modelAccounting": {
+            "version": 1,
+            "runId": "41442645951",
+            "runAttempt": "1",
+            "receipts": [
+              {
+                "id": "da34d7d3-ec28-41df-aa27-f7f0fdb0c237",
+                "period": "2026-11",
+                "model": "claude-sonnet-5",
+                "reservedUSD": 0.142359,
+                "accountedUSD": 0.072636,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 10447,
+                  "output_tokens": 2753,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-sonnet-5",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "92af12ca-19d8-43cb-be94-8490478b3874",
+                "period": "2026-11",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.026098,
+                "accountedUSD": 0.007899,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 6543,
+                  "output_tokens": 271,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "f01a1e1f-b15f-4ea5-bd28-929b579a6bc7",
+                "period": "2026-11",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.04752,
+                "accountedUSD": 0.023184,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 7969,
+                  "output_tokens": 3043,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "95aa10e6-c352-431f-a795-bfb5c6cea08f",
+                "period": "2026-11",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.028336,
+                "accountedUSD": 0.008609,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 6659,
+                  "output_tokens": 390,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              }
+            ]
+          }
+        },
+        "originalDiagnosticArtifacts": [
+          {
+            "runId": "41442543453",
+            "artifactId": "13140502379",
+            "publicationAllowed": false
+          },
+          {
+            "runId": "41442645951",
+            "artifactId": "13141052944",
+            "publicationAllowed": false
+          }
+        ],
+        "generationProvenance": "Three newly selected source-backed stories, with zero additional model calls or provider audit calls. Morning failure and its exhausted recovery, all four settled receipts and USD 0.112328 remain unchanged. The unused noon slot records this independently audited recovery; no allowance or cap was reset.",
+        "sourceProvenance": "Official ABM October 29 notice supports November 2 implementation; La Jornada November 2 fiscal reporting and El País November 2 restaurant reporting independently reviewed. INEGI October 22 inflation context explicitly labeled older. ABM and La Jornada use verified date-only ISO publication precision, not invented times. Evidence and access limits retained outside public artifact.",
+        "candidateSignatureProvenance": "SHA256 of new curated candidate identity metadata, separate from exact artifact and independent audit hashes.",
+        "renderedReviewScope": "Independent full ordered EN/ES built HTML/text review. Local Chrome startup failed SIGABRT; remote exact-head Chrome gate remains required before merging."
+      }
     }
   ]
 }
