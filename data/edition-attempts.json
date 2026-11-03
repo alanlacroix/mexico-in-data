@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-18",
-      "slot": "morning",
-      "candidateSignature": "e930a4eab6ad82e26fa8a336f95b363af7cfe77674ca9ff1065e2c3c12147f6f",
-      "state": "failed",
-      "startedAt": "2026-09-18T13:01:23.573Z",
-      "completedAt": "2026-09-18T13:01:53.052Z",
-      "calls": 2,
-      "costUSD": 0.013311,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-c314e9de6e03: headline: 2 sentences (cap 1); headline: usmca was dropped in Spanish; headline: Spanish 2 sentences (cap 1); background: usmca was dropped in Spanish; watch: usmca was dropped in Spanish | n-7be06d0e0447: model omitted the required story unit | n-c50db4bd2794: model omitted the required story unit"
-    },
-    {
-      "editorialDate": "2026-09-18",
-      "slot": "noon",
-      "candidateSignature": "249d32c58b9d6ffc9ae5b0277d7acea0d059b272ef8ae15362d14611b2ec70a5",
-      "state": "failed",
-      "startedAt": "2026-09-18T16:01:25.174Z",
-      "completedAt": "2026-09-18T16:02:13.925Z",
-      "calls": 2,
-      "costUSD": 0.025531,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-c314e9de6e03: headline: usmca was dropped in Spanish; dek: 3 sentences (cap 2); background: semicolon; background: usmca was dropped in Spanish; background: Spanish semicolon; view: usmca was dropped in Spanish; watch: usmca was dropped in Spanish; watch: negation was introduced in Spanish | n-e223fa844d3b: dek: 47 words (cap"
-    },
-    {
       "editorialDate": "2026-09-19",
       "slot": "morning",
       "candidateSignature": "248b557c302628d09f49ad2d0822250ef99ec7fac61ed580bf2ec29b4293aa79",
@@ -6946,6 +6922,48 @@
         "sourceProvenance": "Official ABM October 29 notice supports November 2 implementation; La Jornada November 2 fiscal reporting and El País November 2 restaurant reporting independently reviewed. INEGI October 22 inflation context explicitly labeled older. ABM and La Jornada use verified date-only ISO publication precision, not invented times. Evidence and access limits retained outside public artifact.",
         "candidateSignatureProvenance": "SHA256 of new curated candidate identity metadata, separate from exact artifact and independent audit hashes.",
         "renderedReviewScope": "Independent full ordered EN/ES built HTML/text review. Local Chrome startup failed SIGABRT; remote exact-head Chrome gate remains required before merging."
+      }
+    },
+    {
+      "editorialDate": "2026-11-03",
+      "slot": "morning",
+      "candidateSignature": "1e3897beae3800570dff5af220be465fc03cdebd264c296523ab388a0502d62c",
+      "state": "started",
+      "startedAt": "2026-11-03T12:10:35.254Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.060361,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-03T12:10:35.254Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ascoa",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "41633466313",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "8cd901fc-26d0-440c-95e4-d510143ac46e",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.060361,
+            "accountedUSD": 0.060361,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
