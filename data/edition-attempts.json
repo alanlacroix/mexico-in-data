@@ -6928,14 +6928,93 @@
       "editorialDate": "2026-11-03",
       "slot": "morning",
       "candidateSignature": "1e3897beae3800570dff5af220be465fc03cdebd264c296523ab388a0502d62c",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-03T12:12:13.263Z",
-      "completedAt": "",
+      "completedAt": "2026-11-03T12:13:10.900Z",
       "calls": 4,
       "costUSD": 0.088565,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-1a6accb314ff: watch: watch item is grammatically incomplete | n-3ea7392685b2: watch: watch item is grammatically incomplete | n-d99745bce66c: dek: unsupported numbers: 7, 492, 928.9, 2024, 163, 933.7, 2023, 453, 569.1; dek: Spanish unsupported numbers: 7, 492, 928.9, 2024, 163, 933.7, 2023, 453, 569.1; background: empty report",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-1a6accb314ff",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "If Sedatu pursues construction or material renovation of either property, whether it obtains required authorization from the Instituto Nacional de Bellas Artes would confirm compliance with protection requirements for artistically significant buildings.",
+              "es": "Si Sedatu realiza construcción o renovación material de cualquiera de los inmuebles, si obtiene la autorización requerida del Instituto Nacional de Bellas Artes confirmaría cumplimiento con requisitos de protección para edificios con significancia artística.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item is grammatically incomplete"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-3ea7392685b2",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "If Sedatu pursues construction or material renovation of either property, whether it obtains required authorization from the Instituto Nacional de Bellas Artes would confirm compliance with protection requirements for artistically significant buildings.",
+              "es": "Si Sedatu realiza construcción o renovación material de cualquiera de los inmuebles, si obtiene la autorización requerida del Instituto Nacional de Bellas Artes confirmaría cumplimiento con requisitos de protección para edificios con significancia artística.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item is grammatically incomplete"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-d99745bce66c",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Public sector budget revenue totaled 7 trillion 492 billion 928.9 million pesos in 2024, exceeding the law by 163 billion 933.7 million pesos and surpassing 2023 receipts by 453 billion 569.1 million pesos.",
+              "es": "Los ingresos presupuestarios del sector público totalizaron 7 billones 492 mil 928.9 millones de pesos en 2024, superando la ley por 163 mil 933.7 millones de pesos y sobrepasando recaudos de 2023 por 453 mil 569.1 millones de pesos.",
+              "refs": [
+                "article",
+                "standing:std-us-dependence"
+              ],
+              "reasons": [
+                "unsupported numbers: 7, 492, 928.9, 2024, 163, 933.7, 2023, 453, 569.1",
+                "Spanish unsupported numbers: 7, 492, 928.9, 2024, 163, 933.7, 2023, 453, 569.1"
+              ]
+            },
+            "background": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article",
+                "standing:std-us-dependence"
+              ],
+              "reasons": [
+                "empty report text",
+                "Spanish translation is empty"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article",
+                "standing:std-us-dependence"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-03T12:12:13.263Z",
         "aliveSources": 68,
