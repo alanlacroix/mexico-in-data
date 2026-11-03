@@ -6928,14 +6928,80 @@
       "editorialDate": "2026-11-03",
       "slot": "morning",
       "candidateSignature": "1e3897beae3800570dff5af220be465fc03cdebd264c296523ab388a0502d62c",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-03T12:10:35.254Z",
-      "completedAt": "",
+      "completedAt": "2026-11-03T12:11:54.855Z",
       "calls": 2,
       "costUSD": 0.043788,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-1a6accb314ff: watch: watch item is grammatically incomplete | n-3ea7392685b2: watch: empty report text; watch: watch item has no observable next test; watch: Spanish translation is empty | n-d99745bce66c: watch: empty report text; watch: watch item has no observable next test; watch: Spanish translation is empty; background: n",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-1a6accb314ff",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "If Sedatu requests permission to modify the buildings' use or undertakes construction requiring Bellas Artes approval, whether the ministry obtains authorization would test whether heritage constraints are enforced.",
+              "es": "Si Sedatu solicita permiso para modificar el uso de los edificios o realiza construcción que requiere aprobación de Bellas Artes, si el ministerio obtiene autorización probaría si las restricciones de patrimonio son aplicadas.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item is grammatically incomplete"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-3ea7392685b2",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-d99745bce66c",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "President Claudia Sheinbaum and Canadian Prime Minister Mark Carney signed the Mexico-Canada Action Plan 2025-2028 on September 18, 2025. The plan commits both countries to joint supply-chain resilience, clean hydrogen development, sustainable mining, and foreign investment screening frameworks across the period through 2028.",
+              "es": "La presidenta Claudia Sheinbaum y el primer ministro canadiense Mark Carney firmaron el Plan de Acción México-Canadá 2025-2028 el 18 de septiembre de 2025. El plan compromete a ambos países a resiliencia conjunta de cadenas de suministro, desarrollo de hidrógeno limpio, minería sostenible y marcos de evaluación de inversión extranjera durante el período hasta 2028.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-03T12:10:35.254Z",
         "aliveSources": 69,
