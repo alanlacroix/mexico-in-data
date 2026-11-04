@@ -7448,62 +7448,70 @@
       "editorialDate": "2026-11-04",
       "slot": "morning",
       "candidateSignature": "a40d0eabc6feeaa8418af6556e586c886973110745539e8146fe2f1f21b8d319",
-      "state": "failed",
-      "startedAt": "2026-11-04T12:10:23.519Z",
-      "completedAt": "2026-11-04T12:11:22.876Z",
-      "calls": 2,
-      "costUSD": 0.074239,
+      "state": "started",
+      "startedAt": "2026-11-04T12:11:37.763Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.118008,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-ae49e7e984a6",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "Experts said a Democratic-controlled US Congress after November 3 midterms could harden border security and crime stances, while Trump keeps wide tariff powers. Integralia said USMCA review risks continue regardless of the election outcome.",
-              "es": "Expertos dijeron que un Congreso de EU controlado por demócratas tras las elecciones del 3 de noviembre podría endurecer posturas de seguridad fronteriza y crimen, mientras Trump conserva amplias facultades arancelarias. Integralia dijo que los riesgos de la revisión del T-MEC continúan sin importar el resultado electoral.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "negation was introduced in Spanish"
-              ]
-            },
-            "watch": {
-              "en": "Watch the July 1, 2027 USMCA annual joint review to see whether political shifts in Washington translate into actual changes to tariff or content rules, as analysts say the review will proceed regardless of the midterm outcome.",
-              "es": "Vigilar la revisión conjunta anual del T-MEC del 1 de julio de 2027 para ver si los cambios políticos en Washington se traducen en cambios reales a las reglas arancelarias o de contenido, ya que los analistas dicen que la revisión seguirá su curso sin importar el resultado de las elecciones intermedias.",
-              "refs": [
-                "article",
-                "calendar:2027-07-01"
-              ],
-              "reasons": [
-                "negation was introduced in Spanish"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-04T12:10:23.519Z",
-        "aliveSources": 67,
+        "collectedAt": "2026-11-04T12:11:37.763Z",
+        "aliveSources": 68,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
-          "mexico-business-news",
           "ascoa",
           "insightcrime-mx",
-          "m4ec-mx",
+          "gnews-payments-watchlist",
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-11-04T12:10:23.519Z",
+          "completedAt": "2026-11-04T12:11:22.876Z",
+          "calls": 2,
+          "costUSD": 0.074239,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-ae49e7e984a6",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "Experts said a Democratic-controlled US Congress after November 3 midterms could harden border security and crime stances, while Trump keeps wide tariff powers. Integralia said USMCA review risks continue regardless of the election outcome.",
+                  "es": "Expertos dijeron que un Congreso de EU controlado por demócratas tras las elecciones del 3 de noviembre podría endurecer posturas de seguridad fronteriza y crimen, mientras Trump conserva amplias facultades arancelarias. Integralia dijo que los riesgos de la revisión del T-MEC continúan sin importar el resultado electoral.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "negation was introduced in Spanish"
+                  ]
+                },
+                "watch": {
+                  "en": "Watch the July 1, 2027 USMCA annual joint review to see whether political shifts in Washington translate into actual changes to tariff or content rules, as analysts say the review will proceed regardless of the midterm outcome.",
+                  "es": "Vigilar la revisión conjunta anual del T-MEC del 1 de julio de 2027 para ver si los cambios políticos en Washington se traducen en cambios reales a las reglas arancelarias o de contenido, ya que los analistas dicen que la revisión seguirá su curso sin importar el resultado de las elecciones intermedias.",
+                  "refs": [
+                    "article",
+                    "calendar:2027-07-01"
+                  ],
+                  "reasons": [
+                    "negation was introduced in Spanish"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "41826939908",
+        "runId": "41827061735",
         "runAttempt": "1",
         "receipts": [
           {
@@ -7537,6 +7545,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "f756813e-c5e0-4eef-9a1d-b96ef538bedf",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.043769,
+            "accountedUSD": 0.043769,
+            "state": "reserved"
           }
         ]
       }
