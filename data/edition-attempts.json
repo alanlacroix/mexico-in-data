@@ -7598,6 +7598,199 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-11-04",
+      "slot": "noon",
+      "candidateSignature": "19a4e22a0b8356a56265d9b1d6f272a9ea5c31d7c229fecf7c51b95c1499ebae",
+      "state": "published",
+      "startedAt": "2026-11-04T12:16:54.172Z",
+      "completedAt": "2026-11-04T12:16:54.179Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "afc69c82f4b196d3d9e6731275f77040e6bd0bd0a6be9109eafd214734233a8e",
+      "reason": "",
+      "diagnostics": [],
+      "collection": null,
+      "recoveries": [],
+      "manualRecovery": {
+        "recoveryKind": "operator-curated-independent-source-and-translation-review",
+        "method": "Zero-model independently audited curated edition; unchanged deterministic numeric and bilingual checks, public contract, full release tests and exact-head CI Chrome gates required before merge.",
+        "artifactHash": "afc69c82f4b196d3d9e6731275f77040e6bd0bd0a6be9109eafd214734233a8e",
+        "reviewedAt": "2026-11-04T12:16:30.250Z",
+        "draftSHA256": "d595dad3b51d45b5f94a4994e922b091c3ffa146a4f52f01d2dd968abb65e5b6",
+        "auditSHA256": "8c67ddb95fa415f4f039e27ff77dd667f61041a4ea0e484affd72cec2a242039",
+        "reviewInputsSHA256": "a2a048730f133dac740d7171305145a354cd66e9d1f707962153095198bfab7b",
+        "deterministicReviewSHA256": "3bdb14c9a21b6d2efe836ede459086d27dbf1af6d8286ac9a605d13df5fe4865",
+        "priorFailedMorning": {
+          "editorialDate": "2026-11-04",
+          "slot": "morning",
+          "candidateSignature": "a40d0eabc6feeaa8418af6556e586c886973110745539e8146fe2f1f21b8d319",
+          "state": "failed",
+          "startedAt": "2026-11-04T12:11:37.763Z",
+          "completedAt": "2026-11-04T12:12:36.881Z",
+          "calls": 4,
+          "costUSD": 0.113226,
+          "artifactHash": "",
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-b49d6d5f6e91",
+              "reasons": [],
+              "fields": {
+                "view": {
+                  "en": "The law makes internet providers liable for copyright infringement unless they remove flagged content, pushing them to take down material quickly. Opposition senators warned this incentive could let platforms or officials suppress legitimate posts, investigations or criticism, though the reform's real effect on speech remains untested.",
+                  "es": "La ley hace responsables a los proveedores de internet por infracciones de derechos de autor a menos que retiren el contenido señalado, lo que los empuja a eliminar material rápidamente. Senadores opositores advirtieron que este incentivo podría permitir suprimir publicaciones legítimas, investigaciones o críticas, aunque el efecto real de la reforma sobre la libertad de expresión aún no se ha probado.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "negation was introduced in Spanish"
+                  ]
+                }
+              }
+            }
+          ],
+          "collection": {
+            "collectedAt": "2026-11-04T12:11:37.763Z",
+            "aliveSources": 68,
+            "totalSources": 72,
+            "wireCount": 60,
+            "minimumAlive": 36,
+            "ok": true,
+            "failedSourceIds": [
+              "ascoa",
+              "insightcrime-mx",
+              "gnews-payments-watchlist",
+              "nexos"
+            ]
+          },
+          "recoveries": [
+            {
+              "startedAt": "2026-11-04T12:10:23.519Z",
+              "completedAt": "2026-11-04T12:11:22.876Z",
+              "calls": 2,
+              "costUSD": 0.074239,
+              "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+              "diagnostics": [
+                {
+                  "stage": "deterministic",
+                  "storyId": "n-ae49e7e984a6",
+                  "reasons": [],
+                  "fields": {
+                    "dek": {
+                      "en": "Experts said a Democratic-controlled US Congress after November 3 midterms could harden border security and crime stances, while Trump keeps wide tariff powers. Integralia said USMCA review risks continue regardless of the election outcome.",
+                      "es": "Expertos dijeron que un Congreso de EU controlado por demócratas tras las elecciones del 3 de noviembre podría endurecer posturas de seguridad fronteriza y crimen, mientras Trump conserva amplias facultades arancelarias. Integralia dijo que los riesgos de la revisión del T-MEC continúan sin importar el resultado electoral.",
+                      "refs": [
+                        "article"
+                      ],
+                      "reasons": [
+                        "negation was introduced in Spanish"
+                      ]
+                    },
+                    "watch": {
+                      "en": "Watch the July 1, 2027 USMCA annual joint review to see whether political shifts in Washington translate into actual changes to tariff or content rules, as analysts say the review will proceed regardless of the midterm outcome.",
+                      "es": "Vigilar la revisión conjunta anual del T-MEC del 1 de julio de 2027 para ver si los cambios políticos en Washington se traducen en cambios reales a las reglas arancelarias o de contenido, ya que los analistas dicen que la revisión seguirá su curso sin importar el resultado de las elecciones intermedias.",
+                      "refs": [
+                        "article",
+                        "calendar:2027-07-01"
+                      ],
+                      "reasons": [
+                        "negation was introduced in Spanish"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "modelAccounting": {
+            "version": 1,
+            "runId": "41827061735",
+            "runAttempt": "1",
+            "receipts": [
+              {
+                "id": "08562d86-939a-4102-ae4f-b8c8c8f9ebf3",
+                "period": "2026-11",
+                "model": "claude-sonnet-5",
+                "reservedUSD": 0.131106,
+                "accountedUSD": 0.066054,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 8533,
+                  "output_tokens": 2697,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-sonnet-5",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "3fe08a48-7d80-475e-8faf-5a971f735e15",
+                "period": "2026-11",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.02743,
+                "accountedUSD": 0.008185,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 5815,
+                  "output_tokens": 474,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "f756813e-c5e0-4eef-9a1d-b96ef538bedf",
+                "period": "2026-11",
+                "model": "claude-haiku-4-5",
+                "reservedUSD": 0.043769,
+                "accountedUSD": 0.019907,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 6497,
+                  "output_tokens": 2682,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-haiku-4-5-20251001",
+                "stopReason": "end_turn"
+              },
+              {
+                "id": "eb8073ce-5c1d-45f2-af7a-0cf6ed1dbd1b",
+                "period": "2026-11",
+                "model": "claude-sonnet-5",
+                "reservedUSD": 0.047487,
+                "accountedUSD": 0.01908,
+                "state": "settled",
+                "usage": {
+                  "input_tokens": 4650,
+                  "output_tokens": 342,
+                  "cache_creation_input_tokens": 0,
+                  "cache_read_input_tokens": 0
+                },
+                "responseModel": "claude-sonnet-5",
+                "stopReason": "end_turn"
+              }
+            ]
+          }
+        },
+        "originalDiagnosticArtifacts": [
+          {
+            "runId": "41826939908",
+            "publicationAllowed": false
+          },
+          {
+            "runId": "41827061735",
+            "publicationAllowed": false
+          }
+        ],
+        "generationProvenance": "Three November 4 source-backed stories, zero additional model or provider audit calls. Failed morning and exhausted recovery, four settled receipts and USD 0.113226 unchanged. Unused noon slot records independently audited recovery; no allowance or cap reset.",
+        "sourceProvenance": "November 4 El Economista copyright liability, Pemex September output and AICM bond reporting independently retrieved and bilingual copy audited. Issuer primary PDF and contemporary reporting support remaining bond maturities. Source publication dates use date-only precision. No inferred July 2027 review date retained.",
+        "candidateSignatureProvenance": "New curated candidate identity metadata, separate from artifact and independent audit hashes."
+      }
     }
   ]
 }
