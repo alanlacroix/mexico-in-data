@@ -12,6 +12,7 @@ import { createEditionQuarantine } from './lib/edition-quarantine.mjs';
 import { createFieldRepairPlan, mergeFieldRepairs } from './lib/edition-field-repair.mjs';
 import { articleIdentity, publishedProvenanceUrls } from './lib/article-identity.mjs';
 import { shapeEvidenceRecord } from './lib/source-evidence.mjs';
+import { calendarEvidenceRecord, calendarDateFlags, CALENDAR_DATE_CONTRACT } from './lib/calendar-evidence.mjs';
 import { createCensusCalendarLoader } from './lib/census-release-calendar.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -240,7 +241,7 @@ function rankSchema() {
 }
 // Use the same hard requirements on the initial draft and the bounded repair.
 // Otherwise the repair is asked to fix symptoms without knowing the release gate.
-const DRAFT_GATE_CONTRACT = `Aim for a 10–14-word English headline, a 25–35-word English dek, and 20–35 English words per analysis field, using one or two short sentences when that is clearer. These are drafting targets below the hard ceilings, not permission to omit material facts or caveats. Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. The allowedNumericValues list is a literal-value checklist, not independent evidence. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. If cited evidence spells a quantity in words, preserve it in words in both languages; do not convert it to digits. For example, casi un millón stays almost one million / casi un millón. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. Each field must fit within 600 JSON UTF-8 bytes. Return every requested story as a required s<index> key in the stories object, never an array. If evidence cannot support a field, keep its story key and leave that field empty for rejection.`;
+const DRAFT_GATE_CONTRACT = `${CALENDAR_DATE_CONTRACT} Aim for a 10–14-word English headline, a 25–35-word English dek, and 20–35 English words per analysis field, using one or two short sentences when that is clearer. These are drafting targets below the hard ceilings, not permission to omit material facts or caveats. Every headline must stay within 20 English words and 24 Spanish words. English deks must stay within 45 words and two sentences. Background, view and watch must each stay within 55 English words, 65 Spanish words and three sentences. Do not use semicolons. The allowedNumericValues list is a literal-value checklist, not independent evidence. Copy numeric values and their scale from cited evidence exactly: never round or convert millions into billions, and preserve the same numeric values and scale in Spanish. If cited evidence spells a quantity in words, preserve it in words in both languages; do not convert it to digits. For example, casi un millón stays almost one million / casi un millón. For watch, name a sourced next decision, release or result and the observable test it resolves, using a conditional such as if, whether, until, confirm or weaken where appropriate. Do not substitute background or a request for comment for a next test. Never invent a milestone or condition just to satisfy this requirement. Each field must fit within 600 JSON UTF-8 bytes. Return every requested story as a required s<index> key in the stories object, never an array. If evidence cannot support a field, keep its story key and leave that field empty for rejection.`;
 
 const DAILY_EDITORIAL_CONTRACT = `Use everyday words, direct verbs and short, connected sentences in both languages. Define necessary terms before use. Read the full story in displayed order: summary, context, why it matters. Keep the background, context, why-it-matters explanation and next step: simplify the wording, not the substance or the sections. Preserve all useful facts, comparisons, attribution and uncertainty. Do not force several ideas into one sentence. Preserve the difference between an official completed action, a proposal and a reported claim. Prefer primary records supplied in the evidence, and name the reporting source or claimant when a primary record is absent. Include the observation period and relevant denominator for numerical comparisons. Choose this story's key explanatory question. Background supplies the missing facts. The view explains how the effect reaches people or the economy, and what the evidence cannot show. Use concrete explanations, not generic advice or numbers needing more caveats than insight. The watch names a sourced observable decision or release and what it would establish. Unsupported substance must remain empty for rejection; never invent a fact to complete the shape.`;
 
@@ -383,7 +384,7 @@ async function evidenceFor(item, standing, calendar, memory = [], censusCalendar
   }
   for (const event of calendar.map((event) => ({ event, score: calendarScore(item, event) }))
     .filter((row) => row.score > 0).sort((a, b) => b.score - a.score).slice(0, 1).map((row) => row.event)) {
-    push({ id: `calendar:${event.id || event.date}`, kind: 'calendar', source: event.source, url: event.sourceUrl, text: `${event.date}: ${event.label}. ${event.mechanism || ''}` });
+    push(calendarEvidenceRecord(event));
   }
   if (item._scheduled) push({
     id: `schedule:${item._scheduled.id}`, kind: 'calendar', source: item._scheduled.source,
@@ -524,6 +525,10 @@ function deterministicDraftCheck(row, draft) {
   for (const [field, refField, maxWords, maxSentences, role] of checks) {
     if (!validRefs(row, draft[refField])) { flags.push(`${field}: invalid evidence references`); continue; }
     const inputs = citedInputs(row, draft[refField]);
+    const citedEvidence = row.evidence.filter(item => draft[refField].includes(item.id));
+    for (const text of [draft[field], draft?.es?.[field]]) {
+      flags.push(...calendarDateFlags(text, citedEvidence).map(flag => `${field}: ${flag}`));
+    }
     if ([draft[field], draft?.es?.[field]].some((text) => new TextEncoder().encode(JSON.stringify(clean(text))).byteLength > 600)) {
       flags.push(`${field}: exceeds the bounded audit field length`);
     }
@@ -1014,7 +1019,7 @@ async function main() {
     }));
     quarantineStage = 'independent-audit';
     const auditResponse = await call({
-      system: `You are the final independent evidence and bilingual editor. Review each English field only against the records identified by its evidenceRefs in that input’s evidence list. Independently compare its Spanish translation with both the English field and the same cited evidence. Reject unsupported actors, numbers, comparisons, causal claims, procedural stages, predictions, non sequiturs, mistranslations, reversed actions, changed subjects, or changed degrees of certainty in either language. Do not reject a clearly labeled narrow inference merely for being an inference. Do not rewrite either language. Return a reviews object with one required s<index> verdict for every input index, never an array.`,
+      system: `${CALENDAR_DATE_CONTRACT} You are the final independent evidence and bilingual editor. Review each English field only against the records identified by its evidenceRefs in that input’s evidence list. Independently compare its Spanish translation with both the English field and the same cited evidence. Reject unsupported actors, numbers, comparisons, causal claims, procedural stages, predictions, non sequiturs, mistranslations, reversed actions, changed subjects, or changed degrees of certainty in either language. Do not reject a clearly labeled narrow inference merely for being an inference. Do not rewrite either language. Return a reviews object with one required s<index> verdict for every input index, never an array.`,
       user: JSON.stringify(auditInputs),
       schema: auditSchema(deterministicPass.map(entry => entry.row.index)), maxTokens: 2400,
     });
