@@ -7448,14 +7448,32 @@
       "editorialDate": "2026-11-04",
       "slot": "morning",
       "candidateSignature": "a40d0eabc6feeaa8418af6556e586c886973110745539e8146fe2f1f21b8d319",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-04T12:11:37.763Z",
-      "completedAt": "",
+      "completedAt": "2026-11-04T12:12:36.881Z",
       "calls": 4,
       "costUSD": 0.113226,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-b49d6d5f6e91",
+          "reasons": [],
+          "fields": {
+            "view": {
+              "en": "The law makes internet providers liable for copyright infringement unless they remove flagged content, pushing them to take down material quickly. Opposition senators warned this incentive could let platforms or officials suppress legitimate posts, investigations or criticism, though the reform's real effect on speech remains untested.",
+              "es": "La ley hace responsables a los proveedores de internet por infracciones de derechos de autor a menos que retiren el contenido señalado, lo que los empuja a eliminar material rápidamente. Senadores opositores advirtieron que este incentivo podría permitir suprimir publicaciones legítimas, investigaciones o críticas, aunque el efecto real de la reforma sobre la libertad de expresión aún no se ha probado.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-04T12:11:37.763Z",
         "aliveSources": 68,
