@@ -27,7 +27,11 @@ const ES_NEGATION = /\b(?:no|nunca|sin|ningun[oa]?|tampoco|sin cambios)\b/i;
 // contrast clauses. Adding them to EN_NEGATION alone would let "untested" hide an
 // unrelated Spanish "no", and matching anywhere would permit subject swaps.
 const NEGATIVE_STATES = [
-  { en: /\buntested\b/g, es: /\bsin probar\b/g, affirmativeEn: /\btested\b/, affirmativeEs: /\bprobad[oa]s?\b/ },
+  // Keep the observed election object, not a blanket regardless/sin exception.
+  { strictScope: true, en: /\bregardless of the election outcome\b/g, es: /\bsin importar el resultado electoral\b/g, affirmativeEn: /\bdepend(?:s|ed|ing)? on\b/, affirmativeEs: /\b(?:depende[ns]?|dependiendo) de\b/ },
+  { strictScope: true, en: /\bregardless of the midterm outcome\b/g, es: /\bsin importar el resultado de las elecciones intermedias\b/g, affirmativeEn: /\bdepend(?:s|ed|ing)? on\b/, affirmativeEs: /\b(?:depende[ns]?|dependiendo) de\b/ },
+  // Only the observed clause-final perfect passive, not arbitrary no ... probado.
+  { en: /\buntested\b/g, es: /\b(?:sin probar|aun no se ha probado(?=\s*(?:[.!?;]|$)))\b/g, affirmativeEn: /\btested\b/, affirmativeEs: /\bprobad[oa]s?\b/ },
   { en: /\bunresolved\b/g, es: /\bsin resolver\b/g, affirmativeEn: /\bresolved\b/, affirmativeEs: /\bresuelt[oa]s?\b/ },
   { en: /\bundetermined\b/g, es: /\bsin determinarse\b/g, affirmativeEn: /\bdetermined\b/, affirmativeEs: /\bdeterminad[oa]s?\b/ },
 ];
@@ -51,7 +55,8 @@ function negationFlags(english, spanish) {
   const states = NEGATIVE_STATES.filter((state) => matchCount(english, state.en));
   // This is an exception only for an observed explicit pair. Other paraphrases
   // (for example unresolved/pendiente) retain the existing gate's behavior.
-  if (!states.some((state) => matchCount(spanish, state.es))) return originalFlags;
+  if (!states.some((state) => matchCount(fold(spanish), state.es))) return originalFlags;
+  const perfectUntested = /\baun no se ha probado\b/;
   const enParts = negationParts(english, 'en');
   const esParts = negationParts(spanish, 'es');
   // Do not infer a correspondence when translators have rearranged the clauses.
@@ -60,6 +65,18 @@ function negationFlags(english, spanish) {
   for (let index = 0; index < enParts.length; index++) {
     const en = enParts[index];
     let es = esParts[index];
+    // New exceptions stay closed when a modifier/state could migrate to a
+    // coordinated/subordinate subject. Do not broaden the older lexical-state behavior.
+    const newPair = states.some((state) => state.strictScope
+      && (matchCount(en, state.en) || matchCount(es, state.es))) || perfectUntested.test(es);
+    if (newPair && (/[,：:]|\b(?:and|or|nor|because|since|as|if|unless|when|where|whether)\b/.test(en)
+      || /[,：:]|\b(?:y|o|ni|porque|pues|si|cuando|donde|ya que|a menos que)\b/.test(es))) return originalFlags;
+    if (perfectUntested.test(es) && !/\buntested$/.test(en)) return originalFlags;
+    for (const state of states.filter((state) => state.strictScope)) {
+      if ((matchCount(en, state.en) || matchCount(es, state.es))
+        && (!new RegExp(`${state.en.source}$`).test(en)
+          || !new RegExp(`${state.es.source}$`).test(es))) return originalFlags;
+    }
     // Different state types in one coordinated clause can exchange subjects while
     // preserving each count. Keep the original rejection when pairing is ambiguous.
     if (states.filter((state) => matchCount(en, state.en) || matchCount(es, state.es)).length > 1) return originalFlags;
@@ -67,8 +84,11 @@ function negationFlags(english, spanish) {
     // subjects across "and/y" or "or/o". Do not grant this exception when that
     // attachment is ambiguous. Splitting every conjunction would split noun lists
     // in the real tariff receipt, so retain the original check in this case.
+    // "probado" inside the exact negative phrase is not an affirmative claim.
+    // Remove only recognized pairs for this check; unrelated affirmative claims
+    // still block the exception (including a tested/untested subject swap).
     if (states.some((state) => (matchCount(en, state.en) || matchCount(es, state.es))
-      && (state.affirmativeEn.test(en) || state.affirmativeEs.test(es)))) {
+      && (state.affirmativeEn.test(en) || state.affirmativeEs.test(es.replace(state.es, ' '))))) {
       return originalFlags;
     }
     for (const state of states) {

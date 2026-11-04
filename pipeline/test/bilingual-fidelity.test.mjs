@@ -114,7 +114,6 @@ for (const [english, spanish] of [
     `${english} must not reverse to ${spanish}`);
 }
 
-console.log('bilingual-fidelity tests: ok');
 
 assert.deepEqual(bilingualFidelityFlags({
   english:'A stronger peso lowers import costs. The morning rise offers relief.',
@@ -181,3 +180,90 @@ for (const [english, spanish] of [
     'La capacidad permanece sin probar y el sistema también está sin probar.'],
 ]) assert.ok(bilingualFidelityFlags({ english, spanish }).some((flag) => /negation|negated state/.test(flag)),
   `${english} must not exempt an unpaired, extra, changed, or ambiguously attached Spanish negative: ${spanish}`);
+
+// November 4 failed-attempt fields: exact observed lexical equivalences, not
+// approval of the candidate or a substitute for its independent evidence audit.
+for (const [english, spanish] of [
+  ['Experts said a Democratic-controlled US Congress after November 3 midterms could harden border security and crime stances, while Trump keeps wide tariff powers. Integralia said USMCA review risks continue regardless of the election outcome.',
+    'Expertos dijeron que un Congreso de EU controlado por demócratas tras las elecciones del 3 de noviembre podría endurecer posturas de seguridad fronteriza y crimen, mientras Trump conserva amplias facultades arancelarias. Integralia dijo que los riesgos de la revisión del T-MEC continúan sin importar el resultado electoral.'],
+  ["The law makes internet providers liable for copyright infringement unless they remove flagged content, pushing them to take down material quickly. Opposition senators warned this incentive could let platforms or officials suppress legitimate posts, investigations or criticism, though the reform's real effect on speech remains untested.",
+    'La ley hace responsables a los proveedores de internet por infracciones de derechos de autor a menos que retiren el contenido señalado, lo que los empuja a eliminar material rápidamente. Senadores opositores advirtieron que este incentivo podría permitir suprimir publicaciones legítimas, investigaciones o críticas, aunque el efecto real de la reforma sobre la libertad de expresión aún no se ha probado.'],
+  ['The review proceeds regardless of the midterm outcome.',
+    'La revisión sigue su curso sin importar el resultado de las elecciones intermedias.'],
+  ['The effect remains untested.', 'El efecto aún no se ha probado.'],
+]) assert.deepEqual(bilingualFidelityFlags({ english, spanish }), [], `${english} preserves the observed lexical equivalence`);
+
+for (const [english, spanish, expected] of [
+  ['The review proceeds regardless of the election outcome.',
+    'La revisión no continúa sin importar el resultado electoral.', /negation/],
+  ['The review proceeds regardless of the election outcome.',
+    'La revisión continúa sin evaluar el resultado electoral.', /negation/],
+  ['The review proceeds regardless of costs.',
+    'La revisión continúa sin importar el resultado electoral.', /negation/],
+  ['The review proceeds regardless of the election outcome.',
+    'La revisión continúa sin importar los costos.', /negation/],
+  ['The review proceeds regardless of the election outcome.',
+    'La revisión continúa sin importar el resultado de las elecciones intermedias.', /negation/],
+  ['The review proceeds.', 'La revisión continúa sin importar el resultado electoral.', /negation/],
+  ['The review does not proceed.', 'La revisión continúa.', /negation was dropped/],
+  ['The review proceeds regardless of the election outcome. The fee changes.',
+    'La revisión continúa. La comisión cambia sin importar el resultado electoral.', /negation/],
+  ['The review proceeds regardless of the election outcome while the fee changes.',
+    'La revisión continúa mientras la comisión cambia sin importar el resultado electoral.', /negation/],
+  ['The review proceeds regardless of the election outcome and the fee depends on costs.',
+    'La revisión continúa dependiendo de los costos y la comisión cambia sin importar el resultado electoral.', /negation/],
+  ['The review proceeds regardless of the election outcome.',
+    'La revisión continúa sin importar el resultado electoral y sin importar el resultado electoral.', /negation/],
+  ['The effect remains untested.', 'El efecto aún no se ha probado eficaz.', /negation/],
+  ['The effect remains untested.', 'El efecto nunca se ha probado.', /negation/],
+  ['The effect remains untested.', 'El efecto no se probará.', /negation/],
+  ['The effect remains untested.', 'El efecto aún no se ha resuelto.', /negation/],
+  ['The effect remains untested.', 'El efecto aún no se ha probado y no funciona.', /negation/],
+  ['The effect remains untested. The method works.',
+    'El efecto aún no se ha probado. El método no funciona.', /negation/],
+  ['The effect remains untested. The method is tested.',
+    'El efecto está probado. El método aún no se ha probado.', /negation/],
+  ['The effect remains untested and the method is tested.',
+    'El efecto está probado y el método aún no se ha probado.', /negation/],
+  ['The effect remains untested while the method is tested.',
+    'El efecto está probado mientras el método aún no se ha probado.', /negation/],
+  ['The effect remains untested. Banxico could change the rule.',
+    'El efecto aún no se ha probado. Banxico cambió la regla.', /proposal or uncertainty/],
+  ['Banxico reports the effect remains untested.',
+    'Hacienda informa que el efecto aún no se ha probado.', /banxico was dropped|hacienda was introduced/],
+  ['The effect remains untested. The proposal could proceed regardless of the election outcome.',
+    'El efecto aún no se ha probado. La reforma fue aprobada sin importar el resultado electoral.', /proposal or uncertainty|completed action/],
+]) assert.ok(bilingualFidelityFlags({ english, spanish }).some((flag) => expected.test(flag)),
+  `${english} must still reject: ${spanish}`);
+
+for (const [english, spanish] of [
+  ['The fee changes because the review proceeds regardless of the election outcome.',
+    'La revisión continúa porque la comisión cambia sin importar el resultado electoral.'],
+  ['The method works because the effect remains untested.',
+    'El efecto funciona porque el método aún no se ha probado.'],
+  ['The method works since the effect remains untested.',
+    'El efecto funciona ya que el método aún no se ha probado.'],
+  ['The fee changes and the review proceeds regardless of the election outcome.',
+    'La revisión continúa y la comisión cambia sin importar el resultado electoral.'],
+  ['The method works and the effect remains untested.',
+    'El efecto funciona y el método aún no se ha probado.'],
+  ['The effect remains untested because the method works.',
+    'El efecto funciona porque el método aún no se ha probado.'],
+  ['The review proceeds regardless of the election outcome because the fee changes.',
+    'La revisión continúa porque la comisión cambia sin importar el resultado electoral.'],
+  ['The review proceeds regardless of the election outcome and the fee changes.',
+    'La revisión continúa y la comisión cambia sin importar el resultado electoral.'],
+  ['The review proceeds regardless of the election outcome, the fee changes.',
+    'La revisión continúa, la comisión cambia sin importar el resultado electoral.'],
+  ['The review proceeds regardless of the election outcome: the fee changes.',
+    'La revisión continúa: la comisión cambia sin importar el resultado electoral.'],
+  ['The effect remains untested and the method works.',
+    'El efecto funciona y el método aún no se ha probado.'],
+  ['The effect remains untested, the method works.',
+    'El efecto funciona, el método aún no se ha probado.'],
+  ['The review proceeds and the fee changes regardless of the election outcome.',
+    'La revisión continúa sin importar el resultado electoral y la comisión cambia.'],
+]) assert.ok(bilingualFidelityFlags({ english, spanish }).some((flag) => /negation/.test(flag)),
+  `${english} must not move the new modifier/state to a coordinated subject`);
+
+console.log('bilingual-fidelity tests: ok');
