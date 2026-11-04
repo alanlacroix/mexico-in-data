@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-19",
-      "slot": "morning",
-      "candidateSignature": "248b557c302628d09f49ad2d0822250ef99ec7fac61ed580bf2ec29b4293aa79",
-      "state": "failed",
-      "startedAt": "2026-09-19T13:01:21.043Z",
-      "completedAt": "2026-09-19T13:02:04.884Z",
-      "calls": 2,
-      "costUSD": 0.022406,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-c0a8ad6bc105: view: semicolon; view: proposal or draft described as a completed action; view: Spanish semicolon; watch: completed action became non-final in Spanish | n-84200aee025a: view: semicolon; view: Spanish semicolon; background: needs an independent source when one is available | n-c314e9de6e03: headline: usmca was dro"
-    },
-    {
-      "editorialDate": "2026-09-19",
-      "slot": "noon",
-      "candidateSignature": "5a327a928d18b998518be74fae132796aa3fce2874d1f400d39663faa4132e1c",
-      "state": "failed",
-      "startedAt": "2026-09-19T16:01:14.710Z",
-      "completedAt": "2026-09-19T16:01:59.908Z",
-      "calls": 2,
-      "costUSD": 0.021596,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-aa91f3c44f96: background: 4 sentences (cap 3); background: Spanish 4 sentences (cap 3); view: proposal or uncertainty became final in Spanish | n-c314e9de6e03: headline: usmca was dropped in Spanish; view: usmca was dropped in Spanish; watch: negation was introduced in Spanish | n-e223fa844d3b: model omitted the required story"
-    },
-    {
       "editorialDate": "2026-09-20",
       "slot": "morning",
       "candidateSignature": "9ae85d059f0133048c9c3368e1375b059444421445ca34a4958a37b2595f29eb",
@@ -7466,6 +7442,50 @@
         "generationProvenance": "Three newly selected November 3 source-backed stories, zero additional model or provider audit calls. Failed morning and exhausted recovery, four settled receipts and USD 0.088565 unchanged. Unused noon slot records independently audited recovery; no allowance or cap reset.",
         "sourceProvenance": "El Economista November 3 Q3 Pemex exports and January-August Canada trade, plus El Pais November 3 avocado seed-borer and strike coverage. All three full source bodies independently read and bilingual copy audited. Canada currency ambiguity avoided by percentage-only copy. El Economista uses date-only precision; El Pais 10:30 CET converted to 09:30 UTC. Prior dated bank-holiday headline made explicitly November 2 past tense.",
         "candidateSignatureProvenance": "New curated candidate identity metadata, separate from artifact and independent audit hashes."
+      }
+    },
+    {
+      "editorialDate": "2026-11-04",
+      "slot": "morning",
+      "candidateSignature": "a40d0eabc6feeaa8418af6556e586c886973110745539e8146fe2f1f21b8d319",
+      "state": "started",
+      "startedAt": "2026-11-04T12:10:23.519Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.131106,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-04T12:10:23.519Z",
+        "aliveSources": 67,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "ascoa",
+          "insightcrime-mx",
+          "m4ec-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "41826939908",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "08562d86-939a-4102-ae4f-b8c8c8f9ebf3",
+            "period": "2026-11",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.131106,
+            "accountedUSD": 0.131106,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
