@@ -7954,6 +7954,53 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-11-05",
+      "slot": "noon",
+      "candidateSignature": "30dd4202c85df7538e42c93779d09ab070d165e9d4034344908fd301214d920b",
+      "state": "published",
+      "startedAt": "2026-11-05T12:34:45.156Z",
+      "completedAt": "2026-11-05T12:34:45.156Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "ed66c757393b80643be3928c28815b163dde4f551da6a46c517ca93f7bafeda9",
+      "reason": "",
+      "diagnostics": [],
+      "collection": null,
+      "recoveries": [],
+      "manualRecovery": {
+        "recoveryKind": "operator-curated-independent-source-and-translation-review",
+        "method": "Zero-provider-call independently audited curated recovery using the supported exact-candidate promotion route. Deterministic numeric/bilingual/public artifact checks and full release passed. Exact-head CI and browser review required before merge.",
+        "artifactHash": "ed66c757393b80643be3928c28815b163dde4f551da6a46c517ca93f7bafeda9",
+        "candidateHash": "4802c0eea0df2954ce3209d506fcc281e26a317ce19ee13fbb91baf16f21523d",
+        "reviewedAt": "2026-11-05T12:33:24.971Z",
+        "draftSHA256": "2e8dde9c413464fb64f60a9e963f41fb5450095f8900a84ec8fca9a4b155e31b",
+        "auditSHA256": "7c8458a8e07c0817fcf7aa76ac5039a626d66cc8487d7379ed6e4130ddd5ab64",
+        "reviewInputsSHA256": "1d96bf03e02750222352e88770cc2622f506f622c71e4b00f018826af180d3a2",
+        "deterministicReviewSHA256": "0a188a2f7803ade1cc60b4058260f0cb9fc4b8afb377d2b5f5537377ced0d16b",
+        "sourceManifestSHA256": "fb9ef332e01c435688b43b85b6b11fae65ceee9ef1e03193a51c6b844006dd0c",
+        "priorFailedMorning": {
+          "state": "failed",
+          "calls": 4,
+          "costUSD": 0.080266,
+          "runId": "42025959067",
+          "recoveryCount": 1
+        },
+        "originalDiagnosticArtifacts": [
+          {
+            "runId": "42025838502",
+            "publicationAllowed": false
+          },
+          {
+            "runId": "42025959067",
+            "publicationAllowed": false
+          }
+        ],
+        "generationProvenance": "Three November 5 source-backed stories; no additional provider drafting or audit calls. Both failed morning attempts, all four settled receipts and USD 0.080266 are unchanged. The unused noon slot records curated recovery; no allowance or cap reset.",
+        "sourceProvenance": "El CEO pension expenditure and LMB/Fanki reporting, plus El Financiero October vehicle sales, independently fetched and reviewed in both languages. All nine inherited weekly snippets independently checked. Exact publication timestamps verified; LMB retained verified date-only precision. Banxico preview excluded, official decision remains due at 13:00 America/Mexico_City.",
+        "releaseTimingFix": "PR 89: official Banxico releaseAt 2026-11-05T19:00:00Z, fail-closed timing and conditional-preview exclusion, separately reviewed and regression-tested."
+      }
     }
   ]
 }
