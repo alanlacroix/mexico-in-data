@@ -5,6 +5,8 @@
 // dated to the scheduled day and matches the configured actor, subject and an outcome
 // verb. Similar commentary on another day does not close the obligation.
 
+const { editorialDay } = require('./news-day.cjs');
+
 const fold = (value) => String(value || '')
   .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .toLowerCase().replace(/\s+/g, ' ').trim();
@@ -37,11 +39,51 @@ const OUTCOMES = Object.freeze({
   'spending-budget': /\b(?:approve|approves|approved|reject|rejects|rejected|aprueba|aprobo|rechaza|rechazo)\b/i,
   election: /\b(?:win|wins|won|elect|elects|elected|result|results|gana|gano|elige|electo|resultado)\b/i,
 });
+const CONDITIONAL_POLICY = /\b(?:si\s+(?:banxico|(?:el\s+)?banco de mexico)\s+(?:decide|decidiera|decidiese)|se\s+tomaria|(?:analistas|economistas|mercados|inversionistas)\s+(?:esperan|preven|anticipan|pronostican))\b/i;
 const FORECAST = /\b(?:analysts?|economists?|markets?|investors?)\s+(?:expect|forecast|predict|anticipat)|\b(?:is|are|was|were) expected\b|\b(?:forecast|projected|likely|may|might|could|se espera|podria|podría|preve|prevé|pronostic|estim(?:a|an) que|anticip(?:a|an) que)\b/i;
 
 function scheduleRows(value) {
   if (Array.isArray(value)) return value;
   return Array.isArray(value?.events) ? value.events : [];
+}
+
+// Only a verified, well-formed release instant can defer a dated obligation.
+// Missing timing keeps the date-only obligation mandatory. Broken timing is not
+// equivalent to missing timing and must never silently exempt a required result.
+function scheduledReleaseState(row, now = new Date()) {
+  if (!(now instanceof Date) || !Number.isFinite(now.getTime())) return 'invalid';
+  const hasTiming = row?.releaseAt !== undefined || row?.timeZone !== undefined;
+  if (!hasTiming) return row?.date > editorialDay(now) ? 'future' : 'unknown';
+  if (typeof row.releaseAt !== 'string' || typeof row.timeZone !== 'string'
+    || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(row.releaseAt)
+    || !Number.isFinite(Date.parse(row.releaseAt))) return 'invalid';
+  const release = new Date(row.releaseAt);
+  if (release.toISOString() !== (row.releaseAt.includes('.') ? row.releaseAt : row.releaseAt.replace('Z', '.000Z'))) return 'invalid';
+  try {
+    if (!row.timeZone.trim()) return 'invalid';
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+      timeZone: row.timeZone, year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(release).map(part => [part.type, part.value]));
+    if (`${parts.year}-${parts.month}-${parts.day}` !== row.date) return 'invalid';
+  } catch { return 'invalid'; }
+  return release.getTime() > now.getTime() ? 'future' : 'released';
+}
+
+function candidatePublishedBy(candidate, now = new Date()) {
+  if (!(now instanceof Date) || !Number.isFinite(now.getTime())) return false;
+  const value = candidate?.publishedAt || candidate?.published_at;
+  if (!value) return true; // Official-page seeds have only the verified calendar day.
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value <= editorialDay(now);
+  const time = Date.parse(value);
+  return Number.isFinite(time) && time <= now.getTime();
+}
+
+function scheduledCandidateAvailable(candidate, row, now = new Date()) {
+  const state = scheduledReleaseState(row, now);
+  if (state === 'future' || state === 'invalid' || !candidatePublishedBy(candidate, now)) return false;
+  const reportedAt = candidate?.publishedAt || candidate?.published_at;
+  return state !== 'released' || !reportedAt || /^\d{4}-\d{2}-\d{2}$/.test(reportedAt)
+    || Date.parse(reportedAt) >= Date.parse(row.releaseAt);
 }
 
 function candidateDay(candidate, explicitDay = '') {
@@ -52,9 +94,9 @@ function candidateDay(candidate, explicitDay = '') {
   return Number.isFinite(time) ? new Date(time).toISOString().slice(0, 10) : '';
 }
 
-function linkScheduledCandidate(candidate, schedule, explicitDay = '') {
+function linkScheduledCandidate(candidate, schedule, explicitDay = '', now = new Date()) {
   const day = candidateDay(candidate, explicitDay);
-  if (!day) return null;
+  if (!day || !candidatePublishedBy(candidate, now)) return null;
   const text = fold([
     candidate?.title,
     candidate?.dek,
@@ -66,6 +108,7 @@ function linkScheduledCandidate(candidate, schedule, explicitDay = '') {
 
   for (const row of scheduleRows(schedule)) {
     if (row?.resolvedOutcome || !row?.id || row.date !== day || row.approx === true || row.outcomeRequired !== true) continue;
+    if (!scheduledCandidateAvailable(candidate, row, now)) continue;
     const actor = String(row.outcome?.actor || '').trim();
     const topic = String(row.outcome?.topic || '').trim();
     const actorPattern = ACTORS[actor];
@@ -76,7 +119,7 @@ function linkScheduledCandidate(candidate, schedule, explicitDay = '') {
     const actorImplicitButScoped = row.outcome?.actorMayBeImplicit === true
       && /\b(?:mexico|mexican|national|nacional)\b/i.test(text);
     if ((!actorMatched && !actorImplicitButScoped) || !topicPattern.test(text) || !outcomePattern.test(text)) continue;
-    if (FORECAST.test(text)) continue;
+    if (FORECAST.test(text) || (topic === 'policy-rate' && CONDITIONAL_POLICY.test(text))) continue;
     return {
       id: row.id,
       date: row.date,
@@ -86,6 +129,7 @@ function linkScheduledCandidate(candidate, schedule, explicitDay = '') {
       importanceFloor: Number(row.importanceFloor) || 0,
       requiredForBrief: row.requiredForBrief === true,
       outcomeRequired: true,
+      ...(row.releaseAt !== undefined ? { releaseAt: row.releaseAt, timeZone: row.timeZone } : {}),
       actor,
       topic,
     };
@@ -109,13 +153,17 @@ function dateMarkers(day) {
   ].map(fold);
 }
 
-function dueScheduledRows(schedule, startDay, endDay = startDay) {
+function dueScheduledRows(schedule, startDay, endDay = startDay, now = new Date()) {
   return scheduleRows(schedule).filter((row) => row?.id
     && row.approx !== true
     && row.outcomeRequired === true
     && row.requiredForBrief === true
     && row.date >= startDay
-    && row.date <= endDay);
+    && row.date <= endDay).filter(row => {
+      const state = scheduledReleaseState(row, now);
+      if (state === 'invalid') throw new Error(`invalid scheduled release timing: ${row.id}`);
+      return state !== 'future';
+    });
 }
 
 function missingScheduledRows(dueRows, candidates) {
@@ -176,7 +224,8 @@ function seedResolvedRevenueDeadline(row, pageText) {
   };
 }
 
-function seedScheduledCandidate(row, pageText) {
+function seedScheduledCandidate(row, pageText, now = new Date()) {
+  if (['future', 'invalid'].includes(scheduledReleaseState(row, now))) return null;
   if (row?.resolvedOutcome) return seedResolvedRevenueDeadline(row, pageText);
   const outcomeUrl = row?.outcomeSourceUrl || row?.sourceUrl;
   if (!row?.id || !row?.date || !outcomeUrl || !String(pageText || '').trim()) return null;
@@ -198,7 +247,7 @@ function seedScheduledCandidate(row, pageText) {
   for (const chunk of chunks) {
     const normalized = fold(chunk);
     if (!markers.some((marker) => normalized.includes(marker))) continue;
-    const linked = linkScheduledCandidate({ title: chunk, sourceName: row.source }, [row], row.date);
+    const linked = linkScheduledCandidate({ title: chunk, sourceName: row.source }, [row], row.date, now);
     if (!linked) continue;
     return {
       id: `scheduled:${row.id}`,
@@ -210,8 +259,9 @@ function seedScheduledCandidate(row, pageText) {
       tier: 1,
       beat: row.kind || 'economy',
       lang: 'es',
-      published_at: `${row.date}T18:00:00.000Z`,
-      first_seen: `${row.date}T18:00:00.000Z`,
+      // The page proves the day, not an invented intraday publication time.
+      published_at: row.date,
+      first_seen: now.toISOString(),
       _editorialDate: row.date,
       _coverage: [],
       _scheduled: linked,
@@ -220,4 +270,4 @@ function seedScheduledCandidate(row, pageText) {
   return null;
 }
 
-module.exports = { dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate };
+module.exports = { scheduledReleaseState, scheduledCandidateAvailable, candidatePublishedBy, dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate };
