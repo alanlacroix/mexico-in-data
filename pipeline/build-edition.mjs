@@ -56,7 +56,7 @@ const NEWS_SOURCES = read(path.join(__dirname, 'news-sources.json'), { sources: 
 
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
-const { dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate } = scheduledCandidate;
+const { scheduledReleaseState, scheduledCandidateAvailable, candidatePublishedBy, dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate } = scheduledCandidate;
 const { prioritizeCandidates, fallbackImportanceComponents, attentionSignal, commentaryOnlyCandidate } = candidatePriority;
 const { calendarScore, standingScore } = analysisEvidence;
 const { atomicWriteEdition, withArtifactHash, mondayOf, previousDay, weekendDay } = publicEdition;
@@ -163,21 +163,21 @@ async function candidateUniverse(now, schedule, editorialDate,
   const byUrl = new Map();
   for (const item of all) {
     const date = editorialDay(item?.published_at);
-    if (!item?.url || !item?.title || !sourceAllowed(item) || date < allowedStart || date > editorialDate) continue;
+    if (!item?.url || !item?.title || !candidatePublishedBy(item, now) || !sourceAllowed(item) || date < allowedStart || date > editorialDate) continue;
     // Filter before grouping and the 24-item cap so old lead URLs cannot displace
     // a new follow-up. Required scheduled outcomes remain eligible even on reused URLs.
-    if (publishedUrls.has(articleIdentity(item.url, registeredHosts)) && !linkScheduledCandidate(item, schedule, date)?.requiredForBrief) continue;
+    if (publishedUrls.has(articleIdentity(item.url, registeredHosts)) && !linkScheduledCandidate(item, schedule, date, now)?.requiredForBrief) continue;
     if (!byUrl.has(item.url)) byUrl.set(item.url, { ...item, _editorialDate: date });
   }
   const grouped = groupEvents([...byUrl.values()]).map((group) => {
     const item = { ...group.event };
     item._editorialDate = editorialDay(item.published_at);
     item._coverage = mergeCoverage(group.coverage || [], group.members || []);
-    item._scheduled = linkScheduledCandidate(item, schedule, item._editorialDate);
+    item._scheduled = linkScheduledCandidate(item, schedule, item._editorialDate, now);
     item._section = sectionOf(item);
     return item;
   });
-  const allDue = dueScheduledRows(schedule, allowedStart, editorialDate);
+  const allDue = dueScheduledRows(schedule, allowedStart, editorialDate, now);
   // A same-day RSS mention cannot establish the reference month of a required INPC
   // outcome. Validate the official monthly document even when the generic linker matched.
   const monthlyIds = new Set(allDue.filter(requiresInegiMonthlySource).map(row => row.id));
@@ -193,7 +193,7 @@ async function candidateUniverse(now, schedule, editorialDate,
     }
     const outcomeUrl = row.outcomeSourceUrl || row.sourceUrl;
     const page = await fetchArticle(outcomeUrl, { allowedHosts: [new URL(outcomeUrl).hostname] });
-    const item = page.ok ? seedScheduledCandidate(row, page.text) : null;
+    const item = page.ok ? seedScheduledCandidate(row, page.text, now) : null;
     if (item) item._section = sectionOf(item);
     return item;
   }))).filter(Boolean);
@@ -295,18 +295,23 @@ function keyedUnits(value) {
   return Object.entries(value).map(([key, unit]) => ({ ...unit, i: /^s\d+$/.test(key) ? Number(key.slice(1)) : NaN }));
 }
 
-function publicationCoverage(rows, locked, editorialDate) {
+function publicationCoverage(rows, locked, editorialDate, now = new Date()) {
+  const scheduled = locked.filter(row => row.item._scheduled);
+  if (scheduled.some(row => scheduledReleaseState(row.item._scheduled, now) === 'invalid')) return false;
+  if (rows.some(row => !candidatePublishedBy(row.item, now)
+    || (row.item._scheduled && !scheduledCandidateAvailable(row.item, row.item._scheduled, now)))) return false;
   const ids = new Set(rows.map(row => row.index));
   return rows.length >= MIN_VISIBLE && rows.length <= MAX_VISIBLE
     && (weekendDay(editorialDate) || rows.some(row => row.item._editorialDate === editorialDate))
-    && locked.filter(row => row.item._scheduled).every(row => ids.has(row.index));
+    && scheduled.filter(row => scheduledReleaseState(row.item._scheduled, now) !== 'future')
+      .every(row => ids.has(row.index));
 }
 
-function removableBudgetRow(rows, editorialDate) {
+function removableBudgetRow(rows, editorialDate, now = new Date()) {
   for (let index = rows.length - 1; index >= 0; index--) {
     if (rows[index].item._scheduled) continue;
     const remaining = rows.filter((_, i) => i !== index);
-    if (publicationCoverage(remaining, rows, editorialDate)) return index;
+    if (publicationCoverage(remaining, rows, editorialDate, now)) return index;
   }
   return -1;
 }
@@ -911,7 +916,7 @@ async function main() {
       const bytes = new TextEncoder().encode(JSON.stringify({system:request.system,user:request.user,schema:request.schema})).byteLength + 1536;
       const maximum = (bytes * 3 + request.maxTokens * 15) / 1e6 + request.reserveUSD;
       if (maximum <= availableForEdition) break;
-      const removable = removableBudgetRow(locked, editorialDate);
+      const removable = removableBudgetRow(locked, editorialDate, now);
       if (removable < 0) break;
       locked = locked.filter((_, index) => index !== removable);
     }
@@ -984,7 +989,7 @@ async function main() {
         rejection: evaluated.rejectionDiagnostics.find(item => item.storyId === storyId(row.item)),
       })));
       const patchResponse = await call({
-        optionalOnBudget: publicationCoverage(evaluated.deterministicPass.map(entry => entry.row), locked, editorialDate),
+        optionalOnBudget: publicationCoverage(evaluated.deterministicPass.map(entry => entry.row), locked, editorialDate, now),
         system: `${DRAFT_GATE_CONTRACT}\n\n${DAILY_EDITORIAL_CONTRACT}\n\n${TRUST}\n\n${REPORT}\n\nRepair only the named bilingual fields. Return repairs keyed by s<index>, containing only the requested field names, each with en, es and refs. Use only that story's evidence and exact evidence IDs. Preserved fields are context and must not be returned or changed. Keep every number, actor, action, date, procedural stage and certainty supported. If a requested next step has no source support, leave its text empty for rejection rather than inventing one.`,
         user: JSON.stringify(repairPlan.inputs), schema: repairPlan.schema,
         model: models.SONNET, effort: 'low', maxTokens: repairPlan.maxTokens, reserveUSD: reservedAuditUSD,
@@ -1004,7 +1009,7 @@ async function main() {
       throw new Error(`all story drafts failed the deterministic evidence gate: ${draftRejects.join(' | ').slice(0, 330)}`);
     }
 
-    if (!publicationCoverage(deterministicPass.map(entry => entry.row), locked, editorialDate)) {
+    if (!publicationCoverage(deterministicPass.map(entry => entry.row), locked, editorialDate, now)) {
       failureDiagnostics = rejectionDiagnostics;
       throw new Error(`drafts cannot meet the ${MIN_VISIBLE}–${MAX_VISIBLE} story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit`);
     }
