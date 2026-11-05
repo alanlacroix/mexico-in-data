@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-20",
-      "slot": "morning",
-      "candidateSignature": "9ae85d059f0133048c9c3368e1375b059444421445ca34a4958a37b2595f29eb",
-      "state": "failed",
-      "startedAt": "2026-09-20T13:01:35.492Z",
-      "completedAt": "2026-09-20T13:02:11.043Z",
-      "calls": 2,
-      "costUSD": 0.015842,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-e223fa844d3b: headline: 22 words (cap 20); headline: Spanish 27 words (cap 24); background: proposal or uncertainty became final in Spanish; view: proposal or draft described as a completed action; watch: watch item has no observable next test | n-ee7dc55915a1: background: negation was introduced in Spanish; watch: watch item"
-    },
-    {
-      "editorialDate": "2026-09-20",
-      "slot": "noon",
-      "candidateSignature": "43a5a80251c4e97046e39357b963677e5149412e46aa29e587867b56d3edd83e",
-      "state": "failed",
-      "startedAt": "2026-09-20T16:01:18.894Z",
-      "completedAt": "2026-09-20T16:01:55.565Z",
-      "calls": 3,
-      "costUSD": 0.020062,
-      "artifactHash": "",
-      "reason": "all selected stories failed the independent evidence audit"
-    },
-    {
       "editorialDate": "2026-09-21",
       "slot": "morning",
       "candidateSignature": "8e73a069b9d48449c137edda09bb05396940cf975a04f3aadf85203c9cd0a1d8",
@@ -7790,6 +7766,48 @@
         "generationProvenance": "Three November 4 source-backed stories, zero additional model or provider audit calls. Failed morning and exhausted recovery, four settled receipts and USD 0.113226 unchanged. Unused noon slot records independently audited recovery; no allowance or cap reset.",
         "sourceProvenance": "November 4 El Economista copyright liability, Pemex September output and AICM bond reporting independently retrieved and bilingual copy audited. Issuer primary PDF and contemporary reporting support remaining bond maturities. Source publication dates use date-only precision. No inferred July 2027 review date retained.",
         "candidateSignatureProvenance": "New curated candidate identity metadata, separate from artifact and independent audit hashes."
+      }
+    },
+    {
+      "editorialDate": "2026-11-05",
+      "slot": "morning",
+      "candidateSignature": "bc34bbf3a04a28415e8f14f4a50692d034a733630f09fec6ebd19a17a427a908",
+      "state": "started",
+      "startedAt": "2026-11-05T12:17:25.715Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.058024,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-05T12:17:25.715Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ascoa",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "42025838502",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "fcb305a9-6e17-4174-9a08-e20a498d7956",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.058024,
+            "accountedUSD": 0.058024,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
