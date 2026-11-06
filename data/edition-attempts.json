@@ -8052,6 +8052,54 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-11-06",
+      "slot": "noon",
+      "candidateSignature": "bc5ae43d02673f2f1f47e37c71d61a24c4543eab063eb26a0272be28e39d4f2f",
+      "state": "published",
+      "startedAt": "2026-11-06T12:30:46.000Z",
+      "completedAt": "2026-11-06T12:30:46.000Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "81be3278522b417e711f5ed291d3b0ce8b60ba9ef4fdb1a4b51b5f7ec626f0bc",
+      "reason": "",
+      "diagnostics": [],
+      "collection": null,
+      "recoveries": [],
+      "manualRecovery": {
+        "recoveryKind": "operator-curated-independent-source-and-translation-review",
+        "method": "Zero additional pipeline provider calls. Exact candidate promoted after independent field-by-field source and bilingual audit. Full release, browser and exact-head CI required before merge.",
+        "artifactHash": "81be3278522b417e711f5ed291d3b0ce8b60ba9ef4fdb1a4b51b5f7ec626f0bc",
+        "candidateHash": "1a0677be22588db73d829a78de267fcdd7c1c39d158c48b6430ecf65a2c86246",
+        "reviewedAt": "2026-11-06T12:30:09Z",
+        "draftSHA256": "ae8c6203e928cfa53052c426b09ac38005bcc7c69bc2c55d72d25c62425e261a",
+        "auditSHA256": "9252537e86c70f433ae09c94822cfa9b457f432aa42328cc3c0b71a2e35c0b3e",
+        "reviewInputsSHA256": "81914945967d6dd97a5c8f12741cc6eaaf4bf32ca9a636011117a71aab80849d",
+        "deterministicReviewSHA256": "8fc54e4025fa645a2a82a146ea2bf01eecdee0828019023259ed8732e4166750",
+        "sourceManifestSHA256": "63ef09bf3dc0847c4d53af9146e9a1767feb11a60f30a0baa4b6891cfc90225d",
+        "priorFailedMorning": {
+          "state": "failed",
+          "calls": 2,
+          "costUSD": 0.112334,
+          "runId": "42216379026",
+          "recoveryCount": 1
+        },
+        "originalFailureRuns": [
+          "42216269219",
+          "42216379026"
+        ],
+        "originalDiagnosticArtifacts": [
+          {
+            "runId": "42216379026",
+            "artifactId": "13501506730",
+            "publicationAllowed": false
+          }
+        ],
+        "generationProvenance": "Three November 6 source-backed stories. The original failed morning, bounded recovery, both settled receipts and USD 0.112334 remain unchanged. The unused noon slot records curated recovery with zero additional calls or spend; no budget or cap reset.",
+        "sourceProvenance": "CFE transmission reporting, Nezahualcoyotl development-zone studies and Banxico November 5 decision effective November 6. Publisher articles plus official Banxico statement and November 19 minutes calendar independently verified. All 12 inherited weekly snippets rechecked against original sources in both languages. CFE and Edomex retain verified date-only precision; inherited pension timestamp reduced to verified November 5 date-only precision. No inherited prose changed.",
+        "candidateSignatureProvenance": "Curated source-row identity, separate from the final artifact and independent audit hashes."
+      }
     }
   ]
 }
