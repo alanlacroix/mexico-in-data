@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-21",
-      "slot": "morning",
-      "candidateSignature": "8e73a069b9d48449c137edda09bb05396940cf975a04f3aadf85203c9cd0a1d8",
-      "state": "failed",
-      "startedAt": "2026-09-21T13:01:14.901Z",
-      "completedAt": "2026-09-21T13:02:04.479Z",
-      "calls": 3,
-      "costUSD": 0.026045,
-      "artifactHash": "",
-      "reason": "all selected stories failed the independent evidence audit"
-    },
-    {
-      "editorialDate": "2026-09-21",
-      "slot": "noon",
-      "candidateSignature": "8ba64b9eb408e05b7315abee98083bc6c783df93b3fca49663566e35f158dcd4",
-      "state": "failed",
-      "startedAt": "2026-09-21T16:01:24.454Z",
-      "completedAt": "2026-09-21T16:02:13.355Z",
-      "calls": 2,
-      "costUSD": 0.020974,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-eb8abbe9ba66: headline: 2 sentences (cap 1); headline: usmca was dropped in Spanish; headline: Spanish 2 sentences (cap 1); watch: usmca was dropped in Spanish | n-603e9280332e: dek: unsupported number: 625.7; dek: Spanish unsupported number: 625.7; watch: watch item has no observable next test | n-dc6c0e7544a3: watch: watch i"
-    },
-    {
       "editorialDate": "2026-09-22",
       "slot": "morning",
       "candidateSignature": "b18de3453a76fb447e37c974236f0a6eb7f0743c581cd0516c6efd9dba645b05",
@@ -8000,6 +7976,49 @@
         "generationProvenance": "Three November 5 source-backed stories; no additional provider drafting or audit calls. Both failed morning attempts, all four settled receipts and USD 0.080266 are unchanged. The unused noon slot records curated recovery; no allowance or cap reset.",
         "sourceProvenance": "El CEO pension expenditure and LMB/Fanki reporting, plus El Financiero October vehicle sales, independently fetched and reviewed in both languages. All nine inherited weekly snippets independently checked. Exact publication timestamps verified; LMB retained verified date-only precision. Banxico preview excluded, official decision remains due at 13:00 America/Mexico_City.",
         "releaseTimingFix": "PR 89: official Banxico releaseAt 2026-11-05T19:00:00Z, fail-closed timing and conditional-preview exclusion, separately reviewed and regression-tested."
+      }
+    },
+    {
+      "editorialDate": "2026-11-06",
+      "slot": "morning",
+      "candidateSignature": "d5fd6d762dea059c07859c913823720f5df52ac8ce88d673889878c656c500b2",
+      "state": "started",
+      "startedAt": "2026-11-06T12:15:35.198Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.139461,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-06T12:15:35.198Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "ascoa",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "42216269219",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "a8ecde4d-61ed-453e-8afa-de330ef2b73e",
+            "period": "2026-11",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.139461,
+            "accountedUSD": 0.139461,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
