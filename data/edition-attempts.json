@@ -8081,14 +8081,85 @@
       "editorialDate": "2026-11-07",
       "slot": "morning",
       "candidateSignature": "95c84c1de4c545e0d3c86e37bde375f01ef42d194c310d3693920c89ec09619d",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-07T12:08:33.617Z",
-      "completedAt": "",
+      "completedAt": "2026-11-07T12:09:59.577Z",
       "calls": 2,
       "costUSD": 0.076799,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "banxico-policy-2026-11-05",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Banxico's board split 3-2 to cut the benchmark rate 25 basis points to 6.25% on November 5, its lowest since 2022, defying most analyst forecasts for a hold. Governor Victoria Rodríguez Ceja led the majority favoring the cut.",
+              "es": "La Junta de Banxico se dividió 3-2 para recortar 25 puntos base la tasa de referencia a 6.25% el 5 de noviembre, la más baja desde 2022, contra el pronóstico de la mayoría de analistas. La gobernadora Victoria Rodríguez Ceja lideró la mayoría que favoreció el recorte.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 2",
+                "Spanish unsupported number: 2"
+              ]
+            },
+            "background": {
+              "en": "The board has repeatedly split between Governor Victoria Rodríguez Ceja, José Gabriel Cuadra García and Omar Mejía Castelazo, who favor cuts, and Galia Borja Gómez and Jonathan Heath, who prefer holding. The rate differential with the US fell to a new low of 225 basis points after the Fed held steady in October.",
+              "es": "La Junta se ha dividido repetidamente entre la gobernadora Victoria Rodríguez Ceja, José Gabriel Cuadra García y Omar Mejía Castelazo, que favorecen recortes, y Galia Borja Gómez y Jonathan Heath, que prefieren mantener. El diferencial de tasas con EU cayó a un nuevo mínimo de 225 puntos base tras que la Fed no se movió en octubre.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish",
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-e1eaac7e483c",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico granted permits dated November 5 to subsidiaries of Cox, Invex and Viva el Sol for six solar projects totaling 649 megawatts and about $750 million in investment, part of a second private-sector tender.",
+              "es": "México otorgó permisos con fecha 5 de noviembre a filiales de Cox, Invex y Viva el Sol para seis proyectos solares que suman 649 megawatts y cerca de $750 millones de inversión, parte de una segunda convocatoria al sector privado.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported numbers: 649, 750",
+                "Spanish unsupported numbers: 649, 750"
+              ]
+            },
+            "background": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "Spanish translation is empty"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-07T12:08:33.617Z",
         "aliveSources": 68,
