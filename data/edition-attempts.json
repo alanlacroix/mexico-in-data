@@ -8081,14 +8081,90 @@
       "editorialDate": "2026-11-07",
       "slot": "morning",
       "candidateSignature": "95c84c1de4c545e0d3c86e37bde375f01ef42d194c310d3693920c89ec09619d",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-07T12:10:15.350Z",
-      "completedAt": "",
+      "completedAt": "2026-11-07T12:11:46.685Z",
       "calls": 4,
       "costUSD": 0.106124,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: banxico-policy-2026-11-05: headline: banxico was introduced in Spanish; background: needs an independent source when one is available | n-225836562ec8: dek: unsupported number: 225; dek: Spanish unsupported number: 225 | n-e1eaac7e483c: headline: unsupported number: 750; headline: Spanish unsupported number: 750; dek: unsupporte",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "banxico-policy-2026-11-05",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexico's central bank cuts benchmark rate to 6.25%, surprising markets amid peso pressure",
+              "es": "Banco de México baja tasa de referencia a 6.25%, sorprendiendo mercados ante presión del peso",
+              "refs": [
+                "article",
+                "coverage:3d78ffad"
+              ],
+              "reasons": [
+                "banxico was introduced in Spanish"
+              ]
+            },
+            "background": {
+              "en": "The Banco de México reduced its key rate by 25 basis points on November 5, 2026, splitting its board when the inflation forecast for the fourth quarter rose to 3.7 percent from 3.5 percent. The central bank expects the inflation index to reach its 3 percent target by the end of 2027.",
+              "es": "El Banco de México redujo su tasa clave 25 puntos base el 5 de noviembre de 2026, dividiendo su consejo cuando el pronóstico de inflación para el cuarto trimestre subió a 3.7 por ciento desde 3.5 por ciento. El banco central espera que el índice de precios llegue a su objetivo de 3 por ciento a finales de 2027.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-225836562ec8",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The rate cut narrowed the interest gap between Mexico and the United States to a new low of 225 basis points, discouraging investment in pesos and pressuring the currency downward.",
+              "es": "El recorte de tasas estrechó la brecha de tasas entre México y Estados Unidos a un nuevo mínimo de 225 puntos base, desalentando inversión en pesos y presionando la moneda a la baja.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 225",
+                "Spanish unsupported number: 225"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-e1eaac7e483c",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexico approves 750 million dollar solar permits for six private photovoltaic projects",
+              "es": "México aprueba permisos solares de 750 millones de dólares para seis proyectos fotovoltaicos privados",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 750",
+                "Spanish unsupported number: 750"
+              ]
+            },
+            "dek": {
+              "en": "The Energy Ministry granted permits for 649 megawatts of solar capacity to Cox, Invex and Viva el Sol on November 5, with operations beginning in 2028 and 2029 toward a 38 percent renewable generation target by 2030.",
+              "es": "La Secretaría de Energía otorgó permisos para 649 megavatios de capacidad solar a Cox, Invex y Viva el Sol el 5 de noviembre, con operaciones comenzando en 2028 y 2029 hacia un objetivo de 38 por ciento de generación renovable para 2030.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported numbers: 649, 2028, 2029, 38, 2030",
+                "Spanish unsupported numbers: 649, 2028, 2029, 38, 2030"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-07T12:10:15.350Z",
         "aliveSources": 66,
