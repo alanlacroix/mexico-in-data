@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-22",
-      "slot": "morning",
-      "candidateSignature": "b18de3453a76fb447e37c974236f0a6eb7f0743c581cd0516c6efd9dba645b05",
-      "state": "failed",
-      "startedAt": "2026-09-22T13:01:27.637Z",
-      "completedAt": "2026-09-22T13:02:12.469Z",
-      "calls": 2,
-      "costUSD": 0.016242,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-a2b819bbd86a: headline: 21 words (cap 20); headline: Spanish 29 words (cap 24); background: 4 sentences (cap 3) | n-44e1115c103f: headline: unsupported number: 22; headline: Spanish unsupported number: 22"
-    },
-    {
-      "editorialDate": "2026-09-22",
-      "slot": "noon",
-      "candidateSignature": "798e46f58cbf3ac1be47913ba29de34cb9130672421e5adb0d7a82cfa3a980a0",
-      "state": "failed",
-      "startedAt": "2026-09-22T16:01:19.635Z",
-      "completedAt": "2026-09-22T16:02:12.940Z",
-      "calls": 2,
-      "costUSD": 0.012251,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-a9fb04b2d3e2: view: negation was introduced in Spanish"
-    },
-    {
       "editorialDate": "2026-09-23",
       "slot": "morning",
       "candidateSignature": "8be2d6bb18c481b3901f9fbb7ade899b7d9e885a882af523d767fee66c909685",
@@ -8099,6 +8075,49 @@
         "generationProvenance": "Three November 6 source-backed stories. The original failed morning, bounded recovery, both settled receipts and USD 0.112334 remain unchanged. The unused noon slot records curated recovery with zero additional calls or spend; no budget or cap reset.",
         "sourceProvenance": "CFE transmission reporting, Nezahualcoyotl development-zone studies and Banxico November 5 decision effective November 6. Publisher articles plus official Banxico statement and November 19 minutes calendar independently verified. All 12 inherited weekly snippets rechecked against original sources in both languages. CFE and Edomex retain verified date-only precision; inherited pension timestamp reduced to verified November 5 date-only precision. No inherited prose changed.",
         "candidateSignatureProvenance": "Curated source-row identity, separate from the final artifact and independent audit hashes."
+      }
+    },
+    {
+      "editorialDate": "2026-11-07",
+      "slot": "morning",
+      "candidateSignature": "95c84c1de4c545e0d3c86e37bde375f01ef42d194c310d3693920c89ec09619d",
+      "state": "started",
+      "startedAt": "2026-11-07T12:08:33.617Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.129172,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-07T12:08:33.617Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "ascoa",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "42371144900",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "c3fd1a56-8afb-4bea-ae23-30350506a34e",
+            "period": "2026-11",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.129172,
+            "accountedUSD": 0.129172,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
