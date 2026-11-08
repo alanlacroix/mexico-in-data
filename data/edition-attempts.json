@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-23",
-      "slot": "morning",
-      "candidateSignature": "8be2d6bb18c481b3901f9fbb7ade899b7d9e885a882af523d767fee66c909685",
-      "state": "failed",
-      "startedAt": "2026-09-23T13:01:24.570Z",
-      "completedAt": "2026-09-23T13:01:54.936Z",
-      "calls": 2,
-      "costUSD": 0.015567,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-6ec1e9184037: headline: semicolon; headline: Spanish semicolon; dek: 3 sentences (cap 2); dek: completed action was introduced in Spanish | n-ba54740f69e4: headline: semicolon; headline: 23 words (cap 20); headline: Spanish semicolon; headline: Spanish 30 words (cap 24)"
-    },
-    {
-      "editorialDate": "2026-09-23",
-      "slot": "noon",
-      "candidateSignature": "3095049dd7448d7b0fd496112ee3f1d5ffc7c072287cf97c2a78b94b4a9d61d3",
-      "state": "failed",
-      "startedAt": "2026-09-23T16:01:48.782Z",
-      "completedAt": "2026-09-23T16:02:16.099Z",
-      "calls": 2,
-      "costUSD": 0.012408,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-fade80a76a05: headline: semicolon; headline: 2 sentences (cap 1); headline: Spanish semicolon; background: proposal or draft described as a completed action | n-a7c69abe167e: model omitted the required story unit | n-58ecf316b500: model omitted the required story unit"
-    },
-    {
       "editorialDate": "2026-09-24",
       "slot": "morning",
       "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -8383,6 +8359,48 @@
         ],
         "generationProvenance": "Three independently reviewed November 6 follow-ups for the November 7 weekend edition. Original failed morning, bounded recovery, four settled receipts and USD 0.106124 remain unchanged. No budget reset or cap change.",
         "sourceProvenance": "Original El CEO, T21 and DPL News lead URLs retained. Customs official decree resolves chronology and threshold qualifications. Digital-payment sector coverage and transition clocks remain conditional. FCC requirements are attributed, with effective date unspecified and consultation prospective. Complete bounded cited records and all inherited public weekly fields independently reviewed."
+      }
+    },
+    {
+      "editorialDate": "2026-11-08",
+      "slot": "morning",
+      "candidateSignature": "8491487fbccb749e7f5f2f8a69340a644435057bedfc4fd487e687d27454d530",
+      "state": "started",
+      "startedAt": "2026-11-08T14:00:31.472Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.129172,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-08T14:00:31.472Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ascoa",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "42487622808",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "a66c49e4-3f9d-4a42-8489-959826c53901",
+            "period": "2026-11",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.129172,
+            "accountedUSD": 0.129172,
+            "state": "reserved"
+          }
+        ]
       }
     }
   ]
