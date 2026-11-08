@@ -8365,14 +8365,50 @@
       "editorialDate": "2026-11-08",
       "slot": "morning",
       "candidateSignature": "8491487fbccb749e7f5f2f8a69340a644435057bedfc4fd487e687d27454d530",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-08T14:00:31.472Z",
-      "completedAt": "",
+      "completedAt": "2026-11-08T14:01:45.704Z",
       "calls": 2,
       "costUSD": 0.095178,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "banxico-policy-2026-11-05",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "The move follows a Fed pause in October, pushing the Mexico-US rate gap to its lowest level since comparable data began, per El Financiero.",
+              "es": "El movimiento sigue a una pausa de la Fed en octubre, llevando el diferencial de tasas México-EU a su nivel más bajo desde que hay datos comparables, según El Financiero.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-e1eaac7e483c",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico imported 7,710 million cubic feet daily of US natural gas in August, up 4.3% year over year, taking 28.4% of all US gas exports, ahead of Canada's 10.4%.",
+              "es": "México importó 7 mil 710 millones de pies cúbicos diarios de gas natural de EU en agosto, un alza anual de 4.3%, tomando 28.4% de todas las exportaciones de gas de EU, por encima del 10.4% de Canadá.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 7710",
+                "numbers changed in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-08T14:00:31.472Z",
         "aliveSources": 69,
