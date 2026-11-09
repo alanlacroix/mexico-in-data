@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-24",
-      "slot": "morning",
-      "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
-      "state": "failed",
-      "startedAt": "2026-09-24T13:02:13.009Z",
-      "completedAt": "2026-09-24T13:02:26.676Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "",
-      "reason": "collection failed: required scheduled outcome unavailable: banxico-policy-2026-09-24"
-    },
-    {
-      "editorialDate": "2026-09-24",
-      "slot": "noon",
-      "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
-      "state": "failed",
-      "startedAt": "2026-09-24T16:01:42.615Z",
-      "completedAt": "2026-09-24T16:01:56.480Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "",
-      "reason": "collection failed: required scheduled outcome unavailable: banxico-policy-2026-09-24"
-    },
-    {
       "editorialDate": "2026-09-25",
       "slot": "morning",
       "candidateSignature": "d4c9254066c21c6fae21c8ac6c4951f18dc9243e2299d236292bd9214ef80ec1",
@@ -8521,6 +8497,35 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-11-09",
+      "slot": "morning",
+      "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
+      "state": "failed",
+      "startedAt": "2026-11-09T14:00:35.773Z",
+      "completedAt": "2026-11-09T14:00:51.428Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "",
+      "reason": "collection failed: required scheduled outcome unavailable: inegi-cpi-2026-11-09",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-09T14:00:35.773Z",
+        "aliveSources": 67,
+        "totalSources": 72,
+        "wireCount": 56,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "elfin-mercados",
+          "ascoa",
+          "insightcrime-mx",
+          "energiaadebate",
+          "nexos"
+        ]
+      },
+      "recoveries": []
     }
   ]
 }
