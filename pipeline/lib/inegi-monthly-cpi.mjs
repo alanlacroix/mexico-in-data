@@ -70,7 +70,12 @@ export function parseMonthlyMetadata(records, row) {
   const [year, month, day] = row.date.split('-');
   const reference = referencePeriod(row.date);
   const path = monthlyPdfPath(row.date);
-  if (record?.idFuente !== '950' || record.tipoPublicacion !== '7'
+  // INEGI also classifies the verified monthly bulletin as a press release.
+  // Admit only that named category; all release and complete-PDF checks still apply.
+  const publicationTypeMatches = record.tipoPublicacion === '7'
+    || (record.tipoPublicacion === '1' && typeof record.tipoPublicacionNombre === 'string'
+      && fold(record.tipoPublicacionNombre) === 'comunicado de prensa');
+  if (record?.idFuente !== '950' || !publicationTypeMatches
       || record.fechaInformacion !== `${day}/${month}/${year}`
       || parseSpanishDate(record.fechaPublicacion) !== row.date
       || fold(record.periodoInformacion) !== reference.text || record.urlPdf !== path

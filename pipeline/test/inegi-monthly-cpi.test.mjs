@@ -239,4 +239,125 @@ try {
   const result = spawnSync(process.execPath, ['check.mjs'], { cwd: temp, encoding: 'utf8', timeout: 20000 });
   assert.equal(result.status, 0, result.stderr || result.stdout);
 } finally { fs.rmSync(temp, { recursive: true, force: true }); }
+
+// Actual November 9 API response categorizes the October bulletin as a press release.
+// Fixtures preserve the complete public metadata and PDF fetched on 2026-11-09.
+const octoberRecords = JSON.parse(fixture('inegi-inpc-october-2026.json'));
+const octoberPdf = new Uint8Array(fixture('inegi-inpc-october-2026.pdf'));
+const octoberRow = JSON.parse(fs.readFileSync(path.join(root, 'data/events.json'))).events.find(r => r.id === 'inegi-cpi-2026-11-09');
+const octoberNow = new Date('2026-11-09T17:42:56Z');
+const octoberMetadata = parseMonthlyMetadata(octoberRecords, octoberRow);
+assert.equal(records[0].tipoPublicacion, '7', 'legacy category remains covered above');
+assert.equal(octoberRecords[0].tipoPublicacion, '1');
+assert.deepEqual(octoberMetadata, { title: 'La inflación anual fue de 3.75% en octubre de 2026',
+  rate: '3.75', date: '2026-11-09', period: 'octubre de 2026',
+  url: 'https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/inpc/inpc_2q2026_11.pdf' });
+assert.equal(createHash('sha256').update(octoberPdf).digest('hex'),
+  '7e7991be791fb3c78c1df5ad29ffe02379f2a5dca8a0b6913d4429715e9e8c50');
+const normalizedCategory = structuredClone(octoberRecords);
+normalizedCategory[0].tipoPublicacionNombre = '  COMUNICADO  de PRENSA  ';
+assert.deepEqual(parseMonthlyMetadata(normalizedCategory, octoberRow), octoberMetadata);
+for (const mutate of [
+  r => delete r.tipoPublicacionNombre, r => r.tipoPublicacionNombre = '',
+  r => r.tipoPublicacionNombre = 'Boletín de indicador',
+  r => r.tipoPublicacionNombre = 'Comunicado de prensa adicional',
+  r => r.tipoPublicacionNombre = ['Comunicado de prensa'],
+  r => r.tipoPublicacionNombre = null, r => r.tipoPublicacion = 1,
+  r => r.tipoPublicacion = '9', r => r.tipoPublicacion = '01',
+  r => r.idFuente = '949', r => r.fechaInformacion = '08/11/2026',
+  r => r.fechaPublicacion = '8 de noviembre de 2026',
+  r => r.periodoInformacion = 'Septiembre de 2026',
+  r => r.periodoInformacion = 'Primera quincena de octubre de 2026',
+  r => r.titulo = 'La inflación anual fue de 3.75% en septiembre de 2026',
+  r => r.programa = 'Producto Interno Bruto',
+  r => r.urlPdf = r.urlPdf.replace('2q', '1q'),
+  r => r.urlPdf = r.urlPdf.replace('_11.pdf', '_10.pdf'),
+  r => r.urlPdf = `https://evil.example${r.urlPdf}`,
+  r => r.urlPdf += '?copy=1', r => r.urlPdf += '#page=1',
+]) {
+  const changed = structuredClone(octoberRecords); mutate(changed[0]);
+  assert.equal(parseMonthlyMetadata(changed, octoberRow), null, 'new category cannot relax release identity');
+}
+assert.equal(parseMonthlyMetadata([...octoberRecords, ...octoberRecords], octoberRow), null);
+const octoberPages = await extractInegiPdf(octoberPdf);
+assert.equal(octoberPages.length, 7);
+const octoberBody = validateMonthlyPages(octoberPages, octoberMetadata);
+assert.ok(octoberBody);
+assert.match(octoberPages[0], /0\.65 %.*3\.75 %.*0\.34 %.*3\.80 %/);
+assert.ok(octoberBody.includes('Página 7/7'), 'last page is retained');
+assert.ok(octoberBody.includes('ISO'), 'full methodology/footer is retained');
+assert.equal(validateMonthlyPages(pages, octoberMetadata), null, 'legacy PDF cannot satisfy October');
+for (const mutate of [
+  p => p.pop(), p => p.reverse(), p => p[3] = '', p => p[1] = p[0],
+  p => p[1] = p[1].replace('684/26', '683/26'),
+  p => p[0] = p[0].replace('9 de noviembre de 2026', '8 de noviembre de 2026'),
+  p => p[0] = p[0].replace('En octubre de 2026', 'En septiembre de 2026'),
+  p => p[0] = p[0].replace('La inflación anual fue de 3.75', 'La inflación anual fue de 3.76'),
+  p => p[1] = p[1].slice(0, p[1].indexOf('Página 2/7') + 'Página 2/7'.length),
+  p => p[6] += ' Complete but oversized source.'.repeat(900),
+]) {
+  const changed = structuredClone(octoberPages); mutate(changed);
+  assert.equal(validateMonthlyPages(changed, octoberMetadata), null, 'new category needs complete matching PDF');
+}
+const octoberRequests = [];
+const octoberFetch = async (url, options) => {
+  octoberRequests.push({ url: String(url), method: options.method, body: options.body });
+  if (String(url) === INEGI_NEWS_URL) return new Response(JSON.stringify(octoberRecords));
+  assert.equal(String(url), octoberMetadata.url);
+  return new Response(octoberPdf);
+};
+const octoberLoad = createInegiMonthlyLoader({ now: octoberNow, fetchBytes: bounded, fetchImpl: octoberFetch });
+const [octoberItem, octoberSame] = await Promise.all([octoberLoad(octoberRow), octoberLoad(octoberRow)]);
+assert.ok(octoberItem); assert.equal(octoberItem, octoberSame);
+assert.equal(octoberRequests.length, 2);
+assert.equal(octoberRequests[0].method, 'POST');
+assert.equal(octoberRequests[0].body, 'acronimo=INPC&idNoticia=0&ingles=0');
+assert.equal(validatedInegiArticle(octoberItem).text, octoberBody);
+assert.deepEqual(validatedInegiReleaseDescriptor(octoberItem), {
+  authority: 'INEGI', series: 'inpc.monthly', referencePeriod: '2026-10', publicationDate: '2026-11-09',
+  bulletin: '684/26', sourceUrl: octoberMetadata.url,
+  sourceSha256: '7e7991be791fb3c78c1df5ad29ffe02379f2a5dca8a0b6913d4429715e9e8c50',
+  revision: null, adapterVersion: 'inegi-monthly-cpi-v1',
+});
+assert.equal(validatedInegiArticle({ ...octoberItem }), null, 'copy cannot inject source trust');
+for (const response of [new Response('', { status: 302, headers: { location: octoberMetadata.url } }),
+  new Response('x'.repeat(2 * 1024 * 1024 + 1)), new Response('<html>Not a PDF</html>')]) {
+  const failed = createInegiMonthlyLoader({ now: octoberNow, fetchBytes: bounded,
+    fetchImpl: async url => String(url) === INEGI_NEWS_URL ? new Response(JSON.stringify(octoberRecords)) : response });
+  assert.equal(await failed(octoberRow), null, 'type 1 does not bypass PDF fetch limits');
+}
+const octoberTemp = fs.mkdtempSync(path.join(os.tmpdir(), 'mb-inegi-october-integration-'));
+try {
+  fs.cpSync(path.join(root, 'pipeline'), path.join(octoberTemp, 'pipeline'), { recursive: true });
+  fs.mkdirSync(path.join(octoberTemp, 'data/news'), { recursive: true });
+  fs.writeFileSync(path.join(octoberTemp, 'package.json'), '{"type":"module"}');
+  fs.symlinkSync(path.join(root, 'node_modules'), path.join(octoberTemp, 'node_modules'));
+  fs.writeFileSync(path.join(octoberTemp, 'pipeline/lib/fetch-article.js'), `export async function fetchArticle(){throw Error('HTML must not replace official PDF');}`);
+  fs.writeFileSync(path.join(octoberTemp, 'pipeline/lib/url-safety.js'), fs.readFileSync(path.join(root, 'pipeline/lib/url-safety.js'), 'utf8')
+    .replace('lookup = dns.lookup, fetchImpl', 'lookup = async()=>[{address:"93.184.216.34",family:4}], fetchImpl'));
+  const runner = `
+    import assert from 'node:assert/strict';import fs from 'node:fs';
+    import { candidateUniverse,evidenceFor } from './pipeline/build-edition.mjs';
+    const row=${JSON.stringify(octoberRow)},records=${JSON.stringify(octoberRecords)};
+    const pdf=new Uint8Array(fs.readFileSync(${JSON.stringify(path.join(root, 'pipeline/test/fixtures/inegi-inpc-october-2026.pdf'))}));
+    let api=0,files=0;
+    globalThis.fetch=async(url)=>{if(String(url)===${JSON.stringify(INEGI_NEWS_URL)}){api++;return new Response(JSON.stringify(records));}if(String(url)===${JSON.stringify(octoberMetadata.url)}){files++;return new Response(pdf);}throw Error('unexpected network');};
+    const now=new Date(${JSON.stringify(octoberNow.toISOString())});
+    const universe=await candidateUniverse(now,{events:[row]},row.date);
+    const official=universe.filter(x=>x._scheduled?.id===row.id);
+    assert.equal(official.length,1);assert.equal(official[0].url,${JSON.stringify(octoberMetadata.url)});
+    const evidence=await evidenceFor(official[0],[],[],[]);
+    assert.equal(evidence[0].kind,'article-body');assert.ok(evidence[0].text.includes('Página 7/7'));
+    assert.ok(evidence[0].text.includes('3.75'));assert.ok(evidence[0].text.includes('3.80'));
+    assert.equal(api,1);assert.equal(files,1,'complete source reused without HTML fallback');
+    await assert.rejects(evidenceFor({...official[0]},[],[],[]),/no trusted complete/);
+    records[0].tipoPublicacionNombre='Boletín de indicador';
+    await assert.rejects(candidateUniverse(now,{events:[row]},row.date),/required scheduled outcome unavailable/);
+    assert.equal(files,1,'invalid category stops before PDF fetch');
+  `;
+  fs.writeFileSync(path.join(octoberTemp, 'check.mjs'), runner);
+  const result = spawnSync(process.execPath, ['check.mjs'], { cwd: octoberTemp, encoding: 'utf8', timeout: 20000 });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+} finally { fs.rmSync(octoberTemp, { recursive: true, force: true }); }
+
 console.log('INEGI monthly CPI: exact official period, complete bounded PDF, trusted evidence and no RSS bypass pass');
