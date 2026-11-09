@@ -8531,14 +8531,91 @@
       "editorialDate": "2026-11-09",
       "slot": "noon",
       "candidateSignature": "0000000000000000000000000000000000000000000000000000000000000000",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-09T17:53:37.216Z",
-      "completedAt": "",
+      "completedAt": "2026-11-09T17:54:59.892Z",
       "calls": 2,
       "costUSD": 0.052114,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: inegi-cpi-2026-11-09: background: needs an independent source when one is available | n-de56ab222879: headline: numbers changed in Spanish; headline: Spanish unsupported number: 66 | n-a2f29e1fee55: view: proposal or draft described as a completed action; watch: empty report text; watch: watch item has no observable next test; w",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "inegi-cpi-2026-11-09",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "Mexico's consumer price index (INPC) reached 147.026 points in October, rising 0.65% from September. Core inflation, which excludes volatile food and energy, fell 48 basis points year-over-year to 3.80%, reflecting easing demand and wage pressures. Non-core inflation rose to 3.59% due to ending summer electricity subsidies in 18 cities where INEGI tracks prices.",
+              "es": "El Índice Nacional de Precios al Consumidor (INPC) alcanzó 147.026 puntos en octubre, subiendo 0.65% desde septiembre. La inflación subyacente, que excluye alimentos y energía volátiles, cayó 48 puntos base interanualmente a 3.80%, reflejando presiones de demanda y salarios que se alivian. La inflación no subyacente subió a 3.59% por fin de subsidios de electricidad de verano en 18 ciudades donde INEGI tiene cobertura.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-de56ab222879",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Honda inaugurates Mexican motorcycle factory line producing 66,000 units yearly",
+              "es": "Honda inaugura línea de fábrica mexicana de motocicletas produciendo 66 mil unidades anuales",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "numbers changed in Spanish",
+                "Spanish unsupported number: 66"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-a2f29e1fee55",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "Mexican payment processors operate under strict regulatory fee compression mandated by Banxico and the Law for Transparency and Regulation of Financial Services.",
+              "es": "Procesadores de pagos mexicanos operan bajo compresión regulatoria de comisiones estricta mandatada por Banxico y la Ley para la Transparencia y Regulación de Servicios Financieros.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            },
+            "view": {
+              "en": "Processors are transitioning from margin-eroding intermediary models to direct principal scheme memberships, capturing tiered volume rebates and eliminating upstream sponsor bank markups. Account-to-account wallet integration via Mercado Pago and SPEI real-time clearing bypasses interbank interchange entirely, preserving 1.0%-1.5% net margins versus compressed card-swiped transaction margins.",
+              "es": "Procesadores están haciendo transición desde modelos de intermediarios erosionadores de margen a membresías directas de esquema principal, capturando rebajas de volumen escalonadas y eliminando marcas de banco patrocinador ascendentes. Integración de billetera cuenta-a-cuenta vía Mercado Pago y compensación en tiempo real SPEI evita comisión interbancaria completamente, preservando márgenes netos de 1.0%-1.5% versus márgenes de transacción de tarjeta frotada comprimidos.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or draft described as a completed action"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article",
+                "coverage:0acd2d91"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty",
+                "invalid repair evidence references"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-09T17:53:37.216Z",
         "aliveSources": 69,
