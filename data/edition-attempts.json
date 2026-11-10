@@ -8444,14 +8444,113 @@
       "editorialDate": "2026-11-10",
       "slot": "morning",
       "candidateSignature": "2fdda4364d803fcf83fd0cac646e693033205ea9774b24a046aedcf334e27cd5",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-10T12:29:38.146Z",
-      "completedAt": "",
+      "completedAt": "2026-11-10T12:30:42.145Z",
       "calls": 5,
       "costUSD": 0.095076,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "only 1 stories passed every editorial gate; need at least 3 without padding",
+      "diagnostics": [
+        {
+          "stage": "independent-audit",
+          "storyId": "n-2e400f9323d2",
+          "reasons": [
+            "The dek field contains a factual error: it states 'INEGI's internal watchdog detected excessive costs' but the evidence clearly attributes this to INE's internal watchdog (Órgano Interno de Control of the Instituto Nacional Electoral), not INEGI (the national statistics agency). These are distinct Mexican government agencies."
+          ],
+          "fields": {
+            "headline": {
+              "en": "Mexico's Fondo de Fondos expands into early-stage venture capital with Nafin and government partners",
+              "es": "El Fondo de Fondos de México se expande al capital de riesgo en etapas tempranas con Nafin y socios gubernamentales",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "dek": {
+              "en": "The public-private investment institution, now 20 years old, launched a national call for early-stage technology projects and plans a three-year investment of $200 million. About 25% will target innovation and venture capital, with 30% directed to infrastructure and energy projects.",
+              "es": "La institución de inversión pública-privada, ahora con 20 años de edad, lanzó una convocatoria nacional para proyectos de tecnología en etapa temprana y planea una inversión de tres años de $200 millones. Aproximadamente 25% apuntará a innovación y capital de riesgo, con 30% dirigido a proyectos de infraestructura y energía.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "background": {
+              "en": "Fondo de Fondos invests primarily through other funds rather than directly in companies. The institution's main shareholders are development banks. It has invested over 1,100 million dollars through 123 funds and 62 co-investments since 2006, supporting more than 1,460 companies and generating 806,600 direct and indirect jobs.",
+              "es": "Fondo de Fondos invierte principalmente a través de otros fondos en lugar de directamente en compañías. Los principales accionistas de la institución son bancos de desarrollo. Ha invertido más de 1,100 millones de dólares a través de 123 fondos y 62 coinversiones desde 2006, apoyando más de 1,460 compañías y generando 806,600 empleos directos e indirectos.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "view": {
+              "en": "Technology startups and infrastructure firms will access capital from a government-aligned source with fewer competitive pressures than traditional venture funds. The fund's alignment with Mexico's Plan México development strategy means investments prioritize regional distribution and Mexican management participation.",
+              "es": "Las startups de tecnología y firmas de infraestructura accederán capital de una fuente alineada con el gobierno con menos presiones competitivas que fondos de riesgo tradicionales. La alineación del fondo con la estrategia de Plan México del país significa que inversiones priorizan distribución regional y participación de gestión mexicana.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "watch": {
+              "en": "Watch the fund's 2027 annual report to measure whether 25% of the three-year $200 million commitment flows to innovation and venture capital as stated, confirming resource allocation matches the announced plan.",
+              "es": "Observe el reporte anual 2027 del fondo para medir si 25% del compromiso de $200 millones de tres años fluye a innovación y capital de riesgo como se indicó, confirmando asignación de recursos coincide con el plan anunciado.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            }
+          }
+        },
+        {
+          "stage": "independent-audit",
+          "storyId": "n-3cc4d5840959",
+          "reasons": [
+            "The background field incorrectly identifies the internal auditor as part of 'INEGI' when the evidence clearly states the auditor was the 'Órgano Interno de Control (OIC)' of the 'Instituto Nacional Electoral (INE)'. INEGI is Mexico's statistics agency; INE is the electoral institute. This is a significant factual error that confuses two different government institutions."
+          ],
+          "fields": {
+            "headline": {
+              "en": "Mexico's electoral agency paid Graphic Workshops up to 246% in overcharges before moving to public bidding in 2020",
+              "es": "La agencia electoral de México pagó a Talleres Gráficos sobrecostos de hasta 246% antes de pasar a licitación pública en 2020",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "dek": {
+              "en": "INEGI's internal watchdog detected excessive costs paid to the state-run printer for ballot and materials before 2019. In 2020, the National Electoral Institute moved to competitive bidding to rein in costs.",
+              "es": "El vigilante interno de INEGI detectó costos excesivos pagados a la imprenta estatal para boletas y materiales antes de 2019. En 2020, el Instituto Nacional Electoral pasó a licitación competitiva para controlar costos.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "background": {
+              "en": "Before 2020, Mexico's electoral authority contracted directly with Talleres Gráficos de México (TGM) for ballot printing and electoral materials without competitive bidding. An internal auditor found the agency paid surcharges reaching 246% above competitive rates and that TGM subcontracted up to 100% of some tasks.",
+              "es": "Antes de 2020, la autoridad electoral de México contrataba directamente con Talleres Gráficos de México (TGM) para impresión de boletas y materiales electorales sin licitación competitiva. Un auditor interno encontró que la agencia pagó sobrecostos llegando 246% por arriba de tasas competitivas y que TGM subcontrató hasta 100% de algunas tareas.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "view": {
+              "en": "Taxpayers and electoral budgets bore unnecessary costs from concentrated procurement practices. The paraestatal's role as intermediary delayed work and inflated expenses without adding value. Public bidding opened competition but faced political pressure to reverse course.",
+              "es": "Contribuyentes y presupuestos electorales soportaron costos innecesarios de prácticas concentradas de compras. El rol de la paraestatal como intermediario retrasó trabajo e inflacionó gastos sin agregar valor. La licitación pública abrió competencia pero enfrentó presión política para revertir cambio.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            },
+            "watch": {
+              "en": "Watch for any attempt to return TGM to direct contracting, which would indicate cost discipline has weakened.",
+              "es": "Observe cualquier intento de retornar TGM a contratación directa, lo cual indicaría disciplina de costos se ha debilitado.",
+              "refs": [
+                "article"
+              ],
+              "reasons": []
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-10T12:29:38.146Z",
         "aliveSources": 69,
