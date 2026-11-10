@@ -8444,51 +8444,16 @@
       "editorialDate": "2026-11-10",
       "slot": "morning",
       "candidateSignature": "2fdda4364d803fcf83fd0cac646e693033205ea9774b24a046aedcf334e27cd5",
-      "state": "failed",
-      "startedAt": "2026-11-10T12:12:02.297Z",
-      "completedAt": "2026-11-10T12:13:13.905Z",
-      "calls": 2,
-      "costUSD": 0.043684,
+      "state": "started",
+      "startedAt": "2026-11-10T12:29:38.146Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.105704,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "inegi-cpi-2026-11-09",
-          "reasons": [],
-          "fields": {
-            "background": {
-              "en": "Mexico's annual inflation reached 3.75% in October 2026, up from 3.57% a year earlier. The monthly gain of 0.65% reflected the end of summer electricity subsidies in 18 cities and higher fruit and vegetable prices, which rose 2.35% in the month.",
-              "es": "La inflación anual de México alcanzó 3.75% en octubre de 2026, frente a 3.57% hace un año. La ganancia mensual de 0.65% reflejó el fin de subsidios de electricidad de verano en 18 ciudades y precios más altos de frutas y verduras, que subieron 2.35% en el mes.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "needs an independent source when one is available"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-2e400f9323d2",
-          "reasons": [],
-          "fields": {
-            "view": {
-              "en": "The fund allocates 30% of its 200 million dollar three-year plan to infrastructure and energy projects, 25% each to venture capital and growth capital for mid-sized companies, and 20% to private credit. Management stated opportunities exceed available resources by 11 times.",
-              "es": "El fondo asigna 30% de su plan de inversión de 200 millones de dólares en tres años a proyectos de infraestructura y energía, 25% cada uno a capital de riesgo y capital de crecimiento para empresas medianas, y 20% a crédito privado. La dirección afirmó que las oportunidades superan en 11 veces los recursos disponibles.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or uncertainty became final in Spanish"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-10T12:12:02.297Z",
+        "collectedAt": "2026-11-10T12:29:38.146Z",
         "aliveSources": 69,
         "totalSources": 72,
         "wireCount": 60,
@@ -8500,10 +8465,54 @@
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-11-10T12:12:02.297Z",
+          "completedAt": "2026-11-10T12:13:13.905Z",
+          "calls": 2,
+          "costUSD": 0.043684,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "inegi-cpi-2026-11-09",
+              "reasons": [],
+              "fields": {
+                "background": {
+                  "en": "Mexico's annual inflation reached 3.75% in October 2026, up from 3.57% a year earlier. The monthly gain of 0.65% reflected the end of summer electricity subsidies in 18 cities and higher fruit and vegetable prices, which rose 2.35% in the month.",
+                  "es": "La inflación anual de México alcanzó 3.75% en octubre de 2026, frente a 3.57% hace un año. La ganancia mensual de 0.65% reflejó el fin de subsidios de electricidad de verano en 18 ciudades y precios más altos de frutas y verduras, que subieron 2.35% en el mes.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "needs an independent source when one is available"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-2e400f9323d2",
+              "reasons": [],
+              "fields": {
+                "view": {
+                  "en": "The fund allocates 30% of its 200 million dollar three-year plan to infrastructure and energy projects, 25% each to venture capital and growth capital for mid-sized companies, and 20% to private credit. Management stated opportunities exceed available resources by 11 times.",
+                  "es": "El fondo asigna 30% de su plan de inversión de 200 millones de dólares en tres años a proyectos de infraestructura y energía, 25% cada uno a capital de riesgo y capital de crecimiento para empresas medianas, y 20% a crédito privado. La dirección afirmó que las oportunidades superan en 11 veces los recursos disponibles.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "proposal or uncertainty became final in Spanish"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "42813685453",
+        "runId": "42816172926",
         "runAttempt": "1",
         "receipts": [
           {
@@ -8537,6 +8546,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "e8bf855e-4f3a-4e45-9606-373d79a4f167",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.06202,
+            "accountedUSD": 0.06202,
+            "state": "reserved"
           }
         ]
       }
