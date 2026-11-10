@@ -4,6 +4,7 @@
 // once, after English, Spanish, evidence, dates and story order all pass. Any failure
 // exits non-zero and leaves the previous public edition byte-for-byte unchanged.
 
+import backgroundEvidence from './lib/background-evidence.cjs';
 import crypto from 'node:crypto';
 import { persistModelAccounting } from './lib/persist-model-accounting.mjs';
 import { restoreHeldEdition } from './lib/held-edition-recovery.mjs';
@@ -567,8 +568,8 @@ function deterministicDraftCheck(row, draft) {
   if (clean(draft.headline) && clean(draft.dek) && !reportContextDistinct({ headline: draft.headline, context: draft.dek })) {
     flags.push('dek: repeats the headline without adding context');
   }
-  const hasIndependentEvidence = row.evidence.some((item) => item.id !== 'article');
-  if (hasIndependentEvidence && !arr(draft.backgroundRefs).some((ref) => ref !== 'article')) {
+  const independentEvidence = backgroundEvidence.independentBackgroundEvidence(row.evidence);
+  if (independentEvidence.length && !arr(draft.backgroundRefs).some(ref => independentEvidence.some(item => item.id === ref))) {
     flags.push('background: needs an independent source when one is available');
   }
   return [...new Set(flags)];
@@ -897,7 +898,7 @@ async function main() {
       return (bytes + rows.length * 5 * 2 * 600 + 8192) / 1e6 + 2400 * 5 / 1e6;
     };
     const draftRequest = (rows) => ({
-      system: `${DRAFT_GATE_CONTRACT}\n\n${DAILY_EDITORIAL_CONTRACT}\n\n${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Before returning, verify every headline is at most 20 English words and 24 Spanish words, every dek is at most two sentences, every analysis field is at most three sentences, no field uses a semicolon, and every number appears in its cited evidence. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: explain a supported connection to earlier developments when prior-article-body evidence is present, otherwise supply only the context needed to understand this change. Never imply earlier MexicoBrief coverage unless a prior source was actually retrieved. If evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Our view: a narrow business implication supported by its citations, naming the affected kind of business where the evidence permits, without first person. Do not convert activity into demand, investment pledges into completed investment, or proposals into rules in force. Multiple articles may repeat one source; never imply independent confirmation from source count. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
+      system: `${DRAFT_GATE_CONTRACT}\n\n${DAILY_EDITORIAL_CONTRACT}\n\n${TRUST}\n\n${SEAM}\n\n${EARNED_LINE}\n\n${BAN}\n\n${REPORT}\n\nWrite one complete English story unit for every input and a faithful Mexican-Spanish translation of all five fields. Use only the evidence strings inside that same input. Cite every field with 1-3 exact evidence ids. Before returning, verify every headline is at most 20 English words and 24 Spanish words, every dek is at most two sentences, every analysis field is at most three sentences, no field uses a semicolon, and every number appears in its cited evidence. Headline: shortest accurate account. Dek: one additional sourced fact or comparison. Background: explain a supported connection to earlier developments when prior-article-body evidence is present, otherwise supply only the context needed to understand this change. Never imply earlier MexicoBrief coverage unless a prior source was actually retrieved. If non-calendar evidence other than article is supplied, background must cite at least one such independent source; otherwise a verified article-body may support it. Calendar-only metadata establishes timing, not independent background context. Our view: a narrow business implication supported by its citations, naming the affected kind of business where the evidence permits, without first person. Do not convert activity into demand, investment pledges into completed investment, or proposals into rules in force. Multiple articles may repeat one source; never imply independent confirmation from source count. Watch: the next observable decision, release, or result and what would confirm or weaken the view. Spanish must preserve every actor, action direction, number, date, caveat, procedural stage, and degree of certainty. Never narrate the prompt, labels, or evidence. Return an item even when evidence is thin; use an empty field so code rejects it.`,
       user: JSON.stringify(rows.map((row) => ({
         i: row.index,
         allowedNumericValues: unsupportedNumericTokens(row.evidence.map((item) => item.text).join(' ')),
