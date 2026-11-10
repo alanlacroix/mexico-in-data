@@ -112,7 +112,12 @@ const ES_FINAL = /\b(?:aprobo|aprobaron|aprobado|aprobada|promulgo|promulgaron|i
 const englishProposalText = (value) => String(value || '')
   .replace(/\b(?:in|since|during|through|until|before|after|by|from|of)\s+May\b/g, '')
   .replace(/\bMay\s+\d{1,4}\b/g, '')
-  .replace(/\bcould not be reached\b/gi, '');
+  .replace(/\bcould not be reached\b/gi, '')
+  // In an allocation, "of its ... plan to infrastructure" names a budget
+  // and its destination. It is not the verb "plan to" plus an infinitive.
+  // Require the allocation frame and observed noun destinations; keep the
+  // surrounding text intact so genuine modals/proposals still trigger the gate.
+  .replace(/(\ballocat(?:e[sd]?|ing)\s+\d+(?:\.\d+)?%\s+of\s+(?:its|the)\s+(?:(?!\bplans?\b)[^.!?;]){0,100}\b)plan(?=\s+to\s+(?:infrastructure and energy projects|innovation and venture capital)\b)/gi, '$1allocation');
 const englishFinalText = (value) => String(value || '').replace(/\bif\s+approved\b/gi, '');
 // Names and numbers can survive a translation even when its meaning is reversed.
 // These pairs catch only clear opposites; neutral paraphrases remain valid.

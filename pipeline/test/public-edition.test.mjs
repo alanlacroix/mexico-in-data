@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import publicEdition from '../lib/public-edition.cjs';
-import { buildWeeklyBrief } from '../build-edition.mjs';
+import { buildWeeklyBrief, deterministicDraftCheck } from '../build-edition.mjs';
 
 const copy = (value) => JSON.parse(JSON.stringify(value));
 const story = (overrides = {}) => {
@@ -131,3 +131,47 @@ for (const [label, mutate, expected] of invalidMonday) {
   assert.deepEqual(fs.readFileSync(file), mondayBytes, `${label} leaves the last good artifact unchanged`);
 }
 console.log('Monday prior-day mirror: ok');
+
+// A complete article plus scheduling metadata has no independent background
+// reporting. Adding substantive evidence must still require its citation, and
+// citing only the calendar must not satisfy that requirement.
+const calendarOnly = story();
+calendarOnly.evidence[0].kind = 'article-body';
+const independent = calendarOnly.evidence[1];
+calendarOnly.evidence = [calendarOnly.evidence[0], {
+  id: 'schedule:release', kind: 'calendar', source: 'Official calendar', url: 'https://example.gov/calendar',
+}];
+calendarOnly.evidenceRefs = Object.fromEntries(Object.keys(calendarOnly.en).map(field => [field, ['article']]));
+const backgroundErrors = value => publicEdition.validateEdition(edition([value])).errors.filter(error => /independent evidence when available/.test(error));
+const draftFlags = value => deterministicDraftCheck({ evidence: value.evidence.map(record => ({
+  ...record, text: record.kind === 'calendar' ? 'Scheduled release.' : [...Object.values(value.en), ...Object.values(value.es)].join(' '),
+})) }, { ...value.en, es: value.es, ...Object.fromEntries(Object.entries(value.evidenceRefs).map(([field, refs]) => [`${field}Refs`, refs])) });
+assert.deepEqual(publicEdition.validateEdition(edition([calendarOnly])).errors, []);
+assert.ok(!draftFlags(calendarOnly).some(flag => /independent source/.test(flag)));
+const substantive = copy(calendarOnly);
+substantive.evidence.push(independent);
+for (const refs of [['article'], ['schedule:release'], ['article', 'schedule:release']]) {
+  substantive.evidenceRefs.background = refs;
+  assert.equal(backgroundErrors(substantive).length, 1);
+  assert.ok(draftFlags(substantive).some(flag => /independent source/.test(flag)));
+}
+substantive.evidenceRefs.background = ['standing:context'];
+assert.deepEqual(backgroundErrors(substantive), []);
+assert.ok(!draftFlags(substantive).some(flag => /independent source/.test(flag)));
+const missingRef = copy(calendarOnly);
+missingRef.evidenceRefs.background = ['invented'];
+assert.ok(publicEdition.validateEdition(edition([missingRef])).errors.some(error => /unknown id/.test(error)));
+assert.ok(draftFlags(missingRef).some(flag => /invalid evidence references/.test(flag)));
+const changedNumber = copy(calendarOnly);
+changedNumber.es.background = changedNumber.es.background.replace('2020', '2021');
+assert.ok(publicEdition.validateEdition(edition([changedNumber])).errors.some(error => /numbers changed/.test(error)));
+assert.ok(draftFlags(changedNumber).some(flag => /numbers changed/.test(flag)));
+
+const calendarSnippet = copy(calendarOnly);
+calendarSnippet.evidence[0].kind = 'article';
+assert.ok(publicEdition.validateEdition(edition([calendarSnippet])).errors.some(error => /needs independent evidence or a verified article body/.test(error)),
+  'calendar-only metadata cannot substitute for a verified complete lead body');
+const malformedEvidence = copy(substantive);
+malformedEvidence.evidence.push(null);
+assert.ok(publicEdition.validateEdition(edition([malformedEvidence])).errors.some(error => /evidence.*is missing/.test(error)),
+  'malformed evidence returns validation errors rather than throwing in the shared predicate');

@@ -1,5 +1,7 @@
 'use strict';
 
+const { independentBackgroundEvidence } = require('./background-evidence.cjs');
+
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -119,7 +121,7 @@ function validateEdition(edition) {
     if (!exactArticle) {
       errors.push(`${label} needs its exact article in evidence`);
     }
-    if (evidence.length < 2 && exactArticle?.kind !== 'article-body') {
+    if (!independentBackgroundEvidence(evidence).length && exactArticle?.kind !== 'article-body') {
       errors.push(`${label} needs independent evidence or a verified article body`);
     }
 
@@ -159,10 +161,11 @@ function validateEdition(edition) {
       }
       if (!Array.isArray(presentation?.margin?.refs) || !presentation.margin.refs.length || presentation.margin.refs.some(ref => !evidenceIds.has(ref))) errors.push(`${label}.margin needs valid evidence refs`);
     }
-    const hasIndependentEvidence = evidence.some((item) => item?.id !== 'article');
+    const independentEvidence = independentBackgroundEvidence(evidence);
+    const hasIndependentEvidence = independentEvidence.length > 0;
     if (hasIndependentEvidence && !Array.isArray(refs.background)) {
       errors.push(`${label}.evidenceRefs.background must cite independent evidence when available`);
-    } else if (hasIndependentEvidence && !refs.background.some((ref) => ref !== 'article')) {
+    } else if (hasIndependentEvidence && !refs.background.some(ref => independentEvidence.some(item => item.id === ref))) {
       errors.push(`${label}.evidenceRefs.background must cite independent evidence when available`);
     }
     for (const field of TEXT_FIELDS) {

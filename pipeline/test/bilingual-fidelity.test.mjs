@@ -267,3 +267,24 @@ for (const [english, spanish] of [
   `${english} must not move the new modifier/state to a coordinated subject`);
 
 console.log('bilingual-fidelity tests: ok');
+
+// November 10 retained repair: nominal investment plan, not "plans to invest".
+const allocationEn = 'The fund allocates 30% of its 200 million dollar three-year plan to infrastructure and energy projects, 25% each to venture capital and growth capital for mid-sized companies, and 20% to private credit. Management stated opportunities exceed available resources by 11 times.';
+const allocationEs = 'El fondo asigna 30% de su plan de inversión de 200 millones de dólares en tres años a proyectos de infraestructura y energía, 25% cada uno a capital de riesgo y capital de crecimiento para empresas medianas, y 20% a crédito privado. La dirección afirmó que las oportunidades superan en 11 veces los recursos disponibles.';
+assert.deepEqual(bilingualFidelityFlags({ english: allocationEn, spanish: allocationEs }), []);
+assert.deepEqual(bilingualFidelityFlags({
+  english: 'The fund will allocate 25% of its investment plan to innovation and venture capital.',
+  spanish: 'El fondo asignará 25% de su plan de inversión a innovación y capital de riesgo.',
+}), []);
+for (const [english, spanish, expected] of [
+  [allocationEn + ' It may expand.', allocationEs + ' Se expande.', /proposal or uncertainty/],
+  [allocationEn + ' It plans to invest.', allocationEs + ' Invierte.', /proposal or uncertainty/],
+  [allocationEn.replace('allocates', 'could allocate'), allocationEs, /proposal or uncertainty/],
+  ['The fund allocates 30% of its plan to invest in infrastructure.', 'El fondo asigna 30% a infraestructura.', /proposal or uncertainty/],
+  ['The fund plans to invest in infrastructure.', 'El fondo invierte en infraestructura.', /proposal or uncertainty/],
+  [allocationEn, allocationEs.replace('30%', '40%'), /numbers changed/],
+  [allocationEn, allocationEs + ' Fue aprobado.', /completed action was introduced/],
+  [allocationEn + ' It did not invest.', allocationEs + ' Invirtió.', /negation was dropped/],
+  [allocationEn + ' Banxico participates.', allocationEs, /banxico was dropped/],
+  [allocationEn + ' Returns rose.', allocationEs + ' Los rendimientos cayeron.', /direction reversed/],
+]) assert.ok(bilingualFidelityFlags({ english, spanish }).some(flag => expected.test(flag)), english);
