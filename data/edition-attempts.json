@@ -2,245 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-25",
-      "slot": "morning",
-      "candidateSignature": "d4c9254066c21c6fae21c8ac6c4951f18dc9243e2299d236292bd9214ef80ec1",
-      "state": "failed",
-      "startedAt": "2026-09-25T13:01:29.091Z",
-      "completedAt": "2026-09-25T13:02:27.617Z",
-      "calls": 2,
-      "costUSD": 0.021747,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: banxico-policy-2026-09-24: background: needs an independent source when one is available | n-eade8d322d5a: headline: unsupported number: 58; headline: Spanish unsupported number: 58 | n-c446ee0d33a1: headline: unsupported number: 0.5; headline: Spanish unsupported number: 0.5; dek: 3 sentences (cap 2); background: 4 sentences (c",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "banxico-policy-2026-09-24",
-          "reasons": [],
-          "fields": {
-            "background": {
-              "en": "Banxico's mandate is to control inflation in Mexico. The headline inflation rate rebounded to 3.42% in early September, pressured by tomato, onion, and alcoholic beverage prices. Governor Victoria Rodríguez Ceja stated in June that services inflation was resisting sharper deceleration than expected.",
-              "es": "El mandato de Banxico es controlar la inflación en México. La inflación general repuntó a 3.42% en la primera quincena de septiembre, presionada por precios de jitomate, cebolla y bebidas alcohólicas. La gobernadora Victoria Rodríguez Ceja señaló en junio que la inflación de servicios se resistía a una desaceleración más marcada de la esperada.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "needs an independent source when one is available"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-eade8d322d5a",
-          "reasons": [],
-          "fields": {
-            "headline": {
-              "en": "Pemex produces only 58% of Mexico's diesel demand, would need 72% output increase for self-sufficiency",
-              "es": "Pemex produce solo 58% de la demanda de diésel de México, requeriría aumento de 72% en producción para autosuficiencia",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported number: 58",
-                "Spanish unsupported number: 58"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-c446ee0d33a1",
-          "reasons": [],
-          "fields": {
-            "headline": {
-              "en": "Higher diesel prices could widen Mexico's fiscal deficit by up to 0.5 percentage points, Moody's warns",
-              "es": "Diésel más caro podría ampliar el déficit fiscal de México en hasta 0.5 puntos porcentuales, advierte Moody's",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported number: 0.5",
-                "Spanish unsupported number: 0.5"
-              ]
-            },
-            "dek": {
-              "en": "Mexico covers more than one third of its diesel consumption through purchases from the United States. If U.S. exports are restricted and prices rise, Pemex would be forced to buy at higher prices from other markets, increasing public spending.",
-              "es": "México cubre más de un tercio de su consumo de diésel mediante compras a Estados Unidos. Si las exportaciones estadounidenses se restringen y los precios suben, Pemex se vería obligado a comprar a precios más altos en otros mercados, aumentando el gasto público.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "3 sentences (cap 2)"
-              ]
-            },
-            "background": {
-              "en": "U.S. President Donald Trump has signaled support for a potential 90-day ban on diesel exports, intended to lower record-high fuel prices for American farmers ahead of midterm elections. Mexico's fiscal position is already under pressure from elevated crude and fuel prices. Moody's currently projects Mexico's 2026 deficit at 4% to 4.5% of GDP.",
-              "es": "El presidente estadounidense Donald Trump ha señalado apoyo a una posible prohibición de 90 días a las exportaciones de diésel, con el objetivo de reducir los precios de combustible en máximos históricos para los agricultores estadounidenses antes de las elecciones intermedias. La posición fiscal de México ya enfrenta presión por precios elevados del petróleo crudo y los combustibles.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "4 sentences (cap 3)",
-                "proposal or draft described as a completed action",
-                "numbers changed in Spanish"
-              ]
-            }
-          }
-        }
-      ],
-      "collection": {
-        "collectedAt": "2026-09-25T13:01:29.091Z",
-        "aliveSources": 68,
-        "totalSources": 72,
-        "wireCount": 60,
-        "minimumAlive": 36,
-        "ok": true,
-        "failedSourceIds": [
-          "contxto",
-          "insightcrime-mx",
-          "retailers-mx",
-          "nexos"
-        ]
-      }
-    },
-    {
-      "editorialDate": "2026-09-25",
-      "slot": "noon",
-      "candidateSignature": "d7b5f9217263e62285f2fa479c8dc4b8faff4512e82578f3f778e1227277e8e3",
-      "state": "failed",
-      "startedAt": "2026-09-25T16:01:24.108Z",
-      "completedAt": "2026-09-25T16:02:15.248Z",
-      "calls": 2,
-      "costUSD": 0.022985,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: banxico-policy-2026-09-24: headline: 2 sentences (cap 1); background: needs an independent source when one is available | n-0b9457144458: headline: unsupported number: 4; headline: numbers changed in Spanish; dek: unsupported number: 25; dek: Spanish unsupported number: 25; watch: semicolon; watch: watch item has no observable n",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "banxico-policy-2026-09-24",
-          "reasons": [],
-          "fields": {
-            "headline": {
-              "en": "Banxico holds rate at 6.5%, signals independence from U.S. Fed",
-              "es": "Banxico mantiene tasa en 6.5%, señala independencia de la Reserva Federal",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "2 sentences (cap 1)"
-              ]
-            },
-            "background": {
-              "en": "Banxico's mandate is to control inflation in Mexico. Annual inflation ticked up to 3.42% in early September, pressured by tomato, onion, and alcohol prices. Governor Victoria Rodríguez Ceja said in the April-June quarterly report that services inflation continues to decelerate but more slowly than previously expected.",
-              "es": "El mandato de Banxico es controlar la inflación en México. La inflación anual subió a 3.42% en septiembre temprano, presionada por precios de jitomate, cebolla y bebidas alcohólicas. La gobernadora Victoria Rodríguez Ceja dijo en el reporte trimestral abril-junio que la inflación de servicios continúa desacelerándose pero más lentamente de lo esperado anteriormente.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "needs an independent source when one is available"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-0b9457144458",
-          "reasons": [],
-          "fields": {
-            "headline": {
-              "en": "Mexico's Treasury raises bond auctions for longer-dated maturities in Q4 2026",
-              "es": "México eleva subastas de bonos con plazos más largos en cuarto trimestre de 2026",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported number: 4",
-                "numbers changed in Spanish"
-              ]
-            },
-            "dek": {
-              "en": "The Secretaría de Hacienda announced on September 25 it will increase auction amounts for 5-year and 20-year bonds and 20-year and 30-year inflation-indexed bonds (Udibonos) in the fourth quarter. It will also boost auction frequency for 20-year bonds and 10-year and 20-year Udibonos.",
-              "es": "La Secretaría de Hacienda anunció el 25 de septiembre que elevará los montos a subastar de Bonos a 5 y 20 años y Udibonos a 20 y 30 años en el cuarto trimestre. También aumentará la frecuencia de subastas de Bonos a 20 años y Udibonos a 10 y 20 años.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported number: 25",
-                "Spanish unsupported number: 25"
-              ]
-            },
-            "watch": {
-              "en": "Success would be indicated by stable or lower yields relative to prior auctions; weakness would show in higher yields or undersubscription at the new volumes.",
-              "es": "El éxito se indicaría por rendimientos estables o menores respecto a subastas previas; debilidad se mostraría en rendimientos más altos o suscripción insuficiente en los nuevos volúmenes.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "semicolon",
-                "watch item has no observable next test",
-                "Spanish semicolon"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-eade8d322d5a",
-          "reasons": [],
-          "fields": {
-            "headline": {
-              "en": "Pemex diesel output covers only 58% of Mexico demand; 72% increase needed to cover all",
-              "es": "Producción de diésel de Pemex cubre solo 58% de la demanda de México; necesita aumento de 72%",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "semicolon",
-                "unsupported number: 58",
-                "Spanish semicolon",
-                "Spanish unsupported number: 58"
-              ]
-            },
-            "background": {
-              "en": "Pemex's diesel production has remained flat at similar levels since May 2025. The company's highest recent output occurred in November and December 2025, when production reached around 310,000 barrels per day.",
-              "es": "La producción de diésel de Pemex se ha mantenido plana en niveles similares desde mayo de 2025. La producción más alta reciente de la empresa ocurrió en noviembre y diciembre de 2025, cuando alcanzó alrededor de 310,000 barriles diarios.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or uncertainty became final in Spanish"
-              ]
-            },
-            "view": {
-              "en": "Pemex cannot meet Mexico's current diesel demand through domestic production alone and relies on net imports of roughly 50,000 barrels per day to make up the shortfall.",
-              "es": "Pemex no puede satisfacer la demanda actual de diésel de México solo con producción doméstica y depende de importaciones netas de aproximadamente 50,000 barriles diarios para cubrir el déficit.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "negation was introduced in Spanish"
-              ]
-            }
-          }
-        }
-      ],
-      "collection": {
-        "collectedAt": "2026-09-25T16:01:24.108Z",
-        "aliveSources": 68,
-        "totalSources": 72,
-        "wireCount": 60,
-        "minimumAlive": 36,
-        "ok": true,
-        "failedSourceIds": [
-          "insightcrime-mx",
-          "retailers-mx",
-          "m4ec-mx",
-          "nexos"
-        ]
-      }
-    },
-    {
       "editorialDate": "2026-09-26",
       "slot": "noon",
       "candidateSignature": "9edc81b91fd78161db1820b02a11d58bae5842a1610b9f30dafe31a18f7572bf",
@@ -8675,6 +8436,48 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-11-10",
+      "slot": "morning",
+      "candidateSignature": "2fdda4364d803fcf83fd0cac646e693033205ea9774b24a046aedcf334e27cd5",
+      "state": "started",
+      "startedAt": "2026-11-10T12:12:02.297Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.061846,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-10T12:12:02.297Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ascoa",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "42813685453",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "08036d5d-c62c-4656-af94-5b1d14ef8cee",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.061846,
+            "accountedUSD": 0.061846,
+            "state": "reserved"
           }
         ]
       }
