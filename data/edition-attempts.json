@@ -8649,14 +8649,70 @@
       "editorialDate": "2026-11-11",
       "slot": "morning",
       "candidateSignature": "ee6cc2a5497ccd2d556c1a0a1764dfeca22f0eabd7d80ce55e54df8185c7066e",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-11T12:08:39.211Z",
-      "completedAt": "",
+      "completedAt": "2026-11-11T12:09:44.504Z",
       "calls": 2,
       "costUSD": 0.036657,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-54373211a46a",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "Mexico's Defense and Navy secretaries initiated helicopter purchases after floods in five states last year required intensive emergency response. President Claudia Sheinbaum said she requested both secretaries acquire additional aircraft after witnessing that emergency's scale.",
+              "es": "Las secretarías de Defensa y Marina iniciaron compras de helicópteros tras inundaciones en cinco estados hace un año que requirieron respuesta intensiva de emergencia. La presidenta Claudia Sheinbaum dijo que solicitó a ambos secretarios adquirir aeronaves adicionales tras presenciar la escala de esa emergencia.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or draft described as a completed action"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-ec252a4aeb3a",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexico's prosecutor's office establishes non-working days for 2027 transparency requests",
+              "es": "Oficina de fiscalía mexicana establece días inhábiles para solicitudes de transparencia en 2027",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was dropped in Spanish"
+              ]
+            },
+            "dek": {
+              "en": "The internal control office set five official holidays and additional discretionary non-working days when it will not process public information or personal data protection requests during 2027. The rules take effect November 12, 2026.",
+              "es": "La oficina de control interno estableció cinco días festivos oficiales y días inhábiles adicionales discrecionales cuando no procesará solicitudes de información pública o protección de datos personales durante 2027. Las reglas entran en vigor el 12 de noviembre de 2026.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 12",
+                "Spanish unsupported number: 12"
+              ]
+            },
+            "watch": {
+              "en": "If the prosecutor's office exercises discretion to add further non-working days beyond the five mandated holidays, it would test whether the agency uses this power sparingly or expands delays beyond statutory minimums.",
+              "es": "Si la oficina de fiscalía ejerce discreción para añadir más días inhábiles más allá de los cinco días festivos mandatados, probaría si la agencia usa este poder con moderación o expande retrasos más allá de mínimos estatutarios.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was dropped in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-11T12:08:39.211Z",
         "aliveSources": 68,
