@@ -28,8 +28,8 @@ assert.match(workflow, /steps\.edition\.outcome == 'failure'/, 'a failed publish
 assert.ok(workflow.indexOf('npm run release') < workflow.indexOf('git add data/edition.json'),
   'the exact site release gate must pass before the edition is committed');
 assert.match(workflow, /Retry deployment once without rerunning editorial generation/);
-assert.equal((workflow.match(/node pipeline\/verify-production\.mjs/g) || []).length, 2,
-  'production gets one verification and one bounded deploy-only recovery');
+assert.equal((workflow.match(/node pipeline\/verify-production\.mjs/g) || []).length, 3,
+  'publication gets verification plus bounded recovery; withdrawal has separate read-only verification');
 
 assert.match(builder, /const MAX_CANDIDATES = 24/);
 assert.match(builder, /const MAX_RANKED = 8/);

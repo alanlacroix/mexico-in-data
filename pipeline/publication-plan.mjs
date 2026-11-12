@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import newsDay from './lib/news-day.cjs';
 import attemptsContract from './lib/edition-attempts.cjs';
+import { readWithdrawals, withdrawalHold } from './lib/withdrawn-editions.mjs';
 import { readPublicationRequest, validatePublicationRequest } from './lib/publication-request.mjs';
 
 // Shared workflow concurrency guarantees the previous production runner has exited.
@@ -32,7 +33,7 @@ export function morningCollectionWindow(now = new Date()) {
   return minutes >= 6 * 60 + 5 && minutes <= 6 * 60 + 45;
 }
 
-export function publicationPlan({ event, workflow = '', date, attempts, slot = 'morning', retry = false, edition, publicationRequest, now = new Date() }) {
+export function publicationPlan({ event, workflow = '', date, attempts, slot = 'morning', retry = false, edition, publicationRequest, withdrawals = { schemaVersion: 1, withdrawals: [] }, now = new Date() }) {
   const collectionTrigger = event === 'workflow_run' && workflow === 'collect-news';
   if (collectionTrigger && (!morningCollectionWindow(now) || newsDay.editorialDay(now) !== date)) {
     return { run: false, slot: 'morning', retry: false };
@@ -48,6 +49,9 @@ export function publicationPlan({ event, workflow = '', date, attempts, slot = '
   const publishedRows = rows.filter(row => row.state === 'published');
   const published = publishedRows.find(row => row.artifactHash === edition?.artifactHash) || publishedRows[0];
   if (published) {
+    if (withdrawals.withdrawals?.some(row => row.editorialDate === date) && publishedRows.length !== 1) throw new Error('Ambiguous published withdrawal');
+    const hold = withdrawalHold({ registry: withdrawals, date, published, edition });
+    if (hold) return hold;
     if (edition?.editorialDate !== date || edition?.artifactHash !== published.artifactHash) {
       throw new Error(`Published ledger does not match the committed public artifact: ${date}`);
     }
@@ -90,11 +94,16 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     fs.writeFileSync(data, `${JSON.stringify(attempts, null, 2)}\n`);
   }
   const plan = publicationPlan({
-    edition,
+    edition, withdrawals: ignoredRequest ? undefined : readWithdrawals(),
     event, workflow: process.env.TRIGGER_WORKFLOW, date, attempts, publicationRequest, now,
     slot: process.env.REQUESTED_SLOT || 'morning', retry: process.env.REQUESTED_RECOVERY === 'true',
   });
-  const output = `run=${plan.run}\nslot=${plan.slot}\nretry=${plan.retry ? '1' : '0'}\nverify=${Boolean(plan.verify)}\neditorial_date=${edition.editorialDate}\nartifact_hash=${edition.artifactHash}\n`;
+  const output = `run=${plan.run}\nslot=${plan.slot}\nretry=${plan.retry ? '1' : '0'}\nverify=${Boolean(plan.verify)}\nheld=${Boolean(plan.held)}\neditorial_date=${edition.editorialDate}\nartifact_hash=${edition.artifactHash}\n`;
+  if (plan.held) {
+    const message = `Editorial hold for ${date}: ${plan.reason}. Last-good edition ${edition.editorialDate} retained; no new publication or model spend.`;
+    console.log(message);
+    if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Editorial hold (not publication)\n${message}\n`);
+  }
   process.stdout.write(output);
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, output);
 }

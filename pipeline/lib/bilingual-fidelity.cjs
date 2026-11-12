@@ -158,6 +158,25 @@ const OPPOSITE_ACTIONS = [
     esNegative: /\b(?:debilitar|debilita|debilito|debilitado|depreciar|deprecia|deprecio|mas debil)\b/i,
   },
 ];
+// Association is weaker than causation even when names and numbers match.
+// This narrow guard does not infer causality from the source headline: the two
+// displayed languages must agree. Mixed causal/associational clauses remain the
+// independent source audit's responsibility rather than guessing their subjects.
+const EN_ASSOCIATION = /\b(?:linked to|associated with|tied to|correlated with|association (?:with|between))\b/;
+const EN_CAUSATION = /\b(?:causes?|caused|causing|causation|causal|leads? to|led to|results? in|resulted in)\b/;
+const ES_ASSOCIATION = /\b(?:vinculad[oa]s? (?:a|con)|asociad[oa]s? (?:a|con)|relacionad[oa]s? con|se (?:vincula|relaciona|asocia) con|correlacionad[oa]s? con|asociacion (?:con|entre))\b/;
+const ES_CAUSATION = /\b(?:causa[nr]?|causo|causaron|causad[oa]s?|provoca[nr]?|provoco|provocaron|ocasiona[nr]?|ocasiono|ocasionaron)\b/;
+function causalStrengthFlags(en, es) {
+  // Sentence alignment keeps an unrelated causal claim from masking a changed
+  // headline/claim in another sentence. Do not force alignment after reordering.
+  const split = text => text.split(/[.!?;]+(?=\s|$)/).filter(Boolean);
+  const enParts = split(en), esParts = split(es);
+  const pairs = enParts.length === esParts.length ? enParts.map((part, i) => [part, esParts[i]]) : [[en, es]];
+  return pairs.some(([a, b]) => EN_ASSOCIATION.test(a) && !EN_CAUSATION.test(a)
+    && ES_CAUSATION.test(b) && !ES_ASSOCIATION.test(b))
+    ? ['association became causation in Spanish'] : [];
+}
+
 const MONTHS = [
   ['january', 'enero'], ['february', 'febrero'], ['march', 'marzo'], ['april', 'abril'],
   ['may', 'mayo'], ['june', 'junio'], ['july', 'julio'], ['august', 'agosto'],
@@ -181,6 +200,7 @@ function bilingualFidelityFlags({ english = '', spanish = '', evidence = [] } = 
     if (inSpanish && !inSupport) flags.push(`${entity.id} was introduced in Spanish`);
   }
   flags.push(...negationFlags(english, spanish));
+  flags.push(...causalStrengthFlags(en, es));
   if (EN_PROPOSAL.test(englishProposalText(english)) && !ES_PROPOSAL.test(es)) flags.push('proposal or uncertainty became final in Spanish');
   if (ES_FINAL.test(es) && !EN_FINAL.test(englishFinalText(english))) flags.push('completed action was introduced in Spanish');
   if (EN_FINAL.test(englishFinalText(english)) && !ES_FINAL.test(es)) flags.push('completed action became non-final in Spanish');
