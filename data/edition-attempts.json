@@ -8826,6 +8826,51 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-11-12",
+      "slot": "morning",
+      "candidateSignature": "4f9ac8e7680ab7c5acab8495a0f15f38270ec05d26064a9142459fe0bc72078f",
+      "state": "started",
+      "startedAt": "2026-11-12T12:10:40.673Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.140646,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-12T12:10:40.673Z",
+        "aliveSources": 66,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "ascoa",
+          "datoz",
+          "insightcrime-mx",
+          "mexico-evalua",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "43215497516",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "c2496cae-e2a8-49b1-8bff-4e645ee5d76b",
+            "period": "2026-11",
+            "model": "claude-sonnet-5",
+            "reservedUSD": 0.140646,
+            "accountedUSD": 0.140646,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
