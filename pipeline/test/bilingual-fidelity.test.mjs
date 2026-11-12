@@ -288,3 +288,26 @@ for (const [english, spanish, expected] of [
   [allocationEn + ' Banxico participates.', allocationEs, /banxico was dropped/],
   [allocationEn + ' Returns rose.', allocationEs + ' Los rendimientos cayeron.', /direction reversed/],
 ]) assert.ok(bilingualFidelityFlags({ english, spanish }).some(flag => expected.test(flag)), english);
+
+// November 12: association in English must not become a causal Spanish claim.
+const causalFlag = 'association became causation in Spanish';
+for (const [english, spanish] of [
+  ['Sugary drinks linked to 40,000 deaths yearly in Mexico', 'Bebidas azucaradas causan 40,000 muertes al año en México'],
+]) assert.ok(bilingualFidelityFlags({english, spanish}).includes(causalFlag));
+for (const [english, spanish] of [
+  ['Exposure is associated with disease.', 'La exposición provoca enfermedades.'],
+  ['Consumption is tied to deaths.', 'El consumo ocasiona muertes.'],
+  ['Exposure is linked to disease. Pollution causes harm.', 'La exposición causa enfermedades. La contaminación causa daños.'],
+]) assert.ok(bilingualFidelityFlags({english, spanish}).includes(causalFlag), english);
+for (const [english, spanish] of [
+  ['Sugary drinks linked to 40,000 deaths yearly in Mexico', 'Bebidas azucaradas vinculadas con 40,000 muertes anuales en México'],
+  ['Exposure is associated with disease.', 'La exposición está relacionada con enfermedades.'],
+  ['Exposure causes disease.', 'La exposición causa enfermedades.'],
+  ['Exposure is linked to disease, but it is not a proven cause.', 'La exposición está vinculada a enfermedades, pero no es una causa probada.'],
+  ['Exposure is linked to disease. Pollution causes harm.', 'La exposición está vinculada a enfermedades. La contaminación causa daños.'],
+]) assert.ok(!bilingualFidelityFlags({english, spanish}).includes(causalFlag), english);
+assert.ok(bilingualFidelityFlags({
+  english: 'Sugary drinks linked to 40,000 deaths yearly in Mexico',
+  spanish: 'Bebidas azucaradas causan 40,000 muertes al año en México',
+  evidence: ['Bebidas azucaradas causan 40,000 muertes, según el titular.'],
+}).includes(causalFlag), 'a causal source headline cannot authorize a stronger Spanish translation');

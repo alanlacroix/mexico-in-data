@@ -177,3 +177,14 @@ assert.equal(publicationCoverage(coverageRows.slice(0,3),coverageRows,'2026-10-0
 assert.equal(publicationCoverage(coverageRows.slice(0,2),coverageRows,'2026-10-01'),false,'two drafts cannot spend on a guaranteed unusable final audit');
 assert.match(builder,/minStories: MIN_VISIBLE, maxStories: MAX_VISIBLE/);
 assert.match(builder,/refusing an unusable paid audit/);
+
+// The Nov 12 audit missed semantic changes while the digits still matched.
+for (const phrase of [
+  'preserve its numerator, denominator, population, comparison baseline, dose or exposure, and time unit',
+  'A share of national supplier chains connected to an industry is not the domestic share',
+  '500 grams per day',
+  'overweight or obesity',
+  'barrels per day, not just barrels',
+  'Distinguish association from causation and research estimates from observed counts',
+  'Reject omitted material qualifiers',
+]) assert.ok(builder.includes(phrase), `independent evidence audit must retain: ${phrase}`);

@@ -187,9 +187,16 @@ jobs:
           path: data/candidates/
           retention-days: 14
 
+      - name: Verify retained edition during editorial hold
+        if: steps.plan.outputs.held == 'true'
+        env:
+          EDITORIAL_DATE: ${{ steps.plan.outputs.editorial_date }}
+          ARTIFACT_HASH: ${{ steps.plan.outputs.artifact_hash }}
+        run: node pipeline/verify-production.mjs
+
       - name: Verify the exact artifact reached production
         id: production
-        if: steps.persist.outputs.published == 'true' || steps.plan.outputs.verify == 'true'
+        if: steps.plan.outputs.held != 'true' && (steps.persist.outputs.published == 'true' || steps.plan.outputs.verify == 'true')
         continue-on-error: true
         env:
           EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date || steps.plan.outputs.editorial_date }}
@@ -197,7 +204,7 @@ jobs:
         run: node pipeline/verify-production.mjs
 
       - name: Retry deployment once without rerunning editorial generation
-        if: (steps.persist.outputs.published == 'true' || steps.plan.outputs.verify == 'true') && steps.production.outcome == 'failure'
+        if: steps.plan.outputs.held != 'true' && (steps.persist.outputs.published == 'true' || steps.plan.outputs.verify == 'true') && steps.production.outcome == 'failure'
         env:
           EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date || steps.plan.outputs.editorial_date }}
           ARTIFACT_HASH: ${{ steps.edition.outputs.artifact_hash || steps.plan.outputs.artifact_hash }}

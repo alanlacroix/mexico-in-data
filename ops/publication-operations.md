@@ -151,3 +151,16 @@ not contain the Board-review milestone. Those require separately retrieved
 source records. General cross-outlet event identity also remains unresolved:
 company/topic overlap alone cannot distinguish new metrics, periods or stages.
 The date-specific selection prototype was not deployed.
+
+## Explicit withdrawal holds
+
+When independent review withdraws a published edition, preserve its original model
+accounting. Record the rejected hash, reviewed rollback date/hash, withdrawal time,
+reason and rollback PR in `ops/withdrawn-editions.json`. The planner accepts only
+that exact pairing and validates the last-good artifact. It reports **held, not
+published**, spends nothing and verifies the retained artifact on both live language
+pages. This read-only hold check cannot claim a deployment retry or edit accounting.
+Unknown mismatches and failed live verification remain failures. A past-day hold
+does not prevent the next day's bounded generation. A corrected edition requires
+its normal review and authorized hash reconciliation; a hold is not a correction
+approval or evidence of fresh publication.
