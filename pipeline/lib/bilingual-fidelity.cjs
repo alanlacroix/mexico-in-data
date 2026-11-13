@@ -27,6 +27,9 @@ const ES_NEGATION = /\b(?:no|nunca|sin|ningun[oa]?|tampoco|sin cambios)\b/i;
 // contrast clauses. Adding them to EN_NEGATION alone would let "untested" hide an
 // unrelated Spanish "no", and matching anywhere would permit subject swaps.
 const NEGATIVE_STATES = [
+  // Lexical "free" expresses the same absence as "sin". Keep this to the
+  // observed clause-final tariff-treatment pair, not arbitrary free/sin text.
+  { strictScope: true, en: /\btariff[-\u2010\u2011]free treatment\b/g, es: /\bsin aranceles\b/g, affirmativeEn: /\b(?:tariff[- ]bearing|subject to tariffs)\b/, affirmativeEs: /\bcon aranceles\b/ },
   // Keep the observed election object, not a blanket regardless/sin exception.
   { strictScope: true, en: /\bregardless of the election outcome\b/g, es: /\bsin importar el resultado electoral\b/g, affirmativeEn: /\bdepend(?:s|ed|ing)? on\b/, affirmativeEs: /\b(?:depende[ns]?|dependiendo) de\b/ },
   { strictScope: true, en: /\bregardless of the midterm outcome\b/g, es: /\bsin importar el resultado de las elecciones intermedias\b/g, affirmativeEn: /\bdepend(?:s|ed|ing)? on\b/, affirmativeEs: /\b(?:depende[ns]?|dependiendo) de\b/ },

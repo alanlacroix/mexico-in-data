@@ -311,3 +311,17 @@ assert.ok(bilingualFidelityFlags({
   spanish: 'Bebidas azucaradas causan 40,000 muertes al año en México',
   evidence: ['Bebidas azucaradas causan 40,000 muertes, según el titular.'],
 }).includes(causalFlag), 'a causal source headline cannot authorize a stronger Spanish translation');
+
+// November 13: tariff-free treatment is absence of tariffs, not new negation.
+const tariffEn = 'US auto suppliers urge keeping USMCA tariff-free treatment';
+const tariffEs = 'Proveedores de EU piden mantener el T-MEC sin aranceles';
+assert.deepEqual(bilingualFidelityFlags({english: tariffEn, spanish: tariffEs}), []);
+for (const [english, spanish] of [
+  [tariffEn, 'Proveedores de EU no piden mantener el T-MEC sin aranceles'],
+  [tariffEn + '. Suppliers support the rule.', tariffEs + '. Los proveedores no apoyan la regla.'],
+  [tariffEn + ' and suppliers support the rule', tariffEs + ' y los proveedores apoyan la regla'],
+  ['US auto suppliers urge keeping USMCA treatment', tariffEs],
+  [tariffEn, tariffEs + ' sin condiciones'],
+  [tariffEn + ' because the rule helps suppliers', 'La regla ayuda a proveedores porque piden mantener el T-MEC sin aranceles'],
+]) assert.ok(bilingualFidelityFlags({english, spanish}).some(flag => /negation/.test(flag)), english);
+assert.ok(bilingualFidelityFlags({english: tariffEn, spanish: tariffEs.replace('T-MEC', 'Banxico')}).some(flag => /usmca|banxico/.test(flag)));
