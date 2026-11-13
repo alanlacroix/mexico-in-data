@@ -40,6 +40,7 @@ import { articleUrlAllowed, sourceHosts } from './lib/url-safety.js';
 import bilingualFidelity from './lib/bilingual-fidelity.cjs';
 import editionHistory from './lib/edition-history.cjs';
 import reviewGate from './lib/review-gate.cjs';
+import { resolveRankedEvidence } from './lib/ranked-evidence.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -868,7 +869,7 @@ async function main() {
       .sort((a, b) => Number(Boolean(b.item._scheduled)) - Number(Boolean(a.item._scheduled))
         || (!weekendDay(editorialDate) && (Number(b.item._editorialDate === editorialDate) - Number(a.item._editorialDate === editorialDate)))
         || b.importance - a.importance || a.index - b.index)
-      .slice(0, MAX_RANKED);
+      .slice(0, MAX_CANDIDATES);
     if (!rankedPool.length) throw new Error('ranking selected no developments');
     if (!weekendDay(editorialDate) && !rankedPool.some((row) => row.item._editorialDate === editorialDate)) {
       throw new Error('ranking selected no exact-day development');
@@ -877,9 +878,11 @@ async function main() {
     const standing = arr(read(path.join(DATA, 'standing.json'), { facts: [] }).facts);
     const calendar = arr(schedule.events).filter((event) => event?.date >= previousDay(editorialDate));
     const censusCalendar = createCensusCalendarLoader({ now });
-    const evidenceRows = await Promise.all(rankedPool.map(async (row) => ({
-      ...row, evidence: await evidenceFor(row.item, standing, calendar, memory, censusCalendar),
-    })));
+    const evidenceRows = await resolveRankedEvidence(rankedPool, {
+      fetchEvidence: row => evidenceFor(row.item, standing, calendar, memory, censusCalendar),
+      ready: evidenceReady, editorialDate, weekend: weekendDay(editorialDate),
+      batchSize: MAX_RANKED, maxCandidates: MAX_CANDIDATES, minimum: MIN_VISIBLE, maximum: MAX_VISIBLE,
+    });
     const withoutContext = evidenceRows.filter((row) => !evidenceReady(row));
     for (const row of withoutContext) {
       console.warn(`  skip ranked story: missing-complete-lead | ${storyId(row.item)} | ${plainSourceName(row.item.sourceName || row.item.source)} | ${clean(row.item.title).slice(0, 120)}`);
