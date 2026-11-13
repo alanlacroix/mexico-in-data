@@ -8657,30 +8657,53 @@
       "editorialDate": "2026-11-13",
       "slot": "morning",
       "candidateSignature": "044ef015ab216f8313cfb6a7c4dd38ac0574a510e9dcaac56613cc723a8e85d6",
-      "state": "failed",
-      "startedAt": "2026-11-13T12:10:20.908Z",
-      "completedAt": "2026-11-13T12:10:38.479Z",
-      "calls": 0,
-      "costUSD": 0,
+      "state": "started",
+      "startedAt": "2026-11-13T12:11:09.117Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.04979,
       "artifactHash": "",
-      "reason": "only 2 strong sourced developments available; need at least 3 without padding",
+      "reason": "",
       "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-13T12:10:20.908Z",
-        "aliveSources": 67,
+        "collectedAt": "2026-11-13T12:11:09.117Z",
+        "aliveSources": 68,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
-          "mexico-business-news",
           "ascoa",
           "datoz",
           "insightcrime-mx",
           "nexos"
         ]
       },
-      "recoveries": []
+      "recoveries": [
+        {
+          "startedAt": "2026-11-13T12:10:20.908Z",
+          "completedAt": "2026-11-13T12:10:38.479Z",
+          "calls": 0,
+          "costUSD": 0,
+          "reason": "only 2 strong sourced developments available; need at least 3 without padding",
+          "diagnostics": []
+        }
+      ],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "43422997822",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "9a79d7c4-badc-4507-b36a-007e98e4403c",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.04979,
+            "accountedUSD": 0.04979,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
