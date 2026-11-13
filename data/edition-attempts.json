@@ -8657,14 +8657,32 @@
       "editorialDate": "2026-11-13",
       "slot": "morning",
       "candidateSignature": "044ef015ab216f8313cfb6a7c4dd38ac0574a510e9dcaac56613cc723a8e85d6",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-13T12:11:09.117Z",
-      "completedAt": "",
+      "completedAt": "2026-11-13T12:12:19.993Z",
       "calls": 2,
       "costUSD": 0.04871,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-e6189eedccbd",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "US auto suppliers urge keeping USMCA tariff-free treatment",
+              "es": "Proveedores de EU piden mantener el T-MEC sin aranceles",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "negation was introduced in Spanish"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-13T12:11:09.117Z",
         "aliveSources": 68,
