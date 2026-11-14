@@ -122,7 +122,7 @@ try {
         const patch=body.output_config.format.schema.required.includes('repairs');
         calls.push({audit,patch,maxTokens:body.max_tokens,indices:inputs.map(row=>row.i),fields:patch?inputs.map(row=>Object.keys(row.repairFields)):[]});
         const key=audit?'reviews':patch?'repairs':'stories';
-        let values=inputs.map((row,index)=>['s'+row.i,audit?{ok:!['audit-reject','diagnostic-capture-fail-audit-reject'].includes(process.env.FLOW_CASE),problems:[]}:drafts[row.story?.url]||drafts[Object.keys(drafts).find(url=>inputs.length===1)]]);
+        let values=inputs.map((row,index)=>['s'+row.i,audit?{ok:!['audit-reject','diagnostic-capture-fail-audit-reject'].includes(process.env.FLOW_CASE),problems:process.env.FLOW_CASE==='contradictory-audit'?['Unresolved source disagreement']:[]}:drafts[row.story?.url]||drafts[Object.keys(drafts).find(url=>inputs.length===1)]]);
         if(!audit && calls.length===1 && ['partial','partial-unrepairable'].includes(process.env.FLOW_CASE))values=values.slice(0,1);
         if(!audit && calls.length===1 && ['field-patch','extra-patch-field'].includes(process.env.FLOW_CASE)){
           values[0][1]=structuredClone(values[0][1]);
@@ -174,10 +174,16 @@ try {
     await main();
   `;
   fs.writeFileSync(path.join(tmp,'run.mjs'),runner);
-  for(const scenario of ['complete','full-evidence','snippet-with-context','oversized-prior-evidence','oversized-evidence','oversized-scheduled-evidence','partial','field-patch','extra-patch-field','partial-unrepairable','audit-reject','artifact-reject','budget-block','diagnostic-capture-fail','diagnostic-capture-fail-audit-reject','diagnostic-write-fail','diagnostic-write-fail-invalid']){
+  for(const scenario of ['review-required','review-held','complete','full-evidence','snippet-with-context','oversized-prior-evidence','oversized-evidence','oversized-scheduled-evidence','partial','field-patch','extra-patch-field','partial-unrepairable','audit-reject','contradictory-audit','artifact-reject','budget-block','diagnostic-capture-fail','diagnostic-capture-fail-audit-reject','diagnostic-write-fail','diagnostic-write-fail-invalid']){
+    fs.rmSync(path.join(tmp,'data/candidates'),{recursive:true,force:true});
     fs.mkdirSync(path.join(tmp,'data/news'),{recursive:true});
     fs.writeFileSync(path.join(tmp,'data/edition.json'),JSON.stringify(priorFixture));
     fs.writeFileSync(path.join(tmp,'data/edition-attempts.json'),'{"schemaVersion":1,"attempts":[]}');
+    if(scenario==='review-held')fs.writeFileSync(path.join(tmp,'data/edition-attempts.json'),JSON.stringify({schemaVersion:1,attempts:[{
+      editorialDate:'2026-10-01',slot:'morning',state:'failed',candidateSignature:fixture.candidateSignature,
+      artifactHash:'',calls:2,costUSD:0.02,reason:'Full site release gate failed',heldEdition:{artifactHash:fixture.artifactHash},
+    }]}));
+    const initialAttempts=fs.readFileSync(path.join(tmp,'data/edition-attempts.json'),'utf8');
     fs.writeFileSync(path.join(tmp,'data/llm-spend.json'),JSON.stringify({'2026-10':scenario==='budget-block'?6:scenario==='partial-unrepairable'?0.02:0}));
     fs.writeFileSync(path.join(tmp,'data/events.json'),'{"events":[]}');
     const scenarioRows=scenario==='snippet-with-context' ? rows.map(row=>({...row,
@@ -190,14 +196,47 @@ try {
     const diagnosticDirectory=path.join(artifacts,scenario);
     if(scenario.startsWith('diagnostic-capture-fail'))fs.writeFileSync(diagnosticDirectory,'not a directory');
     const before=fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8');
-    const result=spawnSync(process.execPath,['run.mjs'],{cwd:tmp,encoding:'utf8',timeout:30000,
+    const runOptions={cwd:tmp,encoding:'utf8',timeout:30000,
       env:{...process.env,GITHUB_ACTIONS:'false',ANTHROPIC_API_KEY:'test-only',LLM_BUDGET_OVERRIDE:'',
         LLM_LEDGER_PATH:path.join(tmp,'data/llm-spend.json'),EDITION_NOW_ISO:'2026-10-01T12:30:00Z',
         EDITION_QUARANTINE_DIRECTORY:diagnosticDirectory,
         PUBLICATION_DATE:'2026-10-01',PUBLICATION_SLOT:'morning',EDITION_SKIP_COLLECTION:'1',
-        EDITION_RETRY_FAILED:'0',EDITION_REQUIRE_REVIEW:'0',FLOW_CASE:scenario}});
+        EDITION_RETRY_FAILED:scenario==='review-held'?'1':'0',EDITION_REQUIRE_REVIEW:scenario.startsWith('review-')?'1':'0',FLOW_CASE:scenario}};
+    const result=spawnSync(process.execPath,['run.mjs'],runOptions);
     const calls=fs.existsSync(path.join(tmp,'calls.json'))?JSON.parse(fs.readFileSync(path.join(tmp,'calls.json'))):[];
-    if(['complete','full-evidence','oversized-prior-evidence','partial','field-patch','diagnostic-capture-fail','diagnostic-write-fail'].includes(scenario)){
+    if(scenario==='review-required'){
+      assert.equal(result.status,0,result.stderr);
+      assert.equal(fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8'),before);
+      const candidateFile=path.join(tmp,'data/candidates/2026-10-01-morning.json');
+      const candidateBytes=fs.readFileSync(candidateFile,'utf8');
+      const candidate=JSON.parse(candidateBytes);
+      assert.equal(candidate.publicationStatus,'candidate');
+      assert.equal(editionContract.validateEdition(candidate).ok,true);
+      assert.equal(candidate.stories.length,3);
+      assert.equal(calls.length,2);
+      assert.match(result.stdout,/edition: review-required/);
+      const attemptsBefore=fs.readFileSync(path.join(tmp,'data/edition-attempts.json'),'utf8');
+      const receipt=JSON.parse(attemptsBefore).attempts[0];
+      assert.equal(receipt.state,'review-required');
+      assert.equal(receipt.artifactHash,candidate.artifactHash);
+      assert.equal(receipt.calls,2);
+      const spendBefore=fs.readFileSync(path.join(tmp,'data/llm-spend.json'),'utf8');
+      fs.rmSync(path.join(tmp,'calls.json'),{force:true});
+      const replay=spawnSync(process.execPath,['run.mjs'],runOptions);
+      assert.equal(replay.status,0,replay.stderr);
+      assert.match(replay.stdout,/already attempted, zero model calls/);
+      assert.equal(fs.existsSync(path.join(tmp,'calls.json')),false);
+      assert.equal(fs.readFileSync(candidateFile,'utf8'),candidateBytes);
+      assert.equal(fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8'),before);
+      assert.equal(fs.readFileSync(path.join(tmp,'data/edition-attempts.json'),'utf8'),attemptsBefore);
+      assert.equal(fs.readFileSync(path.join(tmp,'data/llm-spend.json'),'utf8'),spendBefore);
+    }else if(scenario==='review-held'){
+      assert.notEqual(result.status,0);
+      assert.match(result.stderr,/Held edition requires independent exact-hash editorial review/);
+      assert.equal(calls.length,0);
+      assert.equal(fs.readFileSync(path.join(tmp,'data/edition.json'),'utf8'),before);
+      assert.equal(fs.readFileSync(path.join(tmp,'data/edition-attempts.json'),'utf8'),initialAttempts);
+    }else if(['complete','full-evidence','oversized-prior-evidence','partial','field-patch','diagnostic-capture-fail','diagnostic-write-fail'].includes(scenario)){
       assert.equal(result.status,0,`${scenario}: ${result.stderr}\n${result.stdout}`);
       const out=JSON.parse(fs.readFileSync(path.join(tmp,'data/edition.json')));
       assert.equal(out.stories.length,3,scenario);
@@ -260,6 +299,14 @@ try {
       }
       if(scenario==='budget-block')assert.equal(calls.length,0,'budget refusal occurs before provider fetch');
       if(scenario==='partial-unrepairable')assert.equal(calls.filter(call=>call.audit).length,0,'an unaffordable partial draft must not spend on an unusable audit');
+      if(scenario==='contradictory-audit'){
+        assert.equal(calls.length,2,'contradictory approval is not retried');
+        assert.match(result.stderr,/all selected stories failed the independent evidence audit/);
+        const record=JSON.parse(fs.readFileSync(path.join(diagnosticDirectory,'candidate.json')));
+        assert.ok(Object.values(record.audit.response.reviews).every(review=>review.ok && review.problems.length));
+        const ledger=JSON.parse(fs.readFileSync(path.join(tmp,'data/edition-attempts.json')));
+        assert.equal(ledger.attempts[0].state,'failed');
+      }
       if(scenario==='diagnostic-capture-fail-audit-reject'){
         assert.equal(calls.length,2);
         assert.match(result.stderr,/Optional edition diagnostics unavailable/);

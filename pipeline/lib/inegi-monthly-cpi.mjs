@@ -1,3 +1,4 @@
+import { extractMonthlyProductRates } from './inegi-cpi-claims.mjs';
 import { Worker } from 'node:worker_threads';
 import { createHash } from 'node:crypto';
 import { fetchBounded } from './url-safety.js';
@@ -153,6 +154,10 @@ export function validatedInegiReleaseDescriptor(item) {
   return validatedInegiArticle(item) ? trusted.get(item).descriptor : null;
 }
 
+export function validatedInegiClaimFacts(item) {
+  return validatedInegiArticle(item) ? trusted.get(item).claimFacts : null;
+}
+
 export function createInegiMonthlyLoader({ now, fetchBytes = fetchBounded, fetchImpl = globalThis.fetch, extractPdf = extractInegiPdf } = {}) {
   const cache = new Map();
   return async row => {
@@ -184,7 +189,9 @@ export function createInegiMonthlyLoader({ now, fetchBytes = fetchBounded, fetch
           publicationDate: row.date, bulletin, sourceUrl: metadata.url,
           sourceSha256: createHash('sha256').update(pdf.body).digest('hex'),
           revision: null, adapterVersion: 'inegi-monthly-cpi-v1' });
-        trusted.set(item, { ...metadata, text, scheduledId: row.id, descriptor });
+        const claimFacts = Object.freeze({ referencePeriod: descriptor.referencePeriod, sourceSha256: descriptor.sourceSha256,
+          productMonthlyRates: extractMonthlyProductRates(text, reference.text) });
+        trusted.set(item, { ...metadata, text, scheduledId: row.id, descriptor, claimFacts });
         return item;
       } catch { return rejectSource('bounded source fetch or complete PDF extraction failed'); }
     })());

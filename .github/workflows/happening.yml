@@ -89,7 +89,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PUBLICATION_SLOT: ${{ steps.plan.outputs.slot }}
-          EDITION_REQUIRE_REVIEW: '0'
+          # Model approval is not editorial approval: retain last good until independent review.
+          EDITION_REQUIRE_REVIEW: '1'
           EDITION_WEEKEND_RECOVERY: '1'
           EDITION_RETRY_FAILED: ${{ steps.plan.outputs.retry }}
           EDITION_QUARANTINE_DIRECTORY: ${{ runner.temp }}/edition-quarantine
