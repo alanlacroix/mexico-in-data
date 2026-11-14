@@ -2,328 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-29",
-      "slot": "morning",
-      "candidateSignature": "9e71b6f74b6ea1e868a5fe9892c4b8c0283247bc3e0c6f7ff58e6a278cc64a60",
-      "state": "failed",
-      "startedAt": "2026-09-29T13:01:30.440Z",
-      "completedAt": "2026-09-29T13:02:35.668Z",
-      "calls": 2,
-      "costUSD": 0.039563,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-01773ae9df6b: headline: 2 sentences (cap 1); headline: usmca was dropped in Spanish; dek: 4 sentences (cap 2); background: usmca was dropped in Spanish; view: 4 sentences (cap 3); view: usmca was dropped in Spanish; watch: usmca was dropped in Spanish | n-b65d100586c6: headline: 2 sentences (cap 1); headline: negation was intr",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-01773ae9df6b",
-          "reasons": [],
-          "fields": {
-            "headline": {
-              "en": "U.S. unilateral pressure on Chinese investment in Mexico risks USMCA, Tai warns",
-              "es": "Presión unilateral estadounidense sobre inversión china en México riesgo T-MEC, advierte Tai",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "2 sentences (cap 1)",
-                "usmca was dropped in Spanish"
-              ]
-            },
-            "dek": {
-              "en": "Katherine Tai, former U.S. trade representative, cautioned that unilateral U.S. restrictions on Mexican investment from China risk destabilizing the three-nation pact. She urged dialogue rather than conditionality, citing disagreements over energy, corn, and telecoms as serious obstacles.",
-              "es": "Katherine Tai, exrepresentante comercial estadounidense, advirtió que restricciones unilaterales sobre inversión mexicana proveniente de China arriesgan desestabilizar el pacto tripartita. Instó al diálogo más que al condicionamiento, citando desacuerdos sobre energía, maíz y telecomunicaciones como obstáculos serios.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "4 sentences (cap 2)"
-              ]
-            },
-            "background": {
-              "en": "The U.S. declined a 16-year extension at the first USMCA joint review on 1 July 2026, so the three countries now review the agreement every year. The treaty can run through 2036 unless extended or a country withdraws.",
-              "es": "Estados Unidos rechazó una extensión de 16 años en la primera revisión conjunta del T-MEC el 1 de julio de 2026, por lo que los tres países ahora revisan el acuerdo cada año. El tratado puede funcionar hasta 2036 a menos que se extienda o un país se retire.",
-              "refs": [
-                "standing:std-usmca-review"
-              ],
-              "reasons": [
-                "usmca was dropped in Spanish"
-              ]
-            },
-            "view": {
-              "en": "Tai's warning signals disagreement between trade negotiators and current U.S. policy. The U.S. administration appears intent on using USMCA access to extract concessions on Chinese investment, but Tai argues this approach conflates trade rules with investment screening and could trigger instability.",
-              "es": "La advertencia de Tai señala desacuerdo entre negociadores comerciales y la política actual estadounidense. La administración estadounidense parece decidida a usar el acceso del T-MEC para extraer concesiones sobre inversión china, pero Tai sostiene que este enfoque confunde reglas comerciales con examen de inversiones y podría desencadenar inestabilidad.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "4 sentences (cap 3)",
-                "usmca was dropped in Spanish"
-              ]
-            },
-            "watch": {
-              "en": "The next USMCA annual joint review is scheduled for 1 July 2027. Observable signals would be whether the three countries formally extend the agreement, modify its terms in writing, or allow annual reviews to continue.",
-              "es": "La próxima revisión anual del T-MEC está programada para el 1 de julio de 2027. Las señales observables serían si los tres países formalmente extienden el acuerdo, modifican sus términos por escrito, o permiten que las revisiones anuales continúen.",
-              "refs": [
-                "standing:std-usmca-review",
-                "calendar:2027-07-01",
-                "article"
-              ],
-              "reasons": [
-                "usmca was dropped in Spanish"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-b65d100586c6",
-          "reasons": [],
-          "fields": {
-            "headline": {
-              "en": "Mexico's non-auto exports surge 45% in 2026 on U.S. data-center demand",
-              "es": "Exportaciones no automotrices mexicanas suben 45% en 2026 por demanda de centros datos",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "2 sentences (cap 1)",
-                "negation was introduced in Spanish"
-              ]
-            },
-            "dek": {
-              "en": "Mexican non-automotive manufactures posted a 45% year-over-year gain through August, driven by U.S. demand for computing equipment and data-center components. Total exports reached 549.4 billion USD in the eight-month period, a 29.3% annual increase and the highest volume on record.",
-              "es": "Las manufacturas no automotrices mexicanas registraron un avance de 45% interanual hasta agosto, impulsado por demanda estadounidense de equipos de cómputo y componentes de centros de datos. Las exportaciones totales alcanzaron 549.4 mil millones de USD en ocho meses, un aumento anual de 29.3% y el volumen más alto en registros.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "3 sentences (cap 2)",
-                "unsupported number: 549.4",
-                "negation was introduced in Spanish",
-                "Spanish unsupported number: 549.4"
-              ]
-            },
-            "background": {
-              "en": "Mexico's exports depend heavily on U.S. demand. The non-automotive manufacturing sector has become the backbone of Mexico's external sector as automotive output stalled and oil revenue declined. According to INEGI data, 84.7% of Mexico's non-oil exports went to the United States, with 65.1% distinct from automotive products.",
-              "es": "Las exportaciones de México dependen fuertemente de la demanda estadounidense. El sector de manufactura no automotriz se ha convertido en la columna vertebral del sector externo de México conforme la producción automotriz se estancó y los ingresos petroleros declinaron. De acuerdo con datos del INEGI, 84.7% de las exportaciones no petroleras de México se destinó a Estados Unidos, con 65.1% distintas a productos automotrices.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "4 sentences (cap 3)",
-                "negation was introduced in Spanish"
-              ]
-            },
-            "view": {
-              "en": "The 45% gain in non-auto manufactures is the largest since records began in 1994 and reflects U.S. capital spending on artificial-intelligence infrastructure. Automotive exports grew only 0.8% in the same period, a sharp contrast that underscores the structural shift toward technology-linked manufacturing.",
-              "es": "El avance de 45% en manufacturas no automotrices es el mayor desde que hay registros en 1994 y refleja gasto de capital estadounidense en infraestructura de inteligencia artificial. Las exportaciones automotrices crecieron solo 0.8% en el mismo período, un contraste acentuado que subraya el cambio estructural hacia manufactura ligada a tecnología.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported evidence qualifier: largest",
-                "vague analysis: \"underscores the\"",
-                "negation was introduced in Spanish"
-              ]
-            },
-            "watch": {
-              "en": "The next observable signal is August and September bilateral trade data. If U.S. tech-sector orders ease or capital expenditure on data centers falls, non-automotive exports will decline sharply. Automotive export trends will also indicate whether the trade shift is durable or cyclical.",
-              "es": "La siguiente señal observable es la información de comercio bilateral de agosto y septiembre. Si los pedidos del sector tecnológico estadounidense se ralentizan o el gasto de capital en centros de datos cae, las exportaciones no automotrices descenderán bruscamente. Las tendencias de exportación automotriz también indicarán si el cambio comercial es duradero o cíclico.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "4 sentences (cap 3)",
-                "negation was introduced in Spanish"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-93902769518e",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "Banxico and CNBV proposed a gradual reduction in credit card interchange fees to 1.30%, more than double an earlier 0.60% proposal but still a cut from the current 1.91%. Fifty-three industry commenters, including banks, fintech firms, and payment aggregators, asked for clearer rules on how the new limits would be calculated and applied.",
-              "es": "Banxico y la CNBV propusieron una reducción gradual de las cuotas de intercambio de tarjetas de crédito a 1.30%, más del doble de una propuesta anterior de 0.60% pero aún una reducción respecto a la actual de 1.91%. Cincuenta y tres comentaristas de la industria pidieron reglas más claras sobre cómo se calcularían y aplicarían los nuevos límites.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "53 words (cap 45)"
-              ]
-            },
-            "view": {
-              "en": "The new credit card cap at 1.30% represents a partial rollback of an earlier plan to cut fees to 0.60%. The rise from that stricter proposal suggests regulators responded to industry pushback, though the final rule still reduces interchange by roughly one-third from current levels.",
-              "es": "El nuevo tope de tarjeta de crédito a 1.30% representa un retroceso parcial de un plan anterior de reducir las cuotas a 0.60%. El aumento respecto a esa propuesta más estricta sugiere que los reguladores respondieron a la presión de la industria, aunque la regla final aún reduce el intercambio aproximadamente una tercera parte respecto a los niveles actuales.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "completed action became non-final in Spanish"
-              ]
-            },
-            "watch": {
-              "en": "The consultation period closed on 24 September 2026. The next observable date is when Banxico and CNBV publish final rules specifying the implementation timeline and calculation methodology that 53 commenters flagged as unclear.",
-              "es": "El período de consulta cerró el 24 de septiembre de 2026. La próxima fecha observable es cuando Banxico y la CNBV publiquen las reglas finales especificando el cronograma de implementación y la metodología de cálculo que 53 comentaristas señalaron como poco clara.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "watch item has no observable next test"
-              ]
-            }
-          }
-        }
-      ],
-      "collection": {
-        "collectedAt": "2026-09-29T13:01:30.440Z",
-        "aliveSources": 69,
-        "totalSources": 72,
-        "wireCount": 60,
-        "minimumAlive": 36,
-        "ok": true,
-        "failedSourceIds": [
-          "insightcrime-mx",
-          "retailers-mx",
-          "nexos"
-        ]
-      },
-      "recoveries": []
-    },
-    {
-      "editorialDate": "2026-09-29",
-      "slot": "noon",
-      "candidateSignature": "673f6af5f4ff4833d9067228d4b9edc5ea53eddf24af646fc24e01f6e7641694",
-      "state": "failed",
-      "startedAt": "2026-09-29T16:01:29.623Z",
-      "completedAt": "2026-09-29T16:02:30.503Z",
-      "calls": 2,
-      "costUSD": 0.029953,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-285961094e38: dek: 3 sentences (cap 2); view: proposal or uncertainty became final in Spanish; watch: watch item has no observable next test | n-f6d16eb73906: dek: 3 sentences (cap 2); watch: watch item has no observable next test; background: needs an independent source when one is available | n-c53f9e8ab717: view: completed",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-285961094e38",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "The Economy Ministry said Mexico prevailed in an international arbitration case filed by Doups Holdings LLC, a U.S. investor seeking more than 600 million pesos under NAFTA. The CIADI tribunal ruled it lacked jurisdiction to hear Doups's claims.",
-              "es": "La Secretaría de Economía informó que México prevaleció en un arbitraje internacional iniciado por Doups Holdings LLC, inversionista estadounidense que buscaba más de 600 millones de pesos conforme al TLCAN. El tribunal del CIADI determinó que carecía de jurisdicción.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "3 sentences (cap 2)"
-              ]
-            },
-            "view": {
-              "en": "Mexico's defense centered on procedural and jurisdictional defects rather than the merits of the parking meter concessions. The tribunal agreed, concluding that Doups had accepted being treated as Mexican with respect to its investment, had not proven control of subsidiary Pagomet, and could not claim the subsidiary's losses as its own.",
-              "es": "La defensa de México se centró en deficiencias procedimentales y de jurisdicción más que en el fondo de las concesiones. El tribunal estuvo de acuerdo y concluyó que Doups había aceptado ser considerada mexicana respecto de su inversión, no acreditó el control de Pagomet e incumplió requisitos procesales.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or uncertainty became final in Spanish"
-              ]
-            },
-            "watch": {
-              "en": "The tribunal ruled in September 2026 that it lacked jurisdiction and dismissed the arbitration entirely. The next procedural window or appellate avenue is not stated in available records.",
-              "es": "El tribunal determinó en septiembre de 2026 que carecía de jurisdicción y desestimó el arbitraje en su totalidad. El siguiente paso procesal o vía de apelación no está consignado en registros disponibles.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "watch item has no observable next test"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-f6d16eb73906",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "The Mexican Bolsa climbed above 65,000 for the first time since September 8, with the IPC index rising 0.44% on September 29. FEMSA gained 1.64% to 215.66 pesos, while U.S. markets operated mixed.",
-              "es": "La Bolsa Mexicana subió por encima de 65,000 por primera vez desde el 8 de septiembre, con el IPC subiendo 0.44% el 29 de septiembre. FEMSA ganó 1.64% a 215.66 pesos, mientras que mercados estadounidenses operaron mixtos.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "3 sentences (cap 2)"
-              ]
-            },
-            "background": {
-              "en": "The IPC has followed a zigzag trend since September 24. Wall Street remained mixed that day, with the S&P 500 up 0.06%, the Nasdaq Composite up 0.07%, and the Dow Jones down 0.08%. Inflation pressure globally created caution among investors, though Mexican equities showed relative resilience.",
-              "es": "El IPC ha seguido una tendencia en zigzag desde el 24 de septiembre. Wall Street operó mixto ese día, con el S&P 500 al alza 0.06%, el Nasdaq Composite al alza 0.07%, y el Dow Jones a la baja 0.08%. La presión inflacionaria global creó cautela entre inversionistas, aunque acciones mexicanas mostraron resiliencia relativa.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "needs an independent source when one is available"
-              ]
-            },
-            "watch": {
-              "en": "The Mexican market's narrow composition, with 35 listed companies in June 2026 concentrated in consumer staples and materials, means the IPC index reflects a limited portion of the economy and excludes startups, private manufacturers, and foreign-owned factories.",
-              "es": "La composición estrecha del mercado mexicano, con 35 empresas cotizadas en junio de 2026 concentradas en bienes de consumo y materiales, significa que el índice IPC refleja una porción limitada de la economía y excluye empresas emergentes, fabricantes privados y fábricas de capital extranjero.",
-              "refs": [
-                "standing:std-stock-market"
-              ],
-              "reasons": [
-                "watch item has no observable next test"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-c53f9e8ab717",
-          "reasons": [],
-          "fields": {
-            "view": {
-              "en": "The initiative argues the state may establish general principles that sports associations must observe. If approved as written, the Mexican Soccer Federation would retain the ability to define how competition operates but could no longer maintain a system without promotion and relegation. The legislature has not voted.",
-              "es": "La iniciativa argumenta que el Estado puede establecer principios generales que asociaciones deportivas deben observar. Si se aprueba como está redactada, la Federación Mexicana de Futbol retendría la capacidad de definir cómo opera la competencia pero ya no podría mantener un sistema sin ascenso y descenso. La legislatura aún no ha votado.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "completed action became non-final in Spanish"
-              ]
-            },
-            "watch": {
-              "en": "No vote date has been set. The next legislative action on this bill and whether the Senate will move to a floor vote remain unknown.",
-              "es": "Ninguna fecha de votación ha sido fijada. La siguiente acción legislativa sobre este proyecto y si el Senado procederá a votación en pleno permanecen desconocidas.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or draft described as a completed action"
-              ]
-            }
-          }
-        }
-      ],
-      "collection": {
-        "collectedAt": "2026-09-29T16:01:29.623Z",
-        "aliveSources": 67,
-        "totalSources": 72,
-        "wireCount": 60,
-        "minimumAlive": 36,
-        "ok": true,
-        "failedSourceIds": [
-          "mexico-business-news",
-          "insightcrime-mx",
-          "retailers-mx",
-          "m4ec-mx",
-          "nexos"
-        ]
-      },
-      "recoveries": []
-    },
-    {
       "editorialDate": "2026-09-30",
       "slot": "morning",
       "candidateSignature": "7d269f294d7a9921e04cc3d0ea3197192be5dc6bdc75553508aa49e330673c2f",
@@ -8761,6 +8439,49 @@
       "diagnostics": [],
       "collection": null,
       "recoveries": []
+    },
+    {
+      "editorialDate": "2026-11-14",
+      "slot": "morning",
+      "candidateSignature": "dead1df21fd754b17b71df41edd38c520a9403e7346013ab77acd8377558026c",
+      "state": "started",
+      "startedAt": "2026-11-14T12:21:54.473Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.056028,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-14T12:21:54.473Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ascoa",
+          "datoz",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "43594428889",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "b9d98183-f338-47a6-b170-4be06f6993b9",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.056028,
+            "accountedUSD": 0.056028,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
