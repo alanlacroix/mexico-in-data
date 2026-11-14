@@ -18,10 +18,21 @@ assert.match(workflow, /push:\s+branches: \[main\]\s+paths: \['ops\/publication-
 assert.doesNotMatch(workflow, /build-happening|build-brief|translate-es|publication-status|publish-edition/);
 assert.match(workflow, /git add data\/edition\.json data\/edition-attempts\.json data\/llm-spend\.json data\/editions\/ data\/news\//,
   'a successful edition must commit its immutable history alongside the public artifact');
-assert.match(workflow, /EDITION_REQUIRE_REVIEW:\s*'0'/,
-  'authorized daily workflow publishes only after all gates pass');
+assert.match(workflow, /EDITION_REQUIRE_REVIEW:\s*'1'/,
+  'every production generation trigger must require independent editorial review');
 assert.match(workflow, /\$EDITION_STATE" = "review-required"[\s\S]*git add data\/candidates\/ data\/edition-attempts\.json data\/llm-spend\.json/,
   'a review-required edition must persist only its candidate and accounting receipts');
+const generationStep = workflow.split('- name: Build one atomic bilingual edition')[1].split('\n      - name:')[0];
+assert.match(generationStep, /EDITION_REQUIRE_REVIEW: '1'/);
+assert.equal((workflow.match(/EDITION_REQUIRE_REVIEW:/g) || []).length, 1, 'no conditional review override');
+for (const trigger of ['push', 'schedule', 'workflow_run', 'workflow_dispatch']) {
+  assert.match(workflow, new RegExp(`^  ${trigger}:`, 'm'));
+  assert.doesNotMatch(generationStep, /inputs\.[^\n]*REVIEW|REVIEW[^\n]*inputs\./, `${trigger} cannot disable review`);
+}
+for (const file of fs.readdirSync(path.join(root, '.github/workflows'))) {
+  if (file === 'happening.yml') continue;
+  assert.doesNotMatch(read(`.github/workflows/${file}`), /run:.*build-edition\.mjs/, `${file} cannot introduce an unguarded generation route`);
+}
 assert.match(workflow, /Mark candidate as awaiting human review/);
 assert.match(workflow, /\[CF-Pages-Skip\].*edition:/);
 assert.match(workflow, /steps\.edition\.outcome == 'failure'/, 'a failed publisher must leave the job red after persisting spend');
@@ -142,3 +153,16 @@ assert.match(workflow, /Preserve audited edition after a release rejection/);
 assert.match(workflow, /always\(\) && steps\.edition\.outputs\.state == 'published' && steps\.release\.outcome == 'failure'/);
 assert.ok(workflow.indexOf('name: held-edition-') < workflow.indexOf('Record release rejection'));
 assert.match(workflow, /EDITION_STATE="release-failed"/);
+
+// A committed review candidate never becomes verification/publication or another
+// paid attempt through any production trigger, including an explicit push signal.
+for (const event of ['schedule', 'workflow_dispatch', 'workflow_run', 'push']) {
+  for (const workflow of event === 'workflow_run' ? ['collect-news', 'release-check'] : ['']) {
+    const result = plan(event, [attempt('review-required')], {
+      workflow, now:new Date('2026-09-30T12:22:00Z'),
+      publicationRequest:{editorialDate:date,slot:'morning',expiresAt:'2026-09-30T12:40:00Z',purpose:'bounded recovery'},
+    });
+    assert.equal(result.run,false, `${event}/${workflow}: no extra spend`);
+    assert.notEqual(result.verify,true, `${event}/${workflow}: candidate is not publication`);
+  }
+}

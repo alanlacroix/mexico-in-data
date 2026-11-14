@@ -42,6 +42,38 @@ lacks a complete, independently contextualized explanation that cleared the sepa
 last complete edition stays live. The pipeline may never demote a story because it is hard
 to explain. A quiet day may contain fewer stories; it may not be padded.
 
+## Independent review hold
+
+Production generation in `happening.yml` sets `EDITION_REQUIRE_REVIEW: '1'`
+for every schedule, dispatch, workflow-completion and repository-request trigger.
+A model audit pass alone is not editorial approval. Successful generation writes a
+hashed `candidate` under `data/candidates/` with a `review-required` attempt receipt;
+it preserves the last-good public edition and does not claim fresh publication.
+Collection, durable model accounting, the serialized writer lock and existing
+attempt/spend limits remain in force. Replays do not regenerate or spend again.
+Automatic restoration of a held release-failure artifact is also blocked in this
+mode, before recovery or accounting changes, even if its earlier model audit passed.
+
+Before publication, independently review every English field against the complete
+cited source bodies and every Spanish field against both its English text and those
+sources. Check subjects, reference/publication periods, procedural scope, comparison
+arithmetic, denominators, causal language and qualifiers, not merely matching digits.
+Review and record the exact candidate hash; any edited text requires renewed review.
+Only then may an authorized publication route preserve accounting, pass the complete
+release checks and verify the final exact artifact/date/hash in live JSON and both
+languages. A green candidate/no-op run is not publication.
+
+The existing `approve-edition` workflow promotes an artifact but does not reconcile
+its attempt ledger. It is not a workaround for accounting or approval restrictions;
+do not use it as a complete publication route while that reconciliation is unresolved.
+Do not alter historical failed attempts, receipts or spend to make a candidate look
+published. Hold and report an approval/access blocker rather than bypass it.
+
+The deterministic CPI guard covers a narrow explicit named-product monthly-rate
+binding, not general factual truth or all grammar. It does not validate movement
+sign, broader timing/scope/causality or arithmetic claims. Independent review remains
+required even when this guard and every model verdict pass.
+
 ## Change control
 
 Before adding any page, database, signup flow, connector, workflow, report, or recurring

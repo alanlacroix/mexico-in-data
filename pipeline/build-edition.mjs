@@ -4,6 +4,7 @@
 // once, after English, Spanish, evidence, dates and story order all pass. Any failure
 // exits non-zero and leaves the previous public edition byte-for-byte unchanged.
 
+import { inegiCpiClaimFlags } from './lib/inegi-cpi-claims.mjs';
 import backgroundEvidence from './lib/background-evidence.cjs';
 import crypto from 'node:crypto';
 import { persistModelAccounting } from './lib/persist-model-accounting.mjs';
@@ -20,7 +21,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { collectNews } from './collect-news.js';
 import { fetchArticle } from './lib/fetch-article.js';
-import { createInegiMonthlyLoader, requiresInegiMonthlySource, validatedInegiArticle, alreadyPublishedMonthlyCpi, alreadyPublishedMonthlyCpiInHistory } from './lib/inegi-monthly-cpi.mjs';
+import { createInegiMonthlyLoader, requiresInegiMonthlySource, validatedInegiArticle, validatedInegiClaimFacts, alreadyPublishedMonthlyCpi, alreadyPublishedMonthlyCpiInHistory } from './lib/inegi-monthly-cpi.mjs';
 import { createImaiLoader, isOptionalImaiRelease, validatedImaiArticle } from './lib/inegi-imai.mjs';
 import { editorialSourceTier, eventCandidateEligible, mexicoRelevant, registeredSourceFor, stripNewsBoilerplate } from './lib/news-trust.js';
 import {
@@ -535,6 +536,7 @@ function deterministicDraftCheck(row, draft) {
     const citedEvidence = row.evidence.filter(item => draft[refField].includes(item.id));
     for (const text of [draft[field], draft?.es?.[field]]) {
       flags.push(...calendarDateFlags(text, citedEvidence).map(flag => `${field}: ${flag}`));
+      flags.push(...inegiCpiClaimFlags(text, draft[refField].includes('article') ? validatedInegiClaimFacts(row.item) : null).map(flag => `${field}: ${flag}`));
     }
     if ([draft[field], draft?.es?.[field]].some((text) => new TextEncoder().encode(JSON.stringify(clean(text))).byteLength > 600)) {
       flags.push(`${field}: exceeds the bounded audit field length`);
@@ -729,6 +731,12 @@ async function main() {
   }
   if (isRecovery && (!priorSlotAttempt || priorSlotAttempt.state !== 'failed')) {
     throw new Error(`explicit recovery requires a failed attempt: ${editorialDate}/${slot}`);
+  }
+  // A previously model-audited release artifact is not independent editorial
+  // approval. Do not restore it, consume recovery, or mutate accounting in review mode.
+  if (isRecovery && priorSlotAttempt.heldEdition !== undefined && process.env.EDITION_REQUIRE_REVIEW === '1') {
+    emitOutcome({ state: 'failed', editorial_date: editorialDate, slot, artifact_hash: '' });
+    throw new Error('Held edition requires independent exact-hash editorial review; automatic restoration is disabled');
   }
   const recoveryBase = isRecovery ? { calls: Number(priorSlotAttempt.calls) || 0, costUSD: Number(priorSlotAttempt.costUSD) || 0 } : { calls: 0, costUSD: 0 };
   if (isRecovery) {
@@ -1055,7 +1063,7 @@ async function main() {
     const passing = [];
     for (const entry of deterministicPass) {
       const review = reviews.get(entry.row.index);
-      if (!review?.ok) {
+      if (review?.ok !== true || !Array.isArray(review.problems) || review.problems.length) {
         const reasons = arr(review?.problems).map(clean).filter(Boolean);
         failureDiagnostics.push(draftFailureReceipt(entry.row, entry.draft,
           reasons.length ? reasons : ['missing review'], 'independent-audit'));
