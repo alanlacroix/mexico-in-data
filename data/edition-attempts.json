@@ -8444,36 +8444,16 @@
       "editorialDate": "2026-11-14",
       "slot": "morning",
       "candidateSignature": "dead1df21fd754b17b71df41edd38c520a9403e7346013ab77acd8377558026c",
-      "state": "failed",
-      "startedAt": "2026-11-14T12:21:54.473Z",
-      "completedAt": "2026-11-14T12:23:29.538Z",
-      "calls": 2,
-      "costUSD": 0.047385,
+      "state": "started",
+      "startedAt": "2026-11-14T12:25:45.283Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.103494,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-f813cbad4fc6",
-          "reasons": [],
-          "fields": {
-            "watch": {
-              "en": "",
-              "es": "",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "empty report text",
-                "watch item has no observable next test",
-                "Spanish translation is empty"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-14T12:21:54.473Z",
+        "collectedAt": "2026-11-14T12:25:45.283Z",
         "aliveSources": 68,
         "totalSources": 72,
         "wireCount": 60,
@@ -8486,10 +8466,39 @@
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-11-14T12:21:54.473Z",
+          "completedAt": "2026-11-14T12:23:29.538Z",
+          "calls": 2,
+          "costUSD": 0.047385,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-f813cbad4fc6",
+              "reasons": [],
+              "fields": {
+                "watch": {
+                  "en": "",
+                  "es": "",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "empty report text",
+                    "watch item has no observable next test",
+                    "Spanish translation is empty"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "43594428889",
+        "runId": "43594745423",
         "runAttempt": "1",
         "receipts": [
           {
@@ -8523,6 +8532,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "fabd09b8-75b0-4b64-bcc2-f7191844cc15",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.056109,
+            "accountedUSD": 0.056109,
+            "state": "reserved"
           }
         ]
       }
