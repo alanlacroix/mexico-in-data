@@ -8444,14 +8444,34 @@
       "editorialDate": "2026-11-14",
       "slot": "morning",
       "candidateSignature": "dead1df21fd754b17b71df41edd38c520a9403e7346013ab77acd8377558026c",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-14T12:21:54.473Z",
-      "completedAt": "",
+      "completedAt": "2026-11-14T12:23:29.538Z",
       "calls": 2,
       "costUSD": 0.047385,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-f813cbad4fc6",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-14T12:21:54.473Z",
         "aliveSources": 68,
