@@ -8418,54 +8418,16 @@
       "editorialDate": "2026-11-15",
       "slot": "morning",
       "candidateSignature": "d9326954ab3002186012fa565293eb50690f1f0ab91ffadbffd541f1b8f3b09f",
-      "state": "failed",
-      "startedAt": "2026-11-15T12:21:50.903Z",
-      "completedAt": "2026-11-15T12:23:20.754Z",
-      "calls": 2,
-      "costUSD": 0.046419,
+      "state": "started",
+      "startedAt": "2026-11-15T12:23:38.660Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.107242,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "federal-spending-budget-2027-2026-11-15",
-          "reasons": [],
-          "fields": {
-            "background": {
-              "en": "Congress approved the spending decree and sent it to the executive for signature. Public debt has risen from 52.0 percent of GDP in 2024 to 53.2 percent in 2025 and is projected near 54.7 percent in 2026, limiting fiscal room as pensions and interest payments displace spending on electricity, water, security and health.",
-              "es": "El Congreso aprobó el decreto de gasto y lo envió al Ejecutivo para firma. La deuda pública ha subido de 52.0 por ciento del PIB en 2024 a 53.2 por ciento en 2025 y se proyecta cerca de 54.7 por ciento en 2026, limitando espacio fiscal mientras pensiones y pagos de intereses desplazan gasto en electricidad, agua, seguridad y salud.",
-              "refs": [
-                "article",
-                "history:federal-revenue-law-2027-2026-10-31",
-                "standing:std-fiscal-path"
-              ],
-              "reasons": [
-                "vague newsroom phrase: \"fiscal room\""
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-f813cbad4fc6",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "Priority federal programs will receive 1 billones 25 mil 400 million pesos, equal to 2.6 percent of GDP, and public investment of 1 billones 133 mil 613.2 million pesos focuses on education, health and housing in historically excluded regions.",
-              "es": "Programas prioritarios federales recibirán 1 billones 25 mil 400 millones de pesos, equivalentes a 2.6 por ciento del PIB, e inversión pública de 1 billones 133 mil 613.2 millones de pesos se enfoca en educación, salud y vivienda en regiones históricamente excluidas.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported numbers: 1, 25, 400, 2.6, 133, 613.2",
-                "Spanish unsupported numbers: 1, 25, 400, 2.6, 133, 613.2"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-15T12:21:50.903Z",
+        "collectedAt": "2026-11-15T12:23:38.660Z",
         "aliveSources": 68,
         "totalSources": 72,
         "wireCount": 60,
@@ -8478,10 +8440,57 @@
           "nexos"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-11-15T12:21:50.903Z",
+          "completedAt": "2026-11-15T12:23:20.754Z",
+          "calls": 2,
+          "costUSD": 0.046419,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "federal-spending-budget-2027-2026-11-15",
+              "reasons": [],
+              "fields": {
+                "background": {
+                  "en": "Congress approved the spending decree and sent it to the executive for signature. Public debt has risen from 52.0 percent of GDP in 2024 to 53.2 percent in 2025 and is projected near 54.7 percent in 2026, limiting fiscal room as pensions and interest payments displace spending on electricity, water, security and health.",
+                  "es": "El Congreso aprobó el decreto de gasto y lo envió al Ejecutivo para firma. La deuda pública ha subido de 52.0 por ciento del PIB en 2024 a 53.2 por ciento en 2025 y se proyecta cerca de 54.7 por ciento en 2026, limitando espacio fiscal mientras pensiones y pagos de intereses desplazan gasto en electricidad, agua, seguridad y salud.",
+                  "refs": [
+                    "article",
+                    "history:federal-revenue-law-2027-2026-10-31",
+                    "standing:std-fiscal-path"
+                  ],
+                  "reasons": [
+                    "vague newsroom phrase: \"fiscal room\""
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-f813cbad4fc6",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "Priority federal programs will receive 1 billones 25 mil 400 million pesos, equal to 2.6 percent of GDP, and public investment of 1 billones 133 mil 613.2 million pesos focuses on education, health and housing in historically excluded regions.",
+                  "es": "Programas prioritarios federales recibirán 1 billones 25 mil 400 millones de pesos, equivalentes a 2.6 por ciento del PIB, e inversión pública de 1 billones 133 mil 613.2 millones de pesos se enfoca en educación, salud y vivienda en regiones históricamente excluidas.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported numbers: 1, 25, 400, 2.6, 133, 613.2",
+                    "Spanish unsupported numbers: 1, 25, 400, 2.6, 133, 613.2"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "43713440707",
+        "runId": "43713564814",
         "runAttempt": "1",
         "receipts": [
           {
@@ -8515,6 +8524,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "54ef2de6-d2d3-4caf-a325-cc32078f63cd",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.060823,
+            "accountedUSD": 0.060823,
+            "state": "reserved"
           }
         ]
       }
