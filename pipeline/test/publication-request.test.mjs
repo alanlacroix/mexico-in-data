@@ -35,7 +35,11 @@ assert.deepEqual(plan([row('published')]), { run: false, slot: 'morning', retry:
 assert.deepEqual(plan([row('review-required')]), { run: false, slot: 'morning', retry: false });
 assert.deepEqual(plan([row('failed')]), { run: true, slot: 'morning', retry: true });
 assert.deepEqual(plan([row('failed', { recoveries: [{}] })]), { run: true, slot: 'noon', retry: false });
-assert.throws(() => plan([row('failed', { slot: 'noon', recoveries: [{}] })]), /exhausted/);
+assert.throws(() => plan([row('failed', { slot: 'noon', recoveries: [{}] })]), /Unsettled edition accounting/);
+const exhausted = plan([row('failed', {slot:'noon', recoveries:[{}], completedAt:'2026-10-01T12:30:00Z'})]);
+assert.equal(exhausted.run, false);
+assert.equal(exhausted.held, true);
+assert.match(exhausted.reason, /Bounded recovery exhausted/);
 assert.throws(() => plan([row('started')]), /requires diagnosis/);
 assert.throws(() => plan([row('published')], { edition: { editorialDate: date, artifactHash: 'wrong' } }), /does not match/);
 assert.deepEqual(plan([row('failed')], { publicationRequest: null }), { run: false, slot: 'morning', retry: false },

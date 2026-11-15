@@ -18,7 +18,7 @@ assert.throws(()=>publicationPlan({...input,attempts:{attempts:[row,row]}}),/Amb
 const next=publicationPlan({...input,date:'2026-11-13'});assert.equal(next.run,true);assert.equal(next.held,undefined);
 const normal=publicationPlan({...input,edition:{editorialDate:row.editorialDate,artifactHash:'new'},attempts:{attempts:[{...row,artifactHash:'new'}]}});assert.equal(normal.verify,true);assert.equal(normal.held,undefined);
 const yml=fs.readFileSync(new URL('../../.github/workflows/happening.yml',import.meta.url),'utf8');
-const held=yml.split('      - name: Verify retained edition during editorial hold')[1].split('      - name:')[0];
+const held=yml.split('      - name: Verify retained edition during publication hold')[1].split('      - name:')[0];
 assert.match(held,/verify-production/);assert.doesNotMatch(held,/continue-on-error|claim-deployment|git add/);
 const retry=yml.split('      - name: Retry deployment once')[1];assert.match(retry,/steps.plan.outputs.held != 'true'/);
 console.log('withdrawn editions: ok');

@@ -174,14 +174,14 @@ try {
 
   // Restart keeps the interrupted charge and consumes only the existing bounded recovery.
   const row={editorialDate:'2026-09-30',slot:'morning',state:'started',calls:1,costUSD:0.1,
-    modelAccounting:{version:1,runId:'101',receipts:[{accountedUSD:0.1,state:'reserved'}]},recoveries:[]};
+    modelAccounting:{version:1,runId:'101',receipts:[{id:'interrupted-call',reservedUSD:0.1,accountedUSD:0.1,state:'reserved'}]},recoveries:[]};
   const attempts={attempts:[row]};
   recoverInterruptedAttempts(attempts,row.editorialDate,'102');
   assert.equal(row.state,'failed');assert.equal(row.costUSD,0.1);assert.equal(row.calls,1);
   assert.equal(publicationPlan({event:'schedule',date:row.editorialDate,attempts}).retry,true);
   row.state='started';row.slot='noon';row.recoveries=[{}];
   recoverInterruptedAttempts(attempts,row.editorialDate,'103');
-  assert.throws(()=>publicationPlan({event:'schedule',date:row.editorialDate,attempts}),/exhausted/);
+  assert.throws(()=>publicationPlan({event:'schedule',date:row.editorialDate,attempts}),/Unsettled edition accounting requires diagnosis/);
   row.state='started';delete row.modelAccounting;
   recoverInterruptedAttempts(attempts,row.editorialDate,'104');assert.equal(row.state,'started');
   assert.throws(()=>publicationPlan({event:'schedule',date:row.editorialDate,attempts}),/diagnosis/);

@@ -169,6 +169,9 @@ jobs:
 
       - name: Fail loudly when generation or the release gate failed
         if: steps.edition.outcome == 'failure' || steps.edition.outputs.state == 'failed' || steps.release.outcome == 'failure'
+        env:
+          EDITORIAL_DATE: ${{ steps.edition.outputs.editorial_date || steps.plan.outputs.requested_date }}
+          PUBLICATION_SLOT: ${{ steps.edition.outputs.slot || steps.plan.outputs.slot }}
         run: |
           node pipeline/failure-summary.mjs
           exit 1
@@ -188,7 +191,7 @@ jobs:
           path: data/candidates/
           retention-days: 14
 
-      - name: Verify retained edition during editorial hold
+      - name: Verify retained edition during publication hold
         if: steps.plan.outputs.held == 'true'
         env:
           EDITORIAL_DATE: ${{ steps.plan.outputs.editorial_date }}
