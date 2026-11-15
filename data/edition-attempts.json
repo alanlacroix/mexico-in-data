@@ -8609,6 +8609,35 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-11-15",
+      "slot": "noon",
+      "candidateSignature": "d9326954ab3002186012fa565293eb50690f1f0ab91ffadbffd541f1b8f3b09f",
+      "state": "failed",
+      "startedAt": "2026-11-15T12:42:38.452Z",
+      "completedAt": "2026-11-15T12:43:34.656Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "",
+      "reason": "daily model budget would be exceeded (0.0941 + 0.0611 > 0.2000)",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-15T12:42:38.452Z",
+        "aliveSources": 67,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ascoa",
+          "datoz",
+          "insightcrime-mx",
+          "m4ec-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": []
     }
   ]
 }
