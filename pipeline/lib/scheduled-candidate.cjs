@@ -224,9 +224,48 @@ function seedResolvedRevenueDeadline(row, pageText) {
   };
 }
 
+// The statutory spending deadline is not a new vote date. Validate this exact
+// primary final-approval report on each fetch; metadata alone cannot close it.
+function seedResolvedSpendingDeadline(row, pageText) {
+  const resolution = row?.resolvedOutcome;
+  const url = 'https://www.canaldelcongreso.gob.mx/noticias/10355';
+  if (row?.id !== 'federal-spending-budget-2027-2026-11-15'
+    || row.date !== '2026-11-15' || row.approx === true
+    || row.requiredForBrief !== true || row.outcomeRequired !== true
+    || row.outcome?.actor !== 'congress' || row.outcome?.topic !== 'spending-budget'
+    || resolution?.status !== 'approved-and-sent-to-executive'
+    || resolution.reportedOn !== '2026-11-11'
+    || resolution.source !== 'Canal del Congreso'
+    || resolution.sourceUrl !== url || row.outcomeSourceUrl !== url) return null;
+  const text = fold(pageText);
+  const opening = fold('11 de noviembre de 2026 Cámara de Diputados aprueba Presupuesto de Egresos 2027 Cámara de Diputados') + ' ';
+  const outcome = fold('Con 352 votos a favor, 130 en contra y ninguna abstención, la Cámara de Diputados aprobó en lo particular y sin cambios el Presupuesto de Egresos de la Federación 2027, por lo que el decreto fue enviado al Ejecutivo Federal para sus efectos constitucionales.');
+  const afterOpening = text.startsWith(opening) ? text.slice(opening.length) : '';
+  const outcomeText = afterOpening.replace(/^\d[\d,.]* vistas /, '');
+  if (!afterOpening || outcomeText === afterOpening || !outcomeText.startsWith(outcome)
+    || /\b(?:no fue aprobad[oa]|no fue enviad[oa]|no se aprobo|no se envio|rechazo el presupuesto|fe de erratas|correccion|actualizacion|update|pendiente|devuelt[oa])\b/.test(text)) return null;
+  return {
+    id: `scheduled:${row.id}`, url,
+    title: 'Cámara de Diputados aprueba el Presupuesto de Egresos 2027 y lo envía al Ejecutivo; resultado reportado el 11 de noviembre, antes del plazo del 15 de noviembre',
+    dek: 'Canal del Congreso reportó la aprobación en lo particular y sin cambios. La publicación en el DOF y la entrada en vigor son etapas distintas, no verificadas por este resultado.',
+    source: 'canaldelcongreso.gob.mx', sourceName: resolution.source,
+    tier: 1, beat: row.kind || 'fiscal', lang: 'es',
+    published_at: resolution.reportedOn,
+    _editorialDate: resolution.reportedOn, _coverage: [],
+    _scheduled: {
+      id: row.id, date: row.date,
+      label: 'Chamber of Deputies approval deadline; approval already reported November 11, not a new November 15 vote',
+      source: row.source, sourceUrl: row.sourceUrl,
+      importanceFloor: Number(row.importanceFloor) || 0,
+      requiredForBrief: true, outcomeRequired: true,
+      actor: 'congress', topic: 'spending-budget',
+    },
+  };
+}
+
 function seedScheduledCandidate(row, pageText, now = new Date()) {
   if (['future', 'invalid'].includes(scheduledReleaseState(row, now))) return null;
-  if (row?.resolvedOutcome) return seedResolvedRevenueDeadline(row, pageText);
+  if (row?.resolvedOutcome) return seedResolvedRevenueDeadline(row, pageText) || seedResolvedSpendingDeadline(row, pageText);
   const outcomeUrl = row?.outcomeSourceUrl || row?.sourceUrl;
   if (!row?.id || !row?.date || !outcomeUrl || !String(pageText || '').trim()) return null;
   const markers = dateMarkers(row.date);
