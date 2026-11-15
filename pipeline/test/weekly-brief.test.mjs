@@ -4,13 +4,14 @@ import lib from '../lib/public-edition.cjs';
 import weekly from '../lib/weekly-brief.cjs';
 import nunjucks from 'nunjucks';
 import reading from '../lib/weekly-reading.cjs';
+import uiStrings from '../../_data/uiStrings.js';
 const edition=JSON.parse(fs.readFileSync('docs/pilot/candidate-2026-09-24.json'));
 assert.deepEqual(weekly.validateWeekly(edition.weeklyBrief,edition.editorialDate),[]);
 assert.equal(lib.validateEdition(edition).ok,true);
 for(const mutate of [w=>w.through='2026-09-25',w=>w.items[1].id=w.items[0].id,w=>w.items[0].sources[0].url='javascript:alert(1)',w=>delete w.items[0].es.context,w=>w.dates[0].date='2026-09-20',w=>w.items[1].es.now='Septiembre: 9.50%, unanimidad']){
  const w=structuredClone(edition.weeklyBrief);mutate(w);assert.ok(weekly.validateWeekly(w,edition.editorialDate).length);
 }
-const env=new nunjucks.Environment();env.addFilter('longDate',d=>d);
+const env=new nunjucks.Environment();env.addGlobal('uiStrings',uiStrings);env.addFilter('longDate',d=>d);
 env.addFilter('weeklyReading', reading.weeklyReading);
 env.addFilter('uniqueSourceLinks', reading.uniqueSourceLinks);
 const template=fs.readFileSync('_includes/partials/weekly-brief.njk','utf8');
@@ -27,9 +28,11 @@ for (const locale of ['en', 'es']) {
  for (const item of current.weeklyBrief.items) {
   const story = current.stories.find(s => s.id === item.id);
   const result = reading.weeklyReading(item, current.stories, locale);
-  assert.deepEqual(result, { background: story[locale].background, view: story[locale].view });
+  assert.deepEqual(result, { background: story[locale].background, view: story[locale].view, watch: story[locale].watch });
   assert.ok(html.includes(`<p>${escaped(story[locale].background)}</p>`));
   assert.ok(html.includes(`<p>${escaped(story[locale].view)}</p>`));
+  assert.ok(html.includes(`<p class="weekly-watch">${escaped(story[locale].watch)}</p>`));
+  assert.ok(html.includes(uiStrings[locale].watching));
   assert.ok(html.indexOf(escaped(story[locale].background)) < html.indexOf(escaped(story[locale].view)));
   assert.ok(!html.includes(`<p>${escaped(item[locale].context)}</p>`), 'do not concatenate explanation and analysis');
  }
@@ -113,3 +116,37 @@ const recent = historyStory('recent', '2026-10-11T09:00:00Z');
 assert.deepEqual(buildWeekStories({ weekStories: historyRows }, [recent], '2026-10-11'), [recent, ...historyRows.slice(1).reverse()]);
 assert.throws(() => buildWeekStories(null, Array.from({ length: 22 }, (_, i) => historyStory(`overflow-${i}`, '2026-10-11T09:00:00Z')), '2026-10-11'), /exceed weekly history capacity/);
 console.log('weekly history: current mirrors, bounded capacity, first-seen dedupe, chronology and date boundaries pass');
+
+// Future-effective dates and procedural limits must remain visible, even when
+// an editor opted into a margin that repeats the same reviewed next-step field.
+for (const locale of ['en', 'es']) {
+ const fixtureStories = structuredClone(current.stories);
+ const fixtureWeekly = structuredClone(current.weeklyBrief);
+ const first = fixtureStories.find(story => story.id === fixtureWeekly.items[0].id);
+ first[locale].watch = locale === 'es'
+  ? 'La metodología entra en vigor el 16 de noviembre de 2027, no hoy. La publicación no demuestra cumplimiento.'
+  : 'The methodology takes effect November 16, 2027, not today. Publication does not establish compliance.';
+ fixtureWeekly.items[0].showMargin = true;
+ fixtureWeekly.items[0][locale].margin = first[locale].watch;
+ const html = env.renderString(template, { weeklyBrief: fixtureWeekly, weeklyStories: fixtureStories, locale });
+ assert.equal(html.split(escaped(first[locale].watch)).length - 1, 1, 'do not duplicate the watch as an opted-in margin');
+ assert.ok(html.includes(uiStrings[locale].watching));
+ fixtureWeekly.items[0][locale].margin = 'A distinct reviewed editorial note.';
+ const distinct = env.renderString(template, { weeklyBrief: fixtureWeekly, weeklyStories: fixtureStories, locale });
+ assert.ok(distinct.includes('A distinct reviewed editorial note.'), 'keep separately authored opted-in margin');
+ assert.ok(distinct.includes(escaped(first[locale].watch)), 'keep next-step qualifier alongside distinct margin');
+}
+console.log('weekly watch: future dates, scope qualifiers and margin deduplication pass');
+
+// Independently curated mirrors may store background alone, not concatenated
+// background + view. Both forms retain exact story identity and reason checks.
+for (const locale of ['en', 'es']) {
+ const fixture = structuredClone(current.weeklyBrief);
+ for (const item of fixture.items) item[locale].context = current.stories.find(story => story.id === item.id)[locale].background;
+ const html = env.renderString(template, { weeklyBrief: fixture, weeklyStories: current.stories, locale });
+ for (const item of fixture.items) {
+  const copy = current.stories.find(story => story.id === item.id)[locale];
+  assert.ok(html.includes(escaped(copy.view)));
+  assert.ok(html.includes(escaped(copy.watch)));
+ }
+}

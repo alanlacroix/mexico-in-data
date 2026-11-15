@@ -8,9 +8,9 @@ function weeklyReading(item, stories, locale) {
   if (matches.length !== 1) return null;
   const copy = matches[0][locale];
   if (!copy?.background || !copy?.view ||
-      item?.[locale]?.context !== `${copy.background} ${copy.view}`.trim() ||
+      ![copy.background, `${copy.background} ${copy.view}`.trim()].includes(item?.[locale]?.context) ||
       item[locale].reason !== copy.view) return null;
-  return { background: copy.background, view: copy.view };
+  return { background: copy.background, view: copy.view, watch: copy.watch || '' };
 }
 
 function uniqueSourceLinks(sources) {
