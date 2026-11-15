@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import newsDay from './lib/news-day.cjs';
+import publicEdition from './lib/public-edition.cjs';
 import attemptsContract from './lib/edition-attempts.cjs';
 import { readWithdrawals, withdrawalHold } from './lib/withdrawn-editions.mjs';
 import { readPublicationRequest, validatePublicationRequest } from './lib/publication-request.mjs';
@@ -33,6 +34,35 @@ export function morningCollectionWindow(now = new Date()) {
   return minutes >= 6 * 60 + 5 && minutes <= 6 * 60 + 45;
 }
 
+// A repeat trigger may acknowledge a known failure, never hide unknown charges.
+function failedAttemptHold(attempts, row, reason) {
+  const rows = attemptsContract.readAccountingAttempts(attempts).attempts.filter(item => item.editorialDate === row.editorialDate);
+  if (rows.some(item => item.state === 'started'
+    || (item.state === 'failed' && (!item.completedAt || !Number.isFinite(Date.parse(item.completedAt))))
+    || item.modelAccounting?.receipts.some(receipt => receipt.state !== 'settled'))) {
+    throw new Error(`Unsettled edition accounting requires diagnosis: ${row.editorialDate}`);
+  }
+  if (!row.completedAt || !Number.isFinite(Date.parse(row.completedAt))
+    || row.modelAccounting?.receipts.some(receipt => receipt.state !== 'settled')) {
+    throw new Error(`Unsettled edition attempt requires diagnosis: ${row.editorialDate}/${row.slot}`);
+  }
+  return { run: false, slot: row.slot, retry: false, held: true,
+    reason: `${reason}: ${row.editorialDate}/${row.slot}. Recorded failure remains unresolved: ${row.reason || 'see original run'}` };
+}
+
+function zeroCallBudgetRejection(row) {
+  return row.calls === 0 && row.costUSD === 0
+    && /^daily model budget would be exceeded \(/.test(row.reason || '');
+}
+
+export function validateRetainedEdition(edition, withdrawals) {
+  if (withdrawals?.schemaVersion !== 1 || !Array.isArray(withdrawals.withdrawals)) throw new Error('Invalid editorial withdrawal registry');
+  if (!publicEdition.validateEdition(edition).ok
+    || withdrawals.withdrawals.some(row => row.withdrawnHash === edition.artifactHash)) {
+    throw new Error('Retained edition is invalid or withdrawn');
+  }
+}
+
 export function publicationPlan({ event, workflow = '', date, attempts, slot = 'morning', retry = false, edition, publicationRequest, withdrawals = { schemaVersion: 1, withdrawals: [] }, now = new Date() }) {
   const collectionTrigger = event === 'workflow_run' && workflow === 'collect-news';
   if (collectionTrigger && (!morningCollectionWindow(now) || newsDay.editorialDay(now) !== date)) {
@@ -58,21 +88,32 @@ export function publicationPlan({ event, workflow = '', date, attempts, slot = '
     return { run: false, slot: published.slot, retry: false, verify: true };
   }
   if (rows.some(row => row.state === 'review-required')) return { run: false, slot, retry: false };
-  if (event === 'workflow_dispatch') return { run: true, slot, retry };
+  // A still-running/unknown bill must not be silenced by another slot's hold.
+  if (rows.some(row => row.state === 'started')) throw new Error(`Incomplete edition attempt requires diagnosis: ${date}`);
+  if (event === 'workflow_dispatch') {
+    const requested = rows.find(row => row.slot === slot);
+    if (requested?.state === 'failed') {
+      if (!retry) return failedAttemptHold(attempts, requested, 'Explicit failed-attempt recovery required');
+      if ((requested.recoveries || []).length >= attemptsContract.MAX_RECOVERY_RUNS) {
+        return failedAttemptHold(attempts, requested, 'Bounded recovery exhausted');
+      }
+    }
+    return { run: true, slot, retry };
+  }
   const failed = rows.filter(row => row.state === 'failed')
     .sort((a, b) => Number(b.slot === 'noon') - Number(a.slot === 'noon'))[0];
   if (failed) {
+    if (zeroCallBudgetRejection(failed)) return failedAttemptHold(attempts, failed, 'Automatic retry held after zero-call budget rejection; explicit bounded recovery requires diagnosis');
     if ((failed.recoveries || []).length >= attemptsContract.MAX_RECOVERY_RUNS) {
       // The separate noon attempt is already part of the daily budget contract.
       // Once morning recovery is exhausted, it is the only remaining bounded path.
       if (failed.slot === 'morning' && !rows.some(row => row.slot === 'noon')) {
         return { run: true, slot: 'noon', retry: false };
       }
-      throw new Error(`Bounded recovery exhausted: ${date}/${failed.slot}`);
+      return failedAttemptHold(attempts, failed, 'Bounded recovery exhausted');
     }
     return { run: true, slot: failed.slot, retry: true };
   }
-  if (rows.some(row => row.state === 'started')) throw new Error(`Incomplete edition attempt requires diagnosis: ${date}`);
   // A successful code check can recover a failure, never start unsolicited generation.
   return { run: event === 'schedule' || event === 'push' || collectionTrigger, slot, retry: false };
 }
@@ -93,16 +134,18 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     attempts = recoverInterruptedAttempts(attempts, date, process.env.GITHUB_RUN_ID, process.env.GITHUB_RUN_ATTEMPT);
     fs.writeFileSync(data, `${JSON.stringify(attempts, null, 2)}\n`);
   }
+  const withdrawals = ignoredRequest ? undefined : readWithdrawals();
   const plan = publicationPlan({
-    edition, withdrawals: ignoredRequest ? undefined : readWithdrawals(),
+    edition, withdrawals,
     event, workflow: process.env.TRIGGER_WORKFLOW, date, attempts, publicationRequest, now,
     slot: process.env.REQUESTED_SLOT || 'morning', retry: process.env.REQUESTED_RECOVERY === 'true',
   });
-  const output = `run=${plan.run}\nslot=${plan.slot}\nretry=${plan.retry ? '1' : '0'}\nverify=${Boolean(plan.verify)}\nheld=${Boolean(plan.held)}\neditorial_date=${edition.editorialDate}\nartifact_hash=${edition.artifactHash}\n`;
+  const output = `run=${plan.run}\nslot=${plan.slot}\nretry=${plan.retry ? '1' : '0'}\nverify=${Boolean(plan.verify)}\nheld=${Boolean(plan.held)}\neditorial_date=${edition.editorialDate}\nartifact_hash=${edition.artifactHash}\nrequested_date=${date}\n`;
   if (plan.held) {
-    const message = `Editorial hold for ${date}: ${plan.reason}. Last-good edition ${edition.editorialDate} retained; no new publication or model spend.`;
+    validateRetainedEdition(edition, withdrawals);
+    const message = `Publication held for ${date}: ${plan.reason}. Last-good edition ${edition.editorialDate} retained; no new publication or model spend.`;
     console.log(message);
-    if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Editorial hold (not publication)\n${message}\n`);
+    if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `## Publication held (not publication)\n${message}\n`);
   }
   process.stdout.write(output);
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, output);

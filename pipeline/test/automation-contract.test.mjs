@@ -97,14 +97,14 @@ assert.match(workflow, /cron: '40 12 \* \* \*'/);
 const { publicationPlan } = await import('../publication-plan.mjs');
 const date = '2026-09-30';
 const plan = (event, rows = [], extra = {}) => publicationPlan({event, date, attempts: {attempts: rows}, edition: {editorialDate:date,artifactHash:'current'}, ...extra});
-const attempt = (state, extra = {}) => ({editorialDate: date, slot: 'morning', state, artifactHash:'current', ...extra});
+const attempt = (state, extra = {}) => ({editorialDate: date, slot: 'morning', state, calls:0, costUSD:0, completedAt:`${date}T12:30:00Z`, artifactHash:'current', ...extra});
 assert.deepEqual(plan('schedule'), {run: true, slot: 'morning', retry: false});
 assert.equal(plan('workflow_run').run, false, 'a code check alone never starts a new editorial attempt');
 assert.deepEqual(plan('workflow_run', [attempt('failed')]), {run: true, slot: 'morning', retry: true});
 assert.deepEqual(plan('schedule', [attempt('failed', {slot: 'noon'})]), {run: true, slot: 'noon', retry: true});
 for (const state of ['published', 'review-required']) assert.equal(plan('workflow_run', [attempt(state)]).run, false);
 assert.deepEqual(plan('workflow_run', [attempt('failed', {recoveries: [{}]})]), {run:true,slot:'noon',retry:false});
-assert.throws(() => plan('schedule', [attempt('failed', {slot:'noon',recoveries: [{}]})]), /exhausted/);
+assert.equal(plan('schedule', [attempt('failed', {slot:'noon',recoveries: [{}]})]).held, true);
 assert.throws(() => plan('workflow_run', [attempt('started')]), /requires diagnosis/);
 assert.equal(plan('workflow_run', [attempt('failed', {editorialDate:'2026-09-29'})]).run, false);
 assert.deepEqual(plan('workflow_dispatch', [], {slot:'noon',retry:true}), {run:true,slot:'noon',retry:true});
@@ -123,7 +123,7 @@ assert.equal(plan('workflow_run', [attempt('published')], collection).verify,tru
 assert.equal(plan('workflow_run', [attempt('review-required')], collection).run,false);
 assert.equal(plan('workflow_run', [attempt('failed')], collection).retry,true);
 assert.throws(() => plan('workflow_run', [attempt('started')], collection), /requires diagnosis/);
-assert.throws(() => plan('workflow_run', [attempt('failed',{slot:'noon',recoveries:[{}]})], collection), /exhausted/);
+assert.equal(plan('workflow_run', [attempt('failed',{slot:'noon',recoveries:[{}]})], collection).held, true);
 assert.equal(publicationPlan({event:'workflow_run',workflow:'collect-news',date:'2026-10-03',now:new Date('2026-10-03T12:22:00Z'),attempts:{attempts:[]}}).run,true,
   'the morning collection fallback also covers weekends');
 
@@ -166,3 +166,57 @@ for (const event of ['schedule', 'workflow_dispatch', 'workflow_run', 'push']) {
     assert.notEqual(result.verify,true, `${event}/${workflow}: candidate is not publication`);
   }
 }
+
+// Duplicate notifications stop at planning, without changing receipts or claiming publication.
+const failedRows = [attempt('failed', {reason:'quality rejection', recoveries:[{}]}),
+  attempt('failed', {slot:'noon', reason:'daily model budget would be exceeded (0.0941 + 0.0611 > 0.2000)'})];
+const originalRows = JSON.stringify(failedRows);
+for (const event of ['workflow_dispatch', 'schedule', 'workflow_run']) {
+  const result = plan(event, failedRows);
+  assert.equal(result.run, false);
+  assert.equal(result.held, true);
+  assert.notEqual(result.verify, true, 'held last-good verification is not fresh publication');
+  assert.match(result.reason, /Recorded failure remains unresolved/);
+}
+assert.equal(JSON.stringify(failedRows), originalRows, 'holds never modify accounting');
+assert.equal(plan('workflow_dispatch', [attempt('failed')]).held, true);
+assert.equal(plan('workflow_dispatch', [attempt('failed')], {retry:true}).run, true);
+assert.equal(plan('workflow_dispatch', failedRows, {retry:true}).held, true);
+assert.equal(plan('workflow_dispatch', failedRows, {slot:'noon',retry:true}).run, true,
+  'explicit bounded recovery remains available and still faces builder budget checks');
+for (const rows of [
+  [attempt('failed', {completedAt:''})],
+  [attempt('failed', {calls:NaN})],
+  [attempt('failed'), attempt('started', {slot:'noon'})],
+  [attempt('failed', {calls:1,costUSD:0.1,modelAccounting:{version:1,receipts:[{id:'x',state:'reserved',reservedUSD:0.1,accountedUSD:0.1}]}})],
+]) assert.throws(() => plan('workflow_dispatch', rows), /diagnosis|accounting/);
+assert.equal(plan('schedule', [attempt('failed', {reason:'network outage'})]).retry, true,
+  'a new recoverable failure still receives its bounded retry');
+assert.equal(plan('schedule', [attempt('failed', {reason:failedRows[1].reason,calls:1,costUSD:0.01})]).retry, true,
+  'budget holds are restricted to zero-call failures');
+const { failureSummary } = await import('../failure-summary.mjs');
+const morningSummary = failureSummary({attempts:failedRows},date,'morning');
+assert.match(morningSummary, /quality rejection/);
+assert.doesNotMatch(morningSummary, /budget would/);
+assert.match(failureSummary({attempts:failedRows},date,'noon'), /budget would/);
+assert.match(failureSummary({attempts:failedRows},'2026-10-01','morning'), /No failed ledger row/);
+assert.throws(() => failureSummary({attempts:failedRows},undefined,'morning'), /Invalid/);
+assert.throws(() => failureSummary({attempts:[...failedRows,failedRows[0]]},date,'morning'), /Ambiguous/);
+assert.match(workflow, /EDITORIAL_DATE: \$\{\{ steps.edition.outputs.editorial_date \|\| steps.plan.outputs.requested_date \}\}/);
+
+assert.throws(() => plan('workflow_dispatch', [attempt('failed'), attempt('failed', {
+  slot:'noon', calls:1,costUSD:0.1,modelAccounting:{version:1,receipts:[{id:'other',state:'reserved',reservedUSD:0.1,accountedUSD:0.1}]},
+})]), /Unsettled/);
+assert.match(morningSummary, /Recorded slot totals.*not new spend/);
+
+const { validateRetainedEdition } = await import('../publication-plan.mjs');
+const retained = JSON.parse(read('data/edition.json'));
+const registry = {schemaVersion:1,withdrawals:[]};
+assert.doesNotThrow(() => validateRetainedEdition(retained,registry));
+assert.throws(() => validateRetainedEdition({...retained,artifactHash:'wrong'},registry), /invalid/);
+assert.throws(() => validateRetainedEdition(retained,{schemaVersion:1,withdrawals:[{withdrawnHash:retained.artifactHash}]}), /withdrawn/);
+assert.throws(() => validateRetainedEdition(retained,{}), /registry/);
+
+for (const completedAt of ['', 'invalid']) assert.throws(() => plan('schedule', [
+  attempt('failed', {completedAt}), failedRows[1],
+]), /Unsettled edition accounting/);
