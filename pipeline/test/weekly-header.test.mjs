@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import nunjucks from 'nunjucks';
+import { assertVisibleEditionWatch } from '../lib/visible-edition-watch.mjs';
+import uiStrings from '../../_data/uiStrings.js';
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const filters = {};
@@ -18,6 +20,7 @@ for (const [start, end, enExpected, esExpected] of [
   assert.equal(filters.weekRange(start, end, 'es'), esExpected);
 }
 const env = new nunjucks.Environment(new nunjucks.FileSystemLoader('_includes'), { autoescape: true });
+env.addGlobal('uiStrings', uiStrings);
 for (const [name, fn] of Object.entries(filters)) env.addFilter(name, fn);
 const templates = Object.fromEntries(['index', 'edition'].map(name => [name, fs.readFileSync(`${name}.njk`, 'utf8').replace(/^---[\s\S]*?---\s*/, '')]));
 const edition = JSON.parse(fs.readFileSync('data/edition.json', 'utf8'));
@@ -35,7 +38,7 @@ for (const locale of ['en', 'es']) {
       assert.ok(html.includes(filters.longDate(edition.editorialDate, locale)));
       assert.ok(!html.includes(locale === 'es' ? 'La semana hasta ahora' : 'The week so far'));
       if (weekly) for (const story of edition.stories) {
-        for (const field of ['headline', 'dek', 'background', 'view']) {
+        for (const field of ['headline', 'dek', 'background', 'view', 'watch']) {
           assert.ok(html.includes(env.renderString('{{ text }}', { text: story[locale][field] })), `lost ${locale} ${field}`);
         }
       }
@@ -71,5 +74,24 @@ for (const locale of ['en', 'es']) {
   const html = fs.readFileSync(locale === 'es' ? '_site/es/index.html' : '_site/index.html', 'utf8');
   assert.ok(html.includes(edition.editionType === 'daily' ? (locale === 'es' ? 'Hoy en México' : 'Today in Mexico') : (locale === 'es' ? 'Esta semana en México' : 'This week in Mexico')));
   assert.ok(html.includes(`<a class="edition-date" href="${locale === 'es' ? '/es' : ''}/editions/${edition.editorialDate}/">`));
+  assertVisibleEditionWatch(html, edition, locale);
 }
 console.log('edition headers: daily/recap EN/ES templates, exact dates, preserved copy and daily deadline boundaries pass');
+
+// Production guard must detect omission, hiding, duplication and cross-story
+// placement even when the artifact hash remains correct.
+for (const locale of ['en', 'es']) {
+  const html = fs.readFileSync(locale === 'es' ? '_site/es/index.html' : '_site/index.html', 'utf8');
+  const item = edition.weeklyBrief.items.find(item => filters.weeklyReading(item, edition.stories, locale)?.watch);
+  const watch = filters.weeklyReading(item, edition.stories, locale).watch;
+  const escaped = env.renderString('{{ text }}', { text: watch });
+  const paragraph = `<p class="weekly-watch">${escaped}</p>`;
+  assert.ok(html.includes(paragraph));
+  for (const replacement of ['', `<p hidden>${escaped}</p>`, `<p aria-hidden="true">${escaped}</p>`,
+    `<p class="visually-hidden">${escaped}</p>`, `<p style="display: none">${escaped}</p>`,
+    `<div hidden>${paragraph}</div>`, `<p><span hidden>${escaped}</span></p>`, paragraph + paragraph]) {
+    assert.throws(() => assertVisibleEditionWatch(html.replace(paragraph, replacement), edition, locale));
+  }
+  const misplaced = html.replace(paragraph, '').replace('</article>', `${paragraph}</article>`);
+  assert.throws(() => assertVisibleEditionWatch(misplaced, edition, locale), 'text elsewhere cannot satisfy this story');
+}

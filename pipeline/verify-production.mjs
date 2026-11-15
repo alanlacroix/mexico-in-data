@@ -1,5 +1,6 @@
 // Verify the exact immutable edition, not a second operational receipt.
 import publicEdition from './lib/public-edition.cjs';
+import { assertVisibleEditionWatch } from './lib/visible-edition-watch.mjs';
 import uiStrings from '../_data/uiStrings.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -42,8 +43,9 @@ for (let attempt = 1; attempt <= 24; attempt += 1) {
       if (!response.ok) throw new Error(`${route} returned HTTP ${response.status}`);
       const html = await response.text();
       validateProductionPage(html, route, expectedHash);
+      assertVisibleEditionWatch(html, edition, route === '/es/' ? 'es' : 'en');
     }
-    console.log(`production verified: ${edition.editorialDate} · ${edition.stories.length} stories · ${edition.artifactHash} · EN/ES header verified`);
+    console.log(`production verified: ${edition.editorialDate} · ${edition.stories.length} stories · ${edition.artifactHash} · EN/ES header and visible watch verified`);
     process.exit(0);
   } catch (error) {
     last = error.message;
