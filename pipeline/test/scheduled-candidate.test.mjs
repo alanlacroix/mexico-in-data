@@ -136,3 +136,42 @@ for (const change of [{ outcomeSourceUrl: 'https://example.com/fake' },
   assert.equal(seedScheduledCandidate({ ...revenue, ...change }, officialOpening), null);
 }
 console.log('resolved revenue deadline tests: ok');
+
+const spending = JSON.parse(fs.readFileSync(new URL('../../data/events.json', import.meta.url))).events
+  .find(row => row.id === 'federal-spending-budget-2027-2026-11-15');
+const spendingOpening = '11 de noviembre de 2026 Cámara de Diputados aprueba Presupuesto de Egresos 2027 Cámara de Diputados 2,681 vistas Con 352 votos a favor, 130 en contra y ninguna abstención, la Cámara de Diputados aprobó en lo particular y sin cambios el Presupuesto de Egresos de la Federación 2027, por lo que el decreto fue enviado al Ejecutivo Federal para sus efectos constitucionales.';
+const spendingNow = new Date('2026-11-15T12:20:00Z');
+const spendingSeed = seedScheduledCandidate(spending, spendingOpening, spendingNow);
+assert.ok(spendingSeed);
+assert.equal(spendingSeed.published_at, '2026-11-11');
+assert.equal(spendingSeed._editorialDate, '2026-11-11');
+assert.equal(spendingSeed._scheduled.date, '2026-11-15');
+assert.equal(spendingSeed._scheduled.importanceFloor, 8);
+assert.equal(spendingSeed._scheduled.outcomeRequired, true);
+assert.equal(spendingSeed._scheduled.requiredForBrief, true);
+assert.deepEqual(dueScheduledRows([spending], '2026-11-15', '2026-11-15', spendingNow), [spending]);
+assert.deepEqual(missingScheduledRows([spending], []), [spending]);
+assert.deepEqual(missingScheduledRows([spending], [spendingSeed]), []);
+assert.equal(seedScheduledCandidate(spending, spendingOpening, new Date('2026-11-14T12:00:00Z')), null);
+assert.equal(linkScheduledCandidate({ title: spendingOpening }, [spending], '2026-11-15', spendingNow), null);
+for (const body of ['', 'Archivo. ' + spendingOpening,
+  spendingOpening.replace('11 de noviembre', '15 de noviembre'),
+  spendingOpening.replaceAll('2027', '2026'),
+  spendingOpening.replace('aprobó en lo particular', 'aprobaría en lo particular'),
+  spendingOpening.replace('fue enviado', 'sería enviado'),
+  spendingOpening.replace('352 votos', '300 votos'),
+  spendingOpening.replace('Con 352', 'En otra noticia. Con 352'),
+  spendingOpening + ' Corrección: no se aprobó.',
+  spendingOpening + ' Actualización: el decreto fue devuelto.',
+  spendingOpening + ' El decreto no fue enviado al Ejecutivo Federal.',
+]) assert.equal(seedScheduledCandidate(spending, body, spendingNow), null, 'changed, undated, archive or contradictory spending outcome fails closed');
+for (const change of [
+  { id: 'other-budget' }, { date: '2026-11-14' }, { approx: true },
+  { requiredForBrief: false }, { outcomeRequired: false },
+  { outcome: { actor: 'congress', topic: 'revenue-law' } },
+  { outcomeSourceUrl: 'https://example.com/fake' },
+  { resolvedOutcome: { ...spending.resolvedOutcome, reportedOn: '2026-11-15' } },
+  { resolvedOutcome: { ...spending.resolvedOutcome, sourceUrl: 'https://example.com/fake' } },
+  { resolvedOutcome: { ...spending.resolvedOutcome, status: 'effective' } },
+]) assert.equal(seedScheduledCandidate({ ...spending, ...change }, spendingOpening, spendingNow), null);
+console.log('resolved spending deadline tests: ok');
