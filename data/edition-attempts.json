@@ -2,176 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-09-30",
-      "slot": "morning",
-      "candidateSignature": "7d269f294d7a9921e04cc3d0ea3197192be5dc6bdc75553508aa49e330673c2f",
-      "state": "failed",
-      "startedAt": "2026-09-30T14:10:03.623Z",
-      "completedAt": "2026-09-30T14:10:39.846Z",
-      "calls": 4,
-      "costUSD": 0.033578,
-      "artifactHash": "",
-      "reason": "all story drafts failed the deterministic evidence gate: n-69db541d45cb: headline: unsupported number: 17.99; headline: Spanish unsupported number: 17.99; background: 4 sentences (cap 3); background: Spanish 4 sentences (cap 3); watch: watch item is grammatically incomplete; background: needs an independent source when one is available | n-08b1dfba9989: model omitted the required stor",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-69db541d45cb",
-          "reasons": [],
-          "fields": {
-            "headline": {
-              "en": "Mexican peso strengthens to 17.99 per dollar on U.S. economic data",
-              "es": "El peso mexicano se fortalece a 17.99 por dólar por datos económicos de Estados Unidos",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported number: 17.99",
-                "Spanish unsupported number: 17.99"
-              ]
-            },
-            "background": {
-              "en": "The Mexican peso appreciated to 17.9948 units per dollar on September 30, 2026, according to Bloomberg data from Mexico City at 7:12 a.m. local time. Overnight trading ranged from 17.95 to 18.15 pesos per dollar. The broader U.S. dollar index fell 0.20 percent to 101.17 points against a basket of six major currencies.",
-              "es": "El peso mexicano se apreció a 17.9948 unidades por dólar el 30 de septiembre de 2026, según datos de Bloomberg de la Ciudad de México a las 7:12 a.m. hora local. Las operaciones overnight oscilaron entre 17.95 y 18.15 pesos por dólar. El índice dólar más amplio cayó 0.20 por ciento a 101.17 puntos frente a una canasta de seis monedas principales.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "4 sentences (cap 3)",
-                "Spanish 4 sentences (cap 3)",
-                "needs an independent source when one is available"
-              ]
-            },
-            "watch": {
-              "en": "If September 2026 closes as the peso's worst month since March 2020 with the full 6 percent loss, whether October depreciation reverses would test whether recent U.S. data strength sustained pressure on the Mexican currency or offered only temporary relief.",
-              "es": "Si septiembre de 2026 cierra como el peor mes del peso desde marzo de 2020 con la caída completa de 6 por ciento, si la depreciación de octubre se revierte probaría si la fortaleza reciente de datos de Estados Unidos sostuvo presión en la moneda mexicana u ofreció solo alivio temporal.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "watch item is grammatically incomplete"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-08b1dfba9989",
-          "reasons": [
-            "model omitted the required story unit"
-          ],
-          "fields": {}
-        }
-      ],
-      "collection": {
-        "collectedAt": "2026-09-30T14:10:03.623Z",
-        "aliveSources": 69,
-        "totalSources": 72,
-        "wireCount": 60,
-        "minimumAlive": 36,
-        "ok": true,
-        "failedSourceIds": [
-          "insightcrime-mx",
-          "retailers-mx",
-          "nexos"
-        ]
-      },
-      "recoveries": [
-        {
-          "startedAt": "2026-09-30T13:01:53.924Z",
-          "completedAt": "2026-09-30T13:02:33.396Z",
-          "calls": 2,
-          "costUSD": 0.013732,
-          "reason": "all story drafts failed the deterministic evidence gate: n-f044fbbf79e7: headline: unsupported number: 4; headline: Spanish unsupported number: 4; dek: unsupported numbers: 15.7, 11.7; dek: numbers changed in Spanish; watch: watch item has no observable next test; watch: proposal or uncertainty became final in Spanish",
-          "diagnostics": [
-            {
-              "stage": "deterministic",
-              "storyId": "n-f044fbbf79e7",
-              "reasons": [],
-              "fields": {
-                "headline": {
-                  "en": "Pemex reports 4 billion dollar fuel import deficit January through August 2026",
-                  "es": "Pemex reporta déficit de importación de combustible de 4 mil millones de dólares enero a agosto 2026",
-                  "refs": [
-                    "article"
-                  ],
-                  "reasons": [
-                    "unsupported number: 4",
-                    "Spanish unsupported number: 4"
-                  ]
-                },
-                "dek": {
-                  "en": "Petroleum product imports totaled 15.7 billion dollars against exports of 11.7 billion dollars, a 300 percent annual increase in the negative balance. Mexico consumes roughly 850,000 barrels daily of gasoline while domestic production represents less than 50 percent of demand.",
-                  "es": "Las importaciones de productos petroleros totalizaron 15.700 millones de dólares frente a exportaciones de 11.700 millones de dólares, un aumento anual de 300 por ciento en el saldo negativo. México consume aproximadamente 850.000 barriles diarios de gasolina mientras que la producción doméstica representa menos del 50 por ciento de la demanda.",
-                  "refs": [
-                    "article"
-                  ],
-                  "reasons": [
-                    "unsupported numbers: 15.7, 11.7",
-                    "numbers changed in Spanish"
-                  ]
-                },
-                "watch": {
-                  "en": "Pemex officials could not be reached for comment as data was released outside business hours. The company is increasing fuel production but current capacity remains insufficient to meet domestic demand.",
-                  "es": "Los funcionarios de Pemex no pudieron ser contactados para comentar ya que los datos se difundieron fuera del horario laboral. La compañía está aumentando la producción de combustibles pero la capacidad actual permanece insuficiente para atender la demanda doméstica.",
-                  "refs": [
-                    "article"
-                  ],
-                  "reasons": [
-                    "watch item has no observable next test",
-                    "proposal or uncertainty became final in Spanish"
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "editorialDate": "2026-09-30",
-      "slot": "noon",
-      "candidateSignature": "d250aa031023d81ae622f71aa51c83017015f29f74c60d1851d12f20d099edd9",
-      "state": "published",
-      "startedAt": "2026-09-30T14:23:07.260Z",
-      "completedAt": "2026-09-30T14:32:43.042Z",
-      "calls": 2,
-      "costUSD": 0.078789,
-      "artifactHash": "212da8f9703cfa6ef2271da46db4c1720123c89f6dc5ab17f534abe105715ba6",
-      "reason": "Independent editorial recovery passed source, bilingual and deterministic gates",
-      "diagnostics": [],
-      "collection": {
-        "collectedAt": "2026-09-30T14:23:07.260Z",
-        "aliveSources": 67,
-        "totalSources": 72,
-        "wireCount": 60,
-        "minimumAlive": 36,
-        "ok": true,
-        "failedSourceIds": [
-          "insightcrime-mx",
-          "t21",
-          "retailers-mx",
-          "m4ec-mx",
-          "nexos"
-        ]
-      },
-      "recoveries": [
-        {
-          "startedAt": "2026-09-30T14:16:27.200Z",
-          "completedAt": "2026-09-30T14:17:17.912Z",
-          "calls": 1,
-          "costUSD": 0.078789,
-          "reason": "model call 1 returned no usable result",
-          "diagnostics": []
-        }
-      ],
-      "manualRecovery": {
-        "reviewedAt": "2026-09-30T14:32:43.042Z",
-        "evidenceCapturedAt": "2026-09-30T14:28:31.003Z",
-        "method": "independent field-by-field source and bilingual review",
-        "priorFailure": "core LLM request rejected with HTTP 400: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The compiled grammar is too large, which would cause performance issues. Simplify your tool schemas or reduce the"
-      }
-    },
-    {
       "editorialDate": "2026-10-01",
       "slot": "morning",
       "candidateSignature": "4ed7b87a4c3718ad0d889b03abb36848412ef8d332a3042bd56dd0a093170841",
@@ -8580,6 +8410,49 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-11-15",
+      "slot": "morning",
+      "candidateSignature": "d9326954ab3002186012fa565293eb50690f1f0ab91ffadbffd541f1b8f3b09f",
+      "state": "started",
+      "startedAt": "2026-11-15T12:21:50.903Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.060743,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-15T12:21:50.903Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ascoa",
+          "datoz",
+          "insightcrime-mx",
+          "nexos"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "43713440707",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "4c75c32b-d024-4fef-91e9-37ac319df5b7",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.060743,
+            "accountedUSD": 0.060743,
+            "state": "reserved"
           }
         ]
       }
