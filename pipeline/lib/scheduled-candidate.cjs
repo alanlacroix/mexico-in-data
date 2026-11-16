@@ -309,4 +309,15 @@ function seedScheduledCandidate(row, pageText, now = new Date()) {
   return null;
 }
 
-module.exports = { scheduledReleaseState, scheduledCandidateAvailable, candidatePublishedBy, dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate };
+// Verify a resolved deadline against its exact official source before discharging
+// it. Its historical report cannot become a fresh daily lead merely because the
+// statutory deadline is now due. Invalid evidence never discharges an obligation.
+function resolveScheduledCandidateWindow(row, pageText, now, start) {
+  const candidate = seedScheduledCandidate(row, pageText, now);
+  const resolvedOutsideWindow = Boolean(candidate && row?.resolvedOutcome
+    && candidate._editorialDate === row.resolvedOutcome.reportedOn
+    && candidate._editorialDate < start);
+  return { candidate: resolvedOutsideWindow ? null : candidate, resolvedOutsideWindow };
+}
+
+module.exports = { resolveScheduledCandidateWindow, scheduledReleaseState, scheduledCandidateAvailable, candidatePublishedBy, dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate };
