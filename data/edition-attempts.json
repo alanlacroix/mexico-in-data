@@ -8511,14 +8511,35 @@
       "editorialDate": "2026-11-16",
       "slot": "morning",
       "candidateSignature": "945d74ebe30230e90286d531eff8e529db5630d673712e25d886730c92740c14",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-16T13:03:19.284Z",
-      "completedAt": "",
+      "completedAt": "2026-11-16T13:04:31.797Z",
       "calls": 5,
       "costUSD": 0.085126,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "federal-spending-budget-2027-2026-11-15",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The budget passed with 352 votes in favor and 130 against on November 11, four days before the constitutional deadline. Total spending includes 1 billón 25 mil 400 millones pesos for priority programs and 1 billón 133 mil 613.2 millones for public investment in education, health and housing.",
+              "es": "El presupuesto fue aprobado con 352 votos a favor y 130 en contra el 11 de noviembre, cuatro días antes del plazo constitucional. El gasto total incluye 1 billón 25 mil 400 millones de pesos para programas prioritarios e 1 billón 133 mil 613.2 millones para inversión pública en educación, salud y vivienda.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "48 words (cap 45)",
+                "unsupported number: 1",
+                "completed action was introduced in Spanish",
+                "Spanish unsupported number: 1"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-16T13:03:19.284Z",
         "aliveSources": 66,
