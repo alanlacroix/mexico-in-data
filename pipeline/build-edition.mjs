@@ -59,7 +59,7 @@ const NEWS_SOURCES = read(path.join(__dirname, 'news-sources.json'), { sources: 
 
 const { editorialDay } = newsDay;
 const { groupEvents, mergeCoverage } = newsThreads;
-const { scheduledReleaseState, scheduledCandidateAvailable, candidatePublishedBy, dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate } = scheduledCandidate;
+const { resolveScheduledCandidateWindow, scheduledReleaseState, scheduledCandidateAvailable, candidatePublishedBy, dueScheduledRows, linkScheduledCandidate, missingScheduledRows, seedScheduledCandidate } = scheduledCandidate;
 const { prioritizeCandidates, fallbackImportanceComponents, attentionSignal, commentaryOnlyCandidate } = candidatePriority;
 const { calendarScore, standingScore } = analysisEvidence;
 const { atomicWriteEdition, withArtifactHash, mondayOf, previousDay, weekendDay } = publicEdition;
@@ -188,6 +188,7 @@ async function candidateUniverse(now, schedule, editorialDate,
   const monthlyInegi = createInegiMonthlyLoader({ now });
   const linkedIds = new Set(grouped.map((item) => item._scheduled?.id).filter(Boolean));
   const due = allDue.filter((row) => !linkedIds.has(row.id));
+  const verifiedHistoricalOutcomes = new Set();
   const seeded = (await Promise.all(due.map(async (row) => {
     if (requiresInegiMonthlySource(row)) {
       const item = await monthlyInegi(row);
@@ -196,7 +197,11 @@ async function candidateUniverse(now, schedule, editorialDate,
     }
     const outcomeUrl = row.outcomeSourceUrl || row.sourceUrl;
     const page = await fetchArticle(outcomeUrl, { allowedHosts: [new URL(outcomeUrl).hostname] });
-    const item = page.ok ? seedScheduledCandidate(row, page.text, now) : null;
+    const resolved = page.ok
+      ? resolveScheduledCandidateWindow(row, page.text, now, allowedStart)
+      : { candidate: null, resolvedOutsideWindow: false };
+    if (resolved.resolvedOutsideWindow) verifiedHistoricalOutcomes.add(row.id);
+    const item = resolved.candidate;
     if (item) item._section = sectionOf(item);
     return item;
   }))).filter(Boolean);
@@ -208,7 +213,7 @@ async function candidateUniverse(now, schedule, editorialDate,
       item && !publishedUrls.has(articleIdentity(item.url, registeredHosts)));
   for (const item of optional) item._section = sectionOf(item);
   const complete = mergeOptionalCandidates(seeded, grouped, optional, registeredHosts);
-  const missingDue = missingScheduledRows(allDue, complete);
+  const missingDue = missingScheduledRows(allDue.filter(row => !verifiedHistoricalOutcomes.has(row.id)), complete);
   if (missingDue.length) {
     throw new Error(`required scheduled outcome unavailable: ${missingDue.map((row) => row.id).join(', ')}`);
   }

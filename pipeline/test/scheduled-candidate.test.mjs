@@ -175,3 +175,54 @@ for (const change of [
   { resolvedOutcome: { ...spending.resolvedOutcome, status: 'effective' } },
 ]) assert.equal(seedScheduledCandidate({ ...spending, ...change }, spendingOpening, spendingNow), null);
 console.log('resolved spending deadline tests: ok');
+
+// Monday regression: the November 15 deadline was met November 11. Verify its
+// source, but do not force that old report into the November 16 daily edition.
+const { resolveScheduledCandidateWindow } = await import('../lib/scheduled-candidate.cjs').then(m => m.default);
+const monday = new Date('2026-11-16T13:00:00Z');
+assert.deepEqual(resolveScheduledCandidateWindow(spending, spendingOpening, monday, '2026-11-15'),
+  { candidate: null, resolvedOutsideWindow: true });
+const sameWeek = resolveScheduledCandidateWindow(spending, spendingOpening, spendingNow, '2026-11-09');
+assert.equal(sameWeek.resolvedOutsideWindow, false);
+assert.equal(sameWeek.candidate._editorialDate, '2026-11-11');
+for (const body of ['', spendingOpening.replace('11 de noviembre', '15 de noviembre'), spendingOpening + ' Corrección: no fue aprobado.']) {
+  assert.deepEqual(resolveScheduledCandidateWindow(spending, body, monday, '2026-11-15'),
+    { candidate: null, resolvedOutsideWindow: false });
+}
+assert.deepEqual(resolveScheduledCandidateWindow({ ...spending, resolvedOutcome: { ...spending.resolvedOutcome, status: 'effective' } },
+  spendingOpening, monday, '2026-11-15'), { candidate: null, resolvedOutsideWindow: false });
+console.log('resolved deadline editorial window: ok');
+assert.equal(resolveScheduledCandidateWindow(spending, spendingOpening, monday, '2026-11-11').resolvedOutsideWindow, false,
+  'a report on the exact lower boundary remains eligible');
+
+// Exercise the real universe wiring without network, model calls or production data.
+const { default: os } = await import('node:os');
+const { default: path } = await import('node:path');
+const { fileURLToPath } = await import('node:url');
+const { spawnSync } = await import('node:child_process');
+const root = fileURLToPath(new URL('../../', import.meta.url));
+const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'mb-deadline-window-'));
+try {
+  fs.cpSync(path.join(root, 'pipeline'), path.join(temp, 'pipeline'), { recursive: true });
+  fs.mkdirSync(path.join(temp, 'data/news'), { recursive: true });
+  fs.writeFileSync(path.join(temp, 'package.json'), '{"type":"module"}');
+  fs.symlinkSync(path.join(root, 'node_modules'), path.join(temp, 'node_modules'));
+  fs.writeFileSync(path.join(temp, 'pipeline/lib/fetch-article.js'),
+    'export async function fetchArticle(){return {ok:Boolean(globalThis.body),text:globalThis.body};}');
+  const script = `
+    import assert from 'node:assert/strict';
+    import { candidateUniverse } from './pipeline/build-edition.mjs';
+    const row=${JSON.stringify(spending)};
+    const now=new Date('2026-11-16T13:00:00Z');
+    globalThis.fetch=()=>{throw Error('unexpected network');};
+    globalThis.body=${JSON.stringify(spendingOpening)};
+    assert.deepEqual(await candidateUniverse(now,{events:[row]},'2026-11-16',[]),[]);
+    for(const body of ['',globalThis.body+' Corrección: no fue aprobado.']) {
+      globalThis.body=body;
+      await assert.rejects(candidateUniverse(now,{events:[row]},'2026-11-16',[]),/required scheduled outcome unavailable/);
+    }
+  `;
+  const result=spawnSync(process.execPath,['--input-type=module','-e',script],{cwd:temp,encoding:'utf8'});
+  assert.equal(result.status,0,result.stdout+result.stderr);
+} finally { fs.rmSync(temp,{recursive:true,force:true}); }
+console.log('resolved deadline candidateUniverse integration: ok');
