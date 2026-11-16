@@ -8511,17 +8511,17 @@
       "editorialDate": "2026-11-16",
       "slot": "morning",
       "candidateSignature": "945d74ebe30230e90286d531eff8e529db5630d673712e25d886730c92740c14",
-      "state": "failed",
-      "startedAt": "2026-11-16T13:01:35.766Z",
-      "completedAt": "2026-11-16T13:02:58.139Z",
-      "calls": 3,
-      "costUSD": 0.047474,
+      "state": "started",
+      "startedAt": "2026-11-16T13:03:19.284Z",
+      "completedAt": "",
+      "calls": 4,
+      "costUSD": 0.101609,
       "artifactHash": "",
-      "reason": "invalid edition: stories[0] key-development must be from the previous day; weekStories[2].date falls outside the edition week",
+      "reason": "",
       "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-16T13:01:35.766Z",
-        "aliveSources": 49,
+        "collectedAt": "2026-11-16T13:03:19.284Z",
+        "aliveSources": 66,
         "totalSources": 72,
         "wireCount": 57,
         "minimumAlive": 36,
@@ -8529,33 +8529,25 @@
         "failedSourceIds": [
           "elfin-empresas",
           "elfin-mercados",
-          "gnews-eleconomista",
           "ascoa",
-          "gnews-usmca",
-          "gnews-politics",
-          "gnews-security",
-          "gnews-dof",
-          "gnews-wilson-mexico",
-          "gnews-investment",
-          "gnews-markets",
-          "gnews-ustr",
           "datoz",
           "insightcrime-mx",
-          "gnews-payments-watchlist",
-          "gnews-payments-rails",
-          "gnews-cnbv-actions",
-          "gnews-merchant-crime",
-          "gnews-energy",
-          "gnews-infra",
-          "gnews-ecommerce",
-          "gnews-mexico-china",
           "mexiconow"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-11-16T13:01:35.766Z",
+          "completedAt": "2026-11-16T13:02:58.139Z",
+          "calls": 3,
+          "costUSD": 0.047474,
+          "reason": "invalid edition: stories[0] key-development must be from the previous day; weekStories[2].date falls outside the edition week",
+          "diagnostics": []
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "43871805521",
+        "runId": "43871918127",
         "runAttempt": "1",
         "receipts": [
           {
@@ -8605,6 +8597,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "ee6ce163-1ce7-4ef3-9ec0-536424e5681f",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.054135,
+            "accountedUSD": 0.054135,
+            "state": "reserved"
           }
         ]
       }
