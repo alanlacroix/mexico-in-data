@@ -8587,91 +8587,104 @@
       "editorialDate": "2026-11-17",
       "slot": "morning",
       "candidateSignature": "d2318d5ed3a49eac9e4b58a16f304c93c9899cc8eebcc109f29a9c9b6c6d10c8",
-      "state": "failed",
-      "startedAt": "2026-11-17T12:17:06.751Z",
-      "completedAt": "2026-11-17T12:18:01.767Z",
-      "calls": 2,
-      "costUSD": 0.072486,
+      "state": "started",
+      "startedAt": "2026-11-17T12:18:29.799Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.115656,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-c609e834ee5d",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "Mexico's environment ministry published a study backing a proposed protected area covering 197,337-18-88.73 hectares at Laguna de Cuyutlán in Armería and Manzanillo, Colima. The public can submit comments for 30 days starting the day after the November 17, 2026 publication.",
-              "es": "La Semarnat publicó un estudio que respalda un área natural protegida propuesta de 197,337-18-88.73 hectáreas en la Laguna de Cuyutlán, en Armería y Manzanillo, Colima. El público puede presentar comentarios durante 30 días naturales a partir del día siguiente a la publicación del 17 de noviembre de 2026.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported numbers: 30, 17",
-                "Spanish unsupported numbers: 30, 17"
-              ]
-            },
-            "background": {
-              "en": "The proposal would create a flora and fauna protection area under Mexico's general ecological balance law. The national protected areas commission (Conanp) prepared the study required to justify the decree, which remains pending approval.",
-              "es": "La propuesta crearía un área de protección de flora y fauna bajo la Ley General del Equilibrio Ecológico. La Conanp elaboró el estudio requerido para justificar el decreto, que sigue pendiente de aprobación.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "proposal or draft described as a completed action"
-              ]
-            },
-            "watch": {
-              "en": "",
-              "es": "",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "empty report text",
-                "watch item has no observable next test",
-                "Spanish translation is empty"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-8ac5f05045f7",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "Mexico ranked fourth in APEC in 2025 with high and medium-tech manufactured goods representing 70.6% of its product exports, surpassed only by Taiwan, Hong Kong and South Korea among the region's 21 member economies.",
-              "es": "México ocupó el cuarto lugar de la APEC en 2025 con bienes manufacturados de tecnología media y alta representando 70.6% de sus exportaciones de productos, superado solo por Taiwán, Hong Kong y Corea del Sur entre las 21 economías miembros de la región.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported number: 21",
-                "Spanish unsupported number: 21",
-                "repeats the headline without adding context"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-17T12:17:06.751Z",
-        "aliveSources": 69,
+        "collectedAt": "2026-11-17T12:18:29.799Z",
+        "aliveSources": 65,
         "totalSources": 72,
         "wireCount": 47,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
+          "ciep",
           "ascoa",
           "datoz",
-          "insightcrime-mx"
+          "insightcrime-mx",
+          "m4ec-mx",
+          "justice-in-mexico",
+          "iad-dialogue"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-11-17T12:17:06.751Z",
+          "completedAt": "2026-11-17T12:18:01.767Z",
+          "calls": 2,
+          "costUSD": 0.072486,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-c609e834ee5d",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "Mexico's environment ministry published a study backing a proposed protected area covering 197,337-18-88.73 hectares at Laguna de Cuyutlán in Armería and Manzanillo, Colima. The public can submit comments for 30 days starting the day after the November 17, 2026 publication.",
+                  "es": "La Semarnat publicó un estudio que respalda un área natural protegida propuesta de 197,337-18-88.73 hectáreas en la Laguna de Cuyutlán, en Armería y Manzanillo, Colima. El público puede presentar comentarios durante 30 días naturales a partir del día siguiente a la publicación del 17 de noviembre de 2026.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported numbers: 30, 17",
+                    "Spanish unsupported numbers: 30, 17"
+                  ]
+                },
+                "background": {
+                  "en": "The proposal would create a flora and fauna protection area under Mexico's general ecological balance law. The national protected areas commission (Conanp) prepared the study required to justify the decree, which remains pending approval.",
+                  "es": "La propuesta crearía un área de protección de flora y fauna bajo la Ley General del Equilibrio Ecológico. La Conanp elaboró el estudio requerido para justificar el decreto, que sigue pendiente de aprobación.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "proposal or draft described as a completed action"
+                  ]
+                },
+                "watch": {
+                  "en": "",
+                  "es": "",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "empty report text",
+                    "watch item has no observable next test",
+                    "Spanish translation is empty"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-8ac5f05045f7",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "Mexico ranked fourth in APEC in 2025 with high and medium-tech manufactured goods representing 70.6% of its product exports, surpassed only by Taiwan, Hong Kong and South Korea among the region's 21 member economies.",
+                  "es": "México ocupó el cuarto lugar de la APEC en 2025 con bienes manufacturados de tecnología media y alta representando 70.6% de sus exportaciones de productos, superado solo por Taiwán, Hong Kong y Corea del Sur entre las 21 economías miembros de la región.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported number: 21",
+                    "Spanish unsupported number: 21",
+                    "repeats the headline without adding context"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "44081656378",
+        "runId": "44081779143",
         "runAttempt": "1",
         "receipts": [
           {
@@ -8705,6 +8718,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "6f2fa8df-ca71-40c2-838d-cd33d48192cb",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.04317,
+            "accountedUSD": 0.04317,
+            "state": "reserved"
           }
         ]
       }
