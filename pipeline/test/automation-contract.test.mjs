@@ -220,3 +220,15 @@ assert.throws(() => validateRetainedEdition(retained,{}), /registry/);
 for (const completedAt of ['', 'invalid']) assert.throws(() => plan('schedule', [
   attempt('failed', {completedAt}), failedRows[1],
 ]), /Unsettled edition accounting/);
+
+const descriptiveBudgetRows = structuredClone(failedRows);
+descriptiveBudgetRows[1].reason = 'model budget preflight blocked: spent=0.1083, next-call reserve=0.0611, mandatory audit reserve=0.0400, daily limit=0.2000, monthly remaining=1.0000';
+assert.deepEqual(plan('workflow_dispatch', descriptiveBudgetRows, {retry:true}),
+  plan('workflow_dispatch', failedRows, {retry:true}),
+  'new budget diagnostics retain legacy zero-call planning semantics');
+for (const event of ['schedule', 'workflow_run']) {
+  const result = plan(event, descriptiveBudgetRows, {workflow:'release-check'});
+  assert.equal(result.run, false);
+  assert.equal(result.held, true);
+  assert.match(result.reason, /zero-call budget rejection/);
+}

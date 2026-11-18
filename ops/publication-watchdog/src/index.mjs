@@ -54,6 +54,10 @@ function claimKey(due) {
   return `edition-dispatch:${due.editorialDate}:${due.slot}`;
 }
 
+function receiptKey(due) {
+  return `edition-dispatch-success:${due.editorialDate}:${due.slot}`;
+}
+
 function githubHeaders(token) {
   return {
     Accept: 'application/vnd.github+json',
@@ -92,12 +96,18 @@ export async function runClock(env, now = new Date()) {
   await env.WATCHDOG_STATE.put(key, JSON.stringify({ claimedAt: now.toISOString() }), { expirationTtl: CLAIM_TTL_SECONDS });
   try {
     await dispatch(settings(env), env.GITHUB_TOKEN, due);
-    console.log(JSON.stringify({ service: 'edition-clock', event: 'dispatched', ...due }));
-    return { action: 'dispatch', reason: 'slot claimed', due };
   } catch (error) {
     await env.WATCHDOG_STATE.delete(key);
     throw error;
   }
+  // A claim is not proof of delivery. Record only an acknowledged HTTP 204.
+  // If this write fails, retain the claim: redispatching an accepted request to
+  // repair telemetry could duplicate work. Health must fail closed instead.
+  await env.WATCHDOG_STATE.put(receiptKey(due), JSON.stringify({
+    ...due, dispatchedAt: now.toISOString(),
+  }), { expirationTtl: CLAIM_TTL_SECONDS });
+  console.log(JSON.stringify({ service: 'edition-clock', event: 'dispatched', ...due }));
+  return { action: 'dispatch', reason: 'slot claimed', due };
 }
 
 async function writeHeartbeat(env, heartbeat) {
@@ -126,16 +136,20 @@ export async function runScheduledCheck(env, now = new Date()) {
 }
 
 export async function checkHealth(env, now = new Date()) {
+  const clock = mexicoCityClock(now);
+  const dailyDispatchRequired = clock.minuteOfDay >= MORNING_RETRY_CUTOFF_MINUTE;
   const checks = {
     githubTokenConfigured: Boolean(env.GITHUB_TOKEN),
     stateBindingConfigured: Boolean(env.WATCHDOG_STATE && typeof env.WATCHDOG_STATE.get === 'function'),
     heartbeatFresh: false,
     lastScheduledCheckHealthy: false,
+    dailyDispatchConfirmed: !dailyDispatchRequired,
   };
   const errors = [];
   if (!checks.githubTokenConfigured) errors.push('GITHUB_TOKEN secret is not configured');
   if (!checks.stateBindingConfigured) errors.push('WATCHDOG_STATE KV binding is not configured');
   let heartbeat = null;
+  let dailyDispatch = null;
   if (checks.stateBindingConfigured) {
     try {
       heartbeat = await readHeartbeat(env);
@@ -149,6 +163,23 @@ export async function checkHealth(env, now = new Date()) {
       errors.push('heartbeat state is unreadable');
     }
   }
+  if (checks.stateBindingConfigured) {
+    try {
+      const due = { editorialDate: clock.editorialDate, slot: 'morning' };
+      const value = await env.WATCHDOG_STATE.get(receiptKey(due));
+      dailyDispatch = value ? JSON.parse(value) : null;
+      const dispatchedAt = new Date(dailyDispatch?.dispatchedAt || '');
+      const receiptDue = Number.isFinite(dispatchedAt.getTime()) ? dueSlot(dispatchedAt) : null;
+      const confirmed = dailyDispatch?.editorialDate === due.editorialDate
+        && dailyDispatch?.slot === due.slot && receiptDue?.editorialDate === due.editorialDate
+        && dispatchedAt.getTime() <= now.getTime();
+      checks.dailyDispatchConfirmed = !dailyDispatchRequired || confirmed;
+      if (!checks.dailyDispatchConfirmed) errors.push('daily morning dispatch has not been confirmed');
+    } catch {
+      checks.dailyDispatchConfirmed = false;
+      errors.push('daily dispatch state is unreadable');
+    }
+  }
   return {
     ok: Object.values(checks).every(Boolean),
     service: 'edition-clock',
@@ -157,6 +188,8 @@ export async function checkHealth(env, now = new Date()) {
     checks,
     errors,
     heartbeat,
+    dailyDispatchRequired,
+    dailyDispatch,
   };
 }
 

@@ -325,3 +325,17 @@ for (const [english, spanish] of [
   [tariffEn + ' because the rule helps suppliers', 'La regla ayuda a proveedores porque piden mantener el T-MEC sin aranceles'],
 ]) assert.ok(bilingualFidelityFlags({english, spanish}).some(flag => /negation/.test(flag)), english);
 assert.ok(bilingualFidelityFlags({english: tariffEn, spanish: tariffEs.replace('T-MEC', 'Banxico')}).some(flag => /usmca|banxico/.test(flag)));
+
+// November 18: observed correct translations must not consume the sole repair.
+for (const [english, spanish] of [
+  ['The reforms took effect in September.', 'Las reformas entraron en vigor en septiembre.'],
+  ['Yet exports rose.', 'Sin embargo, las exportaciones subieron.'],
+]) assert.deepEqual(bilingualFidelityFlags({ english, spanish }), []);
+for (const [english, spanish, expected] of [
+  ['The reforms could take effect.', 'Las reformas entraron en vigor.', /completed action/],
+  ['The reforms took effect.', 'Las reformas podrían entrar en vigor.', /completed action/],
+  ['Yet exports rose.', 'Sin embargo, las exportaciones no subieron.', /negation/],
+  ['Yet exports did not rise.', 'Sin embargo, las exportaciones subieron.', /negation/],
+  ['Exports rose without support.', 'Las exportaciones subieron.', /negation/],
+  ['Exports rose.', 'Las exportaciones subieron sin apoyo.', /negation/],
+]) assert.ok(bilingualFidelityFlags({ english, spanish }).some(flag => expected.test(flag)), english);

@@ -30,8 +30,8 @@ npx wrangler secret put GITHUB_TOKEN
 npx wrangler deploy
 ```
 
-The existing `WATCHDOG_STATE` KV namespace contains only slot claims and a health
-heartbeat. Cloudflare Cron Triggers use UTC, so the exact daily trigger is
+The existing `WATCHDOG_STATE` KV namespace contains only slot claims, successful daily dispatch receipts,
+and a health heartbeat. Cloudflare Cron Triggers use UTC, so the exact daily trigger is
 `5 12 * * *`; the Worker verifies the corresponding local time in
 `America/Mexico_City` before dispatching. Mexico City's current UTC-6 clock makes
 12:05 UTC equal to 6:05 a.m. local time.
@@ -41,3 +41,19 @@ heartbeat. Cloudflare Cron Triggers use UTC, so the exact daily trigger is
 ```sh
 node pipeline/test/publication-watchdog.test.mjs
 ```
+
+## Health meaning
+
+After 6:20 a.m. Mexico City, health requires today's successful dispatch receipt
+in addition to a fresh, healthy heartbeat. A claim alone is not a receipt. A
+later outside-window heartbeat cannot hide a missed cron or failed dispatch.
+Receipts are written only after GitHub acknowledges the dispatch with HTTP 204;
+they confirm acceptance, not workflow completion or publication. Health never
+dispatches or repairs content.
+
+If receipt storage fails after GitHub accepts, the claim remains to avoid
+redispatching accepted work, and health fails closed. Investigate the workflow
+and KV storage rather than clearing the claim. Deploying this change after the
+morning window will report missing confirmation for that day when the older
+Worker dispatched without a receipt; do not fabricate a receipt or rerun paid
+work to clear it. Verify the next scheduled dispatch and receipt after deployment.
