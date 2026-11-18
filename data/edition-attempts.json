@@ -8743,56 +8743,68 @@
       "slot": "noon",
       "candidateSignature": "f22c0ca0c2af47e4fb09e16bf6f24a4ac6c8bd9a7bb9f195b27bad624e266767",
       "state": "failed",
-      "startedAt": "2026-11-18T12:48:36.357Z",
-      "completedAt": "2026-11-18T12:49:41.848Z",
+      "startedAt": "2026-11-18T12:50:00.662Z",
+      "completedAt": "2026-11-18T12:50:17.827Z",
       "calls": 2,
       "costUSD": 0.03208,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-83da3c2881f3",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "The Federal Institute of Commercial Bankruptcy Specialists modified administrative procedures November 18, 2026, to align with constitutional changes that transferred judicial administration to a new agency beginning September 1, 2025.",
-              "es": "El Instituto Federal de Especialistas de Concursos Mercantiles modificó procedimientos administrativos el 18 de noviembre de 2026 para alinearse con cambios constitucionales que transfirieron administración judicial a un nuevo organismo a partir del 1 de septiembre de 2025.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported number: 18",
-                "Spanish unsupported number: 18"
-              ]
-            },
-            "view": {
-              "en": "The rule modifications allow the bankruptcy administration agency to operate within the reorganized judicial system by updating references and procedures that previously relied on structures no longer in place. The changes preserve the Institute's technical and operational autonomy while aligning it with new governance arrangements that consolidated judicial administration under a single organ.",
-              "es": "Las modificaciones de reglas permiten que el organismo de administración de quiebras opere dentro del sistema judicial reorganizado actualizando referencias y procedimientos que previamente dependían de estructuras ya inexistentes. Los cambios preservan autonomía técnica y operativa del Instituto mientras lo alinean con nuevos arreglos de gobernanza que consolidaron administración judicial bajo un solo organismo.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "negation was dropped in Spanish"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "daily model budget would be exceeded (0.1083 + 0.0482 > 0.2000)",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-18T12:48:36.357Z",
-        "aliveSources": 69,
+        "collectedAt": "2026-11-18T12:50:00.662Z",
+        "aliveSources": 66,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
+          "ciep",
           "ascoa",
           "datoz",
-          "insightcrime-mx"
+          "insightcrime-mx",
+          "justice-in-mexico",
+          "iad-dialogue"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-11-18T12:48:36.357Z",
+          "completedAt": "2026-11-18T12:49:41.848Z",
+          "calls": 2,
+          "costUSD": 0.03208,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-83da3c2881f3",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "The Federal Institute of Commercial Bankruptcy Specialists modified administrative procedures November 18, 2026, to align with constitutional changes that transferred judicial administration to a new agency beginning September 1, 2025.",
+                  "es": "El Instituto Federal de Especialistas de Concursos Mercantiles modificó procedimientos administrativos el 18 de noviembre de 2026 para alinearse con cambios constitucionales que transfirieron administración judicial a un nuevo organismo a partir del 1 de septiembre de 2025.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported number: 18",
+                    "Spanish unsupported number: 18"
+                  ]
+                },
+                "view": {
+                  "en": "The rule modifications allow the bankruptcy administration agency to operate within the reorganized judicial system by updating references and procedures that previously relied on structures no longer in place. The changes preserve the Institute's technical and operational autonomy while aligning it with new governance arrangements that consolidated judicial administration under a single organ.",
+                  "es": "Las modificaciones de reglas permiten que el organismo de administración de quiebras opere dentro del sistema judicial reorganizado actualizando referencias y procedimientos que previamente dependían de estructuras ya inexistentes. Los cambios preservan autonomía técnica y operativa del Instituto mientras lo alinean con nuevos arreglos de gobernanza que consolidaron administración judicial bajo un solo organismo.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "negation was dropped in Spanish"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
         "runId": "44307429030",
