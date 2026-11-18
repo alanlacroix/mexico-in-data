@@ -8527,14 +8527,63 @@
       "editorialDate": "2026-11-18",
       "slot": "morning",
       "candidateSignature": "82c1a95be879df25b391fa017ff576a39d8574f2fc1e59d35dbdab4b3e49076d",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-18T12:14:44.699Z",
-      "completedAt": "",
+      "completedAt": "2026-11-18T12:15:48.221Z",
       "calls": 2,
       "costUSD": 0.037103,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-83da3c2881f3",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The Federal Institute of Commercial Bankruptcy Specialists modified operational rules on November 18, 2026, to align with Mexico's restructured judicial system. The Institute updated regulations following the dissolution of the Federal Judicial Council and the creation of the Judicial Administration Body on September 1, 2025.",
+              "es": "El Instituto Federal de Especialistas de Concursos Mercantiles modificó reglas operativas el 18 de noviembre de 2026, para alinearse con el sistema judicial reestructurado de México. El Instituto actualizó regulaciones tras la disolución del Consejo de la Judicatura Federal y la creación del Órgano de Administración Judicial el 1 de septiembre de 2025.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 18",
+                "Spanish unsupported number: 18"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-d2392828443e",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Sheinbaum seeks ties with Xi amid Mexico-China trade deficit over 123 billion dollars",
+              "es": "Sheinbaum busca lazos con Xi ante déficit comercial México-China superior a 123 mil millones de dólares",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 123",
+                "Spanish unsupported number: 123"
+              ]
+            },
+            "dek": {
+              "en": "Mexican President Claudia Sheinbaum met Chinese leader Xi Jinping on November 18 during the APEC forum in Shenzhen. Mexico proposed cooperation on solar panels, railways and hospitals, while facing a record annual trade deficit exceeding 123 billion dollars with China.",
+              "es": "La presidenta mexicana Claudia Sheinbaum se reunió con el líder chino Xi Jinping el 18 de noviembre durante el foro APEC en Shenzhen. México propuso cooperación en paneles solares, ferrocarriles y hospitales, mientras enfrenta un déficit comercial anual récord superior a 123 mil millones de dólares con China.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 123",
+                "proposal or uncertainty became final in Spanish",
+                "Spanish unsupported number: 123"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-18T12:14:44.699Z",
         "aliveSources": 68,
