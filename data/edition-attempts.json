@@ -8527,14 +8527,68 @@
       "editorialDate": "2026-11-18",
       "slot": "morning",
       "candidateSignature": "82c1a95be879df25b391fa017ff576a39d8574f2fc1e59d35dbdab4b3e49076d",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-18T12:16:06.382Z",
-      "completedAt": "",
+      "completedAt": "2026-11-18T12:17:02.415Z",
       "calls": 4,
       "costUSD": 0.076251,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-8e8a41887aaa: dek: 50 words (cap 45) | n-83da3c2881f3: dek: 52 words (cap 45); dek: completed action became non-final in Spanish | n-d2392828443e: dek: 59 words (cap 45); dek: Spanish 72 words (cap 65)",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-8e8a41887aaa",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "In January through August 2026, Mexico exported 221,645 million dollars in electrical and electronic equipment, a historic amount for that period and up 94.74 percent annually. Computing and electronic components contributed only 3.8 and 3.3 percent of total export value because Mexico primarily assembles imported parts rather than manufacturing them.",
+              "es": "De enero a agosto de 2026, México exportó 221,645 millones de dólares en equipos y aparatos eléctricos y electrónicos, cantidad histórica para ese período con crecimiento anual de 94.74 por ciento. Las computadoras y componentes electrónicos contribuyeron solo 3.8 y 3.3 por ciento del valor total de exportaciones porque México principalmente ensambla piezas importadas en lugar de fabricarlas.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "50 words (cap 45)"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-83da3c2881f3",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "The Federal Institute of Commercial Bankruptcy Specialists modified administrative rules in August 2026 to reflect constitutional judicial reforms that took effect September 1, 2025, following the extinction of the Federal Judicial Council. The changes update supervisory procedures for bankruptcy specialists designated to serve as inspectors, conciliators and receivers in commercial insolvency cases.",
+              "es": "El Instituto Federal de Especialistas de Concursos Mercantiles modificó reglas administrativas en agosto de 2026 para reflejar reformas constitucionales judiciales que entraron en vigor el 1 de septiembre de 2025, tras la extinción del Consejo de la Judicatura Federal. Los cambios actualizan procedimientos de supervisión para especialistas en insolvencia designados a fungir como visitadores, conciliadores y síndicos en casos de concurso mercantil.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "52 words (cap 45)",
+                "completed action became non-final in Spanish"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-d2392828443e",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "In the first nine months of 2026, Mexico imported 105,000 million dollars in goods from China while exporting only 11,000 million dollars, sustaining a record annual deficit exceeding 123,000 million dollars. Chinese goods hold 20 percent market share in Mexico compared to just 2 percent for Mexican products in China, despite tariff increases and restrictions imposed by Mexico's government.",
+              "es": "En los primeros nueve meses de 2026, México importó 105,000 millones de dólares en mercancías de China mientras exportaba solo 11,000 millones de dólares, sosteniendo un déficit anual récord superior a 123,000 millones de dólares. Las mercancías chinas representan 20 por ciento de participación en el mercado mexicano comparado con apenas 2 por ciento para productos mexicanos en China, a pesar de aumentos arancelarios y restricciones impuestas por el gobierno de México.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "59 words (cap 45)",
+                "Spanish 72 words (cap 65)"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-18T12:16:06.382Z",
         "aliveSources": 64,
