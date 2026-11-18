@@ -21,7 +21,9 @@ const ENTITIES = [
   { id: 'usmca', aliases: [/\busmca\b/, /\bt[-\s]?mec\b/] },
 ];
 const EN_NEGATION = /\b(?:no|not|never|without|neither|unchanged|unregistered)\b|\bnon[-\u2010\u2011](?=[a-z])/i;
-const ES_NEGATION = /\b(?:no|nunca|sin|ningun[oa]?|tampoco|sin cambios)\b/i;
+// The punctuated discourse marker "sin embargo," means however, not without.
+// Remove only that marker from negation matching; other sin/no remain visible.
+const ES_NEGATION = /\b(?:no|nunca|sin(?!\s+embargo\s*,)|ningun[oa]?|tampoco|sin cambios)\b/i;
 // A lexical negative can become an explicit Spanish negative without changing
 // meaning. Pair only the demonstrated predicates, in corresponding sentences or
 // contrast clauses. Adding them to EN_NEGATION alone would let "untested" hide an
@@ -109,7 +111,7 @@ function negationFlags(english, spanish) {
 const EN_PROPOSAL = /\b(?:proposal|proposed|proposes?|draft|would|could|may|might|plans? to|seeks? to)\b/i;
 const ES_PROPOSAL = /\b(?:propuesta|propone|proponen|proyecto|anteproyecto|puede|pueden|podria|podrian|planea|busca|\w+ria|\w+rian)\b/i;
 const EN_FINAL = /\b(?:approved|enacted|implemented|entered into force|took effect|is in force|final rule)\b/i;
-const ES_FINAL = /\b(?:aprobo|aprobaron|aprobado|aprobada|promulgo|promulgaron|implemento|implementaron|entro en vigor|esta en vigor|regla definitiva|reforma definitiva)\b/i;
+const ES_FINAL = /\b(?:aprobo|aprobaron|aprobado|aprobada|promulgo|promulgaron|implemento|implementaron|entro en vigor|entraron en vigor|esta en vigor|regla definitiva|reforma definitiva)\b/i;
 // Preserve genuine modals and completed actions elsewhere in the same field.
 // These phrases have specific non-modal/non-final meanings in reporting.
 const englishProposalText = (value) => String(value || '')

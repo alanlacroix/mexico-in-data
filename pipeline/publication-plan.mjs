@@ -52,7 +52,7 @@ function failedAttemptHold(attempts, row, reason) {
 
 function zeroCallBudgetRejection(row) {
   return row.calls === 0 && row.costUSD === 0
-    && /^daily model budget would be exceeded \(/.test(row.reason || '');
+    && /^(?:daily model budget would be exceeded \(|model budget preflight blocked: )/.test(row.reason || '');
 }
 
 export function validateRetainedEdition(edition, withdrawals) {

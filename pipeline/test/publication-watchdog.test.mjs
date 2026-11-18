@@ -61,6 +61,50 @@ try {
   const stale = await checkHealth(env, new Date('2026-08-03T14:00:00Z'));
   assert.equal(stale.ok, false);
 
+  // A routine heartbeat must not erase a missed or failed daily dispatch.
+  await runScheduledCheck(env, new Date('2026-08-05T12:00:00Z'));
+  assert.equal((await checkHealth(env, new Date('2026-08-05T12:04:00Z'))).ok, true,
+    'today is not overdue before the morning window');
+  await runScheduledCheck(env, new Date('2026-08-05T12:30:00Z'));
+  const missed = await checkHealth(env, new Date('2026-08-05T12:31:00Z'));
+  assert.equal(missed.checks.heartbeatFresh, true);
+  assert.equal(missed.checks.lastScheduledCheckHealthy, true);
+  assert.equal(missed.checks.dailyDispatchConfirmed, false);
+  assert.equal(missed.ok, false, 'a fresh outside-window heartbeat cannot conceal a missed cron');
+  assert.equal(missed.dailyDispatch, null, 'a previous day receipt cannot satisfy today');
+
+  failDispatch = true;
+  await assert.rejects(runScheduledCheck(env, new Date('2026-08-06T12:05:00Z')), /HTTP 503/);
+  await assert.rejects(runScheduledCheck(env, new Date('2026-08-06T12:15:00Z')), /HTTP 503/);
+  await runScheduledCheck(env, new Date('2026-08-06T12:30:00Z'));
+  assert.equal((await checkHealth(env, new Date('2026-08-06T12:31:00Z'))).ok, false,
+    'failed dispatches stay unhealthy after a successful outside-window heartbeat');
+
+  await assert.rejects(runScheduledCheck(env, new Date('2026-08-07T12:05:00Z')), /HTTP 503/);
+  failDispatch = false;
+  await runScheduledCheck(env, new Date('2026-08-07T12:15:00Z'));
+  await runScheduledCheck(env, new Date('2026-08-07T12:30:00Z'));
+  const retried = await checkHealth(env, new Date('2026-08-07T12:31:00Z'));
+  assert.equal(retried.ok, true, 'an acknowledged retry satisfies daily clock health');
+  assert.equal(retried.dailyDispatch.dispatchedAt, '2026-08-07T12:15:00.000Z');
+
+  // Old/in-flight claims and malformed receipts are not delivery evidence.
+  values.set('edition-dispatch:2026-08-08:morning', JSON.stringify({ claimedAt: '2026-08-08T12:05:00Z' }));
+  await runScheduledCheck(env, new Date('2026-08-08T12:15:00Z'));
+  assert.equal((await checkHealth(env, new Date('2026-08-08T12:20:00Z'))).ok, false);
+  values.set('edition-dispatch-success:2026-08-08:morning', '{');
+  assert.equal((await checkHealth(env, new Date('2026-08-08T12:20:00Z'))).ok, false);
+
+  const receiptFailureEnv = { ...env, WATCHDOG_STATE: { ...state, put: async (key, value) => {
+    if (key.startsWith('edition-dispatch-success:')) throw new Error('KV receipt write failed');
+    return state.put(key, value);
+  } } };
+  await assert.rejects(runScheduledCheck(receiptFailureEnv, new Date('2026-08-09T12:05:00Z')), /KV receipt write failed/);
+  const acceptedCount = dispatches.length;
+  await runScheduledCheck(env, new Date('2026-08-09T12:15:00Z'));
+  assert.equal(dispatches.length, acceptedCount, 'receipt write failure must not resend an accepted dispatch');
+  assert.equal((await checkHealth(env, new Date('2026-08-09T12:20:00Z'))).ok, false);
+
   const before = dispatches.length;
   const response = await worker.fetch(new Request('https://worker.example/health'), env);
   assert.ok([200, 503].includes(response.status));

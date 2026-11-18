@@ -188,3 +188,10 @@ for (const phrase of [
   'Distinguish association from causation and research estimates from observed counts',
   'Reject omitted material qualifiers',
 ]) assert.ok(builder.includes(phrase), `independent evidence audit must retain: ${phrase}`);
+
+assert.match(builder, /Spanish deks must stay within 65 words and three sentences/,
+  'initial drafting must disclose the Spanish dek release ceiling');
+assert.match(builder, /mandatory audit reserve=/,
+  'preflight diagnostics must disclose the audit reservation instead of false arithmetic');
+assert.match(builder, /monthly remaining=/,
+  'preflight diagnostics must disclose both budget constraints');
