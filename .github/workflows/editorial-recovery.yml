@@ -1,0 +1,47 @@
+name: editorial-recovery
+on:
+  push:
+    branches: [main]
+    paths: ['ops/editorial-recovery-request.json']
+permissions:
+  contents: write
+concurrency:
+  group: mexico-brief-production-write
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Validate independent review and stage publication without model calls
+        id: approve
+        run: node pipeline/publish-editorial-recovery.mjs
+      - name: Validate the exact complete artifact
+        run: npm run release
+      - name: Publish atomic editorial receipt and artifact only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git diff --exit-code -- data/edition-attempts.json data/llm-spend.json
+          git config user.name mexico-data-bot
+          git config user.email actions@users.noreply.github.com
+          gh auth setup-git
+          git add data/edition.json data/editions/ ops/editorial-publications/
+          if ! git diff --cached --quiet; then
+            git commit -m 'edition: independently reviewed editorial recovery (zero model calls)'
+            git push origin HEAD:main
+          fi
+      - name: Verify exact JSON and both language artifacts
+        env:
+          EDITORIAL_DATE: ${{ steps.approve.outputs.editorial_date }}
+          ARTIFACT_HASH: ${{ steps.approve.outputs.artifact_hash }}
+        run: node pipeline/verify-production.mjs

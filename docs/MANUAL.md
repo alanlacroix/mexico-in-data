@@ -79,3 +79,35 @@ required even when this guard and every model verdict pass.
 Before adding any page, database, signup flow, connector, workflow, report, or recurring
 model job, answer: does this directly improve the homepage a reader sees today? If not,
 leave it out.
+
+## Independently authored editorial recovery
+
+`editorial-recovery.yml` is the separate zero-provider-call reconciliation route.
+It does not promote quarantined drafts or change any model attempt, receipt, failure,
+or spend. The authorized editor supplies a freshly authored candidate and a separate
+field-by-field independent bilingual review, bound to the entire exact candidate hash.
+A public source manifest contains registered HTTPS URLs and hashes only, never source
+bodies. The workflow fetches complete located bodies with the existing bounded URL
+safety/extraction code. Every exact text hash must match the reviewed source; a changed
+body fails closed and requires renewed review. The unchanged deterministic factual
+and bilingual checks and full release gates run before publication. Fetched bodies
+remain in runner memory, never in the public repository or downloadable Actions
+artifacts. The operator retains the exact reviewed source packet privately; public
+records contain source hashes and review attestations only.
+
+The reviewed packet is `ops/editorial-recovery/YYYY-MM-DD.json`. Its accounting
+snapshot contains only SHA-256 hashes of the unchanged attempt and spend files.
+No ledger contents are uploaded or rewritten. `ops/editorial-recovery-request.json`
+binds the date and packet hash with an expiry of at most 30 minutes. Under the existing
+production-write concurrency lock, the workflow validates all accounting is settled,
+checks the prior approved artifact, and commits an immutable dated editorial receipt,
+approved edition and archive together. Receipt creation is exclusive and replays are
+idempotent; changed review/content, stale date, changed accounting, conflicts and
+withdrawn artifacts are rejected. Subsequent planning recognizes this separate
+publication event and verifies production without rewriting failed model history.
+
+A review attestation is an accountable editor's assertion, not automated proof of
+factual truth. Do not generate one without reading every complete source and checking
+all English/Spanish fields, summary and weekly mirrors. Never use this route to evade
+a denied action or skip editorial review. It records curated recovery, not autonomous
+pipeline success.
