@@ -2,30 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-10-04",
-      "slot": "morning",
-      "candidateSignature": "70a1cbd1b2a6333575d4775aebe7e1abc4d2181470103e82b8c8c7b29bfaf342",
-      "state": "published",
-      "startedAt": "2026-10-04T10:57:33.224Z",
-      "completedAt": "2026-10-04T10:57:33.230Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "9bb5564508c827fb78f38044e96c2c9a7dd82a4c1b5b77de90a75285279957b9",
-      "reason": "Independently audited curated morning recovery; no paid generation because reviewed automatic source packets lacked required next-milestone evidence",
-      "diagnostics": [],
-      "collection": null,
-      "recoveries": [],
-      "manualRecovery": {
-        "reviewedAt": "2026-10-04T10:56:29.862827+00:00",
-        "method": "Independent field-by-field source and translation review of 40 narrative fields, unchanged deterministic and public-artifact gates",
-        "draftSHA256": "d6aa64eef7ec0c4094c526ded696dc6265909faa7b6d53f57089b82a2f7d55cc",
-        "auditSHA256": "afae5cf61a9cda10faee6dedaa624e6ab6502f65455e2b57ff6eb425858a396c",
-        "sourceProvenance": "INEGI vehicle sales and calendar, Banco de Mexico remittance release and schedule, attributed preliminary IMF staff findings, and Diario Oficial CNE transmission amendment",
-        "generationProvenance": "operator-curated; no provider generation or audit calls",
-        "preventiveReason": "Known repeated-event ranking and incomplete writer-facing evidence packets; stronger new reporting reviewed before the morning window"
-      }
-    },
-    {
       "editorialDate": "2026-10-05",
       "slot": "morning",
       "candidateSignature": "c69956205b6b8e54fa0ddb9c0df9c36a95d15b2593d2cf2a1ff2c29fc1159e2a",
@@ -8841,6 +8817,49 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-11-19",
+      "slot": "morning",
+      "candidateSignature": "c48f4f1e94e30ccb067684ca905e12f11881f9295249e363804cfb77172264ec",
+      "state": "started",
+      "startedAt": "2026-11-19T12:07:42.900Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.061092,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-19T12:07:42.900Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "ascoa",
+          "datoz",
+          "insightcrime-mx"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "44520962039",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "02eb1e84-028c-4d52-b83e-d9b4a02c1648",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.061092,
+            "accountedUSD": 0.061092,
+            "state": "reserved"
           }
         ]
       }
