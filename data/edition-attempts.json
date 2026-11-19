@@ -8825,64 +8825,16 @@
       "editorialDate": "2026-11-19",
       "slot": "morning",
       "candidateSignature": "c48f4f1e94e30ccb067684ca905e12f11881f9295249e363804cfb77172264ec",
-      "state": "failed",
-      "startedAt": "2026-11-19T12:07:42.900Z",
-      "completedAt": "2026-11-19T12:08:49.465Z",
-      "calls": 2,
-      "costUSD": 0.037312,
+      "state": "started",
+      "startedAt": "2026-11-19T12:09:58.548Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.098485,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-7dd5c28dd217",
-          "reasons": [],
-          "fields": {
-            "dek": {
-              "en": "A decree published November 19 adds national security screening to foreign ownership above 49 percent in artificial intelligence, semiconductors, energy, data systems, aerospace, defense and food supply. The commission must set asset thresholds within 180 days.",
-              "es": "Un decreto publicado el 19 de noviembre añade escrutinio de seguridad nacional a propiedad extranjera superior a 49 por ciento en inteligencia artificial, semiconductores, energía, sistemas de datos, aeroespacial, defensa y abastecimiento alimentario. La comisión debe establecer umbrales de activos en 180 días.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "unsupported numbers: 19, 180",
-                "Spanish unsupported numbers: 19, 180"
-              ]
-            },
-            "watch": {
-              "en": "The commission's resolution setting the asset threshold value will establish which foreign acquisitions face mandatory review and reveal how strictly Mexico enforces national security restrictions.",
-              "es": "La resolución de la comisión estableciendo el valor de umbral de activos determinará qué adquisiciones extranjeras enfrentan revisión obligatoria y revelará cuán estrictamente México cumple restricciones de seguridad nacional.",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "watch item has no observable next test"
-              ]
-            }
-          }
-        },
-        {
-          "stage": "deterministic",
-          "storyId": "n-8af5953ea338",
-          "reasons": [],
-          "fields": {
-            "watch": {
-              "en": "If talks yield an agreement before 2026 ends on Section 232 tariffs and sectoral scope, it would confirm both nations intend to manage trade conflict and extend USMCA cooperation.",
-              "es": "Si pláticas rinden acuerdo antes de terminar 2026 sobre aranceles Section 232 y alcance sectorial, confirmaría que ambas naciones pretenden manejar conflicto comercial y extender cooperación TLCAN.",
-              "refs": [
-                "article",
-                "standing:std-usmca-review",
-                "calendar:estimate-a7917a2e5c7905e7"
-              ],
-              "reasons": [
-                "usmca was dropped in Spanish"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-19T12:07:42.900Z",
+        "collectedAt": "2026-11-19T12:09:58.548Z",
         "aliveSources": 68,
         "totalSources": 72,
         "wireCount": 60,
@@ -8895,10 +8847,67 @@
           "insightcrime-mx"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-11-19T12:07:42.900Z",
+          "completedAt": "2026-11-19T12:08:49.465Z",
+          "calls": 2,
+          "costUSD": 0.037312,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-7dd5c28dd217",
+              "reasons": [],
+              "fields": {
+                "dek": {
+                  "en": "A decree published November 19 adds national security screening to foreign ownership above 49 percent in artificial intelligence, semiconductors, energy, data systems, aerospace, defense and food supply. The commission must set asset thresholds within 180 days.",
+                  "es": "Un decreto publicado el 19 de noviembre añade escrutinio de seguridad nacional a propiedad extranjera superior a 49 por ciento en inteligencia artificial, semiconductores, energía, sistemas de datos, aeroespacial, defensa y abastecimiento alimentario. La comisión debe establecer umbrales de activos en 180 días.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "unsupported numbers: 19, 180",
+                    "Spanish unsupported numbers: 19, 180"
+                  ]
+                },
+                "watch": {
+                  "en": "The commission's resolution setting the asset threshold value will establish which foreign acquisitions face mandatory review and reveal how strictly Mexico enforces national security restrictions.",
+                  "es": "La resolución de la comisión estableciendo el valor de umbral de activos determinará qué adquisiciones extranjeras enfrentan revisión obligatoria y revelará cuán estrictamente México cumple restricciones de seguridad nacional.",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "watch item has no observable next test"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "deterministic",
+              "storyId": "n-8af5953ea338",
+              "reasons": [],
+              "fields": {
+                "watch": {
+                  "en": "If talks yield an agreement before 2026 ends on Section 232 tariffs and sectoral scope, it would confirm both nations intend to manage trade conflict and extend USMCA cooperation.",
+                  "es": "Si pláticas rinden acuerdo antes de terminar 2026 sobre aranceles Section 232 y alcance sectorial, confirmaría que ambas naciones pretenden manejar conflicto comercial y extender cooperación TLCAN.",
+                  "refs": [
+                    "article",
+                    "standing:std-usmca-review",
+                    "calendar:estimate-a7917a2e5c7905e7"
+                  ],
+                  "reasons": [
+                    "usmca was dropped in Spanish"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "44520962039",
+        "runId": "44521312049",
         "runAttempt": "1",
         "receipts": [
           {
@@ -8932,6 +8941,14 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "a0f48fd9-2c2e-4645-9597-eaffa61999ef",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.061173,
+            "accountedUSD": 0.061173,
+            "state": "reserved"
           }
         ]
       }
