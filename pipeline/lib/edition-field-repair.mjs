@@ -1,5 +1,8 @@
 import { unsupportedNumericTokens } from './lint.js';
 
+// A source can identify a recurring measurement without giving the next release date.
+export const WATCH_EVIDENCE_CONTRACT = 'If the evidence identifies an ongoing named measurement but no confirmed date, use the next update of that same series and state which sourced measures to compare, without adding a date or asserting an outcome. Never invent a milestone or condition. If no concrete update or decision is supported, leave the watch empty.';
+
 export const STORY_FIELDS = Object.freeze(['headline', 'dek', 'background', 'view', 'watch']);
 
 // Draft below the release ceilings so counting and translation have room. These
@@ -9,7 +12,7 @@ export const FIELD_REPAIR_CONTRACTS = Object.freeze({
   dek: 'Add one sourced fact beyond the preserved headline. Aim for 25–35 English words and one sentence. Hard limits: 45 English words and two sentences; 65 Spanish words and three sentences.',
   background: 'Explain this story with concrete sourced context, citing an independent non-calendar record when supplied. Calendar-only metadata establishes timing, not independent background context. Define unfamiliar terms before use; keep useful depth. Aim for 20–35 English words in one or two sentences. Hard limits: 55 English words, 65 Spanish words, three sentences in each language.',
   view: 'Explain the supported mechanism, consequence and evidence limits in familiar words, after the background. Avoid generic advice and caveat-heavy statistics. Aim for 20–35 English words in one or two sentences. Hard limits: 55 English words, 65 Spanish words, three sentences in each language.',
-  watch: 'Name a sourced next decision, release or result and the observable test it resolves. Do not invent a milestone. Aim for 20–35 English words in one sentence. Hard limits: 55 English words, 65 Spanish words, three sentences in each language.',
+  watch: `Name a sourced next decision, release or result and the observable test it resolves. ${WATCH_EVIDENCE_CONTRACT} Aim for 20–35 English words. Hard limits: 55 English words, 65 Spanish words, three sentences in each language.`,
 });
 
 // A missing story still gets exactly the former 1,300-token unit allowance.

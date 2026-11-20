@@ -101,3 +101,23 @@ assert.throws(() => createFieldRepairPlan([{ index: 0, evidence }, { index: 0, e
 assert.throws(() => createFieldRepairPlan([{ index: -1, evidence }]), /Invalid/);
 assert.throws(() => createFieldRepairPlan([]), /requires rejected/);
 console.log('edition field repair: ok');
+
+// A November-style trade-data release gives measured quantities, not a capacity
+// deadline. The repair may keep a checkable comparison without inventing a date.
+const tradeBody = 'Trade statistics track the value and volume of gasoline and diesel imports. Refinery throughput increased. Fuel import volumes fell while the import bill rose.';
+const tradeWatch = {en:'On the next trade statistics update, watch whether lower volumes of gasoline and diesel imports also reduce the import bill.',
+ es:'En la próxima actualización de las estadísticas comerciales, conviene observar si los menores volúmenes de importación de gasolina y diésel también reducen el gasto de importación.',
+ refs:['article']};
+const tradePlan = createFieldRepairPlan([{index:0,evidence:[{id:'article',text:tradeBody}],draft:original,rejection:{fields:{watch:{reasons:['unsupported number: 2027']}},reasons:[]}}]);
+assert.match(tradePlan.schema.properties.repairs.properties.s0.properties.watch.description, /same series.*without adding a date/);
+assert.match(tradePlan.schema.properties.repairs.properties.s0.properties.watch.description, /leave the watch empty/);
+const tradeDraft=mergeFieldRepairs(tradePlan,{repairs:{s0:{watch:tradeWatch}}}).stories.s0;
+const tradeEvidence={evidence:[{id:'article',text:tradeBody}]};
+assert.deepEqual(deterministicDraftCheck(tradeEvidence,tradeDraft).filter(flag=>flag.startsWith('watch:')),[]);
+for (const rejectedWatch of [
+ {en:'Watch whether fuel imports fall by 2027.',es:'Conviene observar si las importaciones de combustible caen para 2027.'},
+ {en:'',es:''},
+]) {
+ const patched=mergeFieldRepairs(tradePlan,{repairs:{s0:{watch:{...rejectedWatch,refs:['article']}}}}).stories.s0;
+ assert.ok(deterministicDraftCheck(tradeEvidence,patched).some(flag=>flag.startsWith('watch:')));
+}
