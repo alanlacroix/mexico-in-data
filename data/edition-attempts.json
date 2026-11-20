@@ -9050,6 +9050,33 @@
           }
         ]
       }
+    },
+    {
+      "editorialDate": "2026-11-20",
+      "slot": "noon",
+      "candidateSignature": "c3f5b90c80ff95f1288d8b590d4dad6229cf779cb521943e8cca32638e541d6b",
+      "state": "failed",
+      "startedAt": "2026-11-20T12:26:34.190Z",
+      "completedAt": "2026-11-20T12:26:47.535Z",
+      "calls": 0,
+      "costUSD": 0,
+      "artifactHash": "",
+      "reason": "model budget preflight blocked: spent=0.0917, next-call reserve=0.0625, mandatory audit reserve=0.0679, daily limit=0.2000, monthly remaining=2.1096",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-20T12:26:34.190Z",
+        "aliveSources": 69,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ascoa",
+          "datoz",
+          "insightcrime-mx"
+        ]
+      },
+      "recoveries": []
     }
   ]
 }
