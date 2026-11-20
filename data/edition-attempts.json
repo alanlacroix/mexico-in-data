@@ -2,60 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-10-05",
-      "slot": "morning",
-      "candidateSignature": "c69956205b6b8e54fa0ddb9c0df9c36a95d15b2593d2cf2a1ff2c29fc1159e2a",
-      "state": "published",
-      "startedAt": "2026-10-05T10:39:46.208Z",
-      "completedAt": "2026-10-05T10:39:46.215Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "c536837decc2e7180fac63e1d063535a17bcf031f41b8ae25c1eb4cf6eea0d15",
-      "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
-      "diagnostics": [],
-      "collection": null,
-      "recoveries": [],
-      "manualRecovery": {
-        "reviewedAt": "2026-10-05T10:31:17.514Z",
-        "method": "Independent review of 30 English and Spanish narrative fields against original reporting, procurement metadata and official records; exact candidate and release gates passed",
-        "draftSHA256": "ebd3d393e8a7964dbd43803bdb778b7a4024406be08ba233579ee90039d70b47",
-        "auditSHA256": "5cb23d24df0f6d878509e236e95e3ff638fe1aeb703668a272c933158c9c5d5e",
-        "sourceProvenance": "Fresh registered El Economista RSS reporting for rail and fuel; official SIDOF daily index and published IMSS agreement; original and previous official fuel schedules",
-        "primaryDiscoveries": [
-          {
-            "storyId": "n-8caddd6ff370",
-            "url": "https://sidof.segob.gob.mx/notas/docFuente/5800295",
-            "sourceDiscovery": "official SIDOF daily index",
-            "discoveryUrl": "https://sidof.segob.gob.mx/",
-            "metadataUrl": "https://sidof.segob.gob.mx/notas/5800295",
-            "publicationDate": "2026-10-05",
-            "publicationPrecision": "date",
-            "feedRecordClaimed": false
-          }
-        ],
-        "generationProvenance": "operator-curated; zero provider generation or audit calls",
-        "preventiveReason": "Unpaid replay excludes genuine rail and fuel reports at the metadata geography gate while ranking repeated IMF and vehicle events; incomplete supporting milestones also remain",
-        "releaseRepair": "PR34 restores the already-permitted previous-day lane across Monday rollover without changing source dates or freshness requirements"
-      },
-      "editorialRevisions": [
-        {
-          "kind": "user-approved-plain-language-revision",
-          "previousArtifactHash": "b14a21ab2d6746d9200f932305d6c30cb0d3664a26d00c93fe0eb9494c8228e7",
-          "artifactHash": "c536837decc2e7180fac63e1d063535a17bcf031f41b8ae25c1eb4cf6eea0d15",
-          "previousCandidateSignature": "e534828e1f984911cb3d4038371981ac2e339d02483c877324be39553e6c4492",
-          "candidateSignature": "c69956205b6b8e54fa0ddb9c0df9c36a95d15b2593d2cf2a1ff2c29fc1159e2a",
-          "reviewedAt": "2026-10-05T12:55:44.140429+00:00",
-          "draftSHA256": "f0d65cef8778a31d1be8b3008b1f776feb5f08279903c8f032860a28dd794a10",
-          "auditSHA256": "dd38f7683241e8b990a37b9e1b7ef8dc1a60cee447b4b26e3ec79278ebd4069e",
-          "reviewedFields": 30,
-          "method": "Independent English/Spanish wording and factual-parity review; background, context, why it matters, next steps, exact figures, dates and uncertainty retained",
-          "providerCalls": 0,
-          "costUSD": 0
-        }
-      ],
-      "lastEditorialRevisionAt": "2026-10-05T12:55:44.140429+00:00"
-    },
-    {
       "editorialDate": "2026-10-06",
       "slot": "morning",
       "candidateSignature": "c3100c78359ec7fdcd0404f4de4c8f6c6becca0e2f2cf8d25022f052fc2d04c0",
@@ -8989,6 +8935,49 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-11-20",
+      "slot": "morning",
+      "candidateSignature": "c3f5b90c80ff95f1288d8b590d4dad6229cf779cb521943e8cca32638e541d6b",
+      "state": "started",
+      "startedAt": "2026-11-20T12:15:58.530Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.061876,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-20T12:15:58.530Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "ascoa",
+          "datoz",
+          "insightcrime-mx"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "44734247369",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "f18c8c34-4623-475b-84d5-866d5da7b4ec",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.061876,
+            "accountedUSD": 0.061876,
+            "state": "reserved"
           }
         ]
       }
