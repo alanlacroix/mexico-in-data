@@ -8943,52 +8943,61 @@
       "editorialDate": "2026-11-20",
       "slot": "morning",
       "candidateSignature": "c3f5b90c80ff95f1288d8b590d4dad6229cf779cb521943e8cca32638e541d6b",
-      "state": "failed",
-      "startedAt": "2026-11-20T12:15:58.530Z",
-      "completedAt": "2026-11-20T12:17:05.428Z",
-      "calls": 2,
-      "costUSD": 0.065594,
+      "state": "started",
+      "startedAt": "2026-11-20T12:18:17.250Z",
+      "completedAt": "",
+      "calls": 3,
+      "costUSD": 0.127551,
       "artifactHash": "",
-      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
-      "diagnostics": [
-        {
-          "stage": "deterministic",
-          "storyId": "n-1d9b7ab5a62e",
-          "reasons": [],
-          "fields": {
-            "watch": {
-              "en": "",
-              "es": "",
-              "refs": [
-                "article"
-              ],
-              "reasons": [
-                "empty report text",
-                "watch item has no observable next test",
-                "Spanish translation is empty"
-              ]
-            }
-          }
-        }
-      ],
+      "reason": "",
+      "diagnostics": [],
       "collection": {
-        "collectedAt": "2026-11-20T12:15:58.530Z",
+        "collectedAt": "2026-11-20T12:18:17.250Z",
         "aliveSources": 68,
         "totalSources": 72,
         "wireCount": 60,
         "minimumAlive": 36,
         "ok": true,
         "failedSourceIds": [
-          "mexico-business-news",
           "ascoa",
           "datoz",
-          "insightcrime-mx"
+          "insightcrime-mx",
+          "mcci"
         ]
       },
-      "recoveries": [],
+      "recoveries": [
+        {
+          "startedAt": "2026-11-20T12:15:58.530Z",
+          "completedAt": "2026-11-20T12:17:05.428Z",
+          "calls": 2,
+          "costUSD": 0.065594,
+          "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+          "diagnostics": [
+            {
+              "stage": "deterministic",
+              "storyId": "n-1d9b7ab5a62e",
+              "reasons": [],
+              "fields": {
+                "watch": {
+                  "en": "",
+                  "es": "",
+                  "refs": [
+                    "article"
+                  ],
+                  "reasons": [
+                    "empty report text",
+                    "watch item has no observable next test",
+                    "Spanish translation is empty"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ],
       "modelAccounting": {
         "version": 1,
-        "runId": "44734247369",
+        "runId": "44734620884",
         "runAttempt": "1",
         "receipts": [
           {
@@ -9022,6 +9031,14 @@
             },
             "responseModel": "claude-sonnet-5",
             "stopReason": "end_turn"
+          },
+          {
+            "id": "406157f8-7910-4ceb-95d0-9bd0debf0528",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.061957,
+            "accountedUSD": 0.061957,
+            "state": "reserved"
           }
         ]
       }
