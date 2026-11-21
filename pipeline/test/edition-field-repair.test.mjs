@@ -33,6 +33,14 @@ assert.equal(plan.inputs[0].preservedFields.headline.en, original.headline);
 assert.deepEqual(plan.inputs[0].repairFields.dek.current, {
   en: rejected.fields.dek.en, es: rejected.fields.dek.es, refs: rejected.fields.dek.refs,
 });
+const datedBackground = createFieldRepairPlan([{ index: 3, draft: original,
+  evidence: [...evidence, { id: 'schedule', kind: 'calendar', text: 'Release timing' },
+    { id: 'independent', kind: 'article-body', text: 'Earlier change supported by a separate record.' }],
+  rejection: { fields: { background: { reasons: ['needs an independent source when one is available'] } } },
+}]);
+assert.deepEqual(datedBackground.inputs[0].repairFields.background.backgroundContextIds, ['independent']);
+assert.deepEqual(datedBackground.inputs[0].repairFields.background.current.refs, ['article']);
+assert.equal(plan.inputs[0].repairFields.dek.backgroundContextIds, undefined);
 const patch = {
   en: 'Mexico reduced its regular gasoline subsidy from 72% to 63%, equivalent to 4.2 pesos per liter, for October 3-9, 2026.',
   es: 'México redujo su subsidio a la gasolina regular de 72% a 63%, equivalente a 4.2 pesos por litro, para el 3-9 de octubre de 2026.',

@@ -1,4 +1,5 @@
 import { unsupportedNumericTokens } from './lint.js';
+import backgroundEvidence from './background-evidence.cjs';
 
 // A source can identify a recurring measurement without giving the next release date.
 export const WATCH_EVIDENCE_CONTRACT = 'If the evidence identifies an ongoing named measurement but no confirmed date, use the next update of that same series and state which sourced measures to compare, without adding a date or asserting an outcome. Never invent a milestone or condition. If no concrete update or decision is supported, leave the watch empty.';
@@ -46,6 +47,7 @@ export function createFieldRepairPlan(entries) {
     const evidence = structuredClone(Array.isArray(entry.evidence) ? entry.evidence : []);
     const evidenceIds = [...new Set(evidence.map(record => record?.id).filter(id => typeof id === 'string' && id))];
     if (!evidenceIds.length) throw new Error(`Field repair ${key} has no evidence IDs`);
+    const backgroundContextIds = backgroundEvidence.independentBackgroundEvidence(evidence).map(record => record.id);
     const draft = object(entry.draft) ? structuredClone(entry.draft) : null;
     const rejected = object(entry.rejection?.fields) ? entry.rejection.fields : {};
     const hasGlobalRejection = Array.isArray(entry.rejection?.reasons) && entry.rejection.reasons.length > 0;
@@ -78,6 +80,7 @@ export function createFieldRepairPlan(entries) {
       evidence,
       repairFields: Object.fromEntries(fields.map(field => [field, {
         current: fieldCopy(draft, field),
+        ...(field === 'background' && backgroundContextIds.length ? { backgroundContextIds } : {}),
         reasons: Array.isArray(rejected[field]?.reasons) ? rejected[field].reasons : entry.rejection?.reasons || ['Missing or rejected story unit'],
       }])),
       preservedFields: Object.fromEntries(STORY_FIELDS.filter(field => !fields.includes(field))
