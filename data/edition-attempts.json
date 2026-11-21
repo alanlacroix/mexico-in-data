@@ -9061,7 +9061,7 @@
       "startedAt": "2026-11-21T12:16:48.119Z",
       "completedAt": "",
       "calls": 3,
-      "costUSD": 0.126021,
+      "costUSD": 0.089888,
       "artifactHash": "",
       "reason": "",
       "diagnostics": [],
@@ -9151,8 +9151,16 @@
             "period": "2026-11",
             "model": "claude-haiku-4-5",
             "reservedUSD": 0.060139,
-            "accountedUSD": 0.060139,
-            "state": "reserved"
+            "accountedUSD": 0.024006,
+            "state": "settled",
+            "usage": {
+              "input_tokens": 9931,
+              "output_tokens": 2815,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 0
+            },
+            "responseModel": "claude-haiku-4-5-20251001",
+            "stopReason": "end_turn"
           }
         ]
       }
