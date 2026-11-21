@@ -2,31 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-10-06",
-      "slot": "morning",
-      "candidateSignature": "c3100c78359ec7fdcd0404f4de4c8f6c6becca0e2f2cf8d25022f052fc2d04c0",
-      "state": "published",
-      "startedAt": "2026-10-06T10:25:30.292Z",
-      "completedAt": "2026-10-06T10:25:30.298Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "7602907481104a5d5d347bf7c1617fc1e3aac229892c40f906c823577a1d479f",
-      "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
-      "diagnostics": [],
-      "collection": null,
-      "recoveries": [],
-      "manualRecovery": {
-        "reviewedAt": "2026-10-06T10:25:12.044198+00:00",
-        "method": "Independent review of 40 English and Spanish narrative fields against original reporting, INEGI and Nafin documents, CloudHQ corporate information and the USTR notice; exact candidate and release gates passed",
-        "draftSHA256": "30c708b54bffcbce51a590e381fcef2509802130dedd21bccc507479403cb725",
-        "auditSHA256": "e6d4f303c07ccbe3acedace61b52932ba9068a38f0d4be1164c0f377c27a4881",
-        "sourceProvenance": "Fresh registered El Financiero and El Economista reporting, corroborated with full INEGI and Nafin PDFs, the corporate CloudHQ campus page and USTR Federal Register notice",
-        "primaryDiscoveries": [],
-        "generationProvenance": "operator-curated; zero provider generation or audit calls",
-        "preventiveReason": "Fresh-feed unpaid replay locks a fuel explainer and partisan reaction without sourced next milestones; investment ranks below locked candidates, while Nafin and CloudHQ fail the metadata geography filter"
-      }
-    },
-    {
       "editorialDate": "2026-10-07",
       "slot": "morning",
       "candidateSignature": "e27bb30941596367947b0603aa52812b0f4ca1b602959e79465bddf21745cf1d",
@@ -9077,6 +9052,49 @@
         ]
       },
       "recoveries": []
+    },
+    {
+      "editorialDate": "2026-11-21",
+      "slot": "morning",
+      "candidateSignature": "d2fbe4574d2327d7a8a31e7ebe94278419d2d0712ea376db972a0c7af8421413",
+      "state": "started",
+      "startedAt": "2026-11-21T12:14:57.642Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.060058,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-21T12:14:57.642Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "ascoa",
+          "datoz",
+          "insightcrime-mx"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "44902925205",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "44da1c99-819c-43d3-b4e7-8b91d176e4b7",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.060058,
+            "accountedUSD": 0.060058,
+            "state": "reserved"
+          }
+        ]
+      }
     }
   ]
 }
