@@ -2,81 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-10-07",
-      "slot": "morning",
-      "candidateSignature": "e27bb30941596367947b0603aa52812b0f4ca1b602959e79465bddf21745cf1d",
-      "state": "published",
-      "startedAt": "2026-10-07T10:29:21.462Z",
-      "completedAt": "2026-10-07T10:29:21.469Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "0e7e2467e1313ebd82e91dfadd41927fb23403c7f787cdec18a9bce1bf3f40a3",
-      "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
-      "diagnostics": [],
-      "collection": null,
-      "recoveries": [],
-      "manualRecovery": {
-        "reviewedAt": "2026-10-07T10:29:06.419519+00:00",
-        "method": "Independent review of 50 English and Spanish narrative fields against original reporting, Census and INEGI releases, the CRT auction notice, Torex corporate reporting and the proposed digital-payments legislation; exact candidate and release gates passed",
-        "draftSHA256": "7e2f258ff3b442bd2891c16e044f28fc473246a6831b73a606978cb2d545240a",
-        "auditSHA256": "270261617fc25d687809df1692128b9355ee15e1c4f03e362850a9d2e1a0d006",
-        "sourceProvenance": "Fresh registered publisher reporting and direct official CRT discovery, corroborated with original Census tables, INEGI PDF, official spectrum notice and calendar, corporate Torex release and legislative sources",
-        "primaryDiscoveries": [
-          {
-            "storyId": "n-8eadaafe2ea0",
-            "url": "https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/enco/icc2026_10.pdf",
-            "sourceDiscovery": "Direct official statistical release; no RSS/feed item observed or invented",
-            "publicationDate": "2026-10-06",
-            "publicationPrecision": "date",
-            "feedRecordClaimed": false
-          },
-          {
-            "storyId": "n-9b1187ca5316",
-            "url": "https://sidof.segob.gob.mx/notas/docFuente/5800551",
-            "sourceDiscovery": "Direct official Diario Oficial publication; no RSS/feed item observed or invented",
-            "publicationDate": "2026-10-07",
-            "publicationPrecision": "date",
-            "feedRecordClaimed": false
-          }
-        ],
-        "generationProvenance": "operator-curated; zero provider generation or audit calls",
-        "preventiveReason": "Unpaid full-feed replay and source-packet review found overlapping US trade coverage and insufficient sourced next milestones in the automatic selection"
-      },
-      "editorialRevisions": [
-        {
-          "kind": "user-requested-trade-context-revision",
-          "previousArtifactHash": "1660b2a6042554bf373c57367783677a2c623233cb6401b4e67d0cbb8c6023cb",
-          "artifactHash": "3852b56c37e7f6d8c2b0874e3725fcb061c32f8a9f8670975d2308e1e3fbf8ae",
-          "previousCandidateSignature": "d4eb5be94992489bea8327b17247f2449bca65efaa787b31329e7ba727210573",
-          "candidateSignature": "1932f74d680965cf5627fb61a0fd5d3255f8c4faa6c04e19265d32455bda1d2a",
-          "reviewedAt": "2026-10-07T14:14:14.484376+00:00",
-          "draftSHA256": "8798301e42ceaf82e7727a6cfebd27ee4cb3bc164114d742dea222b5f18aa4fc",
-          "auditSHA256": "719b3c8dedf7d37128db9593714f3a80ccaae5c5a47c0119b343efce0e71689e",
-          "reviewedFields": 10,
-          "preservedOtherNarrativeFields": 40,
-          "method": "Independent original-source, measurement-scope and English/Spanish review of the trade explanation; other four stories preserved; historical input/value-added benchmarks explicitly distinguished from current gross trade",
-          "providerCalls": 0,
-          "costUSD": 0
-        },
-        {
-          "kind": "user-requested-reader-clarity-revision",
-          "previousArtifactHash": "3852b56c37e7f6d8c2b0874e3725fcb061c32f8a9f8670975d2308e1e3fbf8ae",
-          "artifactHash": "0e7e2467e1313ebd82e91dfadd41927fb23403c7f787cdec18a9bce1bf3f40a3",
-          "previousCandidateSignature": "1932f74d680965cf5627fb61a0fd5d3255f8c4faa6c04e19265d32455bda1d2a",
-          "candidateSignature": "e27bb30941596367947b0603aa52812b0f4ca1b602959e79465bddf21745cf1d",
-          "reviewedAt": "2026-10-07T15:11:13.494293+00:00",
-          "draftSHA256": "bca2bd639c260972c5d2731eb21e489fe9130d65ca6114c0e07a6d5da8a7a5d5",
-          "auditSHA256": "77761e43c48985eb337632d959d70d1c8c587ddbfdbbf7192ffe17fbbaa65361",
-          "reviewedFields": 50,
-          "approvedCopySHA256": "7df3e220a8d90ba949950ffedcd4ab7f9e5b95e13b225b2be7c66743291b9072",
-          "method": "Independent source and bilingual review of all five stories; root-reviewed full visible English/Spanish copy; separate Context and Why it matters blocks preserve explanatory depth",
-          "providerCalls": 0,
-          "costUSD": 0
-        }
-      ],
-      "lastEditorialRevisionAt": "2026-10-07T15:11:13.494293+00:00"
-    },
-    {
       "editorialDate": "2026-10-08",
       "slot": "morning",
       "candidateSignature": "d946c6a7710df8154d4b242cc0fe715e1de5610b59c68a71158f1c98b8cd9ae4",
@@ -9161,6 +9086,49 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-11-22",
+      "slot": "morning",
+      "candidateSignature": "1349b2fb8807223cfaab90b94262e3f468f229d963800ed36199aa9c8dec7951",
+      "state": "started",
+      "startedAt": "2026-11-22T12:12:18.733Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.060463,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-22T12:12:18.733Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "mexico-business-news",
+          "ascoa",
+          "datoz",
+          "insightcrime-mx"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "45021034183",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "5a8a7972-d2f0-4487-9f26-ee436f867157",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.060463,
+            "accountedUSD": 0.060463,
+            "state": "reserved"
           }
         ]
       }
