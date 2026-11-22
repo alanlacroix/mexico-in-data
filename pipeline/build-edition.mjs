@@ -41,7 +41,7 @@ import { articleUrlAllowed, sourceHosts } from './lib/url-safety.js';
 import bilingualFidelity from './lib/bilingual-fidelity.cjs';
 import editionHistory from './lib/edition-history.cjs';
 import reviewGate from './lib/review-gate.cjs';
-import { resolveRankedEvidence } from './lib/ranked-evidence.mjs';
+import { resolveRankedEvidence, rotateDeterministicRejects } from './lib/ranked-evidence.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -891,7 +891,10 @@ async function main() {
     const standing = arr(read(path.join(DATA, 'standing.json'), { facts: [] }).facts);
     const calendar = arr(schedule.events).filter((event) => event?.date >= previousDay(editorialDate));
     const censusCalendar = createCensusCalendarLoader({ now });
-    const evidenceRows = await resolveRankedEvidence(rankedPool, {
+    const evidencePool = isRecovery ? rotateDeterministicRejects(rankedPool, {
+      diagnostics: priorSlotAttempt.diagnostics, storyId, editorialDate, weekend: weekendDay(editorialDate),
+    }) : rankedPool;
+    const evidenceRows = await resolveRankedEvidence(evidencePool, {
       fetchEvidence: row => evidenceFor(row.item, standing, calendar, memory, censusCalendar),
       ready: evidenceReady, editorialDate, weekend: weekendDay(editorialDate),
       batchSize: MAX_RANKED, maxCandidates: MAX_CANDIDATES, minimum: MIN_VISIBLE, maximum: MAX_VISIBLE,

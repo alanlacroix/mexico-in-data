@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { resolveRankedEvidence } from '../lib/ranked-evidence.mjs';
+import { resolveRankedEvidence, rotateDeterministicRejects } from '../lib/ranked-evidence.mjs';
 const date = '2026-11-13';
 const rows = Array.from({ length: 30 }, (_, index) => ({ index, item: { _editorialDate: date } }));
 const ready = row => row.evidence.length > 0;
@@ -25,3 +25,26 @@ await resolveRankedEvidence(dated,{editorialDate:date,ready,fetchEvidence:async(
 // day, so the helper must not claim sufficient exact-day coverage or exceed cap.
 assert.equal(calls,24);
 console.log('ranked evidence bounded fallback: ok');
+
+const retryRows = ['mandatory', 'exact-rejected', 'exact-clean', 'prior-audit-flag', 'prior-clean']
+  .map((id, index) => ({ index, item: { id, _editorialDate: index <= 2 ? date : '2026-11-12',
+    ...(index === 0 ? { _scheduled: { requiredForBrief: true } } : {}) } }));
+const diagnostics = [
+  { stage: 'deterministic', storyId: 'mandatory' },
+  { stage: 'deterministic', storyId: 'exact-rejected' },
+  { stage: 'audit', storyId: 'prior-audit-flag' },
+];
+const retryOptions = { diagnostics, storyId: item => item.id, editorialDate: date };
+const ids = list => list.map(row => row.item.id);
+const weekdayRetry = rotateDeterministicRejects(retryRows, retryOptions);
+assert.deepEqual(ids(weekdayRetry), ['mandatory', 'exact-clean', 'exact-rejected', 'prior-audit-flag', 'prior-clean']);
+const weekendRetry = rotateDeterministicRejects(retryRows, { ...retryOptions, weekend: true });
+assert.deepEqual(ids(weekendRetry), ['mandatory', 'exact-clean', 'prior-audit-flag', 'prior-clean', 'exact-rejected']);
+assert.deepEqual(ids(retryRows), ['mandatory', 'exact-rejected', 'exact-clean', 'prior-audit-flag', 'prior-clean']);
+assert.equal(rotateDeterministicRejects(retryRows, { ...retryOptions, diagnostics: [] }), retryRows);
+const fallback = await resolveRankedEvidence(weekendRetry, {
+  editorialDate: date, weekend: true, ready, batchSize: 2,
+  fetchEvidence: async row => [0, 1, 2].includes(row.index) ? ['complete body'] : [],
+});
+assert.deepEqual(ids(fallback.filter(ready)), ['mandatory', 'exact-clean', 'exact-rejected']);
+console.log('retry rotates known optional deterministic rejects without losing coverage: ok');
