@@ -9094,14 +9094,83 @@
       "editorialDate": "2026-11-22",
       "slot": "morning",
       "candidateSignature": "1349b2fb8807223cfaab90b94262e3f468f229d963800ed36199aa9c8dec7951",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-22T12:15:13.896Z",
-      "completedAt": "",
+      "completedAt": "2026-11-22T12:16:51.211Z",
       "calls": 4,
       "costUSD": 0.08553,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-091727f96d93: background: needs an independent source when one is available | n-4c397da33c6e: dek: 47 words (cap 45); dek: unsupported numbers: 5, 2026, 1.14, 40, 288.5; dek: Spanish unsupported numbers: 5, 2026, 1.14, 40, 288.5 | n-f0868e49d79d: dek: 50 words (cap 45); dek: unsupported numbers: 135000, 273000, 220000; dek: Sp",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-091727f96d93",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "The CNE replaced the former Energy Regulatory Commission following its formal dissolution on March 19, 2025, and enactment of the Hydrocarbons Sector Law Regulations in October 2025. The transition shifted regulatory oversight from administrative backlog to strict, time-bound enforcement.",
+              "es": "La CNE reemplazó a la extinta Comisión Reguladora de Energía tras su disolución formal el 19 de marzo de 2025 y la promulgación de las Regulaciones de la Ley de Hidrocarburos en octubre de 2025. La transición cambió supervisión regulatoria de acumulación administrativa a cumplimiento estricto y limitado en tiempo.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-4c397da33c6e",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Mexico's National Energy Commission eliminated permit renewals and capped new commercialization permits at two years under November 5, 2026, rules. Domestic crude refining averages 1.14 million barrels daily across PEMEX's network while foreign shipments still supply over 40 percent of Mexico's 288.5 million barrels daily diesel demand.",
+              "es": "La Comisión Nacional de Energía eliminó renovaciones de permisos y limitó nuevos permisos de comercialización a dos años según reglas de 5 de noviembre de 2026. Refinación de petróleo crudo doméstico promedia 1.14 millones de barriles diarios a través de red de PEMEX mientras envíos extranjeros todavía suministran más de 40 por ciento de demanda de diésel de 288.5 millones de barriles diarios de México.",
+              "refs": [
+                "article",
+                "standing:std-energy-constraint"
+              ],
+              "reasons": [
+                "47 words (cap 45)",
+                "unsupported numbers: 5, 2026, 1.14, 40, 288.5",
+                "Spanish unsupported numbers: 5, 2026, 1.14, 40, 288.5"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-f0868e49d79d",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "National refining capacity increased from 135,000 barrels daily in 2023 to 273,000 barrels daily in 2026, with the Dos Bocas refinery processing nearly 33 percent of refined output by June 2026. Storage capacity covers only 15 to 21 days of consumption if US imports of 220,000 barrels daily are interrupted.",
+              "es": "Capacidad de refinación nacional aumentó de 135,000 barriles diarios en 2023 a 273,000 barriles diarios en 2026, con la refinería Dos Bocas procesando casi 33 por ciento de producción refinada para junio de 2026. Capacidad de almacenamiento cubre solo 15 a 21 días de consumo si importaciones de EU de 220,000 barriles diarios se interrumpen.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "50 words (cap 45)",
+                "unsupported numbers: 135000, 273000, 220000",
+                "Spanish unsupported numbers: 135000, 273000, 220000"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "empty report text",
+                "watch item has no observable next test",
+                "Spanish translation is empty"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-22T12:15:13.896Z",
         "aliveSources": 69,
