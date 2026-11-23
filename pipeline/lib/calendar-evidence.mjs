@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 // Calendar anchors help order candidate events. They are not necessarily dates
 // established by the source. Keep uncertainty in text: the independent audit
 // deliberately receives only evidence IDs and text, not calendar metadata.
-export const CALENDAR_DATE_CONTRACT = 'Preserve calendar date precision and uncertainty in both languages. An approximate calendar estimate is not a confirmed date. A year-only calendar record supports that year, not a month or day. Reject any more precise or certain date unless another cited source explicitly establishes it.';
+export const CALENDAR_DATE_CONTRACT = 'Preserve calendar date precision and uncertainty in both languages. An approximate calendar estimate is not a confirmed date. A year-only calendar record supports that year, not a month or day. Reject any more precise or certain date unless another cited source explicitly establishes it. A publisher timestamp dates the article, not the reported event. Do not convert a relative event day into the publication date. Distinguish a statement made by a litigant in court from a ruling or admission by the court itself; preserve who said what and any contested facts.';
 
 export function calendarEvidenceRecord(event) {
   const approximate = event.approx === true;
@@ -64,4 +64,35 @@ export function calendarDateFlags(text, evidence) {
   return claims.some(claim => !independent.some(source => supports(source, claim))
     && !(qualified(claim) && estimates.some(source => supports(source, claim))))
     ? ['calendar date precision or certainty is unsupported'] : [];
+}
+
+// El País timestamps are still present in the located article bodies. A matching
+// month and day there alone are not evidence that the reported event occurred then.
+// Scope this fail-closed rule to the publisher's observed, unambiguous masthead.
+const elPaisStamp = () => /\s-\s(\d{1,2}\s+\p{L}{3}\s+20\d{2})\s-\s\d{1,2}:\d{2}\s(?:CET|CEST|CST|CDT)\b/giu;
+const shortEs = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function elPaisDates(record) {
+  if (record?.kind !== 'article-body' && record?.kind !== 'prior-article-body') return [];
+  try {
+    if (!['elpais.com','www.elpais.com'].includes(new URL(record.url).hostname)) return [];
+    return [...String(record.text || '').matchAll(elPaisStamp())].flatMap(match => {
+      const [day, month, year] = match[1].toLowerCase().split(/\s+/);
+      const monthNumber = shortEs.indexOf(month) + 1;
+      return monthNumber && Number(day) >= 1 && Number(day) <= 31
+        ? [{ day: Number(day), month: monthNumber, year: Number(year) }] : [];
+    });
+  } catch { return []; }
+}
+export function publicationDateFlags(text, evidence) {
+  const dates = evidence.flatMap(elPaisDates);
+  if (!dates.length) return [];
+  const body = evidence.filter(record => ['article-body','prior-article-body'].includes(record.kind))
+    .flatMap(record => dateClaims(elPaisDates(record).length
+      ? String(record.text || '').replace(elPaisStamp(), ' ') : record.text));
+  const value = String(text || '');
+  const publicationVerb = claim => /\b(?:published|reported|public[oó]|inform[oó]|publicad[oa])(?:\s+(?:on|el))?\s*$/iu
+    .test(value.slice(Math.max(0, claim.start - 28), claim.start));
+  return dateClaims(value).some(claim => claim.day && dates.some(date => supports(date, claim))
+    && !body.some(date => supports(date, claim)) && !publicationVerb(claim))
+    ? ['event date is supported only by an article publication timestamp'] : [];
 }
