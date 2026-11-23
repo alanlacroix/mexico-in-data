@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import dns from 'node:dns/promises';
-import { calendarEvidenceRecord, calendarDateFlags, CALENDAR_DATE_CONTRACT } from '../lib/calendar-evidence.mjs';
+import { calendarEvidenceRecord, calendarDateFlags, publicationDateFlags, CALENDAR_DATE_CONTRACT } from '../lib/calendar-evidence.mjs';
 import { shapeEvidenceRecord } from '../lib/source-evidence.mjs';
 import { evidenceFor, deterministicDraftCheck } from '../build-edition.mjs';
 import scheduled from '../lib/scheduled-candidate.cjs';
@@ -65,3 +65,13 @@ assert.match(builder, /DRAFT_GATE_CONTRACT = `\$\{CALENDAR_DATE_CONTRACT\}/);
 assert.match(builder, /system: `\$\{CALENDAR_DATE_CONTRACT\} You are the final independent/);
 assert.ok(CALENDAR_DATE_CONTRACT.includes('both languages'));
 console.log('calendar evidence: approximate dates, year precision, draft/audit propagation and exact deadlines pass');
+
+const elPais = { id: 'article', kind: 'article-body', url: 'https://elpais.com/mexico/2026-11-23/cooperation.html', text: 'Byline México - 23 nov 2026 - 10:30 CET Compartir La detención este viernes fue anunciada por las autoridades mexicanas.' };
+for (const field of ['The arrest of the leader on November 23 marked a shift.', 'La detención del líder el 23 de noviembre mostró un cambio.', 'The arrest was on 2026-11-23.']) {
+  assert.deepEqual(publicationDateFlags(field, [elPais]), ['event date is supported only by an article publication timestamp']);
+}
+assert.deepEqual(publicationDateFlags('The leader was arrested Friday.', [elPais]), []);
+assert.deepEqual(publicationDateFlags('El País reported on November 23.', [elPais]), []);
+assert.deepEqual(publicationDateFlags('The arrest was on November 23.', [{ ...elPais, text: elPais.text + ' La detención ocurrió el 23 de noviembre de 2026.' }]), []);
+assert.deepEqual(publicationDateFlags('The arrest was on November 23.', [{ ...elPais, url: 'https://example.org/news' }]), []);
+assert.ok(deterministicDraftCheck({ evidence: [elPais] }, { dek: 'The arrest was on November 23.', dekRefs: ['article'], es: { dek: 'La detención ocurrió el 23 de noviembre.' } }).includes('dek: event date is supported only by an article publication timestamp'));

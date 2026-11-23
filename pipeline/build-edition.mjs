@@ -14,7 +14,7 @@ import { createEditionQuarantine } from './lib/edition-quarantine.mjs';
 import { WATCH_EVIDENCE_CONTRACT, createFieldRepairPlan, mergeFieldRepairs } from './lib/edition-field-repair.mjs';
 import { articleIdentity, publishedProvenanceUrls } from './lib/article-identity.mjs';
 import { shapeEvidenceRecord } from './lib/source-evidence.mjs';
-import { calendarEvidenceRecord, calendarDateFlags, CALENDAR_DATE_CONTRACT } from './lib/calendar-evidence.mjs';
+import { calendarEvidenceRecord, calendarDateFlags, publicationDateFlags, CALENDAR_DATE_CONTRACT } from './lib/calendar-evidence.mjs';
 import { createCensusCalendarLoader } from './lib/census-release-calendar.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -541,6 +541,7 @@ function deterministicDraftCheck(row, draft) {
     const citedEvidence = row.evidence.filter(item => draft[refField].includes(item.id));
     for (const text of [draft[field], draft?.es?.[field]]) {
       flags.push(...calendarDateFlags(text, citedEvidence).map(flag => `${field}: ${flag}`));
+      flags.push(...publicationDateFlags(text, citedEvidence).map(flag => `${field}: ${flag}`));
       flags.push(...inegiCpiClaimFlags(text, draft[refField].includes('article') ? validatedInegiClaimFacts(row.item) : null).map(flag => `${field}: ${flag}`));
     }
     if ([draft[field], draft?.es?.[field]].some((text) => new TextEncoder().encode(JSON.stringify(clean(text))).byteLength > 600)) {
