@@ -129,3 +129,17 @@ for (const rejectedWatch of [
  const patched=mergeFieldRepairs(tradePlan,{repairs:{s0:{watch:{...rejectedWatch,refs:['article']}}}}).stories.s0;
  assert.ok(deterministicDraftCheck(tradeEvidence,patched).some(flag=>flag.startsWith('watch:')));
 }
+
+// A real November 24 failure left watch and watchRefs empty on rules with
+// observable implementation checks. An operational test is not a new event.
+const ruleBody = 'The Economy Ministry removed obsolete automatic import permit provisions tied to estimated prices for textiles. The rule enters into force the day after publication. The remaining permit provisions still apply to the goods they cover.';
+const rulePlan = createFieldRepairPlan([{index:0,evidence:[{id:'article',kind:'article-body',text:ruleBody}],draft:original,rejection:{fields:{watch:{reasons:['invalid evidence references']}},reasons:[]}}]);
+assert.match(rulePlan.schema.properties.repairs.properties.s0.properties.watch.description, /first affected filing or transaction.*Cite the rule/);
+const ruleCheck = {en:'Watch whether the first textile import filings under the amended rule omit the old permit while other goods still face the remaining checks.',
+  es:'Conviene observar si las primeras declaraciones de importación de textiles bajo la regla modificada omiten el antiguo permiso mientras se mantienen los demás controles.',
+  refs:['article']};
+const ruleDraft = mergeFieldRepairs(rulePlan,{repairs:{s0:{watch:ruleCheck}}});
+assert.deepEqual(ruleDraft.errorsByIndex,{});
+assert.deepEqual(deterministicDraftCheck({evidence:rulePlan.inputs[0].evidence},ruleDraft.stories.s0).filter(f=>f.startsWith('watch:')),[]);
+const unsupportedRuleDraft = mergeFieldRepairs(rulePlan,{repairs:{s0:{watch:{...ruleCheck,en:'Watch for a mandatory compliance audit by 2027.',es:'Conviene observar si hay una auditoría obligatoria para 2027.'}}}});
+assert.ok(deterministicDraftCheck({evidence:rulePlan.inputs[0].evidence},unsupportedRuleDraft.stories.s0).some(f=>f.startsWith('watch:')));
