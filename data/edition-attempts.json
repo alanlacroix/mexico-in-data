@@ -9317,14 +9317,83 @@
       "editorialDate": "2026-11-24",
       "slot": "morning",
       "candidateSignature": "5a2da6c8ea08a628fa412d4198cd1d6ad53f37fc66ef2a89ac46caef0ed1984d",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-24T12:12:09.587Z",
-      "completedAt": "",
+      "completedAt": "2026-11-24T12:13:06.703Z",
       "calls": 2,
       "costUSD": 0.031117,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-b7d7b0bd734d: background: hacienda was introduced in Spanish; watch: invalid evidence references; watch: invalid repair evidence references | n-59fb98edc4ec: watch: invalid evidence references; watch: invalid repair evidence references | n-e305494570e7: watch: invalid evidence references; background: needs an independent sourc",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-b7d7b0bd734d",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "On September 14, 2026, the Treasury published a resolution ending Annex 4 of the price-guarantee mechanism for textiles and apparel, which had established estimated prices since December 29, 2014. That mechanism required importers to guarantee payment of duties on undervalued textile imports.",
+              "es": "El 14 de septiembre de 2026, Hacienda publicó una resolución que derogó el Anexo 4 del mecanismo de garantía de precios para textiles y confección, que había establecido precios estimados desde el 29 de diciembre de 2014. Ese mecanismo requería que los importadores garantizaran el pago de contribuciones sobre importaciones de textiles subvaluados.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "hacienda was introduced in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [],
+              "reasons": [
+                "invalid evidence references",
+                "invalid repair evidence references"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-59fb98edc4ec",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [],
+              "reasons": [
+                "invalid evidence references",
+                "invalid repair evidence references"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-e305494570e7",
+          "reasons": [],
+          "fields": {
+            "background": {
+              "en": "Price providers are companies that estimate securities values using market data and pricing formulas. The Commission previously required providers to submit financial, administrative and operational information periodically.",
+              "es": "Los proveedores de precios son empresas que estiman valores de valores utilizando datos de mercado y fórmulas de fijación de precios. La Comisión previamente requería que proveedores presentaran información financiera, administrativa y operativa periódicamente.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [],
+              "reasons": [
+                "invalid evidence references",
+                "invalid repair evidence references"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-24T12:12:09.587Z",
         "aliveSources": 67,
