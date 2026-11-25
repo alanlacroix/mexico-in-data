@@ -2,119 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-10-10",
-      "slot": "morning",
-      "candidateSignature": "88141d911c97968b15f8fce79a02265e6a3d853ec320b4cfb311cab37d863994",
-      "state": "published",
-      "startedAt": "2026-10-10T12:07:10.409Z",
-      "completedAt": "2026-10-10T12:07:10.416Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "c9d46adf1736cd890da0aaf72bacf9475a1e082bea497984eed5c66894c5efc8",
-      "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
-      "diagnostics": [],
-      "collection": null,
-      "recoveries": [],
-      "manualRecovery": {
-        "reviewedAt": "2026-10-10T12:07:00.562034+00:00",
-        "method": "Independent review of all 40 English and Spanish fields against retained complete source components, including official CFE provisions, weekly fuel-tax agreements, Volvo company records and direct interview reporting, and any current official weather bulletin included in the final candidate; complete rendered bilingual reader review and exact candidate/release gates passed",
-        "draftSHA256": "10f8152ca767a2a89bfadd898c3438314680af41c9418710e2afa4bd35432164",
-        "auditSHA256": "1ee83d549f95fee14a7a1c834e16c1b87a3887890a5a59d347ef58aa7e6dabc0",
-        "sourceProvenance": "Observed El CEO, Expansión and El Economista feed records retained alongside the selected original sources; direct primary weather discovery recorded separately with exact issue time where included",
-        "primaryDiscoveries": [
-          {
-            "storyId": "n-bf21e8260115",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.012.shtml",
-            "sourceDiscovery": "Direct-primary discovery and refresh. The current public bulletin was retrieved from the NHC official prod-east mirror at12:00UTC, then confirmed against its stable official archive entry. It is Intermediate Advisory12A, valid12:00UTC, not an updated value carried by any older feed row. Earlier Category3 feed reports served only as a research lead. Operator notice/image and latest announcements page were independently rechecked at12:00:25UTC.",
-            "publicationDate": "2026-10-10",
-            "publicationPrecision": "timestamp",
-            "feedRecordClaimed": false
-          }
-        ],
-        "readerCopySHA256": "1ea374fe136843a630ce8ddab7d857d08abde9ae5f7d2efc9c178d0f04904dc1",
-        "generationProvenance": "operator-curated; zero provider generation or audit calls",
-        "preventiveReason": "Unpaid replay after the exact archive-and-ledger CPI discharge fix found that the budget-trimmed automatic selection repeated the August Census trade event already published October7 and lacked its next milestone; curated selection used complete source evidence, independent bilingual audit and root reader review, with no provider generation attempted"
-      },
-      "editorialRevisions": [
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "7a6d93fd226f4067cde8a1b29a93e308ec38bdc8610c3246aa90fc588e45ef03",
-          "artifactHash": "cab4dc5b2d71ebd7282a8dcd0ce79e6601649fa942bbacaa810f3c52b5a529ef",
-          "previousCandidateSignature": "5225f04217e599c005191b105d0a159343cef4b47bd190e90ad3c248234aaf21",
-          "candidateSignature": "9d1c3d1b25d87c21b151a7498c1d91fa088727c5a44793a2c285af99e600afaf",
-          "reviewedAt": "2026-10-10T15:08:18.223913+00:00",
-          "draftSHA256": "b4c53391553b6b605ce01b9d15d8cddf72fb2409c968a79c2aa4c2e167a141de",
-          "auditSHA256": "76e27bd3ba0424c9776a65ecbed492d3d84dba21aed0bb41e42219b7c26c3655",
-          "reviewedFields": 40,
-          "approvedCopySHA256": "0a4db044305d9097da0622eec62c069164fe33f786afbdcc2852e74f2722c541",
-          "method": "Independent source and bilingual review of the updated 09:00 Mexico City NHC Advisory13; three other stories and operator paragraph unchanged; root reviewed exact bilingual copy and rendered presentation",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-bf21e8260115",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.012.shtml",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.013.shtml",
-            "previousPublishedAt": "2026-10-10T12:00:00Z",
-            "publishedAt": "2026-10-10T15:00:00Z",
-            "sourceDiscovery": "Direct-primary scheduled follow-up. Official NHC complete Advisory13 and matching Spanish version were directly retrieved at15:00:44UTC and checked against the stable official archive. The previously published weather story identity is intentionally retained; rawId is the existing event identity, not a claim that an older feed contained this new bulletin. Official operator notice and current announcement index were rechecked at the same time.",
-            "priorBulletinRetained": true
-          },
-          "reason": "NHC reported materially wider tropical-storm-force wind reach and revised Sunday timing; maximum sustained wind and warning area unchanged"
-        },
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "cab4dc5b2d71ebd7282a8dcd0ce79e6601649fa942bbacaa810f3c52b5a529ef",
-          "artifactHash": "31e1793794b95efdd0389e7420beaf10ff720a7db69f8a0095d88df8ee212ea7",
-          "previousCandidateSignature": "9d1c3d1b25d87c21b151a7498c1d91fa088727c5a44793a2c285af99e600afaf",
-          "candidateSignature": "75b56a3558ac2675ee1c57b56c09cd27f50d466be0b432174fe916b13d778a9a",
-          "reviewedAt": "2026-10-10T21:05:14.602502+00:00",
-          "draftSHA256": "59b8b258eb3663dc5d7f72fec4ad878432ef372a17a5ea0e2dfe7f8af424fa8c",
-          "auditSHA256": "4fd3a7da3924cb545126f6b3373865d56d95ffad817d4e9c276a300883bb148e",
-          "reviewedFields": 40,
-          "approvedCopySHA256": "99e0ae20d8fc40cd53c5ede0aa07999adaf9228c8b5477ab46000d53a11e6db4",
-          "method": "Independent source and bilingual review of the updated 15:00 Mexico City NHC Advisory14; three other stories and operator paragraph unchanged; root reviewed exact bilingual copy and rendered presentation",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-bf21e8260115",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.013.shtml",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.014.shtml",
-            "previousPublishedAt": "2026-10-10T15:00:00Z",
-            "publishedAt": "2026-10-10T21:00:00Z",
-            "sourceDiscovery": "Direct-primary scheduled follow-up. Official NHC complete Advisory 14 and its Spanish translation were retrieved at 21:01:22 UTC and checked against the stable official archive. The complete technical Discussion 14 supports retained track uncertainty. The previously published story ID is preserved as the same weather event. No older feed is presented as carrying this update. Official operator notice, original letter and current first-page announcement index were rechecked at 21:02:07 UTC.",
-            "priorBulletinRetained": false
-          },
-          "reason": "NHC updated tropical-storm-force wind extent to 150 km, superseding the widening-wind headline; stable descriptive headline retains Category 4 and coastal warning, with Sunday coastal approach and Monday inland forecast qualified"
-        },
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "31e1793794b95efdd0389e7420beaf10ff720a7db69f8a0095d88df8ee212ea7",
-          "artifactHash": "c9d46adf1736cd890da0aaf72bacf9475a1e082bea497984eed5c66894c5efc8",
-          "previousCandidateSignature": "75b56a3558ac2675ee1c57b56c09cd27f50d466be0b432174fe916b13d778a9a",
-          "candidateSignature": "88141d911c97968b15f8fce79a02265e6a3d853ec320b4cfb311cab37d863994",
-          "reviewedAt": "2026-10-11T03:05:47.611850+00:00",
-          "draftSHA256": "2353c28edac5e4d26c47973b0ab13deecc81e9a8a3532777969b7bd5f68a7afe",
-          "auditSHA256": "215dd18fd079c3466df95188a5170c6c187aee5f41134b04501a4db7dcf28ca1",
-          "reviewedFields": 40,
-          "approvedCopySHA256": "36e6338f5c86797193a538cde3b0c277073bb189d04ea26ca42e1f8fd84a5748",
-          "method": "Independent source and bilingual review of the updated 21:00 Mexico City October 10 NHC Advisory15; three other stories and operator paragraph unchanged; root reviewed exact bilingual copy and rendered presentation",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-bf21e8260115",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.014.shtml",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.015.shtml",
-            "previousPublishedAt": "2026-10-10T21:00:00Z",
-            "publishedAt": "2026-10-11T03:00:00Z",
-            "sourceDiscovery": "Direct-primary scheduled follow-up. Official NHC complete Advisory 15 and its Spanish translation were retrieved at 03:01:14 UTC October 11 and checked against the stable official archive. The complete technical Discussion 15 supports retained track uncertainty. The previously published story ID is preserved as the same weather event. No older feed is presented as carrying this update. Official operator notice, original letter and current first-page announcement index were rechecked at 03:01:14 UTC October 11.",
-            "priorBulletinRetained": false
-          },
-          "reason": "NHC increased sustained wind estimate to 250 km/h, still Category 4; current Sunday coastal forecast remains qualified and previous Monday-inland sentence removed"
-        }
-      ],
-      "lastEditorialRevisionAt": "2026-10-11T03:05:47.611850+00:00"
-    },
-    {
       "editorialDate": "2026-10-11",
       "slot": "morning",
       "candidateSignature": "5284283a0a5d51c47a1e7855bcd3325c75b6b9d10cb6dff4fa5e5b6cd5e2e38d",
@@ -9446,6 +9333,49 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-11-25",
+      "slot": "morning",
+      "candidateSignature": "321284681fdf2c4e8f2ad4ecafffe041c831ec4cfa3de85100aed7009513cb29",
+      "state": "started",
+      "startedAt": "2026-11-25T12:11:30.397Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.053034,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-25T12:11:30.397Z",
+        "aliveSources": 68,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "guardian-mx",
+          "ascoa",
+          "datoz",
+          "insightcrime-mx"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "45611363345",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "d2a136fc-6640-47bb-8384-2d8f0e1966e3",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.053034,
+            "accountedUSD": 0.053034,
+            "state": "reserved"
           }
         ]
       }
