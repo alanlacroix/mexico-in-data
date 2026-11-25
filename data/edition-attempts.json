@@ -9341,14 +9341,43 @@
       "editorialDate": "2026-11-25",
       "slot": "morning",
       "candidateSignature": "321284681fdf2c4e8f2ad4ecafffe041c831ec4cfa3de85100aed7009513cb29",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-25T12:11:30.397Z",
-      "completedAt": "",
+      "completedAt": "2026-11-25T12:12:35.911Z",
       "calls": 2,
       "costUSD": 0.047007,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-f7b52a2225db",
+          "reasons": [],
+          "fields": {
+            "dek": {
+              "en": "Manufacturing drew $19,231 million, 44.6 percent of inflows, while profit reinvestment hit a record $34,975 million, 81.2 percent of total FDI.",
+              "es": "La manufactura captó 19 mil 231 millones de dólares, 44.6 por ciento de los flujos, mientras la reinversión de utilidades alcanzó un récord de 34 mil 975 millones, 81.2 por ciento del total de IED.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported numbers: 19231, 34975",
+                "numbers changed in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "Analysts flag a nearshoring shift: growth now depends on reinvestment by firms already in Mexico, not new entrants.",
+              "es": "Analistas señalan un cambio en el nearshoring: el crecimiento depende ahora de la reinversión de empresas ya instaladas, no de nuevos participantes.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "watch item has no observable next test"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-25T12:11:30.397Z",
         "aliveSources": 68,
