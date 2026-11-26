@@ -2,144 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-10-11",
-      "slot": "morning",
-      "candidateSignature": "5284283a0a5d51c47a1e7855bcd3325c75b6b9d10cb6dff4fa5e5b6cd5e2e38d",
-      "state": "published",
-      "startedAt": "2026-10-11T12:09:25.399Z",
-      "completedAt": "2026-10-11T12:09:25.406Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "80a48c920f8283308ace325b4273b9de8db68f0675dc1e805ce87a6c28b6f316",
-      "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
-      "diagnostics": [],
-      "collection": null,
-      "recoveries": [],
-      "manualRecovery": {
-        "reviewedAt": "2026-10-11T12:09:12.222030+00:00",
-        "method": "Independent review of all 30 English and Spanish fields against retained complete source components, including current official NHC bulletins and airport notices, official rail fares, and complete company interview and business reporting; complete rendered bilingual reader review and exact candidate/release gates passed",
-        "draftSHA256": "acd9a44f8cca4b43c0425299aacd66554e2f9bf4f9de6a9b155d3918148a7203",
-        "auditSHA256": "7597bdf023bb4477bfe408ba6a1d183ab464b849755b244a31d4b55404e0d1dd",
-        "sourceProvenance": "Observed El CEO and Retailers feed records retained alongside the selected original sources; direct primary NHC and airport discovery recorded separately with exact issue times",
-        "primaryDiscoveries": [
-          {
-            "storyId": "n-e4f3fa551142",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.016.shtml",
-            "sourceDiscovery": "Official NHC Intermediate Advisory 16A EN/ES and stable archive retrieved at 12:00:36 UTC October 11. Complete Discussion 16 from09:00 UTC remains the current technical discussion and retains its original timestamp. Both complete official GAP PDFs, linked notice pages and press index re-fetched at12:00:36 UTC; all are byte-identical to initial verified copies. No older feed record is represented as carrying the new bulletin.",
-            "publicationDate": "2026-10-11",
-            "publicationPrecision": "timestamp",
-            "feedRecordClaimed": false
-          }
-        ],
-        "readerCopySHA256": "1ac21eff147c44e193c611fdb65b8ab177ba74c618642114718aa41601d21090",
-        "generationProvenance": "operator-curated; zero provider generation or audit calls",
-        "preventiveReason": "Unpaid Sunday replay found that the capped weekend pool and budget-trimmed automatic selection repeated the August Census trade event already published October 7 and lacked its source-backed next milestone. Curated selection used complete sources, independent bilingual audit and root reader review. The selected-story weekly-history cap regression was separately repaired and tested before assembly; no provider generation was attempted"
-      },
-      "editorialRevisions": [
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "445066188c4f1b5d20874d9e0674bd0e1f1e7020732707097aea2405f1d6eb89",
-          "artifactHash": "5dbb6e613124ac8a30c47095a107b18e7c893a71e6684a4c7f854764d3af80d5",
-          "previousCandidateSignature": "1d3837952a61f64261d808909e9c37a38820a91d1e96c438c1404d61fad960d3",
-          "candidateSignature": "0431d453a7028fe71c394aa69f68b95fb85578e2e9ece744d15cd2f6a0cc14a9",
-          "reviewedAt": "2026-10-11T15:06:27.927324+00:00",
-          "draftSHA256": "53ce066abd4dca30b6a194bf66c5cd37208b5211493d6da7934e3e792e6e9c85",
-          "auditSHA256": "9631d30f01809db65e4364a5f8ad455ea3d589468768a9e66a742f6080496447",
-          "reviewedFields": 30,
-          "approvedCopySHA256": "2f86de081253b1a286eb7bcb04c7ca23a33fbd1fcd6e2050bdda4c776a114c33",
-          "method": "Independent source and bilingual review of the updated 09:00 Mexico City October 11 NHC Advisory17 and Discussion17; two other stories and airport paragraph unchanged; root reviewed exact bilingual copy and rendered presentation",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-e4f3fa551142",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.016.shtml",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.017.shtml",
-            "previousPublishedAt": "2026-10-11T12:00:00Z",
-            "publishedAt": "2026-10-11T15:00:00Z",
-            "sourceDiscovery": "Direct official NHC Advisory 17 and complete technical Discussion 17 retrieved at 15:00:54 UTC October 11; both official GAP notices, complete PDFs and press index rechecked unchanged at 15:01 UTC. Same published weather event identity retained. Original evidence and review history preserved separately.",
-            "priorBulletinRetained": false
-          },
-          "reason": "NHC revised the forecast to very near the coast Sunday and close to it Monday, with high track uncertainty; current sustained winds are 230 km/h, still Category 4. Sunday cancellations and conditional airport reopening notices were rechecked unchanged"
-        },
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "5dbb6e613124ac8a30c47095a107b18e7c893a71e6684a4c7f854764d3af80d5",
-          "artifactHash": "f8c56cbff8af782116c80e970e0c30b5b550437bdea51a68be862e080f962680",
-          "previousCandidateSignature": "0431d453a7028fe71c394aa69f68b95fb85578e2e9ece744d15cd2f6a0cc14a9",
-          "candidateSignature": "b35e8143a7cc71a82883bb6952ea336eea3ddc6cbbd1c69d958d20d64071ba14",
-          "reviewedAt": "2026-10-11T21:08:37.578465+00:00",
-          "draftSHA256": "858d601b228bc8ddb1ab303efd67738c834de7ea617a490614f628ba61eaed73",
-          "auditSHA256": "6258991ae6a835517004ee0e280058d005951d7f51a26757dac3289bb999a93e",
-          "reviewedFields": 30,
-          "approvedCopySHA256": "925539899dafc3b0d71c03c31f3e8a8a923ba1869a2f89be6e7085262328ce8d",
-          "method": "Independent source and bilingual review of the updated 15:00 Mexico City October 11 NHC Advisory18 and Discussion18; two other stories unchanged, airport operational facts preserved with current GAP update and qualified rain geography added; root reviewed exact bilingual copy and rendered presentation",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-e4f3fa551142",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.017.shtml",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.018.shtml",
-            "previousPublishedAt": "2026-10-11T15:00:00Z",
-            "publishedAt": "2026-10-11T21:00:00Z",
-            "sourceDiscovery": "Direct official NHC Advisory 18 and complete technical Discussion 18 retrieved at 21:00:14 UTC October 11; both official GAP notices, complete PDFs and press index rechecked at 21:00:52 UTC, including the October 11 ZLO update that preserves Sunday commercial cancellations. Same published weather event identity retained. Original evidence and review history preserved separately.",
-            "priorBulletinRetained": false
-          },
-          "reason": "NHC added a hurricane watch north of El Roblito to Bahia Tempehuaya, forecast farther offshore Monday and toward Mexico Wednesday, and extended the rain hazard through early Thursday. Current sustained winds are 215 km/h, still Category 4. Sunday passenger cancellations and conditional reopening remain supported by current GAP notices"
-        },
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "f8c56cbff8af782116c80e970e0c30b5b550437bdea51a68be862e080f962680",
-          "artifactHash": "8173420dfa70db71d2335acb2e385fabd921a7e6f99e123b17f37bfdf19c947d",
-          "previousCandidateSignature": "b35e8143a7cc71a82883bb6952ea336eea3ddc6cbbd1c69d958d20d64071ba14",
-          "candidateSignature": "794769c2ce1baa3da5aa2fc010e779013edf9c71c03ed9532772ccea18c18972",
-          "reviewedAt": "2026-10-12T00:08:24.564071+00:00",
-          "draftSHA256": "5f2c8eb216d4579e9873e3bcff05f25670a2339079724bf16ca6aa58c1f09079",
-          "auditSHA256": "c6ce6c4c680649b1fbbb4dd54feb1d1a1226c87d04e073ad07adec3ee0d0f633",
-          "reviewedFields": 30,
-          "approvedCopySHA256": "a3c75bef4865ccab147472c02589b211e55798314c0023c90f531b745293628b",
-          "method": "Independent source and bilingual review of NHC Intermediate Advisory18A valid 18:00 Mexico City October 11 and GAP joint closure extension dated October 11; two other stories unchanged, airport closure endpoints updated without implying confirmed reopening; root reviewed exact bilingual copy and rendered presentation",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-e4f3fa551142",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.018.shtml",
-            "url": "https://www.aeropuertosgap.com.mx/files/Comunicados/20261011_Actualizacion_Se_extiende_Cierre_de_Aeropuertos_por_Huracan_Simon.pdf",
-            "previousPublishedAt": "2026-10-11T21:00:00Z",
-            "publishedAt": "2026-10-11",
-            "sourceDiscovery": "Direct official NHC Intermediate Advisory 18A retrieved at 00:00:43 UTC October 12, valid 18:00 Mexico City October 11; current joint GAP closure extension dated October 11 retrieved and visually verified at 00:01 UTC October 12. Both airport closure endpoints are conditional on safe weather and operations. Same published weather event identity retained. Original evidence and review history preserved separately.",
-            "priorBulletinRetained": false
-          },
-          "reason": "GAP extended all-operation closures to October 13 at 08:00 local in Puerto Vallarta and October 12 at 08:00 local in Manzanillo, conditional on safe weather and operations. NHC now rates Simon Category 3 with 205 km/h winds; warning/watch geography, coastal forecast and early-Thursday rain hazard remain. Both local times are planned endpoints, not verified reopening."
-        },
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "8173420dfa70db71d2335acb2e385fabd921a7e6f99e123b17f37bfdf19c947d",
-          "artifactHash": "80a48c920f8283308ace325b4273b9de8db68f0675dc1e805ce87a6c28b6f316",
-          "previousCandidateSignature": "794769c2ce1baa3da5aa2fc010e779013edf9c71c03ed9532772ccea18c18972",
-          "candidateSignature": "5284283a0a5d51c47a1e7855bcd3325c75b6b9d10cb6dff4fa5e5b6cd5e2e38d",
-          "reviewedAt": "2026-10-12T03:07:51.481993+00:00",
-          "draftSHA256": "abf1b71aed247b92347ee6e36cbeaf77d8567f0431180b361882127d1e253e74",
-          "auditSHA256": "ed14fa742cb6491bcbfb8747eba18b88741b5890098c2b56e3f26feba8151b26",
-          "reviewedFields": 30,
-          "approvedCopySHA256": "5948b8d1d69b65bc007be0a383462b23fdcba8338cfc98f0d86dfe9c51c5981b",
-          "method": "Independent source, timezone and bilingual review of NHC Advisory19 and Discussion19 valid 21:00 Mexico City October11; GAP joint closure extension rechecked unchanged. Two other stories and airport closure conditions unchanged. Explicit derived timezone annotation checked against original UTC/MST; root reviewed exact bilingual copy and rendered presentation",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-e4f3fa551142",
-            "previousUrl": "https://www.aeropuertosgap.com.mx/files/Comunicados/20261011_Actualizacion_Se_extiende_Cierre_de_Aeropuertos_por_Huracan_Simon.pdf",
-            "url": "https://www.aeropuertosgap.com.mx/files/Comunicados/20261011_Actualizacion_Se_extiende_Cierre_de_Aeropuertos_por_Huracan_Simon.pdf",
-            "previousPublishedAt": "2026-10-11",
-            "publishedAt": "2026-10-11",
-            "sourceDiscovery": "Current NHC Advisory19 and Discussion19 retrieved at 03:00:36 UTC October12, valid 21:00 Mexico City October11; explicit derived timezone conversion from source UTC/MST retained separately. GAP joint closure notice and all nine official resources rechecked unchanged at 03:01 UTC. GAP date-only lead publication precision preserved. Same event identity and prior review history retained.",
-            "priorBulletinRetained": true
-          },
-          "reason": "NHC discontinued the warning south of Playa Perula; warning now begins there and extends to El Roblito, with Islas Marias and the northern watch unchanged. Forecast now states inland movement around midweek as a hurricane; current winds are 195 km/h, Category3. Early-Thursday rain risk and conditional GAP airport closures remain. Current source time converted explicitly from 20:00MST to21:00MexicoCity."
-        }
-      ],
-      "lastEditorialRevisionAt": "2026-10-12T03:07:51.481993+00:00"
-    },
-    {
       "editorialDate": "2026-10-12",
       "slot": "morning",
       "candidateSignature": "1b647ba445cfc9e581cee3dc140f232a234c7868946a2785ed13ca8af0801bfa",
@@ -9429,6 +9291,50 @@
             },
             "responseModel": "claude-sonnet-5",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-11-26",
+      "slot": "morning",
+      "candidateSignature": "39d81ddf386df9628fbf934c8321c32e51ce458b7b5a8eb8e70de22e0e38930e",
+      "state": "started",
+      "startedAt": "2026-11-26T12:12:21.359Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.057027,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-26T12:12:21.359Z",
+        "aliveSources": 67,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ceey",
+          "guardian-mx",
+          "ascoa",
+          "datoz",
+          "insightcrime-mx"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "45817438919",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "78cea661-1b42-4e0a-9cbb-e596c90e29cd",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.057027,
+            "accountedUSD": 0.057027,
+            "state": "reserved"
           }
         ]
       }
