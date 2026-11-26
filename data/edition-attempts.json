@@ -9299,14 +9299,84 @@
       "editorialDate": "2026-11-26",
       "slot": "morning",
       "candidateSignature": "39d81ddf386df9628fbf934c8321c32e51ce458b7b5a8eb8e70de22e0e38930e",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-26T12:12:21.359Z",
-      "completedAt": "",
+      "completedAt": "2026-11-26T12:13:26.026Z",
       "calls": 2,
       "costUSD": 0.034493,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "all story drafts failed the deterministic evidence gate: n-ce510aaeda0e: headline: unsupported number: 10; headline: Spanish unsupported number: 10; watch: invalid evidence references; watch: invalid repair evidence references | n-e91ecdec0840: view: proposal or uncertainty became final in Spanish; watch: invalid evidence references; watch: invalid repair evidence references | n-2cf82",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-ce510aaeda0e",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexican banks must close 2027 on 10 set days, plus weekends",
+              "es": "Bancos mexicanos deben cerrar en 2027 en 10 días fijos, además de fines de semana",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "unsupported number: 10",
+                "Spanish unsupported number: 10"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [],
+              "reasons": [
+                "invalid evidence references",
+                "invalid repair evidence references"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-e91ecdec0840",
+          "reasons": [],
+          "fields": {
+            "view": {
+              "en": "The credit line addresses CFE's planned US$37.526 million investment program, mostly in northern Mexico, where reliable power supply supports industrial activity. NADBank proposed up to US$200 million to improve grid performance and reliability.",
+              "es": "La línea de crédito aborda el programa de inversión planeado de CFE de US$37.526 millones, principalmente en el norte de México, donde el suministro confiable de energía respalda la actividad industrial. NADBank propuso hasta US$200 millones para mejorar desempeño y confiabilidad de la red.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "proposal or uncertainty became final in Spanish"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [],
+              "reasons": [
+                "invalid evidence references",
+                "invalid repair evidence references"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-2cf822e22930",
+          "reasons": [],
+          "fields": {
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [],
+              "reasons": [
+                "invalid evidence references",
+                "invalid repair evidence references"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-26T12:12:21.359Z",
         "aliveSources": 67,
