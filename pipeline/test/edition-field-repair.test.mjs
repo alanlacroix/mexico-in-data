@@ -143,3 +143,7 @@ assert.deepEqual(ruleDraft.errorsByIndex,{});
 assert.deepEqual(deterministicDraftCheck({evidence:rulePlan.inputs[0].evidence},ruleDraft.stories.s0).filter(f=>f.startsWith('watch:')),[]);
 const unsupportedRuleDraft = mergeFieldRepairs(rulePlan,{repairs:{s0:{watch:{...ruleCheck,en:'Watch for a mandatory compliance audit by 2027.',es:'Conviene observar si hay una auditoría obligatoria para 2027.'}}}});
 assert.ok(deterministicDraftCheck({evidence:rulePlan.inputs[0].evidence},unsupportedRuleDraft.stories.s0).some(f=>f.startsWith('watch:')));
+
+// November 26: proposed financing and conditional merchant costs are checkable without invented dates.
+assert.match(rulePlan.schema.properties.repairs.properties.s0.properties.watch.description, /proposed financing or policy decision.*signed agreement or final decision.*No firm date is needed/);
+assert.match(rulePlan.schema.properties.repairs.properties.s0.properties.watch.description, /platform changes merchant commissions.*nonempty bilingual watch and at least one exact cited evidence ID/);
