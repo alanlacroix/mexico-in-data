@@ -135,4 +135,18 @@ assert.ok(standingScore({
 }, standing.find((fact) => fact.id === 'std-political-system')) > 0,
 'a completed presidential informe should receive the presidential-system baseline');
 
+const pesoMechanics = standing.find((fact) => fact.id === 'std-peso-mechanics');
+assert.equal(standingScore({title: 'Árbol de Navidad natural en México 2026: cuesta de MXN$900 a MXN$4.000 y estos son los puntos de venta legales'}, pesoMechanics), 0,
+  'a product price denominated in MXN is not exchange-rate evidence');
+assert.equal(standingScore({title: 'Amazon invierte 40 mil millones de pesos en México'}, pesoMechanics), 0,
+  'an investment stated in pesos is not exchange-rate evidence');
+assert.ok(standingScore({title: 'Peso mexicano se deprecia frente al dólar'}, pesoMechanics) > 0,
+  'an actual peso depreciation remains linked to currency mechanics');
+assert.ok(standingScore({title: 'Mexico exchange rate weakens'}, pesoMechanics) > 0,
+  'an explicit exchange-rate topic remains eligible');
+assert.ok(standingScore({title: 'Peso falls against the dollar'}, pesoMechanics) > 0,
+  'a directional currency move remains eligible');
+assert.ok(standingScore({title: 'USD/MXN rises as the dollar strengthens'}, pesoMechanics) > 0,
+  'a currency pair is an FX topic');
+
 console.log('analysis-evidence tests: ok');
