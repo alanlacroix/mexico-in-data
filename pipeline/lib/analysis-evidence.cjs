@@ -52,7 +52,10 @@ const CONCEPT_RULES = [
   ['us-treasury-yield', /\b(?:us 10 year|u s 10 year|treasury yield|rate gap)\b/i],
   ['inflation', /\b(?:inflation|consumer prices?|headline prices?|core prices?|inpc)\b/i],
   ['policy-rate', /\b(?:policy rate|overnight rate|interest-rate decision|banxico (?:decision|holds?|cuts?|raises?))\b/i],
-  ['peso-exchange', /\b(?:peso|exchange rate|mxn)\b/i],
+  // A currency denomination (MXN 900, 900 pesos) is not an FX topic.
+  // Require an exchange-rate term, an explicit currency pair, or a directional
+  // move in the peso itself before requiring the standing FX context.
+  ['peso-exchange', /\b(?:exchange rate|foreign exchange|tipo de cambio|usdmxn|usd[ /-]mxn|mxn[ /-]usd|peso (?:mexicano )?(?:se )?(?:aprecia|deprecia|fortalece|debilita|sube|cae|avanza|retrocede|gana|pierde|rises?|falls?|strengthens?|weakens?|appreciates?|depreciates?)|(?:stronger|weaker|strong|weak) peso|(?:apreciaci[oó]n|depreciaci[oó]n|fortaleza|debilidad) (?:del|de el) peso|peso (?:frente al|against the|versus the) (?:d[oó]lar|dollar))\b/i],
   ['remittances', /\b(?:remittances?|remesas)\b/i],
   ['public-debt', /\b(?:public debt|sovereign debt|debt ceiling|deficit)\b/i],
   ['federal-budget', /\b(?:federal budget|budget package|paquete economico|revenue and spending|presupuesto de egresos|ley de ingresos)\b/i],
