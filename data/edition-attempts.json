@@ -9288,14 +9288,91 @@
       "editorialDate": "2026-11-27",
       "slot": "morning",
       "candidateSignature": "5433c86f1d01ef2731ab28527920c76bea946d0fc84f99d819c852117dab2abf",
-      "state": "started",
+      "state": "failed",
       "startedAt": "2026-11-27T12:12:27.774Z",
-      "completedAt": "",
+      "completedAt": "2026-11-27T12:13:28.070Z",
       "calls": 2,
       "costUSD": 0.065433,
       "artifactHash": "",
-      "reason": "",
-      "diagnostics": [],
+      "reason": "drafts cannot meet the 3–5 story, exact-day and scheduled-outcome requirements; refusing an unusable paid audit",
+      "diagnostics": [
+        {
+          "stage": "deterministic",
+          "storyId": "n-d92fe19c5d49",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Natural Christmas trees in Mexico cost 900 to 4,000 pesos in 2026.",
+              "es": "Árboles de Navidad naturales en México cuestan 900 a 4 mil pesos en 2026.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "numbers changed in Spanish",
+                "Spanish unsupported number: 4"
+              ]
+            },
+            "dek": {
+              "en": "Mexico's National Forest Commission reports that legal natural Christmas trees sold through authorized commercial forestry plantations range from 900 Mexican pesos to 4,000 pesos, depending on the retailer and tree characteristics.",
+              "es": "La Comisión Nacional Forestal de México reporta que árboles de Navidad naturales legales vendidos a través de plantaciones forestales comerciales autorizadas varían entre 900 pesos mexicanos y 4 mil pesos, dependiendo del vendedor y características del árbol.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "numbers changed in Spanish",
+                "Spanish unsupported number: 4",
+                "repeats the headline without adding context"
+              ]
+            },
+            "background": {
+              "en": "Mexico's forestry authority identifies authorized sales points across nine states, including Ciudad de México, State of Mexico, Veracruz, Puebla, and Hidalgo. These commercial plantations span 728 hectares operated by 16 producers and cooperatives, generating an estimated annual production of 1.6 million trees.",
+              "es": "La autoridad forestal de México identifica puntos de venta autorizados en nueve estados, incluyendo Ciudad de México, Estado de México, Veracruz, Puebla e Hidalgo. Estas plantaciones comerciales se extienden a lo largo de 728 hectáreas operadas por 16 productores y cooperativas, generando una producción anual estimada de 1.6 millones de árboles.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            },
+            "watch": {
+              "en": "",
+              "es": "",
+              "refs": [],
+              "reasons": [
+                "invalid evidence references",
+                "invalid repair evidence references"
+              ]
+            }
+          }
+        },
+        {
+          "stage": "deterministic",
+          "storyId": "n-2d5931395454",
+          "reasons": [],
+          "fields": {
+            "headline": {
+              "en": "Mexico's central bank raises 2026 GDP forecast to 1.9 percent.",
+              "es": "El Banco de México eleva pronóstico de crecimiento del PIB 2026 a 1.9 por ciento.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "banxico was introduced in Spanish"
+              ]
+            },
+            "background": {
+              "en": "Mexico's central bank's latest quarterly report covers July through September 2026. It projects 2027 growth at 2 percent and 2028 growth at 2.5 percent, accounting for leap-year effects. Governor Victoria Rodríguez said exports should expand on U.S. industrial production trends and tech-sector demand.",
+              "es": "El informe trimestral más reciente del banco central cubre julio a septiembre de 2026. Proyecta crecimiento de 2027 en 2 por ciento y de 2028 en 2.5 por ciento, considerando efectos de año bisiesto. La gobernadora Victoria Rodríguez dijo que exportaciones se espera se expandan por tendencias de producción industrial estadounidense y demanda tecnológica.",
+              "refs": [
+                "article"
+              ],
+              "reasons": [
+                "needs an independent source when one is available"
+              ]
+            }
+          }
+        }
+      ],
       "collection": {
         "collectedAt": "2026-11-27T12:12:27.774Z",
         "aliveSources": 64,
