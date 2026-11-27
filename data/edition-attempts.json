@@ -2,155 +2,6 @@
   "schemaVersion": 1,
   "attempts": [
     {
-      "editorialDate": "2026-10-12",
-      "slot": "morning",
-      "candidateSignature": "1b647ba445cfc9e581cee3dc140f232a234c7868946a2785ed13ca8af0801bfa",
-      "state": "published",
-      "startedAt": "2026-10-12T12:10:43.705Z",
-      "completedAt": "2026-10-12T12:10:43.712Z",
-      "calls": 0,
-      "costUSD": 0,
-      "artifactHash": "135d12c7a31bcbc806b5ada6fb94115e06e4a0ef8c21f59d11646641bb862669",
-      "reason": "Independently audited curated morning delivery after unpaid selection review; no paid generation",
-      "diagnostics": [],
-      "collection": null,
-      "recoveries": [],
-      "manualRecovery": {
-        "reviewedAt": "2026-10-12T12:10:20.313096+00:00",
-        "method": "Independent review of all 30 English and Spanish fields against retained complete source components, including the official INEGI August industrial bulletin, NHC20A/current GAP notices, and official committee/operative legislative texts; complete rendered bilingual reader review and exact candidate/release gates passed",
-        "draftSHA256": "621bd731168404fd4713ed442a0f73ee0babf4df19e983afa09079ee60dcfad5",
-        "auditSHA256": "d1f5ca7281ef9be11b2c2dbf3389cc7b300991f53e0bf88cf4d313c79e99776f",
-        "sourceProvenance": "Observed El Economista feed record retained alongside official legislative sources; direct INEGI and current NHC/GAP discovery recorded with honest publication precision and explicit derived timezone annotation",
-        "primaryDiscoveries": [
-          {
-            "storyId": "n-edab5fa8665e",
-            "url": "https://www.inegi.org.mx/contenidos/saladeprensa/boletines/2026/imai/imai2026_10.pdf",
-            "sourceDiscovery": "Official calendar and live INEGI news metadata identified October12 national industrial release for August. First noon PDF response was HTML and rejected; complete official PDF captured after upload at12:00:56UTC and visually verified. No pre-release figures used.",
-            "discoveryUrl": "https://www.inegi.org.mx/app/saladeprensa/calendario/",
-            "metadataUrl": "https://www.inegi.org.mx/app/api/saladeprensa/api/saladeprensa/ObtenerInfoNoticia/v3",
-            "publicationDate": "2026-10-12",
-            "publicationPrecision": "day",
-            "feedRecordClaimed": false
-          },
-          {
-            "storyId": "n-02ad1f02b92f",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.020.shtml",
-            "sourceDiscovery": "Official NHC Intermediate Advisory20A valid12UTC October12 captured with stable archive and Spanish bulletin. Current technical Discussion20 retains09UTC issue time. Complete GAP joint closure notice, press index and all nine airport resources rechecked at12UTC, unchanged from09UTC; planned endpoints remain conditional. No older feed record is represented as carrying the new bulletin.",
-            "discoveryUrl": "https://prod-east-nhc.woc.noaa.gov/text/refresh/MIATCPEP5+shtml/100836.shtml",
-            "publicationDate": "2026-10-12",
-            "publicationPrecision": "timestamp",
-            "feedRecordClaimed": false
-          }
-        ],
-        "readerCopySHA256": "dcb0b6c701707682926a19fd9260e7414654255fd42e01a64b35804450ca3182",
-        "generationProvenance": "operator-curated; zero provider generation or audit calls",
-        "preventiveReason": "Unpaid October12 replay selected no exact-day development and the industrial release lacks supported automatic ingestion. The current official industrial PDF became available after noon metadata; complete primary evidence, independent bilingual review, root reader review and actual-browser checks support this curated daily edition. No provider generation was attempted"
-      },
-      "editorialRevisions": [
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "08d11883f52eed2ab61f657801bc36ca23b44a1e16582636c46a07aefe380c02",
-          "artifactHash": "5b301a0c2338812e8a1ea1533dfa7d4b0e08b96566e0e0ee7a84e2c380bc066e",
-          "previousCandidateSignature": "1d8482b3aac3c3a1cfbced4c553723faa3ffdcd5bc8645ac1cb8d1c841582f8e",
-          "candidateSignature": "fbdcbf6dd779bfc41ffe434068a05605e1e1f50e1e52ff914e7131149df78656",
-          "reviewedAt": "2026-10-12T15:15:07.470610+00:00",
-          "draftSHA256": "f32c4150537c37a97257f55186c78d44f25dd15728d0c0d3cf953a27408eabf8",
-          "auditSHA256": "8a1aa294e3a738b4bd6471a0011cbef966a72e8f9ae8e8f75fae0df84ca52cf3",
-          "reviewedFields": 30,
-          "approvedCopySHA256": "6f66654e51de2b2c87ace9665b88307bc120104312f487eea05629f1fa73a3e9",
-          "method": "Independent exact source, timezone and bilingual audit of NHC Advisory21 and Discussion21 valid15UTC/09MexicoCity October12. Full GAP notice and eight related resources rechecked, unchanged. Other two stories byte-identical and original audit retained. Root reviewed full exact bilingual copy/template, with exact-head real browser review required before merge.",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-02ad1f02b92f",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.020.shtml",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.021.shtml",
-            "previousPublishedAt": "2026-10-12T12:00:00Z",
-            "publishedAt": "2026-10-12T15:00:00Z",
-            "sourceDiscovery": "Official NHC Advisory21 and Discussion21 valid15UTC October12 captured at stable archive URLs. Spanish generic refresh still carries20A and is not evidence for current copy. All nine GAP resources rechecked15UTC, unchanged; expired planned Manzanillo endpoint does not establish actual reopening or continued closure.",
-            "priorBulletinRetained": false
-          },
-          "reason": "Hurricane warning now only Islas Marias; possible hurricane conditions north of Cabo Corrientes to Bahia Tempehuaya and tropical-storm warning Playa Perula to Cabo Corrientes. Current winds175km/h, uncertain approach Wednesday into Thursday with possible restrengthening. Regional rainfall risk retained. Airport times attributed to latest conditional plan; elapsed Manzanillo planned endpoint does not establish current operations."
-        },
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "5b301a0c2338812e8a1ea1533dfa7d4b0e08b96566e0e0ee7a84e2c380bc066e",
-          "artifactHash": "ea9cab4c166b7b4a5eb61bdcd3807aa7ad11c0306e2c58cddb6f44f541b659f0",
-          "previousCandidateSignature": "fbdcbf6dd779bfc41ffe434068a05605e1e1f50e1e52ff914e7131149df78656",
-          "candidateSignature": "5ceff3d6fc00b7c934b95f8a39b97b77e173446bd9631f435f88cfae814bbd9e",
-          "reviewedAt": "2026-10-12T21:04:37.862612+00:00",
-          "draftSHA256": "3bb5982e7373a057c1ff1088b1360b3eb987eace1977b1909ad4de23ea82ff92",
-          "auditSHA256": "983d09aa1e4ce627184f963d94f85c0ce86a88a188e5849187de38349b71b465",
-          "reviewedFields": 30,
-          "approvedCopySHA256": "1bcf2a55e3ccf50081b424c924ee573644a2b61bd16de544f855911636dd7f39",
-          "method": "Independent exact source, timezone and bilingual audit of NHC Advisory 22 and Discussion 22 valid 21:00 UTC / 15:00 Mexico City on October 12. Full GAP notice and eight related resources rechecked, unchanged. Other two stories byte-identical and original audit retained. Root reviewed full exact bilingual copy/template, with exact-head real browser review required before merge.",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-02ad1f02b92f",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.021.shtml",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.022.shtml",
-            "previousPublishedAt": "2026-10-12T15:00:00Z",
-            "publishedAt": "2026-10-12T21:00:00Z",
-            "sourceDiscovery": "Official NHC Advisory22 and Discussion22 valid21UTC October12 retained at stable archive URLs. All nine GAP index/notice resources rechecked21UTC, unchanged; expired planned Manzanillo endpoint establishes neither actual reopening nor continuing closure.",
-            "priorBulletinRetained": false
-          },
-          "reason": "Tropical-storm warning from Playa Perula to Cabo Corrientes discontinued. Hurricane warning for Islas Marias retained; possible hurricane conditions from Cabo Corrientes to Bahia Tempehuaya. Current winds 155 km/h, uncertain Wednesday–Thursday approach and possible restrengthening by Wednesday. Rain guidance updated to coastal west-central Mexico and Sinaloa through Thursday. Airport times attributed to latest conditional plan; elapsed Manzanillo planned endpoint does not establish current operations."
-        },
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "ea9cab4c166b7b4a5eb61bdcd3807aa7ad11c0306e2c58cddb6f44f541b659f0",
-          "artifactHash": "91f29b5f3c630561dbc1cb7aba3c0d5a8983e725a2b648574695d69dd44e5b57",
-          "previousCandidateSignature": "5ceff3d6fc00b7c934b95f8a39b97b77e173446bd9631f435f88cfae814bbd9e",
-          "candidateSignature": "d02ea61a82589c672cfc2647a3675b9ca3ec441e06b7f80ccd8f51e5e24bc2b3",
-          "reviewedAt": "2026-10-13T00:07:37.000420+00:00",
-          "draftSHA256": "94c10d3078ea592a36ee5e4b56db2d6ee2250091063c09b2ad3bdaa1c51a171a",
-          "auditSHA256": "9b5008ac0ba2ec62ef855e9be9fc78e67e0bfb7bee9715f3775ef4a493ccd1a8",
-          "reviewedFields": 30,
-          "approvedCopySHA256": "8e987c75fb7faf428012aa4616b04d7f8536efd16a86f042adcf9ac1d351c3d4",
-          "method": "Independent exact source, timezone and bilingual audit of NHC Intermediate Advisory 22A valid 00:00 UTC October 13 / 18:00 Mexico City October 12, current Discussion 22, and both complete official GAP airport reopening notices. Other two stories byte-identical and original audit retained. Root reviewed full exact bilingual copy/template, with exact-head real browser review required before merge.",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-02ad1f02b92f",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.022.shtml",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.022.shtml",
-            "previousPublishedAt": "2026-10-12T21:00:00Z",
-            "publishedAt": "2026-10-13T00:00:00Z",
-            "sourceDiscovery": "Official NHC Intermediate Advisory22A valid00UTC October13, equivalent to18:00MexicoCity October12, retained with current Discussion22. GAP index newly links full October12 Manzanillo confirmed resumption and PuertoVallarta phased reopening notices, captured shortly after00UTC. No publication time is invented for the day-dated GAP notices; their stated operating times are preserved.",
-            "priorBulletinRetained": false
-          },
-          "reason": "GAP confirms Manzanillo airport operations resumed October 12. Puerto Vallarta allows official aircraft only from 14:30 local October 12 and plans commercial operations from October 13, dependent on airline schedules. Superseded 08:00 Puerto Vallarta plan removed. Current timestamped hurricane forecast and rainfall risks retained; no flight movement or guaranteed passenger reopening inferred."
-        },
-        {
-          "kind": "audited-material-weather-update",
-          "previousArtifactHash": "91f29b5f3c630561dbc1cb7aba3c0d5a8983e725a2b648574695d69dd44e5b57",
-          "artifactHash": "135d12c7a31bcbc806b5ada6fb94115e06e4a0ef8c21f59d11646641bb862669",
-          "previousCandidateSignature": "d02ea61a82589c672cfc2647a3675b9ca3ec441e06b7f80ccd8f51e5e24bc2b3",
-          "candidateSignature": "1b647ba445cfc9e581cee3dc140f232a234c7868946a2785ed13ca8af0801bfa",
-          "reviewedAt": "2026-10-13T03:06:17.084479+00:00",
-          "draftSHA256": "6823a3ee0acd668fec0b62e95d08a5aa67ba5ee15da2f036f1ea5ffc81732b1e",
-          "auditSHA256": "7deb15587f131bd619c6f4433feac1fe255269b7a2153fe7ede6286f3bc7e93f",
-          "reviewedFields": 30,
-          "approvedCopySHA256": "1dd942683f4db9388384b7480684e56ba73d48c4953b646f0e3041d77927ab50",
-          "method": "Independent exact source, timezone and bilingual audit of archived NHC Advisory 23 and Discussion 23 valid 03:00 UTC October 13 / 21:00 Mexico City October 12. Both complete GAP reopening PDFs, notice pages and index freshly rechecked byte-identical. Other two stories and airport headline/view preserved exactly. Root reviewed full bilingual copy/template, with exact-head real-browser screenshot review required before merge.",
-          "providerCalls": 0,
-          "costUSD": 0,
-          "sourceUpdate": {
-            "storyId": "n-02ad1f02b92f",
-            "previousUrl": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public_a.022.shtml",
-            "url": "https://prod-east-nhc.woc.noaa.gov/archive/2026/ep20/ep202026.public.023.shtml",
-            "previousPublishedAt": "2026-10-13T00:00:00Z",
-            "publishedAt": "2026-10-13T03:00:00Z",
-            "sourceDiscovery": "Official NHC Advisory 23 and Discussion 23 valid 03:00 UTC October 13 / 21:00 Mexico City October 12 captured from stable archives. Both GAP full reopening PDFs, their notice pages and index freshly rechecked and byte-identical. Editorial date remains October 12 in Mexico City.",
-            "priorBulletinRetained": false
-          },
-          "reason": "Official hurricane watch narrowed to north of Escuinapa through Bahia Tempehuaya; Cabo Corrientes to Escuinapa now under tropical-storm watch. Islas Marias hurricane warning and regional rain risk retained. Current sustained winds remain 155 km/h; uncertain later-week approach attributed to Discussion 23. Airport operations and airline-dependent passenger plans unchanged."
-        }
-      ],
-      "lastEditorialRevisionAt": "2026-10-13T03:06:17.084479+00:00"
-    },
-    {
       "editorialDate": "2026-10-13",
       "slot": "morning",
       "candidateSignature": "265e81a17bd70c8377cf36249281751de4dd67b9f16bfe3794728a9a5105472b",
@@ -9429,6 +9280,53 @@
             },
             "responseModel": "claude-haiku-4-5-20251001",
             "stopReason": "end_turn"
+          }
+        ]
+      }
+    },
+    {
+      "editorialDate": "2026-11-27",
+      "slot": "morning",
+      "candidateSignature": "5433c86f1d01ef2731ab28527920c76bea946d0fc84f99d819c852117dab2abf",
+      "state": "started",
+      "startedAt": "2026-11-27T12:12:27.774Z",
+      "completedAt": "",
+      "calls": 1,
+      "costUSD": 0.052382,
+      "artifactHash": "",
+      "reason": "",
+      "diagnostics": [],
+      "collection": {
+        "collectedAt": "2026-11-27T12:12:27.774Z",
+        "aliveSources": 64,
+        "totalSources": 72,
+        "wireCount": 60,
+        "minimumAlive": 36,
+        "ok": true,
+        "failedSourceIds": [
+          "ciep",
+          "guardian-mx",
+          "ascoa",
+          "gnews-politics",
+          "datoz",
+          "insightcrime-mx",
+          "justice-in-mexico",
+          "iad-dialogue"
+        ]
+      },
+      "recoveries": [],
+      "modelAccounting": {
+        "version": 1,
+        "runId": "45996644002",
+        "runAttempt": "1",
+        "receipts": [
+          {
+            "id": "186face0-ab1e-455f-826d-9d1d872a7db7",
+            "period": "2026-11",
+            "model": "claude-haiku-4-5",
+            "reservedUSD": 0.052382,
+            "accountedUSD": 0.052382,
+            "state": "reserved"
           }
         ]
       }
